@@ -10,12 +10,14 @@ import { useState } from "react";
  * They are plain <img> so no Next image loader config is required, and each
  * one degrades to a neutral placeholder if the asset is missing (a fair number
  * of the smaller national sides simply have no crest in the set).
+ *
+ * Every `logo_url` in the source data lives under a "/L/" folder — there never
+ * was a "/D/" (dark) counterpart to ship, in this dataset or the original
+ * site's. An earlier version of this component guessed that one existed and
+ * rewrote every crest request to a "/D/" path that 404s, which silently blanked
+ * every team logo in the game (they degrade to the initials placeholder on
+ * error, so nothing crashed — it just always showed circles instead of crests).
  */
-
-/** Club and competition logos ship in a light ("/L/") and dark ("/D/") variant. */
-export function darkVariant(url: string): string {
-  return url.replace("/L/", "/D/");
-}
 
 interface RemoteImageProps {
   src: string;
@@ -38,15 +40,12 @@ export function ClubCrest({
   name,
   size = 40,
   className = "",
-  variant = "dark",
   dim = false,
 }: {
   src?: string;
   name: string;
   size?: number;
   className?: string;
-  /** The site ships light/dark crest variants; small inline badges use dark, the big card watermark uses light. */
-  variant?: "dark" | "light";
   /** Greyed out and dimmed, used for the national team crest before the first cap. */
   dim?: boolean;
 }) {
@@ -68,11 +67,10 @@ export function ClubCrest({
   );
 
   if (!src) return placeholder;
-  const resolved = variant === "dark" ? darkVariant(src) : src;
 
   return (
     <RemoteImage
-      src={resolved}
+      src={src}
       alt={name}
       className={`shrink-0 object-contain transition-[filter,opacity] duration-500 ${dim ? "grayscale opacity-30" : ""} ${className}`}
       fallback={placeholder}

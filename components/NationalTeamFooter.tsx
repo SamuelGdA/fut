@@ -21,7 +21,6 @@ export function NationalTeamFooter({ career }: { career: CareerState }) {
           <ClubCrest
             src={nationalTeamCrestUrl(country.fifa_code)}
             name={countryName(country, locale)}
-            variant="light"
             dim={!capped}
             size={22}
             className="h-5 w-5 sm:h-5.5 sm:w-5.5"
