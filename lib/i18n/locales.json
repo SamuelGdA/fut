@@ -1,0 +1,3818 @@
+{
+  "es": {
+    "intro": {
+      "eyebrow": "Minijuegos Copero",
+      "title": "Construí tu carrera futbolística",
+      "subtitle": "Elegí tu origen, tomá decisiones clave y dejá que el destino te lleve a una trayectoria única de títulos, estadísticas y momentos decisivos.",
+      "start": "Comenzar carrera",
+      "back": "Volver a Juegos",
+      "languageLabel": "Idioma",
+      "previewLabel": "Vista previa del simulador",
+      "previewTitle": "Tu carrera empieza acá",
+      "previewSubtitle": "Identidad, decisiones, clubes y resumen compartible.",
+      "modes": {
+        "long": {
+          "title": "Intensa",
+          "description": "1 decisión por temporada, inmersión profunda."
+        },
+        "normal": {
+          "title": "Normal",
+          "description": "Decisiones cada 2 temporadas, una experiencia equilibrada."
+        }
+      },
+      "difficultyTitle": "Dificultad",
+      "difficulties": {
+        "normal": {
+          "title": "Normal",
+          "description": "La carrera equilibrada: el talento aparece, los clubes tienen paciencia, el cuerpo aguanta."
+        },
+        "hard": {
+          "title": "Difícil",
+          "description": "Fútbol de verdad: el talento de élite es raro, la evolución es lenta, el club no espera y el cuerpo cobra caro."
+        }
+      }
+    },
+    "identity": {
+      "eyebrow": "Paso 1",
+      "title": "Definí tu identidad",
+      "subtitle": "Elegí la nacionalidad y la posición inicial de tu futbolista.",
+      "personalizationTitle": "Identidad",
+      "personalizationSubtitle": "Estos datos son cosméticos por ahora.",
+      "lastName": "Apellido",
+      "lastNamePlaceholder": "Apellido",
+      "preferredNumber": "Número",
+      "preferredFoot": "Pierna hábil",
+      "leftFoot": "Izquierda",
+      "rightFoot": "Derecha",
+      "nationalityTitle": "Nacionalidad",
+      "nationalitySubtitle": "Buscá tu país.",
+      "nationalitySearchPlaceholder": "Buscar país",
+      "nationalityEmpty": "No hay países para esa búsqueda.",
+      "positionTitle": "Posición",
+      "positionSubtitle": "Tu lugar en la cancha.",
+      "continue": "Continuar",
+      "confirm": "Confirmar identidad",
+      "back": "Volver",
+      "showMoreCountries": "Ver más",
+      "progressNationality": "Nacionalidad",
+      "progressPosition": "Posición"
+    },
+    "upcoming": {
+      "eyebrow": "Próximo paso",
+      "title": "Oferta de cantera",
+      "subtitle": "La identidad quedó guardada en el motor. El siguiente paso será generar la primera oferta."
+    },
+    "career": {
+      "title": "Carrera",
+      "subtitle": "Tomá decisiones y simulá temporadas hasta el retiro.",
+      "overall": "OVR",
+      "marketValue": "Valor",
+      "identity": "Identidad",
+      "summaryPlayerFallback": "Jugador",
+      "club": "Club",
+      "age": "Edad",
+      "totals": "Totales",
+      "appearances": "PJ",
+      "goals": "Gls",
+      "assists": "Ast",
+      "cleanSheets": "VI",
+      "goalsConceded": "GC",
+      "trophies": "Títulos",
+      "awards": "Premios individuales",
+      "emptyTrophyShowcase": "Vitrina vacía",
+      "history": "Trayectoria",
+      "noSeasons": "Elegí una cantera para empezar a registrar temporadas.",
+      "decision": "Decisión",
+      "choose": "Elegir",
+      "academyOfferTitle": "Oferta de cantera",
+      "academyOfferDescription": "Tres clubes quieren sumarte a su proyecto juvenil. Elegí dónde empieza tu carrera.",
+      "transferTitle": "Mercado de pases",
+      "transferDescription": "Llegaron ofertas después de tu último tramo de carrera. Podés aceptar una o quedarte en tu club.",
+      "loanOfferTitle": "Salida a préstamo",
+      "loanOfferDescription": "Tu club quiere que sumes minutos en otro equipo. Elegí dónde seguir tu desarrollo.",
+      "postLoanReturnTitle": "Regreso a tu club",
+      "postLoanRetainedDescription": "Volvés a tu club y vas a ser tenido en cuenta. Si igual querés salir, tenés dos ofertas para cambiar de aire.",
+      "postLoanNotRetainedDescription": "Volvés a tu club, pero no vas a ser tenido en cuenta. Podés salir otra vez a préstamo o fichar definitivamente por tu club actual.",
+      "contractNonRenewalTitle": "Fin de ciclo",
+      "contractNonRenewalDescription": "Tu club decidió no renovarte. Elegí el próximo paso de tu carrera.",
+      "noOffersRetirementTitle": "Sin ofertas",
+      "noOffersRetirementDescription": "Ningún equipo está interesado en ofrecerte un contrato. Es momento de poner fin a tu carrera.",
+      "historyPeriods": "Períodos",
+      "historySeasons": "Temporadas",
+      "suspended": "Suspendido",
+      "joinClubLabel": "Fichar por {team}",
+      "returnOptionLabel": "Volver a {team}",
+      "joinLoanLabel": "Préstamo en {team}",
+      "permanentTransferLabel": "Fichar por {team}",
+      "joinClubDescription": "Firmar por {team}",
+      "joinLoanDescription": "Ir cedido a {team}",
+      "permanentTransferDescription": "Fichar definitivamente por {team}",
+      "stayOptionLabel": "Quedarse en {team}",
+      "stayOptionDescription": "Continuar en {team}",
+      "retireOptionLabel": "Retirarse",
+      "retireOptionDescription": "Finalizar tu carrera profesional",
+      "choosingClub": "Eligiendo club...",
+      "careerEventPending": "Decisión de carrera...",
+      "active": "Activo",
+      "locked": "Bloqueado",
+      "freeAgent": "Libre",
+      "goalkeeperGoalsConcededShort": "GR",
+      "goalkeeperCleanSheetsShort": "VI",
+      "careerBest": "Máximo",
+      "nationalTeam": "Selección",
+      "relegation": "Descenso",
+      "summaryTitle": "Carrera finalizada",
+      "summarySubtitle": "Tu trayectoria llegó al retiro. El resumen compartible se agregará en una próxima iteración.",
+      "careerEndedTitle": "Tu carrera llegó a su fin",
+      "careerEndedDescription": "Todo lo que construiste queda listo para revisar en tu resumen.",
+      "viewSummary": "Ver resumen",
+      "replay": "Volver a jugar",
+      "shareSummaryTitle": "Compartí tu carrera",
+      "shareBrandPrompt": "Jugá tu carrera en",
+      "shareNative": "Compartir carrera",
+      "sharePreparing": "Preparando imagen",
+      "shareSharing": "Compartiendo carrera",
+      "shareShowLastName": "Mostrar apellido",
+      "shareCopyImage": "Copiar imagen",
+      "shareCopyingImage": "Copiando imagen",
+      "shareSaveImage": "Guardar imagen",
+      "shareSavingImage": "Guardando imagen",
+      "shareCopyLink": "Copiar enlace",
+      "shareCopyingLink": "Copiando enlace",
+      "shareNativeTitle": "Mi carrera en Copero",
+      "shareNativeText": "Esta fue mi carrera en Copero. ¿Cómo sería la tuya?",
+      "shareUnavailable": "Este navegador no expone el menú nativo para compartir.",
+      "shareFileUnavailable": "Este navegador no permite compartir esta imagen como archivo.",
+      "shareFailed": "No se pudo generar la imagen",
+      "shareImagePreparing": "La imagen todavía se está preparando.",
+      "shareImagePreparationFailed": "No se pudo preparar la imagen de tu carrera.",
+      "shareImageCopied": "Imagen copiada al portapapeles.",
+      "shareImageCopyUnavailable": "Este navegador no permite copiar imágenes al portapapeles.",
+      "shareImageCopyFailed": "No se pudo copiar la imagen al portapapeles.",
+      "shareImageSaved": "Imagen guardada.",
+      "shareImageSaveFailed": "No se pudo guardar la imagen.",
+      "shareLinkCopied": "Enlace del juego copiado al portapapeles.",
+      "shareLinkCopyFailed": "No se pudo copiar el enlace.",
+      "summaryPlaceholderTitle": "Resumen de carrera",
+      "summaryPlaceholderDescription": "Acá vas a encontrar tus estadísticas, clubes, títulos y los momentos más importantes de tu trayectoria.",
+      "debugModeLabel": "Debug UI",
+      "debugDecisionLabel": "Decisión visible",
+      "debugDecisionSummary": "Resumen final",
+      "debugDecisionAcademyOffer": "Oferta de cantera",
+      "debugDecisionTransfer": "Mercado de pases",
+      "debugDecisionLoanOffer": "Oferta de préstamo",
+      "debugDecisionPostLoanRetained": "Regreso al club con lugar",
+      "debugDecisionPostLoanNotRetained": "Regreso al club sin lugar",
+      "debugDecisionContractNonRenewal": "Fin de ciclo",
+      "debugDecisionCareerEvent": "Evento de carrera",
+      "talentLabel": "Talento",
+      "talentUnknown": "En evaluación",
+      "talentTiers": {
+        "prospect": "Promesa",
+        "talent": "Talento real",
+        "star": "Crack",
+        "phenomenon": "Fenómeno",
+        "generational": "Generacional"
+      },
+      "trophyWonEyebrow": "Título conseguido",
+      "awardWonEyebrow": "Premio conseguido",
+      "celebrationAt": "a los {age} años",
+      "tapToContinue": "Tocá para continuar",
+      "traitLabel": "Perfil",
+      "traits": {
+        "determined": "Determinado",
+        "professional": "Profesional",
+        "leader": "Líder",
+        "showman": "Showman",
+        "hothead": "Cabeza caliente",
+        "fragile": "Frágil"
+      },
+      "traitDescriptions": {
+        "determined": "Convierte más las decisiones arriesgadas y entrena mejor.",
+        "professional": "Se cuida: envejece mucho más lento.",
+        "leader": "Tira del equipo y se gana a la hinchada fácil.",
+        "showman": "La hinchada lo ama, aunque el partido no salga.",
+        "hothead": "Explosivo: arriesga más, pero se desgasta antes.",
+        "fragile": "Siente la presión en los momentos decisivos."
+      },
+      "fanSupportLabel": "Hinchada",
+      "fanBands": {
+        "hostile": "Hostil",
+        "cold": "Desconfiada",
+        "warm": "De tu lado",
+        "loved": "Enamorada",
+        "adored": "Idolatría"
+      },
+      "rivalLabel": "Rival de generación",
+      "headlinesTitle": "Titulares",
+      "headlinesEmpty": "Tu historia todavía está por escribirse.",
+      "timelineTitle": "Línea de tiempo",
+      "standingLabel": "Estatus en el club",
+      "standings": {
+        "passing": "De paso",
+        "regular": "Titular",
+        "idol": "Ídolo",
+        "legend": "Leyenda"
+      },
+      "firstCallUpEyebrow": "Primera convocatoria",
+      "seasonsAt": "{count} temporadas",
+      "seasonAt": "1 temporada",
+      "traitorLabel": "Traidor",
+      "traitorHint": "Te fuiste directo a un rival de la misma liga — la hinchada nunca lo olvidó.",
+      "roleImproveHint": "Mejora tu lugar en el equipo",
+      "roleWorsenHint": "Empeora tu lugar en el equipo",
+      "performanceLabel": "Rendimiento",
+      "noEffectLabel": "Sin efecto",
+      "outcomeGood": "Salió bien",
+      "outcomeBad": "Salió mal",
+      "biographyTitle": "La carrera en palabras",
+      "recordsTitle": "Récords alcanzados",
+      "recordBeaten": "superó los {previous} de {holder}",
+      "recordEqualled": "igualó los {previous} de {holder}",
+      "downloadCard": "Descargar imagen",
+      "shareCard": "Compartir",
+      "shareWorking": "Generando..."
+    },
+    "careerEvents": {
+      "training_extra": {
+        "title": "Batería de pruebas físicas",
+        "description": "El departamento de rendimiento quiere llevarte al límite en una semana de pruebas. ¿Aceptás la intensidad?",
+        "options": {
+          "accept": {
+            "label": "Encarar las pruebas",
+            "positiveOutcome": {
+              "probability": 70,
+              "description": "Tus números impresionan al departamento"
+            },
+            "negativeOutcome": {
+              "probability": 30,
+              "description": "El cuerpo cobra la factura del exceso"
+            }
+          },
+          "reject": {
+            "label": "Priorizar la recuperación",
+            "outcome": "Sin cambios"
+          }
+        },
+        "variants": {
+          "preseason_camp": {
+            "title": "Concentración de pretemporada",
+            "description": "El club aísla al plantel en un centro de entrenamiento en la montaña por tres semanas.",
+            "options": {
+              "accept": {
+                "label": "Encarar la concentración",
+                "positiveOutcome": {
+                  "probability": 65,
+                  "description": "Volvés transformado físicamente"
+                },
+                "negativeOutcome": {
+                  "probability": 35,
+                  "description": "El ritmo pesado te deja lesionado"
+                }
+              },
+              "reject": {
+                "label": "Seguir con la preparación de siempre",
+                "outcome": "Sin cambios"
+              }
+            }
+          }
+        }
+      },
+      "personal_coach": {
+        "title": "Mentor técnico",
+        "description": "Un ex jugador reconocido se ofrece a darte clases particulares fuera de los horarios del club.",
+        "options": {
+          "accept": {
+            "label": "Aceptar las clases",
+            "positiveOutcome": {
+              "probability": 50,
+              "description": "Las enseñanzas elevan tu nivel"
+            },
+            "negativeOutcome": {
+              "probability": 50,
+              "description": "No hay química y nada fluye"
+            }
+          },
+          "reject": {
+            "label": "Rechazar amablemente",
+            "outcome": "Sin cambios"
+          }
+        },
+        "variants": {
+          "nutrition_plan": {
+            "title": "Reformulación alimentaria",
+            "description": "Una nutricionista deportiva quiere rehacer tu dieta desde cero, con suplementación fuerte.",
+            "options": {
+              "accept": {
+                "label": "Aceptar la reformulación",
+                "positiveOutcome": {
+                  "probability": 60,
+                  "description": "Tu cuerpo responde muy bien al cambio"
+                },
+                "negativeOutcome": {
+                  "probability": 40,
+                  "description": "La nueva dieta afecta tu rendimiento"
+                }
+              },
+              "reject": {
+                "label": "Mantener tu alimentación",
+                "outcome": "Sin cambios"
+              }
+            }
+          }
+        }
+      },
+      "mysterious_substance": {
+        "title": "Cámara de recuperación experimental",
+        "description": "Un kinesiólogo ofrece una sesión en una cámara todavía no homologada por la confederación.",
+        "options": {
+          "consume": {
+            "label": "Probar el aparato",
+            "positiveOutcome": {
+              "probability": 75,
+              "description": "La recuperación es sorprendente"
+            },
+            "negativeOutcome": {
+              "probability": 25,
+              "description": "Un examen detecta una irregularidad y te suspenden"
+            }
+          },
+          "reject": {
+            "label": "Rechazar",
+            "outcome": "Sin cambios"
+          }
+        }
+      },
+      "season_load": {
+        "title": "Final de temporada exigente",
+        "description": "Después de una maratón de partidos, el cuerpo médico sugiere subir o bajar tu carga.",
+        "options": {
+          "accept": {
+            "label": "Mantener la intensidad",
+            "positiveOutcome": {
+              "probability": 70,
+              "description": "Aguantás el ritmo y seguís de titular"
+            },
+            "negativeOutcome": {
+              "probability": 30,
+              "description": "El cuerpo no aguanta y te lesionás"
+            }
+          },
+          "stay_calm": {
+            "label": "Pedir una pausa",
+            "outcome": "Tus minutos bajan"
+          }
+        },
+        "variants": {
+          "double_session": {
+            "title": "Doble turno de entrenamiento",
+            "description": "El nuevo preparador físico quiere instalar dos entrenamientos diarios el resto de la temporada.",
+            "options": {
+              "accept": {
+                "label": "Aceptar el ritmo doble",
+                "positiveOutcome": {
+                  "probability": 65,
+                  "description": "El ritmo fuerte te deja todavía más fuerte"
+                },
+                "negativeOutcome": {
+                  "probability": 35,
+                  "description": "El exceso de carga cobra su precio"
+                }
+              },
+              "stay_calm": {
+                "label": "Negociar una carga menor",
+                "outcome": "Menos minutos"
+              }
+            }
+          }
+        }
+      },
+      "position_change": {
+        "title": "Nuevo esquema táctico",
+        "description": "El técnico quiere probar un esquema distinto, y eso significa ponerte en una función nueva en la cancha.",
+        "options": {
+          "accept": {
+            "label": "Aceptar el cambio",
+            "positiveOutcome": {
+              "description": "Te asegurás la titularidad en la nueva función"
+            },
+            "negativeOutcome": {
+              "description": "La adaptación te cuesta un poco de ritmo"
+            }
+          },
+          "reject": {
+            "label": "Insistir en tu posición",
+            "negativeOutcome": {
+              "description": "Perdés lugar por chocar de frente con el técnico"
+            }
+          }
+        }
+      },
+      "position_competition": {
+        "title": "Refuerzo en tu misma posición",
+        "description": "La dirigencia contrata a un jugador bien cotizado por la prensa para tu posición. El puesto está en juego.",
+        "options": {
+          "compete": {
+            "label": "Pelear la titularidad",
+            "positiveOutcome": {
+              "probability": 50,
+              "description": "Ganás el duelo directo"
+            },
+            "negativeOutcome": {
+              "probability": 50,
+              "description": "El refuerzo se queda con el puesto"
+            }
+          }
+        }
+      },
+      "club_priority": {
+        "title": "Decisión de la dirigencia",
+        "description": "La planificación anual pide prioridad: ¿enfocarse en el título local o en el torneo continental?",
+        "options": {
+          "prioritize_league": {
+            "label": "Enfocarse en la liga",
+            "positiveOutcome": {
+              "description": "Las chances de título local se duplican"
+            },
+            "negativeOutcome": {
+              "description": "Las chances en el torneo continental caen a la mitad"
+            }
+          },
+          "prioritize_continental": {
+            "label": "Enfocarse en el continental",
+            "positiveOutcome": {
+              "description": "Las chances en el torneo continental se duplican"
+            },
+            "negativeOutcome": {
+              "description": "Las chances de título local caen a la mitad"
+            }
+          }
+        }
+      },
+      "rival_offer": {
+        "title": "Sondeo del archirrival",
+        "description": "El {rival} arma un proyecto ambicioso y hace un sondeo directo por vos.",
+        "options": {
+          "accept": {
+            "label": "Aceptar la propuesta",
+            "positiveOutcome": {
+              "description": "Llegás con repercusión y ganás más chances de título"
+            },
+            "negativeOutcome": {
+              "description": "La adaptación al nuevo plantel te quita minutos"
+            }
+          },
+          "reject": {
+            "label": "Quedarte",
+            "outcome": "Seguís de titular sin sobresaltos"
+          }
+        }
+      },
+      "club_crisis": {
+        "title": "Turbulencia institucional",
+        "description": "Una crisis interna agita al club, y alguien de afuera te llama para saber si te irías.",
+        "options": {
+          "stay_and_fight": {
+            "label": "Quedarte a enfrentar la turbulencia",
+            "outcome": "El caos interno prácticamente anula tus chances de título esta temporada"
+          }
+        }
+      },
+      "return_home": {
+        "title": "El llamado de la familia",
+        "description": "Después de un tiempo afuera, tu familia te pide que vuelvas a tu país de origen.",
+        "options": {
+          "stay_abroad": {
+            "label": "Quedarte",
+            "negativeOutcome": {
+              "description": "La distancia pesa y el rendimiento baja por un tiempo"
+            }
+          },
+          "return_home": {
+            "label": "Volver a"
+          }
+        }
+      },
+      "giant_tattoo": {
+        "title": "Look nuevo antes de la temporada",
+        "description": "Un estilista famoso propone un corte de pelo extremadamente arriesgado para tus primeros partidos.",
+        "options": {
+          "accept": {
+            "label": "Aceptar el look",
+            "positiveOutcome": {
+              "probability": 70,
+              "description": "Se vuelve tu sello y jugás con otra confianza"
+            },
+            "negativeOutcome": {
+              "probability": 30,
+              "description": "Una reacción alérgica te deja afuera unos días"
+            }
+          },
+          "reject": {
+            "label": "Mantener el look de siempre",
+            "outcome": "No cambia nada"
+          }
+        }
+      },
+      "tax_trouble": {
+        "title": "Lío con el permiso de trabajo",
+        "description": "Un cambio en la ley local complica tu situación migratoria y amenaza tu estadía en el país.",
+        "options": {
+          "stay_and_fight": {
+            "label": "Quedarte a resolverlo",
+            "negativeOutcome": {
+              "description": "La burocracia te consume la cabeza y el rendimiento baja"
+            }
+          },
+          "search_exit": {
+            "label": "Irte a"
+          }
+        }
+      },
+      "foreign_grandfather": {
+        "title": "Raíces de otro país",
+        "description": "Una investigación genealógica revela que tenés derecho a defender otra selección nacional.",
+        "options": {
+          "switch_national_team": {
+            "label": "Cambiar de selección",
+            "outcome": "Pasás a representar tu nueva selección"
+          },
+          "keep_national_team": {
+            "label": "Seguir con la selección actual",
+            "outcome": "Seguís representando a tu selección de siempre"
+          }
+        }
+      },
+      "finish_high_school": {
+        "title": "Curso de licencia de entrenador",
+        "description": "Mientras todavía jugás, tenés la chance de empezar a formarte como entrenador.",
+        "options": {
+          "accept": {
+            "label": "Empezar el curso",
+            "positiveOutcome": {
+              "description": "La visión táctica aprendida te hace más maduro en la cancha"
+            },
+            "negativeOutcome": {
+              "description": "El tiempo dividido te quita algo de foco en el equipo"
+            }
+          },
+          "reject": {
+            "label": "Enfocarte solo en jugar",
+            "outcome": "Sin cambios"
+          }
+        }
+      },
+      "triumphant_return": {
+        "title": "La invitación de tu primer club",
+        "description": "El club donde empezó todo quiere traerte de vuelta para cerrar tu carrera en casa.",
+        "options": {}
+      },
+      "club_national_team_conflict": {
+        "title": "Cita con la selección",
+        "description": "Tu club no quiere liberarte para {tournament}, pero la federación insiste en la convocatoria.",
+        "options": {
+          "go_anyway": {
+            "label": "Viajar de todos modos",
+            "positiveOutcome": {
+              "description": "Jugás {tournament}"
+            },
+            "negativeOutcome": {
+              "description": "Volvés al club marcado como suplente"
+            }
+          },
+          "comply": {
+            "label": "Obedecer al club",
+            "positiveOutcome": {
+              "description": "Tu lugar de titular no se ve afectado"
+            },
+            "negativeOutcome": {
+              "description": "Te quedás afuera de {tournament}"
+            }
+          }
+        }
+      },
+      "injury_at_peak": {
+        "title": "Dolor muscular en la recta final",
+        "description": "Una lesión aparece justo en la recta final de la pelea por {championship}. ¿Arriesgás o cuidás el cuerpo?",
+        "options": {
+          "play_injured": {
+            "label": "Jugar a pesar del dolor",
+            "positiveOutcome": {
+              "description": "Tus chances de levantar {championship} se disparan"
+            },
+            "negativeOutcome": {
+              "description": "Empeorás la lesión"
+            }
+          },
+          "recover": {
+            "label": "Priorizar la recuperación",
+            "negativeOutcome": {
+              "description": "Tus chances de levantar {championship} caen en picada"
+            },
+            "neutralOutcome": {
+              "description": "La lesión se trata con tranquilidad"
+            }
+          }
+        }
+      },
+      "injury": {
+        "title": "{injury}",
+        "description": "La recuperación te va a dejar fuera de ritmo durante este período.",
+        "options": {
+          "continue": {
+            "label": "Comenzar la recuperación",
+            "negativeOutcome": {
+              "description": "-{ovr} OVR"
+            }
+          }
+        }
+      },
+      "decisive_penalty": {
+        "title": "La ejecución que lo define todo",
+        "description": "Todo se resume a esta ejecución de penal para decidir {championship}.",
+        "options": {
+          "left": {
+            "label": "Picadita por arriba del arquero"
+          },
+          "right": {
+            "label": "Remate fuerte al ángulo"
+          }
+        },
+        "resultLabels": {
+          "goal": "¡Gol!",
+          "save": "¡Atajada!"
+        }
+      },
+      "new_manager": {
+        "title": "Nuevo entrenador",
+        "description": "El club contrató un nuevo técnico, y todavía no sabe cuánto valés.",
+        "options": {
+          "impress_in_training": {
+            "label": "Impresionar en los entrenamientos",
+            "positiveOutcome": {
+              "probability": 55,
+              "description": "Le gusta lo que ve, subís en la consideración"
+            },
+            "negativeOutcome": {
+              "probability": 45,
+              "description": "Todavía no te ve como titular"
+            }
+          },
+          "stay_patient": {
+            "label": "Tener paciencia",
+            "outcome": "Esperás que se asiente el polvo, sin arriesgar nada"
+          }
+        }
+      },
+      "derby_spotlight": {
+        "title": "Clásico decisivo",
+        "description": "Se acerca el clásico más importante de la temporada, y todos van a estar mirándote.",
+        "options": {
+          "embrace_the_pressure": {
+            "label": "Abrazar la presión",
+            "positiveOutcome": {
+              "probability": 55,
+              "description": "Sos el héroe del clásico, la moral por las nubes"
+            },
+            "negativeOutcome": {
+              "probability": 45,
+              "description": "Te bloqueás, la chance se esfuma en el susto"
+            }
+          },
+          "focus_on_process": {
+            "label": "Mantener la cabeza fría",
+            "outcome": "Jugás como siempre, sin dejarte llevar por el clima"
+          }
+        }
+      },
+      "testimonial_match": {
+        "title": "Partido homenaje",
+        "description": "El club quiere organizar un partido homenaje por tu historia ahí.",
+        "options": {
+          "hold_the_testimonial": {
+            "label": "Aceptar el homenaje",
+            "outcome": "La hinchada te aplaude de pie, y eso te recarga"
+          },
+          "keep_it_low_key": {
+            "label": "Preferir discreción",
+            "outcome": "Agradecés, pero preferís dejarlo para más adelante"
+          }
+        }
+      },
+      "agent_ultimatum": {
+        "title": "Ultimátum del representante",
+        "description": "Tu representante quiere forzar una salida si el club no te valora más.",
+        "options": {
+          "reassure_the_club": {
+            "label": "Calmar las cosas y quedarte",
+            "negativeOutcome": {
+              "description": "La novela deja el ambiente raro por un tiempo"
+            }
+          }
+        }
+      },
+      "wonderkid_signing": {
+        "title": "Nueva joya en el plantel",
+        "description": "El club fichó una promesa juvenil justo en tu posición.",
+        "options": {
+          "rise_to_the_challenge": {
+            "label": "Aceptar el desafío",
+            "positiveOutcome": {
+              "probability": 50,
+              "description": "Subís de nivel y dejás en claro quién manda"
+            },
+            "negativeOutcome": {
+              "probability": 50,
+              "description": "El chico te roba minutos que eran tuyos"
+            }
+          },
+          "welcome_and_mentor": {
+            "label": "Recibirlo y guiarlo",
+            "outcome": "El vestuario se une más gracias a tu actitud"
+          }
+        }
+      },
+      "boot_deal": {
+        "title": "Contrato de botines",
+        "description": "Una marca deportiva te ofrece un contrato de patrocinio exclusivo.",
+        "options": {
+          "sign_exclusive": {
+            "label": "Firmar el contrato",
+            "positiveOutcome": {
+              "probability": 65,
+              "description": "Te sentís genial con los botines nuevos"
+            },
+            "negativeOutcome": {
+              "probability": 35,
+              "description": "Te cuesta acostumbrarte al modelo"
+            }
+          },
+          "stick_with_current_boots": {
+            "label": "Quedarte con los de siempre",
+            "outcome": "Preferís no tocar lo que viene funcionando"
+          }
+        }
+      },
+      "hometown_parade": {
+        "title": "Recibimiento de héroe",
+        "description": "Después del título con la selección, tu ciudad natal organiza un recibimiento.",
+        "options": {
+          "enjoy_the_moment": {
+            "label": "Disfrutar el momento",
+            "outcome": "Absorbés esa confianza para el resto de la carrera"
+          },
+          "stay_grounded": {
+            "label": "Mantener los pies en la tierra",
+            "outcome": "Volvés directo a entrenar, y el club nota la actitud"
+          }
+        }
+      },
+      "podcast_interview": {
+        "title": "Entrevista en el podcast",
+        "description": "Un podcast grande te invita, y el temario va a pasar por asuntos delicados del club.",
+        "options": {
+          "speak_your_mind": {
+            "label": "Decir lo que pensás",
+            "positiveOutcome": {
+              "probability": 50,
+              "description": "La sinceridad cae bien, la hinchada te abraza"
+            },
+            "negativeOutcome": {
+              "probability": 50,
+              "description": "Se arma polémica y el club te margina"
+            }
+          },
+          "play_it_safe": {
+            "label": "Dar respuestas seguras",
+            "outcome": "Entrevista tibia, nadie comenta"
+          }
+        }
+      },
+      "agent_change": {
+        "title": "Cambiar de representante",
+        "description": "Un representante más poderoso se ofrece para manejar tu carrera.",
+        "options": {
+          "switch_agent": {
+            "label": "Cambiar de representante",
+            "positiveOutcome": {
+              "probability": 60,
+              "description": "Te abre mejores puertas más adelante"
+            },
+            "negativeOutcome": {
+              "probability": 40,
+              "description": "La transición te complica la temporada"
+            }
+          },
+          "keep_agent": {
+            "label": "Quedarte con el actual",
+            "outcome": "Mantenés al que te trajo hasta acá"
+          }
+        }
+      },
+      "packed_home_stadium": {
+        "title": "Estadio lleno",
+        "description": "Se agotaron las entradas y la hinchada va a empujar al equipo todo el partido.",
+        "options": {
+          "feed_off_the_crowd": {
+            "label": "Alimentarte de la hinchada",
+            "positiveOutcome": {
+              "probability": 60,
+              "description": "Jugás inspirado y la hinchada enloquece"
+            },
+            "negativeOutcome": {
+              "probability": 40,
+              "description": "La presión pesa y desaparecés en la cancha"
+            }
+          },
+          "block_out_the_noise": {
+            "label": "Aislar el ruido",
+            "outcome": "Jugás concentrado, sin altibajos"
+          }
+        }
+      },
+      "controversial_red_card": {
+        "title": "Expulsión polémica",
+        "description": "Te expulsaron en una jugada dudosa, y la prensa no habla de otra cosa.",
+        "options": {
+          "accept_the_ban": {
+            "label": "Aceptar la sanción",
+            "outcome": "Cumplís la fecha y perdés lugar"
+          },
+          "appeal_publicly": {
+            "label": "Apelar públicamente",
+            "positiveOutcome": {
+              "probability": 45,
+              "description": "Anulan la expulsión, la hinchada te aplaude"
+            },
+            "negativeOutcome": {
+              "probability": 55,
+              "description": "Te aumentan la sanción y quedás en el banco"
+            }
+          }
+        }
+      },
+      "crowd_turns": {
+        "title": "La hinchada se dio vuelta",
+        "description": "Los silbidos bajan de la tribuna cada vez que tocás la pelota.",
+        "options": {
+          "win_them_back": {
+            "label": "Reconquistar a la hinchada",
+            "positiveOutcome": {
+              "probability": 55,
+              "description": "Te entregás y los das vuelta"
+            },
+            "negativeOutcome": {
+              "probability": 45,
+              "description": "No pega, y la relación empeora"
+            }
+          },
+          "ignore_the_boos": {
+            "label": "Ignorar los silbidos",
+            "outcome": "Seguís tu camino, sin cambiar nada"
+          }
+        }
+      },
+      "rival_press": {
+        "title": "Comparaciones de la prensa",
+        "description": "Los periodistas no dejan de compararte con {rivalName}.",
+        "options": {
+          "provoke": {
+            "label": "Devolver la provocación",
+            "positiveOutcome": {
+              "probability": 50,
+              "description": "La pulla se vuelve titular y la hinchada lo adora"
+            },
+            "negativeOutcome": {
+              "probability": 50,
+              "description": "Sale mal y se vuelve munición en tu contra"
+            }
+          },
+          "praise": {
+            "label": "Elogiar al rival",
+            "outcome": "La hinchada respeta tu clase"
+          }
+        }
+      },
+      "rival_milestone": {
+        "title": "Tu rival es noticia",
+        "description": "{rivalName} acaba de lograr algo grande, y todos quieren saber tu reacción.",
+        "options": {
+          "use_as_fuel": {
+            "label": "Usarlo como motivación",
+            "positiveOutcome": {
+              "probability": 55,
+              "description": "Se convierte en combustible puro para tu entrenamiento"
+            },
+            "negativeOutcome": {
+              "probability": 45,
+              "description": "La comparación pesa más de lo que ayuda"
+            }
+          },
+          "shrug_it_off": {
+            "label": "No darle importancia",
+            "outcome": "Seguís tu propio camino, sin afectarte"
+          }
+        }
+      },
+      "rival_duel": {
+        "title": "Duelo directo",
+        "description": "Vos y {rivalName} pelean por el mismo lugar en los titulares esta temporada.",
+        "options": {
+          "take_the_weight": {
+            "label": "Asumir la responsabilidad",
+            "positiveOutcome": {
+              "probability": 55,
+              "description": "Aparecés en los momentos decisivos"
+            },
+            "negativeOutcome": {
+              "probability": 45,
+              "description": "La presión de decidir todo solo pesa"
+            }
+          },
+          "let_the_team_carry_it": {
+            "label": "Dejar que el equipo hable más fuerte",
+            "outcome": "Menos foco en vos, más chances para el equipo"
+          }
+        }
+      },
+      "captain_armband": {
+        "title": "La cinta de capitán",
+        "description": "El plantel vota y el técnico quiere entregarte la cinta de capitán a partir de ahora.",
+        "options": {
+          "wear_it": {
+            "label": "Aceptar la cinta",
+            "positiveOutcome": {
+              "probability": 55,
+              "description": "Llevás la responsabilidad como un guante"
+            },
+            "negativeOutcome": {
+              "probability": 45,
+              "description": "La presión extra pesa más de lo que ayuda"
+            }
+          },
+          "pass_it": {
+            "label": "Rechazar, por ahora",
+            "outcome": "Preferís enfocarte solo en tu propio juego"
+          }
+        }
+      },
+      "iconic_number": {
+        "title": "La camiseta símbolo del club",
+        "description": "La dirigencia te ofrece el número que carga el peso de la historia del club.",
+        "options": {
+          "claim_it": {
+            "label": "Asumir el número",
+            "positiveOutcome": {
+              "probability": 50,
+              "description": "Honrás la camiseta y la hinchada te idolatra todavía más"
+            },
+            "negativeOutcome": {
+              "probability": 50,
+              "description": "Muchos creen que todavía no te lo ganaste"
+            }
+          },
+          "let_someone_else": {
+            "label": "Dejárselo a otro jugador",
+            "outcome": "Preferís no cargar ese peso por ahora"
+          }
+        }
+      },
+      "locker_room_clash": {
+        "title": "Roce en el vestuario",
+        "description": "Un compañero más joven cuestiona tu liderazgo frente al grupo, y todos miran cómo reaccionás.",
+        "options": {
+          "stand_your_ground": {
+            "label": "Imponer respeto",
+            "positiveOutcome": {
+              "probability": 50,
+              "description": "El grupo reconoce tu autoridad"
+            },
+            "negativeOutcome": {
+              "probability": 50,
+              "description": "La respuesta sale mal y genera más roce"
+            }
+          },
+          "keep_the_peace": {
+            "label": "Mantener la paz del grupo",
+            "outcome": "Elegís no alimentar la interna"
+          }
+        }
+      },
+      "shirt_upgrade": {
+        "title": "Ascenso en la lista de inscritos",
+        "description": "El utilero te llama antes del entrenamiento: el club liberó camisetas de peso y quiere saber si querés quedarte con una.",
+        "options": {
+          "take_number": {
+            "label": "Quedarte con la {number}",
+            "outcome": "Pasás a saltar a la cancha con la {number} en la espalda"
+          },
+          "keep_current": {
+            "label": "Seguir con la tuya",
+            "outcome": "Preferís no tocar lo que ya es tuyo"
+          }
+        }
+      },
+      "shirt_legend_tribute": {
+        "title": "Homenaje de la dirigencia",
+        "description": "Después de todo lo que construiste acá, la dirigencia abre la lista entera y te deja elegir el número que quieras.",
+        "options": {
+          "take_number": {
+            "label": "Elegir la {number}",
+            "outcome": "La {number} pasa a ser tuya por decisión del club"
+          },
+          "keep_current": {
+            "label": "Quedarte con la de siempre",
+            "outcome": "Agradecés, pero tu número ya lo dice todo"
+          }
+        }
+      },
+      "severe_injury": {
+        "title": "Lesión grave",
+        "description": "La rodilla se trabó en una jugada cualquiera y el silencio del estadio lo dijo todo. El cuerpo médico habla de una temporada entera de recuperación — y nadie garantiza que vuelvas igual.",
+        "options": {
+          "fight_back": {
+            "label": "Encarar la recuperación",
+            "outcome": "Vas a volver a jugar, pero el techo de tu carrera nunca más será el mismo"
+          }
+        }
+      }
+    },
+    "positions": {
+      "LW": "EI",
+      "ST": "DC",
+      "RW": "ED",
+      "LM": "MI",
+      "CAM": "MCO",
+      "RM": "MD",
+      "LB": "LI",
+      "CM": "MC",
+      "RB": "LD",
+      "CDM": "MCD",
+      "CB": "DFC",
+      "GK": "POR"
+    },
+    "trophies": {
+      "league": "Liga",
+      "cup": "Copa",
+      "continental_primary": "Continental principal",
+      "continental_secondary": "Continental secundaria",
+      "club_world_cup": "Mundial de Clubes",
+      "national_continental": "Selección continental",
+      "world_cup": "Mundial",
+      "national_continental_by_confederation": {
+        "UEFA": "Eurocopa",
+        "CONMEBOL": "Copa América",
+        "CONCACAF": "Copa Oro",
+        "CAF": "Copa Africana de Naciones",
+        "AFC": "Copa Asiática",
+        "OFC": "Copa de Naciones de la OFC"
+      }
+    },
+    "awards": {
+      "ballon_dor": "Balón de Oro",
+      "golden_boot": "Bota de Oro",
+      "golden_glove": "Guante de Oro"
+    },
+    "headlines": {
+      "trophy": {
+        "league": "¡{team} campeón! Levantás la copa de la liga.",
+        "cup": "La copa nacional es del {team}, con vos en la cancha.",
+        "continental_primary": "Gloria continental: {team} conquista el continente.",
+        "continental_secondary": "{team} se lleva el título continental y sueña más alto.",
+        "club_world_cup": "{team} es campeón del mundo — y estabas ahí.",
+        "national_continental": "¡Tu selección es campeona continental!",
+        "world_cup": "CAMPEÓN DEL MUNDO. Tu selección gana la Copa."
+      },
+      "award": {
+        "ballon_dor": "Balón de Oro: te eligen el mejor del planeta.",
+        "golden_boot": "Bota de Oro: nadie hizo más goles que vos.",
+        "golden_glove": "Guante de Oro: el arco más seguro de la temporada es el tuyo."
+      },
+      "firstCallUp": "¡Convocado! Vestís la camiseta de la selección por primera vez.",
+      "relegated": "Descenso amargo: {team} se va a la B.",
+      "promoted": "¡Ascenso conseguido! {team} sube de categoría.",
+      "breakoutSeason": "Temporada explosiva en {team}: llegás a {ovr} de overall.",
+      "joinedClub": "Cerrado: sos el nuevo refuerzo del {team}.",
+      "joinedOnLoan": "Cedido al {team} para sumar minutos.",
+      "relegatedBigClub": "La peor generación de la historia de {team} — desciende a la B.",
+      "shirtAssigned": "Inscrito en el {team}: la {number} es tuya en el debut.",
+      "shirtUpgraded": "Camiseta nueva en el {team}: pasás a vestir la {number}.",
+      "severeInjury": "Noticia dura: {injury} te deja fuera por una temporada."
+    },
+    "positionsFull": {
+      "LW": "extremo izquierdo",
+      "ST": "centrodelantero",
+      "RW": "extremo derecho",
+      "LM": "volante por izquierda",
+      "CAM": "enganche",
+      "RM": "volante por derecha",
+      "LB": "lateral izquierdo",
+      "CM": "mediocampista",
+      "RB": "lateral derecho",
+      "CDM": "mediocentro defensivo",
+      "CB": "defensor central",
+      "GK": "arquero"
+    },
+    "challenge": {
+      "title": "Desafío del día",
+      "subtitle": "La misma carrera para todos. Lo que cambia son tus decisiones.",
+      "play": "Jugar el desafío",
+      "back": "Volver",
+      "objective": "Objetivo",
+      "dealtHand": "La mano de hoy",
+      "hardNote": "Todo desafío es en modo Difícil.",
+      "ranking": "Ranking local",
+      "empty": "Todavía no hay intentos. Jugá el desafío de hoy.",
+      "score": "Puntos",
+      "target": "Objetivo",
+      "yourBest": "Tu récord",
+      "played": "Desafíos jugados",
+      "average": "Promedio",
+      "cleanRuns": "Sin romper la regla",
+      "ranked": "Vale",
+      "friendly": "Amistoso",
+      "alreadyPlayed": "Ya hiciste el intento que vale de hoy. Jugar de nuevo cuenta como amistoso.",
+      "result": "Resultado del desafío",
+      "ruleBroken": "Regla rota — puntuación limitada",
+      "clear": "Borrar ranking",
+      "units": {
+        "goals": "goles",
+        "assists": "asistencias",
+        "trophies": "títulos",
+        "overall": "de overall",
+        "caps": "partidos con la selección",
+        "seasons": "temporadas",
+        "clubs": "países",
+        "apps": "partidos",
+        "cleanSheets": "partidos sin recibir goles",
+        "points": "puntos"
+      },
+      "missions": {
+        "one_club_legend": {
+          "title": "Un solo club",
+          "brief": "Construí todo donde empezaste. Ninguna transferencia definitiva."
+        },
+        "goal_machine": {
+          "title": "Máquina de goles",
+          "brief": "Acumulá la mayor cantidad de goles de toda la carrera."
+        },
+        "playmaker": {
+          "title": "El asistidor",
+          "brief": "Servile al equipo: asistencias por encima de todo."
+        },
+        "trophy_hoarder": {
+          "title": "Coleccionista de copas",
+          "brief": "Levantá todos los títulos que puedas."
+        },
+        "collector": {
+          "title": "Vitrina variada",
+          "brief": "Ganá tipos distintos de trofeo, no el mismo varias veces."
+        },
+        "prodigy": {
+          "title": "Prodigio",
+          "brief": "Llegá lo más alto posible antes de cumplir 22 años."
+        },
+        "late_bloomer": {
+          "title": "Maduración tardía",
+          "brief": "Seguí subiendo cuando la mayoría ya se detuvo."
+        },
+        "underdog_idol": {
+          "title": "Ídolo improbable",
+          "brief": "Volvete referencia en un club chico — cuanto menor el escudo, más vale."
+        },
+        "globetrotter": {
+          "title": "Trotamundos",
+          "brief": "Jugá en todos los países que puedas, ganando en el camino."
+        },
+        "national_hero": {
+          "title": "Héroe de la selección",
+          "brief": "Construí una carrera internacional de peso."
+        },
+        "iron_man": {
+          "title": "Hombre de hierro",
+          "brief": "Entrá a la cancha la mayor cantidad de veces posible."
+        },
+        "no_loans": {
+          "title": "Sin atajos",
+          "brief": "Llegá a lo más alto sin aceptar nunca un préstamo."
+        },
+        "continental_king": {
+          "title": "Rey del continente",
+          "brief": "Dominá las noches continentales."
+        },
+        "resilient": {
+          "title": "Piel dura",
+          "brief": "Llegá lejos — y vale más todavía si el camino fue accidentado."
+        },
+        "beloved": {
+          "title": "Amado por la hinchada",
+          "brief": "Terminá la carrera con la tribuna de tu lado."
+        },
+        "marquee_number": {
+          "title": "Camiseta pesada",
+          "brief": "Pasá la mayor cantidad de temporadas con un número de peso."
+        },
+        "journeyman": {
+          "title": "Mercenario",
+          "brief": "Rodá por muchos clubes y ganá en todos los que puedas."
+        },
+        "homecoming": {
+          "title": "Vuelta a casa",
+          "brief": "Construí historia en el club que te formó — y volvé para cerrar ahí."
+        },
+        "sharpshooter": {
+          "title": "Temporada mágica",
+          "brief": "Hacé la mejor temporada goleadora que puedas."
+        },
+        "youth_to_star": {
+          "title": "De cero a la cima",
+          "brief": "Evolucioná lo máximo posible desde los 50 de overall."
+        },
+        "unbreakable": {
+          "title": "Irrompible",
+          "brief": "Llegá alto sin lesión grave y sin descender nunca."
+        },
+        "individual_glory": {
+          "title": "Gloria individual",
+          "brief": "Perseguí los premios: goleador y Balón de Oro."
+        },
+        "double_legend": {
+          "title": "Leyenda doble",
+          "brief": "Volvete ídolo o leyenda en más de un club."
+        },
+        "loyal_servant": {
+          "title": "Servidor fiel",
+          "brief": "Hacé el paso más largo posible por un solo club."
+        },
+        "clean_sheet_wall": {
+          "title": "Muralla",
+          "brief": "Acumulá la mayor cantidad de partidos sin recibir goles."
+        },
+        "riser": {
+          "title": "De la B a la élite",
+          "brief": "Ascendé de categoría y demostrá que no fue suerte."
+        },
+        "domestic_dominance": {
+          "title": "Dueño del país",
+          "brief": "Llená la vitrina con títulos nacionales."
+        },
+        "world_class": {
+          "title": "Nivel mundial",
+          "brief": "Llegá al mayor overall que puedas."
+        },
+        "veteran": {
+          "title": "Veterano",
+          "brief": "Seguí siendo bueno a una edad en la que casi todos ya pararon."
+        },
+        "complete_career": {
+          "title": "Carrera completa",
+          "brief": "Un poco de todo: títulos, selección, estatus de leyenda y nivel."
+        }
+      }
+    }
+  },
+  "en": {
+    "intro": {
+      "eyebrow": "Copero Minigames",
+      "title": "Build your own football career",
+      "subtitle": "Choose your origin, make key decisions and let destiny unfold into a unique path of trophies, stats and defining moments.",
+      "start": "Start career",
+      "back": "Back to Games",
+      "languageLabel": "Language",
+      "previewLabel": "Simulator preview",
+      "previewTitle": "Your career starts here",
+      "previewSubtitle": "Identity, decisions, clubs and a shareable recap.",
+      "modes": {
+        "long": {
+          "title": "Intense",
+          "description": "1 decision per season for a deeply immersive experience."
+        },
+        "normal": {
+          "title": "Normal",
+          "description": "Decisions every 2 seasons for a balanced experience."
+        }
+      },
+      "difficultyTitle": "Difficulty",
+      "difficulties": {
+        "normal": {
+          "title": "Normal",
+          "description": "The balanced career: talent shows up, clubs are patient, the body holds."
+        },
+        "hard": {
+          "title": "Hard",
+          "description": "Real football: elite talent is rare, progress is slow, clubs do not wait and the body charges for it."
+        }
+      }
+    },
+    "identity": {
+      "eyebrow": "Step 1",
+      "title": "Define your identity",
+      "subtitle": "Choose your footballer’s nationality and starting position.",
+      "personalizationTitle": "Identity",
+      "personalizationSubtitle": "These details are cosmetic for now.",
+      "lastName": "Last name",
+      "lastNamePlaceholder": "Last name",
+      "preferredNumber": "Number",
+      "preferredFoot": "Preferred foot",
+      "leftFoot": "Left",
+      "rightFoot": "Right",
+      "nationalityTitle": "Nationality",
+      "nationalitySubtitle": "Search for your country.",
+      "nationalitySearchPlaceholder": "Search country",
+      "nationalityEmpty": "No countries match that search.",
+      "positionTitle": "Position",
+      "positionSubtitle": "Your place on the pitch.",
+      "continue": "Continue",
+      "confirm": "Confirm identity",
+      "back": "Back",
+      "showMoreCountries": "Show more",
+      "progressNationality": "Nationality",
+      "progressPosition": "Position"
+    },
+    "upcoming": {
+      "eyebrow": "Next step",
+      "title": "Academy offer",
+      "subtitle": "The identity is now stored in the engine. The next step will generate the first offer."
+    },
+    "career": {
+      "title": "Career",
+      "subtitle": "Make decisions and simulate seasons until retirement.",
+      "overall": "OVR",
+      "marketValue": "Value",
+      "identity": "Identity",
+      "summaryPlayerFallback": "Player",
+      "club": "Club",
+      "age": "Age",
+      "totals": "Totals",
+      "appearances": "Apps",
+      "goals": "Goals",
+      "assists": "Ast",
+      "cleanSheets": "CS",
+      "goalsConceded": "GA",
+      "trophies": "Trophies",
+      "awards": "Awards",
+      "emptyTrophyShowcase": "Empty trophy case",
+      "history": "Path",
+      "noSeasons": "Choose an academy to start recording seasons.",
+      "decision": "Decision",
+      "choose": "Choose",
+      "academyOfferTitle": "Academy offer",
+      "academyOfferDescription": "Three clubs want to add you to their youth project. Choose where your career begins.",
+      "transferTitle": "Transfer window",
+      "transferDescription": "Offers arrived after your latest career stretch. You can accept one or stay at your club.",
+      "loanOfferTitle": "Loan offer",
+      "loanOfferDescription": "Your club wants you to earn minutes elsewhere. Choose where to continue your development.",
+      "postLoanReturnTitle": "Return to your club",
+      "postLoanRetainedDescription": "You are back at your club and will be part of the plans. If you still want to leave, you have two offers on the table.",
+      "postLoanNotRetainedDescription": "You are back at your club, but you will not be part of the plans. You can leave on loan again or sign permanently for your current club.",
+      "contractNonRenewalTitle": "End of cycle",
+      "noOffersRetirementTitle": "No offers",
+      "noOffersRetirementDescription": "No team is interested in offering you a contract. It is time to end your career.",
+      "historyPeriods": "Periods",
+      "historySeasons": "Seasons",
+      "suspended": "Suspended",
+      "contractNonRenewalDescription": "Your club decided not to renew your contract. Choose the next step in your career.",
+      "joinClubLabel": "Sign for {team}",
+      "returnOptionLabel": "Return to {team}",
+      "joinLoanLabel": "Go on loan to {team}",
+      "permanentTransferLabel": "Sign permanently for {team}",
+      "joinClubDescription": "Sign for {team}",
+      "joinLoanDescription": "Join {team} on loan",
+      "permanentTransferDescription": "Move permanently to {team}",
+      "stayOptionLabel": "Stay at {team}",
+      "stayOptionDescription": "Continue at {team}",
+      "retireOptionLabel": "Retire",
+      "retireOptionDescription": "End your professional career",
+      "choosingClub": "Choosing club...",
+      "careerEventPending": "Career decision...",
+      "active": "Active",
+      "locked": "Locked",
+      "freeAgent": "Free agent",
+      "goalkeeperGoalsConcededShort": "GA",
+      "goalkeeperCleanSheetsShort": "CS",
+      "careerBest": "Career high",
+      "nationalTeam": "National team",
+      "relegation": "Relegation",
+      "summaryTitle": "Career complete",
+      "summarySubtitle": "Your player reached retirement. The shareable recap will be added in a future iteration.",
+      "careerEndedTitle": "Your career has come to an end",
+      "careerEndedDescription": "Everything you built is ready to be reviewed in your career summary.",
+      "viewSummary": "View summary",
+      "replay": "Play again",
+      "shareSummaryTitle": "Share your career",
+      "shareBrandPrompt": "Play your career at",
+      "shareNative": "Share career",
+      "sharePreparing": "Preparing image",
+      "shareSharing": "Sharing career",
+      "shareShowLastName": "Show last name",
+      "shareCopyImage": "Copy image",
+      "shareCopyingImage": "Copying image",
+      "shareSaveImage": "Save image",
+      "shareSavingImage": "Saving image",
+      "shareCopyLink": "Copy link",
+      "shareCopyingLink": "Copying link",
+      "shareNativeTitle": "My career on Copero",
+      "shareNativeText": "This was my career on Copero. What would yours look like?",
+      "shareUnavailable": "This browser does not provide the native share menu.",
+      "shareFileUnavailable": "This browser cannot share this image as a file.",
+      "shareFailed": "Could not generate the image",
+      "shareImagePreparing": "The image is still being prepared.",
+      "shareImagePreparationFailed": "Your career image could not be prepared.",
+      "shareImageCopied": "Image copied to the clipboard.",
+      "shareImageCopyUnavailable": "This browser cannot copy images to the clipboard.",
+      "shareImageCopyFailed": "The image could not be copied to the clipboard.",
+      "shareImageSaved": "Image saved.",
+      "shareImageSaveFailed": "The image could not be saved.",
+      "shareLinkCopied": "Game link copied to the clipboard.",
+      "shareLinkCopyFailed": "The link could not be copied.",
+      "summaryPlaceholderTitle": "Career summary",
+      "summaryPlaceholderDescription": "This is where your stats, clubs, trophies and defining moments will appear.",
+      "debugModeLabel": "UI Debug",
+      "debugDecisionLabel": "Visible decision",
+      "debugDecisionSummary": "Final summary",
+      "debugDecisionAcademyOffer": "Academy offer",
+      "debugDecisionTransfer": "Transfer window",
+      "debugDecisionLoanOffer": "Loan offer",
+      "debugDecisionPostLoanRetained": "Return with role",
+      "debugDecisionPostLoanNotRetained": "Return without role",
+      "debugDecisionContractNonRenewal": "End of cycle",
+      "debugDecisionCareerEvent": "Career event",
+      "talentLabel": "Talent",
+      "talentUnknown": "Being scouted",
+      "talentTiers": {
+        "prospect": "Prospect",
+        "talent": "Real talent",
+        "star": "Star",
+        "phenomenon": "Phenomenon",
+        "generational": "Generational"
+      },
+      "trophyWonEyebrow": "Trophy won",
+      "awardWonEyebrow": "Award won",
+      "celebrationAt": "at age {age}",
+      "tapToContinue": "Tap to continue",
+      "traitLabel": "Profile",
+      "traits": {
+        "determined": "Determined",
+        "professional": "Professional",
+        "leader": "Leader",
+        "showman": "Showman",
+        "hothead": "Hothead",
+        "fragile": "Fragile"
+      },
+      "traitDescriptions": {
+        "determined": "Converts risky calls more often and trains harder.",
+        "professional": "Looks after himself: ages far more slowly.",
+        "leader": "Drags the team along and wins over crowds easily.",
+        "showman": "The fans love him even when the football doesn't come off.",
+        "hothead": "Explosive: takes more risks, but burns out sooner.",
+        "fragile": "Feels the pressure when it matters most."
+      },
+      "fanSupportLabel": "Fans",
+      "fanBands": {
+        "hostile": "Hostile",
+        "cold": "Unconvinced",
+        "warm": "Onside",
+        "loved": "Adoring",
+        "adored": "Worshipped"
+      },
+      "rivalLabel": "Generational rival",
+      "headlinesTitle": "Headlines",
+      "headlinesEmpty": "Your story is still to be written.",
+      "timelineTitle": "Timeline",
+      "standingLabel": "Club standing",
+      "standings": {
+        "passing": "Passed through",
+        "regular": "Regular",
+        "idol": "Idol",
+        "legend": "Legend"
+      },
+      "firstCallUpEyebrow": "First call-up",
+      "seasonsAt": "{count} seasons",
+      "seasonAt": "1 season",
+      "traitorLabel": "Traitor",
+      "traitorHint": "You left straight for a rival in the same league — the fans never forgot.",
+      "roleImproveHint": "Improves your standing in the squad",
+      "roleWorsenHint": "Hurts your standing in the squad",
+      "performanceLabel": "Performance",
+      "noEffectLabel": "No effect",
+      "outcomeGood": "It paid off",
+      "outcomeBad": "It backfired",
+      "biographyTitle": "The career in words",
+      "recordsTitle": "Records reached",
+      "recordBeaten": "passed {holder}'s {previous}",
+      "recordEqualled": "matched {holder}'s {previous}",
+      "downloadCard": "Download image",
+      "shareCard": "Share",
+      "shareWorking": "Generating..."
+    },
+    "careerEvents": {
+      "training_extra": {
+        "title": "Fitness testing week",
+        "description": "The performance department wants to push you to the limit in a week of testing. Up for the intensity?",
+        "options": {
+          "accept": {
+            "label": "Take on the tests",
+            "positiveOutcome": {
+              "probability": 70,
+              "description": "Your numbers impress the department"
+            },
+            "negativeOutcome": {
+              "probability": 30,
+              "description": "The body pays the price for overdoing it"
+            }
+          },
+          "reject": {
+            "label": "Prioritize recovery",
+            "outcome": "No changes"
+          }
+        },
+        "variants": {
+          "preseason_camp": {
+            "title": "Preseason training camp",
+            "description": "The club isolates the squad at a mountain training centre for three weeks.",
+            "options": {
+              "accept": {
+                "label": "Take on the camp",
+                "positiveOutcome": {
+                  "probability": 65,
+                  "description": "You come back physically transformed"
+                },
+                "negativeOutcome": {
+                  "probability": 35,
+                  "description": "The heavy pace leaves you injured"
+                }
+              },
+              "reject": {
+                "label": "Stick with the usual prep",
+                "outcome": "No changes"
+              }
+            }
+          }
+        }
+      },
+      "personal_coach": {
+        "title": "Technical mentor",
+        "description": "A renowned former player offers to give you private lessons outside club hours.",
+        "options": {
+          "accept": {
+            "label": "Accept the lessons",
+            "positiveOutcome": {
+              "probability": 50,
+              "description": "The teachings raise your level"
+            },
+            "negativeOutcome": {
+              "probability": 50,
+              "description": "There's no chemistry and nothing clicks"
+            }
+          },
+          "reject": {
+            "label": "Politely decline",
+            "outcome": "No changes"
+          }
+        },
+        "variants": {
+          "nutrition_plan": {
+            "title": "Diet overhaul",
+            "description": "A sports nutritionist wants to rebuild your diet from scratch, with heavy supplementation.",
+            "options": {
+              "accept": {
+                "label": "Go for the overhaul",
+                "positiveOutcome": {
+                  "probability": 60,
+                  "description": "Your body responds really well to the change"
+                },
+                "negativeOutcome": {
+                  "probability": 40,
+                  "description": "The new diet messes with your form"
+                }
+              },
+              "reject": {
+                "label": "Keep your diet",
+                "outcome": "No changes"
+              }
+            }
+          }
+        }
+      },
+      "mysterious_substance": {
+        "title": "Experimental recovery chamber",
+        "description": "A physio offers a session in a chamber not yet approved by the confederation.",
+        "options": {
+          "consume": {
+            "label": "Try the chamber",
+            "positiveOutcome": {
+              "probability": 75,
+              "description": "The recovery is astonishing"
+            },
+            "negativeOutcome": {
+              "probability": 25,
+              "description": "A test flags an irregularity and you're suspended"
+            }
+          },
+          "reject": {
+            "label": "Decline",
+            "outcome": "No changes"
+          }
+        }
+      },
+      "season_load": {
+        "title": "Gruelling end of season",
+        "description": "After a marathon of matches, the medical staff suggests raising or cutting your load.",
+        "options": {
+          "accept": {
+            "label": "Keep the intensity up",
+            "positiveOutcome": {
+              "probability": 70,
+              "description": "You handle the pace and stay a starter"
+            },
+            "negativeOutcome": {
+              "probability": 30,
+              "description": "The body can't take it and you get injured"
+            }
+          },
+          "stay_calm": {
+            "label": "Ask for a break",
+            "outcome": "Your minutes drop"
+          }
+        },
+        "variants": {
+          "double_session": {
+            "title": "Double training sessions",
+            "description": "The new fitness coach wants two training sessions a day for the rest of the season.",
+            "options": {
+              "accept": {
+                "label": "Take on the double sessions",
+                "positiveOutcome": {
+                  "probability": 65,
+                  "description": "The heavy pace makes you even stronger"
+                },
+                "negativeOutcome": {
+                  "probability": 35,
+                  "description": "The overload takes its toll"
+                }
+              },
+              "stay_calm": {
+                "label": "Negotiate a lighter load",
+                "outcome": "Fewer minutes"
+              }
+            }
+          }
+        }
+      },
+      "position_change": {
+        "title": "New tactical setup",
+        "description": "The coach wants to try a different system, which means putting you in a new role on the pitch.",
+        "options": {
+          "accept": {
+            "label": "Go along with the change",
+            "positiveOutcome": {
+              "description": "You lock down a starting spot in the new role"
+            },
+            "negativeOutcome": {
+              "description": "The adaptation costs you some form"
+            }
+          },
+          "reject": {
+            "label": "Insist on your position",
+            "negativeOutcome": {
+              "description": "You lose ground after clashing with the coach"
+            }
+          }
+        }
+      },
+      "position_competition": {
+        "title": "Reinforcement in your position",
+        "description": "The board signs a player the press rates highly for your exact position. The spot is up for grabs.",
+        "options": {
+          "compete": {
+            "label": "Fight for the starting spot",
+            "positiveOutcome": {
+              "probability": 50,
+              "description": "You win the head-to-head"
+            },
+            "negativeOutcome": {
+              "probability": 50,
+              "description": "The new signing wins out and you lose your place"
+            }
+          }
+        }
+      },
+      "club_priority": {
+        "title": "The board's call",
+        "description": "The yearly planning demands priority: focus on the domestic title or the continental competition?",
+        "options": {
+          "prioritize_league": {
+            "label": "Focus on the league",
+            "positiveOutcome": {
+              "description": "Domestic title odds double"
+            },
+            "negativeOutcome": {
+              "description": "Continental odds are cut in half"
+            }
+          },
+          "prioritize_continental": {
+            "label": "Focus on the continental cup",
+            "positiveOutcome": {
+              "description": "Continental odds double"
+            },
+            "negativeOutcome": {
+              "description": "Domestic title odds are cut in half"
+            }
+          }
+        }
+      },
+      "rival_offer": {
+        "title": "The arch-rival comes calling",
+        "description": "{rival} are building an ambitious project and make a direct approach for you.",
+        "options": {
+          "accept": {
+            "label": "Accept the offer",
+            "positiveOutcome": {
+              "description": "You arrive as a big name and gain better title odds"
+            },
+            "negativeOutcome": {
+              "description": "Settling into the new squad costs you minutes"
+            }
+          },
+          "reject": {
+            "label": "Stay",
+            "outcome": "You stay a starter, unshaken"
+          }
+        }
+      },
+      "club_crisis": {
+        "title": "Boardroom turmoil",
+        "description": "A behind-the-scenes crisis rocks the club, and an outside interest calls asking if you'd leave.",
+        "options": {
+          "stay_and_fight": {
+            "label": "Stay and face the turmoil",
+            "outcome": "The internal chaos all but wipes out your title chances this season"
+          }
+        }
+      },
+      "return_home": {
+        "title": "The family's call",
+        "description": "After time away, your family asks you to move back to your home country.",
+        "options": {
+          "stay_abroad": {
+            "label": "Stay",
+            "negativeOutcome": {
+              "description": "The distance weighs on you and form dips for a while"
+            }
+          },
+          "return_home": {
+            "label": "Move to"
+          }
+        }
+      },
+      "giant_tattoo": {
+        "title": "A new look before the season",
+        "description": "A hyped stylist proposes an extremely bold haircut for your first matches of the season.",
+        "options": {
+          "accept": {
+            "label": "Go for the look",
+            "positiveOutcome": {
+              "probability": 70,
+              "description": "It becomes your trademark and you play with real swagger"
+            },
+            "negativeOutcome": {
+              "probability": 30,
+              "description": "An allergic reaction keeps you out for a few days"
+            }
+          },
+          "reject": {
+            "label": "Keep your usual look",
+            "outcome": "Nothing changes"
+          }
+        }
+      },
+      "tax_trouble": {
+        "title": "Work-visa mess",
+        "description": "A change in local law complicates your visa status and threatens your stay in the country.",
+        "options": {
+          "stay_and_fight": {
+            "label": "Stay and sort it out",
+            "negativeOutcome": {
+              "description": "The paperwork consumes your head and form dips"
+            }
+          },
+          "search_exit": {
+            "label": "Leave for"
+          }
+        }
+      },
+      "foreign_grandfather": {
+        "title": "Roots from another country",
+        "description": "Genealogical research reveals you're eligible to represent another national team.",
+        "options": {
+          "switch_national_team": {
+            "label": "Switch national teams",
+            "outcome": "You now represent your new national team"
+          },
+          "keep_national_team": {
+            "label": "Stay with your current one",
+            "outcome": "You keep representing your usual national team"
+          }
+        }
+      },
+      "finish_high_school": {
+        "title": "Coaching licence course",
+        "description": "While still playing, you get the chance to start training as a coach.",
+        "options": {
+          "accept": {
+            "label": "Start the course",
+            "positiveOutcome": {
+              "description": "The tactical insight makes you sharper on the pitch"
+            },
+            "negativeOutcome": {
+              "description": "The split focus costs you a little sharpness on the team"
+            }
+          },
+          "reject": {
+            "label": "Focus only on playing",
+            "outcome": "No changes"
+          }
+        }
+      },
+      "triumphant_return": {
+        "title": "Your first club's invitation",
+        "description": "The club where it all started wants to bring you back to finish your career at home.",
+        "options": {}
+      },
+      "club_national_team_conflict": {
+        "title": "A date with the national team",
+        "description": "Your club won't release you for {tournament}, but the federation insists on the call-up.",
+        "options": {
+          "go_anyway": {
+            "label": "Go anyway",
+            "positiveOutcome": {
+              "description": "You take the field for {tournament}"
+            },
+            "negativeOutcome": {
+              "description": "You're back at the club marked as a substitute"
+            }
+          },
+          "comply": {
+            "label": "Obey the club",
+            "positiveOutcome": {
+              "description": "Your starting spot isn't affected"
+            },
+            "negativeOutcome": {
+              "description": "You miss out on {tournament}"
+            }
+          }
+        }
+      },
+      "injury_at_peak": {
+        "title": "Muscle pain down the stretch",
+        "description": "An injury flares up right in the run-in for {championship}. Push through, or protect your body?",
+        "options": {
+          "play_injured": {
+            "label": "Play through it",
+            "positiveOutcome": {
+              "description": "Your odds of lifting {championship} shoot up"
+            },
+            "negativeOutcome": {
+              "description": "The injury gets worse"
+            }
+          },
+          "recover": {
+            "label": "Prioritize recovery",
+            "negativeOutcome": {
+              "description": "Your odds of lifting {championship} plummet"
+            },
+            "neutralOutcome": {
+              "description": "The injury heals up without issue"
+            }
+          }
+        }
+      },
+      "injury": {
+        "title": "{injury}",
+        "description": "Your recovery will keep you out of rhythm during this period.",
+        "options": {
+          "continue": {
+            "label": "Start recovery",
+            "negativeOutcome": {
+              "description": "-{ovr} OVR"
+            }
+          }
+        }
+      },
+      "decisive_penalty": {
+        "title": "The kick that decides it all",
+        "description": "It all comes down to this penalty kick to decide {championship}.",
+        "options": {
+          "left": {
+            "label": "Chip it over the keeper"
+          },
+          "right": {
+            "label": "Blast it into the corner"
+          }
+        },
+        "resultLabels": {
+          "goal": "Goal!",
+          "save": "Saved!"
+        }
+      },
+      "new_manager": {
+        "title": "New manager",
+        "description": "The club has hired a new head coach, and he doesn't know what you're worth yet.",
+        "options": {
+          "impress_in_training": {
+            "label": "Impress in training",
+            "positiveOutcome": {
+              "probability": 55,
+              "description": "He likes what he sees — you move up the pecking order"
+            },
+            "negativeOutcome": {
+              "probability": 45,
+              "description": "He doesn't rate you as a starter yet"
+            }
+          },
+          "stay_patient": {
+            "label": "Stay patient",
+            "outcome": "You wait for the dust to settle, no risk taken"
+          }
+        }
+      },
+      "derby_spotlight": {
+        "title": "Derby spotlight",
+        "description": "The season's biggest derby is coming up, and everyone will be watching you.",
+        "options": {
+          "embrace_the_pressure": {
+            "label": "Embrace the pressure",
+            "positiveOutcome": {
+              "probability": 55,
+              "description": "You become the derby hero, morale sky-high"
+            },
+            "negativeOutcome": {
+              "probability": 45,
+              "description": "You freeze up, the moment slips away"
+            }
+          },
+          "focus_on_process": {
+            "label": "Keep a cool head",
+            "outcome": "You play your normal game, unbothered by the noise"
+          }
+        }
+      },
+      "testimonial_match": {
+        "title": "Testimonial match",
+        "description": "The club wants to organise a testimonial in your honour.",
+        "options": {
+          "hold_the_testimonial": {
+            "label": "Accept the testimonial",
+            "outcome": "The crowd gives you a standing ovation, and it recharges you"
+          },
+          "keep_it_low_key": {
+            "label": "Keep it low-key",
+            "outcome": "You're grateful, but you'd rather save it for later"
+          }
+        }
+      },
+      "agent_ultimatum": {
+        "title": "Agent's ultimatum",
+        "description": "Your agent wants to force an exit if the club stops valuing you.",
+        "options": {
+          "reassure_the_club": {
+            "label": "Smooth things over and stay",
+            "negativeOutcome": {
+              "description": "The saga leaves the dressing room a little awkward for a while"
+            }
+          }
+        }
+      },
+      "wonderkid_signing": {
+        "title": "New kid in the squad",
+        "description": "The club has signed a hyped teenager in your exact position.",
+        "options": {
+          "rise_to_the_challenge": {
+            "label": "Rise to the challenge",
+            "positiveOutcome": {
+              "probability": 50,
+              "description": "You raise your level and make it clear who's in charge"
+            },
+            "negativeOutcome": {
+              "probability": 50,
+              "description": "The kid eats into minutes that used to be yours"
+            }
+          },
+          "welcome_and_mentor": {
+            "label": "Welcome and mentor him",
+            "outcome": "The dressing room pulls together because of it"
+          }
+        }
+      },
+      "boot_deal": {
+        "title": "Boot deal",
+        "description": "A sportswear brand offers you an exclusive sponsorship deal.",
+        "options": {
+          "sign_exclusive": {
+            "label": "Sign the deal",
+            "positiveOutcome": {
+              "probability": 65,
+              "description": "You feel great in the new boots"
+            },
+            "negativeOutcome": {
+              "probability": 35,
+              "description": "It takes a while to get used to them"
+            }
+          },
+          "stick_with_current_boots": {
+            "label": "Stick with your old boots",
+            "outcome": "You'd rather not fix what isn't broken"
+          }
+        }
+      },
+      "hometown_parade": {
+        "title": "Hero's welcome",
+        "description": "After the title with the national team, your hometown throws you a welcome parade.",
+        "options": {
+          "enjoy_the_moment": {
+            "label": "Enjoy the moment",
+            "outcome": "You carry that confidence into the rest of your career"
+          },
+          "stay_grounded": {
+            "label": "Stay grounded",
+            "outcome": "You go straight back to training, and the club notices"
+          }
+        }
+      },
+      "podcast_interview": {
+        "title": "Podcast interview",
+        "description": "A big podcast invites you on, and the questions will touch some delicate club matters.",
+        "options": {
+          "speak_your_mind": {
+            "label": "Speak your mind",
+            "positiveOutcome": {
+              "probability": 50,
+              "description": "The honesty lands well, the fans love you for it"
+            },
+            "negativeOutcome": {
+              "probability": 50,
+              "description": "It becomes a controversy and the club freezes you out"
+            }
+          },
+          "play_it_safe": {
+            "label": "Give safe answers",
+            "outcome": "A dull interview, nobody talks about it"
+          }
+        }
+      },
+      "agent_change": {
+        "title": "Change agent",
+        "description": "A more powerful agent offers to take over your career.",
+        "options": {
+          "switch_agent": {
+            "label": "Switch agent",
+            "positiveOutcome": {
+              "probability": 60,
+              "description": "He opens better doors down the line"
+            },
+            "negativeOutcome": {
+              "probability": 40,
+              "description": "The transition disrupts your season"
+            }
+          },
+          "keep_agent": {
+            "label": "Stick with your current one",
+            "outcome": "You keep the person who got you here"
+          }
+        }
+      },
+      "packed_home_stadium": {
+        "title": "Sold-out home crowd",
+        "description": "The stadium is sold out and the crowd will push the team for ninety minutes.",
+        "options": {
+          "feed_off_the_crowd": {
+            "label": "Feed off the crowd",
+            "positiveOutcome": {
+              "probability": 60,
+              "description": "You play inspired and the crowd goes wild"
+            },
+            "negativeOutcome": {
+              "probability": 40,
+              "description": "The pressure gets to you and you disappear"
+            }
+          },
+          "block_out_the_noise": {
+            "label": "Block out the noise",
+            "outcome": "You play focused, no highs or lows"
+          }
+        }
+      },
+      "controversial_red_card": {
+        "title": "Controversial red card",
+        "description": "You were sent off for a soft challenge, and the press won't drop it.",
+        "options": {
+          "accept_the_ban": {
+            "label": "Accept the ban",
+            "outcome": "You serve it and lose your place"
+          },
+          "appeal_publicly": {
+            "label": "Appeal publicly",
+            "positiveOutcome": {
+              "probability": 45,
+              "description": "The red is overturned, the fans applaud you"
+            },
+            "negativeOutcome": {
+              "probability": 55,
+              "description": "The ban is extended and you're benched"
+            }
+          }
+        }
+      },
+      "crowd_turns": {
+        "title": "The crowd turns",
+        "description": "Boos come down from the stands every time you touch the ball.",
+        "options": {
+          "win_them_back": {
+            "label": "Win them back",
+            "positiveOutcome": {
+              "probability": 55,
+              "description": "You throw yourself into it and turn them around"
+            },
+            "negativeOutcome": {
+              "probability": 45,
+              "description": "It doesn't work, and the relationship sours"
+            }
+          },
+          "ignore_the_boos": {
+            "label": "Ignore the boos",
+            "outcome": "You carry on regardless, nothing changes"
+          }
+        }
+      },
+      "rival_press": {
+        "title": "Press comparisons",
+        "description": "Reporters won't stop comparing you to {rivalName}.",
+        "options": {
+          "provoke": {
+            "label": "Fire back",
+            "positiveOutcome": {
+              "probability": 50,
+              "description": "The jab makes headlines and the fans love it"
+            },
+            "negativeOutcome": {
+              "probability": 50,
+              "description": "It backfires and gets used against you"
+            }
+          },
+          "praise": {
+            "label": "Praise the rival",
+            "outcome": "The fans respect the class"
+          }
+        }
+      },
+      "rival_milestone": {
+        "title": "Your rival makes headlines",
+        "description": "{rivalName} just achieved something big, and everyone wants your reaction.",
+        "options": {
+          "use_as_fuel": {
+            "label": "Use it as motivation",
+            "positiveOutcome": {
+              "probability": 55,
+              "description": "It becomes pure fuel for your training"
+            },
+            "negativeOutcome": {
+              "probability": 45,
+              "description": "The comparison weighs more than it helps"
+            }
+          },
+          "shrug_it_off": {
+            "label": "Shrug it off",
+            "outcome": "You keep to your own path, unbothered"
+          }
+        }
+      },
+      "rival_duel": {
+        "title": "Head-to-head",
+        "description": "You and {rivalName} are fighting for the same headlines this season.",
+        "options": {
+          "take_the_weight": {
+            "label": "Take the responsibility",
+            "positiveOutcome": {
+              "probability": 55,
+              "description": "You show up in the decisive moments"
+            },
+            "negativeOutcome": {
+              "probability": 45,
+              "description": "The pressure of deciding it all alone weighs on you"
+            }
+          },
+          "let_the_team_carry_it": {
+            "label": "Let the team carry it",
+            "outcome": "Less spotlight on you, more chances for the team"
+          }
+        }
+      },
+      "captain_armband": {
+        "title": "The captain's armband",
+        "description": "The squad votes and the coach wants to hand you the captain's armband from now on.",
+        "options": {
+          "wear_it": {
+            "label": "Accept the armband",
+            "positiveOutcome": {
+              "probability": 55,
+              "description": "You wear the responsibility like a glove"
+            },
+            "negativeOutcome": {
+              "probability": 45,
+              "description": "The extra weight of it hurts more than it helps"
+            }
+          },
+          "pass_it": {
+            "label": "Decline, for now",
+            "outcome": "You'd rather focus on just your own game"
+          }
+        }
+      },
+      "iconic_number": {
+        "title": "The club's iconic shirt number",
+        "description": "The board offers you the number that carries the weight of the club's history.",
+        "options": {
+          "claim_it": {
+            "label": "Take the number",
+            "positiveOutcome": {
+              "probability": 50,
+              "description": "You honour the shirt and the fans idolise you even more"
+            },
+            "negativeOutcome": {
+              "probability": 50,
+              "description": "Plenty think you haven't earned it yet"
+            }
+          },
+          "let_someone_else": {
+            "label": "Let another player have it",
+            "outcome": "You'd rather not carry that weight right now"
+          }
+        }
+      },
+      "locker_room_clash": {
+        "title": "Dressing-room friction",
+        "description": "A younger teammate challenges your standing in front of the group, and everyone's watching how you react.",
+        "options": {
+          "stand_your_ground": {
+            "label": "Assert yourself",
+            "positiveOutcome": {
+              "probability": 50,
+              "description": "The group recognises your authority"
+            },
+            "negativeOutcome": {
+              "probability": 50,
+              "description": "It backfires and creates more friction"
+            }
+          },
+          "keep_the_peace": {
+            "label": "Keep the peace in the group",
+            "outcome": "You choose not to feed the tension"
+          }
+        }
+      },
+      "shirt_upgrade": {
+        "title": "A promotion in the squad list",
+        "description": "The kit man catches you before training: the club has freed up some serious shirts and wants to know if you'll take one.",
+        "options": {
+          "take_number": {
+            "label": "Take the {number}",
+            "outcome": "You'll be going out with the {number} on your back"
+          },
+          "keep_current": {
+            "label": "Stick with yours",
+            "outcome": "You'd rather not touch what's already yours"
+          }
+        }
+      },
+      "shirt_legend_tribute": {
+        "title": "A tribute from the board",
+        "description": "After everything you've built here, the board opens up the whole squad list and lets you name the number you want.",
+        "options": {
+          "take_number": {
+            "label": "Choose the {number}",
+            "outcome": "The {number} becomes yours by the club's own decision"
+          },
+          "keep_current": {
+            "label": "Keep the one you know",
+            "outcome": "You're grateful, but your number already says it all"
+          }
+        }
+      },
+      "severe_injury": {
+        "title": "A serious injury",
+        "description": "The knee gave way on a routine play and the silence in the stadium said everything. The medical staff are talking about a full season out — and nobody is promising you come back the same.",
+        "options": {
+          "fight_back": {
+            "label": "Face the rehab",
+            "outcome": "You'll play again, but your career's ceiling will never be what it was"
+          }
+        }
+      }
+    },
+    "positions": {
+      "LW": "LW",
+      "ST": "ST",
+      "RW": "RW",
+      "LM": "LM",
+      "CAM": "CAM",
+      "RM": "RM",
+      "LB": "LB",
+      "CM": "CM",
+      "RB": "RB",
+      "CDM": "CDM",
+      "CB": "CB",
+      "GK": "GK"
+    },
+    "trophies": {
+      "league": "League",
+      "cup": "Cup",
+      "continental_primary": "Top continental trophy",
+      "continental_secondary": "Secondary continental trophy",
+      "club_world_cup": "Club World Cup",
+      "national_continental": "National continental trophy",
+      "world_cup": "World Cup",
+      "national_continental_by_confederation": {
+        "UEFA": "Eurocup",
+        "CONMEBOL": "Copa América",
+        "CONCACAF": "Gold Cup",
+        "CAF": "Africa Cup of Nations",
+        "AFC": "Asian Cup",
+        "OFC": "OFC Nations Cup"
+      }
+    },
+    "awards": {
+      "ballon_dor": "Ballon d’Or",
+      "golden_boot": "Golden Boot",
+      "golden_glove": "Golden Glove"
+    },
+    "headlines": {
+      "trophy": {
+        "league": "{team} are champions! You lift the league title.",
+        "cup": "The domestic cup belongs to {team}, with you on the pitch.",
+        "continental_primary": "Continental glory: {team} conquer the continent.",
+        "continental_secondary": "{team} take the continental title and dream bigger.",
+        "club_world_cup": "{team} are world champions — and you were there.",
+        "national_continental": "Your national team are continental champions!",
+        "world_cup": "WORLD CHAMPIONS. Your country wins the World Cup."
+      },
+      "award": {
+        "ballon_dor": "Ballon d'Or: you're voted the best player on the planet.",
+        "golden_boot": "Golden Boot: nobody scored more than you.",
+        "golden_glove": "Golden Glove: the safest hands of the season are yours."
+      },
+      "firstCallUp": "Called up! You wear the national shirt for the first time.",
+      "relegated": "Bitter drop: {team} are relegated.",
+      "promoted": "Promotion sealed! {team} go up.",
+      "breakoutSeason": "Breakout season at {team}: you hit {ovr} overall.",
+      "joinedClub": "Done deal: you're {team}'s new signing.",
+      "joinedOnLoan": "Loaned to {team} to get minutes.",
+      "relegatedBigClub": "The worst generation in {team}'s history — relegated.",
+      "shirtAssigned": "Registered at {team}: the {number} is yours on debut.",
+      "shirtUpgraded": "New shirt at {team}: you'll wear the {number} from now on.",
+      "severeInjury": "Hard news: {injury} rules you out for a season."
+    },
+    "positionsFull": {
+      "LW": "left winger",
+      "ST": "centre-forward",
+      "RW": "right winger",
+      "LM": "left midfielder",
+      "CAM": "attacking midfielder",
+      "RM": "right midfielder",
+      "LB": "left-back",
+      "CM": "central midfielder",
+      "RB": "right-back",
+      "CDM": "defensive midfielder",
+      "CB": "centre-back",
+      "GK": "goalkeeper"
+    },
+    "challenge": {
+      "title": "Daily challenge",
+      "subtitle": "The same career for everyone. Only your decisions differ.",
+      "play": "Play the challenge",
+      "back": "Back",
+      "objective": "Objective",
+      "dealtHand": "Today's hand",
+      "hardNote": "Every challenge is played on Hard.",
+      "ranking": "Local leaderboard",
+      "empty": "No attempts yet. Play today's challenge.",
+      "score": "Points",
+      "target": "Target",
+      "yourBest": "Your best",
+      "played": "Challenges played",
+      "average": "Average",
+      "cleanRuns": "Rule kept",
+      "ranked": "Ranked",
+      "friendly": "Friendly",
+      "alreadyPlayed": "You've already used today's ranked attempt. Playing again counts as a friendly.",
+      "result": "Challenge result",
+      "ruleBroken": "Rule broken — score capped",
+      "clear": "Clear leaderboard",
+      "units": {
+        "goals": "goals",
+        "assists": "assists",
+        "trophies": "trophies",
+        "overall": "overall",
+        "caps": "caps",
+        "seasons": "seasons",
+        "clubs": "countries",
+        "apps": "appearances",
+        "cleanSheets": "clean sheets",
+        "points": "points"
+      },
+      "missions": {
+        "one_club_legend": {
+          "title": "One club only",
+          "brief": "Build it all where you started. No permanent transfer."
+        },
+        "goal_machine": {
+          "title": "Goal machine",
+          "brief": "Score as many career goals as you can."
+        },
+        "playmaker": {
+          "title": "The provider",
+          "brief": "Serve the team: assists above all."
+        },
+        "trophy_hoarder": {
+          "title": "Trophy hoarder",
+          "brief": "Lift as many trophies as you can."
+        },
+        "collector": {
+          "title": "Varied cabinet",
+          "brief": "Win different kinds of trophy, not the same one repeatedly."
+        },
+        "prodigy": {
+          "title": "Prodigy",
+          "brief": "Get as high as possible before turning 22."
+        },
+        "late_bloomer": {
+          "title": "Late bloomer",
+          "brief": "Still be climbing when everyone else has levelled off."
+        },
+        "underdog_idol": {
+          "title": "Unlikely idol",
+          "brief": "Become a name at a small club — the smaller the badge, the more it counts."
+        },
+        "globetrotter": {
+          "title": "Globetrotter",
+          "brief": "Play in as many countries as you can, winning on the way."
+        },
+        "national_hero": {
+          "title": "National hero",
+          "brief": "Build an international career that matters."
+        },
+        "iron_man": {
+          "title": "Iron man",
+          "brief": "Take the field as many times as possible."
+        },
+        "no_loans": {
+          "title": "No shortcuts",
+          "brief": "Reach the top without ever accepting a loan."
+        },
+        "continental_king": {
+          "title": "King of the continent",
+          "brief": "Own the continental nights."
+        },
+        "resilient": {
+          "title": "Thick skin",
+          "brief": "Get far — and it counts for more if the road was rough."
+        },
+        "beloved": {
+          "title": "Loved by the crowd",
+          "brief": "Finish your career with the stands on your side."
+        },
+        "marquee_number": {
+          "title": "The big shirt",
+          "brief": "Spend as many seasons as you can wearing a marquee number."
+        },
+        "journeyman": {
+          "title": "Journeyman",
+          "brief": "Move through many clubs and win wherever you can."
+        },
+        "homecoming": {
+          "title": "Homecoming",
+          "brief": "Build history at the club that raised you — and go back to finish there."
+        },
+        "sharpshooter": {
+          "title": "Magic season",
+          "brief": "Produce the best scoring season you can."
+        },
+        "youth_to_star": {
+          "title": "Zero to the top",
+          "brief": "Improve as much as possible from an overall of 50."
+        },
+        "unbreakable": {
+          "title": "Unbreakable",
+          "brief": "Reach the top with no serious injury and never relegated."
+        },
+        "individual_glory": {
+          "title": "Individual glory",
+          "brief": "Chase the awards: golden boots and the Ballon d'Or."
+        },
+        "double_legend": {
+          "title": "Double legend",
+          "brief": "Become an idol or legend at more than one club."
+        },
+        "loyal_servant": {
+          "title": "Loyal servant",
+          "brief": "Make the longest single spell at one club that you can."
+        },
+        "clean_sheet_wall": {
+          "title": "The wall",
+          "brief": "Rack up as many clean sheets as possible."
+        },
+        "riser": {
+          "title": "Second tier to elite",
+          "brief": "Win promotion and prove it wasn't a fluke."
+        },
+        "domestic_dominance": {
+          "title": "Own the country",
+          "brief": "Fill the cabinet with domestic titles."
+        },
+        "world_class": {
+          "title": "World class",
+          "brief": "Reach the highest overall you can."
+        },
+        "veteran": {
+          "title": "Veteran",
+          "brief": "Still be good at an age where almost everyone has stopped."
+        },
+        "complete_career": {
+          "title": "Complete career",
+          "brief": "A bit of everything: trophies, caps, legend status and level."
+        }
+      }
+    }
+  },
+  "pt": {
+    "intro": {
+      "eyebrow": "Minijogos Copero",
+      "title": "Construa sua carreira no futebol",
+      "subtitle": "Escolha sua origem, tome decisões importantes e deixe que o destino te leve a uma trajetória única de títulos, estatísticas e momentos decisivos.",
+      "start": "Começar carreira",
+      "back": "Voltar aos Jogos",
+      "languageLabel": "Idioma",
+      "previewLabel": "Prévia do simulador",
+      "previewTitle": "Sua carreira começa aqui",
+      "previewSubtitle": "Identidade, decisões, clubes e resumo compartilhável.",
+      "modes": {
+        "long": {
+          "title": "Intensa",
+          "description": "1 decisão por temporada, imersão profunda."
+        },
+        "normal": {
+          "title": "Normal",
+          "description": "Decisões a cada 2 temporadas, uma experiência equilibrada."
+        }
+      },
+      "difficultyTitle": "Dificuldade",
+      "difficulties": {
+        "normal": {
+          "title": "Normal",
+          "description": "A carreira equilibrada: talento aparece, clubes têm paciência, o corpo aguenta."
+        },
+        "hard": {
+          "title": "Difícil",
+          "description": "Futebol de verdade: talento de elite é raro, evolução é lenta, clube não espera e o corpo cobra caro."
+        }
+      }
+    },
+    "identity": {
+      "eyebrow": "Passo 1",
+      "title": "Defina sua identidade",
+      "subtitle": "Escolha a nacionalidade e a posição inicial do seu jogador.",
+      "personalizationTitle": "Identidade",
+      "personalizationSubtitle": "Esses dados são apenas cosméticos por enquanto.",
+      "lastName": "Sobrenome",
+      "lastNamePlaceholder": "Sobrenome",
+      "preferredNumber": "Número",
+      "preferredFoot": "Perna dominante",
+      "leftFoot": "Esquerda",
+      "rightFoot": "Direita",
+      "nationalityTitle": "Nacionalidade",
+      "nationalitySubtitle": "Busque seu país.",
+      "nationalitySearchPlaceholder": "Buscar país",
+      "nationalityEmpty": "Nenhum país encontrado nessa busca.",
+      "positionTitle": "Posição",
+      "positionSubtitle": "Seu lugar em campo.",
+      "continue": "Continuar",
+      "confirm": "Confirmar identidade",
+      "back": "Voltar",
+      "showMoreCountries": "Ver mais",
+      "progressNationality": "Nacionalidade",
+      "progressPosition": "Posição"
+    },
+    "upcoming": {
+      "eyebrow": "Próximo passo",
+      "title": "Oferta de base",
+      "subtitle": "A identidade ficou salva no motor. O próximo passo será gerar a primeira oferta."
+    },
+    "career": {
+      "title": "Carreira",
+      "subtitle": "Tome decisões e simule temporadas até a aposentadoria.",
+      "overall": "OVR",
+      "marketValue": "Valor",
+      "identity": "Identidade",
+      "summaryPlayerFallback": "Jogador",
+      "club": "Clube",
+      "age": "Idade",
+      "totals": "Totais",
+      "appearances": "Jogos",
+      "goals": "Gols",
+      "assists": "Ast",
+      "cleanSheets": "SG",
+      "goalsConceded": "GS",
+      "trophies": "Títulos",
+      "awards": "Prêmios",
+      "emptyTrophyShowcase": "Vitrine vazia",
+      "history": "Trajetória",
+      "noSeasons": "Escolha uma base para começar a registrar temporadas.",
+      "decision": "Decisão",
+      "choose": "Escolher",
+      "academyOfferTitle": "Oferta de base",
+      "academyOfferDescription": "Três clubes querem te incluir no projeto de base. Escolha onde sua carreira começa.",
+      "transferTitle": "Janela de transferências",
+      "transferDescription": "Chegaram ofertas depois do seu último trecho de carreira. Você pode aceitar uma ou ficar no clube.",
+      "loanOfferTitle": "Oferta de empréstimo",
+      "loanOfferDescription": "Seu clube quer que você ganhe minutos em outro time. Escolha onde seguir seu desenvolvimento.",
+      "postLoanReturnTitle": "Retorno ao seu clube",
+      "postLoanRetainedDescription": "Você volta ao seu clube e será considerado nos planos. Se ainda quiser sair, há duas ofertas na mesa.",
+      "postLoanNotRetainedDescription": "Você volta ao seu clube, mas não será considerado nos planos. Pode sair novamente por empréstimo ou assinar em definitivo pelo clube atual.",
+      "contractNonRenewalTitle": "Fim de ciclo",
+      "noOffersRetirementTitle": "Sem ofertas",
+      "noOffersRetirementDescription": "Nenhum clube está interessado em oferecer um contrato. É hora de encerrar sua carreira.",
+      "historyPeriods": "Períodos",
+      "historySeasons": "Temporadas",
+      "suspended": "Suspenso",
+      "contractNonRenewalDescription": "Seu clube decidiu não renovar. Escolha o próximo passo da sua carreira.",
+      "joinClubLabel": "Assinar com {team}",
+      "returnOptionLabel": "Voltar ao {team}",
+      "joinLoanLabel": "Ir por empréstimo para {team}",
+      "permanentTransferLabel": "Assinar em definitivo com {team}",
+      "joinClubDescription": "Assinar pelo {team}",
+      "joinLoanDescription": "Ir emprestado ao {team}",
+      "permanentTransferDescription": "Transferir em definitivo para {team}",
+      "stayOptionLabel": "Ficar no {team}",
+      "stayOptionDescription": "Continuar no {team}",
+      "retireOptionLabel": "Aposentar-se",
+      "retireOptionDescription": "Encerrar sua carreira profissional",
+      "choosingClub": "Escolhendo clube...",
+      "careerEventPending": "Decisão de carreira...",
+      "active": "Ativo",
+      "locked": "Bloqueado",
+      "freeAgent": "Sem clube",
+      "goalkeeperGoalsConcededShort": "GS",
+      "goalkeeperCleanSheetsShort": "SG",
+      "careerBest": "Máximo",
+      "nationalTeam": "Seleção",
+      "relegation": "Rebaixamento",
+      "summaryTitle": "Carreira finalizada",
+      "summarySubtitle": "Sua trajetória chegou à aposentadoria. O resumo compartilhável será adicionado em uma próxima iteração.",
+      "careerEndedTitle": "Sua carreira chegou ao fim",
+      "careerEndedDescription": "Tudo o que você construiu está pronto para ser revisado no seu resumo.",
+      "viewSummary": "Ver resumo",
+      "replay": "Jogar novamente",
+      "shareSummaryTitle": "Compartilhe sua carreira",
+      "shareBrandPrompt": "Jogue sua carreira em",
+      "shareNative": "Compartilhar carreira",
+      "sharePreparing": "Preparando imagem",
+      "shareSharing": "Compartilhando carreira",
+      "shareShowLastName": "Mostrar sobrenome",
+      "shareCopyImage": "Copiar imagem",
+      "shareCopyingImage": "Copiando imagem",
+      "shareSaveImage": "Salvar imagem",
+      "shareSavingImage": "Salvando imagem",
+      "shareCopyLink": "Copiar link",
+      "shareCopyingLink": "Copiando link",
+      "shareNativeTitle": "Minha carreira no Copero",
+      "shareNativeText": "Esta foi a minha carreira no Copero. Como seria a sua?",
+      "shareUnavailable": "Este navegador não oferece o menu nativo de compartilhamento.",
+      "shareFileUnavailable": "Este navegador não permite compartilhar esta imagem como arquivo.",
+      "shareFailed": "Não foi possível gerar a imagem",
+      "shareImagePreparing": "A imagem ainda está sendo preparada.",
+      "shareImagePreparationFailed": "Não foi possível preparar a imagem da sua carreira.",
+      "shareImageCopied": "Imagem copiada para a área de transferência.",
+      "shareImageCopyUnavailable": "Este navegador não permite copiar imagens para a área de transferência.",
+      "shareImageCopyFailed": "Não foi possível copiar a imagem para a área de transferência.",
+      "shareImageSaved": "Imagem salva.",
+      "shareImageSaveFailed": "Não foi possível salvar a imagem.",
+      "shareLinkCopied": "Link do jogo copiado para a área de transferência.",
+      "shareLinkCopyFailed": "Não foi possível copiar o link.",
+      "summaryPlaceholderTitle": "Resumo da carreira",
+      "summaryPlaceholderDescription": "Aqui aparecerão suas estatísticas, clubes, títulos e os momentos mais importantes da sua trajetória.",
+      "debugModeLabel": "Debug UI",
+      "debugDecisionLabel": "Decisão visível",
+      "debugDecisionSummary": "Resumo final",
+      "debugDecisionAcademyOffer": "Oferta de base",
+      "debugDecisionTransfer": "Janela de transferências",
+      "debugDecisionLoanOffer": "Oferta de empréstimo",
+      "debugDecisionPostLoanRetained": "Retorno com espaço",
+      "debugDecisionPostLoanNotRetained": "Retorno sem espaço",
+      "debugDecisionContractNonRenewal": "Fim de ciclo",
+      "debugDecisionCareerEvent": "Evento de carreira",
+      "talentLabel": "Talento",
+      "talentUnknown": "Em avaliação",
+      "talentTiers": {
+        "prospect": "Promessa",
+        "talent": "Talento real",
+        "star": "Craque",
+        "phenomenon": "Fenômeno",
+        "generational": "Geracional"
+      },
+      "trophyWonEyebrow": "Título conquistado",
+      "awardWonEyebrow": "Prêmio conquistado",
+      "celebrationAt": "aos {age} anos",
+      "tapToContinue": "Toque para continuar",
+      "traitLabel": "Perfil",
+      "traits": {
+        "determined": "Determinado",
+        "professional": "Profissional",
+        "leader": "Líder",
+        "showman": "Showman",
+        "hothead": "Cabeça quente",
+        "fragile": "Frágil"
+      },
+      "traitDescriptions": {
+        "determined": "Converte mais as escolhas arriscadas e treina melhor.",
+        "professional": "Se cuida: envelhece muito mais devagar.",
+        "leader": "Puxa o time e conquista a torcida com facilidade.",
+        "showman": "A torcida ama, mesmo quando o jogo não sai.",
+        "hothead": "Explosivo: arrisca mais, mas se desgasta antes.",
+        "fragile": "Sente a pressão nos momentos decisivos."
+      },
+      "fanSupportLabel": "Torcida",
+      "fanBands": {
+        "hostile": "Hostil",
+        "cold": "Desconfiada",
+        "warm": "Do lado",
+        "loved": "Apaixonada",
+        "adored": "Idolatria"
+      },
+      "rivalLabel": "Rival de geração",
+      "headlinesTitle": "Manchetes",
+      "headlinesEmpty": "Sua história ainda vai ser escrita.",
+      "timelineTitle": "Linha do tempo",
+      "standingLabel": "Status no clube",
+      "standings": {
+        "passing": "Passagem",
+        "regular": "Titular",
+        "idol": "Ídolo",
+        "legend": "Lenda"
+      },
+      "firstCallUpEyebrow": "Primeira convocação",
+      "seasonsAt": "{count} temporadas",
+      "seasonAt": "1 temporada",
+      "traitorLabel": "Traidor",
+      "traitorHint": "Você saiu direto pra um rival da mesma liga — a torcida nunca esqueceu.",
+      "roleImproveHint": "Melhora seu lugar no time",
+      "roleWorsenHint": "Piora seu lugar no time",
+      "performanceLabel": "Desempenho",
+      "noEffectLabel": "Sem efeito",
+      "outcomeGood": "Deu certo",
+      "outcomeBad": "Deu errado",
+      "biographyTitle": "A carreira em palavras",
+      "recordsTitle": "Recordes alcançados",
+      "recordBeaten": "superou os {previous} de {holder}",
+      "recordEqualled": "igualou os {previous} de {holder}",
+      "downloadCard": "Baixar imagem",
+      "shareCard": "Compartilhar",
+      "shareWorking": "Gerando..."
+    },
+    "careerEvents": {
+      "training_extra": {
+        "title": "Bateria de testes físicos",
+        "description": "O departamento de performance quer te levar ao limite numa semana de testes. Topa a intensidade?",
+        "options": {
+          "accept": {
+            "label": "Encarar os testes",
+            "positiveOutcome": {
+              "probability": 70,
+              "description": "Seus números impressionam o departamento"
+            },
+            "negativeOutcome": {
+              "probability": 30,
+              "description": "O corpo cobra a conta pelo excesso"
+            }
+          },
+          "reject": {
+            "label": "Priorizar a recuperação",
+            "outcome": "Sem mudanças"
+          }
+        },
+        "variants": {
+          "preseason_camp": {
+            "title": "Concentração de pré-temporada",
+            "description": "O clube isola o elenco num centro de treinamento nas montanhas por três semanas.",
+            "options": {
+              "accept": {
+                "label": "Encarar a concentração",
+                "positiveOutcome": {
+                  "probability": 65,
+                  "description": "Você volta transformado fisicamente"
+                },
+                "negativeOutcome": {
+                  "probability": 35,
+                  "description": "O ritmo pesado te deixa lesionado"
+                }
+              },
+              "reject": {
+                "label": "Ficar na preparação de sempre",
+                "outcome": "Sem mudanças"
+              }
+            }
+          }
+        }
+      },
+      "personal_coach": {
+        "title": "Mentor técnico",
+        "description": "Um ex-jogador renomado se oferece para te dar aulas particulares fora dos horários do clube.",
+        "options": {
+          "accept": {
+            "label": "Aceitar as aulas",
+            "positiveOutcome": {
+              "probability": 50,
+              "description": "Os ensinamentos elevam seu nível"
+            },
+            "negativeOutcome": {
+              "probability": 50,
+              "description": "Vocês não têm química e nada flui"
+            }
+          },
+          "reject": {
+            "label": "Recusar educadamente",
+            "outcome": "Sem mudanças"
+          }
+        },
+        "variants": {
+          "nutrition_plan": {
+            "title": "Reformulação alimentar",
+            "description": "Uma nutricionista esportiva quer reformular sua dieta do zero, com suplementação pesada.",
+            "options": {
+              "accept": {
+                "label": "Topar a reformulação",
+                "positiveOutcome": {
+                  "probability": 60,
+                  "description": "Seu corpo responde muito bem à mudança"
+                },
+                "negativeOutcome": {
+                  "probability": 40,
+                  "description": "A dieta nova mexe com seu rendimento"
+                }
+              },
+              "reject": {
+                "label": "Manter sua alimentação",
+                "outcome": "Sem mudanças"
+              }
+            }
+          }
+        }
+      },
+      "mysterious_substance": {
+        "title": "Câmara de recuperação experimental",
+        "description": "Um fisioterapeuta oferece uma sessão numa câmara ainda não homologada pela confederação.",
+        "options": {
+          "consume": {
+            "label": "Testar o aparelho",
+            "positiveOutcome": {
+              "probability": 75,
+              "description": "A recuperação é surpreendente"
+            },
+            "negativeOutcome": {
+              "probability": 25,
+              "description": "Um exame acusa irregularidade e você é suspenso"
+            }
+          },
+          "reject": {
+            "label": "Recusar",
+            "outcome": "Sem mudanças"
+          }
+        }
+      },
+      "season_load": {
+        "title": "Fim de temporada exigente",
+        "description": "Depois de uma maratona de jogos, o departamento médico sugere intensificar ou reduzir sua carga.",
+        "options": {
+          "accept": {
+            "label": "Manter a intensidade",
+            "positiveOutcome": {
+              "probability": 70,
+              "description": "Você aguenta o ritmo e segue titular"
+            },
+            "negativeOutcome": {
+              "probability": 30,
+              "description": "O corpo não aguenta e você se machuca"
+            }
+          },
+          "stay_calm": {
+            "label": "Pedir uma pausa",
+            "outcome": "Seus minutos diminuem"
+          }
+        },
+        "variants": {
+          "double_session": {
+            "title": "Treinos dobrados",
+            "description": "O novo preparador físico quer implantar dois treinos diários pelo resto da temporada.",
+            "options": {
+              "accept": {
+                "label": "Topar o ritmo dobrado",
+                "positiveOutcome": {
+                  "probability": 65,
+                  "description": "O ritmo pesado te deixa ainda mais forte"
+                },
+                "negativeOutcome": {
+                  "probability": 35,
+                  "description": "O excesso de carga cobra a conta"
+                }
+              },
+              "stay_calm": {
+                "label": "Negociar uma carga menor",
+                "outcome": "Menos minutos"
+              }
+            }
+          }
+        }
+      },
+      "position_change": {
+        "title": "Novo esquema tático",
+        "description": "O treinador quer testar um esquema diferente, e isso significa te colocar numa função nova em campo.",
+        "options": {
+          "accept": {
+            "label": "Topar a mudança",
+            "positiveOutcome": {
+              "description": "Você garante a titularidade na nova função"
+            },
+            "negativeOutcome": {
+              "description": "A adaptação custa um tempinho de ritmo"
+            }
+          },
+          "reject": {
+            "label": "Insistir na sua posição",
+            "negativeOutcome": {
+              "description": "Vira mais reserva por bater de frente com o técnico"
+            }
+          }
+        }
+      },
+      "position_competition": {
+        "title": "Reforço na mesma posição",
+        "description": "A diretoria contrata um jogador bem cotado pela imprensa para a sua posição. A vaga está em disputa.",
+        "options": {
+          "compete": {
+            "label": "Brigar pela titularidade",
+            "positiveOutcome": {
+              "probability": 50,
+              "description": "Você vence a disputa direta"
+            },
+            "negativeOutcome": {
+              "probability": 50,
+              "description": "O reforço leva a melhor e você perde espaço"
+            }
+          }
+        }
+      },
+      "club_priority": {
+        "title": "Escolha da diretoria",
+        "description": "O planejamento anual pede prioridade: focar no título nacional ou na competição continental?",
+        "options": {
+          "prioritize_league": {
+            "label": "Focar na liga",
+            "positiveOutcome": {
+              "description": "As chances de título nacional dobram"
+            },
+            "negativeOutcome": {
+              "description": "As chances no torneio continental caem pela metade"
+            }
+          },
+          "prioritize_continental": {
+            "label": "Focar no continental",
+            "positiveOutcome": {
+              "description": "As chances no torneio continental dobram"
+            },
+            "negativeOutcome": {
+              "description": "As chances de título nacional caem pela metade"
+            }
+          }
+        }
+      },
+      "rival_offer": {
+        "title": "Sondagem do arquirrival",
+        "description": "O {rival} monta um projeto ambicioso e faz uma sondagem direta por você.",
+        "options": {
+          "accept": {
+            "label": "Aceitar a proposta",
+            "positiveOutcome": {
+              "description": "Você chega badalado e ganha mais chances de título"
+            },
+            "negativeOutcome": {
+              "description": "A adaptação ao novo elenco tira seus minutos"
+            }
+          },
+          "reject": {
+            "label": "Ficar",
+            "outcome": "Você segue titular sem abalos"
+          }
+        }
+      },
+      "club_crisis": {
+        "title": "Turbulência institucional",
+        "description": "Uma crise de bastidores agita o clube, e um interessado de fora liga perguntando se você toparia sair.",
+        "options": {
+          "stay_and_fight": {
+            "label": "Permanecer e enfrentar a turbulência",
+            "outcome": "O caos interno praticamente zera suas chances de título esta temporada"
+          }
+        }
+      },
+      "return_home": {
+        "title": "Chamado da família",
+        "description": "Depois de tempo fora, sua família pede pra você voltar pro seu país de origem.",
+        "options": {
+          "stay_abroad": {
+            "label": "Ficar",
+            "negativeOutcome": {
+              "description": "A distância pesa e o rendimento cai por um tempo"
+            }
+          },
+          "return_home": {
+            "label": "Voltar para"
+          }
+        }
+      },
+      "giant_tattoo": {
+        "title": "Visual novo antes da temporada",
+        "description": "Um estilista badalado propõe um corte de cabelo extremamente ousado pros seus primeiros jogos.",
+        "options": {
+          "accept": {
+            "label": "Topar o visual",
+            "positiveOutcome": {
+              "probability": 70,
+              "description": "Vira sua marca registrada e você joga com outra confiança"
+            },
+            "negativeOutcome": {
+              "probability": 30,
+              "description": "Uma reação alérgica te tira de campo por uns dias"
+            }
+          },
+          "reject": {
+            "label": "Manter o visual de sempre",
+            "outcome": "Nada muda"
+          }
+        }
+      },
+      "tax_trouble": {
+        "title": "Imbróglio com o visto de trabalho",
+        "description": "Uma mudança na lei local complica sua situação de visto e ameaça sua permanência no país.",
+        "options": {
+          "stay_and_fight": {
+            "label": "Ficar e resolver",
+            "negativeOutcome": {
+              "description": "A burocracia consome sua cabeça e o rendimento cai"
+            }
+          },
+          "search_exit": {
+            "label": "Sair para"
+          }
+        }
+      },
+      "foreign_grandfather": {
+        "title": "Raízes de outro país",
+        "description": "Uma pesquisa genealógica revela que você tem direito a defender outra seleção nacional.",
+        "options": {
+          "switch_national_team": {
+            "label": "Trocar de seleção",
+            "outcome": "Você passa a representar sua nova seleção"
+          },
+          "keep_national_team": {
+            "label": "Seguir na seleção atual",
+            "outcome": "Você segue representando sua seleção de sempre"
+          }
+        }
+      },
+      "finish_high_school": {
+        "title": "Curso de licença de treinador",
+        "description": "Enquanto ainda joga, você tem a chance de começar a se formar como treinador.",
+        "options": {
+          "accept": {
+            "label": "Começar o curso",
+            "positiveOutcome": {
+              "description": "A visão tática aprendida te deixa mais maduro em campo"
+            },
+            "negativeOutcome": {
+              "description": "O tempo dividido tira um pouco do seu foco no time"
+            }
+          },
+          "reject": {
+            "label": "Focar só em jogar",
+            "outcome": "Sem mudanças"
+          }
+        }
+      },
+      "triumphant_return": {
+        "title": "O convite do seu primeiro clube",
+        "description": "O clube onde tudo começou quer te trazer de volta pra fechar a carreira em casa.",
+        "options": {}
+      },
+      "club_national_team_conflict": {
+        "title": "Encontro marcado com a seleção",
+        "description": "Seu clube não quer liberar você para {tournament}, mas a federação insiste na convocação.",
+        "options": {
+          "go_anyway": {
+            "label": "Viajar mesmo assim",
+            "positiveOutcome": {
+              "description": "Você entra em campo por {tournament}"
+            },
+            "negativeOutcome": {
+              "description": "Volta pro clube marcado como reserva"
+            }
+          },
+          "comply": {
+            "label": "Obedecer o clube",
+            "positiveOutcome": {
+              "description": "Sua posição no time titular não é afetada"
+            },
+            "negativeOutcome": {
+              "description": "Você fica de fora de {tournament}"
+            }
+          }
+        }
+      },
+      "injury_at_peak": {
+        "title": "Dor muscular na reta final",
+        "description": "Uma lesão surge bem na reta final da disputa por {championship}. Arrisca ou preserva o corpo?",
+        "options": {
+          "play_injured": {
+            "label": "Jogar no sacrifício",
+            "positiveOutcome": {
+              "description": "Suas chances de erguer {championship} disparam"
+            },
+            "negativeOutcome": {
+              "description": "Você piora a lesão"
+            }
+          },
+          "recover": {
+            "label": "Priorizar a recuperação",
+            "negativeOutcome": {
+              "description": "Suas chances de erguer {championship} despencam"
+            },
+            "neutralOutcome": {
+              "description": "A lesão é tratada com tranquilidade"
+            }
+          }
+        }
+      },
+      "injury": {
+        "title": "{injury}",
+        "description": "Sua recuperação vai deixar você fora de ritmo durante este período.",
+        "options": {
+          "continue": {
+            "label": "Começar a recuperação",
+            "negativeOutcome": {
+              "description": "-{ovr} OVR"
+            }
+          }
+        }
+      },
+      "decisive_penalty": {
+        "title": "A cobrança que vale tudo",
+        "description": "Tudo se resume a essa cobrança de pênalti para decidir {championship}.",
+        "options": {
+          "left": {
+            "label": "Cavadinha por cima do goleiro"
+          },
+          "right": {
+            "label": "Chute forte no ângulo"
+          }
+        },
+        "resultLabels": {
+          "goal": "Gol!",
+          "save": "Defesa!"
+        }
+      },
+      "new_manager": {
+        "title": "Técnico novo",
+        "description": "O clube contratou um novo treinador, e ele ainda não sabe o que você vale.",
+        "options": {
+          "impress_in_training": {
+            "label": "Impressionar nos treinos",
+            "positiveOutcome": {
+              "probability": 55,
+              "description": "Ele gosta do que vê, você sobe na hierarquia"
+            },
+            "negativeOutcome": {
+              "probability": 45,
+              "description": "Ele ainda não te enxerga como titular"
+            }
+          },
+          "stay_patient": {
+            "label": "Ter paciência",
+            "outcome": "Você espera a poeira baixar, sem arriscar nada"
+          }
+        }
+      },
+      "derby_spotlight": {
+        "title": "Clássico decisivo",
+        "description": "O maior clássico da temporada está chegando, e todo mundo vai estar de olho em você.",
+        "options": {
+          "embrace_the_pressure": {
+            "label": "Abraçar a pressão",
+            "positiveOutcome": {
+              "probability": 55,
+              "description": "Você vira herói do clássico, moral lá em cima"
+            },
+            "negativeOutcome": {
+              "probability": 45,
+              "description": "Você trava, e a chance some no susto"
+            }
+          },
+          "focus_on_process": {
+            "label": "Manter a cabeça fria",
+            "outcome": "Você joga como sempre, sem se deixar levar pelo clima"
+          }
+        }
+      },
+      "testimonial_match": {
+        "title": "Jogo de despedida",
+        "description": "O clube quer organizar um jogo homenagem pela sua história ali.",
+        "options": {
+          "hold_the_testimonial": {
+            "label": "Aceitar a homenagem",
+            "outcome": "A torcida te aplaude de pé, e isso te recarrega"
+          },
+          "keep_it_low_key": {
+            "label": "Preferir discrição",
+            "outcome": "Você agradece, mas prefere deixar isso pra depois"
+          }
+        }
+      },
+      "agent_ultimatum": {
+        "title": "Ultimato do empresário",
+        "description": "Seu empresário quer forçar uma saída caso o clube não te valorize mais.",
+        "options": {
+          "reassure_the_club": {
+            "label": "Acalmar as coisas e ficar",
+            "negativeOutcome": {
+              "description": "A novela deixa o ambiente esquisito por um tempo"
+            }
+          }
+        }
+      },
+      "wonderkid_signing": {
+        "title": "Nova joia no elenco",
+        "description": "O clube contratou uma promessa mirim exatamente na sua posição.",
+        "options": {
+          "rise_to_the_challenge": {
+            "label": "Aceitar o desafio",
+            "positiveOutcome": {
+              "probability": 50,
+              "description": "Você sobe de nível e deixa claro quem manda"
+            },
+            "negativeOutcome": {
+              "probability": 50,
+              "description": "O garoto rouba minutos que eram seus"
+            }
+          },
+          "welcome_and_mentor": {
+            "label": "Acolher e orientar o garoto",
+            "outcome": "O vestiário fica mais unido com sua atitude"
+          }
+        }
+      },
+      "boot_deal": {
+        "title": "Contrato de chuteiras",
+        "description": "Uma marca esportiva oferece um contrato de patrocínio exclusivo.",
+        "options": {
+          "sign_exclusive": {
+            "label": "Assinar o contrato",
+            "positiveOutcome": {
+              "probability": 65,
+              "description": "Você se sente ótimo de chuteira nova"
+            },
+            "negativeOutcome": {
+              "probability": 35,
+              "description": "Leva um tempo pra se acostumar com o modelo"
+            }
+          },
+          "stick_with_current_boots": {
+            "label": "Ficar com as de sempre",
+            "outcome": "Você prefere não mexer em time que está ganhando"
+          }
+        }
+      },
+      "hometown_parade": {
+        "title": "Recepção de herói",
+        "description": "Depois do título com a seleção, sua cidade natal organiza uma recepção.",
+        "options": {
+          "enjoy_the_moment": {
+            "label": "Aproveitar o momento",
+            "outcome": "Você absorve essa confiança pro resto da carreira"
+          },
+          "stay_grounded": {
+            "label": "Manter os pés no chão",
+            "outcome": "Você volta direto aos treinos, e o clube nota a postura"
+          }
+        }
+      },
+      "podcast_interview": {
+        "title": "Entrevista no podcast",
+        "description": "Um podcast grande te chama, e a pauta vai passar por assuntos delicados do clube.",
+        "options": {
+          "speak_your_mind": {
+            "label": "Falar o que pensa",
+            "positiveOutcome": {
+              "probability": 50,
+              "description": "A sinceridade cai bem, torcida te abraça"
+            },
+            "negativeOutcome": {
+              "probability": 50,
+              "description": "Vira polêmica e o clube te escanteia"
+            }
+          },
+          "play_it_safe": {
+            "label": "Dar respostas seguras",
+            "outcome": "Entrevista morna, ninguém comenta"
+          }
+        }
+      },
+      "agent_change": {
+        "title": "Trocar de empresário",
+        "description": "Um empresário mais forte se oferece para cuidar da sua carreira.",
+        "options": {
+          "switch_agent": {
+            "label": "Trocar de empresário",
+            "positiveOutcome": {
+              "probability": 60,
+              "description": "Ele abre portas melhores mais pra frente"
+            },
+            "negativeOutcome": {
+              "probability": 40,
+              "description": "A transição atrapalha sua temporada"
+            }
+          },
+          "keep_agent": {
+            "label": "Ficar com o atual",
+            "outcome": "Você mantém quem te trouxe até aqui"
+          }
+        }
+      },
+      "packed_home_stadium": {
+        "title": "Casa lotada",
+        "description": "O estádio esgotou os ingressos e a torcida vai empurrar o time o jogo inteiro.",
+        "options": {
+          "feed_off_the_crowd": {
+            "label": "Se alimentar da torcida",
+            "positiveOutcome": {
+              "probability": 60,
+              "description": "Você joga inspirado e a torcida enlouquece"
+            },
+            "negativeOutcome": {
+              "probability": 40,
+              "description": "A pressão pesa e você some em campo"
+            }
+          },
+          "block_out_the_noise": {
+            "label": "Isolar o barulho",
+            "outcome": "Você joga concentrado, sem altos e baixos"
+          }
+        }
+      },
+      "controversial_red_card": {
+        "title": "Expulsão polêmica",
+        "description": "Você foi expulso num lance duvidoso, e a imprensa não fala de outra coisa.",
+        "options": {
+          "accept_the_ban": {
+            "label": "Aceitar a suspensão",
+            "outcome": "Você cumpre o gancho e perde espaço"
+          },
+          "appeal_publicly": {
+            "label": "Recorrer publicamente",
+            "positiveOutcome": {
+              "probability": 45,
+              "description": "Expulsão anulada, torcida te aplaude"
+            },
+            "negativeOutcome": {
+              "probability": 55,
+              "description": "O gancho aumenta e você vira reserva"
+            }
+          }
+        }
+      },
+      "crowd_turns": {
+        "title": "A torcida virou",
+        "description": "As vaias começaram a descer da arquibancada toda vez que você toca na bola.",
+        "options": {
+          "win_them_back": {
+            "label": "Reconquistar a torcida",
+            "positiveOutcome": {
+              "probability": 55,
+              "description": "Você se entrega e vira o jogo com eles"
+            },
+            "negativeOutcome": {
+              "probability": 45,
+              "description": "Não cola, e a relação piora"
+            }
+          },
+          "ignore_the_boos": {
+            "label": "Ignorar as vaias",
+            "outcome": "Você segue seu caminho, sem mudar nada"
+          }
+        }
+      },
+      "rival_press": {
+        "title": "Comparações da imprensa",
+        "description": "Os jornalistas não param de te comparar com {rivalName}.",
+        "options": {
+          "provoke": {
+            "label": "Provocar de volta",
+            "positiveOutcome": {
+              "probability": 50,
+              "description": "A alfinetada rende manchete e a torcida adora"
+            },
+            "negativeOutcome": {
+              "probability": 50,
+              "description": "Sai pela culatra e vira munição contra você"
+            }
+          },
+          "praise": {
+            "label": "Elogiar o rival",
+            "outcome": "A torcida respeita a classe"
+          }
+        }
+      },
+      "rival_milestone": {
+        "title": "Seu rival vira notícia",
+        "description": "{rivalName} acabou de conquistar algo grande, e todo mundo quer saber sua reação.",
+        "options": {
+          "use_as_fuel": {
+            "label": "Usar como motivação",
+            "positiveOutcome": {
+              "probability": 55,
+              "description": "Vira combustível puro pro seu treino"
+            },
+            "negativeOutcome": {
+              "probability": 45,
+              "description": "A comparação pesa mais do que ajuda"
+            }
+          },
+          "shrug_it_off": {
+            "label": "Dar de ombros",
+            "outcome": "Você segue seu próprio caminho, sem se abalar"
+          }
+        }
+      },
+      "rival_duel": {
+        "title": "Duelo direto",
+        "description": "Você e {rivalName} disputam a mesma vaga nas manchetes esta temporada.",
+        "options": {
+          "take_the_weight": {
+            "label": "Assumir a responsabilidade",
+            "positiveOutcome": {
+              "probability": 55,
+              "description": "Você aparece nos momentos decisivos"
+            },
+            "negativeOutcome": {
+              "probability": 45,
+              "description": "A pressão de decidir tudo sozinho pesa"
+            }
+          },
+          "let_the_team_carry_it": {
+            "label": "Deixar o coletivo falar mais alto",
+            "outcome": "Menos holofote em você, mais chances pro time"
+          }
+        }
+      },
+      "captain_armband": {
+        "title": "A braçadeira de capitão",
+        "description": "O elenco vota e o técnico quer te entregar a braçadeira de capitão a partir de agora.",
+        "options": {
+          "wear_it": {
+            "label": "Aceitar a braçadeira",
+            "positiveOutcome": {
+              "probability": 55,
+              "description": "Você veste a responsabilidade como uma luva"
+            },
+            "negativeOutcome": {
+              "probability": 45,
+              "description": "O peso extra da cobrança pesa mais do que ajuda"
+            }
+          },
+          "pass_it": {
+            "label": "Recusar, por ora",
+            "outcome": "Você prefere focar só no seu próprio jogo"
+          }
+        }
+      },
+      "iconic_number": {
+        "title": "A camisa símbolo do clube",
+        "description": "A diretoria oferece a você o número que carrega o peso da história do clube.",
+        "options": {
+          "claim_it": {
+            "label": "Assumir o número",
+            "positiveOutcome": {
+              "probability": 50,
+              "description": "Você honra a camisa e a torcida te idolatra ainda mais"
+            },
+            "negativeOutcome": {
+              "probability": 50,
+              "description": "Muita gente acha que você não fez por merecer ainda"
+            }
+          },
+          "let_someone_else": {
+            "label": "Deixar pra outro jogador",
+            "outcome": "Você prefere não carregar esse peso agora"
+          }
+        }
+      },
+      "locker_room_clash": {
+        "title": "Atrito no vestiário",
+        "description": "Um companheiro mais novo questiona sua liderança na frente do grupo, e todo mundo está de olho em como você reage.",
+        "options": {
+          "stand_your_ground": {
+            "label": "Impor respeito",
+            "positiveOutcome": {
+              "probability": 50,
+              "description": "O grupo reconhece sua autoridade"
+            },
+            "negativeOutcome": {
+              "probability": 50,
+              "description": "A resposta sai pela culatra e cria mais atrito"
+            }
+          },
+          "keep_the_peace": {
+            "label": "Manter a paz no grupo",
+            "outcome": "Você escolhe não alimentar a rixa"
+          }
+        }
+      },
+      "shirt_upgrade": {
+        "title": "Promoção na lista de inscritos",
+        "description": "O roupeiro te chama antes do treino: o clube liberou camisas de peso e quer saber se você quer assumir uma delas.",
+        "options": {
+          "take_number": {
+            "label": "Assumir a {number}",
+            "outcome": "Você passa a entrar em campo com a {number} nas costas"
+          },
+          "keep_current": {
+            "label": "Continuar com a sua",
+            "outcome": "Você prefere não mexer no que já é seu"
+          }
+        }
+      },
+      "shirt_legend_tribute": {
+        "title": "Homenagem da diretoria",
+        "description": "Depois de tudo que você construiu aqui, a diretoria abre a lista inteira e deixa você escolher o número que quiser.",
+        "options": {
+          "take_number": {
+            "label": "Escolher a {number}",
+            "outcome": "A {number} passa a ser sua por decisão do clube"
+          },
+          "keep_current": {
+            "label": "Ficar com a de sempre",
+            "outcome": "Você agradece, mas o seu número já diz tudo"
+          }
+        }
+      },
+      "severe_injury": {
+        "title": "Lesão grave",
+        "description": "O joelho travou num lance banal e o silêncio no estádio disse tudo. O departamento médico fala em temporada inteira de recuperação — e ninguém garante que você volta o mesmo.",
+        "options": {
+          "fight_back": {
+            "label": "Encarar a recuperação",
+            "outcome": "Você vai voltar a jogar, mas o teto da sua carreira nunca mais será o mesmo"
+          }
+        }
+      }
+    },
+    "positions": {
+      "LW": "PE",
+      "ST": "CA",
+      "RW": "PD",
+      "LM": "ME",
+      "CAM": "MEI",
+      "RM": "MD",
+      "LB": "LE",
+      "CM": "MC",
+      "RB": "LD",
+      "CDM": "VOL",
+      "CB": "ZAG",
+      "GK": "GOL"
+    },
+    "trophies": {
+      "league": "Liga",
+      "cup": "Copa",
+      "continental_primary": "Continental principal",
+      "continental_secondary": "Continental secundária",
+      "club_world_cup": "Mundial de Clubes",
+      "national_continental": "Seleção continental",
+      "world_cup": "Copa do Mundo",
+      "national_continental_by_confederation": {
+        "UEFA": "Eurocopa",
+        "CONMEBOL": "Copa América",
+        "CONCACAF": "Copa Ouro",
+        "CAF": "Copa Africana de Nações",
+        "AFC": "Copa Asiática",
+        "OFC": "Copa das Nações da OFC"
+      }
+    },
+    "awards": {
+      "ballon_dor": "Bola de Ouro",
+      "golden_boot": "Chuteira de Ouro",
+      "golden_glove": "Luva de Ouro"
+    },
+    "headlines": {
+      "trophy": {
+        "league": "{team} é campeão! Você levanta a taça da liga.",
+        "cup": "Copa nacional é do {team}, com você em campo.",
+        "continental_primary": "Glória continental: {team} conquista o continente.",
+        "continental_secondary": "{team} fatura o título continental e sonha mais alto.",
+        "club_world_cup": "{team} é campeão do mundo — e você estava lá.",
+        "national_continental": "Sua seleção é campeã continental!",
+        "world_cup": "CAMPEÃO DO MUNDO. Sua seleção conquista a Copa."
+      },
+      "award": {
+        "ballon_dor": "Bola de Ouro: você é eleito o melhor do planeta.",
+        "golden_boot": "Chuteira de Ouro: ninguém fez mais gols que você.",
+        "golden_glove": "Luva de Ouro: a defesa mais segura da temporada é sua."
+      },
+      "firstCallUp": "Convocado! Você veste a camisa da seleção pela primeira vez.",
+      "relegated": "Queda amarga: {team} é rebaixado.",
+      "promoted": "Acesso conquistado! {team} sobe de divisão.",
+      "breakoutSeason": "Temporada de explosão no {team}: você chega a {ovr} de overall.",
+      "joinedClub": "Acertado: você é o novo reforço do {team}.",
+      "joinedOnLoan": "Emprestado ao {team} para ganhar minutos.",
+      "relegatedBigClub": "A pior geração da história do {team} — rebaixado.",
+      "shirtAssigned": "Inscrito no {team}: a {number} é sua na estreia.",
+      "shirtUpgraded": "Camisa nova no {team}: você passa a vestir a {number}.",
+      "severeInjury": "Notícia dura: {injury} tira você de circulação por uma temporada."
+    },
+    "positionsFull": {
+      "LW": "ponta-esquerda",
+      "ST": "centroavante",
+      "RW": "ponta-direita",
+      "LM": "meia-esquerda",
+      "CAM": "meia-atacante",
+      "RM": "meia-direita",
+      "LB": "lateral-esquerdo",
+      "CM": "meio-campista",
+      "RB": "lateral-direito",
+      "CDM": "volante",
+      "CB": "zagueiro",
+      "GK": "goleiro"
+    },
+    "challenge": {
+      "title": "Desafio do dia",
+      "subtitle": "Mesma carreira pra todo mundo. O que muda são suas escolhas.",
+      "play": "Jogar o desafio",
+      "back": "Voltar",
+      "objective": "Objetivo",
+      "dealtHand": "A mão de hoje",
+      "hardNote": "Todo desafio é no modo Difícil.",
+      "ranking": "Ranking local",
+      "empty": "Nenhuma tentativa ainda. Jogue o desafio de hoje.",
+      "score": "Pontos",
+      "target": "Alvo",
+      "yourBest": "Seu recorde",
+      "played": "Desafios jogados",
+      "average": "Média",
+      "cleanRuns": "Sem quebrar a regra",
+      "ranked": "Valendo",
+      "friendly": "Amistoso",
+      "alreadyPlayed": "Você já fez a tentativa valendo de hoje. Jogar de novo conta como amistoso.",
+      "result": "Resultado do desafio",
+      "ruleBroken": "Regra quebrada — pontuação limitada",
+      "clear": "Limpar ranking",
+      "units": {
+        "goals": "gols",
+        "assists": "assistências",
+        "trophies": "títulos",
+        "overall": "de overall",
+        "caps": "jogos pela seleção",
+        "seasons": "temporadas",
+        "clubs": "países",
+        "apps": "jogos",
+        "cleanSheets": "jogos sem sofrer gol",
+        "points": "pontos"
+      },
+      "missions": {
+        "one_club_legend": {
+          "title": "Um clube só",
+          "brief": "Construa tudo onde começou. Nenhuma transferência definitiva."
+        },
+        "goal_machine": {
+          "title": "Máquina de gols",
+          "brief": "Acumule o máximo de gols na carreira inteira."
+        },
+        "playmaker": {
+          "title": "O garçom",
+          "brief": "Sirva o time: assistências acima de tudo."
+        },
+        "trophy_hoarder": {
+          "title": "Colecionador de taças",
+          "brief": "Levante o máximo de títulos que conseguir."
+        },
+        "collector": {
+          "title": "Prateleira variada",
+          "brief": "Ganhe tipos diferentes de troféu, não o mesmo várias vezes."
+        },
+        "prodigy": {
+          "title": "Prodígio",
+          "brief": "Chegue o mais alto possível antes de completar 22 anos."
+        },
+        "late_bloomer": {
+          "title": "Maturação tardia",
+          "brief": "Ainda esteja subindo quando a maioria já parou."
+        },
+        "underdog_idol": {
+          "title": "Ídolo improvável",
+          "brief": "Vire referência num clube pequeno — quanto menor o escudo, mais vale."
+        },
+        "globetrotter": {
+          "title": "Andarilho",
+          "brief": "Jogue em quantos países conseguir, ganhando pelo caminho."
+        },
+        "national_hero": {
+          "title": "Herói da seleção",
+          "brief": "Construa uma carreira internacional de peso."
+        },
+        "iron_man": {
+          "title": "Homem de ferro",
+          "brief": "Entre em campo o máximo de vezes possível."
+        },
+        "no_loans": {
+          "title": "Sem atalhos",
+          "brief": "Chegue ao topo sem nunca aceitar um empréstimo."
+        },
+        "continental_king": {
+          "title": "Rei do continente",
+          "brief": "Domine as noites continentais."
+        },
+        "resilient": {
+          "title": "Casca grossa",
+          "brief": "Chegue longe — e vale ainda mais se o caminho for acidentado."
+        },
+        "beloved": {
+          "title": "Amado pela torcida",
+          "brief": "Termine a carreira com a arquibancada do seu lado."
+        },
+        "marquee_number": {
+          "title": "Camisa pesada",
+          "brief": "Passe o máximo de temporadas vestindo um número de destaque."
+        },
+        "journeyman": {
+          "title": "Mercenário",
+          "brief": "Rode por muitos clubes e ganhe em todos que der."
+        },
+        "homecoming": {
+          "title": "Volta pra casa",
+          "brief": "Construa história no clube que te formou — e volte pra encerrar lá."
+        },
+        "sharpshooter": {
+          "title": "Temporada mágica",
+          "brief": "Faça a melhor temporada de gols que conseguir."
+        },
+        "youth_to_star": {
+          "title": "Do zero ao topo",
+          "brief": "Evolua o máximo possível a partir dos 50 de overall."
+        },
+        "unbreakable": {
+          "title": "Inquebrável",
+          "brief": "Chegue alto sem lesão grave e sem nunca ser rebaixado."
+        },
+        "individual_glory": {
+          "title": "Glória individual",
+          "brief": "Persiga os prêmios: artilharias e a Bola de Ouro."
+        },
+        "double_legend": {
+          "title": "Lenda dupla",
+          "brief": "Vire ídolo ou lenda em mais de um clube."
+        },
+        "loyal_servant": {
+          "title": "Servo fiel",
+          "brief": "Faça a passagem mais longa possível por um único clube."
+        },
+        "clean_sheet_wall": {
+          "title": "Muralha",
+          "brief": "Acumule o máximo de jogos sem sofrer gol."
+        },
+        "riser": {
+          "title": "Da segunda à elite",
+          "brief": "Suba de divisão e prove que não foi sorte."
+        },
+        "domestic_dominance": {
+          "title": "Dono do país",
+          "brief": "Encha a prateleira com títulos nacionais."
+        },
+        "world_class": {
+          "title": "Nível mundial",
+          "brief": "Chegue ao maior overall que conseguir."
+        },
+        "veteran": {
+          "title": "Veterano",
+          "brief": "Continue bom numa idade em que quase todos já pararam."
+        },
+        "complete_career": {
+          "title": "Carreira completa",
+          "brief": "Um pouco de tudo: títulos, seleção, status de lenda e nível."
+        }
+      }
+    }
+  }
+}
