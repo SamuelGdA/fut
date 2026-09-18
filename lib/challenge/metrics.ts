@@ -71,6 +71,12 @@ export interface CareerMetrics {
   loanSpells: number;
   /** Permanent moves only — loans don't count as leaving. */
   permanentTransfers: number;
+  /** Age at the first permanent move away from the club they came through. */
+  firstPermanentTransferAge: number | null;
+  /** Longest unbroken run of seasons at one club. */
+  longestSpellSeasons: number;
+  /** Reputation of the biggest club ever played for, 0-5. */
+  biggestClubReputation: number;
   legendClubs: ClubRun[];
   idolClubs: ClubRun[];
   /** Best (lowest-reputation) club the player became a legend at. */
@@ -103,7 +109,7 @@ function buildClubRuns(career: CareerState): ClubRun[] {
       existing ??
       {
         teamId: season.teamId,
-        name: team?.name ?? "—",
+        name: team?.name ?? "-",
         reputation: team ? (team.domestic_reputation + team.international_reputation) / 2 : 0,
         seasons: 0,
         appearances: 0,
@@ -207,12 +213,30 @@ export function buildCareerMetrics(career: CareerState): CareerMetrics {
   const lastTeamId = spellOrder[spellOrder.length - 1] ?? null;
 
   let permanentTransfers = 0;
+  let firstPermanentTransferAge: number | null = null;
   let previousPermanent: string | null = null;
   for (const season of seasons) {
     if (season.onLoan) continue;
-    if (previousPermanent !== null && previousPermanent !== season.teamId) permanentTransfers += 1;
+    if (previousPermanent !== null && previousPermanent !== season.teamId) {
+      permanentTransfers += 1;
+      if (firstPermanentTransferAge === null) firstPermanentTransferAge = season.age;
+    }
     previousPermanent = season.teamId;
   }
+
+  // The longest unbroken stay, which is not the same as total seasons at a
+  // club: leaving and coming back is two spells, and a "never settle" edict
+  // has to care about the difference.
+  let longestSpellSeasons = 0;
+  let runTeam: string | null = null;
+  let runLength = 0;
+  for (const season of seasons) {
+    if (season.teamId === runTeam) runLength += 1;
+    else { runTeam = season.teamId; runLength = 1; }
+    if (runLength > longestSpellSeasons) longestSpellSeasons = runLength;
+  }
+
+  const biggestClubReputation = clubs.reduce((max, c) => Math.max(max, c.reputation), 0);
 
   const loanSpells = (() => {
     let count = 0;
@@ -274,6 +298,9 @@ export function buildCareerMetrics(career: CareerState): CareerMetrics {
     ).size,
     loanSpells,
     permanentTransfers,
+    firstPermanentTransferAge,
+    longestSpellSeasons,
+    biggestClubReputation,
     legendClubs,
     idolClubs,
     smallestLegendClub:

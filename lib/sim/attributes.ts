@@ -48,28 +48,71 @@ export function attributeKeysFor(position: PositionCode): AttributeKey[] {
 
 type WeightMap = Partial<Record<AttributeKey, number>>;
 
-/** How much each attribute contributes to OVR, per position. Each row sums to 1. */
+/**
+ * How much each attribute contributes to the card, per position. Each row
+ * sums to 1.
+ *
+ * Fitted against real cards from the game this one is modelled on rather
+ * than chosen by feel, and the fit is what forced the shape: off-position
+ * attributes carry *zero*. An elite striker rated 91 there has 29 defending
+ * and nobody docks him for it; a centre-back rated 88 has 41 shooting. Every
+ * version of this table that taxed a card for the stats its position never
+ * uses was wrong in the same direction, and wrong most for the players with
+ * the most lopsided cards: Harry Kane came out ten points light because his
+ * pace is 62.
+ */
 const OVR_WEIGHTS: Record<PositionCode, WeightMap> = {
-  ST:  { shooting: 0.35, pace: 0.2,  dribbling: 0.15, physical: 0.15, passing: 0.1,  defending: 0.05 },
-  LW:  { pace: 0.25, dribbling: 0.25, shooting: 0.2,  passing: 0.2,  physical: 0.05, defending: 0.05 },
-  RW:  { pace: 0.25, dribbling: 0.25, shooting: 0.2,  passing: 0.2,  physical: 0.05, defending: 0.05 },
-  CAM: { passing: 0.3,  dribbling: 0.25, shooting: 0.2,  pace: 0.1,  physical: 0.1,  defending: 0.05 },
-  LM:  { passing: 0.25, dribbling: 0.25, pace: 0.2,  shooting: 0.15, defending: 0.08, physical: 0.07 },
-  RM:  { passing: 0.25, dribbling: 0.25, pace: 0.2,  shooting: 0.15, defending: 0.08, physical: 0.07 },
-  CM:  { passing: 0.32, dribbling: 0.22, defending: 0.15, physical: 0.13, pace: 0.1,  shooting: 0.08 },
-  CDM: { defending: 0.32, passing: 0.25, physical: 0.22, dribbling: 0.11, pace: 0.05, shooting: 0.05 },
-  LB:  { defending: 0.3,  pace: 0.22, passing: 0.18, physical: 0.15, dribbling: 0.1,  shooting: 0.05 },
-  RB:  { defending: 0.3,  pace: 0.22, passing: 0.18, physical: 0.15, dribbling: 0.1,  shooting: 0.05 },
-  CB:  { defending: 0.45, physical: 0.3,  passing: 0.1,  pace: 0.1,  dribbling: 0.03, shooting: 0.02 },
-  GK:  { reflexes: 0.22, diving: 0.21, positioning: 0.21, handling: 0.21, kicking: 0.1, speed: 0.05 },
+  ST:  { shooting: 0.45, dribbling: 0.20, physical: 0.16, passing: 0.11, pace: 0.08 },
+  LW:  { dribbling: 0.34, shooting: 0.24, passing: 0.20, pace: 0.14, physical: 0.08 },
+  RW:  { dribbling: 0.34, shooting: 0.24, passing: 0.20, pace: 0.14, physical: 0.08 },
+  CAM: { passing: 0.32, dribbling: 0.30, shooting: 0.22, pace: 0.09, physical: 0.07 },
+  LM:  { dribbling: 0.33, passing: 0.27, shooting: 0.20, pace: 0.15, physical: 0.05 },
+  RM:  { dribbling: 0.33, passing: 0.27, shooting: 0.20, pace: 0.15, physical: 0.05 },
+  CM:  { passing: 0.36, dribbling: 0.30, defending: 0.12, physical: 0.09, shooting: 0.08, pace: 0.05 },
+  CDM: { defending: 0.32, passing: 0.27, physical: 0.19, dribbling: 0.15, pace: 0.04, shooting: 0.03 },
+  LB:  { defending: 0.26, pace: 0.20, passing: 0.20, dribbling: 0.16, physical: 0.14, shooting: 0.04 },
+  RB:  { defending: 0.26, pace: 0.20, passing: 0.20, dribbling: 0.16, physical: 0.14, shooting: 0.04 },
+  CB:  { defending: 0.48, physical: 0.27, passing: 0.12, dribbling: 0.07, pace: 0.06 },
+  // Kicking is weighted above what the fit alone wants. It moves a keeper's
+  // overall very little either way, but the same number sets his ceiling,
+  // and at 0.06 the game capped kicking seventeen points under the overall
+  // while real keepers are within six of it.
+  GK:  { reflexes: 0.29, diving: 0.25, positioning: 0.19, handling: 0.16, kicking: 0.11 },
 };
 
+/**
+ * What the reference game adds on top of the weighted average.
+ *
+ * Its overall is computed from roughly thirty-five sub-attributes, not from
+ * the six the card prints, and several of the ones it leans on hardest
+ * (reactions, composure, interceptions, positioning) are not visible on the
+ * face of the card at all. The net effect is a systematic offset: a real
+ * card sits a few points above the weighted average of its own six numbers,
+ * and the offset is larger in midfield, where the invisible attributes carry
+ * the most weight, and near zero in goal, where the six printed stats *are*
+ * the ones the overall is built from.
+ *
+ * Modelling that as a constant per position reproduces all twenty-three
+ * reference cards to within 1.7 points, which is closer than the year-to-year
+ * drift in the source.
+ */
+const OVR_BONUS: Record<PositionCode, number> = {
+  ST: 3.6, LW: 3.6, RW: 3.6, LM: 3.0, RM: 3.0,
+  CAM: 5.0, CM: 5.0, CDM: 6.0,
+  CB: 4.1, LB: 3.2, RB: 3.2,
+  GK: 1.0,
+};
 export function ovrWeights(position: PositionCode): WeightMap {
   return OVR_WEIGHTS[position];
 }
 
-/** Weighted average of the attributes that matter for this position. */
+/** Weighted average of the attributes this position is rated on, plus its bonus. */
 export function computeOverall(attributes: Attributes, position: PositionCode): number {
+  return weightedAverage(attributes, position) + OVR_BONUS[position];
+}
+
+/** The card without the bonus, which is the space every cap and shift works in. */
+function weightedAverage(attributes: Attributes, position: PositionCode): number {
   const weights = OVR_WEIGHTS[position];
   let sum = 0;
   for (const [key, weight] of Object.entries(weights)) {
@@ -84,15 +127,26 @@ function clampAttr(value: number): number {
 
 /**
  * Shifts every attribute by a constant so the weighted average lands exactly
- * on `target`, then repeats a few times to absorb clamping at the 1..99 edges.
+ * on `target`, then repeats a few times to absorb clamping at the edges.
+ *
+ * Pass `potential` and the edge each attribute clamps against becomes its own
+ * ceiling rather than a flat 99. Without it, every trophy season handed a
+ * point to all six attributes whether or not they had anywhere left to go,
+ * and a decorated generational career simply walked the whole card up to the
+ * top of the scale: two thirds of them finished with at least one 99 and the
+ * average had nearly two. The rise still happens — it just lands on the parts
+ * of the card that can still take it.
  */
 export function normalizeToOverall(
   attributes: Attributes,
   position: PositionCode,
   target: number,
+  potential?: number,
 ): Attributes {
   const weights = OVR_WEIGHTS[position];
   let result = { ...attributes };
+  const limitOf = (key: AttributeKey) =>
+    potential === undefined ? 99 : Math.min(99, attributeCeiling(potential, key, position));
 
   for (let pass = 0; pass < 6; pass += 1) {
     const current = computeOverall(result, position);
@@ -102,8 +156,9 @@ export function normalizeToOverall(
     // Only attributes that still have headroom in the needed direction can absorb the shift.
     let movableWeight = 0;
     for (const [key, weight] of Object.entries(weights)) {
-      const value = result[key as AttributeKey];
-      const canMove = gap > 0 ? value < 99 : value > 1;
+      const attrKey = key as AttributeKey;
+      const value = result[attrKey];
+      const canMove = gap > 0 ? value < limitOf(attrKey) : value > 1;
       if (canMove) movableWeight += weight ?? 0;
     }
     if (movableWeight <= 0) break;
@@ -114,8 +169,9 @@ export function normalizeToOverall(
       if (!weight) continue;
       const attrKey = key as AttributeKey;
       const value = result[attrKey];
-      const canMove = gap > 0 ? value < 99 : value > 1;
-      if (canMove) next[attrKey] = clampAttr(value + shift);
+      const limit = limitOf(attrKey);
+      const canMove = gap > 0 ? value < limit : value > 1;
+      if (canMove) next[attrKey] = Math.min(limit, clampAttr(value + shift));
     }
     result = next;
   }
@@ -150,7 +206,10 @@ export function createStartingAttributes(position: PositionCode, startingOverall
     diving: 50, handling: 50, kicking: 50, reflexes: 50, speed: 50, positioning: 50,
   };
 
-  const shape = STARTING_SHAPE[position];
+  // A position that isn't in the table would throw on Object.entries and take
+  // the whole page down. That is reachable from a persisted draft written by
+  // an older build (or edited by hand), so fall back rather than crash.
+  const shape = STARTING_SHAPE[position] ?? STARTING_SHAPE.CM;
   for (const [key, offset] of Object.entries(shape)) {
     base[key as AttributeKey] = clampAttr(50 + (offset ?? 0));
   }
@@ -307,8 +366,40 @@ function productionAgeValue(age: number): number {
   return 0.25;
 }
 
+/**
+ * How growth is shared out across a card.
+ *
+ * Not a straight line in the weight any more. A line made the top attribute
+ * grow twice as fast as the second one, so a striker's Finishing ran away
+ * while his Dribbling stalled and the card came out 84 overall with 95
+ * Finishing and 68 Dribbling. The cards this game is modelled on do not look
+ * like that: Haaland is a 91 with 93 Shooting and 80 Dribbling, and his
+ * second-best relevant stat is right behind his best.
+ *
+ * So the curve saturates. Everything the position genuinely uses — anything
+ * weighted at or above the knee — grows at full speed, and only the stats the
+ * position has no use for fall away. That is what puts a striker's Defending
+ * at 40 while keeping his Dribbling within a few points of his Finishing.
+ */
 const AFFINITY_FLOOR = 0.1;
-const AFFINITY_SLOPE = 2.0;
+/**
+ * How sharply growth falls away from a position's main attribute. Below 1 so
+ * the second and third stats stay close behind the first: the cards this game
+ * is modelled on have a striker's Dribbling within a few points of his
+ * Finishing, and only his Defending far away.
+ */
+const AFFINITY_FALLOFF = 0.6;
+
+/**
+ * Measured against the position's *own* top weight rather than against an
+ * absolute scale. A centre-back's Defending and a striker's Finishing are both
+ * the thing that position is for, whatever number the weight table happens to
+ * give them, and both should grow fastest on their own card.
+ */
+function affinityCurve(weight: number, topWeight: number): number {
+  const relative = topWeight > 0 ? Math.min(1, weight / topWeight) : 0;
+  return AFFINITY_FLOOR + (1 - AFFINITY_FLOOR) * Math.pow(relative, AFFINITY_FALLOFF);
+}
 
 /**
  * Because OVR is a weighted average and affinity rises with that same weight,
@@ -321,12 +412,13 @@ const AFFINITY_SLOPE = 2.0;
  * at a comparable rate, while still letting the attributes that matter most to
  * a given position grow fastest *within* that card.
  */
-const REFERENCE_CONCENTRATION = 0.62;
+const REFERENCE_CONCENTRATION = 0.98;
 
 const AFFINITY_NORMALISER: Record<PositionCode, number> = Object.fromEntries(
   (Object.entries(OVR_WEIGHTS) as [PositionCode, WeightMap][]).map(([position, weights]) => {
+    const topWeight = Math.max(...Object.values(weights).map((w) => w ?? 0));
     const aggregate = Object.values(weights).reduce(
-      (sum, w) => sum + (w ?? 0) * (AFFINITY_FLOOR + AFFINITY_SLOPE * (w ?? 0)),
+      (sum, w) => sum + (w ?? 0) * affinityCurve(w ?? 0, topWeight),
       0,
     );
     return [position, aggregate > 0 ? REFERENCE_CONCENTRATION / aggregate : 1];
@@ -339,32 +431,126 @@ const AFFINITY_NORMALISER: Record<PositionCode, number> = Object.fromEntries(
  * keeps it from being literally zero, but the slope does the real work.
  */
 function affinity(weight: number, position: PositionCode): number {
-  return (AFFINITY_FLOOR + AFFINITY_SLOPE * weight) * AFFINITY_NORMALISER[position];
+  const weights = OVR_WEIGHTS[position];
+  const topWeight = Math.max(...Object.values(weights).map((w) => w ?? 0));
+  return affinityCurve(weight, topWeight) * AFFINITY_NORMALISER[position];
 }
 
 /**
  * A ceiling isn't flat across the card. A striker capped at 80 should still be
- * allowed to finish like an 88 while defending like a 70 — that's what makes a
- * card read as the position it plays. The spread follows the position's own OVR
- * weights, so the strongest attribute sits `CEILING_SPREAD` above the ceiling
- * and an irrelevant one sits the same distance below.
+ * allowed to finish above that while defending well below it — that's what
+ * makes a card read as the position it plays. The spread follows the position's
+ * own OVR weights, so the strongest attribute sits above the ceiling and an
+ * irrelevant one sits the same distance below.
+ *
+ * The number is set against the cards this game is modelled on, where the best
+ * *skill* stat lands within a couple of points of the overall and only pace
+ * ever runs six clear: Haaland is a 91 with 93 shooting, Lewandowski a 90 with
+ * 91, Van Dijk an 89 with 90 defending. At 11 the ceiling let a striker finish
+ * eight above his own potential, and the game printed 84-rated cards with 95
+ * finishing — internally consistent, and not a card FC would ever print.
  */
-const CEILING_SPREAD = 11;
+const CEILING_SPREAD = 8;
+
+/**
+ * The weighted average of `relative` for a position, which is what decides
+ * where its *overall* ceiling lands once every attribute has grown out.
+ *
+ * This has to be subtracted back off, or the spread quietly changes how good
+ * each position can ever be. A goalkeeper's weights are nearly flat across
+ * its four big attributes, so all four ceilings sat at or above potential and
+ * a keeper finished around potential + 9. A striker's weights are steeply
+ * graded, so only finishing got the high ceiling and everything else was
+ * capped below: potential + 3. Same rolled potential, six OVR apart, purely
+ * because of the shape of the weight table — which is why keepers averaged 84
+ * peak while strikers averaged 73.
+ */
+const CEILING_MEAN: Record<PositionCode, number> = (() => {
+  const out = {} as Record<PositionCode, number>;
+  for (const position of Object.keys(OVR_WEIGHTS) as PositionCode[]) {
+    const weights = OVR_WEIGHTS[position];
+    const values = Object.values(weights).map((w) => w ?? 0);
+    const max = Math.max(...values);
+    out[position] = max > 0 ? values.reduce((sum, w) => sum + w * w, 0) / max : 0;
+  }
+  return out;
+})();
+
+/**
+ * The gap between a card that has fully grown and one that actually exists.
+ *
+ * The centring above assumes every attribute reaches its own ceiling, which is
+ * what would make a finished card land exactly on its potential. Real cards do
+ * not: the stats a position barely uses never get near their ceilings — which
+ * is right, and is what gives a striker 40 Defending — so the weighted average
+ * settles several points under potential while the one stat the position lives
+ * on sits at a ceiling *above* it. That is where 83-rated strikers with 92
+ * Finishing came from.
+ *
+ * Subtracting the shortfall only bites on the attributes that are actually
+ * ceiling-bound, which is the handful at the top of the card. The ones far
+ * below their cap are limited by growth, not by this, and do not move.
+ */
+const CEILING_STALL = 2;
 
 function attributeCeiling(potential: number, key: AttributeKey, position: PositionCode): number {
   const weights = OVR_WEIGHTS[position];
   const max = Math.max(...Object.values(weights).map((w) => w ?? 0));
   const relative = max > 0 ? (weights[key] ?? 0) / max : 0;
-  return clampAttr(potential + CEILING_SPREAD * (relative * 2 - 1));
+  // Centred on the position's own weighted mean, so a fully grown card lands
+  // on `potential` whatever it plays, while the attributes inside it still
+  // spread the way the position demands. `potential` is an overall, and a
+  // ceiling is an attribute, so the position's bonus comes back off first:
+  // without that every card would grow to its potential *plus* the bonus.
+  return clampAttr(
+    potential -
+      OVR_BONUS[position] +
+      CEILING_SPREAD * (relative - CEILING_MEAN[position]) * 2 -
+      CEILING_STALL,
+  );
 }
 
 /**
  * Diminishing returns as an attribute nears *its own* ceiling, so the same
  * season's work buys less the closer you are. This keeps a high attribute
  * feeling earned, and stops one stat running off to 99 while the rest stall.
+ *
+ * Zero at the ceiling, and it used to be 0.12. That floor meant nothing ever
+ * actually stopped: Physical and Pace are the two attributes that grow purely
+ * from playing rather than from producing, so they kept collecting a twelfth
+ * of a full season's work every year and drifted a dozen points past their cap.
+ * That is where the cards with 95 Physical on an 82 centre-back came from — the
+ * stat the position cares least about ending up the highest on the card.
  */
+/**
+ * How far one attribute may run ahead of the card it sits on before its
+ * growth starts costing more.
+ *
+ * The ceiling alone could not hold the shape together. A striker's finishing
+ * grows fastest by design, so it arrives at its cap years before the rest of
+ * the card arrives at theirs, and a career that peaks eight under its
+ * potential still prints a finishing that does not. That is how the game came
+ * to show a best stat five points clear of the overall where the cards it is
+ * modelled on average two.
+ *
+ * A brake rather than a cap, and one that never reaches zero: capping an
+ * attribute at overall-plus-a-bit deadlocks the whole card, because raising
+ * the top stat barely moves a weighted average, so the cap binds on the first
+ * season and nothing grows again. An earlier attempt at exactly that dropped
+ * peak overall from 78 to 61.
+ */
+const ATTRIBUTE_LEAD = 6;
+const LEAD_DECAY = 10;
+const LEAD_FLOOR = 0.2;
+
+function leadBrake(value: number, overall: number): number {
+  const lead = value - overall;
+  if (lead <= ATTRIBUTE_LEAD) return 1;
+  return Math.max(LEAD_FLOOR, 1 - (lead - ATTRIBUTE_LEAD) / LEAD_DECAY);
+}
+
 function headroomFactor(value: number, ceiling: number): number {
-  return Math.max(0.12, Math.min(1.5, (ceiling - value) / 26));
+  return Math.max(0, Math.min(1.5, (ceiling - value) / 26));
 }
 
 /** Ageing erodes explosiveness first and game intelligence last. */
@@ -403,18 +589,27 @@ const ROLE_BY_POSITION: Record<PositionCode, PlayerRole> = Object.fromEntries(
  * you need to be good to produce output — while experience-driven positions
  * (full-back, keeper) grow for free. This is the floor that levels that out.
  */
-const PRODUCTION_FLOOR = 0.95;
+const PRODUCTION_FLOOR = 1.35;
 
 const GOAL_GROWTH_UNIT = 9.5;
 const ASSIST_GROWTH_UNIT = 9.5;
-const DRIBBLE_GROWTH_UNIT = 5.4;
-// Pace asks nothing of the player but availability, so it is kept deliberately
-// cheap — otherwise wingers and full-backs outgrow everyone for free, and a
-// talented teenager pins Pace to its ceiling before any earned stat has moved.
-const PACE_GROWTH_UNIT = 3.4;
-const PHYSICAL_GROWTH_UNIT = 5.6;
-const DEFENDING_GROWTH_UNIT = 5.1;
-const KEEPER_GROWTH_UNIT = 4.9;
+const DRIBBLE_GROWTH_UNIT = 7.0;
+/** Ball work happens every day, whatever the scoreline says. */
+const DRIBBLE_FLOOR = 1.3;
+// Pace and Physical ask nothing of the player but availability, so they are
+// kept deliberately cheap. Left level with the earned stats they simply won:
+// a centre-back finished with Physical as the highest number on his card 146
+// times out of 150, and a striker's Pace outran his Finishing more often than
+// not — because scoring goals is conditional on scoring goals, and turning up
+// is not.
+const PACE_GROWTH_UNIT = 2.6;
+const PHYSICAL_GROWTH_UNIT = 3.4;
+const DEFENDING_GROWTH_UNIT = 5.6;
+// Scaled up once, for a keeper's flat weight table, and then scaled up again
+// by AFFINITY_NORMALISER, which exists to do exactly that. Paid twice, a
+// keeper finished on his potential while every outfield position finished
+// eight short of it.
+const KEEPER_GROWTH_UNIT = 2.5;
 
 /**
  * What the player earned this season, per attribute, before ageing decline
@@ -450,15 +645,22 @@ function growthTriggers(context: GrowthContext): Partial<Record<AttributeKey, nu
       positioning:
         affinity(weights.positioning ?? 0, position) *
         KEEPER_GROWTH_UNIT *
-        1.15 *
+        1.4 *
         experienceFactor(age) *
-        (0.5 + 0.6 * solidity) *
+        // Reading the game is the keeper's own work. Behind a leaky defence
+        // he gets *more* practice at it, not less, so the term the team
+        // contributes is deliberately the smaller half.
+        (0.78 + 0.42 * solidity) *
         appsFactor,
       handling: affinity(weights.handling ?? 0, position) * KEEPER_GROWTH_UNIT * (0.8 + 1.0 * appsFactor),
+      // Distribution is drilled every day of the week, so it grows from
+      // playing rather than from the assists a keeper almost never gets.
+      // Tying it to assists alone left kicking as the one stat on the card
+      // that never moved.
       kicking:
         affinity(weights.kicking ?? 0, position) *
         KEEPER_GROWTH_UNIT *
-        (0.6 + 1.3 * saturate(ratio(stats.assists, apps), 0.08) + 0.5 * (teamReputation / 5)),
+        (1.0 + 0.9 * appsFactor + 0.6 * saturate(ratio(stats.assists, apps), 0.08) + 0.3 * (teamReputation / 5)),
       speed: affinity(weights.speed ?? 0, position) * PACE_GROWTH_UNIT * paceAgeFactor(age) * (0.5 + 0.5 * appsFactor),
     };
   }
@@ -488,7 +690,8 @@ function growthTriggers(context: GrowthContext): Partial<Record<AttributeKey, nu
       (productionAgeValue(age) * assistRate * ASSIST_GROWTH_UNIT + PRODUCTION_FLOOR * appsFactor),
     // Dribbling grows with total chance creation (goals + assists), not tied to age.
     dribbling:
-      affinity(weights.dribbling ?? 0, position) * (DRIBBLE_GROWTH_UNIT * creationRate + 0.6 * appsFactor),
+      affinity(weights.dribbling ?? 0, position) *
+      (DRIBBLE_GROWTH_UNIT * creationRate + DRIBBLE_FLOOR * appsFactor),
     // Defending grows with experience and how solid the team was in front of it — it rewards age, not youth.
     defending: affinity(weights.defending ?? 0, position) * DEFENDING_GROWTH_UNIT * experienceFactor(age) * appsFactor * teamSolidity,
     // Pace is a pure athletic curve: it needs minutes to train, but no stat drives it.
@@ -649,31 +852,84 @@ export function applyGrowth(
     const gain = triggers[key] ?? 0;
     const fade = decline[key] ?? 0;
     const bonus = bonusShares?.[key] ? bonusShares[key]! * 4.5 : 0;
-    const headroom = headroomFactor(attributes[key], attributeCeiling(context.potential, key, position));
+    const ceiling = attributeCeiling(context.potential, key, position);
+    const headroom = headroomFactor(attributes[key], ceiling);
+    const lead = leadBrake(attributes[key], context.overall);
     const earned =
       (gain + bonus) *
       tap *
       coaching *
       ceilingBrake *
       rolled.multiplier *
-      headroom *
+      confidence *
       context.traitGrowth *
-      confidence;
+      headroom *
+      lead;
     next[key] = clampAttr(attributes[key] + earned + fade * context.traitDecline);
   }
 
   return { rng: rolled.rng, attributes: next, form: rolled.form };
 }
 
-/** Applies a flat OVR nudge (career-event bonuses) evenly across the card. */
+/** The least a training focus may move the attributes it targets, in points. */
+const TRAINING_FLOOR = 1;
+
+/** How far dedication may carry an attribute past the ceiling it was born with. */
+const TRAINING_OVERREACH = 4;
+
+/**
+ * Guarantees that a training focus actually paid.
+ *
+ * The bias `applyGrowth` adds is real but not reliably *visible*: a veteran's
+ * decline can eat it, a bad form roll can leave it under half a point, and the
+ * even redistribution that trophy bonuses and event deltas apply to the whole
+ * card can push the focused attribute back down again. Picking a focus and
+ * watching the number sit still reads as the choice having been ignored, so
+ * whatever else happened over the period, the attributes the player chose end
+ * it at least a full point up.
+ *
+ * Allowed to beat the player's potential, but only by
+ * `TRAINING_OVERREACH`. Potential describes where a career drifts to on its
+ * own and work the player chose to put in should be able to beat that, but
+ * uncapped it was worth a dozen points on a single attribute across a
+ * career: pick the same focus every time and one stat walked from its
+ * ceiling to 99 whatever the player was born with, which is most of the
+ * reason 99s turned up on cards that had no business carrying one.
+ */
+export function enforceTrainingFloor(
+  attributes: Attributes,
+  before: Attributes,
+  shares: Partial<Record<AttributeKey, number>>,
+  position: PositionCode,
+  potential?: number,
+): Attributes {
+  const next = { ...attributes };
+  for (const key of attributeKeysFor(position)) {
+    if (!shares[key]) continue;
+    const limit =
+      potential === undefined
+        ? 99
+        : Math.min(99, attributeCeiling(potential, key, position) + TRAINING_OVERREACH);
+    const floor = Math.min(limit, clampAttr(before[key] + TRAINING_FLOOR));
+    if (next[key] < floor) next[key] = floor;
+  }
+  return next;
+}
+
+/**
+ * Applies a flat OVR nudge (career-event bonuses) evenly across the card.
+ * Give it the player's potential and the nudge respects each attribute's own
+ * ceiling instead of walking the whole card to 99.
+ */
 export function shiftOverall(
   attributes: Attributes,
   position: PositionCode,
   delta: number,
+  potential?: number,
 ): Attributes {
   if (delta === 0) return attributes;
   const target = computeOverall(attributes, position) + delta;
-  return normalizeToOverall(attributes, position, target);
+  return normalizeToOverall(attributes, position, target, potential);
 }
 
 export function roundedAttributes(attributes: Attributes, position: PositionCode): Record<string, number> {

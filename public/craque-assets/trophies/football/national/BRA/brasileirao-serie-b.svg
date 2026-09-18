@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 96" width="64" height="96" role="img" aria-label="Taça do Brasileirão Série B">
+  <!-- The Série B trophy, drawn in the same flat style as the other national
+       cups in this set: a silver cup on a dark plinth, with the division's
+       green to tell it apart from the top-flight gold. -->
+  <defs>
+    <linearGradient id="bsbt-metal" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#8d97a4"/>
+      <stop offset=".45" stop-color="#e8eef5"/>
+      <stop offset="1" stop-color="#7a838f"/>
+    </linearGradient>
+  </defs>
+  <path d="M18 14h28v18c0 9-6 15-14 15s-14-6-14-15z" fill="url(#bsbt-metal)"/>
+  <path d="M18 18H12c-5 0-7 4-7 8 0 8 6 12 13 12" fill="none" stroke="url(#bsbt-metal)" stroke-width="4" stroke-linecap="round"/>
+  <path d="M46 18h6c5 0 7 4 7 8 0 8-6 12-13 12" fill="none" stroke="url(#bsbt-metal)" stroke-width="4" stroke-linecap="round"/>
+  <rect x="28" y="46" width="8" height="14" fill="url(#bsbt-metal)"/>
+  <rect x="18" y="60" width="28" height="7" rx="2" fill="#1f9d55"/>
+  <rect x="14" y="67" width="36" height="9" rx="2.5" fill="#14202e"/>
+  <text x="32" y="75" text-anchor="middle" font-family="Archivo, Arial Black, sans-serif"
+        font-size="7.5" font-weight="900" fill="#f7d117" letter-spacing="1">SERIE B</text>
+</svg>

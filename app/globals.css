@@ -141,6 +141,16 @@ body {
   background: var(--pill-bg);
 }
 
+/* The in-game top row is exactly as tall as the player card beside it and no
+   taller. Its height comes in as `--fc-card-h`, set from the card's own size
+   table, so the two can never drift apart. Only from `lg` up: below that the
+   row stacks and each block takes the height it needs. */
+@media (min-width: 64rem) {
+  .row-card-height {
+    height: var(--fc-card-h);
+  }
+}
+
 /* Thin pitch-stripe texture used behind hero and card art. */
 .stripes {
   background-image: repeating-linear-gradient(
@@ -224,6 +234,47 @@ body {
   );
   animation: sheen 1.5s cubic-bezier(0.22, 1, 0.36, 1) 0.25s both;
   pointer-events: none;
+}
+
+/* The volume slider: native range input, painted to match the pills around it
+   and given a hit area big enough for a thumb on a phone. */
+.volume-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 18px;
+  background: transparent;
+  cursor: pointer;
+}
+.volume-slider::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 999px;
+  background: var(--surface-2);
+}
+.volume-slider::-moz-range-track {
+  height: 4px;
+  border-radius: 999px;
+  background: var(--surface-2);
+}
+.volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  margin-top: -5px;
+  border-radius: 999px;
+  background: var(--pitch);
+  border: 2px solid var(--surface);
+}
+.volume-slider::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--surface);
+  border-radius: 999px;
+  background: var(--pitch);
+}
+.volume-slider:focus-visible {
+  outline: 2px solid var(--pitch);
+  outline-offset: 3px;
 }
 
 .stagger > * {

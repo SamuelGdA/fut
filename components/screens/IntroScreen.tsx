@@ -29,7 +29,7 @@ export function IntroScreen() {
   const teaserPosition = draft.position ?? "ST";
 
   return (
-    <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col items-center gap-10 px-4 py-10 sm:px-6 lg:flex-row lg:gap-14 lg:py-16">
+    <div className="scrollbar-thin mx-auto flex h-full w-full max-w-6xl flex-col items-center-safe justify-center-safe gap-6 overflow-y-auto px-4 py-6 sm:px-6 lg:flex-row lg:gap-14 lg:overflow-hidden lg:py-8">
       <div className="animate-fade-in-up w-full lg:w-[55%]">
         <p className="text-[11px] font-bold uppercase tracking-[0.26em] text-pitch">
           {brand.eyebrow}

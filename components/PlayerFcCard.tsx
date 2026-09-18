@@ -4,60 +4,113 @@ import { useI18n } from "@/lib/i18n/context";
 import { Avatar } from "./Avatar";
 import { ClubCrest, Flag } from "./Media";
 import { getLeagueOfTeam, getTeam } from "@/lib/data/dataset";
+import { leagueLogoUrl } from "@/lib/leagueBadges";
 import { getKitForTeam } from "@/lib/kits";
 import { ATTRIBUTE_ABBR, attributeKeysFor, type Attributes } from "@/lib/sim/attributes";
 import type { PositionCode } from "@/lib/sim/constants";
 import type { AvatarConfig } from "@/lib/avatar/config";
 import type { Country } from "@/lib/data/dataset";
 
-export type CardTier = "bronze" | "silver" | "gold" | "elite" | "legend";
+export type CardTier = "bronze" | "silver" | "gold" | "icon";
+
+/**
+ * Rarity bands.
+ *
+ * Four, not five: bronze to 64, silver through 74, a long gold stretch to 93,
+ * and a white ICON card reserved for the last six points. The gold band is
+ * deliberately the widest — it is where almost every real career lives, and
+ * splitting it further made two cards a single point apart look like different
+ * classes of player.
+ */
+const TIER_BANDS: { tier: CardTier; min: number; max: number }[] = [
+  { tier: "icon", min: 94, max: 99 },
+  { tier: "gold", min: 75, max: 93 },
+  { tier: "silver", min: 65, max: 74 },
+  { tier: "bronze", min: 0, max: 64 },
+];
 
 export function cardTier(overall: number): CardTier {
-  if (overall >= 92) return "legend";
-  if (overall >= 85) return "elite";
-  if (overall >= 75) return "gold";
-  if (overall >= 65) return "silver";
-  return "bronze";
+  return TIER_BANDS.find((b) => overall >= b.min)?.tier ?? "bronze";
 }
 
-/** Frame gradients, ink colour and glow per tier. */
-const TIER_STYLE: Record<CardTier, { frame: string; ink: string; sub: string; glow: string; ray: string }> = {
+/**
+ * How far up its own band a rating sits, 0 at the floor and 1 at the ceiling.
+ *
+ * This drives the polish on the plate: a 93 is the best gold there is and
+ * should look it, while a 75 has only just arrived. Kept as a ratio within the
+ * band rather than an absolute so every tier has its own full range of
+ * brilliance to climb.
+ */
+export function tierProgress(overall: number): number {
+  const band = TIER_BANDS.find((b) => overall >= b.min) ?? TIER_BANDS[TIER_BANDS.length - 1];
+  const span = band.max - band.min;
+  if (span <= 0) return 1;
+  return Math.min(1, Math.max(0, (overall - band.min) / span));
+}
+
+interface TierStyle {
+  /** The metal itself, top-left to bottom-right. */
+  plate: string;
+  /** A brighter band swept across the middle of the plate. */
+  sheen: string;
+  ink: string;
+  sub: string;
+  /** Hairline separating the name from the numbers. */
+  rule: string;
+  /** Colour of the diagonal streaks. */
+  streak: string;
+}
+
+const TIER_STYLE: Record<CardTier, TierStyle> = {
   bronze: {
-    frame: "linear-gradient(160deg,#8a5a2b 0%,#c98f4e 28%,#e0b077 46%,#b4753a 62%,#7a4c22 100%)",
-    ink: "#3b2410",
-    sub: "rgba(59,36,16,0.62)",
-    glow: "rgba(201,143,78,0.35)",
-    ray: "rgba(255,231,196,0.5)",
+    plate: "linear-gradient(155deg,#6f4520 0%,#9c6531 22%,#c68a4c 46%,#a06a34 68%,#6b421e 100%)",
+    sheen: "linear-gradient(105deg,transparent 34%,rgba(255,228,190,0.55) 50%,transparent 66%)",
+    ink: "#33200d",
+    sub: "rgba(51,32,13,0.66)",
+    rule: "rgba(51,32,13,0.28)",
+    streak: "rgba(255,226,186,0.55)",
   },
   silver: {
-    frame: "linear-gradient(160deg,#8d97a4 0%,#c9d2dc 28%,#eef3f8 46%,#aab4c0 62%,#79838f 100%)",
-    ink: "#242b33",
-    sub: "rgba(36,43,51,0.62)",
-    glow: "rgba(201,210,220,0.35)",
-    ray: "rgba(255,255,255,0.6)",
+    plate: "linear-gradient(155deg,#7e8894 0%,#aab4c0 22%,#dfe6ee 46%,#b3bdc9 68%,#7a838f 100%)",
+    sheen: "linear-gradient(105deg,transparent 34%,rgba(255,255,255,0.72) 50%,transparent 66%)",
+    ink: "#20262e",
+    sub: "rgba(32,38,46,0.66)",
+    rule: "rgba(32,38,46,0.26)",
+    streak: "rgba(255,255,255,0.7)",
   },
   gold: {
-    frame: "linear-gradient(160deg,#a97b17 0%,#e3b64c 26%,#f7dd8f 46%,#dcae42 62%,#9a6d12 100%)",
-    ink: "#3a2a05",
-    sub: "rgba(58,42,5,0.62)",
-    glow: "rgba(245,196,81,0.42)",
-    ray: "rgba(255,246,214,0.62)",
+    plate: "linear-gradient(155deg,#9a6d12 0%,#caa032 22%,#f2d271 46%,#d3a839 68%,#8f6410 100%)",
+    sheen: "linear-gradient(105deg,transparent 34%,rgba(255,246,214,0.7) 50%,transparent 66%)",
+    ink: "#3a2905",
+    sub: "rgba(58,41,5,0.66)",
+    rule: "rgba(58,41,5,0.26)",
+    streak: "rgba(255,247,219,0.75)",
   },
-  elite: {
-    frame: "linear-gradient(160deg,#1b2440 0%,#33456f 22%,#7f8fc4 44%,#2b3a5e 62%,#141b30 100%)",
-    ink: "#eaf0ff",
-    sub: "rgba(234,240,255,0.66)",
-    glow: "rgba(127,143,196,0.45)",
-    ray: "rgba(190,208,255,0.4)",
-  },
-  legend: {
-    frame: "linear-gradient(160deg,#3d1d5c 0%,#7b3fa8 22%,#d9a2f0 44%,#6a32a0 62%,#2a1240 100%)",
-    ink: "#fbeeff",
-    sub: "rgba(251,238,255,0.68)",
-    glow: "rgba(217,162,240,0.5)",
-    ray: "rgba(238,205,255,0.45)",
+  // The ICON plate: near-white platinum with warm gold ink, so the last six
+  // points of a career read as something else entirely.
+  icon: {
+    plate: "linear-gradient(155deg,#cfc8ba 0%,#efe9dd 20%,#fffdf7 46%,#e6dfd0 70%,#c6bdac 100%)",
+    sheen: "linear-gradient(105deg,transparent 34%,rgba(255,255,255,0.9) 50%,transparent 66%)",
+    ink: "#4a3a16",
+    sub: "rgba(74,58,22,0.62)",
+    rule: "rgba(74,58,22,0.24)",
+    streak: "rgba(255,252,242,0.85)",
   },
 };
+
+/** Card geometry per size, in pixels. Fixed on purpose — see the note below. */
+export const FC_CARD_SIZES = {
+  xs: { w: 124, h: 177 },
+  sm: { w: 164, h: 234 },
+  md: { w: 232, h: 331 },
+  lg: { w: 300, h: 429 },
+} as const;
+
+/**
+ * The shield. Square shoulders, straight sides, a foot tapering to a point —
+ * the same read as the cards this is modelled on.
+ */
+const SHIELD = "polygon(50% 0%, 100% 4.5%, 100% 78%, 50% 100%, 0% 78%, 0% 4.5%)";
 
 export interface FcCardData {
   overall: number;
@@ -79,7 +132,7 @@ export function PlayerFcCard({
 }: {
   data: FcCardData;
   size?: "xs" | "sm" | "md" | "lg";
-  /** Plays the flip-in + light sweep, used when a fresh card appears. */
+  /** Plays the flip-in, used when a fresh card appears. */
   reveal?: boolean;
   className?: string;
 }) {
@@ -90,48 +143,112 @@ export function PlayerFcCard({
   const league = team ? getLeagueOfTeam(team.id) : null;
   const keys = attributeKeysFor(data.position);
   const kit = getKitForTeam(data.teamId);
+  const { w, h } = FC_CARD_SIZES[size];
 
   const small = size === "sm" || size === "xs";
-  const width = size === "xs" ? "w-[124px]" : size === "sm" ? "w-[164px]" : size === "lg" ? "w-[300px]" : "w-[232px]";
   const nameSize = size === "xs" ? "text-sm" : size === "sm" ? "text-base" : size === "lg" ? "text-3xl" : "text-2xl";
   const ovrSize = size === "xs" ? "text-2xl" : size === "sm" ? "text-3xl" : size === "lg" ? "text-6xl" : "text-5xl";
 
+  // How far up its own band the rating sits, and everything the plate does
+  // with light follows it. The top of a band is meant to be noticeably
+  // brighter than the bottom without becoming hard to read: the six numbers
+  // on the front are the point of the card.
+  const climb = tierProgress(data.overall);
+  const streakOpacity = 0.1 + climb * 0.3;
+  const sheenOpacity = 0.16 + climb * 0.42;
+  const rimOpacity = 0.1 + climb * 0.45;
+  const bloomOpacity = climb * 0.34;
+
   return (
     <div
-      className={`relative ${width} aspect-[7/10] shrink-0 select-none ${reveal ? "animate-card-in" : ""} ${className}`}
-      style={{ filter: `drop-shadow(0 18px 34px ${style.glow})` }}
+      // Explicit width AND height rather than a width plus `aspect-ratio`.
+      // The card is often a flex item inside a stretching row, and a stretched
+      // cross-size beats `aspect-ratio`, so the old card silently grew taller
+      // than 7:10 depending on what happened to sit next to it. Fixed pixels
+      // cannot be stretched, so the card is now the same shape everywhere.
+      className={`relative shrink-0 grow-0 self-start select-none ${reveal ? "animate-card-in" : ""} ${className}`}
+      style={{ width: w, height: h }}
     >
       <div
-        className={`relative h-full w-full overflow-hidden ${reveal ? "sheen" : ""}`}
+        className="relative h-full w-full overflow-hidden"
         style={{
-          background: style.frame,
-          // Shield silhouette, the same read as an FC card. Flat zone runs to
-          // 80% so the attribute row never lands in the tapered point.
-          clipPath:
-            "polygon(50% 0%, 100% 6%, 100% 80%, 50% 100%, 0% 80%, 0% 6%)",
+          background: style.plate,
+          // The flat zone runs to 78% so the stat grid never lands inside the
+          // taper.
+          clipPath: SHIELD,
         }}
       >
-        {/* Sunburst rays behind the portrait. */}
+        {/* Diagonal streaks across the plate — the brushed-metal read of the
+            reference, and the thing that brightens as the rating climbs its
+            band. Masked away from the lower half so it never fights the
+            numbers. */}
         <div
-          className="pointer-events-none absolute inset-x-0 top-0 h-[62%]"
+          aria-hidden
+          className="pointer-events-none absolute inset-0"
           style={{
-            background: `conic-gradient(from 180deg at 50% 78%, transparent 0deg, ${style.ray} 8deg, transparent 16deg, transparent 24deg, ${style.ray} 32deg, transparent 40deg, transparent 48deg, ${style.ray} 56deg, transparent 64deg, transparent 116deg, ${style.ray} 124deg, transparent 132deg, transparent 140deg, ${style.ray} 148deg, transparent 156deg, transparent 164deg, ${style.ray} 172deg, transparent 180deg)`,
-            opacity: 0.5,
-            maskImage: "radial-gradient(70% 80% at 50% 78%, black 40%, transparent 78%)",
-            WebkitMaskImage: "radial-gradient(70% 80% at 50% 78%, black 40%, transparent 78%)",
+            background: `repeating-linear-gradient(108deg, transparent 0 14px, ${style.streak} 14px 16px, transparent 16px 30px)`,
+            opacity: streakOpacity,
+            maskImage: "linear-gradient(180deg, black 0%, black 46%, transparent 66%)",
+            WebkitMaskImage: "linear-gradient(180deg, black 0%, black 46%, transparent 66%)",
           }}
         />
 
-        {/* OVR + position block */}
-        <div className="absolute left-[9%] top-[9%] leading-none" style={{ color: style.ink }}>
+        {/* A single broad highlight sweeping the plate, which is what makes
+            the metal look curved rather than flat. Static: the old card ran a
+            looping light sweep that read as a rendering glitch. */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0"
+          style={{ background: style.sheen, opacity: sheenOpacity }}
+        />
+
+        {/* Soft pool of light behind the portrait so the avatar sits on the
+            plate instead of floating over it. */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 top-0 h-[58%]"
+          style={{
+            background: `radial-gradient(58% 62% at 50% 66%, ${style.streak} 0%, transparent 70%)`,
+            opacity: 0.14 + climb * 0.16,
+          }}
+        />
+
+        {/* Rim light. An inset shadow in the plate's own highlight colour, so
+            the edge of the shield catches the light instead of ending flat.
+            Inset means the clip contains it, which is what the old outside
+            glow could never manage. */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0"
+          style={{
+            boxShadow: `inset 0 0 ${Math.round(w * 0.12)}px ${style.streak}, inset 0 0 ${Math.round(w * 0.03)}px ${style.streak}`,
+            opacity: rimOpacity,
+          }}
+        />
+
+        {/* Bloom behind the rating, which is where the eye lands first. */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background: `radial-gradient(38% 26% at 22% 16%, ${style.streak} 0%, transparent 72%)`,
+            opacity: bloomOpacity,
+          }}
+        />
+
+        {/* OVR + position, top-left. */}
+        <div className="absolute left-[9%] top-[8%] leading-none" style={{ color: style.ink }}>
           <div className={`font-display font-black ${ovrSize}`}>{data.overall}</div>
-          <div className={`font-display font-bold tracking-wide ${small ? "text-[10px]" : "text-sm"}`}>
+          <div
+            className={`mt-0.5 font-display font-bold tracking-[0.08em] ${small ? "text-[10px]" : "text-sm"}`}
+            style={{ color: style.sub }}
+          >
             {t(`positions.${data.position}`)}
           </div>
         </div>
 
         {/* Portrait */}
-        <div className="absolute inset-x-0 top-[7%] flex h-[46%] items-end justify-center">
+        <div className="absolute inset-x-0 top-[6%] flex h-[47%] items-end justify-center">
           <Avatar
             config={data.avatar}
             kit={kit}
@@ -140,8 +257,8 @@ export function PlayerFcCard({
           />
         </div>
 
-        {/* Squad number, printed on the shirt itself — just below the collar,
-            white with a hard black outline so it reads on every kit colour. */}
+        {/* Squad number, printed on the shirt just below the collar. White with
+            a hard outline so it reads on every kit colour. */}
         {data.number != null && (
           <div
             className={`pointer-events-none absolute inset-x-0 top-[44%] text-center font-display font-black leading-none text-white ${
@@ -154,8 +271,6 @@ export function PlayerFcCard({
                     : "text-[24px]"
             }`}
             style={{
-              // Thick enough to survive a white kit, where a thin outline
-              // leaves white-on-white and the number disappears.
               WebkitTextStroke:
                 size === "xs" ? "1.2px #000" : size === "sm" ? "1.6px #000" : size === "lg" ? "3px #000" : "2.2px #000",
               paintOrder: "stroke fill",
@@ -166,42 +281,49 @@ export function PlayerFcCard({
         )}
 
         {/* Name */}
-        <div
-          className="absolute inset-x-0 top-[55%] px-3 text-center"
-          style={{ color: style.ink }}
-        >
+        <div className="absolute inset-x-0 top-[55.5%] px-3 text-center" style={{ color: style.ink }}>
           <div className={`truncate font-display font-black tracking-tight ${nameSize}`}>
-            {data.lastName || "—"}
+            {data.lastName || "-"}
           </div>
         </div>
 
-        {/* Six attributes */}
+        {/* Six attributes: labels over values, evenly spaced. Padding and the
+            label's letter-spacing tighten on the small cards, where six
+            three-letter labels across 124px otherwise run into each other. */}
         <div
-          className={`absolute inset-x-0 top-[64%] grid grid-cols-6 px-2 text-center ${
-            small ? "text-[9px]" : "text-[11px]"
+          className={`absolute inset-x-0 top-[66%] grid grid-cols-6 text-center ${
+            size === "xs" ? "px-0.5 text-[7px]" : small ? "px-1.5 text-[8px]" : "px-2 text-[10px]"
           }`}
-          style={{ color: style.ink }}
         >
           {keys.map((key) => (
             <div key={key} className="leading-tight">
-              <div className="font-bold opacity-70">{ATTRIBUTE_ABBR[key]}</div>
-              <div className={`font-display font-black ${small ? "text-xs" : "text-base"}`}>
+              <div
+                className={`font-bold ${size === "xs" ? "tracking-normal" : "tracking-[0.04em]"}`}
+                style={{ color: style.sub }}
+                title={t(`attributes.${key}`)}
+              >
+                {ATTRIBUTE_ABBR[key]}
+              </div>
+              <div
+                className={`font-display font-black ${small ? "text-xs" : "text-base"}`}
+                style={{ color: style.ink }}
+              >
                 {Math.round(data.attributes[key])}
               </div>
             </div>
           ))}
         </div>
 
-        {/* Flag / league / club strip */}
-        <div className="absolute inset-x-0 top-[77%] flex items-center justify-center gap-2">
+        {/* Flag / league / club, sitting in the taper like the reference. */}
+        <div className="absolute inset-x-0 top-[80%] flex items-center justify-center gap-2">
           <Flag
             src={data.country.flag_url}
             alt={data.country.name_en}
             className={small ? "h-2.5 w-4" : "h-3.5 w-5"}
           />
-          {league?.logo_url && (
+          {league && (
             <ClubCrest
-              src={league.logo_url}
+              src={leagueLogoUrl(league)}
               name={league.name}
               size={small ? 10 : 14}
               className={small ? "h-2.5 w-2.5" : "h-3.5 w-3.5"}
@@ -209,7 +331,7 @@ export function PlayerFcCard({
           )}
           {team && (
             <ClubCrest
-              src={team.logo_url}
+              teamId={team.id}
               name={team.name}
               size={small ? 12 : 16}
               className={small ? "h-3 w-3" : "h-4 w-4"}

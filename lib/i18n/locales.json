@@ -197,6 +197,7 @@
       },
       "fanSupportLabel": "Hinchada",
       "fanBands": {
+        "unknown": "No te conoce",
         "hostile": "Hostil",
         "cold": "Desconfiada",
         "warm": "De tu lado",
@@ -218,20 +219,132 @@
       "seasonsAt": "{count} temporadas",
       "seasonAt": "1 temporada",
       "traitorLabel": "Traidor",
-      "traitorHint": "Te fuiste directo a un rival de la misma liga — la hinchada nunca lo olvidó.",
+      "traitorHint": "Este club no te recibe nunca más: o te fuiste directo a un rival, o su propia hinchada te echó.",
       "roleImproveHint": "Mejora tu lugar en el equipo",
       "roleWorsenHint": "Empeora tu lugar en el equipo",
       "performanceLabel": "Rendimiento",
       "noEffectLabel": "Sin efecto",
       "outcomeGood": "Salió bien",
       "outcomeBad": "Salió mal",
+      "outcomeNeutral": "Al final",
       "biographyTitle": "La carrera en palabras",
       "recordsTitle": "Récords alcanzados",
       "recordBeaten": "superó los {previous} de {holder}",
       "recordEqualled": "igualó los {previous} de {holder}",
       "downloadCard": "Descargar imagen",
       "shareCard": "Compartir",
-      "shareWorking": "Generando..."
+      "shareWorking": "Generando...",
+      "talentRumourLabel": "Rumor",
+      "knockTag": "{matches} partidos fuera",
+      "brief": {
+        "roles": {
+          "gk": "portero",
+          "defender": "defensa",
+          "midfielder": "mediocentro",
+          "creator": "mediapunta",
+          "forward": "delantero"
+        },
+        "pressureHigh": "Exigencia alta",
+        "pressureMedium": "Exigencia media",
+        "pressureLow": "Exigencia baja",
+        "briefs": {
+          "replace_idol": {
+            "tag": "Heredero del ídolo",
+            "detail": "El {role} que se fue es leyenda aquí. Las comparaciones empiezan ya."
+          },
+          "marquee": {
+            "tag": "Fichaje estrella",
+            "detail": "Eres la cara del proyecto. Llenarán el estadio para verte."
+          },
+          "savior": {
+            "tag": "Misión salvación",
+            "detail": "El club está en apuros y ha apostado por ti para sacarlo de ahí."
+          },
+          "rebuild": {
+            "tag": "Reconstrucción",
+            "detail": "Un gigante herido que empieza de nuevo. Solo con venir ganas a la afición."
+          },
+          "project": {
+            "tag": "Apuesta de futuro",
+            "detail": "Nadie exige nada todavía. Aquí tienes tiempo para crecer."
+          },
+          "understudy": {
+            "tag": "Aprender detrás de un crack",
+            "detail": "Llegas por detrás de alguien mejor. Los minutos habrá que ganárselos."
+          },
+          "prove_it": {
+            "tag": "Demostrar tu valía",
+            "detail": "El fichaje dividió opiniones. La grada quiere que la convenzas."
+          },
+          "homecoming": {
+            "tag": "Vuelta a casa",
+            "detail": "Nunca te olvidaron. El recibimiento es inmediato."
+          }
+        }
+      },
+      "headlineFilter": {
+        "all": "Todo",
+        "good": "Buenas",
+        "bad": "Malas",
+        "neutral": "Todo"
+      },
+      "headlineOrderOldest": "↑ Inicio",
+      "headlineOrderNewest": "↓ Final",
+      "rivalAhead": "Por delante",
+      "rivalBehind": "Por detrás",
+      "rivalLevel": "Igualados",
+      "rivalGapClosing": "La diferencia se reduce",
+      "rivalGapOpening": "La diferencia crece",
+      "postLoanAgedOutTitle": "Fin de la cesión",
+      "postLoanAgedOutDescription": "Vuelves a un club que no cuenta contigo, y ya pasaste la edad de salir cedido otra vez. Aceptas una oferta o te quedas a pelear por un puesto.",
+      "pressureLabel": "Más exigencia",
+      "seasonsLabel": "Temporadas",
+      "clubsLabel": "Clubes",
+      "capsLabel": "Selección",
+      "nationalGoals": "Goles selec.",
+      "newspaperTitle": "Archivo, temporada a temporada",
+      "newspaperPrev": "Edición anterior",
+      "newspaperNext": "Edición siguiente",
+      "newspaperEdition": "Edición {n} de {total}",
+      "newspaperHint": "Arrastra o usa las flechas para pasar la página",
+      "newspaperNumbers": "La temporada en números",
+      "trainingFocusPending": "Definiendo el enfoque de entrenamiento...",
+      "promotion": "Ascenso",
+      "loanTag": "Cedido",
+      "secondTierShort": "2ª div",
+      "newspaperAlso": "También esta temporada",
+      "newspaperMoreHonours": "+{count} más",
+      "newspaperToDate": "En la carrera hasta aquí",
+      "standingHints": {
+        "passing": "Pasó por el club sin dejar huella, pocas temporadas o pocos minutos.",
+        "regular": "Fue titular y cumplió, pero sin los títulos ni los años que hacen historia.",
+        "idol": "Títulos y temporadas suficientes para que la hinchada cante tu nombre.",
+        "legend": "Entró de lleno en la historia del club: años de casa y copas en la cuenta."
+      },
+      "celebrationHaul": "{count} conquistas",
+      "hints": {
+        "age": "Edad del jugador en esta temporada.",
+        "club": "Club en el que jugó la temporada.",
+        "overall": "Nota general de la carta al final de la temporada, de 1 a 99.",
+        "appearances": "Partidos oficiales disputados, sumando todas las competiciones.",
+        "goals": "Goles marcados en todas las competiciones.",
+        "assists": "Pases de gol en todas las competiciones.",
+        "cleanSheets": "Partidos terminados sin recibir ningún gol.",
+        "goalsConceded": "Goles recibidos mientras estuvo en cancha.",
+        "marketValue": "Lo que el mercado cree que vale hoy.",
+        "talent": "Cuánto creen los ojeadores en tu techo. Se vuelve certeza con el tiempo.",
+        "trait": "Rasgo de personalidad: cambia el riesgo de las decisiones y el ritmo de evolución.",
+        "fanSupport": "Cuánto te quiere la hinchada de este club, de 0 a 100. Influye en tu evolución y desbloquea eventos.",
+        "nationalTeam": "Números con la selección: partidos, goles y asistencias.",
+        "headlines": "Los titulares que generó tu carrera, del más reciente al más antiguo."
+      },
+      "shareSealHard": "DIFÍCIL",
+      "shareSealChallenge": "DESAFÍO",
+      "shareJourney": "La carrera",
+      "shareCallToAction": "Armá tu carrera",
+      "shareValueLabel": "Valor en su pico",
+      "shareBestCard": "Mejor carta",
+      "shareArc": "Evolución por temporada"
     },
     "careerEvents": {
       "training_extra": {
@@ -474,7 +587,7 @@
         "options": {
           "stay_and_fight": {
             "label": "Quedarte a enfrentar la turbulencia",
-            "outcome": "El caos interno prácticamente anula tus chances de título esta temporada"
+            "outcome": "El caos interno hunde tus chances de título esta temporada, aún es posible, pero mucho más difícil"
           }
         }
       },
@@ -632,10 +745,22 @@
         "description": "Todo se resume a esta ejecución de penal para decidir {championship}.",
         "options": {
           "left": {
-            "label": "Picadita por arriba del arquero"
+            "label": "Picadita por arriba del arquero",
+            "positiveOutcome": {
+              "description": "Picadita al medio, el arquero ya se había tirado. {championship} es tuyo."
+            },
+            "negativeOutcome": {
+              "description": "El arquero se quedó parado y la agarró. {championship} se escapó."
+            }
           },
           "right": {
-            "label": "Remate fuerte al ángulo"
+            "label": "Remate fuerte al ángulo",
+            "positiveOutcome": {
+              "description": "Remate fuerte al ángulo, sin chance. {championship} es tuyo."
+            },
+            "negativeOutcome": {
+              "description": "Buena altura para el arquero, que la sacó. {championship} se escapó."
+            }
           }
         },
         "resultLabels": {
@@ -691,11 +816,11 @@
         "options": {
           "hold_the_testimonial": {
             "label": "Aceptar el homenaje",
-            "outcome": "La hinchada te aplaude de pie, y eso te recarga"
+            "outcome": "La semana entera es fiesta: la afición se derrite, el fútbol lo nota"
           },
           "keep_it_low_key": {
-            "label": "Preferir discreción",
-            "outcome": "Agradecés, pero preferís dejarlo para más adelante"
+            "label": "Rechazar y seguir entrenando",
+            "outcome": "Sin ceremonia, sin distracción, un año más en forma"
           }
         }
       },
@@ -750,20 +875,6 @@
           "stick_with_current_boots": {
             "label": "Quedarte con los de siempre",
             "outcome": "Preferís no tocar lo que viene funcionando"
-          }
-        }
-      },
-      "hometown_parade": {
-        "title": "Recibimiento de héroe",
-        "description": "Después del título con la selección, tu ciudad natal organiza un recibimiento.",
-        "options": {
-          "enjoy_the_moment": {
-            "label": "Disfrutar el momento",
-            "outcome": "Absorbés esa confianza para el resto de la carrera"
-          },
-          "stay_grounded": {
-            "label": "Mantener los pies en la tierra",
-            "outcome": "Volvés directo a entrenar, y el club nota la actitud"
           }
         }
       },
@@ -1028,11 +1139,41 @@
       },
       "severe_injury": {
         "title": "Lesión grave",
-        "description": "La rodilla se trabó en una jugada cualquiera y el silencio del estadio lo dijo todo. El cuerpo médico habla de una temporada entera de recuperación — y nadie garantiza que vuelvas igual.",
+        "description": "La rodilla se trabó en una jugada cualquiera y el silencio del estadio lo dijo todo. El cuerpo médico habla de una temporada entera de recuperación y nadie garantiza que vuelvas igual.",
         "options": {
           "fight_back": {
             "label": "Encarar la recuperación",
             "outcome": "Vas a volver a jugar, pero el techo de tu carrera nunca más será el mismo"
+          }
+        }
+      },
+      "dressing_room_fallout": {
+        "title": "Ruptura en el club",
+        "description": "La convivencia se pudrió del todo: el club rescinde en el acto y tenés que buscar dónde jugar.",
+        "variants": {
+          "manager": {
+            "title": "Ruptura con el entrenador",
+            "description": "La discusión con el entrenador se pasó de la raya y llegó a la prensa. El club se queda con él y te rescinde el contrato."
+          },
+          "board": {
+            "title": "Ruptura con la dirigencia",
+            "description": "Dijiste en público lo que pensabas de la dirigencia. No lo perdonaron: rescisión inmediata."
+          },
+          "supporters": {
+            "title": "Ruptura con la hinchada",
+            "description": "El lío con la barra se fue de las manos. El club te saca del plantel para proteger a todos y esa hinchada no olvida.",
+            "options": {
+              "move": {
+                "label": "Buscar otro club",
+                "outcome": "Contrato rescindido y puerta cerrada: esta hinchada no te acepta nunca más."
+              }
+            }
+          }
+        },
+        "options": {
+          "move": {
+            "label": "Buscar otro club",
+            "outcome": "Contrato rescindido al instante. La hinchada no perdona la salida, y arrancás de nuevo en otro lado."
           }
         }
       }
@@ -1057,6 +1198,7 @@
       "continental_primary": "Continental principal",
       "continental_secondary": "Continental secundaria",
       "club_world_cup": "Mundial de Clubes",
+      "intercontinental_cup": "Copa Intercontinental",
       "national_continental": "Selección continental",
       "world_cup": "Mundial",
       "national_continental_by_confederation": {
@@ -1066,7 +1208,11 @@
         "CAF": "Copa Africana de Naciones",
         "AFC": "Copa Asiática",
         "OFC": "Copa de Naciones de la OFC"
-      }
+      },
+      "league_cup": "Copa de la Liga",
+      "domestic_super_cup": "Supercopa nacional",
+      "continental_tertiary": "Continental terciaria",
+      "continental_super_cup": "Supercopa continental"
     },
     "awards": {
       "ballon_dor": "Balón de Oro",
@@ -1079,9 +1225,13 @@
         "cup": "La copa nacional es del {team}, con vos en la cancha.",
         "continental_primary": "Gloria continental: {team} conquista el continente.",
         "continental_secondary": "{team} se lleva el título continental y sueña más alto.",
-        "club_world_cup": "{team} es campeón del mundo — y estabas ahí.",
+        "club_world_cup": "{team} es campeón del mundo y estabas ahí.",
         "national_continental": "¡Tu selección es campeona continental!",
-        "world_cup": "CAMPEÓN DEL MUNDO. Tu selección gana la Copa."
+        "world_cup": "CAMPEÓN DEL MUNDO. Tu selección gana la Copa.",
+        "league_cup": "{team} levanta la Copa de la Liga contigo en el campo.",
+        "domestic_super_cup": "Supercopa para el {team}, la temporada abre con título.",
+        "continental_tertiary": "{team} conquista Europa y sube de nivel.",
+        "continental_super_cup": "{team} vence al otro campeón continental en la supercopa."
       },
       "award": {
         "ballon_dor": "Balón de Oro: te eligen el mejor del planeta.",
@@ -1094,7 +1244,7 @@
       "breakoutSeason": "Temporada explosiva en {team}: llegás a {ovr} de overall.",
       "joinedClub": "Cerrado: sos el nuevo refuerzo del {team}.",
       "joinedOnLoan": "Cedido al {team} para sumar minutos.",
-      "relegatedBigClub": "La peor generación de la historia de {team} — desciende a la B.",
+      "relegatedBigClub": "La peor generación de la historia de {team}, desciende a la B.",
       "shirtAssigned": "Inscrito en el {team}: la {number} es tuya en el debut.",
       "shirtUpgraded": "Camiseta nueva en el {team}: pasás a vestir la {number}.",
       "severeInjury": "Noticia dura: {injury} te deja fuera por una temporada."
@@ -1122,6 +1272,10 @@
       "dealtHand": "La mano de hoy",
       "hardNote": "Todo desafío es en modo Difícil.",
       "ranking": "Ranking local",
+      "placementBest": "Tu mejor marca hasta ahora",
+      "placementOf": "de {total} intentos clasificados",
+      "placementCaption": "Ranking local de desafíos",
+      "playNormal": "Jugar carrera normal",
       "empty": "Todavía no hay intentos. Jugá el desafío de hoy.",
       "score": "Puntos",
       "target": "Objetivo",
@@ -1133,7 +1287,7 @@
       "friendly": "Amistoso",
       "alreadyPlayed": "Ya hiciste el intento que vale de hoy. Jugar de nuevo cuenta como amistoso.",
       "result": "Resultado del desafío",
-      "ruleBroken": "Regla rota — puntuación limitada",
+      "ruleBroken": "Regla rota, puntuación limitada",
       "clear": "Borrar ranking",
       "units": {
         "goals": "goles",
@@ -1146,6 +1300,18 @@
         "apps": "partidos",
         "cleanSheets": "partidos sin recibir goles",
         "points": "puntos"
+      },
+      "unitsShort": {
+        "goals": "goles",
+        "assists": "asist.",
+        "trophies": "títulos",
+        "overall": "ovr",
+        "caps": "partidos",
+        "seasons": "temp.",
+        "clubs": "países",
+        "apps": "partidos",
+        "cleanSheets": "vallas",
+        "points": "pts"
       },
       "missions": {
         "one_club_legend": {
@@ -1178,7 +1344,7 @@
         },
         "underdog_idol": {
           "title": "Ídolo improbable",
-          "brief": "Volvete referencia en un club chico — cuanto menor el escudo, más vale."
+          "brief": "Volvete referencia en un club chico: cuanto menor el escudo, más vale."
         },
         "globetrotter": {
           "title": "Trotamundos",
@@ -1202,7 +1368,7 @@
         },
         "resilient": {
           "title": "Piel dura",
-          "brief": "Llegá lejos — y vale más todavía si el camino fue accidentado."
+          "brief": "Llegá lejos y vale más todavía si el camino fue accidentado."
         },
         "beloved": {
           "title": "Amado por la hinchada",
@@ -1218,7 +1384,7 @@
         },
         "homecoming": {
           "title": "Vuelta a casa",
-          "brief": "Construí historia en el club que te formó — y volvé para cerrar ahí."
+          "brief": "Construí historia en el club que te formó y volvé para cerrar ahí."
         },
         "sharpshooter": {
           "title": "Temporada mágica",
@@ -1267,8 +1433,490 @@
         "complete_career": {
           "title": "Carrera completa",
           "brief": "Un poco de todo: títulos, selección, estatus de leyenda y nivel."
+        },
+        "poacher": {
+          "title": "Killer del área",
+          "brief": "No es el total, es el promedio: goles por partido por encima de todo."
+        },
+        "creator_in_chief": {
+          "title": "Temporada de asistidor",
+          "brief": "Hacé la mejor temporada de asistencias que puedas."
+        },
+        "treble_winner": {
+          "title": "Liga, copa y continente",
+          "brief": "Ganá en los tres frentes. La continental vale más."
+        },
+        "world_conqueror": {
+          "title": "Campeón del mundo",
+          "brief": "Andá por los títulos mundiales, de club o de selección."
+        },
+        "kept_the_shirt": {
+          "title": "Dos direcciones",
+          "brief": "Como mucho dos clubes en toda la carrera, y historia en ambos."
+        },
+        "cap_century": {
+          "title": "Centenario",
+          "brief": "Acumulá la mayor cantidad de partidos con la selección."
+        },
+        "international_scorer": {
+          "title": "Goleador de la selección",
+          "brief": "Hacé goles con la camiseta de tu país."
+        },
+        "early_call": {
+          "title": "Llamado temprano",
+          "brief": "Que te convoquen lo más joven posible, y sostenelo."
+        },
+        "ever_present": {
+          "title": "Siempre en cancha",
+          "brief": "Sumá temporadas de titular de verdad, partido tras partido."
+        },
+        "second_tier_hero": {
+          "title": "Héroe del ascenso",
+          "brief": "Construí la carrera en el ascenso y llevá al club arriba."
+        },
+        "cult_hero": {
+          "title": "Querido donde va",
+          "brief": "Volvete ídolo en varios clubes, no solo en uno."
+        },
+        "golden_boot_run": {
+          "title": "Bota de oro",
+          "brief": "Andá por los goleos y por la mejor temporada de goles."
+        },
+        "decorated": {
+          "title": "Estante de premios",
+          "brief": "Juntá premios individuales, con el Balón de Oro valiendo más."
+        },
+        "safe_hands": {
+          "title": "Muralla",
+          "brief": "Llegá alto de nivel y hacé la mejor temporada con la valla invicta."
+        }
+      },
+      "bestTwoRule": "Tres objetivos, solo cuentan los dos mejores. Uno vas a tener que abandonarlo.",
+      "hiddenBrief": "Tercer objetivo, todavía en secreto",
+      "hiddenBriefNote": "Se revela a los {age}. Hasta entonces juegas sin saber qué te va a pedir.",
+      "edictLabel": "Prohibido hoy",
+      "bankRule": "A partir de los {age} puedes retirarte cuando quieras. Cada temporada muy por debajo de tu pico resta puntos, sabe cuándo parar.",
+      "twilightPenalty": "{seasons} temporada(s) en caída · −{percent}%",
+      "twilightHint": "Jugaste demasiado tiempo después de tu pico.",
+      "peakBonus": "Carta {overall}: +{points} pts",
+      "peakHint": "El mejor overall que alcanzaste también suma puntos. Llegar a 99 vale el máximo.",
+      "edicts": {
+        "no_early_moves": {
+          "title": "Sin salir antes de los 24",
+          "brief": "Ningún traspaso definitivo antes de los 24. Construye algo donde empezaste."
+        },
+        "two_clubs_max": {
+          "title": "Dos clubes como máximo",
+          "brief": "Toda la carrera en dos clubes, no más. Elige bien el segundo."
+        },
+        "no_giants": {
+          "title": "Nada de gigantes",
+          "brief": "Prohibido vestir la camiseta de un club grande. Lo que ganes, gánalo donde nadie lo esperaba."
+        },
+        "one_country": {
+          "title": "Nunca salir del país",
+          "brief": "Naces, juegas y te retiras en el mismo país. Sin Europa, sin atajos."
+        },
+        "top_flight_only": {
+          "title": "Solo primera división",
+          "brief": "Ni una temporada en segunda. Ni una."
+        },
+        "no_loans": {
+          "title": "Sin cesiones",
+          "brief": "Rechaza toda cesión. Si no hay sitio para ti, resuélvelo de otra forma."
+        },
+        "never_settle": {
+          "title": "Nunca echar raíces",
+          "brief": "Cuatro temporadas seguidas en un club como máximo. Ningún sitio llega a ser casa."
+        },
+        "no_marquee_number": {
+          "title": "Sin dorsal histórico",
+          "brief": "Nunca aceptes un número del 1 al 11. Sin focos, solo trabajo."
+        },
+        "never_relegated": {
+          "title": "Jamás descendido",
+          "brief": "Un descenso y la regla del día está rota."
+        },
+        "exile": {
+          "title": "Exilio",
+          "brief": "Juega en al menos tres países distintos. Ningún lugar es definitivo."
         }
       }
+    },
+    "settings": {
+      "title": "Ajustes",
+      "language": "Idioma",
+      "theme": "Tema",
+      "themeDark": "Oscuro",
+      "themeLight": "Claro",
+      "volume": "Volumen",
+      "muted": "Silenciado",
+      "mute": "Silenciar",
+      "unmute": "Activar sonido"
+    },
+    "nav": {
+      "home": "Volver al inicio",
+      "leaveTitle": "¿Salir de la carrera?",
+      "leaveDescription": "La carrera en curso se perderá. Esto no se puede deshacer.",
+      "leaveCancel": "Seguir jugando",
+      "leaveConfirm": "Salir igual",
+      "giveUp": "Dejar la carrera",
+      "giveUpTitle": "¿Colgar los botines?",
+      "giveUpDescription": "Tu carrera termina acá y vas directo al resumen. Todo lo que ganaste sigue contando, pero no se puede volver a jugar.",
+      "giveUpCancel": "Seguir jugando",
+      "giveUpConfirm": "Terminar carrera"
+    },
+    "backPage": {
+      "mastheads": [
+        "El Marcador",
+        "Diario del Balón",
+        "Gaceta Deportiva",
+        "La Contra",
+        "Tribuna FC",
+        "Correo del Fútbol",
+        "Revista Ataque",
+        "El Crack"
+      ],
+      "seasonLabel": "La temporada",
+      "statsLine": "{apps} partidos · {goals} goles · {assists} asistencias",
+      "statsLineDefender": "{apps} partidos · {goals} goles · {assists} asistencias · {cleanSheets} vallas invictas",
+      "statsLineGk": "{apps} partidos · {cleanSheets} porterías a cero",
+      "angles": {
+        "continental_crown": [
+          "REY DEL CONTINENTE",
+          "LA NOCHE QUE EL {team} ESPERÓ TODA LA VIDA",
+          "COPA CONTINENTAL: Y ÉL ESTABA AHÍ",
+          "CAMPEÓN DEL CONTINENTE",
+          "COPA CONTINENTAL: MISIÓN CUMPLIDA",
+          "{continent} ES SUYA Y DEL {team}"
+        ],
+        "clean_sweep": [
+          "TODO LO QUE HABÍA PARA GANAR",
+          "LIGA, COPA Y CONTINENTE, EL AÑO PERFECTO DEL {team}",
+          "NO QUEDÓ COMPETENCIA",
+          "LA TEMPORADA PERFECTA DEL {team}",
+          "BARRIÓ EL AÑO: {trophies} COPAS",
+          "AÑO PERFECTO EN EL {team}"
+        ],
+        "treble": [
+          "TRIPLE CORONA",
+          "TRES COPAS EN UN AÑO",
+          "LA TEMPORADA DE TRES TÍTULOS DEL {team}",
+          "TRIPLETE EN EL {team}",
+          "TRES TÍTULOS. UNA SOLA TEMPORADA.",
+          "EL AÑO DE LAS TRES COPAS"
+        ],
+        "trophy_haul": [
+          "{trophies} COPAS EN UN AÑO",
+          "LA VITRINA DEL {team} YA NO CIERRA",
+          "{trophies} TÍTULOS. UNA SOLA TEMPORADA.",
+          "TEMPORADA DE {trophies} COPAS EN EL {team}",
+          "COLECCIONISTA: {trophies} TÍTULOS EN EL AÑO",
+          "UNA MÁS, Y OTRA, {trophies} EN TOTAL"
+        ],
+        "league_title": [
+          "¡CAMPEÓN! LA LIGA ES DEL {team}",
+          "EL TÍTULO VUELVE A CASA",
+          "CAMPEÓN DE LIGA A LOS {age}",
+          "EL {team} EN LO MÁS ALTO Y ÉL EN MEDIO DE LA FIESTA",
+          "LA LIGA ES NUESTRA",
+          "EL {team} LEVANTA EL TÍTULO"
+        ],
+        "cup_run": [
+          "COPA EN LA VITRINA DEL {team}",
+          "ELIMINATORIA TRAS ELIMINATORIA Y LA COPA",
+          "COPA CONQUISTADA, LA FIESTA DURÓ HASTA LA MAÑANA",
+          "LLEGÓ LA COPA",
+          "RONDA A RONDA, HASTA LEVANTARLA",
+          "COPA EN LA ESTANTERÍA DEL {team}"
+        ],
+        "super_cup": [
+          "SUPERCOPA PARA EL {team}",
+          "PARTIDO ÚNICO, COPA EN LA MANO",
+          "ABRIÓ EL AÑO CON TÍTULO",
+          "DEFINICIÓN EN 90 MINUTOS Y FUE DEL {team}",
+          "PRIMERA COPA DE LA TEMPORADA",
+          "UN PARTIDO, UN TROFEO"
+        ],
+        "golden_boot": [
+          "BOTA DE ORO: {goals} GOLES",
+          "NADIE MARCÓ MÁS QUE ÉL",
+          "MÁXIMO GOLEADOR CON {goals}",
+          "GOLEADOR ABSOLUTO",
+          "NADIE HIZO MÁS: {goals} GOLES",
+          "LA BOTA DE ORO TIENE DUEÑO"
+        ],
+        "player_of_year": [
+          "EL MEJOR DEL MUNDO",
+          "EL BALÓN DE ORO ES SUYO",
+          "EL AÑO ENTERO FUE SUYO",
+          "EL MEJOR DEL AÑO",
+          "PREMIO MÁXIMO Y POCA DISCUSIÓN",
+          "EL AÑO FUE SUYO, Y EL TROFEO LO CONFIRMA"
+        ],
+        "relegated": [
+          "DESCENDIDO. EL {team} SE VA ABAJO.",
+          "EL AÑO QUE EL {team} QUIERE OLVIDAR",
+          "DESCENSO CONSUMADO, ¿Y AHORA?",
+          "SEGUNDA DIVISIÓN: LLEGÓ LA FACTURA",
+          "EL AÑO EN QUE TODO SALIÓ MAL",
+          "DESCENSO AMARGO CON EL {team}"
+        ],
+        "promoted": [
+          "¡ASCENSO! EL {team} SUBE",
+          "DE VUELTA A LA ELITE",
+          "MISIÓN CUMPLIDA: EL {team} HA VUELTO",
+          "ASCENSO CONSEGUIDO",
+          "EL {team} VUELVE A LA ELITE",
+          "SUBIERON A PULMÓN"
+        ],
+        "breakout": [
+          "EXPLOTÓ: OVR {ovr} A LOS {age}",
+          "¿DE DÓNDE SALIÓ ESTE JUGADOR?",
+          "EL SALTO QUE NADIE VIO VENIR",
+          "EL AÑO EN QUE SE CONVIRTIÓ EN OTRO",
+          "NACIÓ UN JUGADOR",
+          "A LOS {age}, OTRO NIVEL"
+        ],
+        "goal_haul": [
+          "{goals} GOLES. SIN MÁS.",
+          "LA TEMPORADA DE LOS {goals} GOLES",
+          "IMPARABLE: {goals} GOLES EN {apps} PARTIDOS",
+          "LOS PORTEROS RIVALES NO DURMIERON ESTE AÑO",
+          "{goals} GOLES EN {apps} PARTIDOS",
+          "LA ARTILLERÍA NO PARÓ"
+        ],
+        "assist_king": [
+          "{assists} ASISTENCIAS, EL CEREBRO DEL EQUIPO",
+          "TODO PASA POR SUS PIES",
+          "EL ASISTIDOR DE LA TEMPORADA",
+          "{assists} PASES QUE ACABARON EN GOL",
+          "EL ÚLTIMO PASE SIEMPRE ERA SUYO",
+          "QUIEN JUEGA CON ÉL MARCA MÁS"
+        ],
+        "clean_sheet_wall": [
+          "{cleanSheets} PARTIDOS SIN ENCAJAR",
+          "EL MURO DEL {team}",
+          "¿SUPERARLO? SUERTE CON ESO.",
+          "{cleanSheets} VECES CON LA VALLA INVICTA",
+          "EL AÑO EN QUE LA PORTERÍA SE CERRÓ",
+          "ATAJAR SE VOLVIÓ RUTINA"
+        ],
+        "first_call_up": [
+          "CONVOCADO POR PRIMERA VEZ",
+          "LA SELECCIÓN LLAMÓ",
+          "LA CAMISETA CON LA QUE SOÑABA YA ES SUYA",
+          "LLEGÓ LA CAMISETA DE LA SELECCIÓN",
+          "CONVOCADO Y MERECIDO",
+          "EL SELECCIONADOR NO PUDO IGNORARLO"
+        ],
+        "wrecked_by_injury": [
+          "UN AÑO PERDIDO EN LA ENFERMERÍA",
+          "MÁS TIEMPO EN LA CAMILLA QUE EN EL CAMPO",
+          "LA TEMPORADA QUE LA LESIÓN LE ROBÓ",
+          "{apps} PARTIDOS: LO QUE DEJÓ LA LESIÓN",
+          "UN AÑO DE FISIOTERAPIA",
+          "EL CALENDARIO PASÓ Y ÉL MIRÓ"
+        ],
+        "frozen_out": [
+          "OLVIDADO EN EL BANQUILLO",
+          "{apps} PARTIDOS: EL AÑO EN LA NEVERA",
+          "FUERA DE LOS PLANES DEL {team}",
+          "FUERA DE LOS PLANES",
+          "SOLO {apps} PARTIDOS EN EL AÑO",
+          "EL BANCO SE VOLVIÓ DIRECCIÓN FIJA"
+        ],
+        "fading": [
+          "¿HA EMPEZADO EL DECLIVE?",
+          "YA NO ES EL MISMO",
+          "LA PRENSA YA PREGUNTA HASTA CUÁNDO",
+          "EL TIEMPO PASA FACTURA",
+          "LOS NÚMEROS CAYERON, Y TODOS LO VIERON",
+          "YA NO CORRE COMO ANTES"
+        ],
+        "new_arrival": [
+          "PRIMER AÑO EN EL {team}",
+          "ADAPTÁNDOSE EN EL {team}",
+          "LLEGÓ, JUGÓ, ¿Y AHORA?",
+          "EMPEZÓ LA VIDA NUEVA EN EL {team}",
+          "PRIMERA TEMPORADA, PRIMERAS IMPRESIONES",
+          "LLEGADA SIN RUIDO AL {team}"
+        ],
+        "last_dance": [
+          "EL ÚLTIMO BAILE",
+          "¿CUÁNTOS AÑOS LE QUEDAN?",
+          "A LOS {age}, TODAVÍA EN EL CAMPO",
+          "LA ÚLTIMA TEMPORADA",
+          "EL FINAL DEL CAMINO, A LOS {age}",
+          "SALE DEL CAMPO POR ÚLTIMA VEZ"
+        ],
+        "steady": [
+          "OTRO AÑO DE TRABAJO",
+          "TEMPORADA TRANQUILA EN EL {team}",
+          "{apps} PARTIDOS Y LA RUTINA DE SIEMPRE",
+          "NI HÉROE NI VILLANO",
+          "PASÓ EL AÑO Y LA VIDA SIGUE",
+          "SIN TITULARES, PERO CON MINUTOS"
+        ]
+      },
+      "clubRose": "El {team} creció como club esta temporada",
+      "clubFell": "El prestigio del {team} ha caído",
+      "ledes": {
+        "continental_crown": [
+          "El {team} es campeón del continente, y él estuvo en el campo la noche que el club nunca olvidará.",
+          "Una campaña entera para llegar a una sola noche y la copa continental es del {team}.",
+          "Todo el continente miró, y fue el {team} quien levantó la copa.",
+          "A los {age} años, su nombre entra en la lista de campeones continentales."
+        ],
+        "clean_sweep": [
+          "Liga, copa y continente en la misma temporada, no quedó competencia para el {team}.",
+          "El año en que el {team} entró en todo y ganó todo, con él adentro.",
+          "Fueron {trophies} copas, y las tres que más pesan estaban entre ellas.",
+          "Una temporada así un club la tiene una vez por generación, si la tiene."
+        ],
+        "treble": [
+          "{trophies} títulos en una sola temporada. El tipo de año que un club tarda una generación en repetir.",
+          "Nada se le escapó al {team} esta temporada: {trophies} copas y un plantel en la historia del club.",
+          "{trophies} títulos en una sola temporada: el año que un club le cuenta a sus nietos.",
+          "No sobró competición, el {team} ganó todo lo que jugó."
+        ],
+        "trophy_haul": [
+          "Fueron {trophies} títulos en una sola temporada, y él estuvo en todos.",
+          "La vitrina del {team} sumó {trophies} piezas de una vez.",
+          "Un año de {trophies} copas, la cuenta que pocos planteles hacen.",
+          "No todas valen lo mismo, pero son {trophies} y están todas ahí."
+        ],
+        "league_title": [
+          "La liga vuelve a las vitrinas del {team} tras {apps} partidos de pelea punto a punto.",
+          "A los {age} levantó el título con el {team} y pesó en él, con {goals} goles por el camino.",
+          "Después de un campeonato entero, el {team} terminó donde quería: primero.",
+          "El título nacional llegó con {apps} partidos suyos en la cuenta."
+        ],
+        "cup_run": [
+          "Otra copa para la sala de trofeos del {team}, al final de una campaña que pocos preveían.",
+          "El {team} llegó a la final y no la dejó escapar. La fiesta fue de quien la esperó mucho.",
+          "La eliminatoria es otra cosa, y el {team} aguantó hasta el último partido.",
+          "La copa llegó, y él estuvo en cada ronda que importó."
+        ],
+        "super_cup": [
+          "Un partido lo decidió, y la copa quedó en el {team}.",
+          "El trofeo que abre el año: noventa minutos y listo.",
+          "No es la copa más grande del calendario, pero es copa, y es suya.",
+          "Título a partido único: el {team} arrancó ganando."
+        ],
+        "golden_boot": [
+          "Nadie en el continente marcó más: {goals} goles en {apps} partidos, y la Bota de Oro con ellos.",
+          "{goals} goles después, el premio de máximo goleador no tuvo discusión.",
+          "{goals} goles y el premio de goleador en la maleta.",
+          "Nadie en la liga se acercó a lo que hizo de cara al gol."
+        ],
+        "player_of_year": [
+          "El premio al mejor del mundo confirma lo que el año entero venía diciendo.",
+          "Después de una temporada así, elegir cualquier otro nombre habría sido difícil de justificar.",
+          "El premio al mejor del año confirmó lo que la liga entera ya sabía.",
+          "A los {age}, se llevó el trofeo individual que todo jugador quiere."
+        ],
+        "relegated": [
+          "El {team} desciende, y una temporada que prometía se volvió la más dura de su carrera.",
+          "Ni {goals} goles en {apps} partidos alcanzaron: el {team} bajó, y ahora toca reconstruir.",
+          "El descenso dolió, y {apps} partidos no alcanzaron para evitarlo.",
+          "El {team} baja, y el año queda marcado por el motivo equivocado."
+        ],
+        "promoted": [
+          "El {team} vuelve a la elite, y el ascenso pasó por sus pies en {apps} partidos.",
+          "Una temporada entera en segunda terminó de la única forma que importaba: subiendo.",
+          "El ascenso llegó sufriendo, y el {team} vuelve donde quería estar.",
+          "Una temporada entera en segunda terminó como debía."
+        ],
+        "breakout": [
+          "De apuesta a titular indiscutible en una sola temporada. El {team} descubrió lo que tenía en casa.",
+          "Este año encajó todo: {apps} partidos, {goals} goles y un salto que nadie había previsto.",
+          "OVR {ovr} a los {age}: el salto que cambia el precio y el tamaño de una carrera.",
+          "Entró en el año como promesa y salió como titular indiscutible."
+        ],
+        "goal_haul": [
+          "{goals} goles en {apps} partidos. El tipo de temporada que cambia el precio de un jugador.",
+          "Cada defensa de la liga pasó por él, y el marcador contó la historia: {goals} goles.",
+          "{goals} goles en {apps} partidos, el tipo de temporada que enamora a cualquier dirigencia.",
+          "Cada dos partidos, un gol: ese fue más o menos el ritmo del año."
+        ],
+        "assist_king": [
+          "{assists} asistencias: cuando el {team} creó algo, casi siempre pasó por él.",
+          "No decidieron los goles que marcó, sino los que dio, {assists} de ellos.",
+          "{assists} asistencias: el {team} atacaba, y casi siempre pasaba por él.",
+          "No fue el goleador, fue quien hizo existir al goleador."
+        ],
+        "clean_sheet_wall": [
+          "{cleanSheets} partidos sin encajar. El {team} construyó la temporada de atrás hacia adelante.",
+          "La defensa del {team} fue el tema de la liga, y su nombre estaba bajo los palos.",
+          "{cleanSheets} partidos sin recibir goles en una temporada de {apps}.",
+          "La defensa del {team} tuvo nombre y apellido esta temporada."
+        ],
+        "first_call_up": [
+          "La llamada que todo jugador espera toda la vida llegó a los {age}.",
+          "Tras {apps} partidos esta temporada, el seleccionador ya no pudo seguir ignorándolo.",
+          "Después de {apps} partidos en la temporada, el seleccionador no pudo seguir ignorándolo.",
+          "La primera convocatoria llegó a los {age} años, y con ella otro nivel."
+        ],
+        "wrecked_by_injury": [
+          "Más semanas de tratamiento que de entrenamiento. Un año que la carrera querrá olvidar.",
+          "La lesión llegó pronto y no dio tregua: {apps} partidos en una temporada entera.",
+          "Fueron solo {apps} partidos: el resto del año fue enfermería.",
+          "La temporada existió en el papel, pero casi no existió en la cancha."
+        ],
+        "frozen_out": [
+          "{apps} partidos en todo un año. Sea cual sea el motivo, está fuera de los planes del {team}.",
+          "El banquillo se volvió dirección fija, y la temporada pasó de largo.",
+          "{apps} partidos en todo un año. Sea cual sea el motivo, salió de los planes del {team}.",
+          "El año pasó en el banco, y la cuenta de partidos lo demuestra."
+        ],
+        "fading": [
+          "Las piernas ya no responden igual, y el {team} ha empezado a mirar a los más jóvenes.",
+          "Bajaron los números, bajó el nivel, y por primera vez apareció la pregunta sobre el final.",
+          "Los números no mienten: la temporada quedó por debajo de lo que ya entregó.",
+          "A los {age}, el rendimiento empezó a resbalar, y la prensa lo notó."
+        ],
+        "new_arrival": [
+          "Primer año en el {team}: campo nuevo, vestuario nuevo y una afición que aún se hace una idea.",
+          "Llegó con el contrato firmado y {apps} partidos después sigue demostrando a qué vino.",
+          "Primer año en el {team}: {apps} partidos para entender el lugar nuevo.",
+          "Llegó, jugó {apps} partidos, y ahora empieza la exigencia de verdad."
+        ],
+        "last_dance": [
+          "A los {age}, cada temporada puede ser la última y él sigue saltando al campo.",
+          "El cuerpo cobra más caro cada año, pero las ganas siguen ahí, en {apps} partidos.",
+          "La última temporada terminó a los {age} años, en el {team}.",
+          "Cierra la carrera con un año más de trabajo y ahora es despedida."
+        ],
+        "steady": [
+          "{apps} partidos, {goals} goles y la rutina de quien hace el trabajo sin ser titular de portada.",
+          "Sin grandes emociones en el {team} esta temporada, que, para un profesional, no es el peor resultado.",
+          "{apps} partidos, {goals} goles: una temporada sin grandes emociones, como le gusta a un profesional.",
+          "Nada de titulares, pero el año rindió {apps} partidos en el {team}."
+        ]
+      },
+      "continents": {
+        "UEFA": "Europa",
+        "CONMEBOL": "Sudamérica",
+        "CONCACAF": "Concacaf",
+        "AFC": "Asia",
+        "CAF": "África",
+        "OFC": "Oceanía"
+      }
+    },
+    "attributes": {
+      "pace": "Ritmo",
+      "shooting": "Tiro",
+      "passing": "Pase",
+      "dribbling": "Regate",
+      "defending": "Defensa",
+      "physical": "Físico",
+      "diving": "Estirada",
+      "handling": "Paradas",
+      "kicking": "Saque",
+      "reflexes": "Reflejos",
+      "speed": "Velocidad",
+      "positioning": "Colocación"
     }
   },
   "en": {
@@ -1469,6 +2117,7 @@
       },
       "fanSupportLabel": "Fans",
       "fanBands": {
+        "unknown": "Yet to notice",
         "hostile": "Hostile",
         "cold": "Unconvinced",
         "warm": "Onside",
@@ -1490,20 +2139,132 @@
       "seasonsAt": "{count} seasons",
       "seasonAt": "1 season",
       "traitorLabel": "Traitor",
-      "traitorHint": "You left straight for a rival in the same league — the fans never forgot.",
+      "traitorHint": "This club will never take you back: either you left straight for a rival, or its own supporters ran you out.",
       "roleImproveHint": "Improves your standing in the squad",
       "roleWorsenHint": "Hurts your standing in the squad",
       "performanceLabel": "Performance",
       "noEffectLabel": "No effect",
       "outcomeGood": "It paid off",
       "outcomeBad": "It backfired",
+      "outcomeNeutral": "As it turned out",
       "biographyTitle": "The career in words",
       "recordsTitle": "Records reached",
       "recordBeaten": "passed {holder}'s {previous}",
       "recordEqualled": "matched {holder}'s {previous}",
       "downloadCard": "Download image",
       "shareCard": "Share",
-      "shareWorking": "Generating..."
+      "shareWorking": "Generating...",
+      "talentRumourLabel": "Word is",
+      "knockTag": "{matches} games out",
+      "brief": {
+        "roles": {
+          "gk": "goalkeeper",
+          "defender": "defender",
+          "midfielder": "midfielder",
+          "creator": "playmaker",
+          "forward": "striker"
+        },
+        "pressureHigh": "High pressure",
+        "pressureMedium": "Steady pressure",
+        "pressureLow": "Low pressure",
+        "briefs": {
+          "replace_idol": {
+            "tag": "Filling an idol's boots",
+            "detail": "The {role} who left is a legend here. The comparisons start on day one."
+          },
+          "marquee": {
+            "tag": "Marquee signing",
+            "detail": "You are the face of the project. They will pack the ground to watch you."
+          },
+          "savior": {
+            "tag": "Rescue job",
+            "detail": "The club is in trouble and has bet on you to drag it clear."
+          },
+          "rebuild": {
+            "tag": "Rebuild",
+            "detail": "A wounded giant starting again. Simply signing wins the crowd over."
+          },
+          "project": {
+            "tag": "One for the future",
+            "detail": "Nobody expects anything yet. Here you get time to grow."
+          },
+          "understudy": {
+            "tag": "Learning behind a star",
+            "detail": "You arrive behind someone better. Minutes will have to be earned."
+          },
+          "prove_it": {
+            "tag": "Something to prove",
+            "detail": "The signing split opinion. The stands want to be convinced."
+          },
+          "homecoming": {
+            "tag": "Coming home",
+            "detail": "They never forgot you. The welcome is immediate."
+          }
+        }
+      },
+      "headlineFilter": {
+        "all": "All",
+        "good": "Good",
+        "bad": "Bad",
+        "neutral": "All"
+      },
+      "headlineOrderOldest": "↑ Earliest",
+      "headlineOrderNewest": "↓ Latest",
+      "rivalAhead": "Ahead",
+      "rivalBehind": "Behind",
+      "rivalLevel": "Level",
+      "rivalGapClosing": "The gap is closing",
+      "rivalGapOpening": "The gap is widening",
+      "postLoanAgedOutTitle": "The loan is over",
+      "postLoanAgedOutDescription": "You return to a club that has no place for you, and you are past the age of going out on loan again. Take an offer, or stay and fight for a shirt.",
+      "pressureLabel": "More pressure",
+      "seasonsLabel": "Seasons",
+      "clubsLabel": "Clubs",
+      "capsLabel": "Caps",
+      "nationalGoals": "Nat. goals",
+      "newspaperTitle": "Archive, season by season",
+      "newspaperPrev": "Previous edition",
+      "newspaperNext": "Next edition",
+      "newspaperEdition": "Edition {n} of {total}",
+      "newspaperHint": "Drag or use the arrows to turn the page",
+      "newspaperNumbers": "The season in numbers",
+      "trainingFocusPending": "Setting the training focus...",
+      "promotion": "Promoted",
+      "loanTag": "On loan",
+      "secondTierShort": "2nd tier",
+      "newspaperAlso": "Also this season",
+      "newspaperMoreHonours": "+{count} more",
+      "newspaperToDate": "Career to date",
+      "standingHints": {
+        "passing": "Came and went without leaving a mark, few seasons, or few minutes.",
+        "regular": "A dependable starter, without the silverware or the years that make history.",
+        "idol": "Enough trophies and seasons for the terraces to sing your name.",
+        "legend": "Written into the club's history: years of service and cups to show for them."
+      },
+      "celebrationHaul": "{count} honours",
+      "hints": {
+        "age": "The player's age in this season.",
+        "club": "The club the season was played at.",
+        "overall": "The card's rating at the end of the season, 1 to 99.",
+        "appearances": "Competitive games played, across every competition.",
+        "goals": "Goals scored in all competitions.",
+        "assists": "Assists in all competitions.",
+        "cleanSheets": "Games finished without conceding.",
+        "goalsConceded": "Goals conceded while on the pitch.",
+        "marketValue": "What the market rates the player at today.",
+        "talent": "How much scouts believe in your ceiling. It hardens into certainty over time.",
+        "trait": "Personality: changes how risky decisions land and how fast you develop.",
+        "fanSupport": "How much this club's crowd rates you, 0 to 100. It feeds your development and unlocks events.",
+        "nationalTeam": "International numbers: caps, goals and assists.",
+        "headlines": "The headlines your career generated, newest first."
+      },
+      "shareSealHard": "HARD",
+      "shareSealChallenge": "CHALLENGE",
+      "shareJourney": "The career",
+      "shareCallToAction": "Build your own career",
+      "shareValueLabel": "Peak value",
+      "shareBestCard": "Career-best card",
+      "shareArc": "Season by season"
     },
     "careerEvents": {
       "training_extra": {
@@ -1746,7 +2507,7 @@
         "options": {
           "stay_and_fight": {
             "label": "Stay and face the turmoil",
-            "outcome": "The internal chaos all but wipes out your title chances this season"
+            "outcome": "The internal chaos sends your title chances through the floor this season, still possible, just far harder"
           }
         }
       },
@@ -1904,10 +2665,22 @@
         "description": "It all comes down to this penalty kick to decide {championship}.",
         "options": {
           "left": {
-            "label": "Chip it over the keeper"
+            "label": "Chip it over the keeper",
+            "positiveOutcome": {
+              "description": "Dinked down the middle, the keeper had already gone. {championship} is yours."
+            },
+            "negativeOutcome": {
+              "description": "The keeper stood still and caught it. {championship} got away."
+            }
           },
           "right": {
-            "label": "Blast it into the corner"
+            "label": "Blast it into the corner",
+            "positiveOutcome": {
+              "description": "Struck hard into the top corner, no chance. {championship} is yours."
+            },
+            "negativeOutcome": {
+              "description": "The right height for the keeper, who pushed it clear. {championship} got away."
+            }
           }
         },
         "resultLabels": {
@@ -1923,7 +2696,7 @@
             "label": "Impress in training",
             "positiveOutcome": {
               "probability": 55,
-              "description": "He likes what he sees — you move up the pecking order"
+              "description": "He likes what he sees, you move up the pecking order"
             },
             "negativeOutcome": {
               "probability": 45,
@@ -1962,12 +2735,12 @@
         "description": "The club wants to organise a testimonial in your honour.",
         "options": {
           "hold_the_testimonial": {
-            "label": "Accept the testimonial",
-            "outcome": "The crowd gives you a standing ovation, and it recharges you"
+            "label": "Take the tribute",
+            "outcome": "The whole week becomes a party: the crowd melts, the football suffers"
           },
           "keep_it_low_key": {
-            "label": "Keep it low-key",
-            "outcome": "You're grateful, but you'd rather save it for later"
+            "label": "Decline and keep training",
+            "outcome": "No ceremony, no distraction: one more year in shape"
           }
         }
       },
@@ -2022,20 +2795,6 @@
           "stick_with_current_boots": {
             "label": "Stick with your old boots",
             "outcome": "You'd rather not fix what isn't broken"
-          }
-        }
-      },
-      "hometown_parade": {
-        "title": "Hero's welcome",
-        "description": "After the title with the national team, your hometown throws you a welcome parade.",
-        "options": {
-          "enjoy_the_moment": {
-            "label": "Enjoy the moment",
-            "outcome": "You carry that confidence into the rest of your career"
-          },
-          "stay_grounded": {
-            "label": "Stay grounded",
-            "outcome": "You go straight back to training, and the club notices"
           }
         }
       },
@@ -2300,11 +3059,41 @@
       },
       "severe_injury": {
         "title": "A serious injury",
-        "description": "The knee gave way on a routine play and the silence in the stadium said everything. The medical staff are talking about a full season out — and nobody is promising you come back the same.",
+        "description": "The knee gave way on a routine play and the silence in the stadium said everything. The medical staff are talking about a full season out and nobody is promising you come back the same.",
         "options": {
           "fight_back": {
             "label": "Face the rehab",
             "outcome": "You'll play again, but your career's ceiling will never be what it was"
+          }
+        }
+      },
+      "dressing_room_fallout": {
+        "title": "Fallout at the club",
+        "description": "It has soured beyond repair: the club tears up the contract on the spot and you need somewhere to play.",
+        "variants": {
+          "manager": {
+            "title": "Fallout with the manager",
+            "description": "The row with the manager went too far and reached the press. The club keeps him and terminates your contract."
+          },
+          "board": {
+            "title": "Fallout with the board",
+            "description": "You said what you thought of the board in public. They did not wear it: immediate termination."
+          },
+          "supporters": {
+            "title": "Fallout with the supporters",
+            "description": "The trouble with the ultras got out of hand. The club takes you out of the squad to protect everyone and that stand does not forget.",
+            "options": {
+              "move": {
+                "label": "Find another club",
+                "outcome": "Contract torn up and the door shut: this support will never have you back."
+              }
+            }
+          }
+        },
+        "options": {
+          "move": {
+            "label": "Find another club",
+            "outcome": "Contract torn up on the spot. The support does not forgive the exit, and you start again elsewhere."
           }
         }
       }
@@ -2329,6 +3118,7 @@
       "continental_primary": "Top continental trophy",
       "continental_secondary": "Secondary continental trophy",
       "club_world_cup": "Club World Cup",
+      "intercontinental_cup": "Intercontinental Cup",
       "national_continental": "National continental trophy",
       "world_cup": "World Cup",
       "national_continental_by_confederation": {
@@ -2338,7 +3128,11 @@
         "CAF": "Africa Cup of Nations",
         "AFC": "Asian Cup",
         "OFC": "OFC Nations Cup"
-      }
+      },
+      "league_cup": "League Cup",
+      "domestic_super_cup": "Domestic Super Cup",
+      "continental_tertiary": "Third continental tier",
+      "continental_super_cup": "Continental Super Cup"
     },
     "awards": {
       "ballon_dor": "Ballon d’Or",
@@ -2351,9 +3145,13 @@
         "cup": "The domestic cup belongs to {team}, with you on the pitch.",
         "continental_primary": "Continental glory: {team} conquer the continent.",
         "continental_secondary": "{team} take the continental title and dream bigger.",
-        "club_world_cup": "{team} are world champions — and you were there.",
+        "club_world_cup": "{team} are world champions and you were there.",
         "national_continental": "Your national team are continental champions!",
-        "world_cup": "WORLD CHAMPIONS. Your country wins the World Cup."
+        "world_cup": "WORLD CHAMPIONS. Your country wins the World Cup.",
+        "league_cup": "{team} lift the League Cup with you on the pitch.",
+        "domestic_super_cup": "Super Cup to {team}, the season opens with silverware.",
+        "continental_tertiary": "{team} win in Europe and move up a level.",
+        "continental_super_cup": "{team} beat the other continental champion to the super cup."
       },
       "award": {
         "ballon_dor": "Ballon d'Or: you're voted the best player on the planet.",
@@ -2366,7 +3164,7 @@
       "breakoutSeason": "Breakout season at {team}: you hit {ovr} overall.",
       "joinedClub": "Done deal: you're {team}'s new signing.",
       "joinedOnLoan": "Loaned to {team} to get minutes.",
-      "relegatedBigClub": "The worst generation in {team}'s history — relegated.",
+      "relegatedBigClub": "The worst generation in {team}'s history, relegated.",
       "shirtAssigned": "Registered at {team}: the {number} is yours on debut.",
       "shirtUpgraded": "New shirt at {team}: you'll wear the {number} from now on.",
       "severeInjury": "Hard news: {injury} rules you out for a season."
@@ -2394,6 +3192,10 @@
       "dealtHand": "Today's hand",
       "hardNote": "Every challenge is played on Hard.",
       "ranking": "Local leaderboard",
+      "placementBest": "Your best mark so far",
+      "placementOf": "of {total} ranked attempts",
+      "placementCaption": "Local challenge leaderboard",
+      "playNormal": "Play a normal career",
       "empty": "No attempts yet. Play today's challenge.",
       "score": "Points",
       "target": "Target",
@@ -2405,7 +3207,7 @@
       "friendly": "Friendly",
       "alreadyPlayed": "You've already used today's ranked attempt. Playing again counts as a friendly.",
       "result": "Challenge result",
-      "ruleBroken": "Rule broken — score capped",
+      "ruleBroken": "Rule broken, score capped",
       "clear": "Clear leaderboard",
       "units": {
         "goals": "goals",
@@ -2418,6 +3220,18 @@
         "apps": "appearances",
         "cleanSheets": "clean sheets",
         "points": "points"
+      },
+      "unitsShort": {
+        "goals": "goals",
+        "assists": "assists",
+        "trophies": "trophies",
+        "overall": "ovr",
+        "caps": "caps",
+        "seasons": "seasons",
+        "clubs": "countries",
+        "apps": "apps",
+        "cleanSheets": "sheets",
+        "points": "pts"
       },
       "missions": {
         "one_club_legend": {
@@ -2450,7 +3264,7 @@
         },
         "underdog_idol": {
           "title": "Unlikely idol",
-          "brief": "Become a name at a small club — the smaller the badge, the more it counts."
+          "brief": "Become a name at a small club, the smaller the badge, the more it counts."
         },
         "globetrotter": {
           "title": "Globetrotter",
@@ -2474,7 +3288,7 @@
         },
         "resilient": {
           "title": "Thick skin",
-          "brief": "Get far — and it counts for more if the road was rough."
+          "brief": "Get far and it counts for more if the road was rough."
         },
         "beloved": {
           "title": "Loved by the crowd",
@@ -2490,7 +3304,7 @@
         },
         "homecoming": {
           "title": "Homecoming",
-          "brief": "Build history at the club that raised you — and go back to finish there."
+          "brief": "Build history at the club that raised you and go back to finish there."
         },
         "sharpshooter": {
           "title": "Magic season",
@@ -2539,8 +3353,490 @@
         "complete_career": {
           "title": "Complete career",
           "brief": "A bit of everything: trophies, caps, legend status and level."
+        },
+        "poacher": {
+          "title": "Penalty-box poacher",
+          "brief": "Not the tally, the rate: goals per game above everything else."
+        },
+        "creator_in_chief": {
+          "title": "A season of assists",
+          "brief": "Put together the best single assist season you can."
+        },
+        "treble_winner": {
+          "title": "League, cup and continent",
+          "brief": "Win on all three fronts. The continental counts most."
+        },
+        "world_conqueror": {
+          "title": "Champion of the world",
+          "brief": "Go after the world titles, club or country."
+        },
+        "kept_the_shirt": {
+          "title": "Two addresses",
+          "brief": "Two clubs at most in a whole career, and a story at both."
+        },
+        "cap_century": {
+          "title": "Centurion",
+          "brief": "Pile up as many caps as you can."
+        },
+        "international_scorer": {
+          "title": "Scoring for your country",
+          "brief": "Put the goals away in the national shirt."
+        },
+        "early_call": {
+          "title": "Called up young",
+          "brief": "Get the call as early as you can, then keep the place."
+        },
+        "ever_present": {
+          "title": "Never off the teamsheet",
+          "brief": "Stack up seasons of being a genuine starter, game after game."
+        },
+        "second_tier_hero": {
+          "title": "Hero of the second tier",
+          "brief": "Build the career a division down, and take the club up."
+        },
+        "cult_hero": {
+          "title": "Loved wherever you go",
+          "brief": "Become an idol at several clubs, not just one."
+        },
+        "golden_boot_run": {
+          "title": "Golden Boot",
+          "brief": "Chase the scoring awards and the best goal season you can."
+        },
+        "decorated": {
+          "title": "A shelf of awards",
+          "brief": "Collect individual honours, with the Ballon d'Or worth most."
+        },
+        "safe_hands": {
+          "title": "A wall in goal",
+          "brief": "Get your level high and put together the best shut-out season you can."
+        }
+      },
+      "bestTwoRule": "Three briefs, only the best two count. One of them has to be given up.",
+      "hiddenBrief": "Third brief, still sealed",
+      "hiddenBriefNote": "Revealed at {age}. Until then you play without knowing what it will ask for.",
+      "edictLabel": "Banned today",
+      "bankRule": "From {age} you may end the career whenever you like. Every season played well below your peak costs points, know when to stop.",
+      "twilightPenalty": "{seasons} season(s) past it · −{percent}%",
+      "twilightHint": "You played on too long after your peak.",
+      "peakBonus": "Card {overall}: +{points} pts",
+      "peakHint": "The best overall you reached is worth points too. Hitting 99 is worth the maximum.",
+      "edicts": {
+        "no_early_moves": {
+          "title": "No moves before 24",
+          "brief": "No permanent transfer before your 24th birthday. Build something where you started."
+        },
+        "two_clubs_max": {
+          "title": "Two clubs, maximum",
+          "brief": "A whole career at no more than two clubs. Choose the second one well."
+        },
+        "no_giants": {
+          "title": "No giants",
+          "brief": "Never sign for a big club. Whatever you win, win it where nobody expected it."
+        },
+        "one_country": {
+          "title": "Never leave home",
+          "brief": "Born, played and retired in the same country. No Europe, no shortcut."
+        },
+        "top_flight_only": {
+          "title": "Top flight only",
+          "brief": "Not one season in the second tier. Not one."
+        },
+        "no_loans": {
+          "title": "No loans",
+          "brief": "Turn down every loan. If there is no room for you, solve it another way."
+        },
+        "never_settle": {
+          "title": "Never put down roots",
+          "brief": "Four consecutive seasons at one club, maximum. Nowhere ever becomes home."
+        },
+        "no_marquee_number": {
+          "title": "No marquee shirt",
+          "brief": "Never take a number from 1 to 11. No spotlight, just work."
+        },
+        "never_relegated": {
+          "title": "Never relegated",
+          "brief": "One relegation and the day's rule is broken."
+        },
+        "exile": {
+          "title": "Exile",
+          "brief": "Play in at least three different countries. Nowhere is permanent."
         }
       }
+    },
+    "settings": {
+      "title": "Settings",
+      "language": "Language",
+      "theme": "Theme",
+      "themeDark": "Dark",
+      "themeLight": "Light",
+      "volume": "Volume",
+      "muted": "Muted",
+      "mute": "Mute",
+      "unmute": "Unmute"
+    },
+    "nav": {
+      "home": "Back to home",
+      "leaveTitle": "Leave this career?",
+      "leaveDescription": "The career in progress will be lost. This cannot be undone.",
+      "leaveCancel": "Keep playing",
+      "leaveConfirm": "Leave anyway",
+      "giveUp": "Give up the career",
+      "giveUpTitle": "Hang up the boots?",
+      "giveUpDescription": "Your career ends here and you go straight to the summary. Everything you have won still counts, but there is no going back to playing.",
+      "giveUpCancel": "Keep playing",
+      "giveUpConfirm": "End career"
+    },
+    "backPage": {
+      "mastheads": [
+        "The Back Page",
+        "Matchday Post",
+        "The Terrace",
+        "Full Time Gazette",
+        "The Sporting Wire",
+        "Kick-Off Daily",
+        "The Touchline",
+        "Ninety Minutes"
+      ],
+      "seasonLabel": "The season",
+      "statsLine": "{apps} apps · {goals} goals · {assists} assists",
+      "statsLineDefender": "{apps} apps · {goals} goals · {assists} assists · {cleanSheets} clean sheets",
+      "statsLineGk": "{apps} apps · {cleanSheets} clean sheets",
+      "angles": {
+        "continental_crown": [
+          "KING OF THE CONTINENT",
+          "THE NIGHT {team} WAITED A LIFETIME FOR",
+          "CONTINENTAL CUP: AND HE WAS THERE",
+          "CHAMPIONS OF THE CONTINENT",
+          "CONTINENTAL CUP: JOB DONE",
+          "{continent} IS HIS AND {team}'S"
+        ],
+        "clean_sweep": [
+          "EVERYTHING THERE WAS TO WIN",
+          "LEAGUE, CUP AND CONTINENT, {team}'S PERFECT YEAR",
+          "NOTHING LEFT TO ENTER",
+          "{team}'S PERFECT SEASON",
+          "A CLEAN SWEEP: {trophies} TROPHIES",
+          "THE PERFECT YEAR AT {team}"
+        ],
+        "treble": [
+          "THE TREBLE",
+          "THREE TROPHIES IN ONE YEAR",
+          "{team}'S THREE-TITLE SEASON",
+          "A TREBLE AT {team}",
+          "THREE TITLES. ONE SEASON.",
+          "THE YEAR OF THREE CUPS"
+        ],
+        "trophy_haul": [
+          "{trophies} TROPHIES IN A SINGLE YEAR",
+          "{team}'S CABINET WILL NOT SHUT",
+          "{trophies} TITLES. ONE SEASON.",
+          "A {trophies}-TROPHY SEASON AT {team}",
+          "COLLECTOR: {trophies} TITLES IN THE YEAR",
+          "ONE MORE, AND ANOTHER, {trophies} IN ALL"
+        ],
+        "league_title": [
+          "CHAMPIONS! THE LEAGUE IS {team}'S",
+          "THE TITLE COMES HOME",
+          "LEAGUE WINNER AT {age}",
+          "{team} ON TOP AND HE WAS IN THE THICK OF IT",
+          "THE LEAGUE IS OURS",
+          "{team} LIFT THE TITLE"
+        ],
+        "cup_run": [
+          "A CUP FOR {team}'S SHELF",
+          "ROUND AFTER ROUND AND THE CUP",
+          "CUP WON, THE PARTY RAN TILL MORNING",
+          "THE CUP CAME",
+          "TIE BY TIE, ALL THE WAY",
+          "SILVERWARE ON {team}'S SHELF"
+        ],
+        "super_cup": [
+          "SUPER CUP FOR {team}",
+          "ONE MATCH, ONE TROPHY",
+          "THE YEAR OPENED WITH SILVERWARE",
+          "SETTLED IN 90 MINUTES AND {team} TOOK IT",
+          "THE SEASON'S FIRST TROPHY",
+          "ONE GAME, ONE CUP"
+        ],
+        "golden_boot": [
+          "GOLDEN BOOT: {goals} GOALS",
+          "NOBODY SCORED MORE",
+          "TOP SCORER, OUTRIGHT, WITH {goals}",
+          "THE LEAGUE TOP SCORER",
+          "NOBODY SCORED MORE: {goals} GOALS",
+          "THE GOLDEN BOOT HAS AN OWNER"
+        ],
+        "player_of_year": [
+          "BEST IN THE WORLD",
+          "THE BALLON D'OR IS HIS",
+          "THE WHOLE YEAR BELONGED TO HIM",
+          "PLAYER OF THE YEAR",
+          "THE BIGGEST PRIZE AND LITTLE ARGUMENT",
+          "THE YEAR WAS HIS, AND THE TROPHY SAYS SO"
+        ],
+        "relegated": [
+          "RELEGATED. {team} GO DOWN.",
+          "THE YEAR {team} WANT TO FORGET",
+          "THE DROP IS CONFIRMED, WHAT NOW?",
+          "SECOND TIER: THE BILL ARRIVES",
+          "THE YEAR IT ALL WENT WRONG",
+          "A BITTER DROP WITH {team}"
+        ],
+        "promoted": [
+          "PROMOTED! {team} GO UP",
+          "BACK IN THE BIG TIME",
+          "JOB DONE: {team} ARE BACK",
+          "UP THEY GO",
+          "{team} ARE BACK IN THE TOP FLIGHT",
+          "PROMOTION, EARNED THE HARD WAY"
+        ],
+        "breakout": [
+          "EXPLOSION: {ovr} OVR AT {age}",
+          "WHERE DID THIS PLAYER COME FROM?",
+          "THE LEAP NOBODY SAW COMING",
+          "THE YEAR HE BECAME SOMEONE ELSE",
+          "A PLAYER IS BORN",
+          "AT {age}, A DIFFERENT LEVEL ENTIRELY"
+        ],
+        "goal_haul": [
+          "{goals} GOALS. THAT'S IT.",
+          "THE {goals}-GOAL SEASON",
+          "UNPLAYABLE: {goals} GOALS IN {apps} GAMES",
+          "OPPOSING KEEPERS DIDN'T SLEEP THIS YEAR",
+          "{goals} GOALS IN {apps} GAMES",
+          "THE SCORING NEVER STOPPED"
+        ],
+        "assist_king": [
+          "{assists} ASSISTS, THE BRAIN OF THE SIDE",
+          "EVERYTHING GOES THROUGH HIM",
+          "THE SUPPLIER OF THE SEASON",
+          "{assists} PASSES THAT BECAME GOALS",
+          "THE LAST PASS WAS ALWAYS HIS",
+          "PLAY BESIDE HIM AND YOU SCORE MORE"
+        ],
+        "clean_sheet_wall": [
+          "{cleanSheets} CLEAN SHEETS",
+          "{team}'S BRICK WALL",
+          "GET PAST HIM? GOOD LUCK.",
+          "{cleanSheets} TIMES UNBEATEN",
+          "THE YEAR THE GOAL STAYED SHUT",
+          "KEEPING THEM OUT BECAME ROUTINE"
+        ],
+        "first_call_up": [
+          "CALLED UP FOR THE FIRST TIME",
+          "THE NATIONAL TEAM CAME CALLING",
+          "THE SHIRT HE DREAMED ABOUT IS HIS",
+          "THE NATIONAL SHIRT ARRIVES",
+          "CALLED UP AND DESERVED",
+          "THE NATIONAL MANAGER COULD NOT LOOK AWAY"
+        ],
+        "wrecked_by_injury": [
+          "A YEAR LOST IN THE TREATMENT ROOM",
+          "MORE TIME ON THE TABLE THAN THE PITCH",
+          "THE SEASON THE INJURY STOLE",
+          "{apps} GAMES: WHAT THE INJURY LEFT",
+          "A YEAR IN THE TREATMENT ROOM",
+          "THE SEASON WENT BY AND HE WATCHED"
+        ],
+        "frozen_out": [
+          "FORGOTTEN ON THE BENCH",
+          "{apps} GAMES: THE YEAR IN THE COLD",
+          "OUT OF {team}'S PLANS",
+          "OUT OF THE PICTURE",
+          "JUST {apps} GAMES ALL YEAR",
+          "THE BENCH BECAME A PERMANENT ADDRESS"
+        ],
+        "fading": [
+          "HAS THE DECLINE STARTED?",
+          "NOT THE PLAYER HE WAS",
+          "THE PRESS ARE ALREADY ASKING HOW LONG",
+          "TIME SENDS ITS BILL",
+          "THE NUMBERS FELL, AND EVERYONE SAW",
+          "HE DOES NOT RUN LIKE HE USED TO"
+        ],
+        "new_arrival": [
+          "FIRST YEAR AT {team}",
+          "SETTLING IN AT {team}",
+          "ARRIVED, PLAYED AND NOW?",
+          "A NEW LIFE BEGINS AT {team}",
+          "FIRST SEASON, FIRST IMPRESSIONS",
+          "A QUIET ARRIVAL AT {team}"
+        ],
+        "last_dance": [
+          "THE LAST DANCE",
+          "HOW MANY YEARS ARE LEFT?",
+          "STILL OUT THERE AT {age}",
+          "THE FINAL SEASON",
+          "THE END OF THE ROAD, AT {age}",
+          "HE LEAVES THE PITCH FOR THE LAST TIME"
+        ],
+        "steady": [
+          "ANOTHER YEAR OF GRAFT",
+          "A QUIET SEASON AT {team}",
+          "{apps} GAMES AND THE USUAL ROUTINE",
+          "NEITHER HERO NOR VILLAIN",
+          "THE YEAR PASSED, LIFE GOES ON",
+          "NO HEADLINES, BUT PLENTY OF MINUTES"
+        ]
+      },
+      "clubRose": "{team} grew as a club this season",
+      "clubFell": "{team}'s standing has slipped",
+      "ledes": {
+        "continental_crown": [
+          "{team} are champions of the continent, and he was on the pitch for the night the club will never forget.",
+          "A whole campaign to reach one night and the continental cup belongs to {team}.",
+          "A whole continent watched, and it was {team} who lifted the cup.",
+          "At {age}, his name joins the list of continental champions."
+        ],
+        "clean_sweep": [
+          "League, cup and continent in one season, {team} left nothing on the table.",
+          "The year {team} entered everything and won everything, with him in it.",
+          "It was {trophies} trophies, and the three that matter most were among them.",
+          "A club gets a season like this once a generation, if at all."
+        ],
+        "treble": [
+          "{trophies} trophies in a single season. The kind of year a club takes a generation to repeat.",
+          "Nothing got away from {team} this season: {trophies} cups, and a squad written into the club's history.",
+          "{trophies} trophies in a single season: the kind of year a club tells its grandchildren about.",
+          "Nothing was left on the table, {team} won everything they entered."
+        ],
+        "trophy_haul": [
+          "It was {trophies} titles in one season, and he was in all of them.",
+          "{team}'s cabinet took on {trophies} new pieces at once.",
+          "A {trophies}-trophy year, a count few squads ever put together.",
+          "They are not all worth the same, but there are {trophies} of them."
+        ],
+        "league_title": [
+          "The league is back in {team}'s cabinet after {apps} games of week-by-week attrition.",
+          "At {age} he lifted the title with {team} and earned it, with {goals} goals along the way.",
+          "After a whole championship, {team} finished where they meant to: first.",
+          "The league title arrived with {apps} of his games behind it."
+        ],
+        "cup_run": [
+          "Another cup for {team}'s trophy room, at the end of a run few people saw coming.",
+          "{team} reached the final and did not let it slip. The party belonged to people who had waited.",
+          "Knockout football is another game, and {team} held on to the last one.",
+          "The cup came, and he was there for every round that mattered."
+        ],
+        "super_cup": [
+          "One match settled it, and the trophy stayed at {team}.",
+          "The trophy that opens the year: ninety minutes and done.",
+          "Not the biggest cup on the calendar, but a cup, and it is his.",
+          "A one-off final: {team} started the season a winner."
+        ],
+        "golden_boot": [
+          "Nobody on the continent scored more: {goals} goals in {apps} games, and the Golden Boot with them.",
+          "{goals} goals later, the top-scorer award was never in question.",
+          "{goals} goals and the top scorer prize to go with them.",
+          "Nobody in the league came close to what he did in front of goal."
+        ],
+        "player_of_year": [
+          "Best in the world confirms what the whole year had already been saying.",
+          "After a season like that, picking any other name would have been hard to justify.",
+          "The player of the year award confirmed what the whole league already knew.",
+          "At {age}, he took the individual trophy every player wants."
+        ],
+        "relegated": [
+          "{team} go down, and a season that promised so much became the hardest of his career.",
+          "Not even {goals} goals in {apps} games were enough: {team} are relegated, and the rebuild starts now.",
+          "The drop hurt, and {apps} games were not enough to prevent it.",
+          "{team} go down, and the year is remembered for the wrong reason."
+        ],
+        "promoted": [
+          "{team} are back in the top flight, and promotion went through him across {apps} games.",
+          "A whole season in the second tier ended the only way that mattered: going up.",
+          "Promotion came the hard way, and {team} are back where they wanted to be.",
+          "A full season in the second tier ended the way it had to."
+        ],
+        "breakout": [
+          "From a punt to an automatic starter in one season. {team} found out what they had all along.",
+          "It clicked this year: {apps} games, {goals} goals, and a jump in level nobody had forecast.",
+          "OVR {ovr} at {age}: the jump that changes both the price and the shape of a career.",
+          "He started the year as a prospect and finished it undroppable."
+        ],
+        "goal_haul": [
+          "{goals} goals in {apps} games. The kind of season that changes what a player costs.",
+          "Every defence in the league went through him, and the scoreboard told the story: {goals} goals.",
+          "{goals} goals in {apps} games, the sort of season that turns a boardroom head.",
+          "A goal every other game: that was roughly the rhythm of the year."
+        ],
+        "assist_king": [
+          "{assists} assists: when {team} created anything, it nearly always came through him.",
+          "It was not the goals he scored that decided things, it was the ones he gave, {assists} of them.",
+          "{assists} assists: when {team} attacked, it nearly always went through him.",
+          "He was not the scorer; he was the reason the scorer existed."
+        ],
+        "clean_sheet_wall": [
+          "{cleanSheets} games without conceding. {team} built the season from the back forwards.",
+          "{team}'s defence became the talk of the league, and his name was between the posts.",
+          "{cleanSheets} clean sheets across a {apps}-game season.",
+          "The {team} defence had a name and a surname this season."
+        ],
+        "first_call_up": [
+          "The call every player waits a lifetime for came at {age}.",
+          "After {apps} games this season, the national manager could not keep looking past him.",
+          "After {apps} games in the season, the national manager could not keep looking away.",
+          "The first call-up came at {age}, and another level with it."
+        ],
+        "wrecked_by_injury": [
+          "More weeks in treatment than on the training ground. A year the career will want to forget.",
+          "The injury came early and never let up: {apps} games from an entire season.",
+          "Just {apps} games: the rest of the year belonged to the treatment room.",
+          "The season existed on paper, but barely existed on the pitch."
+        ],
+        "frozen_out": [
+          "{apps} games in a whole year. Whatever the reason, he is out of {team}'s plans.",
+          "The bench became a permanent address, and the season passed him by.",
+          "{apps} games in a whole year. Whatever the reason, he fell out of the {team} plans.",
+          "The year was spent on the bench, and the appearance count shows it."
+        ],
+        "fading": [
+          "The legs do not answer the way they did, and {team} have started looking at younger men.",
+          "The numbers fell, the level fell, and for the first time the question about the end was asked out loud.",
+          "The numbers do not lie: the season fell short of what he has already delivered.",
+          "At {age}, the level began to slip, and the press noticed."
+        ],
+        "new_arrival": [
+          "First year at {team}: new pitch, new dressing room, and a crowd still making up its mind.",
+          "He arrived with the ink dry and {apps} games later is still showing them what he came for.",
+          "First year at {team}: {apps} games spent learning a new place.",
+          "He arrived, played {apps} games, and now the real demands begin."
+        ],
+        "last_dance": [
+          "At {age}, every season could be the last and he keeps walking out anyway.",
+          "The body charges more each year, but the appetite is still there, across {apps} games.",
+          "The last season ended at {age}, at {team}.",
+          "He closes the career with one more year of work and now the goodbye."
+        ],
+        "steady": [
+          "{apps} games, {goals} goals, and the routine of a man doing the job without making headlines.",
+          "No great drama at {team} this season, which, for a professional, is far from the worst outcome.",
+          "{apps} games, {goals} goals: a season without drama, the way a professional likes it.",
+          "No headlines, but the year returned {apps} games at {team}."
+        ]
+      },
+      "continents": {
+        "UEFA": "Europe",
+        "CONMEBOL": "South America",
+        "CONCACAF": "Concacaf",
+        "AFC": "Asia",
+        "CAF": "Africa",
+        "OFC": "Oceania"
+      }
+    },
+    "attributes": {
+      "pace": "Pace",
+      "shooting": "Shooting",
+      "passing": "Passing",
+      "dribbling": "Dribbling",
+      "defending": "Defending",
+      "physical": "Physical",
+      "diving": "Diving",
+      "handling": "Handling",
+      "kicking": "Kicking",
+      "reflexes": "Reflexes",
+      "speed": "Speed",
+      "positioning": "Positioning"
     }
   },
   "pt": {
@@ -2741,6 +4037,7 @@
       },
       "fanSupportLabel": "Torcida",
       "fanBands": {
+        "unknown": "Não te conhece",
         "hostile": "Hostil",
         "cold": "Desconfiada",
         "warm": "Do lado",
@@ -2762,20 +4059,132 @@
       "seasonsAt": "{count} temporadas",
       "seasonAt": "1 temporada",
       "traitorLabel": "Traidor",
-      "traitorHint": "Você saiu direto pra um rival da mesma liga — a torcida nunca esqueceu.",
+      "traitorHint": "Este clube nunca mais te recebe: ou você saiu direto para um rival, ou a torcida te botou para fora.",
       "roleImproveHint": "Melhora seu lugar no time",
       "roleWorsenHint": "Piora seu lugar no time",
       "performanceLabel": "Desempenho",
       "noEffectLabel": "Sem efeito",
       "outcomeGood": "Deu certo",
       "outcomeBad": "Deu errado",
+      "outcomeNeutral": "No fim das contas",
       "biographyTitle": "A carreira em palavras",
       "recordsTitle": "Recordes alcançados",
       "recordBeaten": "superou os {previous} de {holder}",
       "recordEqualled": "igualou os {previous} de {holder}",
       "downloadCard": "Baixar imagem",
       "shareCard": "Compartilhar",
-      "shareWorking": "Gerando..."
+      "shareWorking": "Gerando...",
+      "talentRumourLabel": "Boato",
+      "knockTag": "{matches} jogos fora",
+      "brief": {
+        "roles": {
+          "gk": "goleiro",
+          "defender": "zagueiro",
+          "midfielder": "volante",
+          "creator": "meia",
+          "forward": "atacante"
+        },
+        "pressureHigh": "Cobrança alta",
+        "pressureMedium": "Cobrança média",
+        "pressureLow": "Cobrança baixa",
+        "briefs": {
+          "replace_idol": {
+            "tag": "Herdeiro do ídolo",
+            "detail": "O {role} que saiu virou lenda aqui. A comparação começa no primeiro jogo."
+          },
+          "marquee": {
+            "tag": "Contratação badalada",
+            "detail": "Você é o rosto do projeto. O estádio vai lotar para te ver."
+          },
+          "savior": {
+            "tag": "Missão salvação",
+            "detail": "O clube está em apuros e apostou em você para tirá-lo de lá."
+          },
+          "rebuild": {
+            "tag": "Reconstrução",
+            "detail": "Um gigante ferido recomeçando. Só de vir você já ganha a torcida."
+          },
+          "project": {
+            "tag": "Aposta de futuro",
+            "detail": "Ninguém cobra nada ainda. Aqui você tem tempo para crescer."
+          },
+          "understudy": {
+            "tag": "Aprender com os melhores",
+            "detail": "Você chega atrás de alguém melhor. Os minutos terão que ser conquistados."
+          },
+          "prove_it": {
+            "tag": "Prove seu valor",
+            "detail": "A contratação dividiu opiniões. A arquibancada quer ser convencida."
+          },
+          "homecoming": {
+            "tag": "De volta pra casa",
+            "detail": "Eles nunca esqueceram você. O acolhimento é imediato."
+          }
+        }
+      },
+      "headlineFilter": {
+        "all": "Tudo",
+        "good": "Boas",
+        "bad": "Ruins",
+        "neutral": "Tudo"
+      },
+      "headlineOrderOldest": "↑ Início",
+      "headlineOrderNewest": "↓ Fim",
+      "rivalAhead": "À frente",
+      "rivalBehind": "Atrás",
+      "rivalLevel": "Empatados",
+      "rivalGapClosing": "A diferença está diminuindo",
+      "rivalGapOpening": "A diferença está aumentando",
+      "postLoanAgedOutTitle": "Fim do empréstimo",
+      "postLoanAgedOutDescription": "Você volta ao seu clube fora dos planos, e já passou da idade de sair emprestado outra vez. Ou aceita uma proposta, ou fica e briga por espaço.",
+      "pressureLabel": "Mais cobrança",
+      "seasonsLabel": "Temporadas",
+      "clubsLabel": "Clubes",
+      "capsLabel": "Seleção",
+      "nationalGoals": "Gols seleção",
+      "newspaperTitle": "Arquivo, temporada a temporada",
+      "newspaperPrev": "Edição anterior",
+      "newspaperNext": "Próxima edição",
+      "newspaperEdition": "Edição {n} de {total}",
+      "newspaperHint": "Arraste ou use as setas para virar a página",
+      "newspaperNumbers": "A temporada em números",
+      "trainingFocusPending": "Definindo foco de treino...",
+      "promotion": "Acesso",
+      "loanTag": "Emprestado",
+      "secondTierShort": "2ª div",
+      "newspaperAlso": "Também nesta temporada",
+      "newspaperMoreHonours": "+{count} outros",
+      "newspaperToDate": "Na carreira até aqui",
+      "standingHints": {
+        "passing": "Passou pelo clube sem deixar marca, poucas temporadas ou pouco tempo em campo.",
+        "regular": "Foi titular e cumpriu, mas sem os títulos ou os anos que viram história.",
+        "idol": "Títulos e temporadas o bastante para a torcida cantar o seu nome.",
+        "legend": "Entrou de vez na história do clube: anos de casa e taças na conta."
+      },
+      "celebrationHaul": "{count} conquistas",
+      "hints": {
+        "age": "Idade do jogador nesta temporada.",
+        "club": "Clube em que jogou a temporada.",
+        "overall": "Nota geral da carta ao fim da temporada, de 1 a 99.",
+        "appearances": "Partidas oficiais disputadas, somando todas as competições.",
+        "goals": "Gols marcados em todas as competições.",
+        "assists": "Passes para gol em todas as competições.",
+        "cleanSheets": "Jogos em que terminou sem sofrer nenhum gol.",
+        "goalsConceded": "Gols sofridos enquanto esteve em campo.",
+        "marketValue": "Quanto o mercado avalia o jogador hoje.",
+        "talent": "O quanto os olheiros acreditam no seu teto. Vira certeza com o tempo.",
+        "trait": "Traço de personalidade: muda o risco das escolhas e o ritmo de evolução.",
+        "fanSupport": "O quanto a torcida deste clube gosta de você, de 0 a 100. Influencia sua evolução e libera eventos.",
+        "nationalTeam": "Números pela seleção: jogos, gols e assistências.",
+        "headlines": "As manchetes que a sua carreira gerou, da mais recente à mais antiga."
+      },
+      "shareSealHard": "DIFÍCIL",
+      "shareSealChallenge": "DESAFIO",
+      "shareJourney": "A carreira",
+      "shareCallToAction": "Monte a sua carreira",
+      "shareValueLabel": "Valor no auge",
+      "shareBestCard": "Melhor carta",
+      "shareArc": "Evolução por temporada"
     },
     "careerEvents": {
       "training_extra": {
@@ -3018,7 +4427,7 @@
         "options": {
           "stay_and_fight": {
             "label": "Permanecer e enfrentar a turbulência",
-            "outcome": "O caos interno praticamente zera suas chances de título esta temporada"
+            "outcome": "O caos interno derruba muito suas chances de título nesta temporada, ainda dá, mas ficou bem mais difícil"
           }
         }
       },
@@ -3176,10 +4585,22 @@
         "description": "Tudo se resume a essa cobrança de pênalti para decidir {championship}.",
         "options": {
           "left": {
-            "label": "Cavadinha por cima do goleiro"
+            "label": "Cavadinha por cima do goleiro",
+            "positiveOutcome": {
+              "description": "Cavadinha no meio o goleiro já tinha caído. {championship} é seu."
+            },
+            "negativeOutcome": {
+              "description": "O goleiro ficou parado e segurou a bola no peito. {championship} escapou."
+            }
           },
           "right": {
-            "label": "Chute forte no ângulo"
+            "label": "Chute forte no ângulo",
+            "positiveOutcome": {
+              "description": "Chute forte no ângulo, sem chance de defesa. {championship} é seu."
+            },
+            "negativeOutcome": {
+              "description": "Boa altura pro goleiro, que espalmou. {championship} escapou."
+            }
           }
         },
         "resultLabels": {
@@ -3235,11 +4656,11 @@
         "options": {
           "hold_the_testimonial": {
             "label": "Aceitar a homenagem",
-            "outcome": "A torcida te aplaude de pé, e isso te recarrega"
+            "outcome": "A semana inteira vira festa: a torcida se derrete, o futebol sente"
           },
           "keep_it_low_key": {
-            "label": "Preferir discrição",
-            "outcome": "Você agradece, mas prefere deixar isso pra depois"
+            "label": "Recusar e seguir treinando",
+            "outcome": "Sem cerimônia, sem distração, mais um ano em forma"
           }
         }
       },
@@ -3294,20 +4715,6 @@
           "stick_with_current_boots": {
             "label": "Ficar com as de sempre",
             "outcome": "Você prefere não mexer em time que está ganhando"
-          }
-        }
-      },
-      "hometown_parade": {
-        "title": "Recepção de herói",
-        "description": "Depois do título com a seleção, sua cidade natal organiza uma recepção.",
-        "options": {
-          "enjoy_the_moment": {
-            "label": "Aproveitar o momento",
-            "outcome": "Você absorve essa confiança pro resto da carreira"
-          },
-          "stay_grounded": {
-            "label": "Manter os pés no chão",
-            "outcome": "Você volta direto aos treinos, e o clube nota a postura"
           }
         }
       },
@@ -3572,11 +4979,41 @@
       },
       "severe_injury": {
         "title": "Lesão grave",
-        "description": "O joelho travou num lance banal e o silêncio no estádio disse tudo. O departamento médico fala em temporada inteira de recuperação — e ninguém garante que você volta o mesmo.",
+        "description": "O joelho travou num lance banal e o silêncio no estádio disse tudo. O departamento médico fala em temporada inteira de recuperação e ninguém garante que você volta o mesmo.",
         "options": {
           "fight_back": {
             "label": "Encarar a recuperação",
             "outcome": "Você vai voltar a jogar, mas o teto da sua carreira nunca mais será o mesmo"
+          }
+        }
+      },
+      "dressing_room_fallout": {
+        "title": "Rompimento no clube",
+        "description": "A convivência azedou de vez e não tem mais volta: o clube rescinde na hora e você precisa achar onde jogar.",
+        "variants": {
+          "manager": {
+            "title": "Rompimento com o treinador",
+            "description": "A discussão com o treinador passou dos limites e vazou pra imprensa. O clube fica com ele e rescinde o seu contrato na hora."
+          },
+          "board": {
+            "title": "Rompimento com a diretoria",
+            "description": "Você falou o que pensava sobre a diretoria em público. Eles não engoliram: rescisão imediata."
+          },
+          "supporters": {
+            "title": "Rompimento com a torcida",
+            "description": "A treta com a organizada tomou proporção grande demais. O clube te tira do elenco pra proteger todo mundo e essa torcida não esquece.",
+            "options": {
+              "move": {
+                "label": "Procurar outro clube",
+                "outcome": "Contrato rescindido e porta fechada: esta torcida não te aceita de volta nunca mais."
+              }
+            }
+          }
+        },
+        "options": {
+          "move": {
+            "label": "Procurar outro clube",
+            "outcome": "Contrato rescindido na hora. A torcida do clube não perdoa a saída, e você recomeça em outro lugar."
           }
         }
       }
@@ -3601,6 +5038,7 @@
       "continental_primary": "Continental principal",
       "continental_secondary": "Continental secundária",
       "club_world_cup": "Mundial de Clubes",
+      "intercontinental_cup": "Copa Intercontinental",
       "national_continental": "Seleção continental",
       "world_cup": "Copa do Mundo",
       "national_continental_by_confederation": {
@@ -3610,7 +5048,11 @@
         "CAF": "Copa Africana de Nações",
         "AFC": "Copa Asiática",
         "OFC": "Copa das Nações da OFC"
-      }
+      },
+      "league_cup": "Copa da Liga",
+      "domestic_super_cup": "Supercopa nacional",
+      "continental_tertiary": "Continental terciária",
+      "continental_super_cup": "Supercopa continental"
     },
     "awards": {
       "ballon_dor": "Bola de Ouro",
@@ -3623,9 +5065,13 @@
         "cup": "Copa nacional é do {team}, com você em campo.",
         "continental_primary": "Glória continental: {team} conquista o continente.",
         "continental_secondary": "{team} fatura o título continental e sonha mais alto.",
-        "club_world_cup": "{team} é campeão do mundo — e você estava lá.",
+        "club_world_cup": "{team} é campeão do mundo e você estava lá.",
         "national_continental": "Sua seleção é campeã continental!",
-        "world_cup": "CAMPEÃO DO MUNDO. Sua seleção conquista a Copa."
+        "world_cup": "CAMPEÃO DO MUNDO. Sua seleção conquista a Copa.",
+        "league_cup": "{team} levanta a Copa da Liga com você em campo.",
+        "domestic_super_cup": "Supercopa para o {team} o título abre a temporada.",
+        "continental_tertiary": "{team} conquista a Europa e sobe de patamar.",
+        "continental_super_cup": "{team} vence a supercopa continental diante do outro campeão."
       },
       "award": {
         "ballon_dor": "Bola de Ouro: você é eleito o melhor do planeta.",
@@ -3638,7 +5084,7 @@
       "breakoutSeason": "Temporada de explosão no {team}: você chega a {ovr} de overall.",
       "joinedClub": "Acertado: você é o novo reforço do {team}.",
       "joinedOnLoan": "Emprestado ao {team} para ganhar minutos.",
-      "relegatedBigClub": "A pior geração da história do {team} — rebaixado.",
+      "relegatedBigClub": "A pior geração da história do {team}, rebaixado.",
       "shirtAssigned": "Inscrito no {team}: a {number} é sua na estreia.",
       "shirtUpgraded": "Camisa nova no {team}: você passa a vestir a {number}.",
       "severeInjury": "Notícia dura: {injury} tira você de circulação por uma temporada."
@@ -3666,6 +5112,10 @@
       "dealtHand": "A mão de hoje",
       "hardNote": "Todo desafio é no modo Difícil.",
       "ranking": "Ranking local",
+      "placementBest": "Sua melhor marca até agora",
+      "placementOf": "de {total} tentativas classificadas",
+      "placementCaption": "Ranking local de desafios",
+      "playNormal": "Jogar carreira normal",
       "empty": "Nenhuma tentativa ainda. Jogue o desafio de hoje.",
       "score": "Pontos",
       "target": "Alvo",
@@ -3677,7 +5127,7 @@
       "friendly": "Amistoso",
       "alreadyPlayed": "Você já fez a tentativa valendo de hoje. Jogar de novo conta como amistoso.",
       "result": "Resultado do desafio",
-      "ruleBroken": "Regra quebrada — pontuação limitada",
+      "ruleBroken": "Regra quebrada, pontuação limitada",
       "clear": "Limpar ranking",
       "units": {
         "goals": "gols",
@@ -3690,6 +5140,18 @@
         "apps": "jogos",
         "cleanSheets": "jogos sem sofrer gol",
         "points": "pontos"
+      },
+      "unitsShort": {
+        "goals": "gols",
+        "assists": "assist.",
+        "trophies": "títulos",
+        "overall": "ovr",
+        "caps": "jogos",
+        "seasons": "temp.",
+        "clubs": "países",
+        "apps": "jogos",
+        "cleanSheets": "s/ gol",
+        "points": "pts"
       },
       "missions": {
         "one_club_legend": {
@@ -3722,7 +5184,7 @@
         },
         "underdog_idol": {
           "title": "Ídolo improvável",
-          "brief": "Vire referência num clube pequeno — quanto menor o escudo, mais vale."
+          "brief": "Vire referência num clube pequeno: quanto menor o escudo, mais vale."
         },
         "globetrotter": {
           "title": "Andarilho",
@@ -3746,7 +5208,7 @@
         },
         "resilient": {
           "title": "Casca grossa",
-          "brief": "Chegue longe — e vale ainda mais se o caminho for acidentado."
+          "brief": "Chegue longe e vale ainda mais se o caminho for acidentado."
         },
         "beloved": {
           "title": "Amado pela torcida",
@@ -3762,7 +5224,7 @@
         },
         "homecoming": {
           "title": "Volta pra casa",
-          "brief": "Construa história no clube que te formou — e volte pra encerrar lá."
+          "brief": "Construa história no clube que te formou e volte pra encerrar lá."
         },
         "sharpshooter": {
           "title": "Temporada mágica",
@@ -3811,8 +5273,490 @@
         "complete_career": {
           "title": "Carreira completa",
           "brief": "Um pouco de tudo: títulos, seleção, status de lenda e nível."
+        },
+        "poacher": {
+          "title": "Matador de área",
+          "brief": "Não é o total, é o aproveitamento: gols por jogo acima de tudo."
+        },
+        "creator_in_chief": {
+          "title": "Temporada de garçom",
+          "brief": "Faça a melhor temporada de assistências que conseguir."
+        },
+        "treble_winner": {
+          "title": "Liga, copa e continente",
+          "brief": "Ganhe nas três frentes. A continental vale mais."
+        },
+        "world_conqueror": {
+          "title": "Campeão do mundo",
+          "brief": "Vá atrás dos títulos mundiais, de clube ou de seleção."
+        },
+        "kept_the_shirt": {
+          "title": "Dois endereços",
+          "brief": "No máximo dois clubes na carreira inteira, e história nos dois."
+        },
+        "cap_century": {
+          "title": "Centenário",
+          "brief": "Acumule o máximo de jogos pela seleção."
+        },
+        "international_scorer": {
+          "title": "Artilheiro da seleção",
+          "brief": "Faça gols com a camisa do seu país."
+        },
+        "early_call": {
+          "title": "Chamado cedo",
+          "brief": "Seja convocado o mais jovem possível, e sustente isso."
+        },
+        "ever_present": {
+          "title": "Sempre em campo",
+          "brief": "Some temporadas em que foi titular de verdade, jogo após jogo."
+        },
+        "second_tier_hero": {
+          "title": "Herói do acesso",
+          "brief": "Construa a carreira na segunda divisão e leve o clube pra cima."
+        },
+        "cult_hero": {
+          "title": "Querido por onde passa",
+          "brief": "Vire ídolo em vários clubes, não só em um."
+        },
+        "golden_boot_run": {
+          "title": "Chuteira de ouro",
+          "brief": "Persiga as artilharias e a melhor temporada de gols."
+        },
+        "decorated": {
+          "title": "Prateleira de prêmios",
+          "brief": "Junte prêmios individuais, com a Bola de Ouro valendo mais."
+        },
+        "safe_hands": {
+          "title": "Paredão",
+          "brief": "Chegue alto no nível e faça a melhor temporada de meta invicta."
+        }
+      },
+      "bestTwoRule": "Três metas, só as duas melhores contam. Uma delas você vai ter que abandonar.",
+      "hiddenBrief": "Terceira meta, ainda em segredo",
+      "hiddenBriefNote": "Revelada aos {age} anos. Até lá, jogue sem saber o que ela vai pedir.",
+      "edictLabel": "Proibido hoje",
+      "bankRule": "A partir dos {age} você pode encerrar a carreira quando quiser. Cada temporada jogada bem abaixo do seu auge corta pontos, saiba a hora de parar.",
+      "twilightPenalty": "{seasons} temporada(s) em queda · −{percent}%",
+      "twilightHint": "Você jogou tempo demais depois do auge.",
+      "peakBonus": "Carta {overall}: +{points} pts",
+      "peakHint": "O melhor overall que você alcançou também vale pontos. Chegar a 99 vale o máximo.",
+      "edicts": {
+        "no_early_moves": {
+          "title": "Sem sair antes dos 24",
+          "brief": "Nenhuma transferência definitiva antes dos 24 anos. Construa alguma coisa onde você começou."
+        },
+        "two_clubs_max": {
+          "title": "No máximo dois clubes",
+          "brief": "A carreira inteira em dois clubes, no máximo. Escolha bem o segundo."
+        },
+        "no_giants": {
+          "title": "Nada de gigantes",
+          "brief": "Proibido vestir a camisa de um clube grande. Tudo o que ganhar, ganhe onde ninguém esperava."
+        },
+        "one_country": {
+          "title": "Nunca sair do país",
+          "brief": "Você nasce, joga e se aposenta no mesmo país. Sem Europa, sem atalho."
+        },
+        "top_flight_only": {
+          "title": "Só primeira divisão",
+          "brief": "Nenhuma temporada na segunda divisão. Nem uma."
+        },
+        "no_loans": {
+          "title": "Sem empréstimos",
+          "brief": "Recuse todo empréstimo. Se não tem espaço, resolva de outro jeito."
+        },
+        "never_settle": {
+          "title": "Nunca criar raiz",
+          "brief": "No máximo quatro temporadas seguidas no mesmo clube. Nada nunca vira casa."
+        },
+        "no_marquee_number": {
+          "title": "Sem camisa histórica",
+          "brief": "Nunca aceite um número de 1 a 11. Sem holofote, só trabalho."
+        },
+        "never_relegated": {
+          "title": "Jamais rebaixado",
+          "brief": "Um rebaixamento e a regra do dia está quebrada."
+        },
+        "exile": {
+          "title": "Exílio",
+          "brief": "Jogue em pelo menos três países diferentes. Nenhum lugar é definitivo."
         }
       }
+    },
+    "settings": {
+      "title": "Ajustes",
+      "language": "Idioma",
+      "theme": "Tema",
+      "themeDark": "Escuro",
+      "themeLight": "Claro",
+      "volume": "Volume",
+      "muted": "Mudo",
+      "mute": "Silenciar",
+      "unmute": "Ativar som"
+    },
+    "nav": {
+      "home": "Voltar ao início",
+      "leaveTitle": "Sair da carreira?",
+      "leaveDescription": "A carreira em andamento será perdida. Isso não pode ser desfeito.",
+      "leaveCancel": "Continuar jogando",
+      "leaveConfirm": "Sair mesmo assim",
+      "giveUp": "Desistir da carreira",
+      "giveUpTitle": "Pendurar as chuteiras?",
+      "giveUpDescription": "Sua carreira termina agora e você vai direto para o resumo. Tudo o que já conquistou continua valendo, mas não dá para voltar a jogar.",
+      "giveUpCancel": "Continuar jogando",
+      "giveUpConfirm": "Encerrar carreira"
+    },
+    "backPage": {
+      "mastheads": [
+        "O Placar",
+        "Diário da Bola",
+        "Gazeta Esportiva",
+        "Jornal do Gol",
+        "A Tribuna FC",
+        "Correio do Futebol",
+        "Revista Ataque",
+        "O Craque"
+      ],
+      "seasonLabel": "A temporada",
+      "statsLine": "{apps} jogos · {goals} gols · {assists} assistências",
+      "statsLineDefender": "{apps} jogos · {goals} gols · {assists} assistências · {cleanSheets} sem sofrer gol",
+      "statsLineGk": "{apps} jogos · {cleanSheets} jogos sem sofrer gol",
+      "angles": {
+        "continental_crown": [
+          "REI DO CONTINENTE",
+          "A NOITE QUE O {team} ESPEROU A VIDA INTEIRA",
+          "TAÇA CONTINENTAL: E ELE ESTAVA LÁ",
+          "CAMPEÃO DO CONTINENTE",
+          "TAÇA CONTINENTAL: MISSÃO CUMPRIDA",
+          "A {continent} É DELE E DO {team}"
+        ],
+        "clean_sweep": [
+          "TUDO O QUE DAVA PRA GANHAR",
+          "LIGA, COPA E CONTINENTE O ANO PERFEITO DO {team}",
+          "NÃO SOBROU COMPETIÇÃO",
+          "A TEMPORADA PERFEITA DO {team}",
+          "VARREU O ANO: {trophies} TAÇAS",
+          "ANO PERFEITO NO {team}"
+        ],
+        "treble": [
+          "TRÍPLICE COROA",
+          "TRÊS TAÇAS EM UM ANO SÓ",
+          "A TEMPORADA DE TRÊS TÍTULOS DO {team}",
+          "TRIPLETE NO {team}",
+          "TRÊS TÍTULOS. UMA SÓ TEMPORADA.",
+          "O ANO DE TRÊS TAÇAS"
+        ],
+        "trophy_haul": [
+          "{trophies} TAÇAS EM UM ANO SÓ",
+          "O ARMÁRIO DO {team} NÃO FECHA MAIS",
+          "{trophies} TÍTULOS. UMA SÓ TEMPORADA.",
+          "TEMPORADA DE {trophies} TAÇAS NO {team}",
+          "COLECIONADOR: {trophies} TÍTULOS NO ANO",
+          "MAIS UMA, E MAIS OUTRA, {trophies} NO TOTAL"
+        ],
+        "league_title": [
+          "CAMPEÃO! O {team} É DA LIGA",
+          "A TAÇA VOLTOU PRA CASA",
+          "TÍTULO NACIONAL AOS {age} ANOS",
+          "O {team} NO TOPO E ELE NO MEIO DA FESTA",
+          "O CAMPEONATO É NOSSO",
+          "{team} LEVANTA A TAÇA DA LIGA"
+        ],
+        "cup_run": [
+          "TAÇA NA PRATELEIRA DO {team}",
+          "MATA-MATA ATÉ O FIM E A TAÇA",
+          "COPA CONQUISTADA, A FESTA FOI ATÉ DE MANHÃ",
+          "A COPA VEIO",
+          "RODADA A RODADA, ATÉ LEVANTAR",
+          "COPA NA PRATELEIRA DO {team}"
+        ],
+        "super_cup": [
+          "SUPERCOPA PARA O {team}",
+          "JOGO ÚNICO, TAÇA NA MÃO",
+          "ABRIU O ANO COM TÍTULO",
+          "DECISÃO EM 90 MINUTOS E DEU {team}",
+          "PRIMEIRA TAÇA DA TEMPORADA",
+          "UMA PARTIDA, UM TROFÉU"
+        ],
+        "golden_boot": [
+          "CHUTEIRA DE OURO: {goals} GOLS",
+          "NINGUÉM FEZ MAIS GOL QUE ELE",
+          "ARTILHEIRO ABSOLUTO COM {goals}",
+          "ARTILHEIRO ABSOLUTO",
+          "NINGUÉM FEZ MAIS: {goals} GOLS",
+          "A CHUTEIRA DE OURO TEM DONO"
+        ],
+        "player_of_year": [
+          "MELHOR DO MUNDO",
+          "A BOLA DE OURO É DELE",
+          "O ANO INTEIRO FOI DELE",
+          "O MELHOR DO ANO",
+          "PRÊMIO MÁXIMO E POUCA DISCUSSÃO",
+          "O ANO FOI DELE, E O TROFÉU CONFIRMA"
+        ],
+        "relegated": [
+          "REBAIXADO. O {team} CAIU.",
+          "O ANO QUE O {team} QUER ESQUECER",
+          "QUEDA CONSUMADA E AGORA?",
+          "SEGUNDA DIVISÃO: A CONTA CHEGOU",
+          "O ANO EM QUE TUDO DEU ERRADO",
+          "DESCIDA AMARGA COM O {team}"
+        ],
+        "promoted": [
+          "ACESSO! O {team} SOBE",
+          "DE VOLTA À ELITE",
+          "MISSÃO CUMPRIDA: O {team} ESTÁ DE VOLTA",
+          "SUBIU!",
+          "O {team} VOLTA PRA ELITE",
+          "ACESSO CONQUISTADO NO GRITO"
+        ],
+        "breakout": [
+          "EXPLODIU: OVR {ovr} AOS {age}",
+          "DE ONDE SAIU ESSE JOGADOR?",
+          "O SALTO QUE NINGUÉM VIU CHEGANDO",
+          "O ANO EM QUE ELE VIROU OUTRO JOGADOR",
+          "NASCEU UM JOGADOR",
+          "AOS {age}, VIROU OUTRO PATAMAR"
+        ],
+        "goal_haul": [
+          "{goals} GOLS. SÓ ISSO.",
+          "A TEMPORADA DOS {goals} GOLS",
+          "IMPARÁVEL: {goals} GOLS EM {apps} JOGOS",
+          "O GOLEIRO ADVERSÁRIO NÃO DORMIU ESSE ANO",
+          "{goals} GOLS EM {apps} JOGOS",
+          "A ARTILHARIA NÃO PAROU"
+        ],
+        "assist_king": [
+          "{assists} ASSISTÊNCIAS O CÉREBRO DO TIME",
+          "TUDO PASSA PELOS PÉS DELE",
+          "O GARÇOM DA TEMPORADA",
+          "{assists} PASSES QUE VIRARAM GOL",
+          "O ÚLTIMO PASSE ERA SEMPRE DELE",
+          "QUEM JOGA COM ELE MARCA MAIS"
+        ],
+        "clean_sheet_wall": [
+          "{cleanSheets} JOGOS SEM SOFRER GOL",
+          "A MURALHA DO {team}",
+          "PASSAR POR ELE? BOA SORTE.",
+          "{cleanSheets} VEZES DE GOL VAZIO",
+          "O ANO EM QUE A META FICOU FECHADA",
+          "DEFENDER VIROU ROTINA"
+        ],
+        "first_call_up": [
+          "CONVOCADO PELA PRIMEIRA VEZ",
+          "A SELEÇÃO CHAMOU",
+          "O SONHO DA CAMISA NACIONAL VIROU REAL",
+          "A CAMISA DA SELEÇÃO CHEGOU",
+          "CONVOCADO E MERECIDO",
+          "O TÉCNICO DA SELEÇÃO NÃO TEVE COMO IGNORAR"
+        ],
+        "wrecked_by_injury": [
+          "ANO PERDIDO NO DEPARTAMENTO MÉDICO",
+          "MAIS TEMPO NA MACA DO QUE EM CAMPO",
+          "A TEMPORADA QUE A LESÃO ROUBOU",
+          "{apps} JOGOS: O QUE A LESÃO DEIXOU",
+          "UM ANO DE FISIOTERAPIA",
+          "O CALENDÁRIO PASSOU E ELE ASSISTIU"
+        ],
+        "frozen_out": [
+          "ESQUECIDO NO BANCO",
+          "{apps} JOGOS: O ANO DO OSTRACISMO",
+          "SUMIU DOS PLANOS DO {team}",
+          "FORA DOS PLANOS",
+          "APENAS {apps} JOGOS NO ANO",
+          "O BANCO VIROU ENDEREÇO FIXO"
+        ],
+        "fading": [
+          "O DECLÍNIO COMEÇOU?",
+          "NÃO É MAIS O MESMO",
+          "A IMPRENSA JÁ PERGUNTA ATÉ QUANDO",
+          "O TEMPO COBRA",
+          "OS NÚMEROS CAÍRAM, E TODO MUNDO VIU",
+          "NÃO CORRE MAIS COMO ANTES"
+        ],
+        "new_arrival": [
+          "PRIMEIRO ANO NO {team}",
+          "ADAPTAÇÃO EM ANDAMENTO NO {team}",
+          "CHEGOU, JOGOU, E AGORA?",
+          "COMEÇOU A VIDA NOVA NO {team}",
+          "PRIMEIRA TEMPORADA, PRIMEIRAS IMPRESSÕES",
+          "CHEGADA SEM ALARDE AO {team}"
+        ],
+        "last_dance": [
+          "A ÚLTIMA DANÇA",
+          "QUANTOS ANOS AINDA RESTAM?",
+          "AOS {age}, AINDA EM CAMPO",
+          "A ÚLTIMA TEMPORADA",
+          "O FIM DA LINHA, AOS {age}",
+          "SAI DE CAMPO PELA ÚLTIMA VEZ"
+        ],
+        "steady": [
+          "MAIS UM ANO DE TRABALHO",
+          "TEMPORADA SEM SUSTOS NO {team}",
+          "{apps} JOGOS E A ROTINA DE SEMPRE",
+          "NEM HERÓI, NEM VILÃO",
+          "O ANO PASSOU E A VIDA SEGUE",
+          "SEM MANCHETE, MAS COM MINUTOS"
+        ]
+      },
+      "clubRose": "O {team} cresceu como clube nesta temporada",
+      "clubFell": "O prestígio do {team} encolheu",
+      "ledes": {
+        "continental_crown": [
+          "O {team} é campeão do continente, e ele estava em campo na noite que o clube vai lembrar para sempre.",
+          "Uma campanha inteira para chegar a uma noite só e a taça continental ficou com o {team}.",
+          "O continente inteiro assistiu, e foi o {team} quem levantou a taça.",
+          "Aos {age} anos, o nome dele entra na lista dos campeões continentais."
+        ],
+        "clean_sweep": [
+          "Liga, copa e continente na mesma temporada, não sobrou competição para o {team} disputar.",
+          "O ano em que o {team} entrou em tudo e ganhou tudo, com ele dentro.",
+          "Foram {trophies} taças, e as três que mais pesam estavam entre elas.",
+          "Uma temporada dessas um clube tem uma vez por geração, se tiver."
+        ],
+        "treble": [
+          "Foram {trophies} títulos em uma única temporada. O tipo de ano que um clube leva uma geração para repetir.",
+          "Nada escapou ao {team} nesta temporada: {trophies} taças, e um elenco que entrou para a história do clube.",
+          "{trophies} títulos numa só temporada: o tipo de ano que um clube conta pros netos.",
+          "Não sobrou competição o {team} ganhou tudo o que disputou."
+        ],
+        "trophy_haul": [
+          "Foram {trophies} títulos numa temporada só, e ele esteve em todos.",
+          "O armário do {team} ganhou {trophies} peças novas de uma vez.",
+          "Um ano de {trophies} taças, a conta que poucos elencos fazem.",
+          "Nem todas valem o mesmo, mas são {trophies} e estão todas na vitrine."
+        ],
+        "league_title": [
+          "O campeonato voltou para as vitrines do {team} depois de {apps} jogos de disputa ponto a ponto.",
+          "Aos {age} anos ele levantou a taça da liga com o {team} e teve peso no título, com {goals} gols pelo caminho.",
+          "Depois de um campeonato inteiro, o {team} terminou onde queria: em primeiro.",
+          "O título nacional chegou com {apps} jogos dele na conta."
+        ],
+        "cup_run": [
+          "Mais um caneco para a sala de troféus do {team}, no fim de uma campanha que poucos previam.",
+          "O {team} chegou à final e não deixou escapar. A festa foi de quem esperou muito por ela.",
+          "Mata-mata é outra coisa, e o {team} aguentou até o último jogo.",
+          "A copa veio, e ele estava lá em cada rodada que importou."
+        ],
+        "super_cup": [
+          "Uma partida decidiu, e a taça ficou com o {team}.",
+          "O troféu que abre o ano: noventa minutos e pronto.",
+          "Não é a maior taça do calendário, mas é taça, e é dele.",
+          "Título de jogo único: o {team} começou a temporada ganhando."
+        ],
+        "golden_boot": [
+          "Ninguém no continente marcou mais: {goals} gols em {apps} jogos, e a chuteira de ouro veio junto.",
+          "{goals} gols depois, o prêmio de artilheiro não teve discussão.",
+          "{goals} gols e o prêmio de artilheiro na bagagem.",
+          "Ninguém do campeonato chegou perto do que ele fez na frente do gol."
+        ],
+        "player_of_year": [
+          "O prêmio de melhor do mundo confirma o que o ano inteiro já vinha dizendo.",
+          "Depois de uma temporada assim, escolher qualquer outro nome teria sido difícil de justificar.",
+          "O prêmio de melhor do ano confirmou o que o campeonato inteiro já sabia.",
+          "Aos {age}, levou o troféu individual que todo jogador quer."
+        ],
+        "relegated": [
+          "O {team} cai de divisão, e a temporada que prometia virou a mais dura da carreira dele.",
+          "Nem {goals} gols em {apps} jogos foram suficientes: o {team} desceu, e agora é reconstruir.",
+          "A queda doeu, e {apps} jogos não foram suficientes pra evitar.",
+          "O {team} desce, e o ano fica marcado pelo motivo errado."
+        ],
+        "promoted": [
+          "O {team} está de volta à elite, e o acesso passou pelos pés dele em {apps} jogos.",
+          "Uma temporada inteira na segunda divisão terminou do único jeito que interessava: subindo.",
+          "O acesso veio no sufoco, e o {team} volta pra onde queria estar.",
+          "Uma temporada inteira na segunda divisão terminou do jeito certo."
+        ],
+        "breakout": [
+          "De aposta a titular indiscutível em uma temporada só. O {team} descobriu o que tinha em casa.",
+          "A ficha caiu neste ano: {apps} jogos, {goals} gols, e um salto de nível que ninguém tinha previsto.",
+          "OVR {ovr} aos {age}: o salto que muda o preço e o tamanho de uma carreira.",
+          "Entrou no ano como promessa e saiu como titular indiscutível."
+        ],
+        "goal_haul": [
+          "{goals} gols em {apps} jogos. O tipo de temporada que muda o preço de um jogador.",
+          "Cada zaga do campeonato passou por ele, e o placar contou a história: {goals} gols.",
+          "{goals} gols em {apps} jogos o tipo de temporada que enche o olho de qualquer diretoria.",
+          "A cada dois jogos, um gol: foi mais ou menos esse o ritmo do ano."
+        ],
+        "assist_king": [
+          "{assists} assistências: quando o {team} criou alguma coisa, quase sempre passou por ele.",
+          "Não foram os gols dele que decidiram, foram os que ele deu, {assists} deles.",
+          "{assists} assistências: o {team} atacava, e quase sempre passava por ele.",
+          "Não foi o artilheiro, foi quem fez o artilheiro existir."
+        ],
+        "clean_sheet_wall": [
+          "{cleanSheets} jogos sem levar gol. O {team} construiu a temporada de trás para frente.",
+          "A defesa do {team} virou assunto do campeonato, e o nome dele estava embaixo das traves.",
+          "{cleanSheets} jogos sem sofrer gol numa temporada de {apps} partidas.",
+          "A defesa do {team} teve nome e sobrenome nesta temporada."
+        ],
+        "first_call_up": [
+          "A ligação que todo jogador espera a vida inteira chegou aos {age} anos.",
+          "Depois de {apps} jogos na temporada, o técnico da seleção não teve como continuar ignorando.",
+          "A primeira convocação chegou aos {age} anos, e com ela outro patamar.",
+          "A seleção chamou depois de uma temporada que não deixava alternativa."
+        ],
+        "wrecked_by_injury": [
+          "Foram mais semanas de tratamento do que de treino. Um ano que a carreira dele vai querer esquecer.",
+          "A lesão chegou cedo e não deu trégua: {apps} jogos em uma temporada inteira.",
+          "Foram só {apps} jogos: o resto do ano foi departamento médico.",
+          "A temporada existiu no papel, mas quase não existiu em campo."
+        ],
+        "frozen_out": [
+          "{apps} jogos em um ano inteiro. Seja qual for o motivo, ele saiu dos planos do {team}.",
+          "O banco virou endereço fixo, e a temporada passou de longe.",
+          "{apps} jogos num ano inteiro. Seja qual for o motivo, ele saiu dos planos do {team}.",
+          "O ano passou no banco, e a conta de jogos mostra isso."
+        ],
+        "fading": [
+          "As pernas não respondem como respondiam, e o {team} já começou a olhar para os mais novos.",
+          "Os números caíram, o nível caiu, e pela primeira vez a pergunta sobre o fim apareceu.",
+          "Os números não mentem: a temporada ficou abaixo do que ele já entregou.",
+          "Aos {age}, o rendimento começou a escorregar, e a imprensa notou."
+        ],
+        "new_arrival": [
+          "Primeiro ano no {team}: gramado novo, vestiário novo, e uma torcida ainda formando opinião.",
+          "Chegou com contrato assinado e {apps} jogos depois ainda está mostrando a que veio.",
+          "Primeiro ano no {team}: {apps} jogos pra entender o lugar novo.",
+          "Chegou, jogou {apps} partidas, e agora começa a cobrança de verdade."
+        ],
+        "last_dance": [
+          "Aos {age} anos, cada temporada pode ser a última e ele segue entrando em campo.",
+          "O corpo cobra mais caro a cada ano, mas a vontade continua ali, em {apps} jogos.",
+          "A última temporada terminou aos {age} anos, no {team}.",
+          "Fecha a carreira com mais um ano de trabalho e agora é despedida."
+        ],
+        "steady": [
+          "{apps} jogos, {goals} gols, e a rotina de quem faz o trabalho sem virar manchete.",
+          "Sem grandes emoções no {team} nesta temporada o que, para um profissional, não é o pior resultado.",
+          "{apps} jogos, {goals} gols: uma temporada sem grandes emoções, do jeito que profissional gosta.",
+          "Nada de manchete, mas o ano rendeu {apps} partidas no {team}."
+        ]
+      },
+      "continents": {
+        "UEFA": "Europa",
+        "CONMEBOL": "América do Sul",
+        "CONCACAF": "Concacaf",
+        "AFC": "Ásia",
+        "CAF": "África",
+        "OFC": "Oceania"
+      }
+    },
+    "attributes": {
+      "pace": "Ritmo",
+      "shooting": "Finalização",
+      "passing": "Passe",
+      "dribbling": "Condução",
+      "defending": "Defesa",
+      "physical": "Físico",
+      "diving": "Elasticidade",
+      "handling": "Manejo",
+      "kicking": "Chute",
+      "reflexes": "Reflexos",
+      "speed": "Velocidade",
+      "positioning": "Posicionamento"
     }
   }
 }

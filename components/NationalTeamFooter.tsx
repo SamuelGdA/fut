@@ -1,7 +1,7 @@
 "use client";
 
 import { countryName, useI18n } from "@/lib/i18n/context";
-import { ClubCrest, Flag, PositionIcons, nationalTeamCrestUrl } from "./Media";
+import { Flag, PositionIcons } from "./Media";
 import type { CareerState } from "@/lib/sim/career";
 
 export function NationalTeamFooter({ career }: { career: CareerState }) {
@@ -12,19 +12,16 @@ export function NationalTeamFooter({ career }: { career: CareerState }) {
   const capped = stats.caps > 0;
 
   return (
-    <div className="sticky bottom-0 z-20 border-t border-line bg-surface/95 backdrop-blur">
+    <div
+      className="sticky bottom-0 z-20 border-t border-line bg-surface/95 backdrop-blur"
+      title={t("career.hints.nationalTeam")}
+    >
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
         <div className="flex items-center gap-2.5">
-          <span className="flex h-7 w-7 shrink-0 items-center justify-center overflow-hidden rounded-full bg-surface-2/50">
+          {/* A national side is its flag — no federation crest beside it. */}
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-surface-2/50 ring-1 ring-inset ring-black/25">
             <Flag src={country.flag_url} alt={countryName(country, locale)} dim={!capped} className="h-full w-full object-cover" />
           </span>
-          <ClubCrest
-            src={nationalTeamCrestUrl(country.fifa_code)}
-            name={countryName(country, locale)}
-            dim={!capped}
-            size={22}
-            className="h-5 w-5 sm:h-5.5 sm:w-5.5"
-          />
           <div>
             <p className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wide text-muted-2">
               {t("career.nationalTeam")}

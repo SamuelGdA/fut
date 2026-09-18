@@ -6,7 +6,7 @@ import { useCareerStore } from "@/store/careerStore";
 import { useSound } from "@/lib/useSound";
 import { Flag } from "@/components/Media";
 import { getCountryByIso } from "@/lib/data/dataset";
-import { getDailyChallenge, todayChallengeId } from "@/lib/challenge/daily";
+import { getDailyChallenge, todayChallengeId, HIDDEN_REVEAL_AGE, BANK_MIN_AGE } from "@/lib/challenge/daily";
 import { hasRankedAttempt, standings, challengeStats } from "@/lib/challenge/leaderboard";
 import { missionById } from "@/lib/challenge/missions";
 
@@ -24,11 +24,11 @@ export function ChallengeScreen() {
   const challenge = useMemo(() => getDailyChallenge(todayChallengeId()), []);
   const country = getCountryByIso(challenge.countryIso) ?? getCountryByIso("BR")!;
   const alreadyRanked = hasRankedAttempt(challenge.id);
-  const board = standings(8);
+  const board = standings(8, challenge.id);
   const stats = challengeStats();
 
   return (
-    <div className="animate-fade-in mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center px-4 py-6 sm:px-6">
+    <div className="animate-fade-in scrollbar-thin h-full min-h-0 overflow-y-auto mx-auto flex w-full max-w-6xl flex-col justify-center-safe px-4 py-6 sm:px-6">
       <div className="flex flex-wrap items-baseline gap-x-3">
         <h1 className="font-display text-2xl font-black tracking-tight sm:text-3xl">
           {t("challenge.title")}
@@ -42,14 +42,48 @@ export function ChallengeScreen() {
             <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-gold">
               {t("challenge.objective")}
             </p>
-            <h2 className="mt-1 font-display text-xl font-black tracking-tight">
-              {t(`challenge.missions.${challenge.mission.key}.title`)}
-            </h2>
-            <p className="mt-1 text-sm leading-snug text-muted">
-              {t(`challenge.missions.${challenge.mission.key}.brief`)}
-            </p>
-            <p className="mt-2 text-xs font-semibold text-muted-2">
-              {t("challenge.target")}: {challenge.mission.target} {t(`challenge.units.${challenge.mission.unit}`)}
+            <p className="mt-1 text-sm leading-snug text-muted">{t("challenge.bestTwoRule")}</p>
+
+            <ul className="mt-3 flex flex-col gap-2">
+              {challenge.openMissions.map((mission) => (
+                <li key={mission.id} className="rounded-xl border border-line bg-surface-2/50 p-3">
+                  <p className="font-display text-base font-black leading-tight">
+                    {t(`challenge.missions.${mission.key}.title`)}
+                  </p>
+                  <p className="mt-0.5 text-xs leading-snug text-muted">
+                    {t(`challenge.missions.${mission.key}.brief`)}
+                  </p>
+                  <p className="mt-1.5 text-[11px] font-semibold text-muted-2">
+                    {t("challenge.target")}: {mission.target} {t(`challenge.units.${mission.unit}`)}
+                  </p>
+                </li>
+              ))}
+              {/* The third brief is real and already scored — it is simply not
+                  shown yet, so the early career cannot be optimised for it. */}
+              <li className="rounded-xl border border-dashed border-line p-3">
+                <p className="font-display text-base font-black leading-tight text-muted-2">
+                  {t("challenge.hiddenBrief")}
+                </p>
+                <p className="mt-0.5 text-xs leading-snug text-muted-2">
+                  {t("challenge.hiddenBriefNote", { age: HIDDEN_REVEAL_AGE })}
+                </p>
+              </li>
+            </ul>
+
+            <div className="mt-3 rounded-xl border border-danger/40 bg-danger/10 p-3">
+              <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-danger">
+                {t("challenge.edictLabel")}
+              </p>
+              <p className="mt-1 font-display text-base font-black leading-tight text-danger">
+                {t(`challenge.edicts.${challenge.edict.key}.title`)}
+              </p>
+              <p className="mt-0.5 text-xs leading-snug text-muted">
+                {t(`challenge.edicts.${challenge.edict.key}.brief`)}
+              </p>
+            </div>
+
+            <p className="mt-3 text-xs leading-snug text-muted-2">
+              {t("challenge.bankRule", { age: BANK_MIN_AGE })}
             </p>
           </div>
 
@@ -122,7 +156,7 @@ export function ChallengeScreen() {
                         <p className="truncate text-[10px] text-muted-2">
                           {mission ? t(`challenge.missions.${mission.key}.title`) : entry.missionId}
                           {" · "}
-                          {entry.challengeId}
+                          {entry.peakOverall} {t("challenge.unitsShort.overall")}
                         </p>
                       </div>
                       <span className="shrink-0 font-display text-sm font-black text-gold">

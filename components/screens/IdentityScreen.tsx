@@ -29,7 +29,7 @@ export function IdentityScreen() {
   const nationalKit = getKitForCountry(draft.countryIso ? getCountryByIso(draft.countryIso) : null);
 
   return (
-    <div className="animate-fade-in mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center px-4 py-6 sm:px-6">
+    <div className="animate-fade-in scrollbar-thin h-full min-h-0 overflow-y-auto mx-auto flex w-full max-w-6xl flex-col justify-center-safe px-4 py-6 sm:px-6">
       <div className="flex flex-wrap items-baseline gap-x-3">
         <h1 className="font-display text-2xl font-black tracking-tight sm:text-3xl">
           {t("identity.title")}

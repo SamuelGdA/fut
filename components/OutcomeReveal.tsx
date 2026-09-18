@@ -70,9 +70,34 @@ export function OutcomeReveal({ career }: { career: CareerState }) {
   const basePath = careerEventCopyBase(key, event.variantKey, raw);
   const options = raw<Record<string, EventOptionCopy>>(`${basePath}.options`) ?? {};
   const copy = options[option.optionKey] ?? {};
-  const branch = kind === "positive" ? copy.positiveOutcome : kind === "negative" ? copy.negativeOutcome : undefined;
-  const description = branch?.description ?? copy.outcome ?? "";
-  if (!description) return null;
+  const branch =
+    kind === "positive" ? copy.positiveOutcome : kind === "negative" ? copy.negativeOutcome : undefined;
+
+  // A choice with no gamble in it is usually a trade: the board’s priority
+  // doubles one competition’s odds and halves the other’s, and both halves are
+  // the answer to "what happened". A gambled version of the same option prints
+  // one branch or the other; a settled one prints both.
+  const lines =
+    branch?.description !== undefined
+      ? [branch.description]
+      : copy.outcome !== undefined
+        ? [copy.outcome]
+        : [copy.positiveOutcome?.description, copy.negativeOutcome?.description].filter(
+            (line): line is string => Boolean(line),
+          );
+  if (lines.length === 0) return null;
+
+  // Green for a gamble that paid, red for one that did not, and a plain
+  // reading for a choice that was never a gamble — which is most of them.
+  const accent =
+    kind === "positive" ? "text-pitch" : kind === "negative" ? "text-danger" : "text-muted";
+  const glyph = kind === "positive" ? "▲" : kind === "negative" ? "▼" : "●";
+  const eyebrow =
+    kind === "positive"
+      ? "career.outcomeGood"
+      : kind === "negative"
+        ? "career.outcomeBad"
+        : "career.outcomeNeutral";
 
   const preview = eventOptionPreview(key, option.optionKey);
   const previewFlat: EventEffectPreview | null =
@@ -80,7 +105,10 @@ export function OutcomeReveal({ career }: { career: CareerState }) {
 
   return (
     <div
-      className="fixed right-3 top-[4.5rem] z-50 w-[calc(100%-1.5rem)] max-w-xs sm:right-6"
+      // Positioned by the shared notification rail rather than by itself:
+      // trophy toasts and this used to be two independent fixed layers at the
+      // same z-index and landed on top of each other.
+      className="pointer-events-auto w-full"
       role="status"
       aria-live="polite"
     >
@@ -90,18 +118,26 @@ export function OutcomeReveal({ career }: { career: CareerState }) {
         }`}
         onClick={dismiss}
       >
+        {/* A glyph rather than a plain dot: the dot's colour was the only
+            thing separating a good outcome from a bad one at a glance. */}
         <span
-          className={`mt-0.5 h-2 w-2 shrink-0 rounded-full ${kind === "positive" ? "bg-pitch" : "bg-danger"}`}
+          className={`mt-px shrink-0 text-[11px] font-black leading-none ${accent}`}
           aria-hidden
-        />
+        >
+          {glyph}
+        </span>
         <div className="min-w-0">
-          <p className={`text-[10px] font-black uppercase tracking-[0.16em] ${kind === "positive" ? "text-pitch" : "text-danger"}`}>
-            {t(kind === "positive" ? "career.outcomeGood" : "career.outcomeBad")}
+          <p className={`text-[10px] font-black uppercase tracking-[0.16em] ${accent}`}>
+            {t(eyebrow)}
           </p>
-          <p className="mt-0.5 text-xs leading-snug text-foreground">
-            {description.replace(/\{(\w+)\}/g, (m, k2) => vars[k2] ?? m)}
-            {previewFlat && <EffectChips preview={previewFlat} t={t} />}
-          </p>
+          {lines.map((line, i) => (
+            <p key={i} className="mt-0.5 text-xs leading-snug text-foreground">
+              {line.replace(/\{(\w+)\}/g, (m, k2) => vars[k2] ?? m)}
+              {i === lines.length - 1 && previewFlat && (
+                <EffectChips preview={previewFlat} t={t} />
+              )}
+            </p>
+          ))}
         </div>
       </div>
     </div>

@@ -4,19 +4,7 @@ import { useState } from "react";
 import { useCareerStore } from "@/store/careerStore";
 import { CAREER_EVENT_KEYS, type CareerEventKey } from "@/lib/sim/careerEvents";
 import { PERSONALITY_TRAITS, TALENT_TIERS, type PersonalityTrait, type TalentTier } from "@/lib/sim/constants";
-
-/**
- * Whether the debug tools are allowed to exist at all.
- *
- * These mutators hand out overall, trophies and talent tier for free, so a
- * production build must not ship them — anyone could open the panel and give
- * themselves a perfect career, which makes every number in the game
- * meaningless. Both checks are compile-time constants, so the whole component
- * is dropped from the bundle rather than merely hidden. Set
- * NEXT_PUBLIC_CRAQUE_DEBUG=1 to opt a production build back in on purpose.
- */
-const DEBUG_ENABLED =
-  process.env.NODE_ENV !== "production" || process.env.NEXT_PUBLIC_CRAQUE_DEBUG === "1";
+import { DEBUG_TOOLS_ENABLED } from "@/lib/debugTools";
 
 /**
  * Dev-only testing tool — never part of the intended play loop. Lets you jump
@@ -39,7 +27,7 @@ export function DebugPanel() {
   const [selectedTrait, setSelectedTrait] = useState<PersonalityTrait>(PERSONALITY_TRAITS[0].trait);
   const [selectedTier, setSelectedTier] = useState<TalentTier>(TALENT_TIERS[0].tier);
 
-  if (!DEBUG_ENABLED) return null;
+  if (!DEBUG_TOOLS_ENABLED) return null;
   if (!career) return null;
 
   return (
@@ -59,7 +47,7 @@ export function DebugPanel() {
 
           <p className="mt-1.5 text-[11px] text-muted-2">
             OVR {career.player.overall} · idade {career.player.age} · torcida {Math.round(career.fanSupport)} · rival{" "}
-            {career.rival?.name ?? "—"}
+            {career.rival?.name ?? "-"}
           </p>
 
           <div className="mt-2">

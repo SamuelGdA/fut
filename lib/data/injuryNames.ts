@@ -2,6 +2,13 @@ import type { Locale } from "@/lib/i18n/context";
 
 export const INJURY_NAMES: Record<Locale, Record<string, string>> = {
   es: {
+    // Everyday knocks: a few games, not a career.
+    muscle_strain: "Sobrecarga muscular",
+    ankle_knock: "Golpe en el tobillo",
+    bruised_knee: "Contusión en la rodilla",
+    back_spasm: "Contractura lumbar",
+    groin_strain: "Molestia en el aductor",
+    illness: "Cuadro viral",
     hamstring: "Desgarro de isquiotibial",
     meniscus: "Rotura de meniscos",
     acl: "Rotura de ligamentos cruzados",
@@ -20,6 +27,13 @@ export const INJURY_NAMES: Record<Locale, Record<string, string>> = {
     knee_cartilage: "Lesión de cartílago en la rodilla",
   },
   en: {
+    // Everyday knocks: a few games, not a career.
+    muscle_strain: "Muscle strain",
+    ankle_knock: "Ankle knock",
+    bruised_knee: "Bruised knee",
+    back_spasm: "Back spasm",
+    groin_strain: "Groin strain",
+    illness: "Illness",
     hamstring: "Hamstring tear",
     meniscus: "Meniscus tear",
     acl: "Torn ACL",
@@ -38,6 +52,13 @@ export const INJURY_NAMES: Record<Locale, Record<string, string>> = {
     knee_cartilage: "Knee cartilage damage",
   },
   pt: {
+    // Everyday knocks: a few games, not a career.
+    muscle_strain: "Estiramento muscular",
+    ankle_knock: "Pancada no tornozelo",
+    bruised_knee: "Contusão no joelho",
+    back_spasm: "Espasmo lombar",
+    groin_strain: "Dor na virilha",
+    illness: "Virose",
     hamstring: "Distensão de isquiotibial",
     meniscus: "Ruptura do menisco",
     acl: "Ruptura dos ligamentos cruzados",

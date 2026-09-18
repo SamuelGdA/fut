@@ -161,8 +161,9 @@ export function createTransferOffers(
   player: Player,
   currentTeam: Team,
   count = 2,
+  blocked: readonly string[] = [],
 ): { rng: Rng; teams: Team[] } {
-  const used = new Set<string>([currentTeam.id]);
+  const used = new Set<string>([currentTeam.id, ...blocked]);
   const offers: Team[] = [];
   let cur = rng;
   const baseReputation = playerOfferReputation(player.overall);
@@ -242,9 +243,18 @@ export function createLoanOffers(
   return picked.length === count ? { rng: cur, teams: picked } : null;
 }
 
+/**
+ * Loans are a development tool, so they stop being offered once a player is
+ * old enough that a club would simply sell them instead. Exported because the
+ * post-loan branch has to honour the same ceiling — it used to re-offer loans
+ * with no age check at all, which left players out on loan at 39.
+ */
+export const LOAN_MIN_AGE = 18;
+export const LOAN_MAX_AGE = 24;
+
 export function isLoanEligible(player: Player, status: string, hadLoan: boolean): boolean {
   if (hadLoan) return false;
-  if (player.age < 18 || player.age > 24) return false;
+  if (player.age < LOAN_MIN_AGE || player.age > LOAN_MAX_AGE) return false;
   return status === "low_rotation" || status === "substitute" || status === "third_keeper";
 }
 
@@ -274,8 +284,9 @@ export function createNonRenewalOffers(
   player: Player,
   contractTeam: Team,
   reputation: number,
+  blocked: readonly string[] = [],
 ): { rng: Rng; teams: Team[]; canRetire: boolean } | null {
-  const excluded = new Set<string>([contractTeam.id]);
+  const excluded = new Set<string>([contractTeam.id, ...blocked]);
   const veteran = player.age >= 32;
   const count = veteran ? 2 : 3;
   const picked: Team[] = [];

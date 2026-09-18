@@ -371,50 +371,115 @@ function Mole({ spot }: { spot: MoleSpot }) {
 // Hair
 // ---------------------------------------------------------------------------
 
+/**
+ * Hair.
+ *
+ * Everything is drawn against the same skull: an ellipse at (100, 88) with
+ * radii 41 x 47, so the scalp runs from y=41 at the crown down to about y=78
+ * at the temples. Styles that sit on the head share `CAP`, the cap that
+ * follows that curve, and differ in what they add on top of it. Keeping one
+ * cap is what stops half the set floating above the head and the other half
+ * sinking into the eyebrows.
+ */
+
+/** The scalp, from temple to temple over the crown. */
+const CAP = "M60 84C60 45 75 38 100 38C125 38 140 45 140 84C140 65 122 58 100 58C78 58 60 65 60 84Z";
+
 function Hair({ style, color }: { style: HairStyle; color: string }) {
   switch (style) {
     case "bald":
       return null;
+
     case "short":
+      return <path d={CAP} fill={color} />;
+
+    case "sidePart":
+      // One shape, no lines.
+      //
+      // Every version that tried to draw the parting failed differently: two
+      // masses with a gap read as a loose patch by the temple, a slot notched
+      // into the fringe read as a receding hairline, and a crease stroke had
+      // to be drawn twice (once dark, once light) to survive every hair
+      // colour, which just put a grey smear across the head.
+      //
+      // The silhouette carries it instead, which is how flat vector art does
+      // a comb-over: the fringe hangs low over one side of the forehead and
+      // sweeps up across to the other, and the crown sits off-centre so the
+      // near side hugs the skull while the swept side keeps its height.
+      // Neither half of that depends on a colour.
       return (
         <path
-          d="M60 84C60 45 75 38 100 38C125 38 140 45 140 84C140 65 122 58 100 58C78 58 60 65 60 84Z"
+          d="M60 84C60 49 68 42 78 40C88 35 100 34 111 36C129 39 140 50 140 84C140 68 133 66 121 66C104 65 87 59 76 54C70 55 63 66 60 84Z"
           fill={color}
         />
       );
+
     case "wavy":
-      return (
-        <path
-          d="M60 84C60 45 75 38 100 38C125 38 140 45 140 84C140 70 130 56 118 62C110 66 106 56 100 60C94 56 90 66 82 62C70 56 60 70 60 84Z"
-          fill={color}
-        />
-      );
-    case "curly":
+      // The first version put the waves in faint strokes over a plain cap,
+      // which at any real size just looked like short hair. The waves are in
+      // the silhouette now: the fringe is a run of four scallops, so the
+      // shape says wavy before any texture is drawn on it.
       return (
         <g fill={color}>
-          <path d="M60 84C60 45 75 38 100 38C125 38 140 45 140 84C140 65 122 58 100 58C78 58 60 65 60 84Z" />
-          <circle cx="70" cy="56" r="14" />
-          <circle cx="88" cy="46" r="15" />
-          <circle cx="112" cy="46" r="15" />
-          <circle cx="130" cy="56" r="14" />
-          <circle cx="100" cy="52" r="16" />
+          <path
+            d="M57 90C55 56 72 32 100 32C128 32 145 56 143 90C141 78 138 68 133 64C128 72 121.5 70 116.5 62C111.5 70 105 70 100 62C95 70 88.5 70 83.5 62C78.5 70 72 72 67 64C62 68 59 78 57 90Z"
+          />
+          {/* Ridges over the crown, strong enough to survive a light hair
+              colour. Mirrored about the centre line: the first pass sloped
+              them left to right and the whole head read as tilted. */}
+          <g fill="none" stroke="#00000038" strokeWidth="3.2" strokeLinecap="round">
+            <path d="M66 62C74 52 86 52 94 60C98 64 102 64 106 60C114 52 126 52 134 62" />
+            <path d="M74 48C82 40 92 40 100 46C108 40 118 40 126 48" />
+          </g>
         </g>
       );
+
+    case "curly":
+      // A ring of curls around a filled cap, so the outline is lumpy but the
+      // scalp underneath is never bare.
+      return (
+        <g fill={color}>
+          <path d={CAP} />
+          <circle cx="66" cy="66" r="12" />
+          <circle cx="76" cy="50" r="13" />
+          <circle cx="92" cy="42" r="13" />
+          <circle cx="108" cy="42" r="13" />
+          <circle cx="124" cy="50" r="13" />
+          <circle cx="134" cy="66" r="12" />
+          <circle cx="100" cy="52" r="14" />
+        </g>
+      );
+
+    case "afro":
+      // A full rounded volume that sits well outside the skull on every side.
+      return (
+        <g fill={color}>
+          <ellipse cx="100" cy="52" rx="49" ry="34" />
+          <circle cx="60" cy="62" r="15" />
+          <circle cx="140" cy="62" r="15" />
+          <circle cx="74" cy="34" r="15" />
+          <circle cx="126" cy="34" r="15" />
+          <circle cx="100" cy="28" r="16" />
+          <path d="M62 76C62 62 78 56 100 56C122 56 138 62 138 76C138 66 121 62 100 62C79 62 62 66 62 76Z" />
+        </g>
+      );
+
+    case "bun":
+      return (
+        <g fill={color}>
+          <path d={CAP} />
+          <path d="M74 46C84 36 116 36 126 46C116 42 84 42 74 46Z" opacity={0.6} />
+          <circle cx="100" cy="28" r="13" />
+        </g>
+      );
+
     case "long":
       return (
         <g fill={color}>
           <path d="M100 36c-28 0-44 18-44 40v58c0-18 5-30 5-46 0-8 3-14 8-18 8 6 22 8 31 8s23-2 31-8c5 4 8 10 8 18 0 16 5 28 5 46V76c0-22-16-40-44-40Z" />
         </g>
       );
-    case "mohawk":
-      return <path d="M88 42c4-8 20-8 24 0 4 4.5 4 12.4 2 18-8-4-20-4-28 0-2-5.6-2-13.5 2-18Z" fill={color} />;
-    case "bun":
-      return (
-        <g fill={color}>
-          <path d="M60 84C60 45 75 38 100 38C125 38 140 45 140 84C140 65 122 58 100 58C78 58 60 65 60 84Z" />
-          <circle cx="100" cy="32" r="13" />
-        </g>
-      );
+
     default:
       return null;
   }

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" width="96" height="96" role="img" aria-label="Brasileirão Série B">
+  <!-- Second-tier mark for the Brazilian league pyramid. Built from the same
+       raw material as the top-flight badge — the national green and gold, a
+       shield, and the division's own numeral — rather than reproducing any
+       federation artwork. -->
+  <defs>
+    <linearGradient id="bsb-plate" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1f9d55"/>
+      <stop offset="1" stop-color="#0c5c31"/>
+    </linearGradient>
+  </defs>
+  <path d="M48 4 86 15v40c0 20-17 32-38 37C27 87 10 75 10 55V15z" fill="url(#bsb-plate)"/>
+  <path d="M48 4 86 15v40c0 20-17 32-38 37C27 87 10 75 10 55V15z" fill="none" stroke="#f7d117" stroke-width="3.5"/>
+  <path d="M48 20 74 27v27c0 13-11 21-26 25-15-4-26-12-26-25V27z" fill="none" stroke="#f7d117" stroke-width="1.6" opacity=".55"/>
+  <text x="48" y="66" text-anchor="middle" font-family="Archivo, Arial Black, sans-serif"
+        font-size="44" font-weight="900" fill="#f7d117">B</text>
+</svg>

@@ -39,12 +39,12 @@ export type CareerEventKey =
   | "agent_ultimatum"
   | "wonderkid_signing"
   | "boot_deal"
-  | "hometown_parade"
   | "podcast_interview"
   | "agent_change"
   | "packed_home_stadium"
   | "controversial_red_card"
   | "crowd_turns"
+  | "dressing_room_fallout"
   | "rival_press"
   | "rival_milestone"
   | "rival_duel"
@@ -52,7 +52,16 @@ export type CareerEventKey =
   | "shirt_legend_tribute"
   | "severe_injury";
 
-export type OutcomeKind = "positive" | "negative" | undefined;
+/**
+ * How a decision turned out.
+ *
+ * `neutral` is not "nothing happened" — it is a choice with no gamble in
+ * it, which still applies modifiers and still deserves to be reported. It
+ * used to be `undefined`, and `undefined` meant the game said nothing at
+ * all: half of every event's options resolved in silence, including every
+ * cautious one.
+ */
+export type OutcomeKind = "positive" | "negative" | "neutral";
 
 export const CAREER_EVENT_KEYS: CareerEventKey[] = [
   "training_extra", "personal_coach", "mysterious_substance", "season_load",
@@ -61,9 +70,9 @@ export const CAREER_EVENT_KEYS: CareerEventKey[] = [
   "tax_trouble", "foreign_grandfather", "finish_high_school", "locker_room_clash",
   "triumphant_return", "club_national_team_conflict", "injury_at_peak", "injury",
   "decisive_penalty", "new_manager", "derby_spotlight", "testimonial_match",
-  "agent_ultimatum", "wonderkid_signing", "boot_deal", "hometown_parade",
+  "agent_ultimatum", "wonderkid_signing", "boot_deal",
   "podcast_interview", "agent_change", "packed_home_stadium",
-  "controversial_red_card", "crowd_turns",
+  "controversial_red_card", "crowd_turns", "dressing_room_fallout",
   "rival_press", "rival_milestone", "rival_duel",
   "shirt_upgrade", "shirt_legend_tribute", "severe_injury",
 ];
@@ -75,6 +84,7 @@ export const CAREER_EVENT_WEIGHTS: Partial<Record<CareerEventKey, number>> = {
   captain_armband: 80,
   rival_offer: 80,
   club_crisis: 45,
+  dressing_room_fallout: 14,
   iconic_number: 45,
   return_home: 45,
   locker_room_clash: 45,
@@ -91,7 +101,6 @@ export const CAREER_EVENT_WEIGHTS: Partial<Record<CareerEventKey, number>> = {
   agent_ultimatum: 50,
   wonderkid_signing: 45,
   boot_deal: 35,
-  hometown_parade: 30,
   podcast_interview: 50,
   agent_change: 40,
   packed_home_stadium: 55,
@@ -118,6 +127,10 @@ export const CAREER_EVENT_OPTIONS: Record<CareerEventKey, string[]> = {
   club_priority: ["prioritize_league", "prioritize_continental"],
   rival_offer: ["accept", "reject"],
   club_crisis: ["stay_and_fight"],
+  // No narrative option: the whole point is that the club has already
+  // decided. The only choice left is where to go next, which
+  // `decorateCareerEvent` supplies as a forced move.
+  dressing_room_fallout: [],
   iconic_number: ["claim_it", "let_someone_else"],
   return_home: ["stay_abroad"],
   giant_tattoo: ["accept", "reject"],
@@ -136,7 +149,6 @@ export const CAREER_EVENT_OPTIONS: Record<CareerEventKey, string[]> = {
   agent_ultimatum: ["reassure_the_club"],
   wonderkid_signing: ["rise_to_the_challenge", "welcome_and_mentor"],
   boot_deal: ["sign_exclusive", "stick_with_current_boots"],
-  hometown_parade: ["enjoy_the_moment", "stay_grounded"],
   podcast_interview: ["speak_your_mind", "play_it_safe"],
   agent_change: ["switch_agent", "keep_agent"],
   packed_home_stadium: ["feed_off_the_crowd", "block_out_the_noise"],
@@ -157,6 +169,12 @@ export const CAREER_EVENT_VARIANTS: Partial<Record<CareerEventKey, { key: string
   training_extra: [{ key: "preseason_camp", weight: 100 }],
   personal_coach: [{ key: "nutrition_plan", weight: 100 }],
   season_load: [{ key: "double_session", weight: 100 }],
+  // Who the bust-up is with changes what it costs, not whether you leave.
+  dressing_room_fallout: [
+    { key: "manager", weight: 40 },
+    { key: "board", weight: 35 },
+    { key: "supporters", weight: 25 },
+  ],
 };
 
 /**
@@ -206,7 +224,7 @@ export function resolveCareerEvent(
 ): ResolvedEvent {
   const modifiers: Modifiers = { ...BASE_MODIFIERS };
   let cur = rng;
-  let outcomeKind: OutcomeKind;
+  let outcomeKind: OutcomeKind = "neutral";
 
   // Personality tilts every gamble a little: a determined player converts risky
   // calls more often than a fragile one, without ever guaranteeing the outcome.
@@ -290,6 +308,9 @@ export function resolveCareerEvent(
     if (earns_it) {
       modifiers.permanentOverallDelta = 2;
       modifiers.fanSupportDelta = 5;
+    // Wearing the club's marquee number means being judged as the player who
+    // should be wearing it. Goodwill now, a shorter rope from here on.
+    modifiers.briefPatienceDelta = 0.2;
     } else {
       modifiers.immediateOverallDelta = -1;
       modifiers.fanSupportDelta = -6;
@@ -310,6 +331,19 @@ export function resolveCareerEvent(
   if (eventKey === "rival_offer" && optionKey === "accept") {
     modifiers.roleOverride = "high_rotation";
     setAllTrophyMultipliers(modifiers, 2);
+  }
+
+  if (eventKey === "dressing_room_fallout" && optionKey === "move") {
+    outcomeKind = "negative";
+    // The row itself costs form and goodwill wherever it happened.
+    modifiers.fanSupportDelta = -18;
+    modifiers.immediateOverallDelta = -1;
+    // A manager can be outlasted and a board can be bought off, but a stand
+    // that has turned on you never takes you back.
+    if (variantKey === "supporters") {
+      modifiers.betrayCurrentClub = true;
+      modifiers.fanSupportDelta = -35;
+    }
   }
 
   if (eventKey === "club_crisis" && optionKey === "stay_and_fight") {
@@ -399,11 +433,18 @@ export function resolveCareerEvent(
   }
   // derby_spotlight / focus_on_process: no swing either way.
 
+  // A tribute night in the middle of a season is a week of build-up, guests
+  // and speeches — the crowd adores it and the football suffers for it. The
+  // quiet option is the professional one: no ceremony, one more good year.
   if (eventKey === "testimonial_match" && optionKey === "hold_the_testimonial") {
+    modifiers.fanSupportDelta = 12;
+    modifiers.statsMultiplier = 0.9;
+    outcomeKind = "positive";
+  }
+  if (eventKey === "testimonial_match" && optionKey === "keep_it_low_key") {
     modifiers.permanentOverallDelta = 1;
     outcomeKind = "positive";
   }
-  // testimonial_match / keep_it_low_key: no modifiers.
 
   if (eventKey === "agent_ultimatum" && optionKey === "reassure_the_club") {
     modifiers.immediateOverallDelta = -1;
@@ -522,14 +563,6 @@ export function resolveCareerEvent(
     }
   }
 
-  if (eventKey === "hometown_parade" && optionKey === "enjoy_the_moment") {
-    modifiers.permanentOverallDelta = 2;
-    outcomeKind = "positive";
-  }
-  if (eventKey === "hometown_parade" && optionKey === "stay_grounded") {
-    modifiers.roleShift = 1;
-    outcomeKind = "positive";
-  }
 
   // Taking a marquee shirt is a statement the terraces notice. There's no
   // gamble here — the number was offered because it was already earned, so
@@ -540,6 +573,8 @@ export function resolveCareerEvent(
   }
   if (eventKey === "shirt_legend_tribute" && optionKey === "take_number") {
     modifiers.fanSupportDelta = 8;
+    // A retired legend's number is the heaviest shirt in the building.
+    modifiers.briefPatienceDelta = 0.35;
     outcomeKind = "positive";
   }
 
@@ -563,6 +598,8 @@ export interface EventEffectPreview {
   /** Multiplier on this season's stats (goals/assists/clean sheets), shown as a % swing. */
   stats?: number;
   role?: -1 | 1;
+  /** The crowd will expect more from here on — shown as a warning, not a number. */
+  pressure?: 1;
 }
 
 type EventPreviewEntry = EventEffectPreview | { positive: EventEffectPreview; negative: EventEffectPreview };
@@ -591,7 +628,10 @@ export const EVENT_OPTION_PREVIEW: Partial<Record<CareerEventKey, Partial<Record
   injury_at_peak: { play_injured: { ovr: -1 } },
   new_manager: { impress_in_training: { positive: { role: 1 }, negative: { role: -1 } } },
   derby_spotlight: { embrace_the_pressure: { positive: { stats: 1.25 }, negative: { stats: 0.75 } } },
-  testimonial_match: { hold_the_testimonial: { ovr: 1 } },
+  testimonial_match: {
+    hold_the_testimonial: { fan: 12, stats: 0.9 },
+    keep_it_low_key: { ovr: 1 },
+  },
   agent_ultimatum: { reassure_the_club: { ovr: -1 } },
   wonderkid_signing: {
     rise_to_the_challenge: { positive: { ovr: 2, role: 1 }, negative: { role: -1 } },
@@ -622,15 +662,11 @@ export const EVENT_OPTION_PREVIEW: Partial<Record<CareerEventKey, Partial<Record
   rival_duel: {
     take_the_weight: { positive: { fan: 6, stats: 1.2 }, negative: { fan: -4, stats: 0.85 } },
   },
-  hometown_parade: {
-    enjoy_the_moment: { ovr: 2 },
-    stay_grounded: { role: 1 },
-  },
   shirt_upgrade: {
-    take_number: { fan: 5 },
+    take_number: { fan: 5, pressure: 1 },
   },
   shirt_legend_tribute: {
-    take_number: { fan: 8 },
+    take_number: { fan: 8, pressure: 1 },
   },
 };
 
