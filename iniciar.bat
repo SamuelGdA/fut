@@ -1,15 +1,29 @@
 @echo off
-title Copero - Simulador de Carreira
+title CRAQUE - Simulador de Carreira
 cd /d "%~dp0"
+
+where pnpm >nul 2>nul
+if errorlevel 1 (
+    echo.
+    echo Instalando o pnpm, aguarde...
+    echo.
+    call npm install -g pnpm
+    if errorlevel 1 (
+        echo.
+        echo Falha ao instalar o pnpm. Verifique se o Node.js esta instalado.
+        pause
+        exit /b 1
+    )
+)
 
 if not exist node_modules (
     echo.
     echo Instalando dependencias pela primeira vez, aguarde...
     echo.
-    call npm install
+    call pnpm install
     if errorlevel 1 (
         echo.
-        echo Falha ao instalar dependencias. Verifique se o Node.js esta instalado.
+        echo Falha ao instalar dependencias.
         pause
         exit /b 1
     )
@@ -20,7 +34,7 @@ echo Iniciando o servidor em http://localhost:3000 ...
 echo (Feche esta janela para encerrar o jogo)
 echo.
 
-start "" cmd /k "npm run dev"
+start "" cmd /k "pnpm dev"
 
-timeout /t 6 /nobreak >nul
-start "" http://localhost:3000
+timeout /t 8 /nobreak >nul
+start "" http://localhost:3000/juegos/simulador-carrera

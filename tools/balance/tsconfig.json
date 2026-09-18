@@ -1,0 +1,19 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    /*
+     * Wider than the base on purpose. The harness typechecks the app's own
+     * source as part of importing it, and that source is written for a browser
+     * (it reaches a .tsx module transitively) against a newer library than the
+     * shared base targets. None of this reaches the shipped game.
+     */
+    "lib": ["ES2023", "DOM"],
+    "jsx": "react-jsx",
+    "types": ["node"],
+    "noUncheckedIndexedAccess": false,
+    "paths": {
+      "@/*": ["../../apps/web/src/*"]
+    }
+  },
+  "include": ["src/**/*.ts", "test/**/*.ts", "vite.config.ts"]
+}

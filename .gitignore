@@ -1,8 +1,6 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
 # dependencies
-/node_modules
-/.pnp
+node_modules/
+.pnp
 .pnp.*
 .yarn/*
 !.yarn/patches
@@ -10,15 +8,15 @@
 !.yarn/releases
 !.yarn/versions
 
+# build output
+.next/
+out/
+build/
+dist/
+.turbo/
+
 # testing
-/coverage
-
-# next.js
-/.next/
-/out/
-
-# production
-/build
+coverage/
 
 # misc
 .DS_Store
@@ -39,3 +37,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Lockfiles from other package managers. The repo is pnpm (see ADR 0001), and a
+# stray package-lock.json installs a different tree than everyone else has.
+package-lock.json
+yarn.lock

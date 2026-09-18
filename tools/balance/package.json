@@ -1,0 +1,19 @@
+{
+  "name": "@craque/balance",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "capture": "vite-node src/cli.ts -- capture",
+    "check": "vite-node src/cli.ts -- check",
+    "balance": "vite-node src/cli.ts -- check --verbose",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "typescript": "^5.9.3",
+    "vite-node": "^3.2.4",
+    "vitest": "^3.2.4"
+  }
+}
