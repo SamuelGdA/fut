@@ -10,17 +10,14 @@
  * up on a normal run.
  */
 
-import { useEffect, useRef, useState } from "react";
-import { Avatar } from "@/components/Avatar";
-import { serialisePortrait } from "@/components/ShareCardButtons";
-import { getKitForTeam } from "@/lib/kits";
+import { useEffect, useState } from "react";
 import { renderShareImage } from "@/lib/share/shareImage";
 import { countryName, useI18n } from "@/lib/i18n/context";
 import { BRAND_COPY } from "@/lib/brandCopy";
 import samples from "@/lib/dev/sampleCareers.json";
 import type { CareerState } from "@/lib/sim/career";
-import type { AvatarConfig } from "@/lib/avatar/config";
-import { DEFAULT_AVATAR } from "@/lib/avatar/config";
+import type { AvatarConfig } from "@craque/art";
+import { DEFAULT_AVATAR } from "@craque/art";
 import type { Difficulty } from "@/lib/sim/constants";
 
 interface Subject {
@@ -65,15 +62,9 @@ const SUBJECTS: Subject[] = [
 function Bench({ subject }: { subject: Subject }) {
   const { t, locale } = useI18n();
   const career = samples[subject.career] as unknown as CareerState;
-  const host = useRef<HTMLDivElement>(null);
   const [png, setPng] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const peakSeason = career.seasons.reduce(
-    (best, s) => (best && best.overall >= s.overall ? best : s),
-    career.seasons[0],
-  );
-  const kit = getKitForTeam(peakSeason?.teamId ?? career.currentTeamId);
 
   useEffect(() => {
     let url: string | null = null;
@@ -83,7 +74,6 @@ function Bench({ subject }: { subject: Subject }) {
         const blob = await renderShareImage({
           career,
           avatar: subject.avatar,
-          avatarSvg: serialisePortrait(host.current),
           difficulty: subject.difficulty,
           challengeId: subject.challengeId,
           locale,
@@ -109,9 +99,6 @@ function Bench({ subject }: { subject: Subject }) {
   return (
     <div className="flex flex-col gap-2">
       <p className="font-mono text-[11px] text-muted-2">{subject.id}</p>
-      <div ref={host} aria-hidden className="pointer-events-none fixed top-0 left-[-300vw] h-[200px] w-[200px]">
-        <Avatar config={subject.avatar} kit={kit} showBackground={false} className="h-[200px] w-[200px]" />
-      </div>
       {error && <p className="max-w-[440px] text-[10px] text-danger">{error}</p>}
       {png ? (
         // eslint-disable-next-line @next/next/no-img-element

@@ -4,7 +4,8 @@ import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from
 
 import { useI18n } from "@/lib/i18n/context";
 import { TrophyImage } from "./Media";
-import { FC_CARD_SIZES, PlayerFcCard } from "./PlayerFcCard";
+import { PlayerFcCard } from "./PlayerFcCard";
+import { FC_CARD_SIZES } from "@craque/art";
 import { CareerTable } from "./CareerTable";
 import {
   allAwards,
@@ -13,13 +14,13 @@ import {
   type CareerState,
 } from "@/lib/sim/career";
 import { resolveTrophy, formatMarketValue } from "@/lib/trophyDisplay";
-import { AWARD_IMAGES, type AwardKey, type TrophyKey } from "@/lib/data/trophies";
+import { AWARD_IMAGES, type AwardKey, type TrophyKey } from "@craque/data";
 import { scoutedTalent } from "@/lib/sim/engine";
 import { FanSupportMeter } from "./FanSupportMeter";
 import { RivalTracker } from "./RivalTracker";
 import { MetaRow } from "./MetaRow";
 import { isDefender, type PersonalityTrait, type TalentTier } from "@/lib/sim/constants";
-import type { AvatarConfig } from "@/lib/avatar/config";
+import type { AvatarConfig } from "@craque/art";
 
 /**
  * The height below which the card gives up a size so the decision fits.

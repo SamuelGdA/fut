@@ -14,8 +14,8 @@
  */
 
 import { useState } from "react";
-import { LEAGUES } from "@/lib/data/dataset";
-import { generatedLeagueBadge, leagueLogoUrl } from "@/lib/leagueBadges";
+import { LEAGUES } from "@craque/data";
+import { generatedLeagueBadge, leagueLogoUrl } from "@craque/art";
 import { ClubCrest } from "@/components/Media";
 
 const SIZES = [10, 14, 28, 96];

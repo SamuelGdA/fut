@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { teamCrestUrl } from "@/lib/crests";
+import { teamCrestUrl } from "@craque/art";
 
 /**
  * Flags, league logos and trophies are served from /public/craque-assets — the

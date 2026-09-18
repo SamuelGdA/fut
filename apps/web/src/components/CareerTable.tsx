@@ -3,10 +3,10 @@
 import { useEffect, useRef } from "react";
 import { useI18n } from "@/lib/i18n/context";
 import { ClubCrest, TrophyImage } from "./Media";
-import { getTeam } from "@/lib/data/dataset";
+import { getTeam } from "@craque/data";
 import { periodRows, type CareerState, type SeasonSnapshot } from "@/lib/sim/career";
 import { resolveTrophy } from "@/lib/trophyDisplay";
-import { AWARD_IMAGES } from "@/lib/data/trophies";
+import { AWARD_IMAGES } from "@craque/data";
 import { addStats } from "@/lib/sim/engine";
 import { EMPTY_STATS, isDefender } from "@/lib/sim/constants";
 

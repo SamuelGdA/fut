@@ -172,10 +172,10 @@ código que vai ficar, e não ao que vai embora.
 |---|---|---|
 | 1 | Esqueleto do monorepo, tooling, docs | **Feito** |
 | 2 | Baselines de balanceamento capturados do código atual | **Feito** |
-| 3 | `data` e `art` extraídos | pendente |
+| 3 | `data` e `art` extraídos | **Feito** |
 | 4 | `content` extraído, com lint de travessão, paridade e variantes | pendente |
 | 5 | `engine` extraído módulo a módulo | pendente |
-| 6 | Especificação única da carta e do avatar | pendente |
+| 6 | Especificação única da carta e do avatar | **Feito na etapa 3** |
 | 7 | App reorganizado em fatias verticais | pendente |
 | 8 | Formato de replay com fallback de snapshot | pendente |
 
@@ -191,6 +191,29 @@ pelo alias `@/` do próprio app, configurado em `tools/balance/vite.config.ts`.
 **Essa é a única linha que muda quando o motor sair:** `@/` deixa de apontar
 para o app e `@craque/engine` assume. Os baselines não se movem, que é
 exatamente a razão de terem sido capturados antes e não depois.
+
+### O que a etapa 3 resolveu
+
+Três coisas que a arquitetura previa e que já valem:
+
+**A carta tem uma definição só.** As faixas de raridade, a geometria do escudo
+e as duas paletas viviam dentro do componente React, o que obrigava o pintor de
+canvas a importar um componente para descobrir de que cor pintar. Um comentário
+pedia a quem mexesse numa que lembrasse de mexer na outra, que é o tipo de
+instrução que funciona até não funcionar. Agora os dois leem de `card/tiers.ts`.
+
+**O pôster parou de raspar o DOM.** O avatar existia só como JSX, então a
+exportação montava uma cópia invisível do retrato fora da tela, procurava o
+`<svg>` no documento, clonava, remendava largura e altura no clone e
+serializava de volta para string. Como string, o retrato é arte como qualquer
+outra: a página injeta, o pôster codifica, e nenhum depende do outro ter
+renderizado antes.
+
+**A ordem das ligas virou um invariante testado.** Ela alimenta a lista plana
+de clubes, que o mercado de transferências agrupa por reputação e sorteia, então
+é comportamento e não apresentação. Quebrar o arquivo único em um por país teria
+reordenado silenciosamente, porque o original intercala os países. O `order.ts`
+preserva, e `integrity.test.ts` reprova se os dois saírem de sincronia.
 
 ---
 

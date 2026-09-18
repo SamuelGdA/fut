@@ -6,8 +6,8 @@ import { useSound } from "@/lib/useSound";
 import { Avatar } from "@/components/Avatar";
 import { PositionField } from "@/components/PositionField";
 import { NationalitySearch } from "@/components/NationalitySearch";
-import { getCountryByIso } from "@/lib/data/dataset";
-import { getKitForCountry } from "@/lib/kits";
+import { getCountryByIso } from "@craque/data";
+import { getKitForCountry } from "@craque/data";
 
 const CUSTOMISE_LABEL = {
   pt: { edit: "Personalizar aparência", editing: "Editar aparência", hint: "Sem personalizar, você joga como silhueta" },

@@ -4,14 +4,14 @@ import {
   getLeagueOfTeam,
   getLeagueOfTeamAtTier,
   getTeam,
-} from "@/lib/data/dataset";
+} from "@craque/data";
 import { countryName, type Locale } from "@/lib/i18n/context";
-import { areRivals } from "@/lib/data/rivalries";
+import { areRivals } from "@craque/data";
 import {
   singleTrophyImportance,
   type Confederation,
   type TrophyKey,
-} from "@/lib/data/trophies";
+} from "@craque/data";
 import { clubStanding, fanBand, rivalOverallAt } from "@/lib/sim/engine";
 import {
   isDefender,

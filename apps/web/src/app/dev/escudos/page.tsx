@@ -10,8 +10,8 @@
  */
 
 import { useMemo, useState } from "react";
-import { LEAGUES } from "@/lib/data/dataset";
-import { getCrestSpec, isCuratedCrest, teamCrestUrl } from "@/lib/crests";
+import { LEAGUES } from "@craque/data";
+import { getCrestSpec, isCuratedCrest, teamCrestUrl } from "@craque/art";
 
 const SIZES = [16, 20, 28, 44, 72] as const;
 

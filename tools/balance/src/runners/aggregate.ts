@@ -1,6 +1,6 @@
 import { attributeKeysFor, roundedAttributes } from "@/lib/sim/attributes";
 import { buildBioFacts } from "@/lib/bio/facts";
-import { getLeagueOfTeam } from "@/lib/data/dataset";
+import { getLeagueOfTeam } from "@craque/data";
 import type { CareerState } from "@/lib/sim/career";
 import type { PositionCode } from "@/lib/sim/constants";
 import { aggregateCorpus } from "../corpus";

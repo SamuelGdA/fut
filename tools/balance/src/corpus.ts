@@ -1,6 +1,6 @@
 import { ALL_POSITIONS, type Difficulty, type GameMode, type PositionCode } from "@/lib/sim/constants";
 import { createRng, nextInt, pickOne, type Rng } from "@/lib/sim/rng";
-import { PLAYABLE_COUNTRY_CODES, COUNTRIES } from "@/lib/data/dataset";
+import { PLAYABLE_COUNTRY_CODES, COUNTRIES } from "@craque/data";
 
 /**
  * The fixed population of careers every baseline is measured over.

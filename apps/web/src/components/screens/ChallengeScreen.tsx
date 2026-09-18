@@ -5,7 +5,7 @@ import { countryName, useI18n } from "@/lib/i18n/context";
 import { useCareerStore } from "@/store/careerStore";
 import { useSound } from "@/lib/useSound";
 import { Flag } from "@/components/Media";
-import { getCountryByIso } from "@/lib/data/dataset";
+import { getCountryByIso } from "@craque/data";
 import { getDailyChallenge, todayChallengeId, HIDDEN_REVEAL_AGE, BANK_MIN_AGE } from "@/lib/challenge/daily";
 import { hasRankedAttempt, standings, challengeStats } from "@/lib/challenge/leaderboard";
 import { missionById } from "@/lib/challenge/missions";

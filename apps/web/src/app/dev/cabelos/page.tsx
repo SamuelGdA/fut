@@ -11,7 +11,7 @@
 
 import { useEffect } from "react";
 import { Avatar } from "@/components/Avatar";
-import { DEFAULT_AVATAR, HAIR_COLORS, HAIR_STYLES, SKIN_TONES } from "@/lib/avatar/config";
+import { DEFAULT_AVATAR, HAIR_COLORS, HAIR_STYLES, SKIN_TONES } from "@craque/art";
 
 const SKINS = [1, 4, 7];
 const COLOURS = [0, 3, 6];

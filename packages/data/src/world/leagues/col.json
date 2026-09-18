@@ -1,0 +1,246 @@
+[
+  {
+    "id": "liga-dimayor",
+    "name": "Liga Dimayor",
+    "country_fifa_code": "COL",
+    "logo_url": "/craque-assets/logos/football/competitions/COL/L/liga-dimayor.svg",
+    "league_trophy_url": "/craque-assets/trophies/football/national/COL/liga-dimayor.png",
+    "confederation": "CONMEBOL",
+    "tier": 1,
+    "domestic_cup_id": "col-copa-colombia",
+    "teams": [
+      {
+        "id": "atletico-nacional",
+        "name": "Atlético Nacional",
+        "short_name": "Nacional",
+        "abbreviation": "NAC",
+        "logo_url": "/craque-assets/logos/football/teams/COL/L/atletico-nacional.svg",
+        "primary_color": "#00953B",
+        "domestic_reputation": 2,
+        "continental_reputation": 1,
+        "international_reputation": 1
+      },
+      {
+        "id": "america-de-cali",
+        "name": "América de Cali",
+        "short_name": "América",
+        "abbreviation": "AME",
+        "logo_url": "/craque-assets/logos/football/teams/COL/L/america.svg",
+        "primary_color": "#000000",
+        "domestic_reputation": 2,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "bucaramanga",
+        "name": "Bucaramanga",
+        "short_name": "Bucaramanga",
+        "abbreviation": "BUC",
+        "logo_url": "/craque-assets/logos/football/teams/COL/L/bucaramanga.svg",
+        "primary_color": "#F3E638",
+        "domestic_reputation": 1,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "deportes-tolima",
+        "name": "Deportes Tolima",
+        "short_name": "Tolima",
+        "abbreviation": "DEP",
+        "logo_url": "/craque-assets/logos/football/teams/COL/L/deportes-tolima.svg",
+        "primary_color": "#8D3031",
+        "domestic_reputation": 1,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "independiente-medellin",
+        "name": "Independiente Medellin",
+        "short_name": "DIM",
+        "abbreviation": "MED",
+        "logo_url": "/craque-assets/logos/football/teams/COL/L/independiente-medellin.svg",
+        "primary_color": "#252C5E",
+        "domestic_reputation": 2,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "junior",
+        "name": "Junior",
+        "short_name": "Junior",
+        "abbreviation": "JUN",
+        "logo_url": "/craque-assets/logos/football/teams/COL/L/junior.svg",
+        "primary_color": "#00309B",
+        "domestic_reputation": 2,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "deportivo-cali",
+        "name": "Deportivo Cali",
+        "short_name": "Dep. Cali",
+        "abbreviation": "CAL",
+        "logo_url": "/craque-assets/logos/football/teams/COL/L/deportivo-cali.svg",
+        "primary_color": "#2A975E",
+        "domestic_reputation": 2,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "once-caldas",
+        "name": "Once Caldas",
+        "short_name": "Once Caldas",
+        "abbreviation": "ONC",
+        "logo_url": "/craque-assets/logos/football/teams/COL/L/once-caldas.svg",
+        "primary_color": "#292E6E",
+        "domestic_reputation": 1,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "millonarios",
+        "name": "Millonarios",
+        "short_name": "Millonarios",
+        "abbreviation": "MIL",
+        "logo_url": "/craque-assets/logos/football/teams/COL/L/millonarios.svg",
+        "primary_color": "#273479",
+        "domestic_reputation": 2,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "santa-fe",
+        "name": "Santa Fe",
+        "short_name": "Santa Fe",
+        "abbreviation": "SAN",
+        "logo_url": "/craque-assets/logos/football/teams/COL/L/santa-fe.svg",
+        "primary_color": "#C32523",
+        "domestic_reputation": 2,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      }
+    ]
+  },
+  {
+    "id": "torneo-dimayor",
+    "name": "Torneo Dimayor",
+    "country_fifa_code": "COL",
+    "logo_url": "",
+    "league_trophy_url": "",
+    "confederation": "CONMEBOL",
+    "tier": 2,
+    "domestic_cup_id": "col-copa-colombia",
+    "teams": [
+      {
+        "id": "real-cartagena",
+        "name": "Real Cartagena",
+        "short_name": "R. Cartagena",
+        "abbreviation": "CTG",
+        "logo_url": "/craque-assets/logos/football/teams/COL/L/real-cartagena.svg",
+        "primary_color": "#00A94F",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "cucuta-deportivo",
+        "name": "Cúcuta Deportivo",
+        "short_name": "Cúcuta",
+        "abbreviation": "CUC",
+        "logo_url": "/craque-assets/logos/football/teams/COL/L/cucuta-deportivo.svg",
+        "primary_color": "#C8102E",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "atletico-huila",
+        "name": "Atlético Huila",
+        "short_name": "Huila",
+        "abbreviation": "HUI",
+        "logo_url": "/craque-assets/logos/football/teams/COL/L/atletico-huila.svg",
+        "primary_color": "#FFC72C",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "patriotas-boyaca",
+        "name": "Patriotas Boyacá",
+        "short_name": "Patriotas",
+        "abbreviation": "PAT",
+        "logo_url": "/craque-assets/logos/football/teams/COL/L/patriotas-boyaca.svg",
+        "primary_color": "#C8102E",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "jaguares-de-cordoba",
+        "name": "Jaguares de Córdoba",
+        "short_name": "Jaguares",
+        "abbreviation": "JAG",
+        "logo_url": "/craque-assets/logos/football/teams/COL/L/jaguares-de-cordoba.svg",
+        "primary_color": "#0B6E4F",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "union-magdalena",
+        "name": "Unión Magdalena",
+        "short_name": "U. Magdalena",
+        "abbreviation": "UMA",
+        "logo_url": "/craque-assets/logos/football/teams/COL/L/union-magdalena.svg",
+        "primary_color": "#003DA5",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "deportes-quindio",
+        "name": "Deportes Quindío",
+        "short_name": "Quindío",
+        "abbreviation": "QUI",
+        "logo_url": "/craque-assets/logos/football/teams/COL/L/deportes-quindio.svg",
+        "primary_color": "#FFC72C",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "itagui-leones",
+        "name": "Itagüí Leones",
+        "short_name": "Leones",
+        "abbreviation": "LEO",
+        "logo_url": "/craque-assets/logos/football/teams/COL/L/itagui-leones.svg",
+        "primary_color": "#C8102E",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "boca-juniors-de-cali",
+        "name": "Boca Juniors de Cali",
+        "short_name": "Boca Cali",
+        "abbreviation": "BJC",
+        "logo_url": "/craque-assets/logos/football/teams/COL/L/boca-juniors-de-cali.svg",
+        "primary_color": "#003DA5",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "internacional-de-bogota",
+        "name": "Internacional de Bogotá",
+        "short_name": "Internacional",
+        "abbreviation": "INT",
+        "logo_url": "/craque-assets/logos/football/teams/COL/L/internacional-de-bogota.svg",
+        "primary_color": "#0B6E4F",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      }
+    ]
+  }
+]

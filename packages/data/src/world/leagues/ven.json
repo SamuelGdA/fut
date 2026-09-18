@@ -1,0 +1,202 @@
+[
+  {
+    "id": "liga-futve",
+    "name": "Liga FUTVE",
+    "country_fifa_code": "VEN",
+    "logo_url": "/craque-assets/logos/football/competitions/VEN/L/liga-futve.svg",
+    "league_trophy_url": "/craque-assets/trophies/football/national/VEN/liga-futve.png",
+    "confederation": "CONMEBOL",
+    "tier": 1,
+    "domestic_cup_id": "ven-copa-venezuela",
+    "teams": [
+      {
+        "id": "carabobo-fc",
+        "name": "Carabobo FC",
+        "short_name": "Carabobo",
+        "abbreviation": "CAR",
+        "logo_url": "/craque-assets/logos/football/teams/VEN/L/carabobo-fc.svg",
+        "primary_color": "#51100E",
+        "domestic_reputation": 2,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "caracas-fc",
+        "name": "Caracas FC",
+        "short_name": "Caracas",
+        "abbreviation": "CAR",
+        "logo_url": "/craque-assets/logos/football/teams/VEN/L/caracas-fc.svg",
+        "primary_color": "#EE3124",
+        "domestic_reputation": 2,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "deportivo-la-guaira",
+        "name": "Deportivo La Guaira",
+        "short_name": "La Guaira",
+        "abbreviation": "LAG",
+        "logo_url": "/craque-assets/logos/football/teams/VEN/L/deportivo-la-guaira.svg",
+        "primary_color": "#10032E",
+        "domestic_reputation": 2,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "deportivo-tachira-fc",
+        "name": "Deportivo Táchira FC",
+        "short_name": "Táchira",
+        "abbreviation": "TAC",
+        "logo_url": "/craque-assets/logos/football/teams/VEN/L/deportivo-tachira-fc.svg",
+        "primary_color": "#FCC708",
+        "domestic_reputation": 2,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "metropolitanos-fc",
+        "name": "Metropolitanos FC",
+        "short_name": "Metropolitanos",
+        "abbreviation": "MET",
+        "logo_url": "/craque-assets/logos/football/teams/VEN/L/metropolitanos-fc.svg",
+        "primary_color": "#342861",
+        "domestic_reputation": 2,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "monagas-sc",
+        "name": "Monagas SC",
+        "short_name": "Monagas",
+        "abbreviation": "MON",
+        "logo_url": "/craque-assets/logos/football/teams/VEN/L/monagas-sc.svg",
+        "primary_color": "#15325A",
+        "domestic_reputation": 2,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "puerto-cabello",
+        "name": "Puerto Cabello",
+        "short_name": "Puerto Cabello",
+        "abbreviation": "PCA",
+        "logo_url": "/craque-assets/logos/football/teams/VEN/L/puerto-cabello.svg",
+        "primary_color": "#272A83",
+        "domestic_reputation": 2,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "ucv",
+        "name": "UCV",
+        "short_name": "UCV",
+        "abbreviation": "UCV",
+        "logo_url": "/craque-assets/logos/football/teams/VEN/L/ucv.svg",
+        "primary_color": "#FFC429",
+        "domestic_reputation": 2,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      }
+    ]
+  },
+  {
+    "id": "liga-futve-2",
+    "name": "Liga FUTVE 2",
+    "country_fifa_code": "VEN",
+    "logo_url": "",
+    "league_trophy_url": "",
+    "confederation": "CONMEBOL",
+    "tier": 2,
+    "domestic_cup_id": "ven-copa-venezuela",
+    "teams": [
+      {
+        "id": "trujillanos",
+        "name": "Trujillanos",
+        "short_name": "Trujillanos",
+        "abbreviation": "TRU",
+        "logo_url": "/craque-assets/logos/football/teams/VEN/L/trujillanos.svg",
+        "primary_color": "#C8102E",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "mineros-de-guayana",
+        "name": "Mineros de Guayana",
+        "short_name": "Mineros",
+        "abbreviation": "MIN",
+        "logo_url": "/craque-assets/logos/football/teams/VEN/L/mineros-de-guayana.svg",
+        "primary_color": "#0B2E5C",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "aragua",
+        "name": "Aragua",
+        "short_name": "Aragua",
+        "abbreviation": "ARA",
+        "logo_url": "/craque-assets/logos/football/teams/VEN/L/aragua.svg",
+        "primary_color": "#F5A800",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "angostura",
+        "name": "Angostura",
+        "short_name": "Angostura",
+        "abbreviation": "ANG",
+        "logo_url": "/craque-assets/logos/football/teams/VEN/L/angostura.svg",
+        "primary_color": "#00A94F",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "atletico-el-vigia",
+        "name": "Atlético El Vigía",
+        "short_name": "El Vigía",
+        "abbreviation": "VIG",
+        "logo_url": "/craque-assets/logos/football/teams/VEN/L/atletico-el-vigia.svg",
+        "primary_color": "#0033A0",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "real-frontera",
+        "name": "Real Frontera",
+        "short_name": "R. Frontera",
+        "abbreviation": "RFR",
+        "logo_url": "/craque-assets/logos/football/teams/VEN/L/real-frontera.svg",
+        "primary_color": "#C8102E",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "titanes",
+        "name": "Titanes",
+        "short_name": "Titanes",
+        "abbreviation": "TIT",
+        "logo_url": "/craque-assets/logos/football/teams/VEN/L/titanes.svg",
+        "primary_color": "#6A1B9A",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "maritimo-de-la-guaira",
+        "name": "Marítimo de La Guaira",
+        "short_name": "Marítimo",
+        "abbreviation": "MAR",
+        "logo_url": "/craque-assets/logos/football/teams/VEN/L/maritimo-de-la-guaira.svg",
+        "primary_color": "#009639",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      }
+    ]
+  }
+]

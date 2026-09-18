@@ -8,9 +8,10 @@
  * replaying careers until the right rating turns up.
  */
 
-import { PlayerFcCard, cardTier, tierProgress } from "@/components/PlayerFcCard";
+import { PlayerFcCard } from "@/components/PlayerFcCard";
+import { cardTier, tierProgress } from "@craque/art";
 import { createStartingAttributes } from "@/lib/sim/attributes";
-import { getCountryByIso } from "@/lib/data/dataset";
+import { getCountryByIso } from "@craque/data";
 import type { PositionCode } from "@/lib/sim/constants";
 
 const RATINGS = [45, 64, 65, 74, 75, 84, 93, 94, 96, 99];

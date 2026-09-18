@@ -1,0 +1,422 @@
+[
+  {
+    "id": "ligue-1",
+    "name": "Ligue 1",
+    "country_fifa_code": "FRA",
+    "logo_url": "/craque-assets/logos/football/competitions/FRA/L/ligue-1.svg",
+    "league_trophy_url": "/craque-assets/trophies/football/national/FRA/ligue-1.png",
+    "confederation": "UEFA",
+    "tier": 1,
+    "domestic_cup_id": "fra-coupe-de-france",
+    "teams": [
+      {
+        "id": "paris-saint-germain",
+        "name": "Paris Saint Germain",
+        "short_name": "PSG",
+        "abbreviation": "PSG",
+        "logo_url": "/craque-assets/logos/football/teams/FRA/L/paris-saint-germain.svg",
+        "primary_color": "#004170",
+        "domestic_reputation": 5,
+        "continental_reputation": 4,
+        "international_reputation": 5
+      },
+      {
+        "id": "monaco",
+        "name": "AS Monaco",
+        "short_name": "Monaco",
+        "abbreviation": "MON",
+        "logo_url": "/craque-assets/logos/football/teams/FRA/L/as-monaco.svg",
+        "primary_color": "#FF002E",
+        "domestic_reputation": 2,
+        "continental_reputation": 1,
+        "international_reputation": 4
+      },
+      {
+        "id": "olympique-de-marseille",
+        "name": "Olympique de Marseille",
+        "short_name": "Marseille",
+        "abbreviation": "MAR",
+        "logo_url": "/craque-assets/logos/football/teams/FRA/L/olympique-de-marseille.svg",
+        "primary_color": "#0097D7",
+        "domestic_reputation": 2,
+        "continental_reputation": 1,
+        "international_reputation": 4
+      },
+      {
+        "id": "olympique-lyonnais",
+        "name": "Olympique Lyonnais",
+        "short_name": "Lyon",
+        "abbreviation": "LYO",
+        "logo_url": "/craque-assets/logos/football/teams/FRA/L/olympique-lyonnais.svg",
+        "primary_color": "#0F23AA",
+        "domestic_reputation": 2,
+        "continental_reputation": 1,
+        "international_reputation": 4
+      },
+      {
+        "id": "rc-strasbourg",
+        "name": "RC Strasbourg",
+        "short_name": "Strasbourg",
+        "abbreviation": "STR",
+        "logo_url": "/craque-assets/logos/football/teams/FRA/L/rc-strasbourg.svg",
+        "primary_color": "#009FE3",
+        "domestic_reputation": 1,
+        "continental_reputation": 1,
+        "international_reputation": 4
+      },
+      {
+        "id": "lens",
+        "name": "Lens",
+        "short_name": "Lens",
+        "abbreviation": "LEN",
+        "logo_url": "/craque-assets/logos/football/teams/FRA/L/rc-lens.svg",
+        "primary_color": "#B71315",
+        "domestic_reputation": 1,
+        "continental_reputation": 0,
+        "international_reputation": 3
+      },
+      {
+        "id": "lille",
+        "name": "Lille",
+        "short_name": "Lille",
+        "abbreviation": "LIL",
+        "logo_url": "/craque-assets/logos/football/teams/FRA/L/lille.svg",
+        "primary_color": "#E01E13",
+        "domestic_reputation": 1,
+        "continental_reputation": 0,
+        "international_reputation": 3
+      },
+      {
+        "id": "nice",
+        "name": "Nice",
+        "short_name": "Nice",
+        "abbreviation": "NIC",
+        "logo_url": "/craque-assets/logos/football/teams/FRA/L/nice.svg",
+        "primary_color": "#ED1C24",
+        "domestic_reputation": 1,
+        "continental_reputation": 0,
+        "international_reputation": 3
+      },
+      {
+        "id": "paris-fc",
+        "name": "Paris FC",
+        "short_name": "Paris FC",
+        "abbreviation": "PAR",
+        "logo_url": "/craque-assets/logos/football/teams/FRA/L/paris-fc.svg",
+        "primary_color": "#0A0F2D",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 3
+      },
+      {
+        "id": "stade-brestois",
+        "name": "Stade Brestois",
+        "short_name": "Brest",
+        "abbreviation": "BRE",
+        "logo_url": "/craque-assets/logos/football/teams/FRA/L/stade-brestois.svg",
+        "primary_color": "#ED1C24",
+        "domestic_reputation": 1,
+        "continental_reputation": 0,
+        "international_reputation": 3
+      },
+      {
+        "id": "toulouse",
+        "name": "Toulouse",
+        "short_name": "Toulouse",
+        "abbreviation": "TOU",
+        "logo_url": "/craque-assets/logos/football/teams/FRA/L/toulouse.svg",
+        "primary_color": "#38284F",
+        "domestic_reputation": 1,
+        "continental_reputation": 0,
+        "international_reputation": 3
+      },
+      {
+        "id": "angers",
+        "name": "Angers",
+        "short_name": "Angers",
+        "abbreviation": "ANG",
+        "logo_url": "/craque-assets/logos/football/teams/FRA/L/angers.svg",
+        "primary_color": "#000000",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 2
+      },
+      {
+        "id": "auxerre",
+        "name": "Auxerre",
+        "short_name": "Auxerre",
+        "abbreviation": "AUX",
+        "logo_url": "/craque-assets/logos/football/teams/FRA/L/auxerre.svg",
+        "primary_color": "#004EA2",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 2
+      },
+      {
+        "id": "lorient",
+        "name": "Lorient",
+        "short_name": "Lorient",
+        "abbreviation": "LOR",
+        "logo_url": "/craque-assets/logos/football/teams/FRA/L/lorient.svg",
+        "primary_color": "#F58113",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 2
+      },
+      {
+        "id": "stade-rennais",
+        "name": "Stade Rennais",
+        "short_name": "Rennes",
+        "abbreviation": "REN",
+        "logo_url": "/craque-assets/logos/football/teams/FRA/L/stade-rennais.svg",
+        "primary_color": "#E13327",
+        "domestic_reputation": 1,
+        "continental_reputation": 0,
+        "international_reputation": 2
+      },
+      {
+        "id": "estac-troyes",
+        "name": "Estac Troyes",
+        "short_name": "Troyes",
+        "abbreviation": "TRO",
+        "logo_url": "/craque-assets/logos/football/teams/FRA/L/estac-troyes.svg",
+        "primary_color": "#006CB4",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 1
+      },
+      {
+        "id": "le-havre",
+        "name": "Le Havre",
+        "short_name": "Le Havre",
+        "abbreviation": "HAV",
+        "logo_url": "/craque-assets/logos/football/teams/FRA/L/le-havre.svg",
+        "primary_color": "#193260",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 1
+      },
+      {
+        "id": "le-mans",
+        "name": "Le Mans",
+        "short_name": "Le Mans",
+        "abbreviation": "LMA",
+        "logo_url": "/craque-assets/logos/football/teams/FRA/L/le-mans.svg",
+        "primary_color": "#E30613",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      }
+    ]
+  },
+  {
+    "id": "ligue-2",
+    "name": "Ligue 2",
+    "country_fifa_code": "FRA",
+    "logo_url": "/craque-assets/logos/football/competitions/FRA/L/ligue-2.svg",
+    "league_trophy_url": "/craque-assets/trophies/football/national/FRA/ligue-2.png",
+    "confederation": "UEFA",
+    "tier": 2,
+    "domestic_cup_id": "fra-coupe-de-france",
+    "teams": [
+      {
+        "id": "nantes",
+        "name": "Nantes",
+        "short_name": "Nantes",
+        "abbreviation": "NAN",
+        "logo_url": "/craque-assets/logos/football/teams/FRA/L/nantes.svg",
+        "primary_color": "#FFDC00",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 3
+      },
+      {
+        "id": "reims",
+        "name": "Reims",
+        "short_name": "Reims",
+        "abbreviation": "REI",
+        "logo_url": "/craque-assets/logos/football/teams/FRA/L/reims.svg",
+        "primary_color": "#EB0000",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 2
+      },
+      {
+        "id": "saint-etienne",
+        "name": "Saint Étienne",
+        "short_name": "Saint Étienne",
+        "abbreviation": "ASE",
+        "logo_url": "/craque-assets/logos/football/teams/FRA/L/saint-etienne.svg",
+        "primary_color": "#1D995B",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 2
+      },
+      {
+        "id": "metz",
+        "name": "Metz",
+        "short_name": "Metz",
+        "abbreviation": "MET",
+        "logo_url": "/craque-assets/logos/football/teams/FRA/L/metz.svg",
+        "primary_color": "#731013",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 1
+      },
+      {
+        "id": "annecy",
+        "name": "Annecy",
+        "short_name": "Annecy",
+        "abbreviation": "ANC",
+        "logo_url": "/craque-assets/logos/football/teams/FRA/L/annecy.svg",
+        "primary_color": "#E30613",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "boulogne",
+        "name": "Boulogne",
+        "short_name": "Boulogne",
+        "abbreviation": "BOU",
+        "logo_url": "/craque-assets/logos/football/teams/FRA/L/boulogne.svg",
+        "primary_color": "#CD131D",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "clermont-foot",
+        "name": "Clermont Foot",
+        "short_name": "Clermont",
+        "abbreviation": "CLE",
+        "logo_url": "/craque-assets/logos/football/teams/FRA/L/clermont-foot.svg",
+        "primary_color": "#1F3561",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "dijon",
+        "name": "Dijon",
+        "short_name": "Dijon",
+        "abbreviation": "DIJ",
+        "logo_url": "/craque-assets/logos/football/teams/FRA/L/dijon.svg",
+        "primary_color": "#D40028",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "dunkerque",
+        "name": "Dunkerque",
+        "short_name": "Dunkerque",
+        "abbreviation": "DUN",
+        "logo_url": "/craque-assets/logos/football/teams/FRA/L/dunkerque.svg",
+        "primary_color": "#1B2738",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "grenoble",
+        "name": "Grenoble",
+        "short_name": "Grenoble",
+        "abbreviation": "GRE",
+        "logo_url": "/craque-assets/logos/football/teams/FRA/L/grenoble.svg",
+        "primary_color": "#005DA3",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "guingamp",
+        "name": "Guingamp",
+        "short_name": "Guingamp",
+        "abbreviation": "GUI",
+        "logo_url": "/craque-assets/logos/football/teams/FRA/L/guingamp.svg",
+        "primary_color": "#E30613",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "laval",
+        "name": "Laval",
+        "short_name": "Laval",
+        "abbreviation": "LAV",
+        "logo_url": "/craque-assets/logos/football/teams/FRA/L/laval.svg",
+        "primary_color": "#EB680B",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "montpellier",
+        "name": "Montpellier",
+        "short_name": "Montpellier",
+        "abbreviation": "MON",
+        "logo_url": "/craque-assets/logos/football/teams/FRA/L/montpellier.svg",
+        "primary_color": "#003E7E",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "nancy",
+        "name": "Nancy",
+        "short_name": "Nancy",
+        "abbreviation": "NAN",
+        "logo_url": "/craque-assets/logos/football/teams/FRA/L/nancy.svg",
+        "primary_color": "#E93526",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "pau",
+        "name": "PAU",
+        "short_name": "PAU",
+        "abbreviation": "PAU",
+        "logo_url": "/craque-assets/logos/football/teams/FRA/L/pau.svg",
+        "primary_color": "#1C1F42",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "red-star-fc-93",
+        "name": "Red Star FC 93",
+        "short_name": "Red Star",
+        "abbreviation": "RED",
+        "logo_url": "/craque-assets/logos/football/teams/FRA/L/red-star-fc-93.svg",
+        "primary_color": "#B21E28",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "rodez",
+        "name": "Rodez",
+        "short_name": "Rodez",
+        "abbreviation": "ROD",
+        "logo_url": "/craque-assets/logos/football/teams/FRA/L/rodez.svg",
+        "primary_color": "#AC1028",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "sochaux",
+        "name": "Sochaux",
+        "short_name": "Sochaux",
+        "abbreviation": "SOC",
+        "logo_url": "/craque-assets/logos/football/teams/FRA/L/sochaux.svg",
+        "primary_color": "#133578",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      }
+    ]
+  }
+]

@@ -1,0 +1,224 @@
+[
+  {
+    "id": "ligapro-serie-a",
+    "name": "LigaPro Serie A",
+    "country_fifa_code": "ECU",
+    "logo_url": "/craque-assets/logos/football/competitions/ECU/L/serie-a.svg",
+    "league_trophy_url": "/craque-assets/trophies/football/national/ECU/serie-a.svg",
+    "confederation": "CONMEBOL",
+    "tier": 1,
+    "domestic_cup_id": "ecu-copa-ecuador",
+    "teams": [
+      {
+        "id": "barcelona-sc",
+        "name": "Barcelona SC",
+        "short_name": "Barcelona SC",
+        "abbreviation": "BAR",
+        "logo_url": "/craque-assets/logos/football/teams/ECU/L/barcelona-sc.svg",
+        "primary_color": "#FFF218",
+        "domestic_reputation": 3,
+        "continental_reputation": 1,
+        "international_reputation": 1
+      },
+      {
+        "id": "emelec",
+        "name": "Emelec",
+        "short_name": "Emelec",
+        "abbreviation": "EME",
+        "logo_url": "/craque-assets/logos/football/teams/ECU/L/emelec.svg",
+        "primary_color": "#054C94",
+        "domestic_reputation": 3,
+        "continental_reputation": 1,
+        "international_reputation": 1
+      },
+      {
+        "id": "independiente-del-valle",
+        "name": "Independiente del Valle",
+        "short_name": "IDV",
+        "abbreviation": "IND",
+        "logo_url": "/craque-assets/logos/football/teams/ECU/L/independiente-del-valle.svg",
+        "primary_color": "#000000",
+        "domestic_reputation": 3,
+        "continental_reputation": 1,
+        "international_reputation": 1
+      },
+      {
+        "id": "ldu-de-quito",
+        "name": "LDU de Quito",
+        "short_name": "LDU",
+        "abbreviation": "QUI",
+        "logo_url": "/craque-assets/logos/football/teams/ECU/L/ldu-de-quito.svg",
+        "primary_color": "#B70000",
+        "domestic_reputation": 3,
+        "continental_reputation": 1,
+        "international_reputation": 1
+      },
+      {
+        "id": "deportivo-cuenca",
+        "name": "Deportivo Cuenca",
+        "short_name": "Cuenca",
+        "abbreviation": "CUE",
+        "logo_url": "/craque-assets/logos/football/teams/ECU/L/cuenca.svg",
+        "primary_color": "#09823A",
+        "domestic_reputation": 1,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "libertad",
+        "name": "Libertad",
+        "short_name": "Libertad",
+        "abbreviation": "LIB",
+        "logo_url": "/craque-assets/logos/football/teams/ECU/L/libertad-ecu.svg",
+        "primary_color": "#DCB248",
+        "domestic_reputation": 1,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "macara",
+        "name": "Macará",
+        "short_name": "Macará",
+        "abbreviation": "MAC",
+        "logo_url": "/craque-assets/logos/football/teams/ECU/L/macara.svg",
+        "primary_color": "#3397C4",
+        "domestic_reputation": 1,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "orense-sc",
+        "name": "Orense SC",
+        "short_name": "Orense",
+        "abbreviation": "ORE",
+        "logo_url": "/craque-assets/logos/football/teams/ECU/L/orense-sc.svg",
+        "primary_color": "#2A2086",
+        "domestic_reputation": 1,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "universidad-catolica",
+        "name": "Universidad Católica",
+        "short_name": "U. Católica",
+        "abbreviation": "UCA",
+        "logo_url": "/craque-assets/logos/football/teams/ECU/L/universidad-catolica.svg",
+        "primary_color": "#2FA6D9",
+        "domestic_reputation": 1,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      }
+    ]
+  },
+  {
+    "id": "ligapro-serie-b",
+    "name": "LigaPro Serie B",
+    "country_fifa_code": "ECU",
+    "logo_url": "",
+    "league_trophy_url": "",
+    "confederation": "CONMEBOL",
+    "tier": 2,
+    "domestic_cup_id": "ecu-copa-ecuador",
+    "teams": [
+      {
+        "id": "el-nacional",
+        "name": "El Nacional",
+        "short_name": "El Nacional",
+        "abbreviation": "NAC",
+        "logo_url": "/craque-assets/logos/football/teams/ECU/L/el-nacional.svg",
+        "primary_color": "#C8102E",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "liga-de-portoviejo",
+        "name": "Liga de Portoviejo",
+        "short_name": "LDU Portoviejo",
+        "abbreviation": "LDP",
+        "logo_url": "/craque-assets/logos/football/teams/ECU/L/liga-de-portoviejo.svg",
+        "primary_color": "#0033A0",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "9-de-octubre",
+        "name": "9 de Octubre",
+        "short_name": "9 de Octubre",
+        "abbreviation": "OCT",
+        "logo_url": "/craque-assets/logos/football/teams/ECU/L/9-de-octubre.svg",
+        "primary_color": "#0033A0",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "cumbaya",
+        "name": "Cumbayá",
+        "short_name": "Cumbayá",
+        "abbreviation": "CUM",
+        "logo_url": "/craque-assets/logos/football/teams/ECU/L/cumbaya.svg",
+        "primary_color": "#00A94F",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "gualaceo",
+        "name": "Gualaceo",
+        "short_name": "Gualaceo",
+        "abbreviation": "GUA",
+        "logo_url": "/craque-assets/logos/football/teams/ECU/L/gualaceo.svg",
+        "primary_color": "#C8102E",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "independiente-juniors",
+        "name": "Independiente Juniors",
+        "short_name": "Ind. Juniors",
+        "abbreviation": "IJR",
+        "logo_url": "/craque-assets/logos/football/teams/ECU/L/independiente-juniors.svg",
+        "primary_color": "#0B2E13",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "cuenca-juniors",
+        "name": "Cuenca Juniors",
+        "short_name": "Cuenca Juniors",
+        "abbreviation": "CJR",
+        "logo_url": "/craque-assets/logos/football/teams/ECU/L/cuenca-juniors.svg",
+        "primary_color": "#C8102E",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "vinotinto-ecuador",
+        "name": "Vinotinto Ecuador",
+        "short_name": "Vinotinto",
+        "abbreviation": "VIN",
+        "logo_url": "/craque-assets/logos/football/teams/ECU/L/vinotinto-ecuador.svg",
+        "primary_color": "#7A1F2B",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "santo-domingo-fc",
+        "name": "Santo Domingo",
+        "short_name": "Santo Domingo",
+        "abbreviation": "SDO",
+        "logo_url": "/craque-assets/logos/football/teams/ECU/L/santo-domingo-fc.svg",
+        "primary_color": "#FFD100",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      }
+    ]
+  }
+]

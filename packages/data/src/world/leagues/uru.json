@@ -1,0 +1,224 @@
+[
+  {
+    "id": "liga-uruguaya",
+    "name": "Liga Uruguaya",
+    "country_fifa_code": "URU",
+    "logo_url": "/craque-assets/logos/football/competitions/URU/L/liga-auf.svg",
+    "league_trophy_url": "/craque-assets/trophies/football/national/URU/liga-uruguaya.png",
+    "confederation": "CONMEBOL",
+    "tier": 1,
+    "domestic_cup_id": "uru-copa-uruguay",
+    "teams": [
+      {
+        "id": "club-nacional",
+        "name": "Nacional",
+        "short_name": "Nacional",
+        "abbreviation": "CLU",
+        "logo_url": "/craque-assets/logos/football/teams/URU/L/club-nacional.svg",
+        "primary_color": "#003362",
+        "domestic_reputation": 4,
+        "continental_reputation": 1,
+        "international_reputation": 1
+      },
+      {
+        "id": "penarol",
+        "name": "Peñarol",
+        "short_name": "Peñarol",
+        "abbreviation": "PEN",
+        "logo_url": "/craque-assets/logos/football/teams/URU/L/penarol.svg",
+        "primary_color": "#FFE600",
+        "domestic_reputation": 4,
+        "continental_reputation": 1,
+        "international_reputation": 1
+      },
+      {
+        "id": "albion",
+        "name": "Albion FC",
+        "short_name": "Albion FC",
+        "abbreviation": "ALB",
+        "logo_url": "/craque-assets/logos/football/teams/URU/L/albion-fc.svg",
+        "primary_color": "#00306D",
+        "domestic_reputation": 1,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "boston-river",
+        "name": "Boston River",
+        "short_name": "Boston River",
+        "abbreviation": "BOS",
+        "logo_url": "/craque-assets/logos/football/teams/URU/L/boston-river.svg",
+        "primary_color": "#EB3236",
+        "domestic_reputation": 1,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "defensor-sporting",
+        "name": "Defensor Sporting",
+        "short_name": "Defensor Sporting",
+        "abbreviation": "DEF",
+        "logo_url": "/craque-assets/logos/football/teams/URU/L/defensor-sporting.svg",
+        "primary_color": "#560090",
+        "domestic_reputation": 1,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "juventud",
+        "name": "Juventud",
+        "short_name": "Juventud",
+        "abbreviation": "JUV",
+        "logo_url": "/craque-assets/logos/football/teams/URU/L/juventud.svg",
+        "primary_color": "#2E5099",
+        "domestic_reputation": 1,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "liverpool-montevideo",
+        "name": "Liverpool",
+        "short_name": "Liverpool",
+        "abbreviation": "LIV",
+        "logo_url": "/craque-assets/logos/football/teams/URU/L/liverpool-uy.svg",
+        "primary_color": "#004292",
+        "domestic_reputation": 1,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "atletico-torque",
+        "name": "Montevideo City Torque",
+        "short_name": "City Torque",
+        "abbreviation": "TOR",
+        "logo_url": "/craque-assets/logos/football/teams/URU/L/montevideo-city-torque.svg",
+        "primary_color": "#6CADDF",
+        "domestic_reputation": 1,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "racing-montevideo",
+        "name": "Racing de Montevideo",
+        "short_name": "Racing",
+        "abbreviation": "RAC",
+        "logo_url": "/craque-assets/logos/football/teams/URU/L/racing-de-montevideo.svg",
+        "primary_color": "#27682E",
+        "domestic_reputation": 1,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      }
+    ]
+  },
+  {
+    "id": "segunda-division-uruguaya",
+    "name": "Segunda División",
+    "country_fifa_code": "URU",
+    "logo_url": "",
+    "league_trophy_url": "",
+    "confederation": "CONMEBOL",
+    "tier": 2,
+    "domestic_cup_id": "uru-copa-uruguay",
+    "teams": [
+      {
+        "id": "rampla-juniors",
+        "name": "Rampla Juniors",
+        "short_name": "Rampla",
+        "abbreviation": "RAM",
+        "logo_url": "/craque-assets/logos/football/teams/URU/L/rampla-juniors.svg",
+        "primary_color": "#C8102E",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "central-espanol",
+        "name": "Central Español",
+        "short_name": "C. Español",
+        "abbreviation": "CES",
+        "logo_url": "/craque-assets/logos/football/teams/URU/L/central-espanol.svg",
+        "primary_color": "#C8102E",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "sud-america",
+        "name": "Sud América",
+        "short_name": "Sud América",
+        "abbreviation": "SUD",
+        "logo_url": "/craque-assets/logos/football/teams/URU/L/sud-america.svg",
+        "primary_color": "#FFD100",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "villa-espanola",
+        "name": "Villa Española",
+        "short_name": "V. Española",
+        "abbreviation": "VES",
+        "logo_url": "/craque-assets/logos/football/teams/URU/L/villa-espanola.svg",
+        "primary_color": "#0033A0",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "uruguay-montevideo",
+        "name": "Uruguay Montevideo",
+        "short_name": "Uruguay Mvd",
+        "abbreviation": "UMO",
+        "logo_url": "/craque-assets/logos/football/teams/URU/L/uruguay-montevideo.svg",
+        "primary_color": "#0057B8",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "atenas-de-san-carlos",
+        "name": "Atenas de San Carlos",
+        "short_name": "Atenas",
+        "abbreviation": "ATE",
+        "logo_url": "/craque-assets/logos/football/teams/URU/L/atenas-de-san-carlos.svg",
+        "primary_color": "#C8102E",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "tacuarembo",
+        "name": "Tacuarembó",
+        "short_name": "Tacuarembó",
+        "abbreviation": "TCB",
+        "logo_url": "/craque-assets/logos/football/teams/URU/L/tacuarembo.svg",
+        "primary_color": "#0033A0",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "rentistas",
+        "name": "Rentistas",
+        "short_name": "Rentistas",
+        "abbreviation": "REN",
+        "logo_url": "/craque-assets/logos/football/teams/URU/L/rentistas.svg",
+        "primary_color": "#C8102E",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "deportivo-maldonado",
+        "name": "Deportivo Maldonado",
+        "short_name": "D. Maldonado",
+        "abbreviation": "MAL",
+        "logo_url": "/craque-assets/logos/football/teams/URU/L/deportivo-maldonado.svg",
+        "primary_color": "#FFD100",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      }
+    ]
+  }
+]

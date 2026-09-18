@@ -1,5 +1,5 @@
-import { getConfederationTrophies, getDomesticCup, getLeagueOfTeamAtTier } from "@/lib/data/dataset";
-import { generatedTrophyUrl, isPlaceholderArt } from "@/lib/trophies";
+import { getConfederationTrophies, getDomesticCup, getLeagueOfTeamAtTier } from "@craque/data";
+import { generatedTrophyUrl, isPlaceholderArt } from "@craque/art";
 import {
   CLUB_WORLD_CUP,
 
@@ -7,7 +7,7 @@ import {
   getDomesticSuperCup,
   getLeagueCup,
   type TrophyKey,
-} from "@/lib/data/trophies";
+} from "@craque/data";
 
 export interface TrophyDisplay {
   key: TrophyKey;

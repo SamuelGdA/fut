@@ -1,0 +1,422 @@
+[
+  {
+    "id": "2-bundesliga",
+    "name": "2. Bundesliga",
+    "country_fifa_code": "GER",
+    "logo_url": "/craque-assets/logos/football/competitions/GER/L/2-bundesliga.svg",
+    "league_trophy_url": "/craque-assets/trophies/football/national/GER/2-bundesliga.png",
+    "confederation": "UEFA",
+    "tier": 2,
+    "domestic_cup_id": "ger-dfb-pokal",
+    "teams": [
+      {
+        "id": "vfl-wolfsburg",
+        "name": "VfL Wolfsburg",
+        "short_name": "Wolfsburg",
+        "abbreviation": "WOL",
+        "logo_url": "/craque-assets/logos/football/teams/GER/L/vfl-wolfsburg.svg",
+        "primary_color": "#52A600",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 3
+      },
+      {
+        "id": "fc-st-pauli",
+        "name": "FC St. Pauli",
+        "short_name": "St. Pauli",
+        "abbreviation": "PAU",
+        "logo_url": "/craque-assets/logos/football/teams/GER/L/fc-st-pauli.svg",
+        "primary_color": "#624839",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 2
+      },
+      {
+        "id": "1-fc-heidenheim",
+        "name": "1. FC Heidenheim",
+        "short_name": "Heidenheim",
+        "abbreviation": "HEI",
+        "logo_url": "/craque-assets/logos/football/teams/GER/L/1-fc-heidenheim.svg",
+        "primary_color": "#003B79",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 1
+      },
+      {
+        "id": "1-fc-kaiserslautern",
+        "name": "1. FC Kaiserslautern",
+        "short_name": "Kaiserslautern",
+        "abbreviation": "KAI",
+        "logo_url": "/craque-assets/logos/football/teams/GER/L/1-fc-kaiserslautern.svg",
+        "primary_color": "#E30511",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 1
+      },
+      {
+        "id": "1-fc-nurnberg",
+        "name": "1. FC Nürnberg",
+        "short_name": "Nürnberg",
+        "abbreviation": "NUR",
+        "logo_url": "/craque-assets/logos/football/teams/GER/L/1-fc-nurnberg.svg",
+        "primary_color": "#AA1124",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 1
+      },
+      {
+        "id": "hannover-96",
+        "name": "Hannover 96",
+        "short_name": "Hannover 96",
+        "abbreviation": "HAN",
+        "logo_url": "/craque-assets/logos/football/teams/GER/L/hannover-96.svg",
+        "primary_color": "#009D3A",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 1
+      },
+      {
+        "id": "hertha-bsc",
+        "name": "Hertha BSC",
+        "short_name": "Hertha",
+        "abbreviation": "HER",
+        "logo_url": "/craque-assets/logos/football/teams/GER/L/hertha-bsc.svg",
+        "primary_color": "#0068B4",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 1
+      },
+      {
+        "id": "holstein-kiel",
+        "name": "Holstein Kiel",
+        "short_name": "Holstein Kiel",
+        "abbreviation": "HOL",
+        "logo_url": "/craque-assets/logos/football/teams/GER/L/holstein-kiel.svg",
+        "primary_color": "#00579C",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 1
+      },
+      {
+        "id": "karlsruher-sc",
+        "name": "Karlsruher SC",
+        "short_name": "Karlsruher",
+        "abbreviation": "KAR",
+        "logo_url": "/craque-assets/logos/football/teams/GER/L/karlsruher-sc.svg",
+        "primary_color": "#004C94",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 1
+      },
+      {
+        "id": "1-fc-magdeburg",
+        "name": "1. FC Magdeburg",
+        "short_name": "Magdeburg",
+        "abbreviation": "MAG",
+        "logo_url": "/craque-assets/logos/football/teams/GER/L/1-fc-magdeburg.svg",
+        "primary_color": "#0057B7",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "arminia-bielefeld",
+        "name": "Arminia Bielefeld",
+        "short_name": "Arminia Bielefeld",
+        "abbreviation": "ARM",
+        "logo_url": "/craque-assets/logos/football/teams/GER/L/arminia-bielefeld.svg",
+        "primary_color": "#005C9D",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "dynamo-dresden",
+        "name": "Dynamo Dresden",
+        "short_name": "Dynamo Dresden",
+        "abbreviation": "DRE",
+        "logo_url": "/craque-assets/logos/football/teams/GER/L/dynamo-dresden.svg",
+        "primary_color": "#9B0011",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "eintracht-braunschweig",
+        "name": "Eintracht Braunschweig",
+        "short_name": "Eintracht Braunschweig",
+        "abbreviation": "BRA",
+        "logo_url": "/craque-assets/logos/football/teams/GER/L/eintracht-braunschweig.svg",
+        "primary_color": "#FEE71A",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "energie-cottbus",
+        "name": "Energie Cottbus",
+        "short_name": "Energie Cottbus",
+        "abbreviation": "ENE",
+        "logo_url": "/craque-assets/logos/football/teams/GER/L/energie-cottbus.svg",
+        "primary_color": "#E61C02",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "spvgg-greuther-furth",
+        "name": "SpVgg Greuther Fürth",
+        "short_name": "Greuther Fürth",
+        "abbreviation": "GRE",
+        "logo_url": "/craque-assets/logos/football/teams/GER/L/spvgg-greuther-furth.svg",
+        "primary_color": "#2FA641",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "sv-darmstadt-98",
+        "name": "SV Darmstadt 98",
+        "short_name": "Darmstadt 98",
+        "abbreviation": "DAR",
+        "logo_url": "/craque-assets/logos/football/teams/GER/L/sv-darmstadt-98.svg",
+        "primary_color": "#004F9F",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "vfl-bochum",
+        "name": "VfL Bochum",
+        "short_name": "Bochum",
+        "abbreviation": "BOC",
+        "logo_url": "/craque-assets/logos/football/teams/GER/L/vfl-bochum.svg",
+        "primary_color": "#005BA4",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "vfl-osnabruck",
+        "name": "VfL Osnabrück",
+        "short_name": "Osnabrück",
+        "abbreviation": "OSN",
+        "logo_url": "/craque-assets/logos/football/teams/GER/L/vfl-osnabruck.svg",
+        "primary_color": "#572A86",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      }
+    ]
+  },
+  {
+    "id": "bundesliga",
+    "name": "Bundesliga",
+    "country_fifa_code": "GER",
+    "logo_url": "/craque-assets/logos/football/competitions/GER/L/bundesliga.svg",
+    "league_trophy_url": "/craque-assets/trophies/football/national/GER/bundesliga.png",
+    "confederation": "UEFA",
+    "tier": 1,
+    "domestic_cup_id": "ger-dfb-pokal",
+    "teams": [
+      {
+        "id": "bayern-munchen",
+        "name": "Bayern München",
+        "short_name": "Bayern München",
+        "abbreviation": "BAY",
+        "logo_url": "/craque-assets/logos/football/teams/GER/L/fc-bayern-munchen.svg",
+        "primary_color": "#ED0038",
+        "domestic_reputation": 5,
+        "continental_reputation": 4,
+        "international_reputation": 5
+      },
+      {
+        "id": "bayer-leverkusen",
+        "name": "Bayer Leverkusen",
+        "short_name": "Bayer Leverkusen",
+        "abbreviation": "BAY",
+        "logo_url": "/craque-assets/logos/football/teams/GER/L/bayer-04-leverkusen.svg",
+        "primary_color": "#E22726",
+        "domestic_reputation": 1,
+        "continental_reputation": 1,
+        "international_reputation": 4
+      },
+      {
+        "id": "borussia-dortmund",
+        "name": "Borussia Dortmund",
+        "short_name": "Borussia Dortmund",
+        "abbreviation": "DOR",
+        "logo_url": "/craque-assets/logos/football/teams/GER/L/borussia-dortmund.svg",
+        "primary_color": "#FFD900",
+        "domestic_reputation": 2,
+        "continental_reputation": 2,
+        "international_reputation": 4
+      },
+      {
+        "id": "rb-leipzig",
+        "name": "RB Leipzig",
+        "short_name": "RB Leipzig",
+        "abbreviation": "LEI",
+        "logo_url": "/craque-assets/logos/football/teams/GER/L/rb-leipzig.svg",
+        "primary_color": "#DD0741",
+        "domestic_reputation": 1,
+        "continental_reputation": 1,
+        "international_reputation": 4
+      },
+      {
+        "id": "vfb-stuttgart",
+        "name": "VfB Stuttgart",
+        "short_name": "Stuttgart",
+        "abbreviation": "STU",
+        "logo_url": "/craque-assets/logos/football/teams/GER/L/vfb-stuttgart.svg",
+        "primary_color": "#D40723",
+        "domestic_reputation": 1,
+        "continental_reputation": 1,
+        "international_reputation": 4
+      },
+      {
+        "id": "1-fc-koln",
+        "name": "1. FC Köln",
+        "short_name": "Köln",
+        "abbreviation": "KOL",
+        "logo_url": "/craque-assets/logos/football/teams/GER/L/1-fc-koln.svg",
+        "primary_color": "#E20613",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 3
+      },
+      {
+        "id": "union-berlin",
+        "name": "1. FC Union Berlin",
+        "short_name": "Union Berlin",
+        "abbreviation": "UNI",
+        "logo_url": "/craque-assets/logos/football/teams/GER/L/1-fc-union-berlin.svg",
+        "primary_color": "#EB1923",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 3
+      },
+      {
+        "id": "1899-hoffenheim",
+        "name": "1899 Hoffenheim",
+        "short_name": "Hoffenheim",
+        "abbreviation": "HOF",
+        "logo_url": "/craque-assets/logos/football/teams/GER/L/tsg-hoffenheim.svg",
+        "primary_color": "#1961B5",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 3
+      },
+      {
+        "id": "borussia-monchengladbach",
+        "name": "Borussia Mönchengladbach",
+        "short_name": "Borussia M'gladbach",
+        "abbreviation": "BMG",
+        "logo_url": "/craque-assets/logos/football/teams/GER/L/borussia-mgladbach.svg",
+        "primary_color": "#000000",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 3
+      },
+      {
+        "id": "eintracht-frankfurt",
+        "name": "Eintracht Frankfurt",
+        "short_name": "Eintracht Frankfurt",
+        "abbreviation": "EIN",
+        "logo_url": "/craque-assets/logos/football/teams/GER/L/eintracht-frankfurt.svg",
+        "primary_color": "#E1020C",
+        "domestic_reputation": 1,
+        "continental_reputation": 1,
+        "international_reputation": 3
+      },
+      {
+        "id": "fc-augsburg",
+        "name": "FC Augsburg",
+        "short_name": "Augsburg",
+        "abbreviation": "AUG",
+        "logo_url": "/craque-assets/logos/football/teams/GER/L/fc-augsburg.svg",
+        "primary_color": "#BA3733",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 3
+      },
+      {
+        "id": "fsv-mainz-05",
+        "name": "FSV Mainz 05",
+        "short_name": "Mainz 05",
+        "abbreviation": "MAI",
+        "logo_url": "/craque-assets/logos/football/teams/GER/L/1-fsv-mainz-05.svg",
+        "primary_color": "#AE0F0A",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 3
+      },
+      {
+        "id": "sc-freiburg",
+        "name": "SC Freiburg",
+        "short_name": "Freiburg",
+        "abbreviation": "FRE",
+        "logo_url": "/craque-assets/logos/football/teams/GER/L/sc-freiburg.svg",
+        "primary_color": "#E1020C",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 3
+      },
+      {
+        "id": "werder-bremen",
+        "name": "Werder Bremen",
+        "short_name": "Werder Bremen",
+        "abbreviation": "WER",
+        "logo_url": "/craque-assets/logos/football/teams/GER/L/sv-werder-bremen.svg",
+        "primary_color": "#1D9053",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 3
+      },
+      {
+        "id": "fc-schalke-04",
+        "name": "FC Schalke 04",
+        "short_name": "Schalke 04",
+        "abbreviation": "SCH",
+        "logo_url": "/craque-assets/logos/football/teams/GER/L/fc-schalke-04.svg",
+        "primary_color": "#004B9C",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 2
+      },
+      {
+        "id": "hamburger-sv",
+        "name": "Hamburger SV",
+        "short_name": "Hamburger",
+        "abbreviation": "HAM",
+        "logo_url": "/craque-assets/logos/football/teams/GER/L/hamburger-sv.svg",
+        "primary_color": "#1E5CB3",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 2
+      },
+      {
+        "id": "sc-paderborn-07",
+        "name": "SC Paderborn 07",
+        "short_name": "Paderborn 07",
+        "abbreviation": "PAD",
+        "logo_url": "/craque-assets/logos/football/teams/GER/L/sc-paderborn-07.svg",
+        "primary_color": "#005CA8",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 1
+      },
+      {
+        "id": "sv-elversberg",
+        "name": "SV Elversberg",
+        "short_name": "Elversberg",
+        "abbreviation": "ELV",
+        "logo_url": "/craque-assets/logos/football/teams/GER/L/sv-elversberg.svg",
+        "primary_color": "#FFFFFF",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 1
+      }
+    ]
+  }
+]
