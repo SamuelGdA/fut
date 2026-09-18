@@ -1,0 +1,202 @@
+[
+  {
+    "id": "liga-bolivia",
+    "name": "Liga Bolivia",
+    "country_fifa_code": "BOL",
+    "logo_url": "/craque-assets/logos/football/competitions/BOL/L/liga-bolivia.svg",
+    "league_trophy_url": "",
+    "confederation": "CONMEBOL",
+    "tier": 1,
+    "domestic_cup_id": "bol-copa-bolivia",
+    "teams": [
+      {
+        "id": "always-ready",
+        "name": "Always Ready",
+        "short_name": "Always Ready",
+        "abbreviation": "ALR",
+        "logo_url": "/craque-assets/logos/football/teams/BOL/L/always-ready.svg",
+        "primary_color": "#E01913",
+        "domestic_reputation": 2,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "blooming",
+        "name": "Blooming",
+        "short_name": "Blooming",
+        "abbreviation": "BLO",
+        "logo_url": "/craque-assets/logos/football/teams/BOL/L/blooming.svg",
+        "primary_color": "#569BD0",
+        "domestic_reputation": 2,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "bolivar",
+        "name": "Bolívar",
+        "short_name": "Bolívar",
+        "abbreviation": "BOL",
+        "logo_url": "/craque-assets/logos/football/teams/BOL/L/bolivar.svg",
+        "primary_color": "#00A6DC",
+        "domestic_reputation": 2,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "guabira",
+        "name": "Guabirá",
+        "short_name": "Guabirá",
+        "abbreviation": "GUA",
+        "logo_url": "/craque-assets/logos/football/teams/BOL/L/guabira.svg",
+        "primary_color": "#E70605",
+        "domestic_reputation": 1,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "independiente-petrolero",
+        "name": "Independiente Petrolero",
+        "short_name": "Ind. Petrolero",
+        "abbreviation": "IND",
+        "logo_url": "/craque-assets/logos/football/teams/BOL/L/independiente-petrolero.svg",
+        "primary_color": "#E90914",
+        "domestic_reputation": 1,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "nacional-potosi",
+        "name": "Nacional Potosí",
+        "short_name": "Nacional Potosí",
+        "abbreviation": "NAC",
+        "logo_url": "/craque-assets/logos/football/teams/BOL/L/nacional-potosi.svg",
+        "primary_color": "#F80907",
+        "domestic_reputation": 1,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "san-antonio-bulo-bulo",
+        "name": "San Antonio Bulo Bulo",
+        "short_name": "San Antonio",
+        "abbreviation": "SAN",
+        "logo_url": "/craque-assets/logos/football/teams/BOL/L/san-antonio-bulo-bulo.svg",
+        "primary_color": "#01115B",
+        "domestic_reputation": 1,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "the-strongest",
+        "name": "The Strongest",
+        "short_name": "The Strongest",
+        "abbreviation": "STR",
+        "logo_url": "/craque-assets/logos/football/teams/BOL/L/the-strongest.svg",
+        "primary_color": "#E2AB1C",
+        "domestic_reputation": 2,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      }
+    ]
+  },
+  {
+    "id": "copa-simon-bolivar",
+    "name": "Copa Simón Bolívar",
+    "country_fifa_code": "BOL",
+    "logo_url": "",
+    "league_trophy_url": "",
+    "confederation": "CONMEBOL",
+    "tier": 2,
+    "domestic_cup_id": "bol-copa-bolivia",
+    "teams": [
+      {
+        "id": "jorge-wilstermann",
+        "name": "Jorge Wilstermann",
+        "short_name": "Wilstermann",
+        "abbreviation": "WIL",
+        "logo_url": "/craque-assets/logos/football/teams/BOL/L/jorge-wilstermann.svg",
+        "primary_color": "#E31E24",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "real-potosi",
+        "name": "Real Potosí",
+        "short_name": "Real Potosí",
+        "abbreviation": "RPO",
+        "logo_url": "/craque-assets/logos/football/teams/BOL/L/real-potosi.svg",
+        "primary_color": "#8B1A1A",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "destroyers",
+        "name": "Club Destroyers",
+        "short_name": "Destroyers",
+        "abbreviation": "DES",
+        "logo_url": "/craque-assets/logos/football/teams/BOL/L/destroyers.svg",
+        "primary_color": "#FFD100",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "universitario-de-vinto",
+        "name": "Universitario de Vinto",
+        "short_name": "U. de Vinto",
+        "abbreviation": "UNV",
+        "logo_url": "/craque-assets/logos/football/teams/BOL/L/universitario-de-vinto.svg",
+        "primary_color": "#1E3A8A",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "real-oruro",
+        "name": "Real Oruro",
+        "short_name": "Real Oruro",
+        "abbreviation": "ORU",
+        "logo_url": "/craque-assets/logos/football/teams/BOL/L/real-oruro.svg",
+        "primary_color": "#C8102E",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "vaca-diez",
+        "name": "Vaca Díez",
+        "short_name": "Vaca Díez",
+        "abbreviation": "VDZ",
+        "logo_url": "/craque-assets/logos/football/teams/BOL/L/vaca-diez.svg",
+        "primary_color": "#0B7A3B",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "san-juan-sc",
+        "name": "San Juan",
+        "short_name": "San Juan",
+        "abbreviation": "SJU",
+        "logo_url": "/craque-assets/logos/football/teams/BOL/L/san-juan-sc.svg",
+        "primary_color": "#0033A0",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "academia-balompie",
+        "name": "Academia del Balompié",
+        "short_name": "Academia",
+        "abbreviation": "ABB",
+        "logo_url": "/craque-assets/logos/football/teams/BOL/L/academia-balompie.svg",
+        "primary_color": "#00A94F",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      }
+    ]
+  }
+]

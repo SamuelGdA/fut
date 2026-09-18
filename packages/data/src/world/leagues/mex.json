@@ -1,0 +1,211 @@
+[
+  {
+    "id": "liga-mx",
+    "name": "Liga MX",
+    "country_fifa_code": "MEX",
+    "logo_url": "/craque-assets/logos/football/competitions/MEX/L/liga-mx.svg",
+    "league_trophy_url": "/craque-assets/trophies/football/national/MEX/liga-mx.png",
+    "confederation": "CONCACAF",
+    "tier": 1,
+    "teams": [
+      {
+        "id": "guadalajara-chivas",
+        "name": "CD Guadalajara",
+        "short_name": "Chivas",
+        "abbreviation": "GUA",
+        "logo_url": "/craque-assets/logos/football/teams/MEX/L/cd-guadalajara.svg",
+        "primary_color": "#002856",
+        "domestic_reputation": 3,
+        "continental_reputation": 3,
+        "international_reputation": 3
+      },
+      {
+        "id": "club-america",
+        "name": "Club América",
+        "short_name": "América",
+        "abbreviation": "CLU",
+        "logo_url": "/craque-assets/logos/football/teams/MEX/L/america.svg",
+        "primary_color": "#FFEB00",
+        "domestic_reputation": 3,
+        "continental_reputation": 3,
+        "international_reputation": 3
+      },
+      {
+        "id": "cruz-azul",
+        "name": "Cruz Azul",
+        "short_name": "Cruz Azul",
+        "abbreviation": "CRU",
+        "logo_url": "/craque-assets/logos/football/teams/MEX/L/cruz-azul.svg",
+        "primary_color": "#001F60",
+        "domestic_reputation": 3,
+        "continental_reputation": 3,
+        "international_reputation": 3
+      },
+      {
+        "id": "tigres-uanl",
+        "name": "Tigres UANL",
+        "short_name": "Tigres UANL",
+        "abbreviation": "UAN",
+        "logo_url": "/craque-assets/logos/football/teams/MEX/L/tigres-uanl.svg",
+        "primary_color": "#015DAA",
+        "domestic_reputation": 3,
+        "continental_reputation": 3,
+        "international_reputation": 3
+      },
+      {
+        "id": "toluca",
+        "name": "Toluca",
+        "short_name": "Toluca",
+        "abbreviation": "TOL",
+        "logo_url": "/craque-assets/logos/football/teams/MEX/L/toluca.svg",
+        "primary_color": "#D53741",
+        "domestic_reputation": 3,
+        "continental_reputation": 3,
+        "international_reputation": 3
+      },
+      {
+        "id": "cf-pachuca",
+        "name": "CF Pachuca",
+        "short_name": "Pachuca",
+        "abbreviation": "PAC",
+        "logo_url": "/craque-assets/logos/football/teams/MEX/L/pachuca.svg",
+        "primary_color": "#162577",
+        "domestic_reputation": 2,
+        "continental_reputation": 2,
+        "international_reputation": 2
+      },
+      {
+        "id": "leon",
+        "name": "Club León",
+        "short_name": "León",
+        "abbreviation": "CLU",
+        "logo_url": "/craque-assets/logos/football/teams/MEX/L/club-leon.svg",
+        "primary_color": "#187B56",
+        "domestic_reputation": 2,
+        "continental_reputation": 2,
+        "international_reputation": 2
+      },
+      {
+        "id": "club-tijuana",
+        "name": "Club Tijuana",
+        "short_name": "Tijuana",
+        "abbreviation": "CLU",
+        "logo_url": "/craque-assets/logos/football/teams/MEX/L/tijuana.svg",
+        "primary_color": "#ED1B26",
+        "domestic_reputation": 1,
+        "continental_reputation": 1,
+        "international_reputation": 2
+      },
+      {
+        "id": "monterrey",
+        "name": "Monterrey",
+        "short_name": "Monterrey",
+        "abbreviation": "MON",
+        "logo_url": "/craque-assets/logos/football/teams/MEX/L/monterrey.svg",
+        "primary_color": "#0A2240",
+        "domestic_reputation": 2,
+        "continental_reputation": 2,
+        "international_reputation": 2
+      },
+      {
+        "id": "unam-pumas",
+        "name": "Pumas UNAM",
+        "short_name": "Pumas UNAM",
+        "abbreviation": "UNA",
+        "logo_url": "/craque-assets/logos/football/teams/MEX/L/pumas.svg",
+        "primary_color": "#132347",
+        "domestic_reputation": 2,
+        "continental_reputation": 2,
+        "international_reputation": 2
+      },
+      {
+        "id": "atlas",
+        "name": "Atlas",
+        "short_name": "Atlas",
+        "abbreviation": "ATL",
+        "logo_url": "/craque-assets/logos/football/teams/MEX/L/atlas.svg",
+        "primary_color": "#EC1C24",
+        "domestic_reputation": 1,
+        "continental_reputation": 1,
+        "international_reputation": 1
+      },
+      {
+        "id": "atletico-san-luis",
+        "name": "Atletico San Luis",
+        "short_name": "San Luis",
+        "abbreviation": "ASL",
+        "logo_url": "/craque-assets/logos/football/teams/MEX/L/atletico-de-san-luis.svg",
+        "primary_color": "#2A2F61",
+        "domestic_reputation": 1,
+        "continental_reputation": 1,
+        "international_reputation": 1
+      },
+      {
+        "id": "fc-juarez",
+        "name": "FC Juárez",
+        "short_name": "Juárez",
+        "abbreviation": "JUA",
+        "logo_url": "/craque-assets/logos/football/teams/MEX/L/fc-juarez.svg",
+        "primary_color": "#21CB35",
+        "domestic_reputation": 1,
+        "continental_reputation": 1,
+        "international_reputation": 1
+      },
+      {
+        "id": "necaxa",
+        "name": "Necaxa",
+        "short_name": "Necaxa",
+        "abbreviation": "NEC",
+        "logo_url": "/craque-assets/logos/football/teams/MEX/L/necaxa.svg",
+        "primary_color": "#E1001E",
+        "domestic_reputation": 1,
+        "continental_reputation": 1,
+        "international_reputation": 1
+      },
+      {
+        "id": "santos-laguna",
+        "name": "Santos Laguna",
+        "short_name": "Santos Laguna",
+        "abbreviation": "SAN",
+        "logo_url": "/craque-assets/logos/football/teams/MEX/L/santos-laguna.svg",
+        "primary_color": "#008066",
+        "domestic_reputation": 2,
+        "continental_reputation": 2,
+        "international_reputation": 1
+      },
+      {
+        "id": "atlante-fc",
+        "name": "Atlante FC",
+        "short_name": "Atlante",
+        "abbreviation": "ATL",
+        "logo_url": "/craque-assets/logos/football/teams/MEX/L/atlante.svg",
+        "primary_color": "#111231",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "club-queretaro",
+        "name": "Club Querétaro",
+        "short_name": "Querétaro",
+        "abbreviation": "QUE",
+        "logo_url": "/craque-assets/logos/football/teams/MEX/L/queretaro.svg",
+        "primary_color": "#0056B3",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "puebla",
+        "name": "Puebla",
+        "short_name": "Puebla",
+        "abbreviation": "PUE",
+        "logo_url": "/craque-assets/logos/football/teams/MEX/L/puebla.svg",
+        "primary_color": "#2B4B75",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      }
+    ]
+  }
+]

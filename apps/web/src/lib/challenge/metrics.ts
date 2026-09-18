@@ -1,5 +1,5 @@
-import { getLeagueOfTeamAtTier, getTeam } from "@/lib/data/dataset";
-import { CLUB_TROPHY_IMPORTANCE, type ClubTrophyKey, type TrophyKey } from "@/lib/data/trophies";
+import { getLeagueOfTeamAtTier, getTeam } from "@craque/data";
+import { CLUB_TROPHY_IMPORTANCE, type ClubTrophyKey, type TrophyKey } from "@craque/data";
 import { clubStanding } from "@/lib/sim/engine";
 import type { ClubStanding } from "@/lib/sim/constants";
 import type { CareerState } from "@/lib/sim/career";

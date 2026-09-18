@@ -1,4 +1,4 @@
-import { COUNTRIES } from "@/lib/data/dataset";
+import { COUNTRIES } from "@craque/data";
 import { ALL_POSITIONS, type Difficulty, type GameMode, type PositionCode } from "@/lib/sim/constants";
 import { createRng, nextInt } from "@/lib/sim/rng";
 import type { CareerState } from "@/lib/sim/career";

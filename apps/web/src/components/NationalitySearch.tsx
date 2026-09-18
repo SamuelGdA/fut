@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { COUNTRIES } from "@/lib/data/dataset";
+import { COUNTRIES } from "@craque/data";
 import { countryName, useI18n } from "@/lib/i18n/context";
 import { Flag } from "./Media";
 

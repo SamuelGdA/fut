@@ -14,7 +14,7 @@ import { CareerTimeline } from "@/components/CareerTimeline";
 import { startCareer, type CareerState, type SeasonSnapshot } from "@/lib/sim/career";
 import { createStartingAttributes } from "@/lib/sim/attributes";
 import { EMPTY_STATS } from "@/lib/sim/constants";
-import type { AwardKey, ClubTrophyKey } from "@/lib/data/trophies";
+import type { AwardKey, ClubTrophyKey } from "@craque/data";
 
 const CLUB_TROPHIES: ClubTrophyKey[] = [
   "league", "cup", "continental_primary", "domestic_super_cup",

@@ -4,8 +4,8 @@ import { useEffect, useRef } from "react";
 import { animate, stagger } from "motion";
 import { countryName, useI18n } from "@/lib/i18n/context";
 import { ClubCrest, Flag, TrophyImage } from "./Media";
-import { getTeam } from "@/lib/data/dataset";
-import { areRivals } from "@/lib/data/rivalries";
+import { getTeam } from "@craque/data";
+import { areRivals } from "@craque/data";
 import { clubStanding, nationalStanding } from "@/lib/sim/engine";
 import { resolveTrophy } from "@/lib/trophyDisplay";
 import {
@@ -16,7 +16,7 @@ import {
   type ClubTrophyKey,
   type NationalTrophyKey,
   type TrophyKey,
-} from "@/lib/data/trophies";
+} from "@craque/data";
 import type { CareerState } from "@/lib/sim/career";
 import type { ClubStanding } from "@/lib/sim/constants";
 

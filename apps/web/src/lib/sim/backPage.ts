@@ -1,8 +1,8 @@
 import { createRng, nextInt } from "./rng";
-import { getLeagueOfTeam, getTeam } from "@/lib/data/dataset";
+import { getLeagueOfTeam, getTeam } from "@craque/data";
 import { isDefender, RETIREMENT_AGE } from "./constants";
 import type { CareerState, SeasonSnapshot } from "./career";
-import type { AwardKey, TrophyKey } from "@/lib/data/trophies";
+import type { AwardKey, TrophyKey } from "@craque/data";
 
 /**
  * The back page of the morning after.

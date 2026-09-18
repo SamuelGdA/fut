@@ -13,10 +13,10 @@ import { SeasonBackPage } from "@/components/SeasonBackPage";
 import { ChallengeHud } from "@/components/ChallengeHud";
 import { buildBackPage, type BackPage } from "@/lib/sim/backPage";
 import type { CareerState } from "@/lib/sim/career";
-import { getLeagueOfTeam, getTeam } from "@/lib/data/dataset";
+import { getLeagueOfTeam, getTeam } from "@craque/data";
 import { isDefender, RETIREMENT_AGE } from "@/lib/sim/constants";
 import { resolveTrophy } from "@/lib/trophyDisplay";
-import { AWARD_IMAGES } from "@/lib/data/trophies";
+import { AWARD_IMAGES } from "@craque/data";
 
 /**
  * The splash for the season just played.

@@ -19,15 +19,15 @@
  * normal run.
  */
 
-import { getLeagueOfTeam, getTeam, type Country } from "@/lib/data/dataset";
-import { leagueLogoUrl } from "@/lib/leagueBadges";
-import { teamCrestUrl } from "@/lib/crests";
-import { getKitForTeam } from "@/lib/kits";
-import { computeOverall } from "@/lib/sim/attributes";
+import { getLeagueOfTeam, getTeam, type Country } from "@craque/data";
+import { leagueLogoUrl } from "@craque/art";
+import { teamCrestUrl } from "@craque/art";
+import { getKitForTeam } from "@craque/data";
+import { ATTRIBUTE_ABBR, attributeKeysFor, computeOverall } from "@/lib/sim/attributes";
 import { allAwards, allTrophies, peakMarketValue, type CareerState } from "@/lib/sim/career";
-import { AWARD_IMAGES, type AwardKey, type TrophyKey } from "@/lib/data/trophies";
+import { AWARD_IMAGES, type AwardKey, type TrophyKey } from "@craque/data";
 import { formatMarketValue, resolveTrophy } from "@/lib/trophyDisplay";
-import type { AvatarConfig } from "@/lib/avatar/config";
+import type { AvatarConfig } from "@craque/art";
 import { isDefender, type Difficulty } from "@/lib/sim/constants";
 import {
   angleGradient,
@@ -44,8 +44,8 @@ import {
   roundRect,
   type Box,
   type TextStyle,
-} from "./canvas";
-import { paintFcCard } from "./fcCardCanvas";
+} from "@craque/art";
+import { avatarDataUri, paintFcCard } from "@craque/art";
 
 export const SHARE_W = 1080;
 export const SHARE_H = 1350;
@@ -72,8 +72,6 @@ export type SealKind = "hard" | "challenge" | null;
 export interface ShareImageInput {
   career: CareerState;
   avatar: AvatarConfig | null;
-  /** Standalone SVG markup for the portrait, serialised from the live avatar. */
-  avatarSvg: string | null;
   difficulty: Difficulty;
   /** Set when the run was a daily challenge. */
   challengeId: string | null;
@@ -571,7 +569,7 @@ export async function renderShareImage(input: ShareImageInput): Promise<Blob> {
 
   // Everything that has to be a bitmap before a single pixel is drawn.
   const [avatarImage, flagImage, leagueImage, crestImage, watermark, ...rest] = await Promise.all([
-    loadImage(input.avatarSvg ? svgDataUri(input.avatarSvg) : null),
+    loadImage(avatarDataUri(input.avatar, { kit })),
     loadImage(country.flag_url),
     loadImage(leagueLogoUrl(league)),
     loadImage(teamCrestUrl(cardTeamId)),
@@ -609,9 +607,11 @@ export async function renderShareImage(input: ShareImageInput): Promise<Blob> {
     card,
     {
       overall: peakOvr,
-      position: career.player.position,
       positionLabel: t(`positions.${career.player.position}`),
-      attributes: peakAttributes,
+      attributes: attributeKeysFor(career.player.position).map((key) => ({
+        label: ATTRIBUTE_ABBR[key],
+        value: peakAttributes[key],
+      })),
       lastName: career.identity.lastName,
       number: peakSeason?.shirtNumber ?? career.shirtNumber ?? null,
       avatar: avatarImage,
@@ -865,7 +865,3 @@ export async function renderShareImage(input: ShareImageInput): Promise<Blob> {
   });
 }
 
-/** Percent-encoded rather than base64: the markup is short and UTF-8 safe. */
-function svgDataUri(markup: string): string {
-  return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(markup)}`;
-}

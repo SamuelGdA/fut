@@ -4,9 +4,9 @@ import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } fr
 import { animate } from "motion";
 import { useI18n } from "@/lib/i18n/context";
 import { injuryName } from "@/lib/data/injuryNames";
-import { getLeagueOfTeamAtTier, getTeam } from "@/lib/data/dataset";
+import { getLeagueOfTeamAtTier, getTeam } from "@craque/data";
 import { resolveTrophy } from "@/lib/trophyDisplay";
-import { AWARD_IMAGES, singleTrophyImportance, type Confederation } from "@/lib/data/trophies";
+import { AWARD_IMAGES, singleTrophyImportance, type Confederation } from "@craque/data";
 import { ClubCrest, TrophyImage } from "./Media";
 import { formatMarketValue } from "@/lib/trophyDisplay";
 import { buildCareerBackPages, type BackPage } from "@/lib/sim/backPage";

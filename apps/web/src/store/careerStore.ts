@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { ALL_POSITIONS, ROLE_POSITIONS } from "@/lib/sim/constants";
 import { attributeKeysFor } from "@/lib/sim/attributes";
-import { getCountryByIso } from "@/lib/data/dataset";
+import { getCountryByIso } from "@craque/data";
 import { DEBUG_TOOLS_ENABLED } from "@/lib/debugTools";
 import { persist } from "zustand/middleware";
 import {
@@ -35,7 +35,7 @@ import {
   NOSE_SHAPES,
   SKIN_TONES,
   type AvatarConfig,
-} from "@/lib/avatar/config";
+} from "@craque/art";
 import { CHALLENGE_DIFFICULTY, CHALLENGE_MODE, getDailyChallenge } from "@/lib/challenge/daily";
 
 export type Screen = "intro" | "identity" | "appearance" | "career" | "summary" | "challenge";

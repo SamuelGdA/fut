@@ -4,7 +4,7 @@ import { useI18n } from "@/lib/i18n/context";
 import { useCareerStore } from "@/store/careerStore";
 import { useSound } from "@/lib/useSound";
 import { PlayerFcCard } from "@/components/PlayerFcCard";
-import { getCountryByIso } from "@/lib/data/dataset";
+import { getCountryByIso } from "@craque/data";
 import { createStartingAttributes } from "@/lib/sim/attributes";
 import { BRAND_COPY } from "@/lib/brandCopy";
 import type { Difficulty, GameMode } from "@/lib/sim/constants";

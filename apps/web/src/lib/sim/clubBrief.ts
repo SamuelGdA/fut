@@ -2,8 +2,8 @@ import { createRng, nextInt, pickWeighted } from "./rng";
 import { teamBaseOverall } from "./engine";
 import type { Player } from "./engine";
 import type { PositionCode } from "./constants";
-import { getLeagueOfTeam } from "@/lib/data/dataset";
-import type { Team } from "@/lib/data/dataset";
+import { getLeagueOfTeam } from "@craque/data";
+import type { Team } from "@craque/data";
 
 /**
  * What a club actually wants from this signing.

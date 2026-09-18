@@ -5,7 +5,7 @@ import {
   getLeaguesOfCountry,
   LEAGUES,
   type Team,
-} from "@/lib/data/dataset";
+} from "@craque/data";
 import { squadStatusAtTeam, type Player } from "./engine";
 
 const ACADEMY_OFFER_COUNT = 3;

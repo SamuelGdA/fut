@@ -1,5 +1,5 @@
 import { chooseOption, startCareer, type CareerState, type DecisionOption } from "@/lib/sim/career";
-import { getTeam } from "@/lib/data/dataset";
+import { getTeam } from "@craque/data";
 import { createRng, nextInt, type Rng } from "@/lib/sim/rng";
 import type { CareerSpec, DecisionPolicy } from "./corpus";
 

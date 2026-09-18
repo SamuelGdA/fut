@@ -1,0 +1,235 @@
+[
+  {
+    "id": "liga-de-primera",
+    "name": "Liga de Primera",
+    "country_fifa_code": "CHI",
+    "logo_url": "/craque-assets/logos/football/competitions/CHI/L/liga-de-primera.svg",
+    "league_trophy_url": "/craque-assets/trophies/football/national/CHI/liga-de-primera.png",
+    "confederation": "CONMEBOL",
+    "tier": 1,
+    "domestic_cup_id": "chi-copa-chile",
+    "teams": [
+      {
+        "id": "cobresal",
+        "name": "Cobresal",
+        "short_name": "Cobresal",
+        "abbreviation": "COB",
+        "logo_url": "/craque-assets/logos/football/teams/CHI/L/cobresal.svg",
+        "primary_color": "#DB812E",
+        "domestic_reputation": 1,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "colo-colo",
+        "name": "Colo Colo",
+        "short_name": "Colo Colo",
+        "abbreviation": "COL",
+        "logo_url": "/craque-assets/logos/football/teams/CHI/L/colo-colo.svg",
+        "primary_color": "#FFFFFF",
+        "domestic_reputation": 2,
+        "continental_reputation": 1,
+        "international_reputation": 0
+      },
+      {
+        "id": "coquimbo-unido",
+        "name": "Coquimbo Unido",
+        "short_name": "Coquimbo Unido",
+        "abbreviation": "COQ",
+        "logo_url": "/craque-assets/logos/football/teams/CHI/L/coquimbo.svg",
+        "primary_color": "#000000",
+        "domestic_reputation": 2,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "huachipato",
+        "name": "Huachipato",
+        "short_name": "Huachipato",
+        "abbreviation": "HUA",
+        "logo_url": "/craque-assets/logos/football/teams/CHI/L/huachipato.svg",
+        "primary_color": "#0084CA",
+        "domestic_reputation": 2,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "ohiggins",
+        "name": "O'Higgins",
+        "short_name": "O'Higgins",
+        "abbreviation": "HIG",
+        "logo_url": "/craque-assets/logos/football/teams/CHI/L/ohiggins.svg",
+        "primary_color": "#4C9C2E",
+        "domestic_reputation": 1,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "palestino",
+        "name": "Palestino",
+        "short_name": "Palestino",
+        "abbreviation": "PAL",
+        "logo_url": "/craque-assets/logos/football/teams/CHI/L/palestino.svg",
+        "primary_color": "#008954",
+        "domestic_reputation": 1,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "u-catolica",
+        "name": "Universidad Católica",
+        "short_name": "U. Católica",
+        "abbreviation": "CAT",
+        "logo_url": "/craque-assets/logos/football/teams/CHI/L/u-catolica.svg",
+        "primary_color": "#1958A8",
+        "domestic_reputation": 2,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "universidad-de-chile",
+        "name": "Universidad de Chile",
+        "short_name": "U. de Chile",
+        "abbreviation": "CHI",
+        "logo_url": "/craque-assets/logos/football/teams/CHI/L/universidad-de-chile.svg",
+        "primary_color": "#022F87",
+        "domestic_reputation": 2,
+        "continental_reputation": 1,
+        "international_reputation": 0
+      },
+      {
+        "id": "a-italiano",
+        "name": "Áudax Italiano",
+        "short_name": "A. Italiano",
+        "abbreviation": "ITA",
+        "logo_url": "/craque-assets/logos/football/teams/CHI/L/a-italiano.svg",
+        "primary_color": "#1F4794",
+        "domestic_reputation": 1,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      }
+    ]
+  },
+  {
+    "id": "primera-b",
+    "name": "Primera B",
+    "country_fifa_code": "CHI",
+    "logo_url": "",
+    "league_trophy_url": "",
+    "confederation": "CONMEBOL",
+    "tier": 2,
+    "domestic_cup_id": "chi-copa-chile",
+    "teams": [
+      {
+        "id": "cobreloa",
+        "name": "Cobreloa",
+        "short_name": "Cobreloa",
+        "abbreviation": "CBL",
+        "logo_url": "/craque-assets/logos/football/teams/CHI/L/cobreloa.svg",
+        "primary_color": "#FF6600",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "santiago-wanderers",
+        "name": "Santiago Wanderers",
+        "short_name": "S. Wanderers",
+        "abbreviation": "WAN",
+        "logo_url": "/craque-assets/logos/football/teams/CHI/L/santiago-wanderers.svg",
+        "primary_color": "#007A33",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "deportes-magallanes",
+        "name": "Deportes Magallanes",
+        "short_name": "Magallanes",
+        "abbreviation": "MAG",
+        "logo_url": "/craque-assets/logos/football/teams/CHI/L/deportes-magallanes.svg",
+        "primary_color": "#0033A0",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "rangers-de-talca",
+        "name": "Rangers de Talca",
+        "short_name": "Rangers",
+        "abbreviation": "RAN",
+        "logo_url": "/craque-assets/logos/football/teams/CHI/L/rangers-de-talca.svg",
+        "primary_color": "#C8102E",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "deportes-temuco",
+        "name": "Deportes Temuco",
+        "short_name": "Temuco",
+        "abbreviation": "TEM",
+        "logo_url": "/craque-assets/logos/football/teams/CHI/L/deportes-temuco.svg",
+        "primary_color": "#009639",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "deportes-copiapo",
+        "name": "Deportes Copiapó",
+        "short_name": "Copiapó",
+        "abbreviation": "COP",
+        "logo_url": "/craque-assets/logos/football/teams/CHI/L/deportes-copiapo.svg",
+        "primary_color": "#6A1B9A",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "curico-unido",
+        "name": "Curicó Unido",
+        "short_name": "Curicó Unido",
+        "abbreviation": "CUR",
+        "logo_url": "/craque-assets/logos/football/teams/CHI/L/curico-unido.svg",
+        "primary_color": "#C8102E",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "deportes-antofagasta",
+        "name": "Deportes Antofagasta",
+        "short_name": "Antofagasta",
+        "abbreviation": "ANT",
+        "logo_url": "/craque-assets/logos/football/teams/CHI/L/deportes-antofagasta.svg",
+        "primary_color": "#00A0DF",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "san-marcos-de-arica",
+        "name": "San Marcos de Arica",
+        "short_name": "S. Marcos",
+        "abbreviation": "ARI",
+        "logo_url": "/craque-assets/logos/football/teams/CHI/L/san-marcos-de-arica.svg",
+        "primary_color": "#FFD100",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "deportes-concepcion",
+        "name": "Deportes Concepción",
+        "short_name": "D. Concepción",
+        "abbreviation": "CON",
+        "logo_url": "/craque-assets/logos/football/teams/CHI/L/deportes-concepcion.svg",
+        "primary_color": "#5B1A8A",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      }
+    ]
+  }
+]

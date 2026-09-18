@@ -1,0 +1,202 @@
+[
+  {
+    "id": "liga1",
+    "name": "Liga1",
+    "country_fifa_code": "PER",
+    "logo_url": "/craque-assets/logos/football/competitions/PER/L/liga-1.svg",
+    "league_trophy_url": "/craque-assets/trophies/football/national/PER/liga-1.svg",
+    "confederation": "CONMEBOL",
+    "tier": 1,
+    "teams": [
+      {
+        "id": "alianza-lima",
+        "name": "Alianza Lima",
+        "short_name": "Alianza Lima",
+        "abbreviation": "ALI",
+        "logo_url": "/craque-assets/logos/football/teams/PER/L/alianza-lima.svg",
+        "primary_color": "#192745",
+        "domestic_reputation": 3,
+        "continental_reputation": 0,
+        "international_reputation": 1
+      },
+      {
+        "id": "sporting-cristal",
+        "name": "Sporting Cristal",
+        "short_name": "Sporting Cristal",
+        "abbreviation": "SPO",
+        "logo_url": "/craque-assets/logos/football/teams/PER/L/sporting-cristal.svg",
+        "primary_color": "#56C7ED",
+        "domestic_reputation": 3,
+        "continental_reputation": 0,
+        "international_reputation": 1
+      },
+      {
+        "id": "universitario",
+        "name": "Universitario",
+        "short_name": "Universitario",
+        "abbreviation": "UNI",
+        "logo_url": "/craque-assets/logos/football/teams/PER/L/universitario.svg",
+        "primary_color": "#8C1619",
+        "domestic_reputation": 3,
+        "continental_reputation": 0,
+        "international_reputation": 1
+      },
+      {
+        "id": "alianza-atletico",
+        "name": "Alianza Atletico",
+        "short_name": "Alianza Atlético",
+        "abbreviation": "AAT",
+        "logo_url": "/craque-assets/logos/football/teams/PER/L/alianza-atletico.svg",
+        "primary_color": "#222677",
+        "domestic_reputation": 1,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "cienciano",
+        "name": "Cienciano",
+        "short_name": "Cienciano",
+        "abbreviation": "CIE",
+        "logo_url": "/craque-assets/logos/football/teams/PER/L/cienciano.svg",
+        "primary_color": "#0A214E",
+        "domestic_reputation": 1,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "cusco",
+        "name": "Cusco",
+        "short_name": "Cusco",
+        "abbreviation": "CUS",
+        "logo_url": "/craque-assets/logos/football/teams/PER/L/cusco.svg",
+        "primary_color": "#CA9A56",
+        "domestic_reputation": 1,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "deportivo-garcilaso",
+        "name": "Deportivo Garcilaso",
+        "short_name": "Deportivo Garcilaso",
+        "abbreviation": "GAR",
+        "logo_url": "/craque-assets/logos/football/teams/PER/L/deportivo-garcilaso.svg",
+        "primary_color": "#ED0103",
+        "domestic_reputation": 1,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "fbc-melgar",
+        "name": "FBC Melgar",
+        "short_name": "Melgar",
+        "abbreviation": "MEL",
+        "logo_url": "/craque-assets/logos/football/teams/PER/L/fbc-melgar.svg",
+        "primary_color": "#EC1C24",
+        "domestic_reputation": 1,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      }
+    ],
+    "domestic_cup_id": "per-copa-bicentenario"
+  },
+  {
+    "id": "liga2",
+    "name": "Liga 2",
+    "country_fifa_code": "PER",
+    "logo_url": "",
+    "league_trophy_url": "",
+    "confederation": "CONMEBOL",
+    "tier": 2,
+    "domestic_cup_id": "per-copa-bicentenario",
+    "teams": [
+      {
+        "id": "cesar-vallejo",
+        "name": "César Vallejo",
+        "short_name": "C. Vallejo",
+        "abbreviation": "UCV",
+        "logo_url": "/craque-assets/logos/football/teams/PER/L/cesar-vallejo.svg",
+        "primary_color": "#0B6E4F",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "carlos-mannucci",
+        "name": "Carlos A. Mannucci",
+        "short_name": "Mannucci",
+        "abbreviation": "MAN",
+        "logo_url": "/craque-assets/logos/football/teams/PER/L/carlos-mannucci.svg",
+        "primary_color": "#003DA5",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "union-comercio",
+        "name": "Unión Comercio",
+        "short_name": "U. Comercio",
+        "abbreviation": "UCO",
+        "logo_url": "/craque-assets/logos/football/teams/PER/L/union-comercio.svg",
+        "primary_color": "#00A94F",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "deportivo-coopsol",
+        "name": "Deportivo Coopsol",
+        "short_name": "Coopsol",
+        "abbreviation": "COO",
+        "logo_url": "/craque-assets/logos/football/teams/PER/L/deportivo-coopsol.svg",
+        "primary_color": "#0033A0",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "academia-cantolao",
+        "name": "Academia Cantolao",
+        "short_name": "Cantolao",
+        "abbreviation": "CAN",
+        "logo_url": "/craque-assets/logos/football/teams/PER/L/academia-cantolao.svg",
+        "primary_color": "#0B2E5C",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "universidad-san-martin",
+        "name": "Universidad San Martín",
+        "short_name": "San Martín",
+        "abbreviation": "USM",
+        "logo_url": "/craque-assets/logos/football/teams/PER/L/universidad-san-martin.svg",
+        "primary_color": "#0033A0",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "deportivo-llacuabamba",
+        "name": "Deportivo Llacuabamba",
+        "short_name": "Llacuabamba",
+        "abbreviation": "LLA",
+        "logo_url": "/craque-assets/logos/football/teams/PER/L/deportivo-llacuabamba.svg",
+        "primary_color": "#009639",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "pirata-fc",
+        "name": "Pirata FC",
+        "short_name": "Pirata",
+        "abbreviation": "PIR",
+        "logo_url": "/craque-assets/logos/football/teams/PER/L/pirata-fc.svg",
+        "primary_color": "#12161C",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      }
+    ]
+  }
+]

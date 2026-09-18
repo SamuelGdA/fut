@@ -29,7 +29,7 @@ import {
   SKIN_TONES,
   randomAvatar,
   type AvatarConfig,
-} from "@/lib/avatar/config";
+} from "@craque/art";
 
 const COPY = {
   pt: {

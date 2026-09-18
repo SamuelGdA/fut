@@ -3,116 +3,22 @@
 import { useI18n } from "@/lib/i18n/context";
 import { Avatar } from "./Avatar";
 import { ClubCrest, Flag } from "./Media";
-import { getLeagueOfTeam, getTeam } from "@/lib/data/dataset";
-import { leagueLogoUrl } from "@/lib/leagueBadges";
-import { getKitForTeam } from "@/lib/kits";
+import { getLeagueOfTeam, getTeam } from "@craque/data";
+import {
+  FC_CARD_SIZES,
+  SHIELD_CLIP_PATH,
+  TIER_DOM_STYLE,
+  cardTier,
+  leagueLogoUrl,
+  tierProgress,
+} from "@craque/art";
+import { getKitForTeam } from "@craque/data";
 import { ATTRIBUTE_ABBR, attributeKeysFor, type Attributes } from "@/lib/sim/attributes";
 import type { PositionCode } from "@/lib/sim/constants";
-import type { AvatarConfig } from "@/lib/avatar/config";
-import type { Country } from "@/lib/data/dataset";
+import type { AvatarConfig } from "@craque/art";
+import type { Country } from "@craque/data";
 
-export type CardTier = "bronze" | "silver" | "gold" | "icon";
-
-/**
- * Rarity bands.
- *
- * Four, not five: bronze to 64, silver through 74, a long gold stretch to 93,
- * and a white ICON card reserved for the last six points. The gold band is
- * deliberately the widest — it is where almost every real career lives, and
- * splitting it further made two cards a single point apart look like different
- * classes of player.
- */
-const TIER_BANDS: { tier: CardTier; min: number; max: number }[] = [
-  { tier: "icon", min: 94, max: 99 },
-  { tier: "gold", min: 75, max: 93 },
-  { tier: "silver", min: 65, max: 74 },
-  { tier: "bronze", min: 0, max: 64 },
-];
-
-export function cardTier(overall: number): CardTier {
-  return TIER_BANDS.find((b) => overall >= b.min)?.tier ?? "bronze";
-}
-
-/**
- * How far up its own band a rating sits, 0 at the floor and 1 at the ceiling.
- *
- * This drives the polish on the plate: a 93 is the best gold there is and
- * should look it, while a 75 has only just arrived. Kept as a ratio within the
- * band rather than an absolute so every tier has its own full range of
- * brilliance to climb.
- */
-export function tierProgress(overall: number): number {
-  const band = TIER_BANDS.find((b) => overall >= b.min) ?? TIER_BANDS[TIER_BANDS.length - 1];
-  const span = band.max - band.min;
-  if (span <= 0) return 1;
-  return Math.min(1, Math.max(0, (overall - band.min) / span));
-}
-
-interface TierStyle {
-  /** The metal itself, top-left to bottom-right. */
-  plate: string;
-  /** A brighter band swept across the middle of the plate. */
-  sheen: string;
-  ink: string;
-  sub: string;
-  /** Hairline separating the name from the numbers. */
-  rule: string;
-  /** Colour of the diagonal streaks. */
-  streak: string;
-}
-
-const TIER_STYLE: Record<CardTier, TierStyle> = {
-  bronze: {
-    plate: "linear-gradient(155deg,#6f4520 0%,#9c6531 22%,#c68a4c 46%,#a06a34 68%,#6b421e 100%)",
-    sheen: "linear-gradient(105deg,transparent 34%,rgba(255,228,190,0.55) 50%,transparent 66%)",
-    ink: "#33200d",
-    sub: "rgba(51,32,13,0.66)",
-    rule: "rgba(51,32,13,0.28)",
-    streak: "rgba(255,226,186,0.55)",
-  },
-  silver: {
-    plate: "linear-gradient(155deg,#7e8894 0%,#aab4c0 22%,#dfe6ee 46%,#b3bdc9 68%,#7a838f 100%)",
-    sheen: "linear-gradient(105deg,transparent 34%,rgba(255,255,255,0.72) 50%,transparent 66%)",
-    ink: "#20262e",
-    sub: "rgba(32,38,46,0.66)",
-    rule: "rgba(32,38,46,0.26)",
-    streak: "rgba(255,255,255,0.7)",
-  },
-  gold: {
-    plate: "linear-gradient(155deg,#9a6d12 0%,#caa032 22%,#f2d271 46%,#d3a839 68%,#8f6410 100%)",
-    sheen: "linear-gradient(105deg,transparent 34%,rgba(255,246,214,0.7) 50%,transparent 66%)",
-    ink: "#3a2905",
-    sub: "rgba(58,41,5,0.66)",
-    rule: "rgba(58,41,5,0.26)",
-    streak: "rgba(255,247,219,0.75)",
-  },
-  // The ICON plate: near-white platinum with warm gold ink, so the last six
-  // points of a career read as something else entirely.
-  icon: {
-    plate: "linear-gradient(155deg,#cfc8ba 0%,#efe9dd 20%,#fffdf7 46%,#e6dfd0 70%,#c6bdac 100%)",
-    sheen: "linear-gradient(105deg,transparent 34%,rgba(255,255,255,0.9) 50%,transparent 66%)",
-    ink: "#4a3a16",
-    sub: "rgba(74,58,22,0.62)",
-    rule: "rgba(74,58,22,0.24)",
-    streak: "rgba(255,252,242,0.85)",
-  },
-};
-
-/** Card geometry per size, in pixels. Fixed on purpose — see the note below. */
-export const FC_CARD_SIZES = {
-  xs: { w: 124, h: 177 },
-  sm: { w: 164, h: 234 },
-  md: { w: 232, h: 331 },
-  lg: { w: 300, h: 429 },
-} as const;
-
-/**
- * The shield. Square shoulders, straight sides, a foot tapering to a point —
- * the same read as the cards this is modelled on.
- */
-const SHIELD = "polygon(50% 0%, 100% 4.5%, 100% 78%, 50% 100%, 0% 78%, 0% 4.5%)";
-
-export interface FcCardData {
+interface FcCardData {
   overall: number;
   position: PositionCode;
   attributes: Attributes;
@@ -138,7 +44,7 @@ export function PlayerFcCard({
 }) {
   const { t } = useI18n();
   const tier = cardTier(data.overall);
-  const style = TIER_STYLE[tier];
+  const style = TIER_DOM_STYLE[tier];
   const team = data.teamId ? getTeam(data.teamId) : null;
   const league = team ? getLeagueOfTeam(team.id) : null;
   const keys = attributeKeysFor(data.position);
@@ -175,7 +81,7 @@ export function PlayerFcCard({
           background: style.plate,
           // The flat zone runs to 78% so the stat grid never lands inside the
           // taper.
-          clipPath: SHIELD,
+          clipPath: SHIELD_CLIP_PATH,
         }}
       >
         {/* Diagonal streaks across the plate — the brushed-metal read of the

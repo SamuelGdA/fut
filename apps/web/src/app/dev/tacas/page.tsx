@@ -9,7 +9,7 @@
  * 96px can turn to mush at 16.
  */
 
-import { TROPHY_ART, trophyDataUri, type TrophySpec } from "@/lib/trophies";
+import { TROPHY_ART, trophyDataUri, type TrophySpec } from "@craque/art";
 
 const SHAPES: TrophySpec["shape"][] = ["cup", "chalice", "salver", "shield", "bowl", "amphora"];
 const METALS: TrophySpec["metal"][] = ["gold", "silver", "bronze"];

@@ -1,0 +1,202 @@
+[
+  {
+    "id": "copa-de-primera",
+    "name": "Copa de Primera",
+    "country_fifa_code": "PAR",
+    "logo_url": "/craque-assets/logos/football/competitions/PAR/L/copa-de-primera.svg",
+    "league_trophy_url": "/craque-assets/trophies/football/national/PAR/copa-de-primera.png",
+    "confederation": "CONMEBOL",
+    "tier": 1,
+    "domestic_cup_id": "par-copa-paraguay",
+    "teams": [
+      {
+        "id": "cerro-porteno",
+        "name": "Cerro Porteño",
+        "short_name": "Cerro Porteño",
+        "abbreviation": "CER",
+        "logo_url": "/craque-assets/logos/football/teams/PAR/L/cerro-porteno.svg",
+        "primary_color": "#081227",
+        "domestic_reputation": 3,
+        "continental_reputation": 1,
+        "international_reputation": 1
+      },
+      {
+        "id": "libertad-asuncion",
+        "name": "Libertad",
+        "short_name": "Libertad",
+        "abbreviation": "LIB",
+        "logo_url": "/craque-assets/logos/football/teams/PAR/L/libertad.svg",
+        "primary_color": "#000000",
+        "domestic_reputation": 3,
+        "continental_reputation": 1,
+        "international_reputation": 1
+      },
+      {
+        "id": "olimpia",
+        "name": "Olimpia",
+        "short_name": "Olimpia",
+        "abbreviation": "OLI",
+        "logo_url": "/craque-assets/logos/football/teams/PAR/L/olimpia.svg",
+        "primary_color": "#000000",
+        "domestic_reputation": 3,
+        "continental_reputation": 1,
+        "international_reputation": 1
+      },
+      {
+        "id": "2-de-mayo",
+        "name": "2 de Mayo",
+        "short_name": "2 de Mayo",
+        "abbreviation": "MAY",
+        "logo_url": "/craque-assets/logos/football/teams/PAR/L/2-de-mayo.svg",
+        "primary_color": "#203185",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "club-guarani",
+        "name": "Club Guaraní",
+        "short_name": "Guaraní",
+        "abbreviation": "GUA",
+        "logo_url": "/craque-assets/logos/football/teams/PAR/L/club-guarani.svg",
+        "primary_color": "#FFCC00",
+        "domestic_reputation": 2,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "nacional-asuncion",
+        "name": "Club Nacional",
+        "short_name": "Nacional",
+        "abbreviation": "NAC",
+        "logo_url": "/craque-assets/logos/football/teams/PAR/L/nacional-asuncion.svg",
+        "primary_color": "#065697",
+        "domestic_reputation": 1,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "deportivo-recoleta",
+        "name": "Deportivo Recoleta",
+        "short_name": "Deportivo Recoleta",
+        "abbreviation": "REC",
+        "logo_url": "/craque-assets/logos/football/teams/PAR/L/deportivo-recoleta.svg",
+        "primary_color": "#D4AB49",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "sportivo-trinidense",
+        "name": "Sportivo Trinidense",
+        "short_name": "Sportivo Trinidense",
+        "abbreviation": "TRI",
+        "logo_url": "/craque-assets/logos/football/teams/PAR/L/sportivo-trinidense.svg",
+        "primary_color": "#251981",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      }
+    ]
+  },
+  {
+    "id": "division-intermedia",
+    "name": "División Intermedia",
+    "country_fifa_code": "PAR",
+    "logo_url": "",
+    "league_trophy_url": "",
+    "confederation": "CONMEBOL",
+    "tier": 2,
+    "domestic_cup_id": "par-copa-paraguay",
+    "teams": [
+      {
+        "id": "sportivo-luqueno",
+        "name": "Sportivo Luqueño",
+        "short_name": "Luqueño",
+        "abbreviation": "LUQ",
+        "logo_url": "/craque-assets/logos/football/teams/PAR/L/sportivo-luqueno.svg",
+        "primary_color": "#003DA5",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "sol-de-america",
+        "name": "Sol de América",
+        "short_name": "Sol de América",
+        "abbreviation": "SOL",
+        "logo_url": "/craque-assets/logos/football/teams/PAR/L/sol-de-america.svg",
+        "primary_color": "#C8102E",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "rubio-nu",
+        "name": "Rubio Ñu",
+        "short_name": "Rubio Ñu",
+        "abbreviation": "RUB",
+        "logo_url": "/craque-assets/logos/football/teams/PAR/L/rubio-nu.svg",
+        "primary_color": "#FFD100",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "river-plate-asuncion",
+        "name": "River Plate",
+        "short_name": "River Plate",
+        "abbreviation": "RIV",
+        "logo_url": "/craque-assets/logos/football/teams/PAR/L/river-plate-asuncion.svg",
+        "primary_color": "#C8102E",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "atletico-colegiales",
+        "name": "Atlético Colegiales",
+        "short_name": "Colegiales",
+        "abbreviation": "CLG",
+        "logo_url": "/craque-assets/logos/football/teams/PAR/L/atletico-colegiales.svg",
+        "primary_color": "#0033A0",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "independiente-cg",
+        "name": "Independiente de Campo Grande",
+        "short_name": "Ind. CG",
+        "abbreviation": "ICG",
+        "logo_url": "/craque-assets/logos/football/teams/PAR/L/independiente-cg.svg",
+        "primary_color": "#C8102E",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "12-de-octubre",
+        "name": "12 de Octubre",
+        "short_name": "12 de Octubre",
+        "abbreviation": "DOC",
+        "logo_url": "/craque-assets/logos/football/teams/PAR/L/12-de-octubre.svg",
+        "primary_color": "#0B6E4F",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      },
+      {
+        "id": "tacuary",
+        "name": "Tacuary",
+        "short_name": "Tacuary",
+        "abbreviation": "TAC",
+        "logo_url": "/craque-assets/logos/football/teams/PAR/L/tacuary.svg",
+        "primary_color": "#C8102E",
+        "domestic_reputation": 0,
+        "continental_reputation": 0,
+        "international_reputation": 0
+      }
+    ]
+  }
+]

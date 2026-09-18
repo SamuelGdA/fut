@@ -1,5 +1,5 @@
 import { chance, createRng, nextInt, pickOne, pickWeighted, type Rng } from "./rng";
-import { areRivals } from "@/lib/data/rivalries";
+import { areRivals } from "@craque/data";
 import { briefDemand, rollClubBrief, type ClubBrief } from "./clubBrief";
 import {
   EMPTY_STATS,
@@ -90,7 +90,7 @@ import {
   getTeam,
   type Country,
   type Team,
-} from "@/lib/data/dataset";
+} from "@craque/data";
 import {
   applyGrowth,
   enforceTrainingFloor,
@@ -109,7 +109,7 @@ import {
   type ClubTrophyKey,
   type NationalTrophyKey,
   type TrophyKey,
-} from "@/lib/data/trophies";
+} from "@craque/data";
 import { CALL_UP_THRESHOLD } from "./constants";
 import { clamp } from "./rng";
 import {

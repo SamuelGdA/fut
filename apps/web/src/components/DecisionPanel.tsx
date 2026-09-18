@@ -2,14 +2,14 @@
 
 import { countryName, useI18n } from "@/lib/i18n/context";
 import { useCareerStore } from "@/store/careerStore";
-import { leagueLogoUrl } from "@/lib/leagueBadges";
+import { leagueLogoUrl } from "@craque/art";
 import { ClubCrest, Flag } from "./Media";
 import {
   getCountryByFifa,
   getLeagueOfTeam,
   getLeagueOfTeamAtTier,
   getTeam,
-} from "@/lib/data/dataset";
+} from "@craque/data";
 import { injuryName } from "@/lib/data/injuryNames";
 import { injuryOverallDelta } from "@/lib/sim/constants";
 import { resolveTrophy } from "@/lib/trophyDisplay";

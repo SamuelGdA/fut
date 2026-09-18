@@ -60,14 +60,14 @@ import {
   hasDomesticCup,
   type Country,
   type Team,
-} from "@/lib/data/dataset";
+} from "@craque/data";
 import {
   getDomesticSuperCup,
   getLeagueCup,
   type AwardKey,
   type ClubTrophyKey,
   type TrophyKey,
-} from "@/lib/data/trophies";
+} from "@craque/data";
 
 export interface SeasonStats {
   appearances: number;
