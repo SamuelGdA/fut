@@ -20,6 +20,14 @@ import {
 import type { CareerState } from "@/lib/sim/career";
 import type { ClubStanding } from "@/lib/sim/constants";
 
+/**
+ * The most honour icons one spell shows before collapsing the rest into a
+ * count. The strip used to be unbounded and shared a wrapping row with the
+ * standing badges, so a decorated spell at a giant grew into a tall block of
+ * loose icons that dwarfed the club it belonged to.
+ */
+const TIMELINE_HONOUR_LIMIT = 8;
+
 /** A full starter season's worth of appearances — the yardstick for "actually played". */
 const STARTER_SEASON_APPEARANCES = 40;
 
@@ -124,17 +132,22 @@ export function CareerTimeline({ career }: { career: CareerState }) {
     spell.clubSeasons = acc.seasons;
   }
 
-  // A move straight into a genuine rival's shirt is the one transfer a club
-  // never forgives — mark the club that got left behind, not the one arrived
-  // at. Judged against real derbies (see lib/data/rivalries.ts), not just
-  // "same league" — two clubs sharing a division isn't a rivalry on its own.
-  for (let i = 0; i < spells.length - 1; i += 1) {
+  // Clubs that will never have this player back, marked on the spell that
+  // ended it. Two ways to get there and the badge reads the same for both:
+  //
+  //  - walking straight into a genuine rival's shirt, judged against real
+  //    derbies (see lib/data/rivalries.ts) rather than "same league", because
+  //    two clubs sharing a division is not a rivalry on its own;
+  //  - being run out of town by the club's own supporters, which the sim
+  //    records on the career itself. That one used only to block future
+  //    offers, so the row where it happened showed nothing at all.
+  const runOut = new Set(career.betrayedClubs ?? []);
+  for (let i = 0; i < spells.length; i += 1) {
     const left = spells[i];
+    if (runOut.has(left.teamId)) left.traitor = true;
     const joined = spells[i + 1];
-    if (left.teamId === joined.teamId) continue;
-    if (areRivals(left.teamId, joined.teamId)) {
-      left.traitor = true;
-    }
+    if (!joined || left.teamId === joined.teamId) continue;
+    if (areRivals(left.teamId, joined.teamId)) left.traitor = true;
   }
 
   const entries: TimelineEntry[] = [...spells];
@@ -193,18 +206,18 @@ export function CareerTimeline({ career }: { career: CareerState }) {
                   }`}
                   aria-hidden
                 />
-                <div className="flex flex-wrap items-center gap-2 rounded-lg bg-flood/10 px-2.5 py-2">
+                <div className="flex items-center gap-2 rounded-lg bg-flood/10 px-2.5 py-2">
                   <Flag
                     src={career.player.nationality.flag_url}
                     alt={countryName(career.player.nationality, locale)}
                     className="h-4 w-6 shrink-0"
                   />
-                  <span className="text-xs font-semibold text-flood">
+                  <span className="min-w-0 flex-1 truncate text-xs font-semibold text-flood">
                     {t("career.firstCallUpEyebrow")}
                   </span>
                   {entry.standing && (
                     <span
-                      className={`rounded px-1.5 py-0.5 text-[9px] font-black uppercase tracking-wide ${STANDING_STYLE[entry.standing]}`}
+                      className={`shrink-0 rounded px-1.5 py-0.5 text-[9px] font-black uppercase tracking-wide ${STANDING_STYLE[entry.standing]}`}
                     >
                       {t(`career.standings.${entry.standing}`)}
                     </span>
@@ -217,6 +230,16 @@ export function CareerTimeline({ career }: { career: CareerState }) {
 
           const spell = entry;
           const team = getTeam(spell.teamId);
+          // Silverware and individual honours share one bounded strip, so the
+          // row's height depends on one number rather than two.
+          const honours = [
+            ...spell.trophies.map((tr) => ({ name: tr.name, imageUrl: tr.imageUrl })),
+            ...spell.awards.map((aw) => ({ name: t(`awards.${aw}`), imageUrl: AWARD_IMAGES[aw] })),
+          ];
+          const shown = honours.slice(0, TIMELINE_HONOUR_LIMIT);
+          const hidden = honours.length - shown.length;
+          const allHonourNames = honours.map((h) => h.name).join(" · ");
+
           return (
             <li key={`${spell.teamId}-${i}`} className="relative">
               <span
@@ -232,28 +255,35 @@ export function CareerTimeline({ career }: { career: CareerState }) {
                 aria-hidden
               />
 
-              <div className="rounded-lg bg-surface-2/50 px-2.5 py-2">
-                <div className="flex items-center gap-2">
+              <div className="min-w-0 rounded-lg bg-surface-2/50 px-2.5 py-2">
+                {/* Club and years. `min-w-0` has to be on the row *and* on the
+                    name, or the name refuses to shrink and gets sliced by the
+                    panel edge instead of ellipsing — which is what kept
+                    clipping club names in the narrow summary rail. */}
+                <div className="flex min-w-0 items-center gap-2">
                   {team && (
-                    <ClubCrest src={team.logo_url} name={team.name} size={20} className="h-5 w-5 shrink-0" />
+                    <ClubCrest teamId={team.id} name={team.name} size={20} className="h-5 w-5 shrink-0" />
                   )}
-                  <span className="min-w-0 flex-1 truncate text-xs font-semibold">
-                    {team?.name ?? "—"}
+                  <span className="min-w-0 flex-1 truncate text-xs font-semibold" title={team?.name ?? undefined}>
+                    {team?.name ?? "-"}
                   </span>
-                  <span className="shrink-0 font-display text-[10px] font-bold text-muted-2">
-                    {spell.from === spell.to ? spell.from : `${spell.from}–${spell.to}`}
+                  <span className="shrink-0 font-display text-[10px] font-bold tabular-nums text-muted-2">
+                    {spell.from === spell.to ? spell.from : `${spell.from}-${spell.to}`}
                   </span>
                 </div>
 
-                <div className="mt-1 flex flex-wrap items-center gap-1.5">
+                {/* Standing and length. Kept apart from the honours so a heavily
+                    decorated spell cannot push these onto their own lines. */}
+                <div className="mt-1 flex min-w-0 items-center gap-1.5">
                   <span
-                    className={`rounded px-1.5 py-0.5 text-[9px] font-black uppercase tracking-wide ${STANDING_STYLE[spell.standing]}`}
+                    className={`shrink-0 rounded px-1.5 py-0.5 text-[9px] font-black uppercase tracking-wide ${STANDING_STYLE[spell.standing]}`}
+                    title={t(`career.standingHints.${spell.standing}`)}
                   >
                     {t(`career.standings.${spell.standing}`)}
                   </span>
                   {spell.traitor && (
                     <span
-                      className="rounded bg-danger/15 px-1.5 py-0.5 text-[9px] font-black uppercase tracking-wide text-danger"
+                      className="shrink-0 rounded bg-danger/15 px-1.5 py-0.5 text-[9px] font-black uppercase tracking-wide text-danger"
                       title={t("career.traitorHint")}
                     >
                       {t("career.traitorLabel")}
@@ -261,29 +291,34 @@ export function CareerTimeline({ career }: { career: CareerState }) {
                   )}
                   {/* Club total, not spell length — otherwise a returning legend
                       reads as "Legend · 2 seasons", which contradicts itself. */}
-                  <span className="text-[9px] text-muted-2">
+                  <span className="min-w-0 truncate text-[9px] text-muted-2">
                     {spell.clubSeasons === 1
                       ? t("career.seasonAt")
                       : t("career.seasonsAt", { count: spell.clubSeasons })}
                   </span>
-
-                  {spell.trophies.map((trophy, ti) => (
-                    <TrophyImage
-                      key={`${trophy.key}-${ti}`}
-                      src={trophy.imageUrl}
-                      alt={trophy.name}
-                      className="h-4 w-4"
-                    />
-                  ))}
-                  {spell.awards.map((award, ai) => (
-                    <TrophyImage
-                      key={`${award}-${ai}`}
-                      src={AWARD_IMAGES[award]}
-                      alt={t(`awards.${award}`)}
-                      className="h-4 w-4"
-                    />
-                  ))}
                 </div>
+
+                {/* One tidy, strictly single-line trophy strip. It used to be
+                    an unbounded wrapping row sharing space with the badges
+                    above, so a decorated spell grew into a tall block of
+                    loose icons. */}
+                {honours.length > 0 && (
+                  <div className="mt-1.5 flex min-w-0 items-center gap-1" title={allHonourNames}>
+                    {shown.map((h, hi) => (
+                      <TrophyImage
+                        key={`h-${hi}`}
+                        src={h.imageUrl}
+                        alt={h.name}
+                        className="h-4 w-4 shrink-0"
+                      />
+                    ))}
+                    {hidden > 0 && (
+                      <span className="shrink-0 font-display text-[9px] font-black tabular-nums text-muted-2">
+                        +{hidden}
+                      </span>
+                    )}
+                  </div>
+                )}
               </div>
             </li>
           );

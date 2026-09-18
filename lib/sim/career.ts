@@ -1,7 +1,10 @@
 import { chance, createRng, nextInt, pickOne, pickWeighted, type Rng } from "./rng";
+import { areRivals } from "@/lib/data/rivalries";
+import { briefDemand, rollClubBrief, type ClubBrief } from "./clubBrief";
 import {
   EMPTY_STATS,
   FAN_SUPPORT_BANDS,
+  FAN_SUPPORT_DEBUT,
   FAN_SUPPORT_START,
   INJURY_PROBABILITY,
   MODE_CONFIG,
@@ -26,12 +29,14 @@ import {
   BIG_CLUB_RELEGATION_REPUTATION,
   buildUpcomingTournaments,
   clubStanding,
+  fanCeilingDamping,
   fanSupportDelta,
   isBenchStatus,
   marketValue,
   NO_MODIFIERS,
   pickDevelopmentProfile,
   relegationOdds,
+  RIVAL_ASSIGNMENT_CHANCE,
   RIVAL_ASSIGNMENT_THRESHOLD,
   roleForPosition,
   rollPersonality,
@@ -44,6 +49,7 @@ import {
   simulateClubTrophies,
   simulateNationalTeam,
   simulateSeasonStats,
+  type SeasonKnock,
   squadStatusAtTeam,
   squadStatusFromGap,
   teamBaseOverall,
@@ -71,6 +77,7 @@ import {
   isLoanEligible,
   jitterReputation as jitterOfferReputation,
   loanWeight,
+  LOAN_MAX_AGE,
   playerOfferReputation,
 } from "./offers";
 import {
@@ -81,10 +88,12 @@ import {
   getLeagueByTier,
   getLeagueOfTeam,
   getTeam,
+  type Country,
   type Team,
 } from "@/lib/data/dataset";
 import {
   applyGrowth,
+  enforceTrainingFloor,
   computeOverall,
   createStartingAttributes,
   shiftOverall,
@@ -93,7 +102,9 @@ import {
 } from "./attributes";
 import { findTrainingFocus, trainingFocusesFor } from "./training";
 import {
-  CLUB_TROPHY_IMPORTANCE,
+  singleTrophyImportance,
+  trophyImportance,
+  type Confederation,
   type AwardKey,
   type ClubTrophyKey,
   type NationalTrophyKey,
@@ -103,6 +114,7 @@ import { CALL_UP_THRESHOLD } from "./constants";
 import { clamp } from "./rng";
 import {
   rollInitialShirtNumber,
+  legendNumbersFor,
   rollLegendTributeOffer,
   rollShirtUpgradeOffer,
   prestigeNumbersFor,
@@ -118,6 +130,7 @@ export type DecisionType =
   | "loan_offer"
   | "post_loan_retained"
   | "post_loan_not_retained"
+  | "post_loan_aged_out"
   | "contract_non_renewal"
   | "career_event"
   | "training_focus"
@@ -140,6 +153,12 @@ export interface DecisionOption {
   optionKey?: string;
   /** shirt_upgrade / shirt_legend_tribute: the number this option puts on the back. */
   shirtNumber?: number;
+  /**
+   * For a move: what that club is signing the player to do. Attached at offer
+   * time so the pitch is part of the decision rather than a surprise on
+   * arrival, and carried through to the accepted state unchanged.
+   */
+  brief?: ClubBrief;
 }
 
 export interface DecisionEvent {
@@ -181,6 +200,15 @@ export interface SeasonSnapshot {
   promoted: boolean;
   /** The number worn this season, so the summary's best card is period-accurate. */
   shirtNumber: number | null;
+  /** A minor injury that cost a few games, or null for a clean season. */
+  knock: SeasonKnock | null;
+  /**
+   * The club's standing this season, 0-5, after whatever it has won under
+   * the player. Recorded per season so the end-of-season page can show the
+   * badge actually growing or fading instead of the number moving invisibly.
+   * Absent on careers saved before this was tracked.
+   */
+  clubStars?: number;
 }
 
 export interface CareerEventPlan {
@@ -210,6 +238,14 @@ export interface Headline {
   key: string;
   vars: Record<string, string>;
   tone: "good" | "bad" | "neutral";
+}
+
+/** A club offer the player passed on, and what it was worth at the time. */
+export interface DeclinedOffer {
+  teamId: string;
+  age: number;
+  /** The club's standing when the offer came, so a later fade does not rewrite history. */
+  reputation: number;
 }
 
 export interface CareerState {
@@ -251,8 +287,48 @@ export interface CareerState {
   nationalTeamStats: SeasonStats & { caps: number };
   /** How the current club's terraces feel about the player, 0-100. Resets on transfer. */
   fanSupport: number;
+  /**
+   * What each club's terraces were left at, and how good the player was when
+   * they walked out. A stand does not forget: coming back to a club you were
+   * adored at should resume near where it stopped rather than reset to a
+   * generic welcome. Optional so saves written before this existed still load.
+   */
+  clubFanMemory?: Record<string, { support: number; overall: number; peak?: number }>;
+  /**
+   * Clubs whose supporters will never have the player back: left directly for
+   * a real rival, or walked out after a fallout with the stand. They are
+   * struck from every future offer pool for the rest of the career. Optional
+   * so saves written before this existed still load.
+   */
+  betrayedClubs?: string[];
+  /**
+   * The highest this club's crowd has ever had the player. Reset on every
+   * move, and picked up again from where it left off on a return. Read only
+   * to tell a stand that has turned on a player from one that has yet to
+   * notice him — see `fanBand`. Optional so saves written before it existed
+   * still load.
+   */
+  clubFanPeak?: number;
+  /** What the current club signed the player to do — sets starting goodwill
+   *  and how impatient the crowd is. Null before the first club. */
+  clubBrief: ClubBrief | null;
   /** The generational rival this career is measured against — assigned once OVR reaches RIVAL_ASSIGNMENT_THRESHOLD, null until then. */
   rival: RivalPlayer | null;
+  /**
+   * Clubs the player turned down. Kept so the biography can look back at the
+   * road not taken — the offer you said no to at 24 is part of the story of
+   * the career you actually had.
+   */
+  declinedOffers: DeclinedOffer[];
+  /**
+   * Whether the player may retire whenever they like rather than only when
+   * the game is finished with them. Set for daily challenges, where deciding
+   * when to stop is the point; a normal career runs its course.
+   */
+  allowEarlyRetirement: boolean;
+  /** Whether the one-and-only rival roll has already been spent, so a career
+   *  that missed out never silently re-rolls into one later. */
+  rivalRollDone: boolean;
   /** Generated back-page lines, newest last. */
   headlines: Headline[];
   /** Age of the first senior call-up, or null if it never came. */
@@ -265,6 +341,18 @@ export interface CareerState {
   shirtNumber: number | null;
   /** The board only ever lets a legend name their own number once. */
   legendShirtTributeUsed: boolean;
+  /**
+   * Where the player is from, as opposed to who they play for.
+   *
+   * A grandparent's passport can move `player.nationality` mid-career, and
+   * everything international rightly follows it — but the childhood does not.
+   * Without this the biography had a boy from Ireland taking his first steps
+   * at a Brazilian academy because he switched at 24. Set once, never
+   * changed. Optional so saves written before it existed still load; readers
+   * fall back to the current nationality, which is correct for every career
+   * that never switched.
+   */
+  birthNationality?: Country;
   retirementReason: "voluntary" | "no_offers" | "age" | "poor_form" | null;
 }
 
@@ -374,10 +462,17 @@ function clampReputation(value: number): number {
 
 /** How much winning each trophy nudges the club's reputation — bigger prizes, bigger jump. */
 const TROPHY_REPUTATION_WEIGHT: Record<ClubTrophyKey, { domestic?: number; continental?: number; international?: number }> = {
+  // A super cup is a trophy the club already earned by winning something else,
+  // so it barely moves standing on its own.
+  domestic_super_cup: { domestic: 0.06 },
+  league_cup: { domestic: 0.12 },
   cup: { domestic: 0.18 },
   league: { domestic: 0.4 },
+  continental_tertiary: { continental: 0.28, domestic: 0.1 },
+  continental_super_cup: { continental: 0.3, domestic: 0.1 },
   continental_secondary: { continental: 0.4, domestic: 0.12 },
   continental_primary: { continental: 0.7, domestic: 0.2 },
+  intercontinental_cup: { international: 0.28, continental: 0.1 },
   club_world_cup: { international: 0.6, continental: 0.2 },
 };
 
@@ -419,8 +514,13 @@ function inUefa(teamId: string): boolean {
 // Headlines
 // ---------------------------------------------------------------------------
 
-/** Keeps the feed from growing without bound over a 20-season career. */
-const MAX_HEADLINES = 60;
+/**
+ * Keeps the feed from growing without bound, set high enough that a real
+ * career never loses anything: the median career writes 12 headlines and the
+ * 90th percentile 38, so only a decorated 20-season run gets anywhere near
+ * this — and that is exactly the career whose early years are worth keeping.
+ */
+const MAX_HEADLINES = 200;
 
 function addHeadline(
   headlines: Headline[],
@@ -438,29 +538,70 @@ function addHeadline(
  */
 const TROPHY_OVERALL_BONUS_CAP = 90;
 
-/** Minimum debut-season appearances for the early-breakout roll — a real run, not a cameo. */
-const EARLY_BREAKOUT_MIN_APPEARANCES = 15;
-/** Odds of the Lamine-Yamal-style debut-season jump, once the appearance floor is met. */
-const EARLY_BREAKOUT_CHANCE = 0.1;
+/**
+ * How high silverware can carry this particular player.
+ *
+ * A flat 90 for everyone left the top of the scale unreachable. Training taper
+ * alone always falls short of the ceiling, so across 80 careers that genuinely
+ * rolled a 99 potential the best peak was 96 and not one reached 99 — the
+ * rarest roll in the game promised a number nobody could ever see.
+ *
+ * Letting trophies close that last gap, but never past the player's own
+ * ceiling, fixes it without touching anyone else: the median career has a
+ * potential of 82, far below the flat cap, so nothing about it changes. And
+ * the greats get the last few points by winning things, which is the right
+ * reason to get them.
+ */
+function trophyOverallCap(potential: number): number {
+  return Math.min(99, Math.max(TROPHY_OVERALL_BONUS_CAP, potential));
+}
 
-function trophyOverallBonus(overall: number, trophiesWon: number): number {
-  if (trophiesWon <= 0 || overall >= TROPHY_OVERALL_BONUS_CAP) return 0;
-  // One point per winning *season*, not per trophy — a treble shouldn't be worth
-  // three, and never enough to cross the cap in a single jump.
-  return Math.min(1, TROPHY_OVERALL_BONUS_CAP - overall);
+/**
+ * The card a fully-formed debutant lands on. The bottom of the range is a
+ * teenager who is plainly a first-team player already; the top is the once-a-
+ * decade arrival. Capped by the player's own potential at the point of use.
+ */
+const EARLY_BREAKOUT_FLOOR = 73;
+const EARLY_BREAKOUT_PEAK = 87;
+
+/**
+ * Odds of the Lamine-Yamal debut, once the club has shown it means it.
+ *
+ * Only the two rarest talent tiers can roll it at all, and a generational
+ * talent is meaningfully likelier to be the one it happens to — that is what
+ * the tier is for.
+ */
+const EARLY_BREAKOUT_CHANCE: Partial<Record<TalentTier, number>> = {
+  phenomenon: 0.15,
+  generational: 0.25,
+};
+
+function trophyOverallBonus(overall: number, importance: number, potential: number): number {
+  const cap = trophyOverallCap(potential);
+  if (importance <= 0 || overall >= cap) return 0;
+  // At most one point per winning *season*, not per trophy — a treble should
+  // not be worth three, and no season should cross the cap in one jump. What
+  // the season was worth decides how much of that point it earns: a league is
+  // the full mark, a super cup on its own is a third of it.
+  return Math.min(1, importance, cap - overall);
 }
 
 /** Would picking a transfer right now actually produce a club offer? */
 function wouldTransferProduceOffer(state: CareerState, team: Team): boolean {
-  return createTransferOffers(state.rng, state.player, team, 2).teams.length > 0;
+  return createTransferOffers(state.rng, state.player, team, 2, blockedClubs(state)).teams.length > 0;
 }
 
 /** Same-country clubs at least as prestigious as the current one (rival_offer pool). */
-function rivalPool(team: Team): Team[] {
+function rivalPool(state: CareerState, team: Team): Team[] {
   const league = getLeagueOfTeam(team.id);
   if (!league) return [];
+  const blocked = new Set(blockedClubs(state));
   return league.teams.filter(
-    (t) => t.id !== team.id && t.domestic_reputation >= team.domestic_reputation && t.international_reputation >= team.international_reputation,
+    (t) =>
+      t.id !== team.id &&
+      !blocked.has(t.id) &&
+      t.domestic_reputation >= team.domestic_reputation &&
+      t.international_reputation >= team.international_reputation,
   );
 }
 
@@ -468,14 +609,37 @@ function rivalPool(team: Team): Team[] {
 function returnHomePool(state: CareerState, team: Team): Team[] {
   const league = getLeagueOfTeam(team.id);
   if (!league || league.country_fifa_code === state.player.nationality.fifa_code) return [];
-  return ALL_TEAMS.filter((t) => t.id !== team.id && getLeagueOfTeam(t.id)?.country_fifa_code === state.player.nationality.fifa_code);
+  const blocked = new Set(blockedClubs(state));
+  return ALL_TEAMS.filter(
+    (t) =>
+      t.id !== team.id &&
+      !blocked.has(t.id) &&
+      getLeagueOfTeam(t.id)?.country_fifa_code === state.player.nationality.fifa_code,
+  );
+}
+
+/** Whether the player is a foreigner where they currently play. */
+function playingAbroad(state: CareerState, team: Team): boolean {
+  const league = getLeagueOfTeam(team.id);
+  return Boolean(league) && league!.country_fifa_code !== state.player.nationality.fifa_code;
+}
+
+/** Whether this club has a real rival on the calendar, for derby_spotlight. */
+function hasDerby(team: Team): boolean {
+  return ALL_TEAMS.some((t) => t.id !== team.id && areRivals(team.id, t.id));
 }
 
 /** Clubs outside the current country, for tax_trouble. */
-function foreignExitPool(team: Team): Team[] {
+function foreignExitPool(state: CareerState, team: Team): Team[] {
   const league = getLeagueOfTeam(team.id);
   if (!league) return [];
-  return ALL_TEAMS.filter((t) => t.id !== team.id && getLeagueOfTeam(t.id)?.country_fifa_code !== league.country_fifa_code);
+  const blocked = new Set(blockedClubs(state));
+  return ALL_TEAMS.filter(
+    (t) =>
+      t.id !== team.id &&
+      !blocked.has(t.id) &&
+      getLeagueOfTeam(t.id)?.country_fifa_code !== league.country_fifa_code,
+  );
 }
 
 /** Countries sharing the player's confederation, for foreign_grandfather. */
@@ -490,6 +654,9 @@ function firstClubForTriumphantReturn(state: CareerState): SeasonSnapshot | null
   const contractId = state.contractTeamId ?? state.currentTeamId;
   const firstClub = [...state.seasons].sort((a, b) => a.index - b.index)[0];
   if (!firstClub || firstClub.teamId === contractId) return null;
+  // No homecoming to a club you walked out on for its rival — that stand is
+  // exactly the one that would never have you back.
+  if (blockedClubs(state).includes(firstClub.teamId)) return null;
   return firstClub;
 }
 
@@ -501,14 +668,14 @@ function firstClubForTriumphantReturn(state: CareerState): SeasonSnapshot | null
 function peekClubTrophyTarget(state: CareerState, team: Team): ClubTrophyKey | null {
   const periodLength = MODE_CONFIG[state.mode].periodLengthSeasons;
   let rng = createRng(`${state.seed}:injury-at-peak:${state.rng.state}:${team.id}:${state.player.age}`);
-  let provisionalSeasons = state.seasons.map((s) => ({ teamId: s.teamId, trophies: s.trophies }));
+  let provisionalSeasons = state.seasons.map((s) => ({ teamId: s.teamId, trophies: s.trophies, leagueTier: s.leagueTier }));
   const currentTier = teamTier(state, team.id);
 
   for (let i = 0; i < periodLength; i += 1) {
     const result = simulateClubTrophies(rng, state.player, team, NO_MODIFIERS, { seasons: provisionalSeasons }, currentTier);
     rng = result.rng;
     if (result.trophies[0]) return result.trophies[0];
-    provisionalSeasons = [...provisionalSeasons, { teamId: team.id, trophies: result.trophies }];
+    provisionalSeasons = [...provisionalSeasons, { teamId: team.id, trophies: result.trophies, leagueTier: currentTier }];
   }
   return null;
 }
@@ -517,7 +684,7 @@ function peekClubTrophyTarget(state: CareerState, team: Team): ClubTrophyKey | n
 function peekBigMomentTrophyTarget(state: CareerState, team: Team): TrophyKey | null {
   const periodLength = MODE_CONFIG[state.mode].periodLengthSeasons;
   let rng = createRng(`${state.seed}:decisive-penalty:${state.rng.state}:${team.id}:${state.player.age}`);
-  let provisionalSeasons = state.seasons.map((s) => ({ teamId: s.teamId, trophies: s.trophies }));
+  let provisionalSeasons = state.seasons.map((s) => ({ teamId: s.teamId, trophies: s.trophies, leagueTier: s.leagueTier }));
   const bigClub: ClubTrophyKey[] = ["continental_primary", "continental_secondary", "club_world_cup"];
   const bigNational: NationalTrophyKey[] = ["national_continental", "world_cup"];
   const currentTier = teamTier(state, team.id);
@@ -534,7 +701,7 @@ function peekBigMomentTrophyTarget(state: CareerState, team: Team): TrophyKey | 
     const nationalHit = nationalResult.trophies.find((t) => bigNational.includes(t as NationalTrophyKey));
     if (nationalHit) return nationalHit;
 
-    provisionalSeasons = [...provisionalSeasons, { teamId: team.id, trophies: clubResult.trophies }];
+    provisionalSeasons = [...provisionalSeasons, { teamId: team.id, trophies: clubResult.trophies, leagueTier: currentTier }];
   }
   return null;
 }
@@ -585,8 +752,47 @@ function simulateOneSeason(
   onLoan: boolean,
 ): CareerState {
   let rng = state.rng;
-  const player = state.player;
+  let player = state.player;
   const tuning = DIFFICULTY_CONFIG[state.difficulty];
+
+  // A genuine once-a-generation talent occasionally arrives fully formed —
+  // Lamine Yamal, not the general run of prospects.
+  //
+  // Rolled here, before a ball is kicked, so the whole season belongs to the
+  // player they turned out to be: the games, the goals, the crowd and the
+  // paper all follow from the new card. It used to be applied at the end of
+  // the season, gated on having already played ten games, which printed a
+  // sixteen-year-old on 87 next to a line reading ten appearances and no
+  // goals — the one thing a breakout season should never look like.
+  //
+  // What replaces the appearance floor is the club's own intent: a debutant
+  // the manager has already decided is a first-team player, rather than one
+  // filling out the bench.
+  const breakoutOdds = EARLY_BREAKOUT_CHANCE[player.talentTier] ?? 0;
+  if (
+    player.age === START_AGE &&
+    breakoutOdds > 0 &&
+    !isBenchStatus(squadStatusAtTeam(player, team))
+  ) {
+    const roll = chance(rng, breakoutOdds);
+    rng = roll.rng;
+    if (roll.success) {
+      const targetRoll = nextInt(rng, EARLY_BREAKOUT_FLOOR, EARLY_BREAKOUT_PEAK);
+      rng = targetRoll.rng;
+      // Never past what this player was ever going to be — the leap is the
+      // ceiling arriving early, not a different ceiling.
+      const target = Math.min(targetRoll.value, player.potential);
+      const delta = target - player.overall;
+      if (delta > 0) {
+        const shifted = shiftOverall(player.attributes, player.position, delta, player.potential);
+        player = {
+          ...player,
+          attributes: shifted,
+          overall: Math.round(computeOverall(shifted, player.position)),
+        };
+      }
+    }
+  }
 
   // The tier this season is actually played at — needed before simulating
   // trophies so a relegated club is judged (and named) against the division
@@ -604,7 +810,7 @@ function simulateOneSeason(
     player,
     team,
     modifiers,
-    { seasons: state.seasons.map((s) => ({ teamId: s.teamId, trophies: s.trophies })) },
+    { seasons: state.seasons.map((s) => ({ teamId: s.teamId, trophies: s.trophies, leagueTier: s.leagueTier })) },
     currentTier,
   );
   rng = trophyResult.rng;
@@ -616,7 +822,14 @@ function simulateOneSeason(
     ? []
     : [...trophyResult.trophies, ...nationalResult.trophies];
 
-  const awardResult = simulateAwards(rng, player, statsResult.stats, trophies, inUefa(team.id));
+  const awardResult = simulateAwards(
+    rng,
+    player,
+    statsResult.stats,
+    trophies,
+    inUefa(team.id),
+    awardStreaks(state.seasons),
+  );
   rng = awardResult.rng;
 
   // Promotion out of the second tier, or relegation out of the first.
@@ -639,7 +852,7 @@ function simulateOneSeason(
     // season earns an automatic spot or a playoff run, same as it does in a
     // real second tier. Scaled by overall like the title odds, just far more
     // generous, since several clubs go up every season and only one wins it.
-    const playoffRoll = chance(rng, secondTierPlayoffOdds(player.overall));
+    const playoffRoll = chance(rng, secondTierPlayoffOdds(player.overall, league?.country_fifa_code));
     rng = playoffRoll.rng;
     if (playoffRoll.success) {
       promoted = true;
@@ -692,6 +905,9 @@ function simulateOneSeason(
     leagueTier: currentTier,
     onLoan,
     suspended: modifiers.suspended,
+    // Filled in below, once the season has actually been played: a row that
+    // says "38 games, 18 goals, 84 overall" has to mean the card he
+    // finished the season with, not the one he started it with.
     overall: player.overall,
     attributes: player.attributes,
     marketValue: valueResult.value,
@@ -701,6 +917,14 @@ function simulateOneSeason(
     relegated,
     promoted,
     shirtNumber: state.shirtNumber,
+    // A suspended season was never played, so it cannot also have been
+    // interrupted by a knock.
+    knock: modifiers.suspended ? null : statsResult.knock,
+    // Read after this season's trophies have been folded in, so a title shows
+    // up as a rise on the page that reports the title.
+    clubStars: clampReputation(
+      (getTeam(team.id)?.domestic_reputation ?? 0) + (reputationOverrides[team.id]?.domestic ?? 0),
+    ),
   };
 
   // Progress the player into next season. Overall-affecting modifiers
@@ -738,58 +962,97 @@ function simulateOneSeason(
 
   // Lifting a trophy is worth a point on the card, up to a ceiling — enough to
   // feel earned, small enough that chasing it never beats simply playing well.
-  const trophyBonus = trophyOverallBonus(grownOverall, trophies.length);
+  const seasonWorth = trophyImportance(trophies, clubConfederation(team.id));
+  const trophyBonus = trophyOverallBonus(grownOverall, seasonWorth, player.potential);
   let boostedAttributes =
-    trophyBonus > 0 ? shiftOverall(nextAttributes, player.position, trophyBonus) : nextAttributes;
+    trophyBonus > 0
+      ? shiftOverall(nextAttributes, player.position, trophyBonus, player.potential)
+      : nextAttributes;
   // The shock of a big-club relegation costs the group ten points, on the card too.
   if (bigClubShock) {
     boostedAttributes = shiftOverall(boostedAttributes, player.position, -10);
   }
 
-  // A genuine once-a-generation talent occasionally arrives fully formed —
-  // Lamine Yamal, not the general run of prospects. Debut-season only, needs
-  // a real run of games (not a cameo), and even then it's rare.
-  const isEarlyBreakoutCandidate =
-    player.age === START_AGE &&
-    (player.talentTier === "phenomenon" || player.talentTier === "generational") &&
-    statsResult.stats.appearances >= EARLY_BREAKOUT_MIN_APPEARANCES;
-  if (isEarlyBreakoutCandidate) {
-    const roll = chance(rng, EARLY_BREAKOUT_CHANCE);
-    rng = roll.rng;
-    if (roll.success) {
-      const targetRoll = nextInt(rng, 73, 87);
-      rng = targetRoll.rng;
-      const current = computeOverall(boostedAttributes, player.position);
-      const delta = targetRoll.value - current;
-      if (delta > 0) boostedAttributes = shiftOverall(boostedAttributes, player.position, delta);
-    }
-  }
 
   const nextOverall = Math.round(computeOverall(boostedAttributes, player.position));
+
+  // The season the snapshot describes is now over, so it records where the
+  // player ended up. Without this the career table showed last season's
+  // rise against this season's games, and the back page could announce a
+  // breakout to a number the table would not print for another year.
+  snapshot.overall = nextOverall;
+  snapshot.attributes = boostedAttributes;
 
   const nextValue = marketValue(rng, nextOverall, nextAge);
   rng = nextValue.rng;
 
-  const nationalStats = nationalResult.calledUp
+  // Caps accrue every season the player is good enough for the squad, not only
+  // in the years a tournament happens to fall.
+  //
+  // They used to be tied to `calledUp`, which is a *tournament* flag: a
+  // national-team regular therefore banked caps once every couple of years and
+  // finished a whole career on about twenty. Real internationals play
+  // qualifiers and friendlies in between, and that is where most of a cap
+  // tally actually comes from — Cristiano Ronaldo's 226 is unreachable if only
+  // tournaments count. Tournaments still decide trophies; this decides caps.
+  const squadThreshold =
+    CALL_UP_THRESHOLD[
+      Math.max(0, Math.min(CALL_UP_THRESHOLD.length - 1, player.nationality.international_reputation))
+    ];
+  const inSquad = nationalResult.calledUp || nextOverall >= squadThreshold;
+  // A regular's season is worth roughly a qualifying campaign plus friendlies,
+  // scaled by how much club football they actually got through.
+  // Per season, not per period: this function already runs once for every
+  // season in the period, so scaling by the period length counted every cap
+  // twice and pushed a long career past 470 — double the real record.
+  const capsThisSeason = inSquad
+    ? Math.max(
+        1,
+        Math.round(
+          CAPS_PER_SEASON *
+            capsAgeFactor(player.age) *
+            Math.min(1.15, statsResult.stats.appearances / STARTER_SEASON_APPEARANCES),
+        ),
+      )
+    : 0;
+  const nationalStats = inSquad
     ? {
-        ...addStats(state.nationalTeamStats, scaleNationalContribution(statsResult.stats)),
-        caps: state.nationalTeamStats.caps + Math.max(1, Math.round(statsResult.stats.appearances * 0.15)),
+        ...addStats(state.nationalTeamStats, scaleNationalContribution(statsResult.stats, capsThisSeason)),
+        caps: state.nationalTeamStats.caps + capsThisSeason,
       }
     : state.nationalTeamStats;
 
   // The terraces react to the season just played, not to the one coming.
   const supportDelta = fanSupportDelta(
     statsResult.stats,
-    trophies.length,
+    seasonWorth,
     player.role,
     player.trait,
+    player.age,
   );
+  // What the club signed the player to do sets the bar the season is measured
+  // against. A stand promised a replacement for its departed number 9 needs a
+  // real season just to stay level; one that signed a teenager for the future
+  // is delighted by anything. Without this the meter was a one-way ratchet —
+  // careers sat "adored" from about year three and the brief meant nothing.
+  const demand = state.clubBrief ? briefDemand(state.clubBrief.key) : 0;
+  const expectedSupportDelta = supportDelta - demand;
+
   // A harder crowd turns faster but is no easier to win over — only the
   // downswings are amplified, so goodwill has to be earned and then defended.
-  const tunedSupportDelta = supportDelta < 0 ? supportDelta * tuning.fanPenalty : supportDelta;
+  // The brief's patience rides on top of the difficulty setting for the same
+  // reason and in the same direction.
+  const patience = state.clubBrief?.patience ?? 1;
+  const tunedSupportDelta =
+    expectedSupportDelta < 0
+      ? expectedSupportDelta * tuning.fanPenalty * patience
+      : // Adoration has to be defended rather than banked: the closer to the
+        // top of the meter, the less each good season adds.
+        expectedSupportDelta * fanCeilingDamping(state.fanSupport);
   const nextFanSupport = applyFanSupport(state.fanSupport, tunedSupportDelta);
+  const nextFanPeak = Math.max(state.clubFanPeak ?? state.fanSupport, nextFanSupport);
 
-  const firstCallUp = state.firstCallUpAge ?? (nationalResult.calledUp ? player.age : null);
+  const firstCallUp = state.firstCallUpAge ?? (inSquad ? player.age : null);
 
   // Back-page reaction to whatever just happened this season.
   let headlines = state.headlines;
@@ -808,7 +1071,7 @@ function simulateOneSeason(
       `${snapshot.id}-h-${award}`,
     );
   }
-  if (state.firstCallUpAge === null && nationalResult.calledUp) {
+  if (state.firstCallUpAge === null && inSquad) {
     headlines = addHeadline(
       headlines,
       {
@@ -839,8 +1102,10 @@ function simulateOneSeason(
       `${snapshot.id}-h-promo`,
     );
   }
-  // A genuinely big season on the card is news in itself.
-  if (nextOverall - player.overall >= 6) {
+  // A genuinely big season on the card is news in itself — but only if there
+  // was a season. Ratings keep climbing in the reserves, and "you exploded"
+  // printed over seven appearances contradicts the table right next to it.
+  if (nextOverall - player.overall >= 6 && statsResult.stats.appearances >= 15) {
     headlines = addHeadline(
       headlines,
       {
@@ -854,12 +1119,17 @@ function simulateOneSeason(
   }
 
   // A rival only shows up once you're actually good enough to plausibly have
-  // one — rolled off the seed so it's stable no matter which season it first
-  // becomes visible in.
-  const rival =
-    state.rival ?? (nextOverall >= RIVAL_ASSIGNMENT_THRESHOLD
-      ? rollRival(state.seed, player.nationality.fifa_code, player.position)
-      : null);
+  // one, and even then only sometimes. The roll happens exactly once — the
+  // first season the bar is cleared — and `rivalRollDone` makes that permanent,
+  // so a career that misses out never quietly re-rolls its way into one later.
+  let rival = state.rival;
+  let rivalRollDone = state.rivalRollDone;
+  if (!rival && !rivalRollDone && nextOverall >= RIVAL_ASSIGNMENT_THRESHOLD) {
+    rivalRollDone = true;
+    const roll = chance(rng, RIVAL_ASSIGNMENT_CHANCE);
+    rng = roll.rng;
+    if (roll.success) rival = rollRival(state.seed, player.nationality.fifa_code, player.position);
+  }
 
   return {
     ...state,
@@ -877,7 +1147,9 @@ function simulateOneSeason(
     teamReputationOverrides: reputationOverrides,
     nationalTeamStats: nationalStats,
     fanSupport: nextFanSupport,
+    clubFanPeak: nextFanPeak,
     rival,
+    rivalRollDone,
     firstCallUpAge: firstCallUp,
     headlines,
     // A chosen training focus only colours the season right after the decision.
@@ -886,13 +1158,31 @@ function simulateOneSeason(
 }
 
 /** National-team output is a fraction of the club season, not a second full season. */
-function scaleNationalContribution(stats: SeasonStats): SeasonStats {
+/**
+ * What a season's international football adds, derived from the player's own
+ * club form and the number of caps they actually won.
+ *
+ * It used to be a flat 12% of the club season regardless of how much
+ * international football was played, which — combined with caps only
+ * accruing in tournament years — left a whole career short of fifty goals
+ * for their country. Scaling by caps means a player who is a fixture for
+ * fifteen years builds a real international record, and one who is picked
+ * occasionally does not.
+ */
+function scaleNationalContribution(stats: SeasonStats, caps: number): SeasonStats {
+  // Per-cap output, taken from the club rate: a striker scoring every other
+  // club game scores at a similar clip for their country.
+  const perClubGame = (n: number) => (stats.appearances > 0 ? n / stats.appearances : 0);
+  // Internationals are tighter games than most club fixtures, so output per
+  // appearance sits a little below a player's club rate.
+  const INTERNATIONAL_DAMPING = 0.78;
+  const scale = caps * INTERNATIONAL_DAMPING;
   return {
     appearances: 0,
-    goals: Math.round(stats.goals * 0.12),
-    assists: Math.round(stats.assists * 0.12),
-    cleanSheets: Math.round(stats.cleanSheets * 0.12),
-    goalsConceded: Math.round(stats.goalsConceded * 0.12),
+    goals: Math.round(perClubGame(stats.goals) * scale),
+    assists: Math.round(perClubGame(stats.assists) * scale),
+    cleanSheets: Math.round(perClubGame(stats.cleanSheets) * scale),
+    goalsConceded: Math.round(perClubGame(stats.goalsConceded) * scale),
   };
 }
 
@@ -907,11 +1197,143 @@ function predictedStatus(state: CareerState): SquadStatus {
   return squadStatusAtTeam(state.player, team);
 }
 
+/**
+ * What a club would be signing the player to do, worked out at offer time so
+ * the pitch is visible on the card. Deterministic in the career seed, the step
+ * and the club, so reading an offer and then accepting it gives the same brief.
+ */
+function offerBrief(state: CareerState, teamId: string): ClubBrief | undefined {
+  const team = effectiveTeam(state, teamId);
+  if (!team) return undefined;
+  const last = state.seasons[state.seasons.length - 1];
+  return rollClubBrief(`${state.seed}:${state.step}`, {
+    player: state.player,
+    team,
+    returning: state.seasons.some((s) => s.teamId === teamId),
+    rebuilding: teamTier(state, teamId) > 1,
+    lastSeasonWasPoor: last ? last.stats.appearances < 15 || last.relegated : false,
+  });
+}
+
+/**
+ * The most a homecoming can add on top of the goodwill already banked at a
+ * club. Deliberately small: coming back a better player buys you a warmer
+ * first day, nothing more — the spell is still judged on how it actually goes.
+ */
+const RETURN_WELCOME_MAX = 8;
+/** Overall points of improvement needed to earn one point of that welcome. */
+const RETURN_WELCOME_PER_OVERALL = 0.6;
+
+/**
+ * The goodwill the player walks into a club with.
+ *
+ * For a club they have never played for this is purely what the club signed
+ * them to do. For a club they are returning to it resumes from where that
+ * terrace was left instead: a stand that adored you does not greet you as a
+ * stranger, and one you left cold has not forgotten that either. Coming back
+ * a better player than you left adds a small bonus on top.
+ */
+function arrivalFanSupport(
+  state: CareerState,
+  teamId: string,
+  currentOverall: number,
+  brief: ClubBrief | null,
+): { support: number; peak: number } {
+  const memory = state.clubFanMemory?.[teamId];
+  if (!memory) {
+    const support = brief?.startingSupport ?? FAN_SUPPORT_START;
+    return { support, peak: support };
+  }
+  const improvement = Math.max(0, currentOverall - memory.overall);
+  const welcome = Math.min(RETURN_WELCOME_MAX, improvement * RETURN_WELCOME_PER_OVERALL);
+  const support = applyFanSupport(memory.support, welcome);
+  // A crowd that once adored this player has not forgotten it, so coming
+  // back to a cold reception still reads as a stand that turned rather than
+  // one that has never heard of him.
+  return { support, peak: Math.max(memory.peak ?? support, support) };
+}
+
+function addBetrayed(current: string[] | undefined, teamId: string): string[] {
+  const list = current ?? [];
+  return list.includes(teamId) ? list : [...list, teamId];
+}
+
+/**
+ * Whether this move is the unforgivable one: walking out of the club that
+ * owned you and straight into its arch-rival's shirt.
+ *
+ * A loan never counts, in either direction — the parent club chose to send
+ * the player, and coming back afterwards is not a defection either.
+ */
+function betrayalOnThisMove(state: CareerState, playingTeamId: string, onLoan: boolean): boolean {
+  if (onLoan) return false;
+  const left = state.contractTeamId;
+  if (!left || left === playingTeamId) return false;
+  return areRivals(left, playingTeamId);
+}
+
+/**
+ * Clubs that must never appear in an offer again.
+ *
+ * Leaving straight for the arch-rival, or being run out of town by the stand,
+ * is not the sort of thing a support forgets two seasons later — so the club
+ * is struck off every pool the rest of the career draws from.
+ */
+function blockedClubs(state: CareerState): string[] {
+  return state.betrayedClubs ?? [];
+}
+
+/** The most offers worth remembering; a long career sees far more than it needs. */
+const MAX_DECLINED_OFFERS = 40;
+
+/**
+ * The clubs on this decision that the player said no to.
+ *
+ * Only real alternatives count: staying at the current club rejects nobody,
+ * and neither does an option with no club behind it. The reputation is frozen
+ * at the moment of the offer, so a club that fades later still reads as the
+ * giant it was when it came calling.
+ */
+function collectDeclinedOffers(
+  state: CareerState,
+  event: DecisionEvent,
+  chosen: DecisionOption,
+): DeclinedOffer[] {
+  // Picking one academy at sixteen is not turning anybody down — every kid
+  // has to choose one, and "he said no to Santos at 16" is not a story.
+  // A save written before offers were tracked has no list at all.
+  const kept = state.declinedOffers ?? [];
+  if (event.type === "academy_offer") return kept;
+
+  const fresh: DeclinedOffer[] = [];
+  for (const other of event.options) {
+    if (other.id === chosen.id) continue;
+    if (!other.teamId) continue;
+    if (other.type !== "join_club" && other.type !== "permanent_transfer") continue;
+    const team = effectiveTeam(state, other.teamId);
+    if (!team) continue;
+    fresh.push({
+      teamId: other.teamId,
+      age: state.player.age,
+      reputation: Math.max(team.domestic_reputation, team.international_reputation),
+    });
+  }
+  if (fresh.length === 0) return kept;
+  const next = [...kept, ...fresh];
+  return next.length > MAX_DECLINED_OFFERS ? next.slice(next.length - MAX_DECLINED_OFFERS) : next;
+}
+
+/** Stamps the club's pitch onto a move option. */
+function withBrief(state: CareerState, option: DecisionOption): DecisionOption {
+  if (!option.teamId) return option;
+  return { ...option, brief: offerBrief(state, option.teamId) };
+}
+
 function createTransferEvent(state: CareerState, label: DecisionType = "transfer"): { rng: Rng; event: DecisionEvent } | null {
   const teamId = state.contractTeamId ?? state.currentTeamId;
   const team = teamId ? effectiveTeam(state, teamId) : null;
   if (!team) return null;
-  const offers = createTransferOffers(state.rng, state.player, team, 2);
+  const offers = createTransferOffers(state.rng, state.player, team, 2, blockedClubs(state));
   if (offers.teams.length === 0) return null;
   return {
     rng: offers.rng,
@@ -920,7 +1342,9 @@ function createTransferEvent(state: CareerState, label: DecisionType = "transfer
       type: label,
       age: state.player.age,
       options: [
-        ...offers.teams.map((t, i) => ({ id: `transfer-${i}-${t.id}`, type: "join_club" as const, teamId: t.id })),
+        ...offers.teams.map((t, i) =>
+          withBrief(state, { id: `transfer-${i}-${t.id}`, type: "join_club" as const, teamId: t.id }),
+        ),
         { id: `stay-${team.id}`, type: "stay" as const, teamId: team.id },
       ],
     },
@@ -940,8 +1364,65 @@ function offerReputationFor(state: CareerState): number {
   return Math.max(0, base - DIFFICULTY_CONFIG[state.difficulty].offerReputationPenalty);
 }
 
+/**
+ * Caps a national-team regular banks per season, at his peak.
+ *
+ * A full year is a qualifying campaign (eight to ten matches), a couple of
+ * friendly windows and, every other summer, a tournament.
+ */
+const CAPS_PER_SEASON = 11;
+
+/**
+ * A cap tally is not flat across a career, and treating it as flat is what
+ * put the record within reach of any decent international.
+ *
+ * A player crossing the squad threshold at nineteen does not immediately
+ * start every qualifier, and a thirty-eight year old is not still doing so.
+ * With the ramp, the absolute maximum a twenty-four season career can bank
+ * lands just under the real record, so beating it takes an international
+ * career that starts as a teenager, never drops out of the side and lasts
+ * into a player's forties.
+ */
+function capsAgeFactor(age: number): number {
+  if (age <= 18) return 0.35;
+  if (age <= 20) return 0.65;
+  if (age <= 22) return 0.85;
+  if (age <= 33) return 1;
+  if (age <= 36) return 0.8;
+  if (age <= 38) return 0.55;
+  return 0.35;
+}
+
+/**
+ * How many seasons running the player has just taken each individual award.
+ * Read backwards from the most recent season, so a gap ends the streak.
+ */
+function awardStreaks(seasons: SeasonSnapshot[]): { top: number; boot: number } {
+  let top = 0;
+  let boot = 0;
+  let topOpen = true;
+  let bootOpen = true;
+  for (let i = seasons.length - 1; i >= 0 && (topOpen || bootOpen); i -= 1) {
+    const awards = seasons[i].awards;
+    if (topOpen) {
+      if (awards.includes("ballon_dor") || awards.includes("golden_glove")) top += 1;
+      else topOpen = false;
+    }
+    if (bootOpen) {
+      if (awards.includes("golden_boot")) boot += 1;
+      else bootOpen = false;
+    }
+  }
+  return { top, boot };
+}
+
 /** A full starter season's worth of appearances — the yardstick for "actually played". */
 const STARTER_SEASON_APPEARANCES = 40;
+
+/** Where a club plays, for the one trophy whose worth depends on it. */
+function clubConfederation(teamId: string): Confederation | undefined {
+  return getLeagueOfTeam(teamId)?.confederation as Confederation | undefined;
+}
 
 /**
  * What this club's terraces would currently call the player, judged the same
@@ -958,7 +1439,7 @@ function standingAtCurrentClub(state: CareerState, team: Team | null): ClubStand
   for (const season of here) {
     appearances += season.stats.appearances;
     for (const key of season.trophies) {
-      trophyScore += CLUB_TROPHY_IMPORTANCE[key as ClubTrophyKey] ?? 0;
+      trophyScore += singleTrophyImportance(key, clubConfederation(team.id));
     }
   }
 
@@ -989,7 +1470,7 @@ function eligibleCareerEvents(state: CareerState, status: SquadStatus, team: Tea
       return (
         status === "starter" &&
         Boolean(team) &&
-        rivalPool(team!).length > 0 &&
+        rivalPool(state, team!).length > 0 &&
         (team?.domestic_reputation ?? 0) > 2 &&
         (team?.international_reputation ?? 0) > 2
       );
@@ -998,7 +1479,17 @@ function eligibleCareerEvents(state: CareerState, status: SquadStatus, team: Tea
       return Boolean(team) && ((team!.domestic_reputation > 1 || team!.international_reputation > 1)) && wouldTransferProduceOffer(state, team!);
     }
     if (key === "iconic_number") {
-      return player.age > 22 && activeRotation && Boolean(team) && (team?.domestic_reputation ?? 0) > 1;
+      // Nothing to offer if the position's first-team shirts are all already
+      // theirs, or if they have not been given a number at all yet.
+      if (state.shirtNumber === null) return false;
+      const available = legendNumbersFor(player.position).filter((n) => n !== state.shirtNumber);
+      return (
+        player.age > 22 &&
+        activeRotation &&
+        Boolean(team) &&
+        (team?.domestic_reputation ?? 0) > 1 &&
+        available.length > 0
+      );
     }
     if (key === "shirt_upgrade") {
       // A club only re-numbers someone it rates: a starter, a player the
@@ -1036,11 +1527,31 @@ function eligibleCareerEvents(state: CareerState, status: SquadStatus, team: Tea
         status === "starter"
       );
     }
+    if (key === "dressing_room_fallout") {
+      // Being thrown out of a club is a one-off in a career, and it needs a
+      // club to be thrown out of plus enough standing for the row to matter.
+      return (
+        Boolean(team) &&
+        player.age >= 20 &&
+        activeRotation &&
+        !state.careerEventPlan.completedEventKeys.includes("dressing_room_fallout")
+      );
+    }
     if (key === "return_home") {
       return player.age > 24 && Boolean(team) && returnHomePool(state, team!).length > 0;
     }
     if (key === "tax_trouble") {
-      return Boolean(team) && foreignExitPool(team!).length > 0;
+      // A work-permit problem is something that happens to a foreigner. The
+      // gate used to check only that other countries exist, so a Brazilian at
+      // a Brazilian club could be told a change in local law threatened their
+      // right to stay in their own country.
+      return Boolean(team) && playingAbroad(state, team!) && foreignExitPool(state, team!).length > 0;
+    }
+    if (key === "finish_high_school") {
+      // The id is a leftover: the copy is a coaching-licence course, which is
+      // something a player starts thinking about once the end is in sight, not
+      // as a teenager. Ungated it could be offered at any age at all.
+      return player.age >= 26;
     }
     if (key === "foreign_grandfather") {
       // Once you've actually worn a senior shirt, switching allegiance is off the table.
@@ -1063,7 +1574,10 @@ function eligibleCareerEvents(state: CareerState, status: SquadStatus, team: Tea
       return Boolean(team) && player.age > 17;
     }
     if (key === "derby_spotlight") {
-      return activeRotation && Boolean(team) && player.role !== "goalkeeper";
+      // There has to be a derby. The dataset already knows which clubs
+      // genuinely hate each other, so ask it instead of assuming every
+      // fixture on the calendar is one.
+      return activeRotation && Boolean(team) && player.role !== "goalkeeper" && hasDerby(team!);
     }
     if (key === "testimonial_match") {
       return player.age >= 33 && activeRotation && Boolean(team);
@@ -1075,11 +1589,6 @@ function eligibleCareerEvents(state: CareerState, status: SquadStatus, team: Tea
       return player.age > 20 && activeRotation && Boolean(team);
     }
     if (key === "boot_deal") return true;
-    if (key === "hometown_parade") {
-      return state.seasons.some(
-        (s) => s.trophies.includes("national_continental") || s.trophies.includes("world_cup"),
-      );
-    }
     if (key === "podcast_interview") return player.age > 19;
     if (key === "agent_change") return player.age > 20;
     if (key === "packed_home_stadium") return activeRotation && Boolean(team);
@@ -1231,6 +1740,27 @@ function decorateCareerEvent(
     return { rng: picked.rng, event: { ...event, injuryType: picked.type } };
   }
 
+  // The club's own shirt, handed to the player who has earned it. It used to
+  // be a decision about nothing: the board offered "the number that carries
+  // the weight of this club's history", the player took it, and the number on
+  // their back did not change. Drawn from the first-team shirts the position
+  // actually wears, so a striker is handed a 9 or a 10 rather than the 4.
+  if (key === "iconic_number") {
+    const offer = rollLegendTributeOffer(cur, state.player.position, state.shirtNumber ?? 0);
+    cur = offer.rng;
+    const number = offer.numbers[0];
+    if (number === undefined) return { rng: cur, event };
+    return {
+      rng: cur,
+      event: {
+        ...event,
+        options: event.options.map((option) =>
+          option.optionKey === "claim_it" ? { ...option, shirtNumber: number } : option,
+        ),
+      },
+    };
+  }
+
   if (key === "shirt_upgrade" || key === "shirt_legend_tribute") {
     const current = state.shirtNumber ?? 0;
     const offer =
@@ -1260,7 +1790,7 @@ function decorateCareerEvent(
   }
 
   if (key === "rival_offer" && team) {
-    const rivals = rivalPool(team);
+    const rivals = rivalPool(state, team);
     if (rivals.length > 0) {
       const picked = pickOne(cur, rivals);
       cur = picked.rng;
@@ -1287,7 +1817,7 @@ function decorateCareerEvent(
         event: {
           ...event,
           options: [
-            { id: `triumphant-return-${firstClub.teamId}`, type: "join_club", teamId: firstClub.teamId },
+            withBrief(state, { id: `triumphant-return-${firstClub.teamId}`, type: "join_club", teamId: firstClub.teamId }),
             { id: `triumphant-return-stay-${currentId}`, type: "stay", teamId: currentId },
           ],
         },
@@ -1318,7 +1848,7 @@ function decorateCareerEvent(
 
   // "Go home" and "leave the country" pick a destination with the right filter.
   if (key === "return_home" || key === "tax_trouble") {
-    const pool = key === "return_home" ? returnHomePool(state, team) : foreignExitPool(team);
+    const pool = key === "return_home" ? returnHomePool(state, team) : foreignExitPool(state, team);
     if (pool.length === 0) return { rng: cur, event };
 
     const target = jitterOfferReputation(cur, offerReputationFor(state));
@@ -1333,14 +1863,39 @@ function decorateCareerEvent(
         ...event,
         options: [
           ...event.options,
-          { id: `${key}-move-${picked.item.id}`, type: "join_club", teamId: picked.item.id },
+          withBrief(state, { id: `${key}-move-${picked.item.id}`, type: "join_club", teamId: picked.item.id }),
         ],
       },
     };
   }
 
+  if (key === "dressing_room_fallout") {
+    // The contract is already torn up, so this offers somewhere to go rather
+    // than whether to go. The option carries `optionKey: "move"` so the
+    // event's own modifiers still resolve — a plain club option carries no
+    // option key and would silently skip the fallout's cost entirely.
+    const offers = createTransferOffers(cur, state.player, team, 2, blockedClubs(state));
+    cur = offers.rng;
+    if (offers.teams.length > 0) {
+      return {
+        rng: cur,
+        event: {
+          ...event,
+          options: offers.teams.map((destination, i) =>
+            withBrief(state, {
+              id: `${key}-exit-${i}-${destination.id}`,
+              type: "join_club" as const,
+              teamId: destination.id,
+              eventKey: key,
+              optionKey: "move",
+            }),
+          ),
+        },
+      };
+    }
+  }
   if (CLUB_CHOICE_EVENTS.has(key)) {
-    const offers = createTransferOffers(cur, state.player, team, 1);
+    const offers = createTransferOffers(cur, state.player, team, 1, blockedClubs(state));
     cur = offers.rng;
     if (offers.teams.length > 0) {
       const destination = offers.teams[0];
@@ -1350,7 +1905,7 @@ function decorateCareerEvent(
           ...event,
           options: [
             ...event.options,
-            { id: `${key}-join-${destination.id}`, type: "join_club", teamId: destination.id },
+            withBrief(state, { id: `${key}-join-${destination.id}`, type: "join_club", teamId: destination.id }),
           ],
         },
       };
@@ -1377,6 +1932,18 @@ function createPostLoanEvent(state: CareerState): { rng: Rng; event: DecisionEve
     return transfer;
   }
 
+  // Past loan age the answer can no longer be "go out on loan again". This
+  // branch used to offer two fresh loans regardless of age, and because a
+  // player who is never good enough to be retained keeps landing back here, a
+  // career could spend twenty straight seasons on loan and still be a loanee
+  // at 39. Once too old, the club has to decide: sell, or keep them.
+  if (state.player.age > LOAN_MAX_AGE) {
+    // Its own label, not `post_loan_not_retained`: that copy promises another
+    // loan or a permanent deal at the current club, and this branch offers
+    // neither — it deals ordinary transfer offers plus staying to fight.
+    return createTransferEvent(state, "post_loan_aged_out");
+  }
+
   const contractTeam = state.contractTeamId ? effectiveTeam(state, state.contractTeamId) : null;
   if (!contractTeam) return null;
 
@@ -1386,7 +1953,7 @@ function createPostLoanEvent(state: CareerState): { rng: Rng; event: DecisionEve
     contractTeam,
     offerReputationFor(state),
     2,
-    [loanTeam.id],
+    [loanTeam.id, ...blockedClubs(state)],
   );
   if (!loans) return null;
 
@@ -1397,8 +1964,10 @@ function createPostLoanEvent(state: CareerState): { rng: Rng; event: DecisionEve
       type: "post_loan_not_retained",
       age: state.player.age,
       options: [
-        ...loans.teams.map((t, i) => ({ id: `loan-${i}-${t.id}`, type: "join_loan" as const, teamId: t.id })),
-        { id: `permanent-${loanTeam.id}`, type: "permanent_transfer" as const, teamId: loanTeam.id },
+        ...loans.teams.map((t, i) =>
+          withBrief(state, { id: `loan-${i}-${t.id}`, type: "join_loan" as const, teamId: t.id }),
+        ),
+        withBrief(state, { id: `permanent-${loanTeam.id}`, type: "permanent_transfer" as const, teamId: loanTeam.id }),
       ],
     },
   };
@@ -1412,14 +1981,13 @@ function createNonRenewalEvent(state: CareerState): { rng: Rng; event: DecisionE
     state.player,
     contractTeam,
     offerReputationFor(state),
+    blockedClubs(state),
   );
   if (!result) return null;
 
-  const options: DecisionOption[] = result.teams.map((t, i) => ({
-    id: `nonrenewal-${i}-${t.id}`,
-    type: "join_club" as const,
-    teamId: t.id,
-  }));
+  const options: DecisionOption[] = result.teams.map((t, i) =>
+    withBrief(state, { id: `nonrenewal-${i}-${t.id}`, type: "join_club" as const, teamId: t.id }),
+  );
   if (result.canRetire) options.push({ id: `retire-${state.step}`, type: "retire" });
 
   return {
@@ -1445,7 +2013,13 @@ function createTrainingFocusEvent(state: CareerState): { rng: Rng; event: Decisi
   const roll = chance(state.rng, 0.45);
   if (!roll.success) return { rng: roll.rng, event: null };
 
+  // Every focus, always. Hiding the ones with no headroom left was meant to
+  // stop a choice resolving to a card that does not move, but it made the
+  // menu itself unpredictable — five options one preseason, one the next,
+  // with no explanation on screen. The guarantee handles that case instead:
+  // training now moves what it promises to move, ceiling or no ceiling.
   const focuses = trainingFocusesFor(state.player.position);
+
   return {
     rng: roll.rng,
     event: {
@@ -1471,6 +2045,7 @@ function createLoanEvent(state: CareerState): { rng: Rng; event: DecisionEvent }
     contractTeam,
     offerReputationFor(state),
     3,
+    blockedClubs(state),
   );
   if (!loans) return null;
   return {
@@ -1479,7 +2054,9 @@ function createLoanEvent(state: CareerState): { rng: Rng; event: DecisionEvent }
       id: eventId(state, "loan_offer"),
       type: "loan_offer",
       age: state.player.age,
-      options: loans.teams.map((t, i) => ({ id: `loan-${i}-${t.id}`, type: "join_loan" as const, teamId: t.id })),
+      options: loans.teams.map((t, i) =>
+        withBrief(state, { id: `loan-${i}-${t.id}`, type: "join_loan" as const, teamId: t.id }),
+      ),
     },
   };
 }
@@ -1488,8 +2065,12 @@ function createLoanEvent(state: CareerState): { rng: Rng; event: DecisionEvent }
 function normalNextDecision(state: CareerState): CareerState {
   if (state.completedLoan) {
     const postLoan = createPostLoanEvent(state);
+    // The loan is over either way — clear it even when no post-loan decision
+    // could be built, or `completedLoan` sticks around forever and silently
+    // blocks the player from ever being loaned again.
+    state = { ...state, completedLoan: null };
     if (postLoan) {
-      return { ...state, rng: postLoan.rng, currentEvent: postLoan.event, completedLoan: null };
+      return { ...state, rng: postLoan.rng, currentEvent: postLoan.event };
     }
   }
 
@@ -1549,7 +2130,54 @@ function normalNextDecision(state: CareerState): CareerState {
  * then (while serving out a doping ban) nothing but plain transfer windows,
  * otherwise the normal branching.
  */
+/**
+ * Transfer-window decisions, where "walk away now" is a coherent third answer.
+ *
+ * Deliberately not every decision: a training focus or a mid-season career
+ * event is not a moment anybody retires at, and both are rendered by panels
+ * that key off their own option shapes.
+ */
+const BANKABLE_DECISIONS: DecisionType[] = [
+  "transfer",
+  "loan_offer",
+  "post_loan_retained",
+  "post_loan_not_retained",
+  "post_loan_aged_out",
+  "contract_non_renewal",
+];
+
+/** The earliest age a challenge career can be ended by choice. */
+const EARLY_RETIREMENT_MIN_AGE = 27;
+
+/**
+ * Adds "retire now" to a transfer window when the career is one the player is
+ * allowed to end on their own terms.
+ *
+ * This is what makes the daily challenge's twilight decay a decision rather
+ * than a tax: pushing on for another season can win more, and can also cost
+ * more than it wins, and the player is the one who has to call it.
+ */
+function withBankOption(state: CareerState): CareerState {
+  const event = state.currentEvent;
+  if (!event || !state.allowEarlyRetirement) return state;
+  if (state.player.age < EARLY_RETIREMENT_MIN_AGE) return state;
+  if (!BANKABLE_DECISIONS.includes(event.type)) return state;
+  if (event.options.some((o) => o.type === "retire")) return state;
+
+  return {
+    ...state,
+    currentEvent: {
+      ...event,
+      options: [...event.options, { id: `bank-${state.step}`, type: "retire" }],
+    },
+  };
+}
+
 function nextDecision(state: CareerState): CareerState {
+  return withBankOption(nextDecisionInner(state));
+}
+
+function nextDecisionInner(state: CareerState): CareerState {
   if (state.player.age >= RETIREMENT_AGE) {
     return { ...state, phase: "summary", currentEvent: null, retirementReason: "age" };
   }
@@ -1583,6 +2211,7 @@ export function startCareer(
   mode: GameMode,
   identity: Identity,
   difficulty: Difficulty = "normal",
+  options: { allowEarlyRetirement?: boolean } = {},
 ): CareerState {
   const country = getCountryByIso(identity.countryIso);
   if (!country) throw new Error(`Unknown country: ${identity.countryIso}`);
@@ -1637,12 +2266,17 @@ export function startCareer(
     teamReputationOverrides: {},
     nationalTeamStats: { ...EMPTY_STATS, caps: 0 },
     fanSupport: FAN_SUPPORT_START,
+    clubBrief: null,
     // Not everyone earns a rival — only assigned once OVR crosses the threshold.
     rival: null,
+    declinedOffers: [],
+    allowEarlyRetirement: options.allowEarlyRetirement ?? false,
+    rivalRollDone: false,
     headlines: [],
     firstCallUpAge: null,
     shirtNumber: null,
     legendShirtTributeUsed: false,
+    birthNationality: country,
     retirementReason: null,
   };
 
@@ -1663,6 +2297,20 @@ export function startCareer(
   };
 }
 
+/**
+ * Hangs up the boots on the spot.
+ *
+ * Some careers stop being worth playing out — a ceiling that a bad injury
+ * took away, a spell nobody will end, a save the player simply wants to draw
+ * a line under. Retiring is not the same as abandoning: the seasons already
+ * played still count, and the summary and the newspaper still get written.
+ * That is the whole point of offering it.
+ */
+export function retireNow(state: CareerState): CareerState {
+  if (state.phase !== "career") return state;
+  return { ...state, phase: "summary", currentEvent: null, retirementReason: "voluntary" };
+}
+
 export function chooseOption(state: CareerState, optionId: string): CareerState {
   if (state.phase !== "career" || !state.currentEvent) return state;
   const option = state.currentEvent.options.find((o) => o.id === optionId);
@@ -1677,10 +2325,16 @@ export function chooseOption(state: CareerState, optionId: string): CareerState 
   const isCareerChoice = option.type === "career_choice";
   const periodLength = MODE_CONFIG[state.mode].periodLengthSeasons;
 
+  // Everything on the table that the player did not take. Staying put is not a
+  // rejection of anywhere, so `stay` is skipped; so is the club actually
+  // chosen. Capped because a long career sees a lot of offers and only the
+  // biggest one ever gets quoted back.
+  const declined = collectDeclinedOffers(state, event, option);
+
   // Resolve career-event modifiers up front so they colour the whole period.
   let rng = state.rng;
   let modifiers: Modifiers = { ...NO_MODIFIERS };
-  let outcome: OutcomeKind;
+  let outcome: OutcomeKind = "neutral";
 
   if (event.type === "career_event" && event.eventKey && (isCareerChoice || option.optionKey === "move")) {
     const resolved = resolveCareerEvent(
@@ -1756,7 +2410,11 @@ export function chooseOption(state: CareerState, optionId: string): CareerState 
     rng = assigned.rng;
     shirtNumber = assigned.value;
   }
-  if (event.eventKey === "shirt_upgrade" || event.eventKey === "shirt_legend_tribute") {
+  if (
+    event.eventKey === "shirt_upgrade" ||
+    event.eventKey === "shirt_legend_tribute" ||
+    event.eventKey === "iconic_number"
+  ) {
     if (typeof option.shirtNumber === "number") shirtNumber = option.shirtNumber;
     if (event.eventKey === "shirt_legend_tribute") legendShirtTributeUsed = true;
   }
@@ -1778,7 +2436,7 @@ export function chooseOption(state: CareerState, optionId: string): CareerState 
   // and are spread evenly across the card so no single stat absorbs them.
   const eventDelta = modifiers.immediateOverallDelta + modifiers.permanentOverallDelta;
   if (eventDelta !== 0) {
-    const shifted = shiftOverall(player.attributes, player.position, eventDelta);
+    const shifted = shiftOverall(player.attributes, player.position, eventDelta, player.potential);
     player = {
       ...player,
       attributes: shifted,
@@ -1847,6 +2505,26 @@ export function chooseOption(state: CareerState, optionId: string): CareerState 
     );
   }
 
+  // What this club signed the player to do. Read off the option the player
+  // actually took, so the pitch shown on the card is exactly the one they now
+  // have to live up to — and kept on the career, because the crowd keeps
+  // measuring against it season after season, not only on arrival.
+  const brief = changedClub
+    ? (option.brief ?? (playingTeamId ? offerBrief(state, playingTeamId) : null) ?? null)
+    : state.clubBrief;
+
+  // What the meter reads the moment this decision resolves, and how high
+  // this stand has ever had the player — the second is what separates a crowd
+  // that turned on him from one that has yet to notice him.
+  const arrival =
+    state.currentTeamId === null
+      ? { support: FAN_SUPPORT_DEBUT, peak: FAN_SUPPORT_DEBUT }
+      : changedClub
+        ? arrivalFanSupport(state, playingTeamId, player.overall, brief)
+        : (() => {
+            const support = applyFanSupport(state.fanSupport, modifiers.fanSupportDelta);
+            return { support, peak: Math.max(state.clubFanPeak ?? state.fanSupport, support) };
+          })();
   let working: CareerState = {
     ...state,
     rng,
@@ -1857,14 +2535,60 @@ export function chooseOption(state: CareerState, optionId: string): CareerState 
     activeLoan: onLoan ? { loanTeamId: playingTeamId } : null,
     periodIndex: state.periodIndex + 1,
     step: state.step + 1,
-    // A move wipes the slate; otherwise the chosen option's swing lands now.
-    fanSupport: changedClub
-      ? FAN_SUPPORT_START
-      : applyFanSupport(state.fanSupport, modifiers.fanSupportDelta),
+    // Goodwill accepted today is measured against you for the rest of the
+    // spell: a marquee shirt or a testimonial makes the crowd harder to
+    // please, which is what stops those options from being free.
+    clubBrief:
+      brief && modifiers.briefPatienceDelta
+        ? { ...brief, patience: Math.min(2, brief.patience + modifiers.briefPatienceDelta) }
+        : brief,
+    declinedOffers: declined,
+    // A move wipes the slate — but not to the same number every time. What the
+    // club wants decides how much goodwill is in the bank on day one. The
+    // very first-ever signing is a harder reset than any of those: there is
+    // no goodwill to bank because nobody has heard of this player yet. And a
+    // club that already knows the player does not start from a stranger's
+    // number at all (see `arrivalFanSupport`).
+    fanSupport: arrival.support,
+    clubFanPeak: arrival.peak,
+    clubFanMemory: changedClub
+      ? { ...(state.clubFanMemory ?? {}), ...(state.currentTeamId
+          ? {
+              [state.currentTeamId]: {
+                support: state.fanSupport,
+                overall: state.player.overall,
+                // Kept so a stand that once loved this player still counts as
+                // having turned on him if he comes back to a cold reception.
+                peak: state.clubFanPeak ?? state.fanSupport,
+              },
+            }
+          : {}) }
+      : state.clubFanMemory,
+    // Signing directly for a club's real rival is the one move its supporters
+    // never forgive, and the club never offers again (see `blockedClubs`).
+    //
+    // Judged on the club that actually owned the player, and only on a
+    // permanent move. Being *sent* out on loan to a rival is the parent club's
+    // decision, not a defection — and going back to that parent afterwards is
+    // not one either, which is what an earlier version got wrong: it read the
+    // loan destination against the club the player was still under contract
+    // at, branded the parent a betrayal, and then kept offering it anyway.
+    betrayedClubs:
+      modifiers.betrayCurrentClub && state.contractTeamId
+        ? addBetrayed(state.betrayedClubs, state.contractTeamId)
+        : betrayalOnThisMove(state, playingTeamId, onLoan)
+          ? addBetrayed(state.betrayedClubs, state.contractTeamId!)
+          : state.betrayedClubs,
     headlines,
     shirtNumber,
     legendShirtTributeUsed,
-    lastOutcome: event.eventKey && outcome ? { event, optionId: option.id, kind: outcome } : null,
+    // Reported for every career-event option, cautious ones included. The
+    // guard is on the option carrying a key, because the "leave the club"
+    // option some events append is answered by the transfer itself.
+    lastOutcome:
+      event.eventKey && option.optionKey
+        ? { event, optionId: option.id, kind: outcome }
+        : null,
   };
 
   // A chosen training focus biases the growth of the season about to be played.
@@ -1890,8 +2614,13 @@ export function chooseOption(state: CareerState, optionId: string): CareerState 
   }
 
   // A failed giant-tattoo bench-warms only the first season of the period.
-  const tattooInfectionOnly = event.eventKey === "giant_tattoo" && option.optionKey === "accept" && outcome === "negative";
+  const tattooInfectionOnly =
+    event.eventKey === "giant_tattoo" && option.optionKey === "accept" && outcome === "negative";
 
+  // Where the focused attributes stood before the period the focus applies
+  // to — the baseline the guarantee below is measured against.
+  const trainingShares = working.pendingTrainingShares;
+  const beforeTraining = trainingShares ? { ...working.player.attributes } : null;
   for (let i = 0; i < periodLength; i += 1) {
     if (working.player.age >= RETIREMENT_AGE) break;
     const seasonModifiers: Modifiers = {
@@ -1902,11 +2631,30 @@ export function chooseOption(state: CareerState, optionId: string): CareerState 
     if (seasonModifiers.suspended) suspensionCounter -= 1;
   }
 
+  if (trainingShares && beforeTraining) {
+    const trained = enforceTrainingFloor(
+      working.player.attributes,
+      beforeTraining,
+      trainingShares,
+      working.player.position,
+      working.player.potential,
+    );
+    working = {
+      ...working,
+      player: {
+        ...working.player,
+        attributes: trained,
+        overall: Math.round(computeOverall(trained, working.player.position)),
+      },
+    };
+  }
+
   if (modifiers.deferredOverallDelta !== 0) {
     const restored = shiftOverall(
       working.player.attributes,
       working.player.position,
       modifiers.deferredOverallDelta,
+      working.player.potential,
     );
     working = {
       ...working,
@@ -2026,11 +2774,23 @@ export function debugForceEvent(state: CareerState, eventKey: CareerEventKey): C
   const teamId = state.contractTeamId ?? state.currentTeamId;
   const team = teamId ? effectiveTeam(state, teamId) : null;
 
+  // Rolled the same way the real scheduler rolls it, so a forced event
+  // behaves exactly like one that came up on its own — without this the
+  // variant was always undefined and every variant-specific branch was dead.
+  const variants = CAREER_EVENT_VARIANTS[eventKey];
+  const variantKey = variants
+    ? pickWeighted(
+        createRng(`${state.seed}:debug-variant:${state.step}:${eventKey}`),
+        variants.map((v) => ({ item: v.key, weight: v.weight })),
+      ).item
+    : undefined;
+
   const event: DecisionEvent = {
     id: eventId(state, `debug-force-${eventKey}`),
     type: "career_event",
     age: state.player.age,
     eventKey,
+    ...(variantKey ? { variantKey } : {}),
     options: CAREER_EVENT_OPTIONS[eventKey].map((o) => ({
       id: `${eventKey}-${o}`,
       type: "career_choice" as const,

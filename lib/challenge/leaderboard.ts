@@ -18,9 +18,10 @@ export interface ChallengeEntry {
   missionId: string;
   playerName: string;
   score: number;
-  progress: number;
-  target: number;
-  cleanRun: boolean;
+  /** How many of the three briefs were actually delivered on. */
+  missionsCounted: number;
+  /** The day's banned move survived the whole career. */
+  edictHeld: boolean;
   /** Peak overall reached, shown alongside the score for context. */
   peakOverall: number;
   /** ISO timestamp of when the run finished. */
@@ -81,11 +82,10 @@ export function recordAttempt(input: {
   const entry: ChallengeEntry = {
     challengeId: input.challengeId,
     missionId: input.missionId,
-    playerName: input.playerName || "—",
+    playerName: input.playerName || "-",
     score: input.result.score,
-    progress: input.result.progress,
-    target: input.result.target,
-    cleanRun: input.result.cleanRun,
+    missionsCounted: input.result.missions.filter((m) => m.counted && m.progress >= m.target).length,
+    edictHeld: input.result.edictHeld,
     peakOverall: input.peakOverall,
     finishedAt: new Date().toISOString(),
     ranked: !board.entries.some((e) => e.challengeId === input.challengeId && e.ranked),
@@ -103,12 +103,20 @@ export function attemptsFor(challengeId: string): ChallengeEntry[] {
 }
 
 /**
- * The standings: one row per challenge (the ranked attempt), best score first.
- * This is what a server-backed board would return for "all time".
+ * The standings for one day's challenge, best score first.
+ *
+ * Scoped to a single challenge on purpose: a daily board that carries
+ * yesterday's scores is not a daily board, and an all-time list of one row
+ * per day is a history rather than a ranking. Every attempt at the day
+ * counts here, ranked or not, so the board fills up as the day is played
+ * and is empty again the next morning.
+ *
+ * Passing no challenge falls back to every ranked run, which is what the
+ * all-time view would want if one is ever added.
  */
-export function standings(limit = 30): ChallengeEntry[] {
+export function standings(limit = 30, challengeId?: string): ChallengeEntry[] {
   return read()
-    .entries.filter((e) => e.ranked)
+    .entries.filter((e) => (challengeId === undefined ? e.ranked : e.challengeId === challengeId))
     .sort((a, b) => b.score - a.score)
     .slice(0, limit);
 }
@@ -127,7 +135,7 @@ export function challengeStats(): ChallengeStats {
     played: ranked.length,
     bestScore: Math.max(...ranked.map((e) => e.score)),
     averageScore: Math.round(ranked.reduce((s, e) => s + e.score, 0) / ranked.length),
-    cleanRuns: ranked.filter((e) => e.cleanRun).length,
+    cleanRuns: ranked.filter((e) => e.edictHeld).length,
   };
 }
 

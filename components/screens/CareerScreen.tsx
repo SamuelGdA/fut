@@ -4,15 +4,52 @@ import { useEffect, useRef, useState } from "react";
 import { countryName, useI18n } from "@/lib/i18n/context";
 import { useCareerStore } from "@/store/careerStore";
 import { useSound } from "@/lib/useSound";
-import { PlayerCard } from "@/components/PlayerCard";
-import { CareerTable } from "@/components/CareerTable";
+import { PlayerCard, TrophyShowcase } from "@/components/PlayerCard";
 import { DecisionPanel } from "@/components/DecisionPanel";
 import { NationalTeamFooter } from "@/components/NationalTeamFooter";
-import { TrophyCelebration, type CelebrationItem } from "@/components/TrophyCelebration";
+import { TrophyToasts, type CelebrationItem } from "@/components/TrophyCelebration";
 import { OutcomeReveal } from "@/components/OutcomeReveal";
-import { HeadlinesFeed } from "@/components/HeadlinesFeed";
+import { SeasonBackPage } from "@/components/SeasonBackPage";
+import { ChallengeHud } from "@/components/ChallengeHud";
+import { buildBackPage, type BackPage } from "@/lib/sim/backPage";
+import type { CareerState } from "@/lib/sim/career";
+import { getLeagueOfTeam, getTeam } from "@/lib/data/dataset";
+import { isDefender, RETIREMENT_AGE } from "@/lib/sim/constants";
 import { resolveTrophy } from "@/lib/trophyDisplay";
 import { AWARD_IMAGES } from "@/lib/data/trophies";
+
+/**
+ * The splash for the season just played.
+ *
+ * Derived rather than stored: it is a pure read of the snapshots, so it
+ * survives a reload for free and can never drift out of sync with the career.
+ * The season before it is built too, only so the paper knows not to print the
+ * same words two years running.
+ */
+function latestBackPage(career: CareerState): BackPage | null {
+  const n = career.seasons.length;
+  if (n === 0) return null;
+
+  const build = (index: number, previousPage: BackPage | null): BackPage | null => {
+    const season = career.seasons[index];
+    const team = season ? getTeam(season.teamId) : null;
+    if (!season || !team) return null;
+    return buildBackPage(career.seed, {
+      season,
+      previous: career.seasons[index - 1] ?? null,
+      teamName: team.name,
+      firstCallUp: career.firstCallUpAge === season.age,
+      isGoalkeeper: career.player.position === "GK",
+      isDefender: isDefender(career.player.position),
+      confederation:
+        getLeagueOfTeam(team.id)?.confederation ?? career.player.nationality.confederation,
+      retirementAge: RETIREMENT_AGE,
+      previousPage,
+    });
+  };
+
+  return build(n - 1, n >= 2 ? build(n - 2, null) : null);
+}
 
 export function CareerScreen() {
   const { t, locale } = useI18n();
@@ -33,10 +70,14 @@ export function CareerScreen() {
   useEffect(() => {
     if (!career) return;
     if (seenCareerSeed.current !== career.seed) {
-      // A brand new career (including a replay) — nothing to celebrate retroactively.
+      // First sight of this career. Everything already in it counts as seen:
+      // for a new career that is nothing, and for one restored from a reload
+      // it is the whole history — which stops a refresh from replaying every
+      // trophy the player ever won as a fresh celebration.
       seenCareerSeed.current = career.seed;
-      seenSeasonCount.current = 0;
-      celebratedCallUp.current = false;
+      seenSeasonCount.current = career.seasons.length;
+      celebratedCallUp.current = career.firstCallUpAge !== null;
+      return;
     }
     if (career.seasons.length <= seenSeasonCount.current) return;
 
@@ -81,37 +122,61 @@ export function CareerScreen() {
     }
 
     if (items.length > 0) {
+      // Replaces rather than appends. Clicking through decisions faster than
+      // the toasts expire used to build a backlog, so a player three seasons
+      // on was still being told about a cup they won before the last transfer.
+      // Whatever just happened is the only thing worth announcing.
       // eslint-disable-next-line react-hooks/set-state-in-effect -- syncing local UI state off the external career store, not deriving render output
-      setCelebrationQueue((queue) => [...queue, ...items]);
+      setCelebrationQueue(items);
+      // One cue per *batch*, played right here rather than in an effect keyed
+      // off the front of the queue. Toasts each expire on their own timer, so
+      // once the first one's timeout removed it, the second became
+      // `celebrationQueue[0]` with a different id — a `topCelebrationId`-keyed
+      // effect saw that as a brand new celebration and replayed the sound for
+      // every toast in the batch as it aged out, roughly once every 700ms. A
+      // treble sounded like the cue stuttering three times instead of playing
+      // once.
+      sound("trophy");
     }
-  }, [career, t, locale]);
+  }, [career, t, locale, sound]);
 
-  const currentCelebration = celebrationQueue[0] ?? null;
-  const dismissCelebration = () => setCelebrationQueue((queue) => queue.slice(1));
-
-  // A genuine side effect (Web Audio) belongs in its own effect, keyed off which
-  // item is actually showing so each one in the queue gets its own cue.
-  const currentCelebrationId = currentCelebration?.id;
-  useEffect(() => {
-    if (currentCelebrationId) sound("trophy");
-  }, [currentCelebrationId, sound]);
+  // Toasts remove themselves on a timer; a click only hurries one along.
+  const expireCelebration = (id: string) =>
+    setCelebrationQueue((queue) => queue.filter((c) => c.id !== id));
 
   if (!career) return null;
   const finished = career.phase === "summary";
 
+  // The splash for the season just played. Derived rather than stored: it is a
+  // pure read of the last snapshot, so it survives a reload for free and never
+  // has to be kept in sync with the career state.
+  const backPage = latestBackPage(career);
+
   return (
-    <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col px-4 py-3 sm:px-6 lg:h-[calc(100vh-3.5rem)] lg:flex-none">
-      {/* A toast in the corner for what a decision led to; a full-screen beat
-          only for something worth stopping for, like a trophy. */}
-      <OutcomeReveal career={career} />
-      <TrophyCelebration item={currentCelebration} onDismiss={dismissCelebration} />
+    <div className="scrollbar-thin mx-auto flex h-full min-h-0 w-full max-w-6xl flex-col gap-3 overflow-y-auto px-4 py-3 sm:px-6 lg:overflow-hidden">
+      {/* One rail for every notification. These used to be two independent
+          fixed layers at the same z-index, so a trophy toast landed directly
+          on top of the outcome of the decision that won it. The rail is inert;
+          only the cards inside it take clicks. */}
+      <div className="pointer-events-none fixed inset-x-3 top-[4.5rem] z-50 mx-auto flex max-w-xs flex-col items-stretch gap-2 sm:inset-x-auto sm:right-6 sm:mx-0">
+        <OutcomeReveal career={career} />
+        <TrophyToasts items={celebrationQueue} onExpire={expireCelebration} />
+      </div>
 
       <div className="shrink-0">
         <PlayerCard career={career} avatar={avatar} />
       </div>
 
-      <div className="mt-3 grid min-h-0 flex-1 grid-cols-1 gap-3 lg:grid-cols-[1fr_320px]">
-        <div className="scrollbar-thin lg:h-full lg:overflow-y-auto lg:pr-1">
+      {/* `min-h-0`/`flex-1` only from `lg:` on: they force this grid to
+          collapse to the exact leftover space so its own panels can scroll
+          internally, which needs the shell above to have a bounded height —
+          true only in the locked one-screen desktop layout. Below `lg` the
+          shell scrolls as a whole instead, so this grid has no bounded
+          height to collapse into; forcing it there anyway shrank it to zero
+          and let its content spill out on top of whatever came after it
+          (the sticky national-team footer). */}
+      <div className="grid grid-cols-1 gap-3 lg:min-h-0 lg:flex-1 lg:grid-cols-[1fr_320px]">
+        <div className="scrollbar-thin lg:min-h-0 lg:h-full lg:overflow-y-auto lg:pr-1">
           {finished ? (
             <section className="panel animate-fade-in-up p-5 text-center">
               <h2 className="font-display text-xl font-black">{t("career.careerEndedTitle")}</h2>
@@ -128,22 +193,38 @@ export function CareerScreen() {
               </button>
             </section>
           ) : (
-            <DecisionPanel key={career.currentEvent?.id} career={career} />
+            <div className="flex flex-col gap-3">
+              <ChallengeHud career={career} />
+              {backPage && <SeasonBackPage key={backPage.age} page={backPage} />}
+              <DecisionPanel key={career.currentEvent?.id} career={career} />
+            </div>
           )}
         </div>
 
-        {/* Table and back pages share the rail: the numbers, then the story of them. */}
-        <div className="grid min-h-[240px] grid-rows-[1fr_auto] gap-3 lg:h-full lg:min-h-0 lg:grid-rows-[minmax(0,1fr)_minmax(0,150px)]">
-          <div className="min-h-0">
-            <CareerTable career={career} />
-          </div>
-          <div className="min-h-0">
-            <HeadlinesFeed headlines={career.headlines} />
-          </div>
+        {/* The rail belongs to the trophy cabinet.
+
+            It used to hold the season table and a headline feed. Both were
+            the wrong shape for it: the table is wide and short, so a tall
+            narrow column showed two rows of it, while the cabinet is a grid
+            of small icons that fills a tall column and never outgrows it. So
+            they swapped — the table now runs across the top beside the card.
+            The headline feed is gone: every line it carried is replayed in
+            the newspaper at the end, and in-game it spent a third of the rail
+            repeating what the back page above the decision had just said.
+
+            Below lg the rail is hidden rather than stacked underneath — a
+            phone cannot show both columns without the page growing past one
+            screen, and between the two the decision is what needs to be
+            there. */}
+        <div className="hidden min-h-0 lg:block">
+          <TrophyShowcase career={career} />
         </div>
       </div>
 
-      <div className="mt-3 shrink-0">
+      {/* No margin of its own: the shell is a `gap-3` column, so `mt-3` here
+          spaced the footer twice and cost the decision above it a dozen
+          pixels it could not spare. */}
+      <div className="shrink-0">
         <NationalTeamFooter career={career} />
       </div>
     </div>

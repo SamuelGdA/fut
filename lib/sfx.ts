@@ -15,6 +15,7 @@ export type SoundName =
 
 let context: AudioContext | null = null;
 let muted = false;
+let masterVolume = 0.75;
 
 function ctx(): AudioContext | null {
   if (typeof window === "undefined") return null;
@@ -30,6 +31,15 @@ function ctx(): AudioContext | null {
 
 export function setMuted(value: boolean): void {
   muted = value;
+}
+
+/**
+ * Master level, 0–1, applied on top of every cue's own gain. Kept as a plain
+ * multiplier rather than a shared GainNode so a cue scheduled before the
+ * player touches the slider still plays at the level it was started with.
+ */
+export function setVolume(value: number): void {
+  masterVolume = Math.min(1, Math.max(0, value));
 }
 
 interface ToneOptions {
@@ -56,7 +66,7 @@ function tone({ freq, duration, type = "sine", gain = 0.08, delay = 0, slideTo }
 
   // Short attack, exponential release: reads as a soft "pop" rather than a click.
   amp.gain.setValueAtTime(0.0001, start);
-  amp.gain.exponentialRampToValueAtTime(gain, start + 0.012);
+  amp.gain.exponentialRampToValueAtTime(Math.max(0.0002, gain * masterVolume), start + 0.012);
   amp.gain.exponentialRampToValueAtTime(0.0001, start + duration);
 
   osc.connect(amp);
@@ -85,7 +95,7 @@ function noise({ duration, gain = 0.05, delay = 0 }: { duration: number; gain?: 
   source.buffer = buffer;
   filter.type = "bandpass";
   filter.frequency.value = 2400;
-  amp.gain.value = gain;
+  amp.gain.value = gain * masterVolume;
 
   source.connect(filter);
   filter.connect(amp);
@@ -94,7 +104,7 @@ function noise({ duration, gain = 0.05, delay = 0 }: { duration: number; gain?: 
 }
 
 export function play(name: SoundName): void {
-  if (muted) return;
+  if (muted || masterVolume <= 0) return;
 
   switch (name) {
     case "tick":

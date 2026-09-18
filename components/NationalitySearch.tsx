@@ -5,8 +5,6 @@ import { COUNTRIES } from "@/lib/data/dataset";
 import { countryName, useI18n } from "@/lib/i18n/context";
 import { Flag } from "./Media";
 
-const INITIAL_VISIBLE = 24;
-
 export function NationalitySearch({
   value,
   onChange,
@@ -16,7 +14,6 @@ export function NationalitySearch({
 }) {
   const { t, locale } = useI18n();
   const [query, setQuery] = useState("");
-  const [expanded, setExpanded] = useState(false);
 
   const sorted = useMemo(
     () =>
@@ -26,14 +23,11 @@ export function NationalitySearch({
     [locale],
   );
 
-  const filtered = useMemo(() => {
+  const visible = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return sorted;
     return sorted.filter((c) => countryName(c, locale).toLowerCase().includes(q));
   }, [sorted, query, locale]);
-
-  const visible = expanded || query ? filtered : filtered.slice(0, INITIAL_VISIBLE);
-  const showMore = !query && !expanded && filtered.length > INITIAL_VISIBLE;
 
   return (
     <div>
@@ -80,16 +74,6 @@ export function NationalitySearch({
             );
           })}
         </div>
-      )}
-
-      {showMore && (
-        <button
-          type="button"
-          onClick={() => setExpanded(true)}
-          className="mt-2.5 w-full rounded-lg border border-line py-1.5 text-xs font-semibold uppercase tracking-wide text-muted-2 transition-colors hover:text-foreground"
-        >
-          {t("identity.showMoreCountries")}
-        </button>
       )}
     </div>
   );

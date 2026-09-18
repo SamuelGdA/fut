@@ -13,160 +13,207 @@ export interface CelebrationItem {
   age: number;
 }
 
-/** Deterministic scatter so the burst reads as chaotic without re-randomising per render. */
-const CONFETTI = Array.from({ length: 26 }, (_, i) => {
-  const golden = (i * 137.508) % 100;
-  return {
-    left: `${golden}%`,
-    color: ["var(--gold)", "var(--pitch)", "var(--flood)"][i % 3],
-    size: 5 + ((i * 7) % 6),
-    drift: ((i * 53) % 120) - 60,
-    spin: ((i * 97) % 540) + 180,
-    delay: ((i * 31) % 26) / 100,
-  };
-});
-
 const EYEBROW_KEY: Record<CelebrationItem["kind"], string> = {
   trophy: "career.trophyWonEyebrow",
   award: "career.awardWonEyebrow",
   callUp: "career.firstCallUpEyebrow",
 };
 
+/** Deterministic scatter so the burst reads as chaotic without re-randomising per render. */
+/** How long a single toast stays up before fading itself out. */
+const TOAST_MS = 4200;
+/** A haul has more to read than a single trophy, so it lingers a little longer. */
+const HAUL_EXTRA_MS = 1600;
+/** Never stack more than this many at once — a treble plus an award is the realistic worst case. */
+const MAX_VISIBLE = 4;
+
 /**
- * Full-screen moment when a trophy, an individual award or a first call-up
- * lands — one at a time off a queue in CareerScreen.
+ * What you won, said without stopping the game.
  *
- * Choreographed with `motion` rather than CSS keyframes because the sequence
- * needs real orchestration (a spring on the trophy, a staggered particle burst,
- * a light sweep) that would be unreadable as six separate keyframe rules. The
- * library drives the Web Animations API, so all of this runs off the main
- * thread and costs ~2.6kb.
+ * This used to be a full-screen modal with a "tap to continue" button, shown
+ * one item at a time off a queue — so a treble meant three separate clicks
+ * before you could get back to your career, every single season. Trophies are
+ * supposed to be the reward, not a chore.
+ *
+ * Now they arrive as a self-dismissing stack in the corner: everything that
+ * landed this season is visible at once, nothing blocks the page underneath,
+ * and a click only ever hurries a card along rather than being required.
  */
-export function TrophyCelebration({
-  item,
-  onDismiss,
+export function TrophyToasts({
+  items,
+  onExpire,
 }: {
-  item: CelebrationItem | null;
-  onDismiss: () => void;
+  items: CelebrationItem[];
+  onExpire: (id: string) => void;
 }) {
+  if (items.length === 0) return null;
+
+  // One thing won gets its own card. Several things won at once get a single
+  // card that says so.
+  //
+  // They used to arrive as a stack of separate cards, each on its own timer
+  // staggered behind the last — so a treble put four cards on screen and then
+  // shuffled the remaining ones upward every 700ms as each expired. The
+  // movement made a good moment read as a glitch. A haul is one event, so it
+  // is now one card that holds still.
+  if (items.length === 1) {
+    return (
+      <div className="flex w-full flex-col gap-2" aria-live="polite">
+        <Toast item={items[0]} onExpire={() => onExpire(items[0].id)} />
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex w-full flex-col gap-2" aria-live="polite">
+      <HaulToast items={items} onExpire={() => items.forEach((i) => onExpire(i.id))} />
+    </div>
+  );
+}
+
+/**
+ * Everything won in one season, on one card.
+ *
+ * The medals are the headline; the names sit under them in a single compact
+ * block so a five-trophy year is still one glance rather than five.
+ */
+function HaulToast({ items, onExpire }: { items: CelebrationItem[]; onExpire: () => void }) {
   const { t } = useI18n();
   const rootRef = useRef<HTMLDivElement>(null);
-  const itemId = item?.id;
+  const expireRef = useRef(onExpire);
+  useEffect(() => {
+    expireRef.current = onExpire;
+  }, [onExpire]);
+
+  const shown = items.slice(0, MAX_VISIBLE);
+  const hidden = items.length - shown.length;
 
   useEffect(() => {
     const root = rootRef.current;
-    if (!root || !itemId) return;
-    // Honour the OS-level preference; the overlay still shows, it just appears.
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    // A haul earns a little longer on screen than a single trophy, because
+    // there is more to read — but it is still one lifetime, not a cascade.
+    const lifetime = TOAST_MS + HAUL_EXTRA_MS;
+    const timer = window.setTimeout(() => expireRef.current(), lifetime);
+    if (!root) return () => window.clearTimeout(timer);
 
-    const q = <T extends Element>(sel: string) => Array.from(root.querySelectorAll<T>(sel));
-
-    const trophy = root.querySelector<HTMLElement>("[data-celebrate='trophy']");
-    if (trophy) {
+    const medals = Array.from(root.querySelectorAll<HTMLElement>("[data-celebrate='medal']"));
+    if (medals.length > 0) {
       animate(
-        trophy,
-        { scale: [0.2, 1.18, 1], rotate: [-25, 8, 0] },
-        { duration: 0.75, ease: [0.22, 1, 0.36, 1] },
+        medals,
+        { scale: [0.3, 1.15, 1], rotate: [-20, 6, 0] },
+        { duration: 0.6, delay: stagger(0.07), ease: [0.22, 1, 0.36, 1] },
       );
     }
+    const fade = window.setTimeout(() => {
+      animate(root, { opacity: [1, 0], x: [0, 24] }, { duration: 0.35, ease: "easeIn" });
+    }, lifetime - 350);
 
-    const rays = root.querySelector<HTMLElement>("[data-celebrate='rays']");
-    if (rays) {
-      animate(rays, { opacity: [0, 0.5, 0.22], scale: [0.6, 1.35] }, { duration: 1.1, ease: "easeOut" });
-    }
-
-    const confetti = q<HTMLElement>("[data-celebrate='confetti']");
-    if (confetti.length > 0) {
-      animate(
-        confetti,
-        { y: [0, 320], opacity: [1, 1, 0], rotate: [0, 420] },
-        { duration: 1.5, delay: stagger(0.022), ease: "easeIn" },
-      );
-    }
-
-    const text = q<HTMLElement>("[data-celebrate='text']");
-    if (text.length > 0) {
-      animate(
-        text,
-        { opacity: [0, 1], y: [14, 0] },
-        { duration: 0.5, delay: stagger(0.08, { startDelay: 0.25 }), ease: "easeOut" },
-      );
-    }
-  }, [itemId]);
-
-  if (!item) return null;
+    return () => {
+      window.clearTimeout(timer);
+      window.clearTimeout(fade);
+    };
+  }, []);
 
   return (
     <div
       ref={rootRef}
-      className="fixed inset-0 z-50 flex animate-fade-in items-center justify-center bg-background/88 p-4 backdrop-blur-sm"
-      onClick={onDismiss}
-      role="dialog"
-      aria-live="polite"
+      onClick={() => expireRef.current()}
+      className="animate-toast-in pointer-events-auto relative flex w-full cursor-pointer flex-col gap-2 overflow-hidden rounded-2xl border border-gold/30 bg-surface/95 px-3 py-2.5 shadow-xl backdrop-blur-sm"
+    >
+      <div className="relative flex items-center gap-2">
+        {shown.map((item) => (
+          <span
+            key={item.id}
+            data-celebrate="medal"
+            title={item.name}
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gold/10 ring-1 ring-gold/25"
+          >
+            <TrophyImage src={item.imageUrl} alt={item.name} className="h-6 w-6" />
+          </span>
+        ))}
+        {hidden > 0 && (
+          <span className="shrink-0 font-display text-xs font-black text-gold">+{hidden}</span>
+        )}
+      </div>
+
+      <div className="relative min-w-0">
+        <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-gold">
+          {t("career.celebrationHaul", { count: items.length })}
+        </p>
+        <p className="truncate font-display text-sm font-black leading-tight" title={items.map((i) => i.name).join(" · ")}>
+          {items.map((i) => i.name).join(" · ")}
+        </p>
+        <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-2">
+          {t("career.celebrationAt", { age: items[0].age })}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function Toast({ item, onExpire }: { item: CelebrationItem; onExpire: () => void }) {
+  const { t } = useI18n();
+  const rootRef = useRef<HTMLDivElement>(null);
+  // The expiry callback lives in a ref so the timer below is armed exactly
+  // once per toast: putting `onExpire` in the effect's deps would re-arm it on
+  // every parent render and the card would never actually leave.
+  const expireRef = useRef(onExpire);
+  useEffect(() => {
+    expireRef.current = onExpire;
+  }, [onExpire]);
+
+  useEffect(() => {
+    const root = rootRef.current;
+    const lifetime = TOAST_MS;
+    const timer = window.setTimeout(() => expireRef.current(), lifetime);
+
+    if (!root) return () => window.clearTimeout(timer);
+
+    // The slide-in is a CSS class on the card itself, so this behaves exactly
+    // like the outcome toast sitting beside it in the rail. Gating the whole
+    // entrance behind this check was why the trophy notification sat perfectly
+    // still while the notification next to it animated.
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      return () => window.clearTimeout(timer);
+    }
+
+    const medal = root.querySelector<HTMLElement>("[data-celebrate='medal']");
+    if (medal) {
+      animate(medal, { scale: [0.3, 1.15, 1], rotate: [-20, 6, 0] }, { duration: 0.6, ease: [0.22, 1, 0.36, 1] });
+    }
+
+    // Fade out just before the timer fires, so it leaves rather than blinks.
+    const fade = window.setTimeout(() => {
+      animate(root, { opacity: [1, 0], x: [0, 24] }, { duration: 0.35, ease: "easeIn" });
+    }, lifetime - 350);
+
+    return () => {
+      window.clearTimeout(timer);
+      window.clearTimeout(fade);
+    };
+  }, []);
+
+  return (
+    <div
+      ref={rootRef}
+      onClick={() => expireRef.current()}
+      className="animate-toast-in pointer-events-auto relative flex w-full cursor-pointer items-center gap-3 overflow-hidden rounded-2xl border border-gold/30 bg-surface/95 py-2.5 pl-2.5 pr-4 shadow-xl backdrop-blur-sm"
     >
       <div
-        className="relative flex flex-col items-center gap-3 overflow-hidden rounded-3xl border border-gold/30 bg-surface px-10 py-9 text-center shadow-2xl"
-        onClick={(e) => e.stopPropagation()}
+        data-celebrate="medal"
+        className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gold/10 ring-1 ring-gold/25"
       >
-        {/* Confetti sits above the panel background but below the content. */}
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-full overflow-hidden">
-          {CONFETTI.map((c, i) => (
-            <span
-              key={i}
-              data-celebrate="confetti"
-              className="absolute -top-3 block rounded-[2px]"
-              style={{
-                left: c.left,
-                width: c.size,
-                height: c.size,
-                background: c.color,
-                transform: `translateX(${c.drift}px) rotate(${c.spin}deg)`,
-              }}
-            />
-          ))}
-        </div>
+        <TrophyImage src={item.imageUrl} alt={item.name} className="h-8 w-8" />
+      </div>
 
-        <div
-          data-celebrate="rays"
-          className="pointer-events-none absolute left-1/2 top-24 h-64 w-64 -translate-x-1/2 -translate-y-1/2 rounded-full opacity-0"
-          style={{
-            background:
-              "conic-gradient(from 0deg, rgba(245,196,81,0.5), transparent 22%, rgba(245,196,81,0.5) 44%, transparent 66%, rgba(245,196,81,0.5) 88%, transparent)",
-          }}
-        />
-
-        <p
-          data-celebrate="text"
-          className="relative text-xs font-bold uppercase tracking-[0.24em] text-gold"
-        >
+      <div className="relative min-w-0 flex-1">
+        <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-gold">
           {t(EYEBROW_KEY[item.kind])}
         </p>
-
-        <div
-          data-celebrate="trophy"
-          className="relative flex h-28 w-28 items-center justify-center rounded-full bg-gold/10 ring-1 ring-gold/25"
-        >
-          <TrophyImage src={item.imageUrl} alt={item.name} className="h-20 w-20" />
-        </div>
-
-        <h2
-          data-celebrate="text"
-          className="relative max-w-[24ch] font-display text-2xl font-black leading-tight"
-        >
-          {item.name}
-        </h2>
-        <p data-celebrate="text" className="relative text-sm text-muted">
+        <p className="truncate font-display text-sm font-black leading-tight">{item.name}</p>
+        <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-2">
           {t("career.celebrationAt", { age: item.age })}
         </p>
-
-        <button
-          data-celebrate="text"
-          type="button"
-          onClick={onDismiss}
-          className="relative mt-1 rounded-full bg-gold px-6 py-2 text-xs font-black uppercase tracking-wide text-[#2a1d02] transition-all hover:brightness-110 active:scale-[0.98]"
-        >
-          {t("career.tapToContinue")}
-        </button>
       </div>
     </div>
   );

@@ -115,6 +115,19 @@ export const ROLE_POSITIONS: Record<PlayerRole, PositionCode[]> = {
   goalkeeper: ["GK"],
 };
 
+/**
+ * The back line, for the purposes of what a season is judged on.
+ *
+ * Wider than the `defensive` role, which puts the full-backs in with the
+ * central midfielders: a right-back's job is defending whatever the growth
+ * model calls them. A holding midfielder is in for the same reason — nobody
+ * reads their season off their goal tally either.
+ */
+export const DEFENDER_POSITIONS: PositionCode[] = ["CB", "LB", "RB", "CDM"];
+
+export function isDefender(position: PositionCode): boolean {
+  return DEFENDER_POSITIONS.includes(position);
+}
 export const ALL_POSITIONS: PositionCode[] = Object.values(ROLE_POSITIONS).flat();
 
 /**
@@ -160,7 +173,26 @@ export const TALENT_TIER_ORDER: TalentTier[] = TALENT_TIERS.map((t) => t.tier);
  * only interesting if the player can eventually plan around it, so it resolves
  * from "unknown" to a two-tier band to an exact call as the career unfolds.
  */
-export const TALENT_REVEAL_APPEARANCES = { approximate: 45, exact: 160 };
+/**
+ * When the scouting read-out sharpens, as `{ age, appearances }` gates that
+ * must *both* be cleared.
+ *
+ * Appearances alone was the old rule and it broke the game's main tension: a
+ * teenager who played two full seasons at a small club knew by 18 whether the
+ * save was worth continuing, so the honest move was always to restart until a
+ * good tier showed up. Age is now the binding constraint, so the answer
+ * arrives once the career is already underway and the decision has been paid
+ * for rather than previewed.
+ *
+ * `rumour` deliberately reports a band that can be wrong (see `scoutedTalent`):
+ * at 21 nobody actually knows, and a read-out that is never wrong is just the
+ * answer with extra steps.
+ */
+export const TALENT_REVEAL_GATES = {
+  rumour: { age: 22, appearances: 75 },
+  approximate: { age: 27, appearances: 230 },
+  exact: { age: 32, appearances: 440 },
+};
 
 // ---------------------------------------------------------------------------
 // Personality
@@ -219,6 +251,8 @@ export const TRAIT_EFFECTS: Record<PersonalityTrait, TraitEffects> = {
  * transfer — earning a terrace's trust again is part of the cost of moving.
  */
 export const FAN_SUPPORT_START = 45;
+/** The very first-ever signing: nobody has heard of this player yet. */
+export const FAN_SUPPORT_DEBUT = 0;
 export const FAN_SUPPORT_MIN = 0;
 export const FAN_SUPPORT_MAX = 100;
 
@@ -268,6 +302,43 @@ export const CLUB_TROPHY_PROBABILITY = {
   cup: [0.01, 0.04, 0.1, 0.25, 0.35, 0.4],
 };
 
+/**
+ * How many clubs actually go up, per country.
+ *
+ * The sim used one generic playoff roll everywhere, which quietly said every
+ * second division promotes the same number of teams. They don't: England,
+ * Spain, Italy and France send three up (two automatic plus a playoff),
+ * Germany sends two plus a relegation/promotion tie against the top flight's
+ * third-bottom, and Argentina's Primera Nacional promotes the champion plus
+ * one survivor of a long knockout. `slots` is the total promoted; `playoff`
+ * says whether the non-champions go through a knockout, which is far less
+ * certain than an automatic place.
+ */
+export interface PromotionFormat {
+  slots: number;
+  playoff: boolean;
+}
+
+export const PROMOTION_FORMATS: Record<string, PromotionFormat> = {
+  ENG: { slots: 3, playoff: true },
+  ESP: { slots: 3, playoff: true },
+  ITA: { slots: 3, playoff: true },
+  FRA: { slots: 3, playoff: true },
+  // Two straight up, then a two-legged tie against the Bundesliga's 16th.
+  GER: { slots: 3, playoff: true },
+  // Champion up automatically; the Reducido produces exactly one more from a
+  // very large field, so a strong season is far from enough.
+  ARG: { slots: 2, playoff: true },
+};
+
+/** Countries with a second flight but no entry above fall back to this. */
+export const DEFAULT_PROMOTION_FORMAT: PromotionFormat = { slots: 2, playoff: true };
+
+export function promotionFormat(fifaCode: string | undefined): PromotionFormat {
+  if (!fifaCode) return DEFAULT_PROMOTION_FORMAT;
+  return PROMOTION_FORMATS[fifaCode.trim().toUpperCase()] ?? DEFAULT_PROMOTION_FORMAT;
+}
+
 /** Second-division title odds, keyed by overall ceiling. */
 export const SECOND_TIER_LEAGUE_ODDS: [number, number][] = [
   [64, 0.03], [69, 0.04], [74, 0.06], [79, 0.09],
@@ -289,7 +360,44 @@ export const SECOND_TIER_PLAYOFF_ODDS: [number, number][] = [
 export const CONTINENTAL_TROPHY_PROBABILITY = {
   continental_primary: [0.0008, 0.003, 0.05, 0.15, 0.2, 0.3],
   continental_secondary: [0.02, 0.06, 0.15, 0.02, 0, 0],
+  /**
+   * Conference League. Peaks a notch below the Europa League because that is
+   * who actually enters it — the clubs finishing sixth or seventh, not the ones
+   * dropping out of the Champions League. Zero at the top: a giant is never in
+   * this competition in the first place.
+   */
+  continental_tertiary: [0.03, 0.06, 0.045, 0.008, 0, 0],
 };
+
+/**
+ * Second domestic knockout (England's EFL Cup). Lower than the FA Cup at the
+ * top — big clubs rotate heavily in the early rounds — and better than it at
+ * the bottom, because the draw is kinder and second-tier sides go deep.
+ */
+export const LEAGUE_CUP_PROBABILITY = [0.02, 0.05, 0.09, 0.18, 0.24, 0.28];
+
+/**
+ * Super cups are decided over a single match, so they sit far closer to a coin
+ * flip than a league season does — reputation only tilts it. Which row applies
+ * depends on how the club qualified:
+ *
+ *   domesticDouble    won league *and* cup, so it faces a runner-up
+ *   domesticSingle    won one of the two, facing the other winner
+ *   continentalPrime  Champions League / Libertadores winner, the favourite
+ *   continentalSecond Europa League / Sudamericana winner, the underdog
+ */
+export const SUPER_CUP_PROBABILITY = {
+  domesticDouble: [0.6, 0.62, 0.64, 0.66, 0.68, 0.7],
+  domesticSingle: [0.44, 0.46, 0.48, 0.5, 0.52, 0.54],
+  continentalPrime: [0.5, 0.52, 0.54, 0.56, 0.58, 0.6],
+  continentalSecond: [0.34, 0.36, 0.38, 0.4, 0.42, 0.44],
+};
+
+/**
+ * One match gives a great player less room to drag a side through than a
+ * 38-game league does, so the star-player boost is halved for super cups.
+ */
+export const SUPER_CUP_STAR_BOOST_DAMPING = 0.5;
 
 /**
  * Club World Cup odds by confederation and continental reputation (0-5).
@@ -306,6 +414,61 @@ export const CLUB_WORLD_CUP_PROBABILITY: Record<string, number[]> = {
   CONCACAF: [0.00005, 0.0001, 0.0003, 0.0008, 0.0015, 0.003],
   OFC: [0.00001, 0.00003, 0.00008, 0.0002, 0.0005, 0.0012],
 };
+
+/**
+ * Odds of winning the annual intercontinental title, per confederation.
+ *
+ * Played the season after winning the continent, between that season's
+ * champions. The ordering is the real one — the European champion starts
+ * favourite, the South American champion is the one who beats them often
+ * enough to matter, and the rest are live outsiders rather than makeweights.
+ * Every confederation can win it; only the odds differ.
+ */
+export const INTERCONTINENTAL_ODDS: Record<string, number> = {
+  UEFA: 0.58,
+  CONMEBOL: 0.12,
+  CONCACAF: 0.03,
+  AFC: 0.035,
+  CAF: 0.025,
+  OFC: 0.01,
+};
+
+/**
+ * Confederations whose champion plays for the intercontinental in the same
+ * season he won the continent, rather than the following one.
+ *
+ * The match is in December. South America, North America and Oceania play
+ * calendar-year seasons, so their champion is crowned a few weeks earlier
+ * and plays it straight away; Europe, Asia and Africa finish in May and
+ * come back for it the December after, which is the next season.
+ */
+export const INTERCONTINENTAL_SAME_SEASON = new Set(["CONMEBOL", "CONCACAF", "OFC"]);
+
+/**
+ * Odds of winning the month-long world championship, per confederation.
+ *
+ * A far bigger field than the intercontinental — more European entrants than
+ * anyone else — so any single club's chance is lower, and Europe's collective
+ * weight tells more. Still winnable from anywhere: Corinthians and Corínthians
+ * again, São Paulo, Internacional and Al-Hilal are all real answers.
+ */
+export const CLUB_WORLD_CUP_CHAMPION_ODDS: Record<string, number> = {
+  UEFA: 0.42,
+  CONMEBOL: 0.075,
+  CONCACAF: 0.02,
+  AFC: 0.02,
+  CAF: 0.015,
+  OFC: 0.005,
+};
+
+/**
+ * How far back the world championship looks when deciding who is in it.
+ *
+ * It runs once every four years and takes the continental champions of the
+ * cycle, so winning the continent books a place for the whole cycle rather
+ * than for the following season only.
+ */
+export const CLUB_WORLD_CUP_QUALIFYING_SEASONS = 4;
 
 /** Continental national-team title odds by country continental reputation. */
 export const NATIONAL_CONTINENTAL_PROBABILITY = [0.00001, 0.02, 0.05, 0.1, 0.2, 0.3, 0.8];
@@ -349,6 +512,15 @@ export const BASE_MODIFIERS = {
   potentialDelta: 0,
   /** One-off swing in how the current club's fans feel about the player. */
   fanSupportDelta: 0,
+  /**
+   * Permanent change to how impatient the current club's crowd is.
+   *
+   * A reward with no cost is not a decision — the player takes it every time.
+   * Accepting the number 10, or a testimonial in your honour, buys goodwill
+   * today and raises the bar for every season after it, which is exactly how
+   * it works at a real club.
+   */
+  briefPatienceDelta: 0,
   statsMultiplier: 1,
   roleShift: 0,
   suspended: false,
@@ -368,10 +540,40 @@ export type Modifiers = typeof BASE_MODIFIERS & {
   clubTrophyOverride?: { trophy: string; result: "force" | "skip" };
   /** Forces a specific national trophy to be won/skipped, used by decisive_penalty. */
   nationalTrophyOverride?: { trophy: string; result: "force" | "skip" };
+  /**
+   * Marks the club being left as one that will never sign the player again.
+   * Set by the supporters' variant of `dressing_room_fallout`: you can fall
+   * out with a manager and be forgiven, but not with the stand.
+   */
+  betrayCurrentClub?: boolean;
 };
 
 /** Chance of a random injury striking during a season. */
 export const INJURY_PROBABILITY = 0.02;
+
+/**
+ * Everyday knocks: the pulled muscle that costs a month, not the injury that
+ * costs a career.
+ *
+ * The sim had exactly one kind of injury — the rare, career-altering decision
+ * event — so every other season was played at perfect fitness and read as flat.
+ * These never surface as a headline or a decision; they just quietly take a
+ * few games off the return, which is what makes a full, uninterrupted season
+ * feel earned instead of default.
+ */
+export const KNOCK_BASE_PROBABILITY = 0.2;
+
+/** Extra chance per year over 29 — bodies stop bouncing back. */
+export const KNOCK_AGE_RAMP = 0.022;
+
+export const KNOCK_TYPES: { type: string; weight: number; matches: [number, number] }[] = [
+  { type: "muscle_strain", weight: 30, matches: [2, 5] },
+  { type: "ankle_knock", weight: 24, matches: [2, 4] },
+  { type: "bruised_knee", weight: 16, matches: [2, 4] },
+  { type: "back_spasm", weight: 12, matches: [3, 6] },
+  { type: "groin_strain", weight: 10, matches: [4, 8] },
+  { type: "illness", weight: 8, matches: [1, 3] },
+];
 
 export const INJURY_TYPES: { type: string; weight: number; overallDelta: number }[] = [
   { type: "hamstring", weight: 24, overallDelta: -3 },

@@ -22,7 +22,7 @@ export const BRAND_COPY: Record<
     headlineTop: "Do sub-17 ao",
     headlineAccent: "último jogo",
     subtitle:
-      "Monte seu jogador, escolha onde começar e veja seus seis atributos evoluírem a cada temporada — até a carta final.",
+      "Monte seu jogador, escolha onde começar e veja seus seis atributos evoluírem a cada temporada, até a carta final.",
     startHint: "Leva uns 2 minutos até a aposentadoria.",
     stats: [
       ["384", "clubes"],
@@ -37,7 +37,7 @@ export const BRAND_COPY: Record<
     headlineTop: "Del sub-17 al",
     headlineAccent: "último partido",
     subtitle:
-      "Armá tu jugador, elegí dónde empezar y mirá cómo tus seis atributos evolucionan temporada a temporada — hasta la carta final.",
+      "Armá tu jugador, elegí dónde empezar y mirá cómo tus seis atributos evolucionan temporada a temporada, hasta la carta final.",
     startHint: "Son unos 2 minutos hasta el retiro.",
     stats: [
       ["384", "clubes"],
@@ -52,7 +52,7 @@ export const BRAND_COPY: Record<
     headlineTop: "From the academy",
     headlineAccent: "to the last whistle",
     subtitle:
-      "Build your player, pick where to start, and watch six attributes evolve season by season — all the way to the final card.",
+      "Build your player, pick where to start, and watch six attributes evolve season by season, all the way to the final card.",
     startHint: "About 2 minutes from debut to retirement.",
     stats: [
       ["384", "clubs"],

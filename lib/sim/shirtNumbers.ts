@@ -22,6 +22,30 @@ export const PRESTIGE_NUMBERS_BY_POSITION: Record<PositionCode, number[]> = {
   RM: [7, 8, 10, 11],
 };
 
+/**
+ * The first-team numbers that belong to each position, in the traditional
+ * 1-11 reading of a team sheet.
+ *
+ * Only used for the legend's tribute, which is the one moment a player picks
+ * their own shirt. The board opening the whole list meant a striker could be
+ * offered the 4, which is not a tribute — it is a filing error. A goalkeeper
+ * has exactly one number here, and that is the point of it.
+ */
+export const LEGEND_NUMBERS_BY_POSITION: Record<PositionCode, number[]> = {
+  GK: [1],
+  RB: [2, 4],
+  LB: [3, 6],
+  CB: [3, 4, 5, 6],
+  CDM: [4, 5, 6, 8],
+  CM: [6, 8, 10],
+  CAM: [8, 10, 11],
+  LM: [7, 11],
+  RM: [7, 11],
+  LW: [7, 10, 11],
+  RW: [7, 10, 11],
+  ST: [9, 10, 11],
+};
+
 /** Squad numbers handed out to nobody in particular start here. */
 export const SQUAD_NUMBER_MIN = 12;
 export const SQUAD_NUMBER_MAX = 99;
@@ -37,6 +61,11 @@ const INITIAL_PRESTIGE_CHANCE = 0.18;
 const UPGRADE_OFFER_SIZE = 3;
 /** How many the board offers when a legend gets to name their own number. */
 const TRIBUTE_OFFER_SIZE = 5;
+
+/** The first-team shirts this position wears, 1-11. */
+export function legendNumbersFor(position: PositionCode): number[] {
+  return LEGEND_NUMBERS_BY_POSITION[position] ?? [];
+}
 
 export function prestigeNumbersFor(position: PositionCode): number[] {
   return PRESTIGE_NUMBERS_BY_POSITION[position] ?? [];
@@ -98,26 +127,20 @@ export function rollShirtUpgradeOffer(
 }
 
 /**
- * A legend gets to name their number, so the board opens up the whole first
- * team list rather than just the ones that suit the position. The position's
- * own marquee shirts are still offered first — that's the one a career has
- * actually been building towards.
+ * A legend gets to name their number, drawn from the first-team shirts their
+ * position actually wears. A striker is offered the 9, 10 or 11; a keeper is
+ * offered the 1, because that is the only one there is.
  */
 export function rollLegendTributeOffer(
   rng: Rng,
   position: PositionCode,
   current: number,
 ): { rng: Rng; numbers: number[] } {
-  const preferred = prestigeNumbersFor(position).filter((n) => n !== current);
-  const rest: number[] = [];
-  for (let n = 1; n <= 11; n += 1) {
-    if (n !== current && !preferred.includes(n)) rest.push(n);
-  }
-
-  const fromPreferred = pickDistinct(rng, preferred, Math.min(2, preferred.length));
-  const need = TRIBUTE_OFFER_SIZE - fromPreferred.picked.length;
-  const fromRest = pickDistinct(fromPreferred.rng, rest, Math.max(0, need));
-
-  const numbers = [...fromPreferred.picked, ...fromRest.picked].sort((a, b) => a - b);
-  return { rng: fromRest.rng, numbers };
+  const pool = legendNumbersFor(position).filter((n) => n !== current);
+  const { rng: after, picked } = pickDistinct(
+    rng,
+    pool,
+    Math.min(TRIBUTE_OFFER_SIZE, pool.length),
+  );
+  return { rng: after, numbers: picked.sort((a, b) => a - b) };
 }

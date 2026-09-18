@@ -4,7 +4,8 @@
  */
 
 export type HairStyle =
-  | "bald" | "short" | "wavy" | "curly" | "long" | "mohawk" | "bun";
+  | "bald" | "short" | "sidePart" | "wavy"
+  | "curly" | "afro" | "bun" | "long";
 
 export type BeardStyle =
   | "none" | "moustache" | "soulPatch"
@@ -94,8 +95,9 @@ export const EYE_COLORS = [
   "#2D5F91", "#4B84BE", "#6E6E77",
 ];
 
+/** Roughly shortest to longest, so the picker reads as a scale. */
 export const HAIR_STYLES: HairStyle[] = [
-  "bald", "short", "wavy", "curly", "long", "mohawk", "bun",
+  "bald", "short", "sidePart", "wavy", "curly", "afro", "bun", "long",
 ];
 
 export const BEARD_STYLES: BeardStyle[] = [

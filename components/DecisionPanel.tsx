@@ -2,8 +2,14 @@
 
 import { countryName, useI18n } from "@/lib/i18n/context";
 import { useCareerStore } from "@/store/careerStore";
+import { leagueLogoUrl } from "@/lib/leagueBadges";
 import { ClubCrest, Flag } from "./Media";
-import { getCountryByFifa, getLeagueOfTeam, getTeam } from "@/lib/data/dataset";
+import {
+  getCountryByFifa,
+  getLeagueOfTeam,
+  getLeagueOfTeamAtTier,
+  getTeam,
+} from "@/lib/data/dataset";
 import { injuryName } from "@/lib/data/injuryNames";
 import { injuryOverallDelta } from "@/lib/sim/constants";
 import { resolveTrophy } from "@/lib/trophyDisplay";
@@ -12,6 +18,7 @@ import { TRAINING_EVENT_COPY, trainingFocusesFor } from "@/lib/sim/training";
 import { ATTRIBUTE_ABBR } from "@/lib/sim/attributes";
 import { eventOptionPreview, type EventEffectPreview } from "@/lib/sim/careerEvents";
 import { teamTier, type CareerState, type DecisionEvent, type DecisionOption } from "@/lib/sim/career";
+import { briefPositionKey, type ClubBrief } from "@/lib/sim/clubBrief";
 
 const TITLE_BY_TYPE: Record<string, { title: string; description: string }> = {
   academy_offer: { title: "career.academyOfferTitle", description: "career.academyOfferDescription" },
@@ -19,6 +26,7 @@ const TITLE_BY_TYPE: Record<string, { title: string; description: string }> = {
   loan_offer: { title: "career.loanOfferTitle", description: "career.loanOfferDescription" },
   post_loan_retained: { title: "career.postLoanReturnTitle", description: "career.postLoanRetainedDescription" },
   post_loan_not_retained: { title: "career.postLoanReturnTitle", description: "career.postLoanNotRetainedDescription" },
+  post_loan_aged_out: { title: "career.postLoanAgedOutTitle", description: "career.postLoanAgedOutDescription" },
   contract_non_renewal: { title: "career.contractNonRenewalTitle", description: "career.contractNonRenewalDescription" },
   no_offers_retirement: { title: "career.noOffersRetirementTitle", description: "career.noOffersRetirementDescription" },
 };
@@ -43,12 +51,18 @@ function TrainingFocusPanel({ career, event }: { career: CareerState; event: Dec
   const focuses = trainingFocusesFor(career.player.position);
 
   return (
-    <section className="panel animate-fade-in-up p-4">
+    // Half a step tighter than the other decision panels. Five focus cards is
+    // the tallest decision the game can show, and on a 900px-high window it was
+    // landing a single pixel over its box — which is still a scrollbar.
+    <section className="panel animate-fade-in-up p-3.5">
       <p className="text-xs font-bold uppercase tracking-[0.2em] text-pitch">{copy.eyebrow}</p>
-      <h2 className="mt-1 font-display text-xl font-black">{copy.title}</h2>
+      <h2 className="mt-0.5 font-display text-xl font-black">{copy.title}</h2>
       <p className="mt-1 text-sm text-muted">{copy.description}</p>
 
-      <div className="stagger mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
+      {/* Three across on a wide screen. Five focuses stacked two-up ran to six
+          rows of card and pushed the decision into a scroll on any laptop-height
+          window; three-up fits them in two. */}
+      <div className="stagger mt-2.5 grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
         {event.options.map((option) => {
           const focus = focuses.find((f) => f.key === option.optionKey);
           if (!focus) return null;
@@ -60,14 +74,14 @@ function TrainingFocusPanel({ career, event }: { career: CareerState; event: Dec
                 choose(option.id);
                 sound("statUp");
               }}
-              className="group rounded-xl border border-line bg-surface-2/60 p-3.5 text-left transition-all hover:border-pitch/60 hover:bg-surface-2 active:scale-[0.98]"
+              className="group rounded-xl border border-line bg-surface-2/60 p-3 text-left transition-all hover:border-pitch/60 hover:bg-surface-2 active:scale-[0.98]"
             >
               <div className="flex items-center gap-2">
-                <span className="text-xl">{focus.icon}</span>
-                <p className="font-display text-base font-black">{focus.label[locale]}</p>
+                <span className="text-lg">{focus.icon}</span>
+                <p className="font-display text-sm font-black">{focus.label[locale]}</p>
               </div>
-              <p className="mt-1.5 text-xs leading-snug text-muted">{focus.description[locale]}</p>
-              <div className="mt-2 flex flex-wrap gap-1.5">
+              <p className="mt-1 text-xs leading-snug text-muted">{focus.description[locale]}</p>
+              <div className="mt-1.5 flex flex-wrap gap-1.5">
                 {Object.keys(focus.shares).map((key) => (
                   <span
                     key={key}
@@ -137,6 +151,47 @@ function actionPrefix(template: string): string {
   return template.replace("{team}", "").trim();
 }
 
+/**
+ * The club's pitch, shown on the offer itself.
+ *
+ * Two clubs of the same size are otherwise the same choice; what each one wants
+ * from the player is the part worth reading. The pill is tinted by how much
+ * rope the move comes with, so the trade-off — a bigger welcome for a shorter
+ * fuse — is legible at a glance rather than only felt three seasons later.
+ *
+ * `squad_depth` is the "nothing in particular" outcome and renders nothing.
+ *
+ * Text only: each brief used to carry an emoji (🌱 for the prospect, 🛟 for
+ * the rescue job, and so on). At 10px beside uppercase type they read as
+ * clip-art rather than as part of the badge, and the tint already carries the
+ * same "how much rope" signal the icon was doubling up on.
+ */
+function BriefPill({ brief }: { brief: ClubBrief }) {
+  const { t } = useI18n();
+  const position = useCareerStore((s) => s.career?.player.position);
+  if (!position) return null;
+  if (brief.key === "squad_depth") return null;
+
+  const pressure =
+    brief.patience >= 1.3 ? "high" : brief.patience <= 0.85 ? "low" : "medium";
+  const tone =
+    pressure === "high"
+      ? "border-danger/40 bg-danger/10 text-danger"
+      : pressure === "low"
+        ? "border-pitch/40 bg-pitch/10 text-pitch"
+        : "border-line bg-surface-2 text-muted";
+
+  const role = t(`career.brief.roles.${briefPositionKey(position)}`);
+  return (
+    <span
+      title={t(`career.brief.briefs.${brief.key}.detail`, { role })}
+      className={`mt-0.5 inline-flex max-w-full items-center rounded-full border px-2 py-0.5 text-[10px] font-semibold leading-tight ${tone}`}
+    >
+      <span className="truncate">{t(`career.brief.briefs.${brief.key}.tag`)}</span>
+    </span>
+  );
+}
+
 export function OptionCard({
   option,
   onSelect,
@@ -145,6 +200,7 @@ export function OptionCard({
   onSelect: () => void;
 }) {
   const { t, locale } = useI18n();
+  const career = useCareerStore((s) => s.career);
 
   if (option.type === "retire") {
     return (
@@ -162,7 +218,14 @@ export function OptionCard({
 
   const team = option.teamId ? getTeam(option.teamId) : null;
   if (!team) return null;
-  const league = getLeagueOfTeam(team.id);
+  // The division the club is in *right now*, not the one it is listed under in
+  // the dataset. Winning Série B with a club and then being offered to stay
+  // still printed "Série B" on the stay card, because a plain
+  // `getLeagueOfTeam` ignores the promotion/relegation overrides the career
+  // has been accumulating.
+  const league = career
+    ? getLeagueOfTeamAtTier(team.id, teamTier(career, team.id))
+    : getLeagueOfTeam(team.id);
   const country = league ? getCountryByFifa(league.country_fifa_code) : null;
 
   return (
@@ -175,13 +238,14 @@ export function OptionCard({
       <p className="text-xs font-semibold uppercase tracking-wide text-muted-2">
         {actionPrefix(t(optionLabelKey(option), { team: "" }))}
       </p>
-      <ClubCrest src={team.logo_url} name={team.name} size={48} className="h-12 w-12" />
+      <ClubCrest teamId={team.id} name={team.name} size={48} className="h-12 w-12" />
       <p className="font-display text-sm font-bold leading-tight">{team.name}</p>
+      {option.brief && <BriefPill brief={option.brief} />}
       <div className="flex items-center gap-1.5 text-xs text-muted-2">
         {country && (
           <Flag src={country.flag_url} alt={countryName(country, locale)} className="h-3 w-4" />
         )}
-        {league?.logo_url && <ClubCrest src={league.logo_url} name={league.name} size={10} className="h-2.5 w-2.5" />}
+        {league && <ClubCrest src={leagueLogoUrl(league)} name={league.name} size={10} className="h-2.5 w-2.5" />}
         <span className="truncate">{league?.name}</span>
       </div>
     </button>
@@ -213,7 +277,11 @@ export function careerEventVars(
     ? getCountryByFifa(event.alternativeNationalityFifaCode)
     : null;
   const currentTeam = career.currentTeamId ? getTeam(career.currentTeamId) : null;
-  const league = currentTeam ? getLeagueOfTeam(currentTeam.id) : null;
+  // Same reason as the offer cards: honour promotion/relegation rather than the
+  // division the club is statically listed under.
+  const league = currentTeam
+    ? getLeagueOfTeamAtTier(currentTeam.id, teamTier(career, currentTeam.id))
+    : null;
   const country = league ? getCountryByFifa(league.country_fifa_code) : null;
 
   const targetTrophyKey = event.targetTrophy ?? event.targetClubTrophy;
@@ -291,8 +359,19 @@ function CareerEventPanel({ career, event }: { career: CareerState; event: Decis
         }`}
       >
         {event.options.map((option) => {
-          // Options added by the engine (club moves) have no narrative copy.
-          if (!option.optionKey) {
+          // A club move is always drawn as a club card, whatever else it
+          // carries. Routing on "has no optionKey" was close but not quite:
+          // the dressing-room fallout attaches `optionKey: "move"` to its
+          // destinations so the event's own modifiers still resolve, and that
+          // sent an ordinary transfer down the narrative branch, where it
+          // rendered the raw key ("move") as the label with "Sem efeito"
+          // underneath instead of the club it was offering.
+          const isClubMove =
+            option.type === "join_club" ||
+            option.type === "stay" ||
+            option.type === "permanent_transfer" ||
+            option.type === "join_loan";
+          if (isClubMove || !option.optionKey) {
             return (
               <OptionCard
                 key={option.id}
@@ -343,7 +422,7 @@ function CareerEventPanel({ career, event }: { career: CareerState; event: Decis
               className="flex flex-col gap-1.5 rounded-xl border border-line bg-surface-2/60 p-3.5 text-left transition-all hover:scale-[1.02] hover:border-pitch/60 active:scale-[0.98]"
             >
               <div className="flex items-center gap-2">
-                {team && <ClubCrest src={team.logo_url} name={team.name} size={28} className="h-7 w-7" />}
+                {team && <ClubCrest teamId={team.id} name={team.name} size={28} className="h-7 w-7" />}
                 {optionFlagCountry && (
                   <Flag src={optionFlagCountry.flag_url} alt={countryName(optionFlagCountry, locale)} className="h-5 w-7" />
                 )}
@@ -357,8 +436,13 @@ function CareerEventPanel({ career, event }: { career: CareerState; event: Decis
                 </p>
               )}
 
+              {/* The ▲/▼ carries the good-or-bad read on its own: these two
+                  lines were otherwise separated by text colour alone, which is
+                  precisely the green/red pair a colour-blind player cannot
+                  split. */}
               {copy.positiveOutcome && (
                 <p className="text-xs text-pitch">
+                  <span className="mr-0.5 font-black" aria-hidden>▲</span>
                   {copy.positiveOutcome.probability !== undefined && (
                     <span className="font-bold">{copy.positiveOutcome.probability}% </span>
                   )}
@@ -368,6 +452,7 @@ function CareerEventPanel({ career, event }: { career: CareerState; event: Decis
               )}
               {copy.negativeOutcome && (
                 <p className="text-xs text-danger">
+                  <span className="mr-0.5 font-black" aria-hidden>▼</span>
                   {copy.negativeOutcome.probability !== undefined && (
                     <span className="font-bold">{copy.negativeOutcome.probability}% </span>
                   )}
@@ -415,6 +500,9 @@ export function EffectChips({ preview, t }: { preview: EventEffectPreview; t: (k
     chips.push(`${t("career.performanceLabel")} ${pct > 0 ? "+" : ""}${pct}%`);
   }
   if (preview.role) chips.push(preview.role > 0 ? "▲" : "▼");
+  // Not a number: the cost is that every season after this one is judged
+  // more harshly, which no single figure would honestly convey.
+  if (preview.pressure) chips.push(t("career.pressureLabel"));
   if (chips.length === 0) return null;
   return (
     <span

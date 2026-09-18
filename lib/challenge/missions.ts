@@ -20,8 +20,28 @@ import type { CareerMetrics } from "./metrics";
  * **It has to be reachable in the position it's dealt to.** `role` exists so a
  * clean-sheet brief never lands on a striker.
  */
+/**
+ * What a mission pulls the career towards.
+ *
+ * The day deals three briefs and scores the best two, which is only a decision
+ * if the three want incompatible careers — so the dealer draws one from each
+ * of three different axes. Loyalty and journey genuinely fight each other;
+ * two goal-scoring briefs do not.
+ */
+export type MissionAxis =
+  | "output"
+  | "silverware"
+  | "loyalty"
+  | "journey"
+  | "growth"
+  | "underdog"
+  | "national"
+  | "longevity"
+  | "accolades";
+
 export interface Mission {
   id: string;
+  axis: MissionAxis;
   /** Locale key suffix under `challenge.missions.<id>`. */
   key: string;
   /**
@@ -48,6 +68,16 @@ export interface Mission {
    * impossible day means an all-zero leaderboard.
    */
   role: "any" | "goalkeeper" | "attacker" | "outfield";
+  /**
+   * Briefs that pull the opposite way hard enough that holding both is not a
+   * trade-off, it is a contradiction: "never transfer" against "win a league
+   * in three countries" is not a hand, it is a wasted slot. Declared one way
+   * round; the dealer reads it symmetrically.
+   *
+   * Only genuine cancellations belong here. Briefs that merely compete for
+   * the same seasons are exactly what the day is supposed to be about.
+   */
+  excludes?: string[];
   /** Short value shown next to the score. */
   unit:
     | "goals" | "assists" | "trophies" | "overall" | "caps"
@@ -65,6 +95,8 @@ function standingPoints(standing: string): number {
 export const MISSIONS: Mission[] = [
   {
     id: "one_club_legend",
+    excludes: ["globetrotter", "journeyman", "double_legend", "homecoming", "riser"],
+    axis: "loyalty",
     key: "one_club_legend",
     role: "any",
     unit: "points",
@@ -79,6 +111,7 @@ export const MISSIONS: Mission[] = [
   },
   {
     id: "goal_machine",
+    axis: "output",
     key: "goal_machine",
     role: "attacker",
     unit: "goals",
@@ -87,6 +120,7 @@ export const MISSIONS: Mission[] = [
   },
   {
     id: "playmaker",
+    axis: "output",
     key: "playmaker",
     role: "outfield",
     unit: "assists",
@@ -95,6 +129,7 @@ export const MISSIONS: Mission[] = [
   },
   {
     id: "trophy_hoarder",
+    axis: "silverware",
     key: "trophy_hoarder",
     role: "any",
     unit: "trophies",
@@ -103,6 +138,7 @@ export const MISSIONS: Mission[] = [
   },
   {
     id: "collector",
+    axis: "silverware",
     key: "collector",
     role: "any",
     unit: "points",
@@ -112,6 +148,8 @@ export const MISSIONS: Mission[] = [
   },
   {
     id: "prodigy",
+    excludes: ["late_bloomer"],
+    axis: "growth",
     key: "prodigy",
     role: "any",
     unit: "overall",
@@ -120,6 +158,7 @@ export const MISSIONS: Mission[] = [
   },
   {
     id: "late_bloomer",
+    axis: "growth",
     key: "late_bloomer",
     role: "any",
     unit: "points",
@@ -129,6 +168,8 @@ export const MISSIONS: Mission[] = [
   },
   {
     id: "underdog_idol",
+    excludes: ["world_class", "domestic_dominance", "continental_king"],
+    axis: "underdog",
     key: "underdog_idol",
     role: "any",
     unit: "points",
@@ -142,6 +183,7 @@ export const MISSIONS: Mission[] = [
   },
   {
     id: "globetrotter",
+    axis: "journey",
     key: "globetrotter",
     role: "any",
     unit: "points",
@@ -150,6 +192,7 @@ export const MISSIONS: Mission[] = [
   },
   {
     id: "national_hero",
+    axis: "national",
     key: "national_hero",
     role: "any",
     unit: "points",
@@ -160,6 +203,7 @@ export const MISSIONS: Mission[] = [
   },
   {
     id: "iron_man",
+    axis: "longevity",
     key: "iron_man",
     role: "any",
     unit: "apps",
@@ -168,6 +212,7 @@ export const MISSIONS: Mission[] = [
   },
   {
     id: "no_loans",
+    axis: "journey",
     key: "no_loans",
     role: "any",
     unit: "overall",
@@ -177,6 +222,7 @@ export const MISSIONS: Mission[] = [
   },
   {
     id: "continental_king",
+    axis: "silverware",
     key: "continental_king",
     role: "any",
     unit: "points",
@@ -190,6 +236,7 @@ export const MISSIONS: Mission[] = [
   },
   {
     id: "resilient",
+    axis: "underdog",
     key: "resilient",
     role: "any",
     unit: "points",
@@ -202,6 +249,7 @@ export const MISSIONS: Mission[] = [
   },
   {
     id: "beloved",
+    axis: "loyalty",
     key: "beloved",
     role: "any",
     unit: "points",
@@ -210,6 +258,7 @@ export const MISSIONS: Mission[] = [
   },
   {
     id: "marquee_number",
+    axis: "loyalty",
     key: "marquee_number",
     role: "any",
     unit: "seasons",
@@ -218,6 +267,7 @@ export const MISSIONS: Mission[] = [
   },
   {
     id: "journeyman",
+    axis: "journey",
     key: "journeyman",
     role: "any",
     unit: "points",
@@ -226,6 +276,8 @@ export const MISSIONS: Mission[] = [
   },
   {
     id: "homecoming",
+    excludes: ["globetrotter"],
+    axis: "loyalty",
     key: "homecoming",
     role: "any",
     unit: "points",
@@ -238,6 +290,7 @@ export const MISSIONS: Mission[] = [
   },
   {
     id: "sharpshooter",
+    axis: "output",
     key: "sharpshooter",
     role: "attacker",
     unit: "goals",
@@ -246,6 +299,7 @@ export const MISSIONS: Mission[] = [
   },
   {
     id: "youth_to_star",
+    axis: "growth",
     key: "youth_to_star",
     role: "any",
     unit: "overall",
@@ -255,6 +309,7 @@ export const MISSIONS: Mission[] = [
   },
   {
     id: "unbreakable",
+    axis: "longevity",
     key: "unbreakable",
     role: "any",
     unit: "overall",
@@ -264,6 +319,7 @@ export const MISSIONS: Mission[] = [
   },
   {
     id: "individual_glory",
+    axis: "accolades",
     key: "individual_glory",
     role: "attacker",
     unit: "points",
@@ -274,6 +330,7 @@ export const MISSIONS: Mission[] = [
   },
   {
     id: "double_legend",
+    axis: "journey",
     key: "double_legend",
     role: "any",
     unit: "points",
@@ -282,6 +339,8 @@ export const MISSIONS: Mission[] = [
   },
   {
     id: "loyal_servant",
+    excludes: ["globetrotter", "journeyman"],
+    axis: "loyalty",
     key: "loyal_servant",
     role: "any",
     unit: "seasons",
@@ -290,6 +349,7 @@ export const MISSIONS: Mission[] = [
   },
   {
     id: "clean_sheet_wall",
+    axis: "output",
     key: "clean_sheet_wall",
     role: "goalkeeper",
     unit: "cleanSheets",
@@ -298,6 +358,8 @@ export const MISSIONS: Mission[] = [
   },
   {
     id: "riser",
+    excludes: ["domestic_dominance", "continental_king"],
+    axis: "underdog",
     key: "riser",
     role: "any",
     unit: "points",
@@ -306,6 +368,7 @@ export const MISSIONS: Mission[] = [
   },
   {
     id: "domestic_dominance",
+    axis: "silverware",
     key: "domestic_dominance",
     role: "any",
     unit: "points",
@@ -314,6 +377,7 @@ export const MISSIONS: Mission[] = [
   },
   {
     id: "world_class",
+    axis: "growth",
     key: "world_class",
     role: "any",
     unit: "overall",
@@ -322,6 +386,7 @@ export const MISSIONS: Mission[] = [
   },
   {
     id: "veteran",
+    axis: "longevity",
     key: "veteran",
     role: "any",
     unit: "overall",
@@ -329,7 +394,148 @@ export const MISSIONS: Mission[] = [
     target: 78,
   },
   {
+    id: "poacher",
+    axis: "output",
+    key: "poacher",
+    role: "attacker",
+    unit: "points",
+    // Rate, not volume: the same tally in half the games is the better
+    // striker, and it stops the brief being "play for twenty-four years".
+    progress: (m) =>
+      m.totalAppearances >= 120 ? Math.round((m.totalGoals / m.totalAppearances) * 100) : 0,
+    target: 52,
+  },
+  {
+    id: "creator_in_chief",
+    axis: "output",
+    key: "creator_in_chief",
+    role: "outfield",
+    unit: "assists",
+    // One unforgettable season rather than a long accumulation.
+    progress: (m) => m.bestSeasonAssists,
+    target: 17,
+  },
+  {
+    id: "treble_winner",
+    axis: "silverware",
+    key: "treble_winner",
+    role: "any",
+    unit: "points",
+    // League, cup and continent all count, and the continent counts most.
+    progress: (m) => m.leagueTitles * 6 + m.cupTitles * 5 + m.continentalTitles * 14,
+    target: 46,
+  },
+  {
+    id: "world_conqueror",
+    axis: "silverware",
+    key: "world_conqueror",
+    role: "any",
+    unit: "points",
+    progress: (m) => m.clubWorldCups * 40 + m.worldCups * 45 + m.nationalContinental * 20,
+    target: 45,
+  },
+  {
+    id: "kept_the_shirt",
+    axis: "loyalty",
+    key: "kept_the_shirt",
+    role: "any",
+    excludes: ["globetrotter", "journeyman"],
+    unit: "points",
+    // Two clubs, no more, and something built at both.
+    progress: (m) =>
+      m.clubCount <= 2 ? m.seasonsPlayed * 3 + m.totalTrophies * 6 + m.legendClubs.length * 20 : 0,
+    target: 84,
+  },
+  {
+    id: "cap_century",
+    axis: "national",
+    key: "cap_century",
+    role: "any",
+    unit: "caps",
+    progress: (m) => m.caps,
+    target: 112,
+  },
+  {
+    id: "international_scorer",
+    axis: "national",
+    key: "international_scorer",
+    role: "outfield",
+    unit: "goals",
+    progress: (m) => m.nationalGoals,
+    target: 44,
+  },
+  {
+    id: "early_call",
+    axis: "growth",
+    key: "early_call",
+    role: "any",
+    unit: "points",
+    // Rewards being trusted young: the earlier the first cap, the better,
+    // and it still has to lead somewhere.
+    progress: (m) =>
+      m.firstCallUpAge === null ? 0 : Math.max(0, 30 - m.firstCallUpAge) * 6 + m.caps,
+    target: 74,
+  },
+  {
+    id: "ever_present",
+    axis: "longevity",
+    key: "ever_present",
+    role: "any",
+    unit: "seasons",
+    // Seasons that were actually played, not merely survived.
+    progress: (m) => m.clubs.reduce((n, c) => n + (c.appearances / Math.max(1, c.seasons) >= 30 ? c.seasons : 0), 0),
+    target: 17,
+  },
+  {
+    id: "second_tier_hero",
+    axis: "underdog",
+    key: "second_tier_hero",
+    role: "any",
+    excludes: ["world_class", "continental_king", "domestic_dominance"],
+    unit: "points",
+    progress: (m) => m.promotions * 26 + m.seasonsInSecondTier * 4 + m.totalTrophies * 3,
+    target: 62,
+  },
+  {
+    id: "cult_hero",
+    axis: "underdog",
+    key: "cult_hero",
+    role: "any",
+    unit: "points",
+    // Loved everywhere rather than adored in one place.
+    progress: (m) => m.idolClubs.length * 18 + m.legendClubs.length * 26,
+    target: 58,
+  },
+  {
+    id: "golden_boot_run",
+    axis: "accolades",
+    key: "golden_boot_run",
+    role: "attacker",
+    unit: "points",
+    progress: (m) => m.goldenBoots * 22 + m.bestSeasonGoals,
+    target: 68,
+  },
+  {
+    id: "decorated",
+    axis: "accolades",
+    key: "decorated",
+    role: "any",
+    unit: "points",
+    progress: (m) => m.totalAwards * 14 + m.ballonDors * 20,
+    target: 58,
+  },
+  {
+    id: "safe_hands",
+    axis: "growth",
+    key: "safe_hands",
+    role: "goalkeeper",
+    unit: "points",
+    progress: (m) => m.bestSeasonCleanSheets * 3 + Math.max(0, m.peakOverall - 70) * 2,
+    target: 96,
+  },
+  {
     id: "complete_career",
+    axis: "accolades",
     key: "complete_career",
     role: "any",
     unit: "points",

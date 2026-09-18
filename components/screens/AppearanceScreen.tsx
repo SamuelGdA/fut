@@ -35,7 +35,7 @@ const COPY = {
   pt: {
     eyebrow: "Aparência",
     title: "Monte seu jogador",
-    subtitle: "Tudo opcional — sem personalizar, seu jogador entra em campo como silhueta.",
+    subtitle: "Tudo opcional: sem personalizar, seu jogador entra em campo como silhueta.",
     skin: "Pele",
     eyebrowsSection: "Sobrancelha",
     eyesSection: "Olhos",
@@ -71,9 +71,8 @@ const COPY = {
     on: "Com",
     off: "Sem",
     hairStyles: {
-      bald: "Careca", short: "Curto", wavy: "Ondulado",
-      curly: "Cacheado", long: "Comprido",
-      mohawk: "Moicano", bun: "Coque",
+      bald: "Careca", short: "Curto", sidePart: "Repartido", wavy: "Ondulado",
+      curly: "Cacheado", afro: "Black power", bun: "Coque", long: "Comprido",
     },
     beardStyles: {
       none: "Sem barba", moustache: "Bigode",
@@ -89,7 +88,7 @@ const COPY = {
   es: {
     eyebrow: "Apariencia",
     title: "Armá tu jugador",
-    subtitle: "Todo opcional — sin personalizar, tu jugador sale a la cancha como silueta.",
+    subtitle: "Todo opcional: sin personalizar, tu jugador sale a la cancha como silueta.",
     skin: "Piel",
     eyebrowsSection: "Cejas",
     eyesSection: "Ojos",
@@ -125,9 +124,8 @@ const COPY = {
     on: "Con",
     off: "Sin",
     hairStyles: {
-      bald: "Pelado", short: "Corto", wavy: "Ondulado",
-      curly: "Rizado", long: "Largo",
-      mohawk: "Mohicano", bun: "Rodete",
+      bald: "Pelado", short: "Corto", sidePart: "Con raya", wavy: "Ondulado",
+      curly: "Enrulado", afro: "Afro", bun: "Rodete", long: "Largo",
     },
     beardStyles: {
       none: "Sin barba", moustache: "Bigote",
@@ -143,7 +141,7 @@ const COPY = {
   en: {
     eyebrow: "Appearance",
     title: "Build your player",
-    subtitle: "All optional — skip it and your player takes the pitch as a silhouette.",
+    subtitle: "All optional: skip it and your player takes the pitch as a silhouette.",
     skin: "Skin",
     eyebrowsSection: "Eyebrows",
     eyesSection: "Eyes",
@@ -179,9 +177,8 @@ const COPY = {
     on: "On",
     off: "Off",
     hairStyles: {
-      bald: "Bald", short: "Short", wavy: "Wavy",
-      curly: "Curly", long: "Long",
-      mohawk: "Mohawk", bun: "Bun",
+      bald: "Bald", short: "Short", sidePart: "Side part", wavy: "Wavy",
+      curly: "Curly", afro: "Afro", bun: "Top knot", long: "Long",
     },
     beardStyles: {
       none: "Clean shaven", moustache: "Moustache",
@@ -213,7 +210,7 @@ export function AppearanceScreen() {
   };
 
   return (
-    <div className="animate-fade-in mx-auto flex w-full max-w-7xl flex-1 flex-col px-4 py-2.5 sm:px-6 lg:h-[calc(100vh-3.5rem)] lg:flex-none">
+    <div className="animate-fade-in scrollbar-thin h-full min-h-0 overflow-y-auto mx-auto flex w-full max-w-7xl flex-col px-4 py-2.5 sm:px-6 lg:overflow-hidden">
       <div className="shrink-0 flex flex-wrap items-end justify-between gap-2">
         <div>
           <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-pitch">{copy.eyebrow}</p>
@@ -244,7 +241,10 @@ export function AppearanceScreen() {
         </div>
       </div>
 
-      <div className="scrollbar-thin mt-1.5 min-h-0 flex-1 overflow-y-auto lg:pr-1">
+      {/* Scoped to `lg:` for the same reason as CareerScreen's grid: below
+          `lg` the shell above already owns the page scroll, and this pane
+          has no bounded height to flex into. */}
+      <div className="scrollbar-thin mt-1.5 lg:min-h-0 lg:flex-1 lg:overflow-y-auto lg:pr-1">
       <div className="grid grid-cols-1 gap-3 lg:grid-cols-[300px_1fr]">
         <div className="lg:sticky lg:top-0 lg:self-start">
           <div className="panel aspect-square w-full max-w-[300px] overflow-hidden p-0 mx-auto lg:mx-0">
@@ -266,7 +266,7 @@ export function AppearanceScreen() {
               />
             </Row>
             <SliderRow label={copy.eyebrowPosition}>
-              <Slider
+              <PositionSlider
                 value={avatar.eyebrowOffset}
                 min={EYEBROW_OFFSET_MIN}
                 max={EYEBROW_OFFSET_MAX}
@@ -290,7 +290,7 @@ export function AppearanceScreen() {
               <Slider value={avatar.eyeSize} min={FEATURE_SIZE_MIN} max={FEATURE_SIZE_MAX} onChange={(eyeSize) => update({ eyeSize })} />
             </SliderRow>
             <SliderRow label={copy.eyePosition}>
-              <Slider
+              <PositionSlider
                 value={avatar.eyeOffset}
                 min={EYE_OFFSET_MIN}
                 max={EYE_OFFSET_MAX}
@@ -326,7 +326,7 @@ export function AppearanceScreen() {
               <Slider value={avatar.noseSize} min={FEATURE_SIZE_MIN} max={FEATURE_SIZE_MAX} onChange={(noseSize) => update({ noseSize })} />
             </SliderRow>
             <SliderRow label={copy.nosePosition}>
-              <Slider
+              <PositionSlider
                 value={avatar.noseOffset}
                 min={NOSE_OFFSET_MIN}
                 max={NOSE_OFFSET_MAX}
@@ -344,7 +344,7 @@ export function AppearanceScreen() {
               />
             </Row>
             <SliderRow label={copy.mouthPosition}>
-              <Slider
+              <PositionSlider
                 value={avatar.mouthOffset}
                 min={MOUTH_OFFSET_MIN}
                 max={MOUTH_OFFSET_MAX}
@@ -526,6 +526,31 @@ function Chips<T extends string | boolean>({
         </button>
       ))}
     </div>
+  );
+}
+
+/**
+ * A position slider, which runs the way a person expects a position slider
+ * to run: right raises the feature, left lowers it.
+ *
+ * The stored offset keeps its SVG meaning, where a larger number is further
+ * *down* the face, because that is what the drawing code wants. Flipping it
+ * here rather than there keeps every saved avatar looking exactly as it did,
+ * and puts the inversion in the one place it is about: the control.
+ */
+function PositionSlider({
+  value,
+  min,
+  max,
+  onChange,
+}: {
+  value: number;
+  min: number;
+  max: number;
+  onChange: (value: number) => void;
+}) {
+  return (
+    <Slider value={-value} min={-max} max={-min} onChange={(next) => onChange(-next)} />
   );
 }
 

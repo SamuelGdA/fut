@@ -66,7 +66,7 @@ export function CareerBiography({ career }: { career: CareerState }) {
                     <span className="font-display font-black text-gold">{broken.achieved}</span>{" "}
                     <span className="text-foreground">{record.label[locale]}</span>
                     <span className="text-muted-2">
-                      {" — "}
+                      {": "}
                       {t(broken.equalled ? "career.recordEqualled" : "career.recordBeaten", {
                         holder: record.holder,
                         previous: String(broken.previous),
