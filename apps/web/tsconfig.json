@@ -1,0 +1,37 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "jsx": "preserve",
+    "allowJs": true,
+    "plugins": [{ "name": "next" }],
+
+    /*
+     * Two base rules are relaxed here, and only here.
+     *
+     * The app is the pre-rewrite codebase moved verbatim, so turning these on
+     * today would produce hundreds of errors that have nothing to do with the
+     * migration and would have to be fixed in the same commit that moves the
+     * files, which is exactly how a "pure move" stops being provably pure.
+     *
+     * They are on in tsconfig.base.json, so every package extracted from here
+     * gets them from birth, and this file loses each override as the code
+     * behind it moves out.
+     */
+    "noUncheckedIndexedAccess": false,
+    "verbatimModuleSyntax": false,
+
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.mts",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts"
+  ],
+  "exclude": ["node_modules", ".next"]
+}

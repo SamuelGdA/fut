@@ -1,96 +1,106 @@
-# CRAQUE — Simulador de Carreira
+# CRAQUE: Simulador de Carreira
 
-Um simulador de carreira de futebol 100% client-side: você cria um jogador, escolhe onde começar e joga temporada a temporada — via decisões narrativas, não partidas simuladas jogo a jogo — até a aposentadoria. No final, o jogo escreve a biografia da sua carreira e monta uma carta de jogador estilo EA FC com os atributos no auge.
+Um simulador de carreira de futebol 100% client-side. Você cria um jogador,
+escolhe onde começar e joga temporada a temporada, por decisões narrativas e não
+por partidas simuladas lance a lance, até a aposentadoria. No fim, o jogo
+escreve a biografia da carreira e monta uma carta estilo EA FC com os atributos
+no auge.
 
-Não depende de backend nem de contas: todo o estado vive no navegador (Zustand + `localStorage`).
+Não depende de backend nem de contas: todo o estado vive no navegador.
 
-**Stack:** Next.js 16 (App Router) · React 19 · TypeScript · Tailwind CSS v4 · Zustand · [`motion`](https://motion.dev) para animações.
+**Stack:** Next.js 16 (App Router) · React 19 · TypeScript · Tailwind CSS v4 ·
+Zustand · [`motion`](https://motion.dev) · pnpm workspaces + Turborepo.
+
+## Documentação
+
+| Documento | O que é |
+|---|---|
+| [docs/REQUISITOS.md](docs/REQUISITOS.md) | A especificação completa do comportamento do jogo, em 55 seções |
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Como o repositório é organizado e o que ainda falta mover |
+| [docs/BALANCE.md](docs/BALANCE.md) | Como mexer em número de balanceamento sem quebrar nada |
+| [docs/decisions/](docs/decisions) | ADRs das decisões estruturais |
 
 ## Rodando localmente
 
-Pré-requisito: [Node.js](https://nodejs.org) 20+.
+Pré-requisito: [Node.js](https://nodejs.org) 20.9+ e [pnpm](https://pnpm.io).
 
 ```bash
-npm install
-npm run dev
+pnpm install
+pnpm dev
 ```
 
-Abra [http://localhost:3000](http://localhost:3000) — a rota raiz redireciona para `/juegos/simulador-carrera`, onde o jogo vive.
+Abra <http://localhost:3000>. A raiz redireciona para
+`/juegos/simulador-carrera`, onde o jogo vive.
 
-No Windows, dando duplo-clique em [`iniciar.bat`](iniciar.bat) ele instala as dependências (se faltarem) e abre o jogo no navegador sozinho.
+No Windows, dando duplo-clique em [`iniciar.bat`](iniciar.bat) ele instala o que
+faltar e abre o jogo sozinho.
 
-Outros scripts:
-
-```bash
-npm run build   # build de produção
-npm run start   # roda o build de produção
-npm run lint    # eslint
-npx tsc --noEmit  # checagem de tipos
-```
+| Comando | O que faz |
+|---|---|
+| `pnpm build` | Build de produção |
+| `pnpm verify` | Typecheck, lint e testes em tudo |
+| `pnpm balance` | Confere o jogo contra os baselines de balanceamento |
+| `pnpm balance:capture` | Regrava os baselines. Leia BALANCE.md antes |
 
 ## O que o jogo faz
 
-1. **Criação de personagem** — nome, pé preferido, nacionalidade (211 seleções), posição e um avatar vetorial totalmente customizável (cabelo, barba, olhos, acessórios, cores) desenhado em SVG puro, sem imagens externas.
-2. **Modo e dificuldade** — dois eixos independentes:
-   - **Modo** (`long` / `normal`) controla o ritmo: decisões a cada temporada ou a cada duas.
-   - **Dificuldade** (`normal` / `hard`) controla o quão realista/punitivo o jogo é: chance de virar Craque/Fenômeno, velocidade de evolução e declínio, chance de lesão (incluindo lesões graves), paciência dos clubes e reputação exigida para receber propostas.
-3. **Carreira** — a cada período o motor de simulação (`lib/sim/`) resolve a temporada: minutos, gols/assistências (ou defesas, para goleiros), evolução dos 6 atributos, prêmios, disputa de títulos, rebaixamento/acesso, lesões, e eventualmente uma decisão narrativa (uma de ~30 eventos de carreira). A cada 2 temporadas normalmente aparece uma janela de transferência com propostas de outros clubes.
-4. **Talento oculto** — todo jogador nasce com um "teto" de potencial sorteado (Promessa → Talento → Craque → Fenômeno → Geracional), nunca revelado como número — só dá pra sentir jogando.
-5. **Final de carreira** — a tela de resumo monta a melhor carta da carreira (atributos no pico, não na aposentadoria), gera uma biografia em prosa condicional a partir do que de fato aconteceu naquela carreira específica, mostra a linha do tempo de clubes, o mural de troféus, o rival ao longo da carreira e os recordes mundiais reais batidos (atualizados para 2026). Dá para baixar a carta como PNG ou compartilhar direto.
-6. **Desafio do dia** — todo mundo recebe a mesma seed, nacionalidade, posição e uma missão do dia (uma de 30, sempre em modo Difícil). A pontuação mede o quão perto (ou além) da meta da missão você chegou, com um ranking local guardado no navegador.
+1. **Criação de personagem.** Nome, pé preferido, nacionalidade (211 seleções),
+   posição e um avatar vetorial totalmente customizável (cabelo, barba, olhos,
+   nariz, boca, acessórios, cores), desenhado em SVG puro, sem imagem externa.
 
-## Estrutura do projeto
+2. **Modo e dificuldade**, dois eixos independentes. O **modo** controla o
+   ritmo: decisão a cada temporada ou a cada duas. A **dificuldade** controla o
+   quanto o futebol perdoa: chance de talento raro, velocidade de evolução e
+   declínio, chance de lesão, paciência dos clubes e reputação exigida para
+   receber proposta.
+
+3. **Carreira.** A cada período o motor resolve a temporada inteira: minutos,
+   gols e assistências (ou jogos sem sofrer gol, para goleiros e defensores),
+   evolução dos seis atributos, prêmios, disputa de títulos, acesso e
+   rebaixamento, lesões, e eventualmente uma decisão narrativa entre 40 eventos
+   de carreira.
+
+4. **Talento oculto.** Todo jogador nasce com um teto de potencial sorteado
+   (Promessa, Talento, Craque, Fenômeno, Geracional) que nunca é revelado como
+   número. O veredito de olheiro vai afiando com a idade e os jogos, e é
+   deliberadamente capaz de errar enquanto é só um rumor.
+
+5. **Fim de carreira.** A tela de resumo monta a melhor carta da carreira
+   (atributos no pico, não na aposentadoria), gera uma biografia em prosa
+   condicional a partir do que de fato aconteceu, e mostra a linha do tempo de
+   clubes, a vitrine de troféus, o rival e os recordes reais batidos. Dá para
+   baixar como PNG ou compartilhar direto.
+
+6. **Desafio do dia.** Todo mundo recebe a mesma semente, nacionalidade,
+   posição, três briefings e um édito, sempre no difícil. Contam os dois
+   melhores briefings, e insistir além do próprio auge custa pontos. Ranking
+   local, que zera todo dia.
+
+**O mundo:** 32 ligas em 17 países, 489 clubes, 211 seleções, 15 divisões de
+acesso, e todas as competições continentais, mundiais e de seleção.
+
+## Estrutura
 
 ```
-app/juegos/simulador-carrera/page.tsx   # roteador de telas (via screen no store)
-components/screens/                     # Intro, Identity, Appearance, Career, Summary, Challenge
-components/                             # carta de jogador, avatar, timeline, biografia, etc.
-store/careerStore.ts                    # único store Zustand (persistido em localStorage)
-lib/sim/                                # motor de simulação: RNG, atributos, progressão, eventos, carreira
-lib/data/                               # dataset: 23 ligas / 384 clubes / 211 países / troféus
-lib/avatar/                             # config do criador de personagem
-lib/bio/                                # gerador de biografia (fatos extraídos da carreira + frases condicionais)
-lib/challenge/                          # desafio diário: métricas, missões, seed/rotação, ranking local
-lib/i18n/                               # dicionários pt/es/en + contexto de idioma
-public/craque-assets/                   # escudos, bandeiras e troféus servidos localmente
+apps/web/          o jogo (Next.js)
+packages/          os pacotes de domínio, em extração
+tools/balance/     captura e verificação dos baselines de balanceamento
+tools/eslint-config/  as regras compartilhadas
+docs/              especificação, arquitetura e ADRs
 ```
 
-### Motor de simulação (`lib/sim/`)
-
-- `rng.ts` — RNG determinístico por seed (tudo no jogo é reproduzível a partir da seed da carreira).
-- `constants.ts` — tabelas de balanceamento: tiers de talento, curvas de idade, e `DIFFICULTY_CONFIG` (o eixo Normal/Difícil).
-- `attributes.ts` — os 6 atributos por posição e o cálculo de OVR a partir deles.
-- `engine.ts` — sorteio de potencial, evolução de atributos, declínio por idade, reputação de clube.
-- `career.ts` — orquestra uma carreira inteira: temporada a temporada, contratos, lesões, seleção nacional, aposentadoria.
-- `careerEvents.ts` — os ~30 eventos narrativos (decisões com consequências reais nos atributos/reputação).
-- `shirtNumbers.ts` — atribuição e evolução do número da camisa.
-
-### Biografia (`lib/bio/`)
-
-- `facts.ts` — extrai fatos objetivos da carreira (clube revelação, volta para casa, lesão grave, etc.) sem nunca inferir o que não aconteceu.
-- `phrases.ts` — biblioteca de frases condicionais, cada uma só é elegível se os fatos da carreira a sustentam.
-- `generate.ts` — monta o texto final em ordem cronológica global.
-- `records.ts` — recordes mundiais reais (Cristiano Ronaldo, Messi, etc.) usados para comparar contra a carreira do jogador.
-
-### Desafio diário (`lib/challenge/`)
-
-- `metrics.ts` — extrai um snapshot plano (`CareerMetrics`) da carreira terminada; toda missão é pontuada só a partir daí, nunca lendo o motor de simulação diretamente.
-- `missions.ts` — 30 missões, cada uma com uma curva de progresso contínua (nunca um gate binário) e uma lista de posições em que faz sentido ser sorteada.
-- `daily.ts` — fixa seed, nacionalidade, posição e missão do dia a partir da data (UTC); a rotação de missões garante um intervalo mínimo antes de repetir; `scoreChallenge()` converte progresso em pontuação (0–1000+) numa curva que valoriza mais quem chega perto da meta.
-- `leaderboard.ts` — ranking local em `localStorage`: a primeira tentativa completa de cada desafio vale para o ranking, replays contam como amistoso.
-
-### Store (`store/careerStore.ts`)
-
-Único store Zustand com `persist`. Guarda o rascunho de identidade/avatar, preferências (som, tema, modo, dificuldade) e a carreira em andamento. Migração versionada (`version`/`migrate`) para não quebrar saves antigos quando o formato muda.
-
-### Debug panel
-
-Em desenvolvimento (`npm run dev`), um botão 🐞 no canto inferior esquerdo abre um painel para forçar OVR, torcida, traço de personalidade, tier de talento, evento de carreira específico, transferência ou rival — útil para testar sem jogar dezenas de temporadas manualmente. Ele é removido do bundle em produção (`NODE_ENV === "production"`), a menos que `NEXT_PUBLIC_CRAQUE_DEBUG=1` seja definido de propósito.
-
-## i18n
-
-O jogo é totalmente traduzido para **português, espanhol e inglês** (`lib/i18n/locales.json` + `lib/i18n/context.tsx`), com troca de idioma em tempo real pela UI.
+O repositório está em migração para uma arquitetura de monorepo com o motor de
+simulação como pacote puro. A etapa 1 está concluída: a casca existe, o app foi
+movido sem uma única alteração de conteúdo, e os baselines de balanceamento
+foram capturados do código atual. O mapa completo, com o que falta e em que
+ordem, está em [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
 ## Origem dos dados
 
-O dataset de clubes, ligas, países e troféus foi originalmente extraído de um simulador de carreira de futebol público como ponto de partida para ter dados realistas (escudos, reputações, competições). A partir daí o projeto virou algo próprio: motor de progressão reescrito, sistema de atributos EA FC, avatar vetorial, identidade visual, eventos de carreira, biografia gerada, dificuldade configurável e o desafio diário são construções deste repositório, não uma porta 1:1 de outro jogo.
+O dataset de clubes, ligas, países e troféus foi originalmente extraído de um
+simulador de carreira público como ponto de partida para ter dados realistas.
+A partir daí o projeto virou outra coisa: o motor de progressão foi reescrito, e
+o sistema de atributos, o avatar vetorial, a identidade visual, os eventos de
+carreira, a biografia gerada, a dificuldade configurável, a arte generativa de
+escudos e troféus e o desafio diário são construções deste repositório, não uma
+porta de outro jogo.

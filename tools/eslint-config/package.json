@@ -1,0 +1,17 @@
+{
+  "name": "@craque/eslint-config",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./base": "./base.mjs",
+    "./strict": "./strict.mjs"
+  },
+  "peerDependencies": {
+    "eslint": "^9"
+  },
+  "dependencies": {
+    "@eslint/js": "^9.39.1",
+    "typescript-eslint": "^8.46.2"
+  }
+}

@@ -1,0 +1,1454 @@
+{
+  "version": 1,
+  "capturedAt": "2026-09-18T15:44:16.880Z",
+  "environment": {
+    "node": "v24.19.0",
+    "platform": "win32",
+    "arch": "x64"
+  },
+  "corpus": {
+    "masterSeed": "craque-balance-v1",
+    "fingerprintCount": 240,
+    "aggregateCount": 6000,
+    "challengeDays": 180,
+    "challengeFrom": "2026-01-01"
+  },
+  "data": {
+    "corpusSize": 6000,
+    "stalled": 0,
+    "targets": {
+      "ballonDorRecordPctOfGenerational": 3.03,
+      "fourInARowPctOfGenerational": 0.61,
+      "goldenBootRecordPctOfGenerationalInEurope": 20,
+      "medianBallonDorsOfGenerational": 2,
+      "maxBallonDors": 8,
+      "maxBallonStreak": 6,
+      "maxGoldenBoots": 11,
+      "hardProspectPct": 45.8,
+      "hardTalentPct": 33.9,
+      "hardStarPct": 14.7,
+      "hardPhenomenonPct": 4.3,
+      "hardGenerationalPct": 1.3,
+      "careersWithA99Pct": 0.52,
+      "peakOverallP90": 86
+    },
+    "talentByDifficulty": {
+      "normal": {
+        "generational": {
+          "count": 119,
+          "pct": 5
+        },
+        "phenomenon": {
+          "count": 271,
+          "pct": 11.3
+        },
+        "prospect": {
+          "count": 669,
+          "pct": 27.8
+        },
+        "star": {
+          "count": 515,
+          "pct": 21.4
+        },
+        "talent": {
+          "count": 830,
+          "pct": 34.5
+        }
+      },
+      "hard": {
+        "generational": {
+          "count": 46,
+          "pct": 1.3
+        },
+        "phenomenon": {
+          "count": 156,
+          "pct": 4.3
+        },
+        "prospect": {
+          "count": 1648,
+          "pct": 45.8
+        },
+        "star": {
+          "count": 528,
+          "pct": 14.7
+        },
+        "talent": {
+          "count": 1218,
+          "pct": 33.9
+        }
+      }
+    },
+    "peakOverallByTier": {
+      "generational": {
+        "n": 165,
+        "mean": 93.388,
+        "median": 94,
+        "p90": 97,
+        "min": 81,
+        "max": 98
+      },
+      "phenomenon": {
+        "n": 427,
+        "mean": 87.967,
+        "median": 88,
+        "p90": 93,
+        "min": 74,
+        "max": 95
+      },
+      "prospect": {
+        "n": 2317,
+        "mean": 63.695,
+        "median": 63,
+        "p90": 69,
+        "min": 53,
+        "max": 77
+      },
+      "star": {
+        "n": 1043,
+        "mean": 80.329,
+        "median": 80,
+        "p90": 86,
+        "min": 68,
+        "max": 91
+      },
+      "talent": {
+        "n": 2048,
+        "mean": 71.624,
+        "median": 71,
+        "p90": 78,
+        "min": 59,
+        "max": 84
+      }
+    },
+    "peakOverallByPosition": {
+      "CAM": {
+        "n": 510,
+        "mean": 71.947,
+        "median": 70,
+        "p90": 86,
+        "min": 53,
+        "max": 97
+      },
+      "CB": {
+        "n": 485,
+        "mean": 73.365,
+        "median": 72,
+        "p90": 87,
+        "min": 56,
+        "max": 97
+      },
+      "CDM": {
+        "n": 475,
+        "mean": 72.36,
+        "median": 71,
+        "p90": 86,
+        "min": 57,
+        "max": 98
+      },
+      "CM": {
+        "n": 522,
+        "mean": 71.979,
+        "median": 71,
+        "p90": 86,
+        "min": 55,
+        "max": 98
+      },
+      "GK": {
+        "n": 551,
+        "mean": 74.163,
+        "median": 73,
+        "p90": 87,
+        "min": 56,
+        "max": 96
+      },
+      "LB": {
+        "n": 523,
+        "mean": 71.361,
+        "median": 69,
+        "p90": 85,
+        "min": 56,
+        "max": 97
+      },
+      "LM": {
+        "n": 459,
+        "mean": 71.179,
+        "median": 70,
+        "p90": 86,
+        "min": 55,
+        "max": 98
+      },
+      "LW": {
+        "n": 471,
+        "mean": 70.246,
+        "median": 68,
+        "p90": 85,
+        "min": 55,
+        "max": 97
+      },
+      "RB": {
+        "n": 508,
+        "mean": 71.516,
+        "median": 71,
+        "p90": 84,
+        "min": 56,
+        "max": 97
+      },
+      "RM": {
+        "n": 488,
+        "mean": 70.453,
+        "median": 69,
+        "p90": 83,
+        "min": 55,
+        "max": 98
+      },
+      "RW": {
+        "n": 543,
+        "mean": 71.195,
+        "median": 70,
+        "p90": 84,
+        "min": 54,
+        "max": 98
+      },
+      "ST": {
+        "n": 465,
+        "mean": 72.019,
+        "median": 70,
+        "p90": 87,
+        "min": 56,
+        "max": 97
+      }
+    },
+    "cardByPosition": {
+      "CAM": {
+        "pace": {
+          "n": 510,
+          "mean": 60.276,
+          "median": 59,
+          "p90": 71,
+          "min": 46,
+          "max": 91
+        },
+        "shooting": {
+          "n": 510,
+          "mean": 64.573,
+          "median": 63,
+          "p90": 80,
+          "min": 45,
+          "max": 90
+        },
+        "passing": {
+          "n": 510,
+          "mean": 71.092,
+          "median": 69,
+          "p90": 86,
+          "min": 51,
+          "max": 98
+        },
+        "dribbling": {
+          "n": 510,
+          "mean": 68.522,
+          "median": 66,
+          "p90": 83,
+          "min": 49,
+          "max": 93
+        },
+        "defending": {
+          "n": 510,
+          "mean": 40.48,
+          "median": 40,
+          "p90": 42,
+          "min": 36,
+          "max": 47
+        },
+        "physical": {
+          "n": 510,
+          "mean": 54.584,
+          "median": 53,
+          "p90": 66,
+          "min": 37,
+          "max": 81
+        },
+        "overall": {
+          "n": 510,
+          "mean": 71.947,
+          "median": 70,
+          "p90": 86,
+          "min": 53,
+          "max": 97
+        }
+      },
+      "CB": {
+        "pace": {
+          "n": 485,
+          "mean": 57.388,
+          "median": 56,
+          "p90": 71,
+          "min": 42,
+          "max": 84
+        },
+        "shooting": {
+          "n": 485,
+          "mean": 40.126,
+          "median": 39,
+          "p90": 45,
+          "min": 35,
+          "max": 55
+        },
+        "passing": {
+          "n": 485,
+          "mean": 53.913,
+          "median": 51,
+          "p90": 72,
+          "min": 39,
+          "max": 87
+        },
+        "dribbling": {
+          "n": 485,
+          "mean": 48.942,
+          "median": 46,
+          "p90": 66,
+          "min": 35,
+          "max": 84
+        },
+        "defending": {
+          "n": 485,
+          "mean": 76.01,
+          "median": 75,
+          "p90": 90,
+          "min": 56,
+          "max": 98
+        },
+        "physical": {
+          "n": 485,
+          "mean": 71.227,
+          "median": 70,
+          "p90": 84,
+          "min": 55,
+          "max": 91
+        },
+        "overall": {
+          "n": 485,
+          "mean": 73.365,
+          "median": 72,
+          "p90": 87,
+          "min": 56,
+          "max": 97
+        }
+      },
+      "CDM": {
+        "pace": {
+          "n": 475,
+          "mean": 54.834,
+          "median": 53,
+          "p90": 67,
+          "min": 41,
+          "max": 80
+        },
+        "shooting": {
+          "n": 475,
+          "mean": 45.985,
+          "median": 43,
+          "p90": 59,
+          "min": 34,
+          "max": 80
+        },
+        "passing": {
+          "n": 475,
+          "mean": 66.366,
+          "median": 64,
+          "p90": 83,
+          "min": 49,
+          "max": 99
+        },
+        "dribbling": {
+          "n": 475,
+          "mean": 57.112,
+          "median": 55,
+          "p90": 73,
+          "min": 42,
+          "max": 87
+        },
+        "defending": {
+          "n": 475,
+          "mean": 72.375,
+          "median": 71,
+          "p90": 85,
+          "min": 56,
+          "max": 95
+        },
+        "physical": {
+          "n": 475,
+          "mean": 68.303,
+          "median": 67,
+          "p90": 80,
+          "min": 54,
+          "max": 89
+        },
+        "overall": {
+          "n": 475,
+          "mean": 72.36,
+          "median": 71,
+          "p90": 86,
+          "min": 57,
+          "max": 98
+        }
+      },
+      "CM": {
+        "pace": {
+          "n": 522,
+          "mean": 57.998,
+          "median": 57,
+          "p90": 69,
+          "min": 46,
+          "max": 82
+        },
+        "shooting": {
+          "n": 522,
+          "mean": 53.707,
+          "median": 51,
+          "p90": 68,
+          "min": 41,
+          "max": 83
+        },
+        "passing": {
+          "n": 522,
+          "mean": 73.939,
+          "median": 73,
+          "p90": 88,
+          "min": 54,
+          "max": 99
+        },
+        "dribbling": {
+          "n": 522,
+          "mean": 68.328,
+          "median": 67,
+          "p90": 84,
+          "min": 50,
+          "max": 98
+        },
+        "defending": {
+          "n": 522,
+          "mean": 58.67,
+          "median": 57,
+          "p90": 69,
+          "min": 45,
+          "max": 85
+        },
+        "physical": {
+          "n": 522,
+          "mean": 60.63,
+          "median": 59,
+          "p90": 71,
+          "min": 46,
+          "max": 84
+        },
+        "overall": {
+          "n": 522,
+          "mean": 71.979,
+          "median": 71,
+          "p90": 86,
+          "min": 55,
+          "max": 98
+        }
+      },
+      "GK": {
+        "diving": {
+          "n": 551,
+          "mean": 74.826,
+          "median": 74,
+          "p90": 88,
+          "min": 56,
+          "max": 99
+        },
+        "handling": {
+          "n": 551,
+          "mean": 71.574,
+          "median": 70,
+          "p90": 84,
+          "min": 56,
+          "max": 92
+        },
+        "kicking": {
+          "n": 551,
+          "mean": 67.267,
+          "median": 66,
+          "p90": 80,
+          "min": 50,
+          "max": 89
+        },
+        "reflexes": {
+          "n": 551,
+          "mean": 78.015,
+          "median": 77,
+          "p90": 91,
+          "min": 58,
+          "max": 99
+        },
+        "speed": {
+          "n": 551,
+          "mean": 45.799,
+          "median": 45,
+          "p90": 49,
+          "min": 40,
+          "max": 57
+        },
+        "positioning": {
+          "n": 551,
+          "mean": 67.327,
+          "median": 65,
+          "p90": 80,
+          "min": 52,
+          "max": 93
+        },
+        "overall": {
+          "n": 551,
+          "mean": 74.163,
+          "median": 73,
+          "p90": 87,
+          "min": 56,
+          "max": 96
+        }
+      },
+      "LB": {
+        "pace": {
+          "n": 523,
+          "mean": 72.522,
+          "median": 71,
+          "p90": 83,
+          "min": 60,
+          "max": 93
+        },
+        "shooting": {
+          "n": 523,
+          "mean": 48.071,
+          "median": 45,
+          "p90": 63,
+          "min": 36,
+          "max": 83
+        },
+        "passing": {
+          "n": 523,
+          "mean": 67.652,
+          "median": 65,
+          "p90": 85,
+          "min": 49,
+          "max": 99
+        },
+        "dribbling": {
+          "n": 523,
+          "mean": 62.625,
+          "median": 59,
+          "p90": 79,
+          "min": 47,
+          "max": 91
+        },
+        "defending": {
+          "n": 523,
+          "mean": 71.916,
+          "median": 70,
+          "p90": 86,
+          "min": 56,
+          "max": 97
+        },
+        "physical": {
+          "n": 523,
+          "mean": 66.453,
+          "median": 65,
+          "p90": 78,
+          "min": 51,
+          "max": 89
+        },
+        "overall": {
+          "n": 523,
+          "mean": 71.361,
+          "median": 69,
+          "p90": 85,
+          "min": 56,
+          "max": 97
+        }
+      },
+      "LM": {
+        "pace": {
+          "n": 459,
+          "mean": 67.296,
+          "median": 66,
+          "p90": 78,
+          "min": 52,
+          "max": 87
+        },
+        "shooting": {
+          "n": 459,
+          "mean": 64.519,
+          "median": 62,
+          "p90": 80,
+          "min": 48,
+          "max": 96
+        },
+        "passing": {
+          "n": 459,
+          "mean": 69.699,
+          "median": 68,
+          "p90": 85,
+          "min": 52,
+          "max": 99
+        },
+        "dribbling": {
+          "n": 459,
+          "mean": 71.12,
+          "median": 69,
+          "p90": 87,
+          "min": 53,
+          "max": 99
+        },
+        "defending": {
+          "n": 459,
+          "mean": 44.331,
+          "median": 44,
+          "p90": 46,
+          "min": 40,
+          "max": 49
+        },
+        "physical": {
+          "n": 459,
+          "mean": 54.516,
+          "median": 53,
+          "p90": 64,
+          "min": 41,
+          "max": 82
+        },
+        "overall": {
+          "n": 459,
+          "mean": 71.179,
+          "median": 70,
+          "p90": 86,
+          "min": 55,
+          "max": 98
+        }
+      },
+      "LW": {
+        "pace": {
+          "n": 471,
+          "mean": 66.851,
+          "median": 65,
+          "p90": 77,
+          "min": 56,
+          "max": 94
+        },
+        "shooting": {
+          "n": 471,
+          "mean": 66.866,
+          "median": 65,
+          "p90": 82,
+          "min": 50,
+          "max": 96
+        },
+        "passing": {
+          "n": 471,
+          "mean": 61.344,
+          "median": 59,
+          "p90": 77,
+          "min": 45,
+          "max": 92
+        },
+        "dribbling": {
+          "n": 471,
+          "mean": 71.293,
+          "median": 69,
+          "p90": 87,
+          "min": 54,
+          "max": 98
+        },
+        "defending": {
+          "n": 471,
+          "mean": 38.868,
+          "median": 39,
+          "p90": 41,
+          "min": 35,
+          "max": 44
+        },
+        "physical": {
+          "n": 471,
+          "mean": 57.076,
+          "median": 55,
+          "p90": 68,
+          "min": 43,
+          "max": 84
+        },
+        "overall": {
+          "n": 471,
+          "mean": 70.246,
+          "median": 68,
+          "p90": 85,
+          "min": 55,
+          "max": 97
+        }
+      },
+      "RB": {
+        "pace": {
+          "n": 508,
+          "mean": 72.596,
+          "median": 72,
+          "p90": 82,
+          "min": 58,
+          "max": 96
+        },
+        "shooting": {
+          "n": 508,
+          "mean": 47.89,
+          "median": 46,
+          "p90": 59,
+          "min": 35,
+          "max": 83
+        },
+        "passing": {
+          "n": 508,
+          "mean": 67.811,
+          "median": 66,
+          "p90": 83,
+          "min": 49,
+          "max": 99
+        },
+        "dribbling": {
+          "n": 508,
+          "mean": 62.709,
+          "median": 61,
+          "p90": 77,
+          "min": 46,
+          "max": 93
+        },
+        "defending": {
+          "n": 508,
+          "mean": 72.122,
+          "median": 71,
+          "p90": 85,
+          "min": 56,
+          "max": 97
+        },
+        "physical": {
+          "n": 508,
+          "mean": 66.703,
+          "median": 66,
+          "p90": 79,
+          "min": 52,
+          "max": 89
+        },
+        "overall": {
+          "n": 508,
+          "mean": 71.516,
+          "median": 71,
+          "p90": 84,
+          "min": 56,
+          "max": 97
+        }
+      },
+      "RM": {
+        "pace": {
+          "n": 488,
+          "mean": 67.078,
+          "median": 66,
+          "p90": 77,
+          "min": 55,
+          "max": 96
+        },
+        "shooting": {
+          "n": 488,
+          "mean": 63.648,
+          "median": 62,
+          "p90": 77,
+          "min": 47,
+          "max": 96
+        },
+        "passing": {
+          "n": 488,
+          "mean": 68.816,
+          "median": 67,
+          "p90": 82,
+          "min": 52,
+          "max": 99
+        },
+        "dribbling": {
+          "n": 488,
+          "mean": 70.361,
+          "median": 69,
+          "p90": 84,
+          "min": 53,
+          "max": 99
+        },
+        "defending": {
+          "n": 488,
+          "mean": 44.197,
+          "median": 44,
+          "p90": 46,
+          "min": 40,
+          "max": 50
+        },
+        "physical": {
+          "n": 488,
+          "mean": 54.1,
+          "median": 53,
+          "p90": 62,
+          "min": 41,
+          "max": 80
+        },
+        "overall": {
+          "n": 488,
+          "mean": 70.453,
+          "median": 69,
+          "p90": 83,
+          "min": 55,
+          "max": 98
+        }
+      },
+      "RW": {
+        "pace": {
+          "n": 543,
+          "mean": 67.622,
+          "median": 67,
+          "p90": 77,
+          "min": 55,
+          "max": 88
+        },
+        "shooting": {
+          "n": 543,
+          "mean": 67.926,
+          "median": 67,
+          "p90": 82,
+          "min": 50,
+          "max": 99
+        },
+        "passing": {
+          "n": 543,
+          "mean": 62.276,
+          "median": 61,
+          "p90": 78,
+          "min": 43,
+          "max": 93
+        },
+        "dribbling": {
+          "n": 543,
+          "mean": 72.311,
+          "median": 71,
+          "p90": 87,
+          "min": 54,
+          "max": 99
+        },
+        "defending": {
+          "n": 543,
+          "mean": 39.077,
+          "median": 39,
+          "p90": 41,
+          "min": 36,
+          "max": 48
+        },
+        "physical": {
+          "n": 543,
+          "mean": 57.74,
+          "median": 57,
+          "p90": 68,
+          "min": 40,
+          "max": 85
+        },
+        "overall": {
+          "n": 543,
+          "mean": 71.195,
+          "median": 70,
+          "p90": 84,
+          "min": 54,
+          "max": 98
+        }
+      },
+      "ST": {
+        "pace": {
+          "n": 465,
+          "mean": 63.049,
+          "median": 61,
+          "p90": 74,
+          "min": 48,
+          "max": 92
+        },
+        "shooting": {
+          "n": 465,
+          "mean": 75.974,
+          "median": 75,
+          "p90": 91,
+          "min": 57,
+          "max": 99
+        },
+        "passing": {
+          "n": 465,
+          "mean": 54.327,
+          "median": 51,
+          "p90": 71,
+          "min": 39,
+          "max": 87
+        },
+        "dribbling": {
+          "n": 465,
+          "mean": 62.978,
+          "median": 60,
+          "p90": 79,
+          "min": 48,
+          "max": 90
+        },
+        "defending": {
+          "n": 465,
+          "mean": 39.443,
+          "median": 39,
+          "p90": 42,
+          "min": 36,
+          "max": 49
+        },
+        "physical": {
+          "n": 465,
+          "mean": 65.256,
+          "median": 64,
+          "p90": 78,
+          "min": 51,
+          "max": 88
+        },
+        "overall": {
+          "n": 465,
+          "mean": 72.019,
+          "median": 70,
+          "p90": 87,
+          "min": 56,
+          "max": 97
+        }
+      }
+    },
+    "outputByRole": {
+      "attacker": {
+        "appearances": {
+          "n": 1479,
+          "mean": 657.389,
+          "median": 647,
+          "p90": 882,
+          "min": 118,
+          "max": 1206
+        },
+        "goals": {
+          "n": 1479,
+          "mean": 202.628,
+          "median": 152,
+          "p90": 402,
+          "min": 8,
+          "max": 934
+        },
+        "assists": {
+          "n": 1479,
+          "mean": 48.596,
+          "median": 32,
+          "p90": 105,
+          "min": 0,
+          "max": 308
+        },
+        "cleanSheets": {
+          "n": 1479,
+          "mean": 0,
+          "median": 0,
+          "p90": 0,
+          "min": 0,
+          "max": 0
+        },
+        "goalsPerGame": {
+          "n": 1479,
+          "mean": 0.277,
+          "median": 0.238,
+          "p90": 0.471,
+          "min": 0.064,
+          "max": 0.782
+        }
+      },
+      "creator": {
+        "appearances": {
+          "n": 1457,
+          "mean": 651.798,
+          "median": 646,
+          "p90": 874,
+          "min": 196,
+          "max": 1227
+        },
+        "goals": {
+          "n": 1457,
+          "mean": 133.021,
+          "median": 96,
+          "p90": 273,
+          "min": 5,
+          "max": 864
+        },
+        "assists": {
+          "n": 1457,
+          "mean": 83.83,
+          "median": 64,
+          "p90": 175,
+          "min": 1,
+          "max": 379
+        },
+        "cleanSheets": {
+          "n": 1457,
+          "mean": 0,
+          "median": 0,
+          "p90": 0,
+          "min": 0,
+          "max": 0
+        },
+        "goalsPerGame": {
+          "n": 1457,
+          "mean": 0.18,
+          "median": 0.148,
+          "p90": 0.321,
+          "min": 0.026,
+          "max": 0.718
+        }
+      },
+      "defensive": {
+        "appearances": {
+          "n": 960,
+          "mean": 736.679,
+          "median": 726,
+          "p90": 937,
+          "min": 208,
+          "max": 1336
+        },
+        "goals": {
+          "n": 960,
+          "mean": 16.152,
+          "median": 12,
+          "p90": 33,
+          "min": 0,
+          "max": 127
+        },
+        "assists": {
+          "n": 960,
+          "mean": 12.177,
+          "median": 7,
+          "p90": 29,
+          "min": 0,
+          "max": 155
+        },
+        "cleanSheets": {
+          "n": 960,
+          "mean": 189.294,
+          "median": 162,
+          "p90": 309,
+          "min": 37,
+          "max": 625
+        },
+        "goalsPerGame": {
+          "n": 960,
+          "mean": 0.019,
+          "median": 0.017,
+          "p90": 0.036,
+          "min": 0,
+          "max": 0.107
+        }
+      },
+      "goalkeeper": {
+        "appearances": {
+          "n": 551,
+          "mean": 663.962,
+          "median": 659,
+          "p90": 849,
+          "min": 116,
+          "max": 1090
+        },
+        "goals": {
+          "n": 551,
+          "mean": 0,
+          "median": 0,
+          "p90": 0,
+          "min": 0,
+          "max": 0
+        },
+        "assists": {
+          "n": 551,
+          "mean": 0,
+          "median": 0,
+          "p90": 0,
+          "min": 0,
+          "max": 0
+        },
+        "cleanSheets": {
+          "n": 551,
+          "mean": 181.662,
+          "median": 165,
+          "p90": 276,
+          "min": 14,
+          "max": 521
+        },
+        "goalsPerGame": {
+          "n": 551,
+          "mean": 0,
+          "median": 0,
+          "p90": 0,
+          "min": 0,
+          "max": 0
+        }
+      },
+      "support": {
+        "appearances": {
+          "n": 1553,
+          "mean": 687.169,
+          "median": 676,
+          "p90": 889,
+          "min": 80,
+          "max": 1163
+        },
+        "goals": {
+          "n": 1553,
+          "mean": 20.069,
+          "median": 15,
+          "p90": 40,
+          "min": 0,
+          "max": 161
+        },
+        "assists": {
+          "n": 1553,
+          "mean": 50.698,
+          "median": 35,
+          "p90": 106,
+          "min": 0,
+          "max": 289
+        },
+        "cleanSheets": {
+          "n": 1553,
+          "mean": 112.104,
+          "median": 120,
+          "p90": 237,
+          "min": 0,
+          "max": 507
+        },
+        "goalsPerGame": {
+          "n": 1553,
+          "mean": 0.026,
+          "median": 0.022,
+          "p90": 0.046,
+          "min": 0,
+          "max": 0.144
+        }
+      }
+    },
+    "trophies": {
+      "total": {
+        "n": 6000,
+        "mean": 6.127,
+        "median": 3,
+        "p90": 16,
+        "min": 0,
+        "max": 65
+      },
+      "club_world_cup": {
+        "n": 6000,
+        "mean": 0.068,
+        "median": 0,
+        "p90": 0,
+        "min": 0,
+        "max": 4
+      },
+      "continental_primary": {
+        "n": 6000,
+        "mean": 0.403,
+        "median": 0,
+        "p90": 2,
+        "min": 0,
+        "max": 8
+      },
+      "continental_secondary": {
+        "n": 6000,
+        "mean": 0.41,
+        "median": 0,
+        "p90": 1,
+        "min": 0,
+        "max": 6
+      },
+      "continental_super_cup": {
+        "n": 6000,
+        "mean": 0.252,
+        "median": 0,
+        "p90": 1,
+        "min": 0,
+        "max": 7
+      },
+      "continental_tertiary": {
+        "n": 6000,
+        "mean": 0.137,
+        "median": 0,
+        "p90": 1,
+        "min": 0,
+        "max": 3
+      },
+      "cup": {
+        "n": 6000,
+        "mean": 1.601,
+        "median": 1,
+        "p90": 4,
+        "min": 0,
+        "max": 16
+      },
+      "domestic_super_cup": {
+        "n": 6000,
+        "mean": 0.855,
+        "median": 0,
+        "p90": 3,
+        "min": 0,
+        "max": 16
+      },
+      "intercontinental_cup": {
+        "n": 6000,
+        "mean": 0.124,
+        "median": 0,
+        "p90": 0,
+        "min": 0,
+        "max": 6
+      },
+      "league": {
+        "n": 6000,
+        "mean": 2.017,
+        "median": 1,
+        "p90": 6,
+        "min": 0,
+        "max": 20
+      },
+      "league_cup": {
+        "n": 6000,
+        "mean": 0.124,
+        "median": 0,
+        "p90": 0,
+        "min": 0,
+        "max": 7
+      },
+      "national_continental": {
+        "n": 6000,
+        "mean": 0.106,
+        "median": 0,
+        "p90": 0,
+        "min": 0,
+        "max": 5
+      },
+      "world_cup": {
+        "n": 6000,
+        "mean": 0.033,
+        "median": 0,
+        "p90": 0,
+        "min": 0,
+        "max": 3
+      }
+    },
+    "awards": {
+      "ballonDor": {
+        "n": 6000,
+        "mean": 0.106,
+        "median": 0,
+        "p90": 0,
+        "min": 0,
+        "max": 8
+      },
+      "goldenBoot": {
+        "n": 6000,
+        "mean": 0.135,
+        "median": 0,
+        "p90": 0,
+        "min": 0,
+        "max": 11
+      },
+      "goldenGlove": {
+        "n": 6000,
+        "mean": 0.016,
+        "median": 0,
+        "p90": 0,
+        "min": 0,
+        "max": 13
+      }
+    },
+    "awardStreaks": {
+      "ballonDor": {
+        "n": 6000,
+        "mean": 0.057,
+        "median": 0,
+        "p90": 0,
+        "min": 0,
+        "max": 6
+      },
+      "goldenBoot": {
+        "n": 6000,
+        "mean": 0.069,
+        "median": 0,
+        "p90": 0,
+        "min": 0,
+        "max": 8
+      }
+    },
+    "recordsBroken": {
+      "ballon_dor": {
+        "count": 5,
+        "pct": 0.08
+      },
+      "clean_sheets": {
+        "count": 1,
+        "pct": 0.02
+      },
+      "consecutive_ballon_dor": {
+        "count": 3,
+        "pct": 0.05
+      },
+      "consecutive_continental_primary": {
+        "count": 18,
+        "pct": 0.3
+      },
+      "consecutive_league_titles": {
+        "count": 24,
+        "pct": 0.4
+      },
+      "continental_primary_conmebol": {
+        "count": 1,
+        "pct": 0.02
+      },
+      "continental_primary_uefa": {
+        "count": 26,
+        "pct": 0.43
+      },
+      "continental_secondary_conmebol": {
+        "count": 49,
+        "pct": 0.82
+      },
+      "golden_boots": {
+        "count": 59,
+        "pct": 0.98
+      },
+      "international_caps": {
+        "count": 10,
+        "pct": 0.17
+      },
+      "international_goals": {
+        "count": 1,
+        "pct": 0.02
+      },
+      "league_titles_bra": {
+        "count": 14,
+        "pct": 0.23
+      },
+      "league_titles_esp": {
+        "count": 6,
+        "pct": 0.1
+      },
+      "league_titles_fra": {
+        "count": 4,
+        "pct": 0.07
+      },
+      "league_titles_ger": {
+        "count": 7,
+        "pct": 0.12
+      },
+      "league_titles_ita": {
+        "count": 3,
+        "pct": 0.05
+      },
+      "season_assists": {
+        "count": 94,
+        "pct": 1.57
+      },
+      "season_goals": {
+        "count": 3,
+        "pct": 0.05
+      },
+      "total_trophies": {
+        "count": 17,
+        "pct": 0.28
+      },
+      "world_cups": {
+        "count": 3,
+        "pct": 0.05
+      }
+    },
+    "career": {
+      "seasons": {
+        "n": 6000,
+        "mean": 23.486,
+        "median": 24,
+        "p90": 24,
+        "min": 10,
+        "max": 24
+      },
+      "clubs": {
+        "n": 6000,
+        "mean": 7.592,
+        "median": 7,
+        "p90": 12,
+        "min": 1,
+        "max": 18
+      },
+      "countries": {
+        "n": 6000,
+        "mean": 3.226,
+        "median": 3,
+        "p90": 5,
+        "min": 1,
+        "max": 10
+      },
+      "caps": {
+        "n": 6000,
+        "mean": 45.762,
+        "median": 0,
+        "p90": 165,
+        "min": 0,
+        "max": 238
+      },
+      "fanSupport": {
+        "n": 6000,
+        "mean": 49.845,
+        "median": 51,
+        "p90": 70,
+        "min": 0,
+        "max": 100
+      },
+      "relegations": {
+        "n": 6000,
+        "mean": 0.557,
+        "median": 0,
+        "p90": 2,
+        "min": 0,
+        "max": 5
+      },
+      "promotions": {
+        "n": 6000,
+        "mean": 1.083,
+        "median": 1,
+        "p90": 3,
+        "min": 0,
+        "max": 6
+      },
+      "secondTierSeasons": {
+        "n": 6000,
+        "mean": 9.328,
+        "median": 9,
+        "p90": 18,
+        "min": 0,
+        "max": 24
+      }
+    },
+    "retirementReasons": {
+      "age": {
+        "count": 4845,
+        "pct": 80.8
+      },
+      "poor_form": {
+        "count": 1155,
+        "pct": 19.3
+      }
+    },
+    "confederationShare": {
+      "CONCACAF": {
+        "count": 11516,
+        "pct": 8.2
+      },
+      "CONMEBOL": {
+        "count": 62733,
+        "pct": 44.5
+      },
+      "UEFA": {
+        "count": 66667,
+        "pct": 47.3
+      }
+    }
+  }
+}
