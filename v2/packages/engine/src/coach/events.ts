@@ -459,34 +459,54 @@ const MATCH_OPTIONS: Readonly<Record<MatchContext["situation"], ReadonlyArray<{ 
   ],
 };
 
-function poissonAtLeast(lambda: number, goals: number): number {
-  let probability = 0;
-  let term = Math.exp(-lambda);
-  for (let k = 0; k < goals; k += 1) {
-    probability += term;
-    term *= lambda / (k + 1);
-  }
-  return 1 - probability;
+/**
+ * O que cada escolha tenta (spec 12): virar ou empatar, não piorar, vencer
+ * ou não perder. "Dar certo" é cumprir esse objetivo; a tela mostra também
+ * as chances de vitória, empate e derrota do resultado final.
+ */
+type MatchGoal = "win" | "notLose" | "noWorse";
+
+const MATCH_GOAL: Readonly<Record<string, MatchGoal>> = {
+  allIn: "notLose",
+  adjust: "notLose",
+  accept: "noWorse",
+  push: "win",
+  balance: "notLose",
+  hold: "notLose",
+  close: "win",
+  keepGoing: "win",
+  manage: "win",
+};
+
+function goalMet(goal: MatchGoal, diffBefore: number, diffAfter: number): boolean {
+  if (goal === "win") return diffAfter > 0;
+  if (goal === "notLose") return diffAfter >= 0;
+  return diffAfter >= diffBefore;
 }
 
-/** Chance de a escolha dar certo, pelo próprio modelo nos minutos que faltam. */
-function optionChance(situation: MatchContext["situation"], lambdaFor: number, lambdaAgainst: number, diff: number): number {
-  // Aproximação por grade: soma P(a) × P(b) para placares do resto do jogo.
+/** Chances pelo próprio modelo nos minutos que faltam (grade de placares do resto do jogo). */
+function optionOdds(goal: MatchGoal, lambdaFor: number, lambdaAgainst: number, diff: number): { chance: number; win: number; draw: number; loss: number } {
   const pmf = (lambda: number, k: number) => {
     let value = Math.exp(-lambda);
     for (let index = 1; index <= k; index += 1) value *= lambda / index;
     return value;
   };
   let good = 0;
+  let win = 0;
+  let draw = 0;
+  let loss = 0;
   for (let a = 0; a <= 8; a += 1) {
     for (let b = 0; b <= 8; b += 1) {
+      const p = pmf(lambdaFor, a) * pmf(lambdaAgainst, b);
       const final = diff + a - b;
-      const ok = situation === "losing" ? final >= 0 : situation === "drawing" ? final > 0 : final > 0;
-      if (ok) good += pmf(lambdaFor, a) * pmf(lambdaAgainst, b);
+      if (final > 0) win += p;
+      else if (final === 0) draw += p;
+      else loss += p;
+      if (goalMet(goal, diff, final)) good += p;
     }
   }
-  void poissonAtLeast;
-  return clamp(good, 0.03, 0.97);
+  const total = win + draw + loss;
+  return { chance: clamp(good / total, 0.03, 0.97), win: win / total, draw: draw / total, loss: loss / total };
 }
 
 export function buildMatchEvent(career: CoachCareer, fixture: Fixture, live: LiveMatch, coachIndex: 0 | 1, minute: number, input: DetailedInput): CoachEvent {
@@ -508,10 +528,11 @@ export function buildMatchEvent(career: CoachCareer, fixture: Fixture, live: Liv
   const baseFor = (lambdas[coachIndex] ?? 1) * (remaining / 90);
   const baseAgainst = (lambdas[coachIndex === 0 ? 1 : 0] ?? 1) * (remaining / 90);
   const options: EventOption[] = MATCH_OPTIONS[situation].map((entry) => {
-    const chance = optionChance(situation, baseFor * entry.forMult, baseAgainst * entry.againstMult, diff);
+    const odds = optionOdds(MATCH_GOAL[entry.id] ?? "win", baseFor * entry.forMult, baseAgainst * entry.againstMult, diff);
     return {
       id: entry.id,
-      chance,
+      chance: odds.chance,
+      odds: { win: odds.win, draw: odds.draw, loss: odds.loss },
       success: [{ type: "match", forMult: entry.forMult, againstMult: entry.againstMult }, { type: "fans", amount: fixture.round === "F" || fixture.round === "FF" ? 3 : 1 }],
       failure: [{ type: "match", forMult: entry.forMult, againstMult: entry.againstMult }],
     };
@@ -543,12 +564,11 @@ export function buildMatchEvent(career: CoachCareer, fixture: Fixture, live: Liv
 }
 
 /** Resultado do evento de partida pelo placar final (a chance mostrada vem do modelo). */
-export function matchEventSuccess(event: CoachEvent, ownGoals: number, otherGoals: number, aggregateBefore: readonly [number, number] | null): boolean {
+export function matchEventSuccess(event: CoachEvent, option: string, ownGoals: number, otherGoals: number, aggregateBefore: readonly [number, number] | null): boolean {
   const before = aggregateBefore ?? [0, 0];
   const diff = ownGoals + before[0] - (otherGoals + before[1]);
-  const situation = event.match?.situation ?? "drawing";
-  if (situation === "losing") return diff >= 0;
-  return diff > 0;
+  const at = event.match ? (event.match.aggregate ? event.match.aggregate[0] - event.match.aggregate[1] : event.match.score[0] - event.match.score[1]) : 0;
+  return goalMet(MATCH_GOAL[option] ?? "win", at, diff);
 }
 
 // ------------------------------------------------------------ efeitos

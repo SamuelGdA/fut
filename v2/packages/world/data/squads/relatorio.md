@@ -10,40 +10,40 @@ Gerado por `pnpm elencos:montar`. Fontes, ordem das camadas e regras na D52 (doc
 
 ## Por país e divisão
 
-| País | Div. | Clubes | Jogadores | FC 27 | eFootball | Conhecimento | Gerados | Reais | Deslocamento da liga |
-|---|---|---|---|---|---|---|---|---|---|
-| ARG | 1 | 30 | 878 | 867 | 10 | 0 | 1 | 100% | 2.9 (30 clubes) |
-| ARG | 2 | 36 | 792 | 0 | 0 | 4 | 788 | 1% | sem medida |
-| BOL | 1 | 8 | 185 | 80 | 0 | 5 | 100 | 46% | 3.1 (3 clubes) |
-| BOL | 2 | 8 | 176 | 0 | 0 | 0 | 176 | 0% | sem medida |
-| BRA | 1 | 20 | 518 | 53 | 409 | 31 | 25 | 95% | 4.1 (18 clubes) |
-| BRA | 2 | 20 | 443 | 0 | 33 | 40 | 370 | 16% | 9.5 (1 clubes) |
-| CHI | 1 | 9 | 283 | 128 | 155 | 0 | 0 | 100% | 2.2 (9 clubes) |
-| CHI | 2 | 10 | 232 | 0 | 34 | 0 | 198 | 15% | 15.9 (1 clubes) |
-| COL | 1 | 10 | 265 | 177 | 85 | 1 | 2 | 99% | 2.6 (10 clubes) |
-| COL | 2 | 10 | 247 | 0 | 92 | 0 | 155 | 37% | 14.8 (3 clubes) |
-| ECU | 1 | 9 | 213 | 125 | 0 | 2 | 86 | 60% | 1.1 (5 clubes) |
-| ECU | 2 | 9 | 198 | 0 | 0 | 0 | 198 | 0% | sem medida |
-| ENG | 1 | 20 | 612 | 612 | 0 | 0 | 0 | 100% | 0.5 (20 clubes) |
-| ENG | 2 | 24 | 669 | 669 | 0 | 0 | 0 | 100% | 0.9 (24 clubes) |
-| ESP | 1 | 20 | 548 | 548 | 0 | 0 | 0 | 100% | 0.1 (20 clubes) |
-| ESP | 2 | 20 | 504 | 477 | 0 | 2 | 25 | 95% | 0.4 (18 clubes) |
-| FRA | 1 | 18 | 501 | 500 | 0 | 0 | 1 | 100% | -1 (18 clubes) |
-| FRA | 2 | 18 | 460 | 459 | 0 | 0 | 1 | 100% | -0.9 (18 clubes) |
-| GER | 1 | 18 | 548 | 548 | 0 | 0 | 0 | 100% | -0.6 (18 clubes) |
-| GER | 2 | 18 | 499 | 499 | 0 | 0 | 0 | 100% | -0.3 (18 clubes) |
-| ITA | 1 | 20 | 572 | 572 | 0 | 0 | 0 | 100% | -0.8 (20 clubes) |
-| ITA | 2 | 20 | 501 | 404 | 0 | 24 | 73 | 85% | 1.5 (16 clubes) |
-| MEX | 1 | 18 | 441 | 439 | 0 | 0 | 2 | 100% | -0.1 (18 clubes) |
-| PAR | 1 | 8 | 209 | 121 | 0 | 0 | 88 | 58% | 4.3 (4 clubes) |
-| PAR | 2 | 8 | 176 | 0 | 0 | 0 | 176 | 0% | sem medida |
-| PER | 1 | 8 | 185 | 104 | 0 | 24 | 57 | 69% | 3.2 (4 clubes) |
-| PER | 2 | 8 | 176 | 0 | 0 | 0 | 176 | 0% | sem medida |
-| URU | 1 | 9 | 214 | 116 | 0 | 0 | 98 | 54% | 3.6 (4 clubes) |
-| URU | 2 | 9 | 198 | 0 | 0 | 0 | 198 | 0% | sem medida |
-| USA | 1 | 30 | 806 | 806 | 0 | 0 | 0 | 100% | 1.5 (30 clubes) |
-| VEN | 1 | 8 | 184 | 111 | 0 | 0 | 73 | 60% | 4.6 (5 clubes) |
-| VEN | 2 | 8 | 176 | 0 | 0 | 0 | 176 | 0% | sem medida |
+| País | Div. | Clubes | Jogadores | FC 27 | eFootball | Conhecimento | Gerados | Reais | Deslocamento da liga | Ajuste da 2ª |
+|---|---|---|---|---|---|---|---|---|---|---|
+| ARG | 1 | 30 | 878 | 867 | 10 | 0 | 1 | 100% | 2.9 (30 clubes) | - |
+| ARG | 2 | 36 | 792 | 0 | 0 | 4 | 788 | 1% | sem medida | +0 |
+| BOL | 1 | 8 | 185 | 80 | 0 | 5 | 100 | 46% | 3.1 (3 clubes) | - |
+| BOL | 2 | 8 | 176 | 0 | 0 | 0 | 176 | 0% | sem medida | +0.8 |
+| BRA | 1 | 20 | 518 | 53 | 409 | 31 | 25 | 95% | 4.1 (18 clubes) | - |
+| BRA | 2 | 20 | 443 | 0 | 33 | 40 | 370 | 16% | 9.5 (1 clubes) | +3.1 |
+| CHI | 1 | 9 | 283 | 128 | 155 | 0 | 0 | 100% | 2.2 (9 clubes) | - |
+| CHI | 2 | 10 | 232 | 0 | 34 | 0 | 198 | 15% | 15.9 (1 clubes) | +1.5 |
+| COL | 1 | 10 | 265 | 177 | 85 | 1 | 2 | 99% | 2.6 (10 clubes) | - |
+| COL | 2 | 10 | 247 | 0 | 92 | 0 | 155 | 37% | 14.8 (3 clubes) | +5.8 |
+| ECU | 1 | 9 | 213 | 125 | 0 | 2 | 86 | 60% | 1.1 (5 clubes) | - |
+| ECU | 2 | 9 | 198 | 0 | 0 | 0 | 198 | 0% | sem medida | +3.2 |
+| ENG | 1 | 20 | 612 | 612 | 0 | 0 | 0 | 100% | 0.5 (20 clubes) | - |
+| ENG | 2 | 24 | 669 | 669 | 0 | 0 | 0 | 100% | 0.9 (24 clubes) | - |
+| ESP | 1 | 20 | 548 | 548 | 0 | 0 | 0 | 100% | 0.1 (20 clubes) | - |
+| ESP | 2 | 20 | 504 | 477 | 0 | 2 | 25 | 95% | 0.4 (18 clubes) | - |
+| FRA | 1 | 18 | 501 | 500 | 0 | 0 | 1 | 100% | -1 (18 clubes) | - |
+| FRA | 2 | 18 | 460 | 459 | 0 | 0 | 1 | 100% | -0.9 (18 clubes) | - |
+| GER | 1 | 18 | 548 | 548 | 0 | 0 | 0 | 100% | -0.6 (18 clubes) | - |
+| GER | 2 | 18 | 499 | 499 | 0 | 0 | 0 | 100% | -0.3 (18 clubes) | - |
+| ITA | 1 | 20 | 572 | 572 | 0 | 0 | 0 | 100% | -0.8 (20 clubes) | - |
+| ITA | 2 | 20 | 501 | 404 | 0 | 24 | 73 | 85% | 1.5 (16 clubes) | - |
+| MEX | 1 | 18 | 441 | 439 | 0 | 0 | 2 | 100% | -0.1 (18 clubes) | - |
+| PAR | 1 | 8 | 209 | 121 | 0 | 0 | 88 | 58% | 4.3 (4 clubes) | - |
+| PAR | 2 | 8 | 176 | 0 | 0 | 0 | 176 | 0% | sem medida | +2.4 |
+| PER | 1 | 8 | 185 | 104 | 0 | 24 | 57 | 69% | 3.2 (4 clubes) | - |
+| PER | 2 | 8 | 176 | 0 | 0 | 0 | 176 | 0% | sem medida | +0.5 |
+| URU | 1 | 9 | 214 | 116 | 0 | 0 | 98 | 54% | 3.6 (4 clubes) | - |
+| URU | 2 | 9 | 198 | 0 | 0 | 0 | 198 | 0% | sem medida | +3.5 |
+| USA | 1 | 30 | 806 | 806 | 0 | 0 | 0 | 100% | 1.5 (30 clubes) | - |
+| VEN | 1 | 8 | 184 | 111 | 0 | 0 | 73 | 60% | 4.6 (5 clubes) | - |
+| VEN | 2 | 8 | 176 | 0 | 0 | 0 | 176 | 0% | sem medida | +2.3 |
 
 ## Por clube
 
@@ -123,14 +123,14 @@ Gerado por `pnpm elencos:montar`. Fontes, ordem das camadas e regras na D52 (doc
 | Nacional Potosí | BOL | 1 | 60 | 63.1 | 61.4 | 0 | 0 | 0 | 22 |
 | Guabirá | BOL | 1 | 59 | 62.1 | 60.5 | 0 | 0 | 0 | 22 |
 | San Antonio Bulo Bulo | BOL | 1 | 59 | 62.1 | 60.7 | 0 | 0 | 0 | 22 |
-| Jorge Wilstermann | BOL | 2 | 59 | 62.1 | 60.1 | 0 | 0 | 0 | 22 |
-| Real Potosí | BOL | 2 | 57 | 60.1 | 58.8 | 0 | 0 | 0 | 22 |
-| Universitario de Vinto | BOL | 2 | 56 | 59.1 | 57.1 | 0 | 0 | 0 | 22 |
-| Club Destroyers | BOL | 2 | 55 | 58.1 | 56.6 | 0 | 0 | 0 | 22 |
-| Real Oruro | BOL | 2 | 55 | 58.1 | 56.4 | 0 | 0 | 0 | 22 |
-| Academia del Balompié | BOL | 2 | 55 | 58.1 | 57.2 | 0 | 0 | 0 | 22 |
-| Vaca Díez | BOL | 2 | 54 | 57.1 | 55.8 | 0 | 0 | 0 | 22 |
-| San Juan | BOL | 2 | 53 | 56.1 | 54.2 | 0 | 0 | 0 | 22 |
+| Jorge Wilstermann | BOL | 2 | 59 | 62.1 | 60.8 | 0 | 0 | 0 | 22 |
+| Real Potosí | BOL | 2 | 57 | 60.1 | 59.6 | 0 | 0 | 0 | 22 |
+| Universitario de Vinto | BOL | 2 | 56 | 59.1 | 57.9 | 0 | 0 | 0 | 22 |
+| Club Destroyers | BOL | 2 | 55 | 58.1 | 57.3 | 0 | 0 | 0 | 22 |
+| Real Oruro | BOL | 2 | 55 | 58.1 | 57 | 0 | 0 | 0 | 22 |
+| Academia del Balompié | BOL | 2 | 55 | 58.1 | 58.1 | 0 | 0 | 0 | 22 |
+| Vaca Díez | BOL | 2 | 54 | 57.1 | 56.4 | 0 | 0 | 0 | 22 |
+| San Juan | BOL | 2 | 53 | 56.1 | 55 | 0 | 0 | 0 | 22 |
 | Flamengo | BRA | 1 | 79 | 83.1 | 80.6 | 0 | 20 | 4 | 0 |
 | Palmeiras | BRA | 1 | 79 | 83.1 | 79.4 | 0 | 25 | 0 | 0 |
 | Botafogo | BRA | 1 | 76 | 80.1 | 73.4 | 27 | 0 | 0 | 0 |
@@ -151,26 +151,26 @@ Gerado por `pnpm elencos:montar`. Fontes, ordem das camadas e regras na D52 (doc
 | Vitoria | BRA | 1 | 69 | 73.1 | 75.7 | 0 | 19 | 3 | 0 |
 | Chapecoense | BRA | 1 | 67 | 71.1 | 73.9 | 0 | 21 | 0 | 1 |
 | Remo | BRA | 1 | 67 | 71.1 | 69.9 | 0 | 0 | 3 | 19 |
-| Sport Recife | BRA | 2 | 66 | 70.1 | 73.6 | 0 | 13 | 4 | 5 |
+| Sport Recife | BRA | 2 | 66 | 70.1 | 74 | 0 | 13 | 4 | 5 |
 | Ceará | BRA | 2 | 66 | 70.1 | 75.5 | 0 | 20 | 5 | 0 |
-| Goiás | BRA | 2 | 65 | 69.1 | 67.7 | 0 | 0 | 1 | 21 |
-| América-MG | BRA | 2 | 65 | 69.1 | 67.5 | 0 | 0 | 1 | 21 |
-| Cuiabá | BRA | 2 | 65 | 69.1 | 67.6 | 0 | 0 | 2 | 20 |
-| Criciúma | BRA | 2 | 64 | 68.1 | 66.4 | 0 | 0 | 5 | 17 |
-| Novorizontino | BRA | 2 | 64 | 68.1 | 66.1 | 0 | 0 | 5 | 17 |
-| Avaí | BRA | 2 | 63 | 67.1 | 65.3 | 0 | 0 | 0 | 22 |
-| Ponte Preta | BRA | 2 | 62 | 66.1 | 64.6 | 0 | 0 | 2 | 20 |
-| Guarani | BRA | 2 | 62 | 66.1 | 64.7 | 0 | 0 | 1 | 21 |
-| Náutico | BRA | 2 | 62 | 66.1 | 65.1 | 0 | 0 | 1 | 21 |
-| Vila Nova | BRA | 2 | 62 | 66.1 | 64.3 | 0 | 0 | 1 | 21 |
-| Paysandu | BRA | 2 | 62 | 66.1 | 64.8 | 0 | 0 | 9 | 13 |
-| Operário-PR | BRA | 2 | 62 | 66.1 | 65.2 | 0 | 0 | 0 | 22 |
-| CRB | BRA | 2 | 62 | 66.1 | 64.3 | 0 | 0 | 1 | 21 |
-| Ferroviária | BRA | 2 | 61 | 65.1 | 64.1 | 0 | 0 | 1 | 21 |
-| Botafogo-SP | BRA | 2 | 61 | 65.1 | 63.5 | 0 | 0 | 0 | 22 |
-| Volta Redonda | BRA | 2 | 61 | 65.1 | 63.2 | 0 | 0 | 0 | 22 |
-| Amazonas | BRA | 2 | 61 | 65.1 | 64.2 | 0 | 0 | 1 | 21 |
-| Athletic-MG | BRA | 2 | 60 | 64.1 | 62.5 | 0 | 0 | 0 | 22 |
+| Goiás | BRA | 2 | 65 | 69.1 | 70.8 | 0 | 0 | 1 | 21 |
+| América-MG | BRA | 2 | 65 | 69.1 | 70.6 | 0 | 0 | 1 | 21 |
+| Cuiabá | BRA | 2 | 65 | 69.1 | 70.7 | 0 | 0 | 2 | 20 |
+| Criciúma | BRA | 2 | 64 | 68.1 | 69.6 | 0 | 0 | 5 | 17 |
+| Novorizontino | BRA | 2 | 64 | 68.1 | 69.2 | 0 | 0 | 5 | 17 |
+| Avaí | BRA | 2 | 63 | 67.1 | 68.4 | 0 | 0 | 0 | 22 |
+| Ponte Preta | BRA | 2 | 62 | 66.1 | 67.6 | 0 | 0 | 2 | 20 |
+| Guarani | BRA | 2 | 62 | 66.1 | 67.8 | 0 | 0 | 1 | 21 |
+| Náutico | BRA | 2 | 62 | 66.1 | 68.1 | 0 | 0 | 1 | 21 |
+| Vila Nova | BRA | 2 | 62 | 66.1 | 67.3 | 0 | 0 | 1 | 21 |
+| Paysandu | BRA | 2 | 62 | 66.1 | 67.8 | 0 | 0 | 9 | 13 |
+| Operário-PR | BRA | 2 | 62 | 66.1 | 68.3 | 0 | 0 | 0 | 22 |
+| CRB | BRA | 2 | 62 | 66.1 | 67.3 | 0 | 0 | 1 | 21 |
+| Ferroviária | BRA | 2 | 61 | 65.1 | 67.1 | 0 | 0 | 1 | 21 |
+| Botafogo-SP | BRA | 2 | 61 | 65.1 | 66.6 | 0 | 0 | 0 | 22 |
+| Volta Redonda | BRA | 2 | 61 | 65.1 | 66.2 | 0 | 0 | 0 | 22 |
+| Amazonas | BRA | 2 | 61 | 65.1 | 67.2 | 0 | 0 | 1 | 21 |
+| Athletic-MG | BRA | 2 | 60 | 64.1 | 65.6 | 0 | 0 | 0 | 22 |
 | Colo Colo | CHI | 1 | 69 | 71.2 | 75.6 | 0 | 40 | 0 | 0 |
 | Universidad Católica | CHI | 1 | 68 | 70.2 | 69.9 | 27 | 0 | 0 | 0 |
 | Universidad de Chile | CHI | 1 | 68 | 70.2 | 75.5 | 0 | 37 | 0 | 0 |
@@ -180,16 +180,16 @@ Gerado por `pnpm elencos:montar`. Fontes, ordem das camadas e regras na D52 (doc
 | O'Higgins | CHI | 1 | 65 | 67.2 | 66.6 | 25 | 0 | 0 | 0 |
 | Palestino | CHI | 1 | 65 | 67.2 | 66.9 | 25 | 0 | 0 | 0 |
 | Áudax Italiano | CHI | 1 | 65 | 67.2 | 67.2 | 26 | 0 | 0 | 0 |
-| Cobreloa | CHI | 2 | 61 | 63.2 | 62.2 | 0 | 0 | 0 | 22 |
-| Santiago Wanderers | CHI | 2 | 60 | 62.2 | 60.8 | 0 | 0 | 0 | 22 |
-| Deportes Antofagasta | CHI | 2 | 59 | 61.2 | 60.3 | 0 | 0 | 0 | 22 |
-| Deportes Magallanes | CHI | 2 | 58 | 60.2 | 58.8 | 0 | 0 | 0 | 22 |
-| Rangers de Talca | CHI | 2 | 58 | 60.2 | 59.1 | 0 | 0 | 0 | 22 |
-| Deportes Temuco | CHI | 2 | 58 | 60.2 | 58.6 | 0 | 0 | 0 | 22 |
-| Deportes Copiapó | CHI | 2 | 58 | 60.2 | 58.3 | 0 | 0 | 0 | 22 |
-| Curicó Unido | CHI | 2 | 58 | 60.2 | 59.1 | 0 | 0 | 0 | 22 |
+| Cobreloa | CHI | 2 | 61 | 63.2 | 63.7 | 0 | 0 | 0 | 22 |
+| Santiago Wanderers | CHI | 2 | 60 | 62.2 | 62.4 | 0 | 0 | 0 | 22 |
+| Deportes Antofagasta | CHI | 2 | 59 | 61.2 | 61.8 | 0 | 0 | 0 | 22 |
+| Deportes Magallanes | CHI | 2 | 58 | 60.2 | 60.1 | 0 | 0 | 0 | 22 |
+| Rangers de Talca | CHI | 2 | 58 | 60.2 | 60.4 | 0 | 0 | 0 | 22 |
+| Deportes Temuco | CHI | 2 | 58 | 60.2 | 60 | 0 | 0 | 0 | 22 |
+| Deportes Copiapó | CHI | 2 | 58 | 60.2 | 59.8 | 0 | 0 | 0 | 22 |
+| Curicó Unido | CHI | 2 | 58 | 60.2 | 60.6 | 0 | 0 | 0 | 22 |
 | Deportes Concepción | CHI | 2 | 58 | 60.2 | 73.9 | 0 | 34 | 0 | 0 |
-| San Marcos de Arica | CHI | 2 | 57 | 59.2 | 57.4 | 0 | 0 | 0 | 22 |
+| San Marcos de Arica | CHI | 2 | 57 | 59.2 | 59 | 0 | 0 | 0 | 22 |
 | Atlético Nacional | COL | 1 | 70 | 72.6 | 72.6 | 30 | 0 | 0 | 0 |
 | América de Cali | COL | 1 | 68 | 70.6 | 70 | 23 | 0 | 0 | 1 |
 | Junior | COL | 1 | 68 | 70.6 | 70.6 | 25 | 0 | 0 | 0 |
@@ -201,15 +201,15 @@ Gerado por `pnpm elencos:montar`. Fontes, ordem das camadas e regras na D52 (doc
 | Deportivo Cali | COL | 1 | 66 | 68.6 | 76.6 | 0 | 31 | 0 | 0 |
 | Once Caldas | COL | 1 | 66 | 68.6 | 74.9 | 0 | 26 | 0 | 0 |
 | Cúcuta Deportivo | COL | 2 | 59 | 61.6 | 73.6 | 0 | 29 | 0 | 0 |
-| Atlético Huila | COL | 2 | 59 | 61.6 | 60 | 0 | 0 | 0 | 22 |
+| Atlético Huila | COL | 2 | 59 | 61.6 | 65.7 | 0 | 0 | 0 | 22 |
 | Jaguares de Córdoba | COL | 2 | 59 | 61.6 | 73.8 | 0 | 32 | 0 | 0 |
-| Unión Magdalena | COL | 2 | 59 | 61.6 | 60 | 0 | 0 | 0 | 22 |
-| Real Cartagena | COL | 2 | 58 | 60.6 | 58.8 | 0 | 0 | 0 | 22 |
-| Patriotas Boyacá | COL | 2 | 58 | 60.6 | 58.4 | 0 | 0 | 0 | 22 |
-| Deportes Quindío | COL | 2 | 58 | 60.6 | 59.4 | 0 | 0 | 0 | 22 |
-| Itagüí Leones | COL | 2 | 58 | 60.6 | 59.3 | 0 | 0 | 0 | 22 |
+| Unión Magdalena | COL | 2 | 59 | 61.6 | 65.6 | 0 | 0 | 0 | 22 |
+| Real Cartagena | COL | 2 | 58 | 60.6 | 64.7 | 0 | 0 | 0 | 22 |
+| Patriotas Boyacá | COL | 2 | 58 | 60.6 | 64.3 | 0 | 0 | 0 | 22 |
+| Deportes Quindío | COL | 2 | 58 | 60.6 | 65 | 0 | 0 | 0 | 22 |
+| Itagüí Leones | COL | 2 | 58 | 60.6 | 65.1 | 0 | 0 | 0 | 22 |
 | Internacional de Bogotá | COL | 2 | 58 | 60.6 | 73.9 | 0 | 31 | 0 | 1 |
-| Boca Juniors de Cali | COL | 2 | 56 | 58.6 | 57.3 | 0 | 0 | 0 | 22 |
+| Boca Juniors de Cali | COL | 2 | 56 | 58.6 | 63 | 0 | 0 | 0 | 22 |
 | Independiente del Valle | ECU | 1 | 70 | 71.1 | 70.9 | 29 | 0 | 0 | 0 |
 | LDU de Quito | ECU | 1 | 70 | 71.1 | 70.6 | 26 | 0 | 0 | 0 |
 | Barcelona SC | ECU | 1 | 68 | 69.1 | 69.1 | 22 | 0 | 0 | 0 |
@@ -219,15 +219,15 @@ Gerado por `pnpm elencos:montar`. Fontes, ordem das camadas e regras na D52 (doc
 | Libertad | ECU | 1 | 64 | 65.1 | 63.6 | 0 | 0 | 0 | 22 |
 | Orense SC | ECU | 1 | 64 | 65.1 | 63.5 | 0 | 0 | 0 | 22 |
 | Macará | ECU | 1 | 63 | 64.1 | 66.7 | 23 | 0 | 0 | 0 |
-| El Nacional | ECU | 2 | 60 | 61.1 | 59.4 | 0 | 0 | 0 | 22 |
-| Independiente Juniors | ECU | 2 | 58 | 59.1 | 58.1 | 0 | 0 | 0 | 22 |
-| Liga de Portoviejo | ECU | 2 | 57 | 58.1 | 56.7 | 0 | 0 | 0 | 22 |
-| 9 de Octubre | ECU | 2 | 57 | 58.1 | 56.9 | 0 | 0 | 0 | 22 |
-| Cumbayá | ECU | 2 | 57 | 58.1 | 57.1 | 0 | 0 | 0 | 22 |
-| Gualaceo | ECU | 2 | 56 | 57.1 | 55.6 | 0 | 0 | 0 | 22 |
-| Cuenca Juniors | ECU | 2 | 55 | 56.1 | 54.7 | 0 | 0 | 0 | 22 |
-| Vinotinto Ecuador | ECU | 2 | 55 | 56.1 | 55 | 0 | 0 | 0 | 22 |
-| Santo Domingo | ECU | 2 | 55 | 56.1 | 53.7 | 0 | 0 | 0 | 22 |
+| El Nacional | ECU | 2 | 60 | 61.1 | 62.5 | 0 | 0 | 0 | 22 |
+| Independiente Juniors | ECU | 2 | 58 | 59.1 | 61.3 | 0 | 0 | 0 | 22 |
+| Liga de Portoviejo | ECU | 2 | 57 | 58.1 | 59.8 | 0 | 0 | 0 | 22 |
+| 9 de Octubre | ECU | 2 | 57 | 58.1 | 60 | 0 | 0 | 0 | 22 |
+| Cumbayá | ECU | 2 | 57 | 58.1 | 60.1 | 0 | 0 | 0 | 22 |
+| Gualaceo | ECU | 2 | 56 | 57.1 | 58.9 | 0 | 0 | 0 | 22 |
+| Cuenca Juniors | ECU | 2 | 55 | 56.1 | 58.1 | 0 | 0 | 0 | 22 |
+| Vinotinto Ecuador | ECU | 2 | 55 | 56.1 | 58.2 | 0 | 0 | 0 | 22 |
+| Santo Domingo | ECU | 2 | 55 | 56.1 | 57.1 | 0 | 0 | 0 | 22 |
 | Arsenal | ENG | 1 | 87 | 87.5 | 85.8 | 29 | 0 | 0 | 0 |
 | Liverpool | ENG | 1 | 87 | 87.5 | 83.9 | 32 | 0 | 0 | 0 |
 | Manchester City | ENG | 1 | 87 | 87.5 | 85 | 30 | 0 | 0 | 0 |
@@ -450,14 +450,14 @@ Gerado por `pnpm elencos:montar`. Fontes, ordem das camadas e regras na D52 (doc
 | 2 de Mayo | PAR | 1 | 61 | 65.3 | 64.8 | 0 | 0 | 0 | 22 |
 | Deportivo Recoleta | PAR | 1 | 61 | 65.3 | 67.1 | 35 | 0 | 0 | 0 |
 | Sportivo Trinidense | PAR | 1 | 61 | 65.3 | 63.4 | 0 | 0 | 0 | 22 |
-| Sportivo Luqueño | PAR | 2 | 58 | 62.3 | 61 | 0 | 0 | 0 | 22 |
-| Sol de América | PAR | 2 | 58 | 62.3 | 60.7 | 0 | 0 | 0 | 22 |
-| Rubio Ñu | PAR | 2 | 57 | 61.3 | 59.7 | 0 | 0 | 0 | 22 |
-| River Plate | PAR | 2 | 56 | 60.3 | 58.2 | 0 | 0 | 0 | 22 |
-| Atlético Colegiales | PAR | 2 | 56 | 60.3 | 58.9 | 0 | 0 | 0 | 22 |
-| 12 de Octubre | PAR | 2 | 56 | 60.3 | 58.9 | 0 | 0 | 0 | 22 |
-| Independiente de Campo Grande | PAR | 2 | 55 | 59.3 | 57.9 | 0 | 0 | 0 | 22 |
-| Tacuary | PAR | 2 | 55 | 59.3 | 57.8 | 0 | 0 | 0 | 22 |
+| Sportivo Luqueño | PAR | 2 | 58 | 62.3 | 63.5 | 0 | 0 | 0 | 22 |
+| Sol de América | PAR | 2 | 58 | 62.3 | 63.3 | 0 | 0 | 0 | 22 |
+| Rubio Ñu | PAR | 2 | 57 | 61.3 | 62.2 | 0 | 0 | 0 | 22 |
+| River Plate | PAR | 2 | 56 | 60.3 | 60.4 | 0 | 0 | 0 | 22 |
+| Atlético Colegiales | PAR | 2 | 56 | 60.3 | 61.2 | 0 | 0 | 0 | 22 |
+| 12 de Octubre | PAR | 2 | 56 | 60.3 | 61.2 | 0 | 0 | 0 | 22 |
+| Independiente de Campo Grande | PAR | 2 | 55 | 59.3 | 60.4 | 0 | 0 | 0 | 22 |
+| Tacuary | PAR | 2 | 55 | 59.3 | 60.3 | 0 | 0 | 0 | 22 |
 | Universitario | PER | 1 | 67 | 70.2 | 70 | 19 | 0 | 2 | 1 |
 | Alianza Lima | PER | 1 | 66 | 69.2 | 68.4 | 0 | 0 | 15 | 7 |
 | Sporting Cristal | PER | 1 | 66 | 69.2 | 69.2 | 29 | 0 | 0 | 0 |
@@ -466,14 +466,14 @@ Gerado por `pnpm elencos:montar`. Fontes, ordem das camadas e regras na D52 (doc
 | Cusco | PER | 1 | 63 | 66.2 | 67.4 | 15 | 0 | 0 | 7 |
 | Alianza Atletico | PER | 1 | 62 | 65.2 | 65.1 | 24 | 0 | 0 | 0 |
 | Deportivo Garcilaso | PER | 1 | 62 | 65.2 | 63.6 | 0 | 0 | 0 | 22 |
-| César Vallejo | PER | 2 | 59 | 62.2 | 61.3 | 0 | 0 | 0 | 22 |
-| Carlos A. Mannucci | PER | 2 | 57 | 60.2 | 59 | 0 | 0 | 0 | 22 |
-| Universidad San Martín | PER | 2 | 57 | 60.2 | 58.2 | 0 | 0 | 0 | 22 |
-| Unión Comercio | PER | 2 | 56 | 59.2 | 56.5 | 0 | 0 | 0 | 22 |
-| Deportivo Coopsol | PER | 2 | 55 | 58.2 | 56.6 | 0 | 0 | 0 | 22 |
-| Academia Cantolao | PER | 2 | 55 | 58.2 | 57.2 | 0 | 0 | 0 | 22 |
-| Deportivo Llacuabamba | PER | 2 | 54 | 57.2 | 55.9 | 0 | 0 | 0 | 22 |
-| Pirata FC | PER | 2 | 54 | 57.2 | 55.4 | 0 | 0 | 0 | 22 |
+| César Vallejo | PER | 2 | 59 | 62.2 | 61.7 | 0 | 0 | 0 | 22 |
+| Carlos A. Mannucci | PER | 2 | 57 | 60.2 | 59.6 | 0 | 0 | 0 | 22 |
+| Universidad San Martín | PER | 2 | 57 | 60.2 | 58.7 | 0 | 0 | 0 | 22 |
+| Unión Comercio | PER | 2 | 56 | 59.2 | 57 | 0 | 0 | 0 | 22 |
+| Deportivo Coopsol | PER | 2 | 55 | 58.2 | 57.1 | 0 | 0 | 0 | 22 |
+| Academia Cantolao | PER | 2 | 55 | 58.2 | 57.6 | 0 | 0 | 0 | 22 |
+| Deportivo Llacuabamba | PER | 2 | 54 | 57.2 | 56.6 | 0 | 0 | 0 | 22 |
+| Pirata FC | PER | 2 | 54 | 57.2 | 55.9 | 0 | 0 | 0 | 22 |
 | Nacional | URU | 1 | 68 | 71.6 | 71 | 27 | 0 | 0 | 0 |
 | Peñarol | URU | 1 | 68 | 71.6 | 71.6 | 28 | 0 | 0 | 0 |
 | Defensor Sporting | URU | 1 | 64 | 67.6 | 65.9 | 0 | 0 | 0 | 22 |
@@ -483,15 +483,15 @@ Gerado por `pnpm elencos:montar`. Fontes, ordem das camadas e regras na D52 (doc
 | Racing de Montevideo | URU | 1 | 62 | 65.6 | 64.6 | 0 | 0 | 0 | 22 |
 | Albion FC | URU | 1 | 61 | 64.6 | 63.9 | 0 | 0 | 0 | 22 |
 | Juventud | URU | 1 | 61 | 64.6 | 66.5 | 12 | 0 | 0 | 10 |
-| Rampla Juniors | URU | 2 | 57 | 60.6 | 60.1 | 0 | 0 | 0 | 22 |
-| Deportivo Maldonado | URU | 2 | 57 | 60.6 | 58.7 | 0 | 0 | 0 | 22 |
-| Central Español | URU | 2 | 56 | 59.6 | 59.1 | 0 | 0 | 0 | 22 |
-| Sud América | URU | 2 | 56 | 59.6 | 58 | 0 | 0 | 0 | 22 |
-| Rentistas | URU | 2 | 56 | 59.6 | 58.2 | 0 | 0 | 0 | 22 |
-| Villa Española | URU | 2 | 55 | 58.6 | 57.9 | 0 | 0 | 0 | 22 |
-| Uruguay Montevideo | URU | 2 | 55 | 58.6 | 57 | 0 | 0 | 0 | 22 |
-| Atenas de San Carlos | URU | 2 | 55 | 58.6 | 57 | 0 | 0 | 0 | 22 |
-| Tacuarembó | URU | 2 | 55 | 58.6 | 57.1 | 0 | 0 | 0 | 22 |
+| Rampla Juniors | URU | 2 | 57 | 60.6 | 63.6 | 0 | 0 | 0 | 22 |
+| Deportivo Maldonado | URU | 2 | 57 | 60.6 | 62.4 | 0 | 0 | 0 | 22 |
+| Central Español | URU | 2 | 56 | 59.6 | 62.6 | 0 | 0 | 0 | 22 |
+| Sud América | URU | 2 | 56 | 59.6 | 61.6 | 0 | 0 | 0 | 22 |
+| Rentistas | URU | 2 | 56 | 59.6 | 61.6 | 0 | 0 | 0 | 22 |
+| Villa Española | URU | 2 | 55 | 58.6 | 61.4 | 0 | 0 | 0 | 22 |
+| Uruguay Montevideo | URU | 2 | 55 | 58.6 | 60.6 | 0 | 0 | 0 | 22 |
+| Atenas de San Carlos | URU | 2 | 55 | 58.6 | 60.4 | 0 | 0 | 0 | 22 |
+| Tacuarembó | URU | 2 | 55 | 58.6 | 60.6 | 0 | 0 | 0 | 22 |
 | Inter Miami | USA | 1 | 74 | 75.5 | 74.6 | 26 | 0 | 0 | 0 |
 | Los Angeles FC | USA | 1 | 72 | 73.5 | 72.1 | 24 | 0 | 0 | 0 |
 | Los Angeles Galaxy | USA | 1 | 71 | 72.5 | 71.4 | 26 | 0 | 0 | 0 |
@@ -530,14 +530,14 @@ Gerado por `pnpm elencos:montar`. Fontes, ordem das camadas e regras na D52 (doc
 | Metropolitanos FC | VEN | 1 | 61 | 65.6 | 64.4 | 0 | 0 | 0 | 22 |
 | Monagas SC | VEN | 1 | 61 | 65.6 | 64.1 | 0 | 0 | 0 | 22 |
 | UCV | VEN | 1 | 61 | 65.6 | 67.3 | 21 | 0 | 0 | 1 |
-| Mineros de Guayana | VEN | 2 | 57 | 61.6 | 59.4 | 0 | 0 | 0 | 22 |
-| Trujillanos | VEN | 2 | 56 | 60.6 | 59.4 | 0 | 0 | 0 | 22 |
-| Aragua | VEN | 2 | 55 | 59.6 | 58 | 0 | 0 | 0 | 22 |
-| Angostura | VEN | 2 | 55 | 59.6 | 58 | 0 | 0 | 0 | 22 |
-| Atlético El Vigía | VEN | 2 | 54 | 58.6 | 57.5 | 0 | 0 | 0 | 22 |
-| Real Frontera | VEN | 2 | 54 | 58.6 | 57.5 | 0 | 0 | 0 | 22 |
-| Marítimo de La Guaira | VEN | 2 | 54 | 58.6 | 57.9 | 0 | 0 | 0 | 22 |
-| Titanes | VEN | 2 | 53 | 57.6 | 56.1 | 0 | 0 | 0 | 22 |
+| Mineros de Guayana | VEN | 2 | 57 | 61.6 | 61.6 | 0 | 0 | 0 | 22 |
+| Trujillanos | VEN | 2 | 56 | 60.6 | 61.6 | 0 | 0 | 0 | 22 |
+| Aragua | VEN | 2 | 55 | 59.6 | 60.4 | 0 | 0 | 0 | 22 |
+| Angostura | VEN | 2 | 55 | 59.6 | 60.3 | 0 | 0 | 0 | 22 |
+| Atlético El Vigía | VEN | 2 | 54 | 58.6 | 59.8 | 0 | 0 | 0 | 22 |
+| Real Frontera | VEN | 2 | 54 | 58.6 | 59.6 | 0 | 0 | 0 | 22 |
+| Marítimo de La Guaira | VEN | 2 | 54 | 58.6 | 60.1 | 0 | 0 | 0 | 22 |
+| Titanes | VEN | 2 | 53 | 57.6 | 58.6 | 0 | 0 | 0 | 22 |
 
 ## Características iniciais
 

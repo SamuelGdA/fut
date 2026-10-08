@@ -11,6 +11,43 @@ export const pt = {
     tagline: "Carreira de futebol",
   },
 
+  brand: {
+    name: "Futeiros",
+    hub: "Início do Futeiros",
+    games: { craque: "Craque", tecnico: "Técnico" },
+  },
+
+  hub: {
+    eyebrow: "Dois jogos de futebol",
+    title: "Futeiros",
+    lead: "Viva o futebol dentro de campo, como jogador, ou da beira do gramado, como técnico.",
+    craque: {
+      eyebrow: "Carreira de jogador",
+      title: "Craque",
+      lead: "Do primeiro contrato, aos 16 anos, até a despedida.",
+      points: { first: "Uma decisão por temporada", second: "Ofertas, treinos e eventos", third: "Carreira salva neste aparelho" },
+      play: "Jogar",
+      continue: "Continuar carreira",
+      summary: "Ver o resumo",
+      saved: "Carreira salva: {surname}, {age} anos, OVR {ovr}",
+      open: "Início do Craque",
+    },
+    tecnico: {
+      eyebrow: "Carreira de técnico",
+      title: "Técnico",
+      lead: "24 temporadas no banco, quase sempre começando na segunda divisão.",
+      points: { first: "Três ações por etapa", second: "Elencos reais, mercado e base", third: "Mundo vivo, sem seleções" },
+      play: "Jogar",
+      resume: "Voltar à carreira",
+      inProgress: "Em andamento nesta aba",
+      ended: "Legado na tela",
+      noSave: "Sem salvamento",
+      noSaveHint: "Recarregar a página encerra a carreira do Técnico.",
+    },
+    achievements: "Conquistas",
+    achievementsCount: { zero: "Nenhuma liberada ainda", one: "{count} liberada", other: "{count} liberadas" },
+  },
+
   common: {
     confirm: "Confirmar",
     cancel: "Cancelar",
@@ -827,6 +864,7 @@ export const pt = {
 
     areas: {
       label: "Áreas do laboratório",
+      tecnico: "Técnico",
       ending: "Fim de carreira",
       design: "Design",
       world: "Mundo",

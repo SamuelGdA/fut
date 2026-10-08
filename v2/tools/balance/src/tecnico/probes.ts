@@ -2,6 +2,8 @@ import {
   affordability,
   clubDuel,
   type ClubDuel,
+  clubWorldCupOdds,
+  type ClubWorldCupOdds,
   type CoachCareer,
   createCoachCareer,
   developCandidates,
@@ -43,6 +45,7 @@ export interface ProbeMetrics {
   readonly pace: PaceTrial;
   readonly budget: readonly { readonly division: number; readonly clubs: number; readonly withThree: number; readonly tight: readonly string[] }[];
   readonly createMs: number;
+  readonly clubWorldCup: ClubWorldCupOdds;
 }
 
 const CURVE_GAPS = [-2, 0, 2, 4, 6, 8, 10, 12, 15];
@@ -119,5 +122,6 @@ export function runProbes(seed: string): ProbeMetrics {
     pace,
     budget,
     createMs,
+    clubWorldCup: clubWorldCupOdds(career, 20000),
   };
 }

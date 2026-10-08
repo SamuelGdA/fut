@@ -7,6 +7,43 @@ export const es: Messages = {
     tagline: "Carrera de fútbol",
   },
 
+  brand: {
+    name: "Futeiros",
+    hub: "Inicio de Futeiros",
+    games: { craque: "Craque", tecnico: "Técnico" },
+  },
+
+  hub: {
+    eyebrow: "Dos juegos de fútbol",
+    title: "Futeiros",
+    lead: "Vive el fútbol dentro de la cancha, como jugador, o desde la banda, como entrenador.",
+    craque: {
+      eyebrow: "Carrera de jugador",
+      title: "Craque",
+      lead: "Del primer contrato, a los 16 años, hasta la despedida.",
+      points: { first: "Una decisión por temporada", second: "Ofertas, entrenamientos y eventos", third: "Carrera guardada en este dispositivo" },
+      play: "Jugar",
+      continue: "Seguir la carrera",
+      summary: "Ver el resumen",
+      saved: "Carrera guardada: {surname}, {age} años, OVR {ovr}",
+      open: "Inicio de Craque",
+    },
+    tecnico: {
+      eyebrow: "Carrera de entrenador",
+      title: "Técnico",
+      lead: "24 temporadas en el banquillo, casi siempre empezando en segunda división.",
+      points: { first: "Tres acciones por etapa", second: "Plantillas reales, mercado y cantera", third: "Mundo vivo, sin selecciones" },
+      play: "Jugar",
+      resume: "Volver a la carrera",
+      inProgress: "En curso en esta pestaña",
+      ended: "Legado en pantalla",
+      noSave: "Sin guardado",
+      noSaveHint: "Recargar la página termina la carrera de Técnico.",
+    },
+    achievements: "Logros",
+    achievementsCount: { zero: "Ninguno desbloqueado todavía", one: "{count} desbloqueado", other: "{count} desbloqueados" },
+  },
+
   common: {
     confirm: "Confirmar",
     cancel: "Cancelar",
@@ -823,6 +860,7 @@ export const es: Messages = {
 
     areas: {
       label: "Áreas del laboratorio",
+      tecnico: "Técnico",
       ending: "Fin de carrera",
       design: "Diseño",
       world: "Mundo",

@@ -1,5 +1,6 @@
 import { getCountry } from "@craque/world";
 import { stream } from "../rng";
+import { clubWorldCupEntrants } from "./competitions";
 import { growthStep } from "./evolution";
 import { askingTerms, chanceTier, purchaseChance, type ChanceTier } from "./market";
 import { ageOf } from "./players";
@@ -187,6 +188,78 @@ export function clubDuel(career: CoachCareer, a: string, b: string): ClubDuel {
 export function confederationOf(career: CoachCareer, clubId: string): string {
   const club = career.clubs[clubId];
   return club ? (getCountry(club.country)?.confederation ?? "") : "";
+}
+
+// ----------------------------------------------------------- Mundial
+
+export interface ClubWorldCupOdds {
+  readonly entrants: number;
+  readonly europeans: number;
+  /** Fatia dos títulos por confederação no chaveamento do Técnico. */
+  readonly share: Readonly<Record<string, number>>;
+  /** O sul-americano com mais chance e a chance dele. */
+  readonly bestSouth: { readonly club: string; readonly chance: number } | null;
+}
+
+/**
+ * Mundial de Clubes jogado muitas vezes com as chances exatas de cada jogo
+ * (mesmos classificados, mesma preliminar e o mesmo sorteio aberto das
+ * fases seguintes). Mede o "difícil, mas possível" sem depender da sorte de
+ * uma carreira.
+ */
+export function clubWorldCupOdds(career: CoachCareer, runs: number): ClubWorldCupOdds {
+  const strength = (id: string) => career.clubs[id]?.strength ?? 60;
+  const entrants = clubWorldCupEntrants({ seed: career.setup.seed, year: career.year, clubs: career.clubs, memory: career.memory }, strength);
+  const advance = new Map<string, number>();
+  const chance = (a: string, b: string) => {
+    const key = `${a}|${b}`;
+    let value = advance.get(key);
+    if (value === undefined) {
+      value = clubDuel(career, a, b).odds.advance;
+      advance.set(key, value);
+      advance.set(`${b}|${a}`, 1 - value);
+    }
+    return value;
+  };
+  const rng = stream(career.setup.seed, "coach", "probe", "clubworldcup");
+  const titles = new Map<string, number>();
+  const ordered = [...entrants].sort((a, b) => strength(b) - strength(a) || a.localeCompare(b));
+  for (let run = 0; run < runs; run += 1) {
+    const extra = Math.max(0, ordered.length - 16);
+    const direct = ordered.slice(0, ordered.length - extra * 2);
+    const prelim = ordered.slice(ordered.length - extra * 2);
+    let alive = [...direct];
+    for (let index = 0; index < prelim.length / 2; index += 1) {
+      const a = prelim[index] as string;
+      const b = prelim[prelim.length - 1 - index] as string;
+      alive.push(rng.next() < chance(a, b) ? a : b);
+    }
+    while (alive.length > 1) {
+      const shuffled = rng.shuffle(alive);
+      const next: string[] = [];
+      for (let index = 0; index + 1 < shuffled.length; index += 2) {
+        const a = shuffled[index] as string;
+        const b = shuffled[index + 1] as string;
+        next.push(rng.next() < chance(a, b) ? a : b);
+      }
+      alive = next;
+    }
+    const champion = alive[0];
+    if (champion) titles.set(champion, (titles.get(champion) ?? 0) + 1);
+  }
+  const share: Record<string, number> = {};
+  for (const [club, count] of titles) {
+    const confederation = confederationOf(career, club) || "OUTRO";
+    share[confederation] = (share[confederation] ?? 0) + count / runs;
+  }
+  const south = entrants.filter((club) => confederationOf(career, club) === "CONMEBOL").sort((a, b) => (titles.get(b) ?? 0) - (titles.get(a) ?? 0));
+  const best = south[0];
+  return {
+    entrants: entrants.length,
+    europeans: entrants.filter((club) => confederationOf(career, club) === "UEFA").length,
+    share,
+    bestSouth: best ? { club: best, chance: (titles.get(best) ?? 0) / runs } : null,
+  };
 }
 
 // ---------------------------------------------------------------- mercado

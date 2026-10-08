@@ -9,7 +9,7 @@ import { clubPalette, contrastRatio, DARK_REFERENCE, LIGHT_REFERENCE } from "./c
 import { EMPTY_DRAFT, isDraftComplete, sanitizeDraft } from "./draft";
 import { currentStartYear, newSeed, quickDraft, setupFromDraft } from "./newCareer";
 import { readSave, recordOf } from "./save";
-import { peekSave, writeSave } from "./saveRecord";
+import { peekSave, savedScreen, writeSave } from "./saveRecord";
 import { useCareer } from "./store";
 
 /**
@@ -149,7 +149,9 @@ describe("estado da carreira", () => {
     const state = useCareer.getState();
     expect(state.career?.end?.reason).toBe("voluntary");
     expect(state.screen).toBe("summary");
-    expect(startScreen("")).toBe("summary");
+    // O jogo abre no hub (D50); o cartão do Craque continua de onde parou.
+    expect(startScreen("")).toBe("hub");
+    expect(savedScreen()).toBe("summary");
     useCareer.setState({ status: "idle", career: null });
     useCareer.getState().hydrate();
     expect(useCareer.getState().career?.end?.reason).toBe("voluntary");
@@ -197,7 +199,8 @@ describe("save (GDD 34)", () => {
     safeStorage.setItem(STORAGE_KEYS.save, JSON.stringify({ ...raw, engine: "2.0.0-m1" }));
     const read = readSave();
     expect(read.kind).toBe("stale");
-    expect(startScreen("")).toBe("home");
+    expect(startScreen("")).toBe("hub");
+    expect(savedScreen()).toBeNull();
     const peek = peekSave();
     expect(peek.kind === "present" && !peek.current).toBe(true);
   });
@@ -206,7 +209,8 @@ describe("save (GDD 34)", () => {
     safeStorage.setItem(STORAGE_KEYS.save, "{quebrado");
     expect(readSave().kind).toBe("invalid");
     expect(peekSave().kind).toBe("invalid");
-    expect(startScreen("")).toBe("home");
+    expect(startScreen("")).toBe("hub");
+    expect(savedScreen()).toBeNull();
   });
 
   it("o registro guarda o retrato da carreira para o Início não precisar do motor", () => {
