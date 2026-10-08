@@ -47,7 +47,10 @@ export default defineConfig({
     },
   ],
   webServer: {
+    // O build da suíte usa as imagens reais: assim o modo real (cache de
+    // escudos, "Guardar todas") continua testado; o padrão é o desenhado (D46).
     command: `pnpm build && pnpm exec vite preview --port ${PORT} --strictPort`,
+    env: { VITE_ASSETS: "real" },
     url: `http://localhost:${PORT}`,
     reuseExistingServer: !process.env["CI"],
     timeout: 300_000,

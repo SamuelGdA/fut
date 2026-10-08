@@ -1,6 +1,7 @@
 import { Moon, Sun, Volume2, VolumeX } from "lucide-react";
 import type { ReactNode } from "react";
 import { useT } from "../../i18n/useT";
+import { useAssetMode } from "../../lib/assets";
 import { LOCALES, type Locale } from "../../i18n/types";
 import { feedback } from "../../services/feedback";
 import { canVibrate } from "../../services/haptics";
@@ -25,6 +26,7 @@ function SettingRow({ label, children, note }: { label: string; children: ReactN
 /** Conteúdo do painel de ajustes. Carregado só quando o painel abre. */
 export function SettingsPanel() {
   const { t } = useT();
+  const assetMode = useAssetMode((state) => state.mode);
   const locale = usePrefs((state) => state.locale);
   const theme = usePrefs((state) => state.theme);
   const volume = usePrefs((state) => state.volume);
@@ -156,9 +158,12 @@ export function SettingsPanel() {
         />
       </div>
 
-      <SettingRow label={t("settings.offlineTitle")}>
-        <OfflineImagesRow />
-      </SettingRow>
+      {/* No modo desenhado (o padrão, D46) não há imagem real para guardar. */}
+      {assetMode === "real" ? (
+        <SettingRow label={t("settings.offlineTitle")}>
+          <OfflineImagesRow />
+        </SettingRow>
+      ) : null}
     </div>
   );
 }

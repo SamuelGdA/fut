@@ -107,7 +107,7 @@
     "strength": 61,
     "prestige": 2.1,
     "color": "#FF6600",
-    "crest": null
+    "crest": "svg"
   },
   {
     "id": "santiago-wanderers",
@@ -118,7 +118,7 @@
     "strength": 60,
     "prestige": 1.8,
     "color": "#007A33",
-    "crest": null
+    "crest": "png"
   },
   {
     "id": "deportes-magallanes",
@@ -129,7 +129,7 @@
     "strength": 58,
     "prestige": 1.3,
     "color": "#0033A0",
-    "crest": null
+    "crest": "png"
   },
   {
     "id": "rangers-de-talca",
@@ -140,7 +140,7 @@
     "strength": 58,
     "prestige": 1.3,
     "color": "#C8102E",
-    "crest": null
+    "crest": "svg"
   },
   {
     "id": "deportes-temuco",
@@ -151,7 +151,7 @@
     "strength": 58,
     "prestige": 1.2,
     "color": "#009639",
-    "crest": null
+    "crest": "png"
   },
   {
     "id": "deportes-copiapo",
@@ -162,7 +162,7 @@
     "strength": 58,
     "prestige": 1.1,
     "color": "#6A1B9A",
-    "crest": null
+    "crest": "png"
   },
   {
     "id": "curico-unido",
@@ -173,7 +173,7 @@
     "strength": 58,
     "prestige": 1.1,
     "color": "#C8102E",
-    "crest": null
+    "crest": "png"
   },
   {
     "id": "deportes-antofagasta",
@@ -184,7 +184,7 @@
     "strength": 59,
     "prestige": 1.3,
     "color": "#00A0DF",
-    "crest": null
+    "crest": "png"
   },
   {
     "id": "san-marcos-de-arica",
@@ -195,7 +195,7 @@
     "strength": 57,
     "prestige": 1.1,
     "color": "#FFD100",
-    "crest": null
+    "crest": "png"
   },
   {
     "id": "deportes-concepcion",
@@ -206,6 +206,6 @@
     "strength": 58,
     "prestige": 1.3,
     "color": "#5B1A8A",
-    "crest": null
+    "crest": "svg"
   }
 ]

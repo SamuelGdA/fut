@@ -118,7 +118,7 @@
     "strength": 58,
     "prestige": 1.3,
     "color": "#00A94F",
-    "crest": null
+    "crest": "png"
   },
   {
     "id": "cucuta-deportivo",
@@ -129,7 +129,7 @@
     "strength": 59,
     "prestige": 1.6,
     "color": "#C8102E",
-    "crest": null
+    "crest": "png"
   },
   {
     "id": "atletico-huila",
@@ -140,7 +140,7 @@
     "strength": 59,
     "prestige": 1.4,
     "color": "#FFC72C",
-    "crest": null
+    "crest": "svg"
   },
   {
     "id": "patriotas-boyaca",
@@ -162,7 +162,7 @@
     "strength": 59,
     "prestige": 1.2,
     "color": "#0B6E4F",
-    "crest": null
+    "crest": "png"
   },
   {
     "id": "union-magdalena",
@@ -173,7 +173,7 @@
     "strength": 59,
     "prestige": 1.5,
     "color": "#003DA5",
-    "crest": null
+    "crest": "png"
   },
   {
     "id": "deportes-quindio",
@@ -184,7 +184,7 @@
     "strength": 58,
     "prestige": 1.4,
     "color": "#FFC72C",
-    "crest": null
+    "crest": "png"
   },
   {
     "id": "itagui-leones",
@@ -195,7 +195,7 @@
     "strength": 58,
     "prestige": 1.1,
     "color": "#C8102E",
-    "crest": null
+    "crest": "png"
   },
   {
     "id": "boca-juniors-de-cali",
@@ -206,7 +206,7 @@
     "strength": 56,
     "prestige": 1.0,
     "color": "#003DA5",
-    "crest": null
+    "crest": "png"
   },
   {
     "id": "internacional-de-bogota",
@@ -217,6 +217,6 @@
     "strength": 58,
     "prestige": 1.1,
     "color": "#0B6E4F",
-    "crest": null
+    "crest": "png"
   }
 ]

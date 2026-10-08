@@ -36,7 +36,7 @@
     "division": 2,
     "games": 22,
     "promotionSlots": 1,
-    "crest": null,
+    "crest": "png",
     "trophy": null
   },
   {
@@ -76,7 +76,7 @@
     "division": 2,
     "games": 30,
     "promotionSlots": 1,
-    "crest": null,
+    "crest": "png",
     "trophy": null
   },
   {
@@ -96,7 +96,7 @@
     "division": 2,
     "games": 36,
     "promotionSlots": 1,
-    "crest": null,
+    "crest": "svg",
     "trophy": null
   },
   {
@@ -246,7 +246,7 @@
     "division": 2,
     "games": 30,
     "promotionSlots": 1,
-    "crest": null,
+    "crest": "png",
     "trophy": null
   },
   {
@@ -286,7 +286,7 @@
     "division": 2,
     "games": 30,
     "promotionSlots": 1,
-    "crest": null,
+    "crest": "png",
     "trophy": null
   },
   {

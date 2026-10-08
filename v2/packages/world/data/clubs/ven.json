@@ -96,7 +96,7 @@
     "strength": 56,
     "prestige": 1.4,
     "color": "#C8102E",
-    "crest": null
+    "crest": "png"
   },
   {
     "id": "mineros-de-guayana",
@@ -107,7 +107,7 @@
     "strength": 57,
     "prestige": 1.6,
     "color": "#0B2E5C",
-    "crest": null
+    "crest": "png"
   },
   {
     "id": "aragua",
@@ -118,7 +118,7 @@
     "strength": 55,
     "prestige": 1.2,
     "color": "#F5A800",
-    "crest": null
+    "crest": "png"
   },
   {
     "id": "angostura",
@@ -129,7 +129,7 @@
     "strength": 55,
     "prestige": 1.0,
     "color": "#00A94F",
-    "crest": null
+    "crest": "png"
   },
   {
     "id": "atletico-el-vigia",
@@ -162,7 +162,7 @@
     "strength": 53,
     "prestige": 1.0,
     "color": "#6A1B9A",
-    "crest": null
+    "crest": "png"
   },
   {
     "id": "maritimo-de-la-guaira",

@@ -107,7 +107,7 @@
     "strength": 60,
     "prestige": 2.2,
     "color": "#C8102E",
-    "crest": null
+    "crest": "png"
   },
   {
     "id": "liga-de-portoviejo",
@@ -118,7 +118,7 @@
     "strength": 57,
     "prestige": 1.2,
     "color": "#0033A0",
-    "crest": null
+    "crest": "png"
   },
   {
     "id": "9-de-octubre",
@@ -129,7 +129,7 @@
     "strength": 57,
     "prestige": 1.2,
     "color": "#0033A0",
-    "crest": null
+    "crest": "png"
   },
   {
     "id": "cumbaya",
@@ -140,7 +140,7 @@
     "strength": 57,
     "prestige": 1.0,
     "color": "#00A94F",
-    "crest": null
+    "crest": "png"
   },
   {
     "id": "gualaceo",
@@ -151,7 +151,7 @@
     "strength": 56,
     "prestige": 1.0,
     "color": "#C8102E",
-    "crest": null
+    "crest": "png"
   },
   {
     "id": "independiente-juniors",
@@ -162,7 +162,7 @@
     "strength": 58,
     "prestige": 1.1,
     "color": "#0B2E13",
-    "crest": null
+    "crest": "png"
   },
   {
     "id": "cuenca-juniors",
@@ -173,7 +173,7 @@
     "strength": 55,
     "prestige": 1.0,
     "color": "#C8102E",
-    "crest": null
+    "crest": "png"
   },
   {
     "id": "vinotinto-ecuador",
@@ -184,7 +184,7 @@
     "strength": 55,
     "prestige": 1.0,
     "color": "#7A1F2B",
-    "crest": null
+    "crest": "png"
   },
   {
     "id": "santo-domingo-fc",

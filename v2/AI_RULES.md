@@ -43,7 +43,7 @@ vez de escondê-lo no motor.
 
 1. `README.md`: visão geral, mecânicas, arquitetura e comandos.
 2. As seções do `docs/GDD.md` ligadas à mudança (e as notas "Como ficou").
-3. As decisões de `docs/DECISOES.md` que tratam do assunto (D1 a D45).
+3. As decisões de `docs/DECISOES.md` que tratam do assunto (D1 a D46).
 
 ### 2. Ponha cada coisa no lugar certo
 
@@ -93,7 +93,7 @@ vez de escondê-lo no motor.
 - `docs/GDD.md`: a especificação da regra. Se a implementação mudou algo,
   acrescente uma nota "Como ficou" na seção, com o número da decisão.
 - `docs/DECISOES.md`: toda decisão de produto ou de arquitetura ganha o
-  próximo número (D46, D47...), com **Decisão** e **Por quê**.
+  próximo número (D47, D48...), com **Decisão** e **Por quê**.
 - Comentários no código explicam o porquê, em português, no tom do resto do
   arquivo.
 
