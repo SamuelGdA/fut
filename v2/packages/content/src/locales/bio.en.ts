@@ -100,9 +100,9 @@ export const bioEn: BioMessages = {
     ],
     classicShirt: [
       "At {age}, he inherited the number {number} shirt.",
-      "The {number} came at {age}, and the pressure came with it.",
+      "The number {number} shirt came at {age}, and the pressure came with it.",
       "At {age}, he got the number every player in his position wants: {number}.",
-      "At {age}, he started wearing the {number}.",
+      "At {age}, he started wearing the number {number} shirt.",
     ],
     roadNotTaken: [
       "At {age}, he turned down a bigger offer: {club}.",

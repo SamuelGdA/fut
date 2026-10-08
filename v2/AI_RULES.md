@@ -31,6 +31,11 @@ Avalie cada funcionalidade por duas perguntas:
 2. **O jogador consegue entender seu efeito facilmente?**
 
 Se a resposta a qualquer uma for "não", simplifique a ideia ou não a faça.
+Não crie escolhas determinísticas em que uma opção só cause prejuízo e a outra
+não mude nada: cada caminho precisa de uma vantagem, custo ou consequência
+relevante e visível. Evitar um risco real pode ser um caminho conservador válido;
+um efeito apenas narrativo não compensa uma penalidade de jogo.
+
 Uma regra que o jogador não percebe, ou que só existe para complicar, não
 entra no jogo. Na dúvida, mostre o efeito na tela (texto, número, selo) em
 vez de escondê-lo no motor.
@@ -43,7 +48,7 @@ vez de escondê-lo no motor.
 
 1. `README.md`: visão geral, mecânicas, arquitetura e comandos.
 2. As seções do `docs/GDD.md` ligadas à mudança (e as notas "Como ficou").
-3. As decisões de `docs/DECISOES.md` que tratam do assunto (D1 a D46).
+3. As decisões de `docs/DECISOES.md` que tratam do assunto (D1 em diante).
 
 ### 2. Ponha cada coisa no lugar certo
 
@@ -98,6 +103,19 @@ vez de escondê-lo no motor.
   arquivo.
 
 ### 6. Verifique antes de entregar
+
+**REGRA ABSOLUTA: após toda mudança, correção ou nova implementação, teste
+integralmente o projeto e os fluxos afetados. Se encontrar erros, falhas ou
+melhorias necessárias, implemente as correções e teste novamente. Repita esse
+ciclo de testar, corrigir e retestar quantas vezes forem necessárias, até tudo
+ficar PERFEITO: verificações obrigatórias aprovadas e nenhum defeito conhecido
+no escopo da entrega. Esta obrigação vale para toda IA que mexer no projeto.**
+
+Não encerre o trabalho no primeiro teste aprovado. Examine também regressões,
+coerência da documentação e comportamento real. Não esconda falhas nem enfraqueça
+testes para obter aprovação. Um impedimento externo ou trabalho paralelo que
+bloqueie a validação deve ser identificado na entrega, com os testes executados
+e as pendências; nunca declare validação completa enquanto houver bloqueios.
 
 ```bash
 pnpm verify

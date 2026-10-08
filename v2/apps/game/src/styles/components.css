@@ -375,6 +375,9 @@
 
   .avatar-panel {
     padding: 12px;
+    height: clamp(300px, 60dvh, 640px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
   }
 
   /* As seções em colunas de jornal (D45): cada uma desce logo abaixo da de
@@ -396,12 +399,12 @@
     }
   }
 
-  /* PC: a tela do tamanho do que tem dentro, nunca maior que a janela; se
-     faltar altura, só o painel de opções rola. */
+  /* PC: moldura estável entre abas; só os controles rolam quando necessário. */
   @media (min-width: 1024px) {
     .appearance-page {
       display: flex;
       flex-direction: column;
+      height: calc(100dvh - var(--topbar-h));
       max-height: calc(100dvh - var(--topbar-h));
       padding-block: clamp(12px, 2.5dvh, 24px) 16px;
       /* Numa janela pequena demais, rola por dentro em vez de cortar. */
@@ -418,10 +421,10 @@
       min-height: 0;
     }
 
-    /* O painel de opções tem a altura do que tem dentro; numa janela baixa,
-       para no que sobra da tela (cabeçalho, abas e rodapé somam uns 280 px)
-       e rola por dentro. */
+    /* Cabeçalho, abas e rodapé somam cerca de 280 px; o resto fica estável. */
     .appearance-page .avatar-panel {
+      height: max(240px, calc(100dvh - var(--topbar-h) - 280px));
+      scrollbar-gutter: stable;
       max-height: max(240px, calc(100dvh - var(--topbar-h) - 280px));
       overflow-y: auto;
       overscroll-behavior: contain;
@@ -1220,4 +1223,14 @@
   .field-input[aria-invalid="true"] {
     border-color: var(--bad);
   }
+}
+
+@layer components {
+  .avatar-panel:not([hidden]) .avatar-columns { animation: controls-enter 160ms ease-out; }
+  .explore-tab { transition: color 140ms ease, background-color 140ms ease; }
+  .explore-tab[data-active] { color: var(--fg); background: var(--panel-2); }
+  .avatar-panel { scrollbar-gutter: stable; }
+  @keyframes controls-enter { from { opacity: 0.75; transform: translateY(3px); } to { opacity: 1; transform: translateY(0); } }
+  [data-motion="reduced"] .avatar-columns { animation: none !important; }
+  @media (prefers-reduced-motion: reduce) { .avatar-columns { animation: none !important; } }
 }

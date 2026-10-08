@@ -149,12 +149,20 @@ export const eventsEs: EventsMessages = {
       keep: { label: "Seguir con tu selección", result: "Mantienes la camiseta del país donde naciste." },
     },
   },
+  residencePassport: {
+    title: "Una nueva selección",
+    body: "Tras cinco temporadas en el país, la selección de {country} quiere convocarte. Aceptar cambia tu nacionalidad en el juego.",
+    options: {
+      switch: { label: "Aceptar la nueva nacionalidad", result: "Ahora representas a {country}." },
+      keep: { label: "Mantener mi nacionalidad", result: "Mantienes tu nacionalidad y esperas a tu selección." },
+    },
+  },
   diploma: {
     title: "El título",
     body: "La familia insiste: terminar los estudios antes de pensar solo en la pelota.",
     options: {
-      study: { label: "Terminar los estudios", result: "Título en mano. Las clases te quitaron algo de tiempo de entrenamiento." },
-      football: { label: "Solo fútbol", result: "Apuestas todo a la pelota." },
+      study: { label: "Terminar los estudios", result: "Título en mano. Menos entrenamiento reduce la evolución un 10% y el riesgo de lesión un 30% durante este período." },
+      football: { label: "Solo fútbol", result: "Entrenas más: evolución un 10% mayor, pero riesgo de lesión un 30% mayor durante este período." },
     },
   },
   dressingRoomRift: {
@@ -269,7 +277,7 @@ export const eventsEs: EventsMessages = {
         label: "Forzar la salida",
         result: "Fuerzas la salida y te vas. {target} gana un refuerzo; tu antigua hinchada, un rencor.",
       },
-      stay: { label: "Quedarse", result: "Te plantas y te quedas. La hinchada lo nota y lo agradece." },
+      stay: { label: "Quedarse", result: "Te quedas y ganas el apoyo de la hinchada, pero tu representante se va. Solo la próxima decisión tendrá ofertas de clubes más débiles, si hay transferencia; después el mercado vuelve a la normalidad." },
     },
   },
   academyJewel: {
@@ -277,7 +285,7 @@ export const eventsEs: EventsMessages = {
     body: "Un chico de las inferiores juega en tu puesto y pide entrenar a tu lado.",
     options: {
       mentor: { label: "Apadrinarlo", result: "Le enseñas todo lo que sabes. La hinchada lo adora, y tu tiempo de entrenamiento baja." },
-      compete: { label: "Pelear el puesto", result: "Amistad, pero el puesto es tuyo. El chico va a tener que esperar." },
+      compete: { label: "Pelear el puesto", success: "Ganas la disputa y más protagonismo.", failure: "El joven gana la disputa. Pierdes protagonismo." },
     },
   },
   bootDeal: {
@@ -318,8 +326,8 @@ export const eventsEs: EventsMessages = {
     options: {
       showboat: {
         label: "Jugar para la tribuna",
-        success: "Jugadas de lujo y goles hermosos. El mundo lo vio.",
-        failure: "Mucho lujo, poca eficacia. La temporada rinde por debajo.",
+        success: "Ganas protagonismo con actuaciones sólidas. La afición lo reconoce.",
+        failure: "Te expones demasiado y pierdes protagonismo.",
       },
       focused: { label: "Jugar simple", result: "Juegas simple y cumples tu función." },
     },

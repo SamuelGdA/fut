@@ -24,11 +24,8 @@ export const challengeEs: ChallengeMessages = {
     cupTitles: { name: "Copero", goal: { one: "{n} título de copa nacional", other: "{n} títulos de copa nacional" } },
     longestStay: { name: "Raíces", goal: { one: "{n} temporada en un mismo club", other: "{n} temporadas en un mismo club" } },
     firstClubGames: { name: "Canterano", goal: { one: "{n} partido con el club donde empezó", other: "{n} partidos con el club donde empezó" } },
-    idolSeasons: {
-      name: "Ídolo",
-      goal: { one: "{n} temporada como ídolo o leyenda", other: "{n} temporadas como ídolo o leyenda" },
-      hint: "Ídolo y leyenda son los dos peldaños más altos del legado en un club.",
-    },
+    clubLegend: { name: "Leyenda del club", goal: { one: "Conviértete en leyenda de un club", other: "Conviértete en leyenda de un club" }, hint: "El legado depende de tu participación en el campo." },
+    twoClubIdol: { name: "Dos aficiones", goal: { one: "Conviértete en ídolo o leyenda de al menos dos clubes", other: "Conviértete en ídolo o leyenda de al menos dos clubes" }, hint: "El legado depende de tu participación en el campo." },
     peakFans: {
       name: "Consentido de la afición",
       goal: { one: "Apoyo de la afición en {n} en un club", other: "Apoyo de la afición en {n} en un club" },

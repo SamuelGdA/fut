@@ -1,7 +1,7 @@
 import { existsSync } from "node:fs";
 import { AWARDS, CLUBS, COMPETITIONS, COUNTRIES, LEAGUES } from "@craque/world";
 import { afterEach, describe, expect, it } from "vitest";
-import { ASSET_MODE } from "./env";
+import { ASSET_MODE, TROPHY_ASSET_MODE } from "./env";
 import {
   awardImageUrl,
   clubCrestUrl,
@@ -76,13 +76,16 @@ describe("imagens no modo gerado", () => {
 });
 
 describe("modo de imagens em tempo real", () => {
-  afterEach(() => useAssetMode.setState({ mode: ASSET_MODE }));
+  afterEach(() => useAssetMode.setState({ mode: ASSET_MODE, trophyMode: TROPHY_ASSET_MODE }));
 
   it("começa no modo do build e troca quando o laboratório pede", () => {
     expect(useAssetMode.getState().mode).toBe(ASSET_MODE);
+    expect(useAssetMode.getState().trophyMode).toBe(TROPHY_ASSET_MODE);
     useAssetMode.getState().setMode("gerado");
     expect(useAssetMode.getState().mode).toBe("gerado");
+    expect(useAssetMode.getState().trophyMode).toBe("gerado");
     useAssetMode.getState().setMode("real");
     expect(useAssetMode.getState().mode).toBe("real");
+    expect(useAssetMode.getState().trophyMode).toBe("real");
   });
 });

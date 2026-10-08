@@ -29,6 +29,8 @@ export function holds(condition: Condition, context: EventContext): boolean {
       return context.value >= condition.min;
     case "nationWeakOrUncapped":
       return context.nationWeakOrUncapped;
+    case "residenceEligible":
+      return context.residenceEligible === true;
     case "legacyElsewhere":
       return context.legacyClub !== null;
     case "tournamentSquad":

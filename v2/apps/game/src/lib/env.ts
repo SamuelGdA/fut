@@ -2,10 +2,13 @@
 export type AssetMode = "real" | "gerado";
 
 /**
- * O padrão são os escudos desenhados pelo jogo (D46): as imagens reais só
+ * O padrão são os escudos e selos desenhados pelo jogo (D46): os reais só
  * entram num build com `VITE_ASSETS=real`.
  */
 export const ASSET_MODE: AssetMode = import.meta.env.VITE_ASSETS === "real" ? "real" : "gerado";
+
+/** Troféus e prêmios preservam suas imagens reais; modo gerado explícito ainda permite comparar. */
+export const TROPHY_ASSET_MODE: AssetMode = import.meta.env.VITE_ASSETS === "gerado" ? "gerado" : "real";
 
 export const IS_DEV = import.meta.env.DEV;
 

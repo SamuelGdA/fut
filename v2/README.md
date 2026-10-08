@@ -1,5 +1,93 @@
 # CRAQUE v2
 
+> **Revisão de 8 de outubro de 2026 (D47, motor `2.0.0-m8.3`).**
+> Esta revisão substitui as regras anteriores indicadas abaixo.
+>
+> - Tema inicial e manifesto PWA claros (#F3F0E8), respeitando a preferência já salva. Abas de aparência com
+>   altura estável no PC e celular (controles com rolagem própria), painéis preservados e transição breve, sem movimento
+>   quando reduzido. Retrato da carta centralizado. Jornal com cabeçalho esportivo,
+>   filetes e estatísticas mais legíveis. Resultado da decisão dentro do layout,
+>   sem cobrir texto, mantido até a próxima escolha; no celular mostra o resultado
+>   curto, com o detalhe no lance.
+> - Renovação usa nome e expectativa próprios em todas as dez missões, por exemplo
+>   “Renovação de estrela” e “Fica para ensinar os mais novos”, sem mudar a cobrança.
+> - Legado: zero jogos dá zero pontos. Pontos = `4 × participação +
+>   (10 × importância dos títulos + 2 × prêmios + bônus de torcida) ×
+>   min(1, participação / 0,85)`, vezes o traço. Participação usa os jogos realmente disputados sobre os jogos
+>   do clube, limitada ao papel no elenco. Ídolo exige 60 jogos no clube e lenda
+>   exige 120, além dos pontos e temporadas. O bônus de torcida é 3 com apoio
+>   de pelo menos 80. Lendas de 33 anos ou mais não perdem apoio pelo banco ou
+>   declínio natural; rebaixamento ainda pode tirar até 2 pontos por temporada.
+> - Clássico, estádio lotado, final, pênalti e cartão vermelho exigem
+>   pelo menos rotação e 12 jogos na temporada
+>   anterior. Estádio lotado agora sobe/desce o papel no elenco e muda torcida
+>   (+5/-3), efeitos úteis em qualquer posição. Disputar a vaga com a joia da base
+>   tem 50% exatos de aumentar os jogos planejados em 20% e 50% de reduzir em
+>   20%, sem ajuste pelo traço, respeitando jogos disponíveis e lesões.
+> - Novo evento “Uma nova seleção” (peso 70 no sorteio de eventos elegíveis):
+>   cinco temporadas consecutivas no mesmo país estrangeiro, mesmo mudando de
+>   clube, nenhuma estreia pela seleção e OVR suficiente para ao menos convocação
+>   ocasional no país de residência. Aceitar muda nacionalidade; recusar mantém.
+>   A decisão depende da agenda, não é automática ao completar cinco anos.
+> - Título de clube ou seleção conquistado na temporada dá **+1 de OVR** sobre a
+>   evolução natural, após crescimento, declínio, devolução de capacidade temporária
+>   e garantia do treino, uma vez por temporada,
+>   até 99 e respeitando atributos limitados a 99. Substitui a antiga moral variável.
+>   OVR continua sendo calculado pelos atributos, nunca por um número separado.
+> - Todos os clubes continuam evoluindo com sucesso, ruído e retorno à força base.
+>   A força fica também limitada a ±10 da base. As estrelas das ofertas acompanham
+>   a força atual, incluindo o impacto projetado do jogador: ±1 estrela no máximo
+>   em relação à nota inicial, entre 1 e 5. Mudança exige ±3 pontos de força;
+>   subir de 4 para 5 ou cair de 5 para 4 exige 4,5. O impacto continua sendo
+>   `0,22 × participação × limitar(OVR - força, -3, 15)`, até +3,135 para um craque
+>   de linha. Ganhar campeonatos ajuda a força, mas não garante uma estrela.
+> - Desafio: “Regra da tentativa” substitui “Édito”; texto explica a penalidade
+>   de metade da pontuação. Catálogo com 37 missões. Missão de temporadas como ídolo substituída por virar
+>   lenda de um clube (alvo 1); nova missão de ídolo ou lenda de dois clubes
+>   (alvo 2). Ambos são alvos fixos do produto, os demais seguem calibrados.
+> - 148 conquistas com abas por categoria: 18 recordes gerados do catálogo e um título
+>   por competição, automaticamente. Aba secreta com quatro conquistas naturais,
+>   escondendo nome e requisito até desbloquear. Nova conquista de terminar no
+>   clube da estreia em campo. Contagens persistem sem precisar guardar carreiras.
+> - Hall da Fama desativado: arquivos antigos são apagados na abertura do banco;
+>   carreiras concluídas/interrompidas e saves incompatíveis não são arquivados.
+>   Permanecem o save atual, conquistas, contagens agregadas e ranking diário.
+>   O resumo e o caminho hipotético continuam disponíveis para o save atual.
+>   O capítulo passa a se chamar “{sobrenome} hipotético”.
+> - Biografia explicita “camisa” ao citar o número 1 ou outro número histórico.
+> - Metas revisadas pelo bônus obrigatório de título: pico médio Normal entre
+>   P−2 e P+3; diferença entre grupos até 3 OVR; Bolas de Ouro de Fenômeno
+>   de ataque com média entre 1 e 2,25, mantendo 40–60% com ao menos uma.
+>   As missões de legado conservam os alvos 1/2 e só entram em faixas em que
+>   15–55% do lote de calibragem os alcança, sem tolerância nesta seleção.
+> - Talento no Difícil usa **pesos** 45/34/15/4/1, soma 99: probabilidades reais
+>   45,45% / 34,34% / 15,15% / 4,04% / 1,01%. Normal: 28/34/22/11/5%.
+> - Validação: 547 testes unitários, 44 ponta a ponta, build e 51 metas de
+>   balanceamento aprovados; todos os recordes alcançados. `pnpm verify` para
+>   em quatro imports ausentes do módulo `manager` preexistente; detalhes na D47.
+
+**Residência consecutiva (D48):** sair do país interrompe a contagem; ao voltar,
+é preciso completar cinco novas temporadas seguidas. Anos de períodos separados
+não se somam. Trocar de clube dentro do mesmo país mantém a sequência.
+O ciclo obrigatório de testar, corrigir e retestar está em `AI_RULES.md`.
+
+**Revisão D49, motor `2.0.0-m8.4`:** no diploma, estudar reduz evolução em
+10% e risco de lesão em 30%; só futebol aumenta ambos em 10% e 30%,
+respectivamente, durante o período. Ficar no ultimato dá torcida +4 e rompe
+com o empresário: somente a próxima decisão pode trazer ofertas de clubes
+pelo menos 2 pontos de força mais fracos que o atual. Se a decisão for treino
+ou outro evento sem transferência, a restrição acaba mesmo assim. Não obriga
+a sair, não reduz a força dos clubes e não afeta janelas posteriores.
+Escudos e selos continuam desenhados por padrão; competições e prêmios usam
+suas imagens reais quando disponíveis e arte gerada como reserva. O laboratório
+compara o padrão misto, todas reais ou todas geradas; `VITE_ASSETS=gerado`
+continua permitindo um build inteiramente desenhado. Troféus e prêmios carregam
+assim que entram na tela, sem depender do carregamento adiado. O Vite ignora
+os relatórios de testes para evitar travamento do observador no Windows.
+Validação D49: 550 testes unitários, 48 ponta a ponta e 51 metas no
+balanceamento completo aprovados. Bloqueios de `verify` e da amostra reduzida
+continuam explicitados na D49.
+
 Simulador de carreira de futebol jogado por decisões. Você monta um jogador de
 16 anos, escolhe onde jogar, no que treinar e como reagir ao que acontece, e
 vê a carreira inteira acontecer dentro de um mundo de futebol simulado:
@@ -11,7 +99,7 @@ entender, só por ele, como o jogo funciona, como o motor calcula e onde cada
 coisa mora. O detalhe completo de cada regra está no
 [GDD](docs/GDD.md) (a especificação, com notas "Como ficou" onde a
 implementação mudou algo), e o porquê de cada escolha está em
-[docs/DECISOES.md](docs/DECISOES.md) (D1 a D46). **Antes de mudar qualquer
+[docs/DECISOES.md](docs/DECISOES.md) (D1 em diante). **Antes de mudar qualquer
 coisa, leia [AI_RULES.md](AI_RULES.md).**
 
 > Este diretório (`v2/`) é o jogo. A raiz do repositório guarda o v1 (Next.js),
@@ -24,7 +112,7 @@ coisa, leia [AI_RULES.md](AI_RULES.md).**
 1. [Visão geral](#1-visão-geral)
 2. [O motor: as contas por trás da tela](#2-o-motor-as-contas-por-trás-da-tela)
 3. [O mundo e os prêmios](#3-o-mundo-e-os-prêmios)
-4. [Metagame: Desafio do dia, Hall da Fama, conquistas e "E se...?"](#4-metagame)
+4. [Metagame: Desafio do dia, conquistas e caminho hipotético](#4-metagame)
 5. [Arquitetura técnica](#5-arquitetura-técnica)
 6. [Comandos](#6-comandos)
 7. [Documentação e regras para quem mexe no código](#7-documentação-e-regras)
@@ -42,14 +130,12 @@ flowchart LR
   C --> D[Mensagem do resultado<br/>e o lance da temporada]
   D --> C
   D --> E[Resumo da carreira]
-  E --> F[Hall da Fama / E se...? / jogar de novo]
+  E --> F[Conquistas / caminho hipotético / jogar de novo]
 ```
 
 1. **Início.** Ritmo e dificuldade, Começar carreira, Jogo rápido (identidade
-   e aparência sorteadas), o Desafio do dia, a memória (Hall da Fama e
-   conquistas) e os números do mundo. O Início é para começar: a carreira em
-   andamento não aparece nele, e começar outra não pergunta nada (a anterior,
-   com ao menos uma temporada, vai para o Hall como interrompida). Abrir o
+   e aparência sorteadas), o Desafio do dia, as conquistas e os números do mundo. O Início é para começar: a carreira em
+   andamento não aparece nele; começar outra substitui o save atual, sem arquivo. Abrir o
    jogo de novo volta para a carreira guardada.
 2. **Quem é você.** Sobrenome, número dos sonhos (opcional), pé, país (211
    seleções) e posição (12), mais o editor de aparência. O jogador montado
@@ -73,7 +159,7 @@ flowchart LR
 
 - **O laço cabe numa tela.** Decisão, lance e jornal nunca rolam a página, do
   celular de 360 × 640 ao PC (D23). Só as telas de exploração (histórico,
-  biografia, vitrine, Hall) rolam.
+  biografia, vitrine, conquistas) rolam.
 - **Ritmos.** Na tela, "Normal" é uma temporada por decisão (o padrão; no
   código, `intense`) e "Rápida" são duas (no código, `normal`). O GDD antigo
   usa "Intensa" para o Normal de hoje.
@@ -106,9 +192,9 @@ Todas as constantes citadas aqui estão no código, com o nome entre crases.
   identidade) e a lista de escolhas. `replay()` refaz a carreira inteira e
   chega exatamente ao mesmo ponto. O save também guarda um retrato leve
   (`snapshot`) para mostrar a carreira sem rodar o motor.
-- `ENGINE_VERSION` (`version.ts`, hoje `2.0.0-m8.2`) sobe sempre que a mesma
+- `ENGINE_VERSION` (`version.ts`, hoje `2.0.0-m8.3`) sobe sempre que a mesma
   entrada passa a produzir outra carreira. Save de outra versão abre só para
-  leitura e entra no Hall pelo retrato.
+  leitura; o save incompatível pode ser descartado, sem arquivamento.
 
 ### 2.2 O jogador
 
@@ -159,8 +245,8 @@ A cada temporada, L cresce (`evolution/growth.ts`, `evolution/tuning.ts`):
 - **Teto biológico** (`capSeasonGain`): até 4,4 pontos numa temporada passam
   inteiros; acima disso o ganho rende cada vez menos e nunca chega a 7.
   Nenhuma temporada dá um salto irreal (o maior salto de OVR medido é +9).
-- **Moral de título**: +0,25 por ponto de importância do título (liga 1,0;
-  Champions 2,5...), até +1,2 por temporada e nunca acima de P + 1.
+- **Bônus de título (D47)**: +1 OVR após toda a evolução natural, uma vez
+  por temporada com ao menos um título, inclusive no declínio. Limite 99.
 - **Declínio** (`ageDecline`): começa 2 anos depois do pico, mais a folga da
   posição (zagueiro +1, goleiro +2) e a longevidade:
   `mín(4,5; 0,26 × anos + 0,05 × anos²)` por temporada, × traço × dificuldade.
@@ -411,30 +497,24 @@ Cada torneio sorteia no próprio fluxo.
   A primeira tentativa terminada no dia é a **ranqueada**; as outras são
   amistosas.
 
-### 4.2 Hall da Fama e conquistas
+### 4.2 Conquistas e persistência
 
-- **Banco**: IndexedDB `craque-v2` com as lojas `archive`, `achievements` e
-  `leaderboard` (`apps/game/src/services/database.ts`). Na abertura tudo é
-  lido para um **espelho em memória**; a leitura vem do espelho e a escrita vai
-  para o espelho e depois para o disco. Se o IndexedDB não existe, não abre
-  (aba anônima), demora ou falha numa escrita (cota cheia), o banco vive só
-  em memória até fechar a aba, o jogo segue igual e um aviso discreto aparece
-  uma vez.
-- **Entra no Hall**: toda carreira terminada; a interrompida (substituída por
-  outra) com ao menos uma temporada; saves de versão antiga, pelo retrato. A
-  linha alternativa do "E se...?" não entra.
-- **Abrir uma carreira do Hall** refaz o resumo por replay, só para leitura;
-  apagar pede confirmação.
-- **Conquistas**: 49 (`packages/content/src/achievements.ts`), derivadas da
-  carreira terminada (ex.: todas as grandes ligas, um clube só, Setenta e
-  três). Aparecem num aviso quando liberadas.
+Hall desativado (D47): não guarda carreiras antigas e apaga os arquivos existentes.
+IndexedDB `craque-v2` preserva conquistas e ranking; `craque.v2.progress` guarda
+somente melhores contagens por conquista e hashes das carreiras concluídas,
+sem replay ou retratos. Falha do banco mantém a sessão funcionando em memória.
 
-### 4.3 "E se...?"
+São 148 conquistas em dez categorias: 51 específicas, 18 geradas do catálogo
+de recordes e 79 das competições. A aba Secretas tem quatro objetivos naturais,
+com nome e pista ocultos até desbloquear. Aposentar no clube da estreia em campo
+é uma conquista de Lealdade. Cada competição nova gera sua conquista de título.
 
-No resumo de uma carreira comum (não do Desafio), o capítulo "E se...?"
-lista cada decisão tomada. Escolher uma refaz a carreira por replay até ali
-e continua ao vivo, com a opção que você não escolheu. A linha alternativa é
-só para se divertir: não entra no Hall e não libera conquista (D43).
+### 4.3 Caminho hipotético
+
+No resumo de uma carreira comum (fora do Desafio), o capítulo
+“{sobrenome} hipotético” lista cada decisão. Escolher uma refaz o replay até ali
+e continua ao vivo com outra opção. Substitui o save atual; a linha alternativa
+não libera conquistas. Não há arquivo da carreira anterior.
 
 ### 4.4 O resumo e o compartilhamento
 
@@ -462,7 +542,7 @@ v2/
 ├─ apps/game/         o jogo: Vite + React 19; depende de todos acima
 ├─ tools/balance/     harness de balanceamento: metas do GDD 40 e relatórios
 ├─ tools/terminal/    uma carreira inteira no terminal (pnpm carreira)
-└─ docs/              GDD.md (especificação) e DECISOES.md (D1 a D46)
+└─ docs/              GDD.md (especificação) e DECISOES.md (D1 em diante)
 ```
 
 - **O motor não sabe que existe interface.** Nada em `packages/engine`
@@ -483,8 +563,8 @@ v2/
 |---|---|
 | Pilha | Vite 8, React 19 com React Compiler, TypeScript 6, Tailwind 4.3, Base UI, Motion 13, Zustand 5 |
 | `src/app/` | Casca (barra do topo sempre visível), navegação por `history.state` (a URL não muda entre telas, nenhum host precisa de regra de reescrita), barreiras de erro em três níveis, telas carregadas sob demanda e baixadas em segundo plano depois da primeira pintura |
-| `src/screens/` | Início, Identidade, Aparência, Carreira (decisão, lance, jornal, mensagem do resultado), Resumo, link compartilhado, Desafio, Hall da Fama, carreira arquivada, Conquistas, 404 e o laboratório |
-| `src/features/` | Estado da carreira (`career/store.ts`, Zustand), save, rascunho do jogador, lance (`play.ts`) e mensagem (`resultView.ts`), "E se...?", resumo (pôster, link, vitrine), desafio (relógio), Hall (banco, ranking, conquistas), aparência, ajustes |
+| `src/screens/` | Início, Identidade, Aparência, Carreira (decisão, lance, jornal, mensagem do resultado), Resumo, link compartilhado, Desafio, Conquistas, 404 e o laboratório |
+| `src/features/` | Estado da carreira (`career/store.ts`, Zustand), save, rascunho do jogador, lance (`play.ts`) e mensagem (`resultView.ts`), "E se...?", resumo (pôster, link, vitrine), desafio (relógio), persistência (pasta `hall`: banco, ranking, conquistas), aparência, ajustes |
 | `src/services/` | Som, vibração, `localStorage` seguro, IndexedDB com espelho em memória, imagens offline |
 | `src/ui/` | Sistema de design: botões, carta do jogador, números que contam, sinais e pílulas, painéis, janelas, avisos |
 | `src/i18n/` | Português (fonte), espanhol, inglês |
@@ -526,10 +606,10 @@ clubes), movimento reduzido respeitado (do sistema ou dos ajustes).
 
 - **Testes unitários** (Vitest) em cada pacote: motor (pureza, replay,
   propriedades, regras), conteúdo (textos sem marcador sobrando, idiomas
-  iguais, biografia coerente), app (save, lance, Hall, desafio).
+  iguais, biografia coerente), app (save, lance, contagens, desafio).
 - **Ponta a ponta** (Playwright no Chrome instalado, sobre o build de
   produção, celular 375 × 812 e desktop 1280 × 800): jornada do Início ao
-  Resumo, recarregar, Desafio, Hall com "E se...?", erros, offline e
+  Resumo, recarregar, Desafio, caminho hipotético, conquistas, erros, offline e
   acessibilidade (axe nos dois temas, teclado, leitor de tela).
 - **Balanceamento** (`tools/balance`): milhares de carreiras com políticas
   automáticas contra as 51 metas do GDD 40 (evolução, mundo, carreira,
@@ -668,7 +748,7 @@ Durante o jogo: o número escolhe, `h` mostra o histórico, `s` salva, `q` sai.
   com as metas de balanceamento (seção 40) e notas "Como ficou" onde a
   implementação mudou algo.
 - **[docs/DECISOES.md](docs/DECISOES.md)**: cada decisão de arquitetura e de
-  produto, com o porquê (D1 a D46). Decisão nova ganha o próximo número.
+  produto, com o porquê (D1 em diante). Decisão nova ganha o próximo número.
 
 ### Marcos
 

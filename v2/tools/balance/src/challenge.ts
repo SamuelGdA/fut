@@ -25,7 +25,7 @@ import { bandName, type TargetResult } from "./targets";
  * O Desafio do dia no harness (GDD 27.3 e 40.1):
  *
  * - **calibragem**: carreiras com as regras do desafio (Difícil, Normal,
- *   aposentar a partir dos 27) em cada faixa de talento, medindo as 36
+ *   aposentar a partir dos 27) em cada faixa de talento, medindo as 37
  *   missões; o alvo de cada faixa é o percentil 65 do jogo comum, então quem
  *   persegue a missão chega lá bem mais vezes;
  * - **relatório**: dez anos de mãos (todas válidas), a taxa de cumprimento
@@ -135,7 +135,11 @@ export function calibrateTargets(runs: readonly CalibrationRun[]): Record<string
     const row = {} as Record<TalentBand, number>;
     for (const band of TALENT_BANDS) {
       const values = runs.filter((run) => run.band === band && item.id in run.measures).map((run) => run.measures[item.id] ?? 0);
-      row[band] = values.length === 0 ? 0 : targetFor(values);
+      const fixed = item.id === "clubLegend" ? 1 : item.id === "twoClubIdol" ? 2 : null;
+      // Legado mantém a promessa (uma lenda ou dois ídolos), sem sortear uma
+      // missão quase impossível para a faixa de talento do dia.
+      const reached = fixed === null ? 0 : share(values, (value) => value >= fixed);
+      row[band] = values.length === 0 ? 0 : fixed === null ? targetFor(values) : reached >= RARE_SHARE && reached <= EASY_SHARE ? fixed : 0;
     }
     table[item.id] = row;
   }
@@ -298,8 +302,8 @@ export function challengeTargets(metrics: ChallengeMetrics): TargetResult[] {
     {
       id: "challenge-coverage",
       label: "Toda missão aparece em alguma mão",
-      target: "36 de 36",
-      measured: unused.length === 0 ? "36 de 36" : `faltam ${unused.join(", ")}`,
+      target: `${MISSIONS.length} de ${MISSIONS.length}`,
+      measured: unused.length === 0 ? `${MISSIONS.length} de ${MISSIONS.length}` : `faltam ${unused.join(", ")}`,
       pass: unused.length === 0,
     },
     {

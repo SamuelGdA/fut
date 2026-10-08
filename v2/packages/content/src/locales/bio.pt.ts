@@ -103,9 +103,9 @@ export const bioPt = {
     ],
     classicShirt: [
       "Aos {age} anos, herdou a camisa {number}.",
-      "A {number} chegou aos {age}, e com ela a cobrança.",
+      "A camisa {number} chegou aos {age}, e com ela a cobrança.",
       "Aos {age}, ganhou o número que todo jogador da posição quer: {number}.",
-      "Com {age} anos, passou a vestir a {number}.",
+      "Com {age} anos, passou a vestir a camisa {number}.",
     ],
     roadNotTaken: [
       "Aos {age} anos, recusou uma proposta maior: {club}.",

@@ -51,8 +51,10 @@ function Picture({
   className,
   decorative,
   fill = false,
+  loading = "lazy",
 }: {
   src: string;
+  loading?: "lazy" | "eager";
   /** A arte gerada, se a real falhar. */
   fallback: string;
   alt: string;
@@ -75,7 +77,7 @@ function Picture({
       aria-hidden={decorative || undefined}
       width={width}
       height={height}
-      loading="lazy"
+      loading={loading}
       decoding="async"
       draggable={false}
       className={cn("shrink-0 select-none object-contain", className)}
@@ -171,9 +173,10 @@ export function TrophyArt({
   decorative,
   language,
 }: BaseProps & { competition: Competition; language: Language }) {
-  const mode = useAssetMode((state) => state.mode);
+  const mode = useAssetMode((state) => state.trophyMode);
   return (
     <Picture
+      loading="eager"
       src={competitionTrophyUrl(competition, mode)}
       fallback={generatedTrophyUrl(competition)}
       alt={competition.names[language]}
@@ -192,9 +195,10 @@ export function AwardArt({
   decorative,
   language,
 }: BaseProps & { award: Award; language: Language }) {
-  const mode = useAssetMode((state) => state.mode);
+  const mode = useAssetMode((state) => state.trophyMode);
   return (
     <Picture
+      loading="eager"
       src={awardImageUrl(award, mode)}
       fallback={generatedAwardUrl(award)}
       alt={award.names[language]}

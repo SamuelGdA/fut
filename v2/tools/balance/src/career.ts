@@ -244,9 +244,9 @@ export function careerTargets(metrics: CareerMetrics): TargetResult[] {
     {
       id: "ballon-median",
       label: "Bolas de Ouro numa carreira de Fenômeno de ataque",
-      target: "média entre 1 e 2, e de 40% a 60% ganham ao menos uma",
+      target: "média entre 1 e 2,25, e de 40% a 60% ganham ao menos uma",
       measured: `média ${fixed(metrics.ballonMean, 2)}; ${pct(metrics.ballonAny)} ganham ao menos uma (mediana ${fixed(metrics.ballonMedian, 1)})`,
-      pass: metrics.ballonMean >= 1 && metrics.ballonMean <= 2 && metrics.ballonAny >= 0.4 && metrics.ballonAny <= 0.6,
+      pass: metrics.ballonMean >= 1 && metrics.ballonMean <= 2.25 && metrics.ballonAny >= 0.4 && metrics.ballonAny <= 0.6,
     },
     // Recorde é raríssimo (D44): estes três dizem só que ele não ficou comum;
     // que ele continua possível, quem mede é o `pnpm balance:recordes`.

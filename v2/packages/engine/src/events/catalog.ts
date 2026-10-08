@@ -180,13 +180,23 @@ export const EVENT_CATALOG: readonly EventDefinition[] = [
     ],
   },
   {
+    id: "residencePassport",
+    weight: 70,
+    tags: ["national"],
+    when: [{ kind: "residenceEligible" }],
+    options: [
+      { id: "switch", kind: "change", success: [{ kind: "nationality", residence: true }] },
+      { id: "keep", kind: "safe", success: [] },
+    ],
+  },
+  {
     id: "diploma",
     weight: 30,
     tags: ["personal"],
     when: [{ kind: "age", max: 19 }],
     options: [
-      { id: "study", kind: "choice", success: [{ kind: "growth", scale: 0.9 }, { kind: "story", tag: "diploma" }] },
-      { id: "football", kind: "safe", success: [] },
+      { id: "study", kind: "choice", success: [{ kind: "growth", scale: 0.9 }, { kind: "injury", scale: 0.7 }, { kind: "story", tag: "diploma" }] },
+      { id: "football", kind: "choice", success: [{ kind: "growth", scale: 1.1 }, { kind: "injury", scale: 1.3 }] },
     ],
   },
   {
@@ -229,7 +239,7 @@ export const EVENT_CATALOG: readonly EventDefinition[] = [
     id: "painBeforeFinal",
     weight: 20,
     tags: ["final", "injury-risk"],
-    when: [{ kind: "knockout" }],
+    when: [{ kind: "role", in: ["rotation", "starter", "star"] }, { kind: "lastGames", min: 12 }, { kind: "knockout" }],
     options: [
       {
         id: "sacrifice",
@@ -261,7 +271,7 @@ export const EVENT_CATALOG: readonly EventDefinition[] = [
     id: "decisivePenalty",
     weight: 20,
     tags: ["final"],
-    when: [{ kind: "knockout" }],
+    when: [{ kind: "role", in: ["rotation", "starter", "star"] }, { kind: "lastGames", min: 12 }, { kind: "knockout" }],
     options: [
       { id: "take", kind: "risky", chance: 0.7, success: [{ kind: "final", result: "win" }, { kind: "fans", amount: 8 }], failure: [{ kind: "final", result: "lose" }, { kind: "fans", amount: -6 }] },
       // Quem bate é outro, mas a final existe: metade das vezes ele converte.
@@ -282,7 +292,7 @@ export const EVENT_CATALOG: readonly EventDefinition[] = [
     id: "derby",
     weight: 60,
     tags: ["fans"],
-    when: [{ kind: "derby" }],
+    when: [{ kind: "derby" }, { kind: "role", in: ["rotation", "starter", "star"] }, { kind: "lastGames", min: 12 }],
     options: [
       { id: "provoke", kind: "risky", chance: 0.55, success: [{ kind: "fans", amount: 12 }], failure: [{ kind: "fans", amount: -10 }] },
       { id: "fairPlay", kind: "safe", success: [{ kind: "fans", amount: 2 }] },
@@ -305,7 +315,7 @@ export const EVENT_CATALOG: readonly EventDefinition[] = [
     when: [{ kind: "age", min: 21, max: 30 }],
     options: [
       { id: "force", kind: "change", success: [{ kind: "fans", amount: -12 }, { kind: "transfer", to: "bigger" }] },
-      { id: "stay", kind: "safe", success: [{ kind: "fans", amount: 4 }] },
+      { id: "stay", kind: "choice", success: [{ kind: "fans", amount: 4 }, { kind: "agentBreakup" }] },
     ],
   },
   {
@@ -315,7 +325,7 @@ export const EVENT_CATALOG: readonly EventDefinition[] = [
     when: [{ kind: "age", min: 28 }],
     options: [
       { id: "mentor", kind: "choice", success: [{ kind: "fans", amount: 8 }, { kind: "growth", scale: 0.9 }, { kind: "story", tag: "mentor" }] },
-      { id: "compete", kind: "safe", success: [] },
+      { id: "compete", kind: "risky", chance: 0.5, fixedChance: true, success: [{ kind: "games", scale: 1.2 }], failure: [{ kind: "games", scale: 0.8 }] },
     ],
   },
   {
@@ -352,9 +362,9 @@ export const EVENT_CATALOG: readonly EventDefinition[] = [
     id: "packedStadium",
     weight: 55,
     tags: ["fans"],
-    when: [],
+    when: [{ kind: "role", in: ["rotation", "starter", "star"] }, { kind: "lastGames", min: 12 }],
     options: [
-      { id: "showboat", kind: "risky", chance: 0.5, success: [{ kind: "production", scale: 1.3 }, { kind: "fans", amount: 5 }], failure: [{ kind: "production", scale: 0.8 }, { kind: "fans", amount: -3 }] },
+      { id: "showboat", kind: "risky", chance: 0.5, success: [{ kind: "role", change: "up" }, { kind: "fans", amount: 5 }], failure: [{ kind: "role", change: "down" }, { kind: "fans", amount: -3 }] },
       { id: "focused", kind: "safe", success: [] },
     ],
   },
@@ -362,7 +372,7 @@ export const EVENT_CATALOG: readonly EventDefinition[] = [
     id: "redCard",
     weight: 45,
     tags: ["discipline"],
-    when: [{ kind: "any", of: [{ kind: "trait", in: ["hothead"] }, { kind: "lastGames", min: 30 }] }],
+    when: [{ kind: "role", in: ["rotation", "starter", "star"] }, { kind: "lastGames", min: 12 }, { kind: "any", of: [{ kind: "trait", in: ["hothead"] }, { kind: "lastGames", min: 30 }] }],
     options: [
       { id: "appeal", kind: "risky", chance: 0.5, success: [{ kind: "games", scale: 0.97 }], failure: [{ kind: "games", scale: 0.85 }] },
       { id: "accept", kind: "safe", success: [{ kind: "games", scale: 0.93 }] },

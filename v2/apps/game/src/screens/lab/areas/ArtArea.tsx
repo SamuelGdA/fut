@@ -164,7 +164,7 @@ function TrophyGrid({ competitions }: { competitions: readonly Competition[] }) 
 
 function Trophies() {
   const { t } = useT();
-  const mode = useAssetMode((state) => state.mode);
+  const mode = useAssetMode((state) => state.trophyMode);
 
   return (
     <section aria-labelledby="arte-trofeus" className="flex flex-col gap-8">

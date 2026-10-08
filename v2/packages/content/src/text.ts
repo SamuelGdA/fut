@@ -240,6 +240,8 @@ export function describeEffect(locale: Locale, effect: Effect, target: EventTarg
       return effect.number === "ten" ? t("effect.shirtTen") : t("effect.shirt", { number: target?.number ?? "" });
     case "block":
       return t("effect.block");
+    case "agentBreakup":
+      return t("effect.agentBreakup");
     case "market":
       return t(effect.amount >= 0 ? "effect.marketUp" : "effect.marketDown");
     case "clubStrength":
@@ -286,6 +288,7 @@ export function effectTone(effect: Effect): EffectTone {
     case "national":
       return effect.mode === "force" ? "good" : "neutral";
     case "suspension":
+    case "agentBreakup":
     case "block":
       return "bad";
     case "shirt":

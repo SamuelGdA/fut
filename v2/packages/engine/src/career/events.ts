@@ -6,7 +6,7 @@ import { TRAIT_EFFECTS } from "../player/traits";
 import { type Rng, stream } from "../rng";
 import { type Pace, SEASONS_PER_PERIOD } from "../types";
 import { clubIndex } from "../world/model";
-import { grandfatherCountry, homeClub, legacyClub, marketContext } from "./context";
+import { grandfatherCountry, residenceCountry, homeClub, legacyClub, marketContext } from "./context";
 import { buildOffer, interestedClubs, marketOffers, offerFrom } from "./market";
 import type { Career, ClubOffer, Decision, DecisionOption, EventTarget } from "./types";
 
@@ -62,6 +62,7 @@ export function pickEvent(career: Career, context: EventContext): EventDefinitio
 /** Chance de uma opção arriscada, com o traço (GDD 18.2), limitada de 5% a 95%. */
 export function optionChance(career: Career, option: EventOption): number | null {
   if (option.kind !== "risky") return null;
+  if (option.fixedChance) return clamp(option.chance ?? 0.5, 0.05, 0.95);
   return clamp((option.chance ?? 0.5) * TRAIT_EFFECTS[career.player.trait].risk, 0.05, 0.95);
 }
 
@@ -106,7 +107,7 @@ function resolveTarget(
         const legacy = legacyClub(career);
         club = legacy ? offerFrom(market, legacy, rng) : null;
       }
-      if (!club) return undefined;
+      if (!club || club.strength > (market.maxStrength ?? Infinity)) return undefined;
       target = { ...(target ?? {}), club };
     }
     if (effect.kind === "position") {
@@ -114,7 +115,7 @@ function resolveTarget(
       target = { ...(target ?? {}), position: context.neighbourPosition };
     }
     if (effect.kind === "nationality") {
-      const country = grandfatherCountry(career);
+      const country = effect.residence ? residenceCountry(career) : grandfatherCountry(career);
       if (!country) return undefined;
       target = { ...(target ?? {}), country };
     }

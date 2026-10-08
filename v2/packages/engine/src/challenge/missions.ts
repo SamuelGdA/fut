@@ -3,6 +3,7 @@ import { GROUP_OF, type Position, type PositionGroup } from "../player/positions
 import type { TalentBand } from "../player/talent";
 import {
   best,
+  finalLegacy,
   bestWorldCupStage,
   clubCountry,
   lastPlayedAge,
@@ -72,7 +73,8 @@ export const MISSIONS: readonly Mission[] = [
     const first = c.history[0]?.club;
     return first ? sum(c.history, (r) => (r.club === first ? r.games : 0)) : 0;
   }),
-  mission("idolSeasons", "loyalty", [], (c) => c.history.filter((r) => r.legacy === "idol" || r.legacy === "legend").length),
+  mission("clubLegend", "loyalty", [], (c) => [...finalLegacy(c.history).values()].filter((level) => level === "legend").length),
+  mission("twoClubIdol", "loyalty", [], (c) => [...finalLegacy(c.history).values()].filter((level) => level === "idol" || level === "legend").length),
   mission("peakFans", "loyalty", [], (c) => Math.round(Math.max(0, ...Object.values(c.bonds).map((bond) => bond.peakFans)))),
 
   // Estrada.

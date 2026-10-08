@@ -22,7 +22,7 @@ function folderBytes(folder: string): number {
 
 const RUNTIME_IMAGE_BYTES = folderBytes(join(PUBLIC_ASSETS, "clubs")) + folderBytes(join(PUBLIC_ASSETS, "trophies"));
 
-const THEME = "#0d1110";
+const THEME = "#f3f0e8";
 
 export default defineConfig({
   define: {
@@ -102,6 +102,8 @@ export default defineConfig({
     }),
   ],
   server: {
+    // Relatórios gerados são reescritos durante os testes e podem estar bloqueados no Windows.
+    watch: { ignored: ["**/e2e-relatorio/**", "**/e2e-resultados/**"] },
     port: 5173,
     strictPort: false,
   },

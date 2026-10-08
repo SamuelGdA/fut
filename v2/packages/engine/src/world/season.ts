@@ -530,7 +530,7 @@ function evolveStrength(
   return context.world.strength.map((current, index) => {
     const base = BASE_STRENGTH[index] ?? current;
     const next = current + CLUB_DRIFT.reversion * (base - current) + (success[index] ?? 0) + rng.normal(0, CLUB_DRIFT.noise);
-    return clamp(next, CLUB_DRIFT.min, CLUB_DRIFT.max);
+    return clamp(next, Math.max(CLUB_DRIFT.min, base - 10), Math.min(CLUB_DRIFT.max, base + 10));
   });
 }
 

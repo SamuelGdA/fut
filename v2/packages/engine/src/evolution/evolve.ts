@@ -1,5 +1,5 @@
 import { clamp } from "../math";
-import { attributesAt, overallLevel, type Player } from "../player/player";
+import { attributesAt, ovrAt, type Player } from "../player/player";
 import type { Rng } from "../rng";
 import type { Six } from "../types";
 import { drawSeasonForm, type SeasonForm } from "./form";
@@ -10,9 +10,8 @@ import {
   type GrowthContext,
   type GrowthFactors,
   growthFactors,
-  titleMorale,
 } from "./growth";
-import { isFocusValid, settleTraining, trainFocus, type TrainingFocus } from "./training";
+import { guaranteeFocus, isFocusValid, settleTraining, trainFocus, type TrainingFocus } from "./training";
 import { CAPACITY_RANGE } from "./tuning";
 
 /**
@@ -27,6 +26,10 @@ export interface SeasonEvolutionInput extends GrowthContext {
   readonly focus: TrainingFocus | null;
   /** Multiplica o crescimento esperado (evento: diploma, apadrinhar a joia da base). */
   readonly growthScale?: number;
+  /** Devolve capacidade emprestada por evento antes do resultado final. */
+  readonly restoreCapacity?: number;
+  /** Garantia do atributo treinado, somente no fim do período. */
+  readonly guarantee?: { readonly focus: TrainingFocus; readonly start: Six };
 }
 
 export interface SeasonEvolutionReport {
@@ -34,7 +37,7 @@ export interface SeasonEvolutionReport {
   readonly factors: GrowthFactors;
   /** Ganho esperado antes da forma. */
   readonly expected: number;
-  /** Moral de título somada antes do teto. */
+  /** Bônus de título, em OVR, após a evolução natural. */
   readonly morale: number;
   /** L ganho de fato, já pelo teto suave. */
   readonly gain: number;
@@ -55,15 +58,15 @@ export interface SeasonEvolution {
  * Um passo de evolução. Consome sempre os mesmos dois sorteios (a forma), para
  * que mudar o contexto nunca desalinhe o fluxo das temporadas seguintes.
  *
- * Ordem: forma, crescimento (pelo teto suave), declínio, treino.
+ * Ordem: forma, crescimento (pelo teto suave), declínio, treino, bônus de título.
  */
 export function evolveSeason(player: Player, input: SeasonEvolutionInput, rng: Rng): SeasonEvolution {
   const form = drawSeasonForm(rng, input.age, input.games);
   const factors = growthFactors(player, input);
   const expected = expectedGrowth(factors) * (input.growthScale ?? 1);
-  const morale = titleMorale(input.titleImportance, overallLevel(player), player.potential);
+  const morale = input.titleImportance > 0 ? 1 : 0;
 
-  const gain = capSeasonGain(expected * form.multiplier + morale);
+  const gain = capSeasonGain(expected * form.multiplier);
   const loss = ageDecline(player, input.age, input.difficulty);
   const grown: Player = {
     ...player,
@@ -71,7 +74,16 @@ export function evolveSeason(player: Player, input: SeasonEvolutionInput, rng: R
   };
 
   const focus = input.focus !== null && isFocusValid(player.position, input.focus) ? input.focus : null;
-  const next = focus ? settleTraining(grown, trainFocus(grown.training, focus)) : grown;
+  let next = focus ? settleTraining(grown, trainFocus(grown.training, focus)) : grown;
+  if (input.restoreCapacity) next = { ...next, capacity: next.capacity - input.restoreCapacity };
+  if (input.guarantee) next = guaranteeFocus(next, input.guarantee.focus, input.guarantee.start, input.age);
+  if (morale > 0) {
+    const target = Math.min(99, ovrAt(next, input.age) + 1);
+    // OVR sempre deriva dos atributos: achar o primeiro degrau, mesmo perto do 99.
+    for (let step = 0; step < 200 && ovrAt(next, input.age) < target && next.capacity < CAPACITY_RANGE.max; step += 1) {
+      next = { ...next, capacity: Math.min(CAPACITY_RANGE.max, next.capacity + 0.05) };
+    }
+  }
 
   return {
     player: next,

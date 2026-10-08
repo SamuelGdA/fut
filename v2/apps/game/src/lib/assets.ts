@@ -6,28 +6,33 @@ import {
 } from "@craque/art";
 import { type Award, type Club, type Competition, getClub, type League } from "@craque/world";
 import { create } from "zustand";
-import { ASSET_MODE, type AssetMode } from "./env";
+import { ASSET_MODE, TROPHY_ASSET_MODE, type AssetMode } from "./env";
 
 /**
  * De onde vem cada imagem do jogo (GDD 31.1).
  *
  * `real`: escudos, selos e troféus reais quando existem, e a arte gerada no
  * lugar dos que faltam. `gerado`: só a arte gerada. Bandeiras são sempre as
- * reais. O modo vem do build; no laboratório dá para trocar em tempo real.
+ * reais. Por padrão, escudos e selos são gerados, troféus e prêmios reais.
+ * O modo vem do build; no laboratório dá para trocar em tempo real.
  */
 
 interface AssetModeState {
   mode: AssetMode;
+  trophyMode: AssetMode;
   /**
    * Troca o modo até a página recarregar. Só o laboratório chama isto, para
    * comparar as duas artes; o jogo usa sempre o modo do build.
    */
   setMode(mode: AssetMode): void;
+  resetMode(): void;
 }
 
 export const useAssetMode = create<AssetModeState>()((set) => ({
   mode: ASSET_MODE,
-  setMode: (mode) => set({ mode }),
+  trophyMode: TROPHY_ASSET_MODE,
+  setMode: (mode) => set({ mode, trophyMode: mode }),
+  resetMode: () => set({ mode: ASSET_MODE, trophyMode: TROPHY_ASSET_MODE }),
 }));
 
 const BASE = import.meta.env.BASE_URL;

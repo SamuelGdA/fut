@@ -101,9 +101,9 @@ export const bioEs: BioMessages = {
     ],
     classicShirt: [
       "A los {age} años heredó la camiseta {number}.",
-      "La {number} llegó a los {age}, y con ella la exigencia.",
+      "La camiseta {number} llegó a los {age}, y con ella la exigencia.",
       "A los {age}, recibió el número que todo jugador de su puesto quiere: {number}.",
-      "Con {age} años, empezó a vestir la {number}.",
+      "Con {age} años, empezó a vestir la camiseta {number}.",
     ],
     roadNotTaken: [
       "A los {age} años rechazó una oferta mayor: {club}.",

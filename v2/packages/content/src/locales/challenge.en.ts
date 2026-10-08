@@ -24,11 +24,8 @@ export const challengeEn: ChallengeMessages = {
     cupTitles: { name: "Cup specialist", goal: { one: "{n} domestic cup", other: "{n} domestic cups" } },
     longestStay: { name: "Rooted", goal: { one: "{n} season at the same club", other: "{n} seasons at the same club" } },
     firstClubGames: { name: "Homegrown", goal: { one: "{n} game for your first club", other: "{n} games for your first club" } },
-    idolSeasons: {
-      name: "Idol",
-      goal: { one: "{n} season as an idol or legend", other: "{n} seasons as an idol or legend" },
-      hint: "Idol and legend are the two highest steps of legacy at a club.",
-    },
+    clubLegend: { name: "Club legend", goal: { one: "Become a legend at one club", other: "Become a legend at one club" }, hint: "Legacy depends on your contribution on the pitch." },
+    twoClubIdol: { name: "Two fanbases", goal: { one: "Become an idol or legend at at least two clubs", other: "Become an idol or legend at at least two clubs" }, hint: "Legacy depends on your contribution on the pitch." },
     peakFans: {
       name: "Fan favourite",
       goal: { one: "Fan support of {n} at one club", other: "Fan support of {n} at one club" },

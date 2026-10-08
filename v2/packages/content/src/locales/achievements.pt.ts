@@ -2,7 +2,11 @@ import type { Widen } from "../i18n";
 
 /** As conquistas (GDD 28.2): nome e o que pedem. A regra de cada uma mora em `achievements.ts`. */
 export const achievementsPt = {
+  recordGoal: "Iguale ou supere a marca de {value}.",
+  titleGoal: "Ganhe: {title}.",
   groups: {
+    records: "Recordes",
+    secret: "Secretas",
     career: "Carreira",
     titles: "Títulos",
     awards: "Prêmios",
@@ -13,6 +17,8 @@ export const achievementsPt = {
     curious: "Curiosas",
   },
   items: {
+    retireAtDebut: { name: "De volta ao começo", description: "Encerre a carreira no clube onde estreou em campo." },
+    newPassport: { name: "Uma nova bandeira", description: "Mude de nacionalidade durante a carreira." },
     firstCareer: { name: "Primeiro apito final", description: "Termine uma carreira." },
     tenCareers: { name: "Dez vidas", description: "Termine dez carreiras." },
     fullDistance: { name: "Até o último fôlego", description: "Jogue até o limite de idade, sem pendurar as chuteiras antes." },
@@ -52,7 +58,7 @@ export const achievementsPt = {
     challengeFirst: { name: "Desafio aceito", description: "Termine um Desafio do dia." },
     challenge700: { name: "Mão firme", description: "Faça 700 pontos num Desafio do dia." },
     challenge900: { name: "Mão de mestre", description: "Faça 900 pontos num Desafio do dia." },
-    challengeClean: { name: "Ficha limpa", description: "Termine um desafio com o édito cumprido e nenhuma temporada apagada." },
+    challengeClean: { name: "Ficha limpa", description: "Termine um desafio com a regra cumprida e nenhuma temporada apagada." },
     challengeAllThree: { name: "Três de três", description: "Cumpra as três missões de um desafio, mesmo que só duas contem." },
     challengeWeek: { name: "Sete dias", description: "Jogue o desafio ranqueado em sete dias diferentes." },
     fiftyGoals: { name: "Meio século", description: "Faça 50 gols por clube numa temporada." },

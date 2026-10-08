@@ -149,12 +149,20 @@ export const eventsEn: EventsMessages = {
       keep: { label: "Stay with your country", result: "You keep the shirt of the country where you were born." },
     },
   },
+  residencePassport: {
+    title: "A new national team",
+    body: "After five seasons in the country, {country} wants to call you up. Accepting changes your nationality in the game.",
+    options: {
+      switch: { label: "Accept the new nationality", result: "You now represent {country}." },
+      keep: { label: "Keep my nationality", result: "You keep your nationality and wait for your national team." },
+    },
+  },
   diploma: {
     title: "The diploma",
     body: "Your family insists: finish school before thinking only about football.",
     options: {
-      study: { label: "Finish school", result: "Diploma in hand. The classes cost you some training time." },
-      football: { label: "Football only", result: "You bet everything on the game." },
+      study: { label: "Finish school", result: "Diploma in hand. Less training cuts growth by 10% and injury risk by 30% for this period." },
+      football: { label: "Football only", result: "You train harder: 10% more growth, but 30% more injury risk for this period." },
     },
   },
   dressingRoomRift: {
@@ -269,7 +277,7 @@ export const eventsEn: EventsMessages = {
         label: "Force the move",
         result: "You force it through and leave. {target} gain a signing; your old fans, a grudge.",
       },
-      stay: { label: "Stay", result: "You dig in and stay. The fans notice, and they are grateful." },
+      stay: { label: "Stay", result: "You stay and win the fans over, but your agent leaves. Only the next decision has offers from weaker clubs, if a transfer comes up; then the market returns to normal." },
     },
   },
   academyJewel: {
@@ -277,7 +285,7 @@ export const eventsEn: EventsMessages = {
     body: "A kid from the academy plays in your position and asks to train alongside you.",
     options: {
       mentor: { label: "Take him under your wing", result: "You teach him everything you know. The fans love it, and your own training time shrinks." },
-      compete: { label: "Fight for the spot", result: "Friendly, but the spot is yours. The kid will have to wait." },
+      compete: { label: "Fight for the spot", success: "You win the competition and gain playing time.", failure: "The youngster wins the competition. You lose playing time." },
     },
   },
   bootDeal: {
@@ -318,8 +326,8 @@ export const eventsEn: EventsMessages = {
     options: {
       showboat: {
         label: "Play to the crowd",
-        success: "Tricks and beautiful goals. The world was watching.",
-        failure: "Too many tricks, too little end product. The season falls short.",
+        success: "Solid performances earn you more playing time and appreciation.",
+        failure: "You take too many risks and lose playing time.",
       },
       focused: { label: "Keep it simple", result: "You keep it simple and do your job." },
     },

@@ -1,5 +1,5 @@
 import { CLUBS, COUNTRIES, LEAGUES } from "@craque/world";
-import { ArrowRight, Award, Crosshair, Dices, FlaskConical, Landmark, Pencil, Play, Timer } from "lucide-react";
+import { ArrowRight, Award, Crosshair, Dices, FlaskConical, Pencil, Play, Timer } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigation } from "../../app/navigation";
 import { useDraft } from "../../features/career/draft";
@@ -300,7 +300,6 @@ function DailyChallengeCard({ save }: { save: SavePeek }) {
 function MemoryPanel() {
   const { t, tp } = useT();
   const go = useNavigation((state) => state.go);
-  const careers = useHall((state) => state.entries.length);
   const unlocked = useHall((state) => state.achievements.length);
 
   useEffect(() => {
@@ -310,23 +309,6 @@ function MemoryPanel() {
   return (
     <Panel title={t("home.memory")}>
       <div className="flex flex-col gap-2">
-        <button
-          type="button"
-          className="option"
-          onClick={() => {
-            feedback("select");
-            go("hall");
-          }}
-        >
-          <span className="option-lead text-glory">
-            <Landmark size={22} aria-hidden="true" />
-          </span>
-          <span className="option-main">
-            <span className="option-title">{t("home.hall")}</span>
-            <span className="option-meta text-xs text-muted">{tp("home.hallCount", careers)}</span>
-          </span>
-          <ArrowRight size={18} aria-hidden="true" className="text-faint" />
-        </button>
         <button
           type="button"
           className="option"

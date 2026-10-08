@@ -212,10 +212,9 @@ describe("a sessão: terminar, interromper, ranquear e conquistar", () => {
     expect(attempts).toHaveLength(2);
     expect(attempts.find((item) => item.surname === "PRIMEIRO")?.ranked).toBe(true);
     expect(attempts.find((item) => item.surname === "SEGUNDO")?.ranked).toBe(false);
-    const entry = useHall.getState().entries.find((item) => item.id === archiveId(saveOf(first)));
-    expect(entry?.archivedAt).toBe(100);
-    expect(entry?.snapshot.challenge).toEqual({ day: DAY, score: challengeOf(first)?.total, ranked: true });
-    expect(useHall.getState().entries.filter((item) => item.id === entry?.id)).toHaveLength(1);
+    expect(useHall.getState().entries).toEqual([]);
+    expect(useHall.getState().finishedIds.filter((id) => id === archiveId(saveOf(first)))).toHaveLength(1);
+    expect(useHall.getState().progress["record:careerGames"]).toBeGreaterThan(0);
 
     // Conquistas: a primeira carreira e o primeiro desafio caíram, uma vez só.
     const unlocked = new Set(useHall.getState().achievements.map((row) => row.id));
@@ -225,7 +224,7 @@ describe("a sessão: terminar, interromper, ranquear e conquistar", () => {
     expect(useHall.getState().achievements.find((row) => row.id === "challengeFirst")?.by).toBe("PRIMEIRO");
   });
 
-  it("interrompida só com ao menos uma temporada; terminada não vira interrompida", async () => {
+  it("começar outra não arquiva a carreira interrompida", async () => {
     const fresh = createCareer({ ...SETUP, seed: "sem-temporada" });
     await recordInterrupted(fresh, null, false, 1);
     expect(useHall.getState().entries.some((item) => item.id === archiveId(saveOf(fresh)))).toBe(false);
@@ -242,10 +241,10 @@ describe("a sessão: terminar, interromper, ranquear e conquistar", () => {
     useCareer.getState().start({ ...SETUP, seed: "a-nova" }, null);
     await new Promise((resolve) => setTimeout(resolve, 0));
     const left = useHall.getState().entries.find((item) => item.id === archiveId(saveOf(playing)));
-    expect(left?.status).toBe("interrupted");
+    expect(left).toBeUndefined();
   });
 
-  it("o save em disco, trocado ou descartado, vai para o Hall antes de sumir", async () => {
+  it("o save em disco não é arquivado ao ser substituído", async () => {
     const career = createCareer({ ...SETUP, seed: "em-disco" });
     let played = career;
     for (let turn = 0; turn < 2 && played.decision; turn += 1) {
@@ -256,8 +255,7 @@ describe("a sessão: terminar, interromper, ranquear e conquistar", () => {
     writeSave(recordOf(played, DEFAULT_AVATAR, "career"));
     await archiveSavedCareer(42);
     const entry = useHall.getState().entries.find((item) => item.id === archiveId(saveOf(played)));
-    expect(entry?.status).toBe("interrupted");
-    expect(entry?.archivedAt).toBe(42);
+    expect(entry).toBeUndefined();
   });
 });
 

@@ -1,14 +1,9 @@
 import { expect, test } from "@playwright/test";
 import { abrir, encerrar, jogarTurno, jogoRapido, OPCOES } from "./apoio";
 
-/**
- * Hall da Fama, "E se...?" e conquistas (GDD 28): a carreira terminada entra
- * no Hall, abre só de leitura, uma linha alternativa sai de uma decisão (e,
- * por ser só para se divertir, não entra no Hall, D43), e apagar pede
- * confirmação.
- */
+/** Caminho hipotético sem arquivo de carreiras; conquistas preservadas (D47). */
 
-test("Hall da Fama, E se...? e conquistas", async ({ page }) => {
+test("carreira hipotética e conquistas sem Hall", async ({ page }) => {
   await abrir(page);
   await jogoRapido(page);
   for (let turn = 0; turn < 3; turn += 1) await jogarTurno(page);
@@ -23,25 +18,17 @@ test("Hall da Fama, E se...? e conquistas", async ({ page }) => {
   await encerrar(page);
   await expect(page.locator(".summary-hero")).toContainText("Linha alternativa");
 
-  // Só a original no Hall: a linha alternativa é só para se divertir.
+  // Não há arquivo de carreiras; as conquistas da original continuam.
   await page.getByRole("button", { name: "Início", exact: true }).click();
-  await page.getByRole("button", { name: /Hall da Fama/ }).first().click();
-  await expect(page.locator(".hall-card")).toHaveCount(1);
-  await expect(page.locator(".hall-card").filter({ hasText: "Linha alternativa" })).toHaveCount(0);
-
-  // Abrir mostra o resumo só de leitura, com a volta para o Hall.
-  await page.locator(".hall-card").first().getByRole("button", { name: "Abrir" }).click();
-  await expect(page.getByText("Do Hall da Fama")).toBeVisible();
-  await page.getByRole("button", { name: "Voltar ao Hall" }).first().click();
-
-  // Apagar pede confirmação.
-  await page.locator(".hall-card").first().getByRole("button", { name: "Apagar" }).click();
-  await expect(page.getByRole("alertdialog", { name: "Apagar do Hall da Fama?" })).toBeVisible();
-  await page.locator(".dialog-popup").getByRole("button", { name: "Apagar", exact: true }).click();
-  await expect(page.locator(".hall-card")).toHaveCount(0);
-
-  // Conquistas: a primeira carreira terminada já está liberada, com quem liberou.
-  await page.getByRole("button", { name: "Ver conquistas" }).click();
+  await expect(page.getByRole("button", { name: /Hall da Fama/ })).toHaveCount(0);
+  await page.getByRole("button", { name: /Conquistas/ }).click();
   const first = page.locator(".achievement").filter({ hasText: "Primeiro apito final" });
   await expect(first).toHaveAttribute("data-unlocked", "true");
+  await page.getByRole("tab", { name: "Títulos", exact: true }).click();
+  await expect(page.locator(".achievement").filter({ hasText: "Brasileirão" }).first()).toBeVisible();
+  await page.getByRole("tab", { name: "Recordes", exact: true }).click();
+  await expect(page.locator(".achievement")).toHaveCount(18);
+  await page.getByRole("tab", { name: "Secretas", exact: true }).click();
+  await expect(page.locator(".achievement")).toHaveCount(4);
+  await expect(page.locator(".achievement").filter({ hasText: "Conquista secreta" }).first()).toBeVisible();
 });

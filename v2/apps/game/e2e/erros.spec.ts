@@ -36,9 +36,9 @@ test("tela que não baixa: o erro aparece dentro da casca, com recarregar e volt
   // As telas baixam em segundo plano logo depois da primeira pintura (D43): a
   // rede da tela do Hall cai antes de o jogo abrir, para nem o download
   // antecipado nem o clique a trazerem.
-  await page.route(/\/assets\/HallScreen-[\w-]+\.js$/, (route) => route.abort());
+  await page.route(/\/assets\/AchievementsScreen-[\w-]+\.js$/, (route) => route.abort());
   await abrir(page);
-  await page.getByRole("button", { name: /Hall da Fama/ }).first().click();
+  await page.getByRole("button", { name: /Conquistas/ }).first().click();
   await expect(page.getByRole("heading", { name: "Faltou um pedaço do jogo" })).toBeVisible();
   await expect(page.getByRole("button", { name: "Recarregar" })).toBeVisible();
   // A casca continua de pé: a marca no topo e os ajustes.

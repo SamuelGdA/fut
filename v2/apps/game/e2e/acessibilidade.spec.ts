@@ -35,10 +35,7 @@ for (const theme of ["dark", "light"] as const) {
     await auditar(page, "Resumo");
 
     await page.getByRole("button", { name: "Início", exact: true }).click();
-    await page.getByRole("button", { name: /Hall da Fama/ }).first().click();
-    await expect(page.locator(".hall-card").first()).toBeVisible();
-    await auditar(page, "Hall da Fama");
-    await page.getByRole("button", { name: "Ver conquistas" }).click();
+    await page.getByRole("button", { name: /Conquistas/ }).click();
     await expect(page.locator(".achievement").first()).toBeVisible();
     await auditar(page, "Conquistas");
 

@@ -203,7 +203,7 @@ export function OverlaysSection({ index }: SectionProps) {
               </Button>
             ))}
           </div>
-          <ResultLayer view={result} />
+          <div className="mt-4 max-w-lg"><ResultLayer view={result} /></div>
         </Panel>
       </div>
 

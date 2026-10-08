@@ -50,6 +50,5 @@ test("da entrada do desafio ao resultado ranqueado", async ({ page }, info) => {
   // O Início mostra a ranqueada de hoje; o Hall, o selo do desafio.
   await page.getByRole("button", { name: "Início", exact: true }).click();
   await expect(page.getByText(/^Ranqueada de hoje: \d+ pontos$/)).toBeVisible();
-  await page.getByRole("button", { name: /Hall da Fama/ }).first().click();
-  await expect(page.locator(".hall-card").first()).toContainText(/Desafio \d+/);
+  await expect(page.getByRole("button", { name: /Hall da Fama/ })).toHaveCount(0);
 });

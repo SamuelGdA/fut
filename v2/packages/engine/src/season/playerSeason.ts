@@ -1,7 +1,7 @@
 import { type CountryCode, getClub, getCountry, leagueAt, titleImportance } from "@craque/world";
 import { decideAwards, type AwardsOutcome } from "../awards/awards";
 import type { CrownEntry, Placing } from "../awards/crowns";
-import { evolveSeason, type SeasonEvolutionReport } from "../evolution/evolve";
+import { evolveSeason, type SeasonEvolutionInput, type SeasonEvolutionReport } from "../evolution/evolve";
 import type { TrainingFocus } from "../evolution/training";
 import { clamp } from "../math";
 import { attributesAt, ovrAt, type Player } from "../player/player";
@@ -52,6 +52,7 @@ export interface PlayerSeasonInput {
   /** Torcida do clube atual, de 0 a 100. */
   readonly fans: number;
   readonly focus: TrainingFocus | null;
+  readonly guarantee?: SeasonEvolutionInput["guarantee"];
   /** Temporada suspensa (GDD 11.7): sem jogos, sem títulos, sem prêmios. */
   readonly suspended?: boolean;
   /** Efeitos de evento que valem durante a temporada (GDD 18.2). */
@@ -426,12 +427,13 @@ export function simulatePlayerSeason(input: PlayerSeasonInput): PlayerSeasonResu
       titleImportance: importance,
       focus: input.focus,
       growthScale: modifiers.growthScale ?? 1,
+      restoreCapacity: shift,
+      guarantee: input.guarantee,
     },
     stream(seed, "growth", year),
   );
-  // Devolve a capacidade emprestada: só o crescimento da temporada fica.
-  const evolved: Player =
-    shift === 0 ? evolution.player : { ...evolution.player, capacity: evolution.player.capacity - shift };
+  // A capacidade emprestada já foi devolvida antes do bônus final de título.
+  const evolved = evolution.player;
 
   const stats: PlayerSeasonStats = {
     year,

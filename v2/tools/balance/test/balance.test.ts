@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { calibrateTargets, type CalibrationRun } from "../src/challenge";
 import { computeMetrics, seasonDeltas } from "../src/metrics";
 import { careerValue, RECORD_BATCHES, RECORD_TARGETS, recordRows, runRecordCareers } from "../src/records";
 import { markdownReport, sparkline } from "../src/report";
@@ -100,5 +101,20 @@ describe("recordes ao alcance (D33 e D42)", () => {
     expect(careerValue(total, career.history)).toBe(
       career.history.reduce((sum, record) => sum + record.production.goals + record.national.goals, 0),
     );
+  });
+});
+
+
+describe("missões de legado com objetivo fixo", () => {
+  it("mantém uma lenda e dois ídolos, omitindo talentos em que o objetivo é raro demais", () => {
+    const runs: CalibrationRun[] = Array.from({ length: 100 }, (_, index) => ({
+      band: "class", measures: { clubLegend: index < 30 ? 1 : 0, twoClubIdol: index < 10 ? 2 : 0 }, brokenEdicts: [],
+    }));
+    const targets = calibrateTargets(runs);
+    expect(targets.clubLegend?.class).toBe(1);
+    expect(targets.twoClubIdol?.class).toBe(0);
+    expect(targets.clubLegend?.journeyman).toBe(0);
+    const viable = runs.map((run, index) => ({ ...run, measures: { ...run.measures, twoClubIdol: index < 40 ? 2 : 0 } }));
+    expect(calibrateTargets(viable).twoClubIdol?.class).toBe(2);
   });
 });

@@ -132,9 +132,9 @@ describe("a mão do dia (GDD 27.2)", () => {
     }
   });
 
-  it("o catálogo tem 36 missões em nove eixos, e alvo calibrado para cada uma", () => {
-    expect(MISSIONS).toHaveLength(36);
-    for (const axis of CHALLENGE_AXES) expect(MISSIONS.filter((item) => item.axis === axis)).toHaveLength(4);
+  it("o catálogo tem 37 missões em nove eixos, e alvo calibrado para cada uma", () => {
+    expect(MISSIONS).toHaveLength(37);
+    for (const axis of CHALLENGE_AXES) expect(MISSIONS.filter((item) => item.axis === axis)).toHaveLength(axis === "loyalty" ? 5 : 4);
     expect(Object.keys(MISSION_TARGETS).sort()).toEqual(MISSIONS.map((item) => item.id).sort());
     for (const item of MISSIONS) {
       const row = MISSION_TARGETS[item.id];

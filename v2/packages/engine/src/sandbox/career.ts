@@ -1,5 +1,5 @@
 import { CLUBS, type CountryCode, getCountry, PLAYABLE_COUNTRIES } from "@craque/world";
-import { focusDueAt, guaranteeFocus, type TrainingFocus } from "../evolution/training";
+import { focusDueAt, type TrainingFocus } from "../evolution/training";
 import { attributesAt, createPlayer, ovrAt, type Player } from "../player/player";
 import type { Position } from "../player/positions";
 import { stream } from "../rng";
@@ -129,6 +129,7 @@ export function runCareerSandbox(input: CareerSandboxInput): CareerSandboxRun {
     const startsPeriod = index % periodLength === 0;
     if (!club) throw new Error("caixa de areia: sem clube");
 
+    const endsPeriod = (index + 1) % periodLength === 0 || age === LAST_AGE;
     const season = simulatePlayerSeason({
       seed: input.seed,
       world,
@@ -139,13 +140,12 @@ export function runCareerSandbox(input: CareerSandboxInput): CareerSandboxRun {
       difficulty: input.difficulty,
       fans,
       focus: startsPeriod ? focus : null,
+      guarantee: endsPeriod && focus && periodStart ? { focus, start: periodStart } : undefined,
       tally: recordTally(seasons),
     });
     world = season.world;
     player = season.player;
 
-    const endsPeriod = (index + 1) % periodLength === 0 || age === LAST_AGE;
-    if (endsPeriod && focus && periodStart) player = guaranteeFocus(player, focus, periodStart, age);
 
     const ovr = ovrAt(player, age);
     seasons.push({ ...season.stats, ovrEnd: ovr, attributes: attributesAt(player, age) });

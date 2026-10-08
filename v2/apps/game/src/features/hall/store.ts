@@ -29,6 +29,10 @@ interface HallState {
   entries: ArchiveEntry[];
   achievements: AchievementRow[];
   attempts: AttemptEntry[];
+  progress: Record<string, number>;
+  finished: number;
+  finishedIds: string[];
+  recordProgress(counts: Record<string, number>, finishedId?: string): void;
 
   /** Abre o banco e lê tudo. Chamar quantas vezes for: só a primeira lê. */
   load(): Promise<void>;
@@ -71,6 +75,18 @@ export const useHall = create<HallState>()((set, get) => ({
   entries: [],
   achievements: [],
   attempts: [],
+  progress: {},
+  finished: 0,
+  finishedIds: [],
+  recordProgress(counts, finishedId) {
+    const state = get();
+    const progress = { ...state.progress };
+    for (const [id, value] of Object.entries(counts)) progress[id] = Math.max(progress[id] ?? 0, value);
+    const finishedIds = finishedId && !state.finishedIds.includes(finishedId) ? [...state.finishedIds, finishedId] : state.finishedIds;
+    const finished = finishedIds.length;
+    set({ progress, finished, finishedIds });
+    safeStorage.setItem("craque.v2.progress", JSON.stringify({ progress, finishedIds }));
+  },
 
   load() {
     loading ??= (async () => {
@@ -82,6 +98,24 @@ export const useHall = create<HallState>()((set, get) => ({
         announceMemoryOnly();
       });
       const archive = readRows(db, "archive", sanitizeArchiveEntry);
+      // Hall desativado: apaga também os arquivos de versões anteriores.
+      for (const row of db.all("archive")) {
+        if (typeof row === "object" && row !== null && "id" in row && typeof row.id === "string") await db.remove("archive", row.id);
+      }
+      try {
+        const saved: unknown = JSON.parse(safeStorage.getItem("craque.v2.progress") ?? "null");
+        if (typeof saved === "object" && saved !== null && "progress" in saved) {
+          const source = saved as { progress: unknown; finishedIds?: unknown };
+          const progress: Record<string, number> = {};
+          if (typeof source.progress === "object" && source.progress !== null) {
+            for (const [id, value] of Object.entries(source.progress)) {
+              if (typeof value === "number" && Number.isFinite(value) && value >= 0) progress[id] = value;
+            }
+          }
+          const finishedIds = Array.isArray(source.finishedIds) ? [...new Set(source.finishedIds.filter((id): id is string => typeof id === "string"))] : [];
+          set({ progress, finished: finishedIds.length, finishedIds });
+        }
+      } catch { /* Contadores corrompidos voltam a zero; conquistas ficam no banco. */ }
       const achievements = readRows(db, "achievements", sanitizeAchievementRow);
       const attempts = readRows(db, "leaderboard", sanitizeAttempt);
       // Linha que não passa no schema sai do disco; no ranking, isto descarta
@@ -92,7 +126,7 @@ export const useHall = create<HallState>()((set, get) => ({
       set({
         status: "ready",
         persistent: db.persistent,
-        entries: archive.valid,
+        entries: [],
         achievements: achievements.valid,
         attempts: attempts.valid,
       });
@@ -100,10 +134,9 @@ export const useHall = create<HallState>()((set, get) => ({
     return loading;
   },
 
-  async archive(entry) {
+  async archive() {
+    // Mantido apenas para compatibilidade de chamadas: não guarda carreiras.
     await get().load();
-    set((state) => ({ entries: [...state.entries.filter((item) => item.id !== entry.id), entry] }));
-    await database?.put("archive", entry);
   },
 
   async remove(id) {

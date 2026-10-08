@@ -90,7 +90,7 @@ function rng(career: Career, label: string) {
 /** Ninguém aceitaria: nenhum interessado e o clube atual também não o quer mais. */
 function noMarket(career: Career): boolean {
   if (career.age < 27) return false;
-  const context = marketContext(career);
+  const context = marketContext(career, { maxStrength: undefined });
   if (interestedClubs(context).length > 0) return false;
   if (!career.contract) return true;
   const strength = career.world.strength[clubIndex(career.contract.club)] ?? 0;
@@ -126,11 +126,11 @@ function returnDecision(career: Career): Career {
   const buyout = random.chance(retained ? BUYOUT_CHANCE.retained : BUYOUT_CHANCE.released);
   const context = marketContext(career, { current: loan.owner, excluded: [...career.blocked, contract.club, loan.owner] });
   const options: DecisionOption[] = [];
-  if (retained) {
+  if (retained && ownerStrength <= (context.maxStrength ?? Infinity)) {
     const back = buildOffer({ ...context, excluded: career.blocked }, clubIndex(loan.owner), random, { back: true });
     options.push(...clubOptions([back]));
   }
-  if (buyout) {
+  if (buyout && (career.world.strength[clubIndex(contract.club)] ?? 0) <= (context.maxStrength ?? Infinity)) {
     const keep = buildOffer({ ...context, excluded: career.blocked }, clubIndex(contract.club), random, { buyout: true });
     options.push(...clubOptions([keep]));
   }
@@ -180,7 +180,7 @@ export function baseDecision(career: Career): Career {
   return withDecision(career, decision(career, "base", clubOptions(offers)));
 }
 
-export function nextDecision(career: Career): Career {
+function buildNextDecision(career: Career): Career {
   if (career.end) return career;
   if (career.age >= RETIREMENT_AGE) return ended(career, "age");
   if (noMarket(career)) {
@@ -212,4 +212,10 @@ export function nextDecision(career: Career): Career {
   }
 
   return windowDecision(career);
+}
+
+/** O rompimento vale apenas nesta decisão; foco ou evento também consomem a restrição. */
+export function nextDecision(career: Career): Career {
+  const next = buildNextDecision(career);
+  return career.agentRestriction ? { ...next, agentRestriction: false } : next;
 }

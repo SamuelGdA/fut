@@ -157,12 +157,20 @@ export const eventsPt = {
       keep: { label: "Ficar com a sua seleção", result: "Você mantém a camisa do país onde nasceu." },
     },
   },
+  residencePassport: {
+    title: "Uma nova seleção",
+    body: "Depois de cinco temporadas no país, a seleção de {country} quer convocar você. Aceitar muda sua nacionalidade no jogo.",
+    options: {
+      switch: { label: "Aceitar a nova nacionalidade", result: "Você passa a representar {country}." },
+      keep: { label: "Manter minha nacionalidade", result: "Você mantém sua nacionalidade e espera a sua seleção." },
+    },
+  },
   diploma: {
     title: "O diploma",
     body: "A família insiste: terminar os estudos antes de pensar só na bola.",
     options: {
-      study: { label: "Terminar os estudos", result: "Diploma na mão. As aulas tiraram um pouco do tempo de treino." },
-      football: { label: "Só futebol", result: "Você aposta tudo na bola." },
+      study: { label: "Terminar os estudos", result: "Diploma na mão. Menos treino reduz a evolução em 10% e o risco de lesão em 30% neste período." },
+      football: { label: "Só futebol", result: "Você treina mais: evolução 10% maior, mas risco de lesão 30% maior neste período." },
     },
   },
   dressingRoomRift: {
@@ -277,7 +285,7 @@ export const eventsPt = {
         label: "Forçar a saída",
         result: "Você força a barra e sai. {target} ganha um reforço; a sua antiga torcida, uma mágoa.",
       },
-      stay: { label: "Ficar", result: "Você bate o pé e fica. A torcida percebe e agradece." },
+      stay: { label: "Ficar", result: "Você fica e ganha o apoio da torcida, mas o empresário rompe. Só a próxima decisão terá propostas de clubes mais fracos, se houver transferência; depois o mercado volta ao normal." },
     },
   },
   academyJewel: {
@@ -285,7 +293,7 @@ export const eventsPt = {
     body: "Um garoto da base joga na sua posição e pede para treinar ao seu lado.",
     options: {
       mentor: { label: "Apadrinhar", result: "Você ensina tudo o que sabe. A torcida adora, e o seu tempo de treino diminui." },
-      compete: { label: "Disputar a vaga", result: "Amizade, mas a vaga é sua. O garoto vai ter que esperar." },
+      compete: { label: "Disputar a vaga", success: "Você ganha a disputa e mais espaço no time.", failure: "O garoto leva a melhor. Você perde espaço no time." },
     },
   },
   bootDeal: {
@@ -326,8 +334,8 @@ export const eventsPt = {
     options: {
       showboat: {
         label: "Jogar para a torcida",
-        success: "Lances de efeito e gols bonitos. O mundo viu.",
-        failure: "Firula demais, objetividade de menos. A temporada rende abaixo.",
+        success: "Você ganha espaço com atuações seguras. A torcida reconhece.",
+        failure: "Você se expõe demais e perde espaço no time.",
       },
       focused: { label: "Jogar simples", result: "Você joga o simples e cumpre a função." },
     },

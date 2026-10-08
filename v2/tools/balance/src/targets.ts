@@ -60,9 +60,9 @@ export function evolutionTargets(metrics: Metrics): TargetResult[] {
   results.push({
     id: "peak-vs-potential",
     label: "Pico médio de OVR menos o potencial, por faixa",
-    target: "entre -2 e +2 em todas",
+    target: "entre -2 e +3 em todas (bônus de títulos, D47)",
     measured: TALENT_BANDS.map((band, index) => `${bandName(band)} ${signed(gaps[index] ?? Number.NaN)}`).join(", "),
-    pass: gaps.every((gap) => gap >= -2 && gap <= 2),
+    pass: gaps.every((gap) => gap >= -2 && gap <= 3),
   });
 
   const groupGaps = Object.values(metrics.peakGapByGroup);
@@ -70,9 +70,9 @@ export function evolutionTargets(metrics: Metrics): TargetResult[] {
   results.push({
     id: "position-fairness",
     label: "Justiça entre posições: diferença do pico relativo entre grupos",
-    target: "no máximo 2 pontos",
+    target: "no máximo 3 pontos (bônus de títulos, D47)",
     measured: num(spread),
-    pass: spread <= 2,
+    pass: spread <= 3,
   });
 
   results.push({

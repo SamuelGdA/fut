@@ -2,7 +2,11 @@ import type { AchievementsMessages } from "./achievements.pt";
 
 /** Achievements (GDD 28.2): name and what each one asks for. */
 export const achievementsEn: AchievementsMessages = {
+  recordGoal: "Match or beat the mark of {value}.",
+  titleGoal: "Win: {title}.",
   groups: {
+    records: "Records",
+    secret: "Secrets",
     career: "Career",
     titles: "Titles",
     awards: "Awards",
@@ -13,6 +17,8 @@ export const achievementsEn: AchievementsMessages = {
     curious: "Oddities",
   },
   items: {
+    retireAtDebut: { name: "Back to the beginning", description: "Finish your career at the club where you made your debut." },
+    newPassport: { name: "A new flag", description: "Change nationality during your career." },
     firstCareer: { name: "Final whistle", description: "Finish a career." },
     tenCareers: { name: "Ten lives", description: "Finish ten careers." },
     fullDistance: { name: "Last breath", description: "Play to the age limit without hanging up your boots early." },
@@ -52,7 +58,7 @@ export const achievementsEn: AchievementsMessages = {
     challengeFirst: { name: "Challenge accepted", description: "Finish a Daily Challenge." },
     challenge700: { name: "Steady hand", description: "Score 700 points in a Daily Challenge." },
     challenge900: { name: "Master's hand", description: "Score 900 points in a Daily Challenge." },
-    challengeClean: { name: "Clean record", description: "Finish a challenge with the edict kept and no erased seasons." },
+    challengeClean: { name: "Clean record", description: "Finish a challenge with the rule kept and no erased seasons." },
     challengeAllThree: { name: "Three for three", description: "Complete all three missions of a challenge, even though only two count." },
     challengeWeek: { name: "Seven days", description: "Play the ranked challenge on seven different days." },
     fiftyGoals: { name: "Half century", description: "Score 50 club goals in a season." },

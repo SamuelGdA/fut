@@ -260,6 +260,8 @@ export interface Career {
   readonly pending: PendingEffects;
   /** Nível de mercado extra na próxima janela (troca de empresário). */
   readonly marketBonus: number;
+  /** Restrição consumida ao gerar a próxima decisão, mesmo se ela não tiver transferências. */
+  readonly agentRestriction?: boolean;
   /** Veio de dispensa ou de empréstimo não retido: a próxima missão é "mostrar serviço". */
   readonly proving: boolean;
   readonly firstCapAge: number | null;
