@@ -24,6 +24,8 @@
     "elencos:montar": "node packages/world/scripts/elencos/montar.mjs",
     "balance": "pnpm --filter @craque/balance balance",
     "balance:check": "pnpm --filter @craque/balance balance --carreiras 2500 --check --sem-arquivo",
+    "balance:tecnico": "pnpm --filter @craque/balance tecnico",
+    "balance:tecnico:check": "pnpm --filter @craque/balance tecnico --carreiras 8 --temporadas 12 --check --sem-arquivo",
     "balance:recordes": "pnpm --filter @craque/balance recordes",
     "desafio:calibrar": "pnpm --filter @craque/balance desafio:calibrar",
     "carreira": "pnpm --silent --filter @craque/terminal carreira"

@@ -77,8 +77,8 @@ export const SUBSTITUTIONS = { max: 5, windows: 3, minimumOnField: 7 } as const;
  */
 export const MATCH = {
   base: 1.32,
-  attackSlope: 0.055,
-  midSlope: 0.025,
+  attackSlope: 0.045,
+  midSlope: 0.02,
   home: 0.11,
   minLambda: 0.12,
   maxLambda: 4.2,
@@ -106,10 +106,10 @@ export const POSITION_FIT = { alternate: -1, sameSector: -3, otherSector: -7, go
  * contra-ataque pune quem se expõe e sofre contra quem se fecha.
  */
 export const PHILOSOPHY = {
-  attacking: { for: 1.15, against: 1.15, defenseRelief: 0.004 },
-  defensive: { for: 0.82, against: 0.8 },
+  attacking: { for: 1.2, against: 1.12, defenseRelief: 0.004 },
+  defensive: { for: 0.8, against: 0.76 },
   possession: { perMidPoint: 0.02, cap: 0.1, against: 0.92 },
-  counter: { vsOpen: 1.12, vsClosed: 0.88, against: 0.92, perFastPlayer: 0.02, fastCap: 0.06 },
+  counter: { vsOpen: 1.13, vsClosed: 0.86, against: 0.94, perFastPlayer: 0.02, fastCap: 0.06 },
 } as const;
 
 /**
@@ -175,7 +175,7 @@ export const FORM = { window: 6, thresholds: [5.8, 6.25, 6.85, 7.25] as const, d
  * podem atravessar etapas).
  */
 export const INJURY = {
-  per90: 0.011,
+  per90: 0.022,
   agePerYear: 0.04,
   ageFrom: 28,
   severity: [
@@ -291,7 +291,22 @@ export const YOUTH = {
 } as const;
 
 /** Jovens que os clubes da IA sobem a cada temporada. */
-export const AI_YOUTH = { perClub: [1, 3] as const, ovrBelowAnchor: 14, ovrSpread: 4, starChance: 0.03 } as const;
+/**
+ * Base da IA na virada: quantos garotos sobem depende do tamanho do elenco
+ * (elenco curto sobe mais, cheio quase nenhum), para o mundo não inchar nem
+ * secar em 24 temporadas.
+ */
+export const AI_YOUTH = {
+  bySquad: [
+    [30, [0, 0]],
+    [27, [0, 1]],
+    [24, [1, 2]],
+    [0, [2, 3]],
+  ] as const,
+  ovrBelowAnchor: 14,
+  ovrSpread: 4,
+  starChance: 0.03,
+} as const;
 
 // --------------------------------------------------------------- finanças
 
@@ -304,7 +319,7 @@ export const FINANCE = {
   divisionFactor: { 1: 1, 2: 0.8 },
   wageTarget: 0.55,
   wageCap: 0.7,
-  budgetShare: 0.15,
+  budgetShare: 0.4,
   /** Caixa inicial entre estes múltiplos da receita, fixo por clube. */
   cashRange: [-0.08, 0.3] as const,
   /** Dívida máxima aceita antes de bloquear operações. */
@@ -335,6 +350,14 @@ export const PURCHASE = {
   /** Preço pedido sobre o valor, pelo papel. */
   askFactor: { star: [1.35, 1.6], starter: [1.15, 1.35], rotation: [1, 1.15], backup: [0.85, 1], prospect: [1.1, 1.4] },
   wageRaise: [1.05, 1.3] as const,
+  /** Quanto a expectativa cai por ponto de OVR acima da atratividade do clube atual. */
+  ambitionPull: 0.5,
+  /** O desconto da expectativa nunca passa disto: craque de clube pequeno não aceita clube bem menor. */
+  ambitionCap: 3,
+  /** Menor vontade possível do jogador: quase impossível, nunca zero. */
+  playerFloor: 0.0001,
+  /** Sem clube, o jogador aceita clubes um pouco abaixo do próprio nível. */
+  freeAgentDiscount: 3,
 } as const;
 
 /** Pedir verba (spec 6.7). */
@@ -344,16 +367,19 @@ export const FUNDS = { large: 0.35, small: 0.12, maxGrants: 2, repeatFactor: 0.6
 
 /**
  * Avaliação anual (spec 14): nota da temporada s, crédito acumulado C com
- * memória decrescente, confiança = 50 + 18s + 15C; abaixo de 35, dispensa.
+ * memória decrescente (começa em 0,5 a cada clube novo: o técnico recém-chegado
+ * tem um pouco de paciência), confiança = 50 + 12s + 15C; abaixo de 27,
+ * dispensa. Calibrado para 8% a 15% de demissões por temporada com a política
+ * equilibrada do harness.
  */
 export const EVALUATION = {
-  creditStart: 0.3,
+  creditStart: 0.5,
   creditMemory: 0.6,
   creditRange: [-1.5, 1.5] as const,
   confidenceBase: 50,
-  seasonWeight: 18,
+  seasonWeight: 12,
   creditWeight: 15,
-  dismissBelow: 35,
+  dismissBelow: 27,
   financePenalty: -0.6,
   financeBonus: 0.2,
   promiseWeight: 0.2,

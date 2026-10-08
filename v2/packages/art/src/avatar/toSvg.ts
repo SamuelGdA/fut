@@ -61,6 +61,11 @@ export interface AvatarSvgOptions {
   idPrefix?: string;
   /** Explicit pixel size, for callers that need intrinsic dimensions. */
   size?: number;
+  /**
+   * What the torso wears: the club jersey (default) or the coach's suit, with
+   * the tie in the club colours. The default output is unchanged.
+   */
+  outfit?: "kit" | "coach";
 }
 
 const VIEW = 200;
@@ -119,6 +124,29 @@ function jersey(kit: KitDef, clipId: string): string {
     `<path d="${TORSO_PATH}" fill="${kit.base}"/>`,
     `<g clip-path="url(#${clipId})">${jerseyPattern(kit.pattern, kit.accent)}</g>`,
     `<path d="M82 146q18 12 36 0" stroke="${kit.accent}" stroke-width="4" stroke-linecap="round" fill="none" opacity="0.85"/>`,
+    "</g>",
+  ].join("");
+}
+
+/** Dark jacket, white shirt and a tie in the club colour: the coach on the touchline. */
+function suit(kit: KitDef, clipId: string): string {
+  const jacket = "#2B3038";
+  const lapel = "#1F232A";
+  return [
+    "<g>",
+    `<defs><clipPath id="${clipId}"><path d="${TORSO_PATH}"/></clipPath></defs>`,
+    `<path d="${TORSO_PATH}" fill="${jacket}"/>`,
+    `<g clip-path="url(#${clipId})">`,
+    // Shirt opening between the lapels.
+    `<path d="M80 142 100 200 120 142Z" fill="#F4F5F7"/>`,
+    // Lapels.
+    `<path d="M80 142 100 200 88 200 70 150Z" fill="${lapel}"/>`,
+    `<path d="M120 142 100 200 112 200 130 150Z" fill="${lapel}"/>`,
+    // Tie: knot and blade in the club colour.
+    `<path d="M95 146h10l-2 7h-6Z" fill="${kit.base}"/>`,
+    `<path d="M97 153h6l4 34-7 9-7-9Z" fill="${kit.base}"/>`,
+    `<path d="M97 153h6l1 6h-8Z" fill="${kit.accent}" opacity="0.55"/>`,
+    "</g>",
     "</g>",
   ].join("");
 }
@@ -441,6 +469,7 @@ export function renderAvatarSvg(
     className,
     idPrefix = "cq-av",
     size,
+    outfit = "kit",
   } = options;
 
   const placeholder = config === null;
@@ -495,7 +524,7 @@ export function renderAvatarSvg(
     `<svg${root}>`,
     showBackground ? `<rect width="${VIEW}" height="${VIEW}" fill="${backgroundColor}"/>` : "",
     // Jersey, shoulders and neck sit behind the head.
-    jersey(kit ?? NEUTRAL_KIT, clipId),
+    outfit === "coach" ? suit(kit ?? NEUTRAL_KIT, clipId) : jersey(kit ?? NEUTRAL_KIT, clipId),
     `<rect x="85" y="112" width="30" height="42" rx="12" fill="${shadow}"/>`,
     // Ears tuck behind the face outline.
     placeholder

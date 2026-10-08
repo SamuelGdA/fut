@@ -76,6 +76,8 @@ export function attractiveness(career: CoachCareer, clubId: string, withCoach: b
 }
 
 export interface InterestBreakdown {
+  /** O que o jogador acha que merece (OVR puxado pelo clube atual). */
+  readonly expectation: number;
   readonly gap: number;
   readonly levelFactor: number;
   readonly stepDown: number;
@@ -90,11 +92,16 @@ export interface InterestBreakdown {
 /**
  * Chance de um negócio existir (o jogador querer e o clube liberar).
  *
+ *   expectativa = OVR − mín(3; 0,5 × máx(0; OVR − atratividade do clube atual))
  *   jogador = σ((2,5 − lacuna) / 1,6) × σ((folga − descida) / 2,2) × estrela × papel
  *   clube   = base do papel lá × σ((força comprador − força vendedor + 3) / 2,5) (titulares)
  *
- * lacuna = OVR − atratividade do comprador; descida = força do vendedor −
- * força do comprador; folga = 4 (8 para quem não joga lá; +3 para veteranos).
+ * lacuna = expectativa − atratividade do comprador; descida = força do
+ * vendedor − força do comprador; folga = 4 (8 para quem não joga lá; +3
+ * para veteranos). A expectativa mede o que o jogador acha que merece: o
+ * próprio nível, puxado para baixo quando ele joga num clube bem menos
+ * atraente (o craque de um clube pequeno aceita um vizinho do mesmo porte,
+ * nunca um clube bem menor). Sem clube, a expectativa é OVR − 3.
  * Estrela (85+): × máx(0,05; 1 − 0,15 × (OVR − 84)), salvo clube de elite.
  */
 export function purchaseChance(career: CoachCareer, player: CoachPlayer, buyerId: string): InterestBreakdown {
@@ -102,7 +109,9 @@ export function purchaseChance(career: CoachCareer, player: CoachPlayer, buyerId
   const seller = player.club ? career.clubs[player.club] : null;
   const buyerClub = career.clubs[buyerId];
   const age = ageOf(player, career.year);
-  const gap = player.ovr - buyer.total;
+  const current = seller ? attractiveness(career, seller.id, false).total : null;
+  const expectation = current === null ? player.ovr - PURCHASE.freeAgentDiscount : player.ovr - Math.min(PURCHASE.ambitionCap, PURCHASE.ambitionPull * Math.max(0, player.ovr - current));
+  const gap = expectation - buyer.total;
   const levelFactor = sigmoid((2.5 - gap) / 1.6);
   const playing = player.role === "star" || player.role === "starter";
   const slack = 4 + (playing ? 0 : 4) + (age >= 32 ? 3 : 0);
@@ -112,7 +121,8 @@ export function purchaseChance(career: CoachCareer, player: CoachPlayer, buyerId
   const buyerSquad = squadOf(career, buyerId);
   const roleThere = buyerClub ? roleFor(player, [...buyerSquad.filter((other) => other.id !== player.id), player], career.year, buyerClub.strength) : "backup";
   const roleFactor = roleThere === "star" || roleThere === "starter" ? 1.15 : roleThere === "backup" ? 0.5 : 1;
-  const playerChance = clamp(levelFactor * stepFactor * starFactor * roleFactor, 0.002, 0.97);
+  // Piso minúsculo: nunca impossível, mas a curva continua caindo até lá.
+  const playerChance = clamp(levelFactor * stepFactor * starFactor * roleFactor, PURCHASE.playerFloor, 0.97);
   let clubChance = 1;
   if (seller) {
     clubChance = PURCHASE.clubWilling[player.role];
@@ -121,7 +131,7 @@ export function purchaseChance(career: CoachCareer, player: CoachPlayer, buyerId
     if (age >= 31) clubChance *= 1.3;
     clubChance = clamp(clubChance, 0.01, 0.97);
   }
-  return { gap, levelFactor, stepDown, stepFactor, starFactor, roleFactor, playerChance, clubChance, total: playerChance * clubChance };
+  return { expectation, gap, levelFactor, stepDown, stepFactor, starFactor, roleFactor, playerChance, clubChance, total: playerChance * clubChance };
 }
 
 export type ChanceTier = "veryHard" | "hard" | "possible" | "likely";

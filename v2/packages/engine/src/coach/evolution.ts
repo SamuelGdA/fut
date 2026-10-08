@@ -1,4 +1,5 @@
 import { clamp, fallingLogistic } from "../math";
+import type { Rng } from "../rng";
 import { ageOf, sectorOf } from "./players";
 import type { CoachCareer, CoachPlayer, CoachTrait, PlayerChange } from "./types";
 import { DEVELOP, EVOLUTION, TRAIT_EFFECTS } from "./tuning";
@@ -53,6 +54,55 @@ function aiMinutes(career: CoachCareer, index: Map<string, CoachPlayer[]>): Map<
   return minutes;
 }
 
+export interface GrowthInput {
+  readonly year: number;
+  /** Fração da temporada: 1 no rápido, 0,5 em cada metade do lento. */
+  readonly fraction: number;
+  /** Jogos no período (os da IA vêm do posto no elenco). */
+  readonly games: number;
+  /** Desempenho de −1 a 1 pela nota média (só no clube do treinador). */
+  readonly performance: number;
+  /** Multiplicador do mentor para jovens (1 sem mentor). */
+  readonly mentor: number;
+  /** Marcado pelo Desenvolver nesta etapa. */
+  readonly developed: boolean;
+}
+
+/**
+ * Novo nível oculto de um jogador depois de um período. Função pura (o
+ * sorteio vem de fora) para o laboratório e o harness compararem o mesmo
+ * jogador com e sem o Desenvolver, com a mesma sorte.
+ */
+export function growthStep(player: CoachPlayer, input: GrowthInput, rng: Rng): number {
+  const age = ageOf(player, input.year);
+  const sector = sectorOf(player.position);
+  const peak = EVOLUTION.peakAge[sector];
+  let gain =
+    input.fraction *
+    EVOLUTION.growthBase *
+    ageRate(age, peak) *
+    gapDrive(player.level, player.potential) *
+    minutesFactor(input.games, input.fraction) *
+    (1 + EVOLUTION.performanceWeight * input.performance) *
+    input.mentor;
+  const declineAge = EVOLUTION.declineStart + (sector === "gk" ? 2 : sector === "def" ? 1 : 0) + player.longevity;
+  const over = age - declineAge;
+  if (over > 0) {
+    let decline = input.fraction * (EVOLUTION.declineLinear * over + EVOLUTION.declineQuadratic * over * over);
+    decline *= 1 - 0.2 * input.performance;
+    gain -= decline;
+  }
+  gain += rng.normal(0, EVOLUTION.noise * Math.sqrt(input.fraction));
+  if (input.developed) {
+    if (age <= 29) gain += developBonus(player, input.year) + Math.abs(rng.normal(0, 0.25));
+    else if (gain < 0) gain *= DEVELOP.veteranDeclineCut;
+  }
+  const ceiling = player.potential + EVOLUTION.potentialTolerance;
+  let level = player.level + gain;
+  if (gain > 0 && level > ceiling) level = Math.max(player.level, ceiling);
+  return clamp(level, 30, 97);
+}
+
 /**
  * Atualiza todos os jogadores do mundo para um período de fração `fraction`
  * (1 no rápido, 0,5 em cada metade do lento). Devolve as mudanças de OVR do
@@ -68,41 +118,16 @@ export function evolvePeriod(career: CoachCareer, fraction: number): PlayerChang
   for (const player of Object.values(career.players)) {
     const rng = coachRng(career.setup.seed, "growth", key, player.id);
     const age = ageOf(player, career.year);
-    const sector = sectorOf(player.position);
-    const peak = EVOLUTION.peakAge[sector];
     const inCoachClub = player.club === coachClub && coachClub !== null;
     const games = inCoachClub ? player.season.apps : (ai.get(player.id)?.games ?? 4) * fraction;
     const average = player.season.rated > 0 ? player.season.ratingSum / player.season.rated : 6.6;
     const performance = inCoachClub ? clamp((average - 6.6) / 0.6, -1, 1) : 0;
     const mentor = inCoachClub && age <= 21 ? 1 + mentorBoost : 1;
-    let gain =
-      fraction *
-      EVOLUTION.growthBase *
-      ageRate(age, peak) *
-      gapDrive(player.level, player.potential) *
-      minutesFactor(games, fraction) *
-      (1 + EVOLUTION.performanceWeight * performance) *
-      mentor;
-    const declineAge = EVOLUTION.declineStart + (sector === "gk" ? 2 : sector === "def" ? 1 : 0) + player.longevity;
-    const over = age - declineAge;
-    if (over > 0) {
-      let decline = fraction * (EVOLUTION.declineLinear * over + EVOLUTION.declineQuadratic * over * over);
-      decline *= 1 - 0.2 * performance;
-      gain -= decline;
-    }
-    gain += rng.normal(0, EVOLUTION.noise * Math.sqrt(fraction));
     const developed = player.developedAt === key;
-    if (developed) {
-      if (age <= 29) gain += developBonus(player, career.year) + Math.abs(rng.normal(0, 0.25));
-      else if (gain < 0) gain *= DEVELOP.veteranDeclineCut;
-      player.developedAt = null;
-    }
     const before = player.ovr;
-    const ceiling = player.potential + EVOLUTION.potentialTolerance;
-    let level = player.level + gain;
-    if (gain > 0 && level > ceiling) level = Math.max(player.level, ceiling);
-    player.level = clamp(level, 30, 97);
+    player.level = growthStep(player, { year: career.year, fraction, games, performance, mentor, developed }, rng);
     player.ovr = Math.round(player.level);
+    if (developed) player.developedAt = null;
     if (inCoachClub && (player.ovr !== before || developed)) changes.push({ player: player.id, from: before, to: player.ovr, developed });
     if (!inCoachClub) player.form = clamp(rng.normal(0, 0.7), -2, 2);
     if (inCoachClub) maybeTrait(career, player, rng.next());

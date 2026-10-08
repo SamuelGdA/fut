@@ -93,10 +93,11 @@ export function coachSheet(squad: readonly CoachPlayer[], tactics: Tactics, cont
 
   const minor = !context.big && context.fixture.kind !== "league" && context.fixture.roundKind !== "group" && context.ownStrength - context.opponentStrength >= ROTATION.strengthGap;
   let rotations = 0;
+  const lineup = honorStartPromises(tactics, slots, byId, usable, context.promises, rested);
 
   const onField: OnField[] = [];
   slots.forEach((slot, index) => {
-    const chosen = byId.get(tactics.lineup[index] ?? "");
+    const chosen = byId.get(lineup[index] ?? "");
     let player: CoachPlayer | undefined = usable(chosen) && !used.has(chosen.id) ? chosen : undefined;
     if (player && !context.big && player.role !== "star") {
       const tired = player.consecutiveStarts >= ROTATION.consecutiveStarts && context.rotationRoll() < ROTATION.restChance;
@@ -139,6 +140,51 @@ export function coachSheet(squad: readonly CoachPlayer[], tactics: Tactics, cont
     used.add(player.id);
   }
   return { onField, bench, rested, replaced };
+}
+
+/**
+ * Promessa de titularidade (spec 12): enquanto a parte prometida dos jogos
+ * não foi cumprida, a rotação automática dá a vaga ao prometido no lugar do
+ * titular mais fraco da mesma posição (ou do mesmo setor), nunca de uma
+ * estrela. Custa força em campo nesses jogos: é o preço da promessa.
+ */
+function honorStartPromises(
+  tactics: Tactics,
+  slots: readonly Position[],
+  byId: ReadonlyMap<string, CoachPlayer>,
+  usable: (player: CoachPlayer | undefined) => player is CoachPlayer,
+  promises: readonly CoachPromise[],
+  rested: string[],
+): string[] {
+  const lineup = [...tactics.lineup];
+  for (const promise of promises) {
+    if (promise.status !== "active" || promise.kind !== "starts" || !promise.player) continue;
+    const player = byId.get(promise.player);
+    if (!usable(player) || lineup.includes(player.id)) continue;
+    const starts = player.season.starts - promise.baseline.starts;
+    const available = player.season.available - promise.baseline.available + 1;
+    if (starts >= promise.target * available) continue;
+    let bestIndex = -1;
+    let bestScore = -Infinity;
+    slots.forEach((slot, index) => {
+      const current = byId.get(lineup[index] ?? "");
+      if (current?.role === "star") return;
+      if ((slot === "gk") !== (player.position === "gk")) return;
+      const fit = positionPenalty(player, slot);
+      if (fit <= -7) return;
+      // Prefere a vaga natural dele e, entre elas, quem rende menos.
+      const score = fit * 10 - (current ? current.level : 0);
+      if (score > bestScore) {
+        bestScore = score;
+        bestIndex = index;
+      }
+    });
+    if (bestIndex < 0) continue;
+    const replaced = lineup[bestIndex];
+    if (replaced) rested.push(replaced);
+    lineup[bestIndex] = player.id;
+  }
+  return lineup;
 }
 
 function pickReplacement(

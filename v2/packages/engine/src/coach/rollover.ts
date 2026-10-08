@@ -130,7 +130,8 @@ function aiYouth(career: CoachCareer): void {
     const rng = coachRng(career.setup.seed, "aiYouthCount", career.year, club.id);
     const size = squadSizes.get(club.id) ?? 0;
     // Elenco cheio sobe menos garotos: a base renova sem inchar o mundo.
-    const count = size >= 30 ? 1 : rng.int(AI_YOUTH.perClub[0], AI_YOUTH.perClub[1]);
+    const [low, high] = AI_YOUTH.bySquad.find(([minimum]) => size >= minimum)?.[1] ?? [1, 2];
+    const count = rng.int(low, high);
     for (let index = 0; index < count; index += 1) {
       const player = newYouth(career, club, index);
       career.players[player.id] = player;
