@@ -96,7 +96,7 @@
     "strength": 59,
     "prestige": 1.5,
     "color": "#0B6E4F",
-    "crest": null
+    "crest": "png"
   },
   {
     "id": "carlos-mannucci",
@@ -107,7 +107,7 @@
     "strength": 57,
     "prestige": 1.2,
     "color": "#003DA5",
-    "crest": null
+    "crest": "png"
   },
   {
     "id": "union-comercio",
@@ -118,7 +118,7 @@
     "strength": 56,
     "prestige": 1.1,
     "color": "#00A94F",
-    "crest": null
+    "crest": "svg"
   },
   {
     "id": "deportivo-coopsol",
@@ -129,7 +129,7 @@
     "strength": 55,
     "prestige": 1.0,
     "color": "#0033A0",
-    "crest": null
+    "crest": "png"
   },
   {
     "id": "academia-cantolao",
@@ -140,7 +140,7 @@
     "strength": 55,
     "prestige": 1.0,
     "color": "#0B2E5C",
-    "crest": null
+    "crest": "gif"
   },
   {
     "id": "universidad-san-martin",
@@ -151,7 +151,7 @@
     "strength": 57,
     "prestige": 1.3,
     "color": "#0033A0",
-    "crest": null
+    "crest": "png"
   },
   {
     "id": "deportivo-llacuabamba",
@@ -162,7 +162,7 @@
     "strength": 54,
     "prestige": 1.0,
     "color": "#009639",
-    "crest": null
+    "crest": "png"
   },
   {
     "id": "pirata-fc",
@@ -173,6 +173,6 @@
     "strength": 54,
     "prestige": 1.0,
     "color": "#12161C",
-    "crest": null
+    "crest": "png"
   }
 ]

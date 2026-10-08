@@ -11,7 +11,7 @@ entender, só por ele, como o jogo funciona, como o motor calcula e onde cada
 coisa mora. O detalhe completo de cada regra está no
 [GDD](docs/GDD.md) (a especificação, com notas "Como ficou" onde a
 implementação mudou algo), e o porquê de cada escolha está em
-[docs/DECISOES.md](docs/DECISOES.md) (D1 a D45). **Antes de mudar qualquer
+[docs/DECISOES.md](docs/DECISOES.md) (D1 a D46). **Antes de mudar qualquer
 coisa, leia [AI_RULES.md](AI_RULES.md).**
 
 > Este diretório (`v2/`) é o jogo. A raiz do repositório guarda o v1 (Next.js),
@@ -462,7 +462,7 @@ v2/
 ├─ apps/game/         o jogo: Vite + React 19; depende de todos acima
 ├─ tools/balance/     harness de balanceamento: metas do GDD 40 e relatórios
 ├─ tools/terminal/    uma carreira inteira no terminal (pnpm carreira)
-└─ docs/              GDD.md (especificação) e DECISOES.md (D1 a D45)
+└─ docs/              GDD.md (especificação) e DECISOES.md (D1 a D46)
 ```
 
 - **O motor não sabe que existe interface.** Nada em `packages/engine`
@@ -505,16 +505,20 @@ clubes), movimento reduzido respeitado (do sistema ou dos ajustes).
 - **PWA** com `vite-plugin-pwa` (D36): instalável, funciona sem internet
   depois de aberto uma vez. A casca do jogo (código, estilos, fontes,
   bandeiras, selos e ícones) entra no precache da instalação.
-- **Escudos, troféus e federações** entram no cache `craque-imagens`
-  conforme aparecem. Ajustes > "Imagens sem internet" > "Guardar todas" baixa
-  o resto (cerca de 22 MB).
-- **Imagem real ou gerada.** Cada clube, liga, troféu e prêmio tem arte
-  gerada em `packages/art` (desenhada no navegador, sem rede). No modo
-  `VITE_ASSETS=real` (padrão), o jogo usa a imagem real quando existe e a
-  gerada quando falta (sem internet e fora do cache, nenhum escudo aparece
-  quebrado). `VITE_ASSETS=gerado` usa só a gerada (copie
-  `apps/game/.env.example` para `.env.local`). Hoje 399 dos 489 clubes têm
-  escudo real.
+- **Imagem desenhada ou real.** Cada clube, liga, troféu e prêmio tem arte
+  desenhada em `packages/art` (gerada no navegador, sem rede). **O padrão é
+  `VITE_ASSETS=gerado`: só a arte desenhada** (bandeiras continuam reais)
+  (D46). Num build com `VITE_ASSETS=real` (copie `apps/game/.env.example`
+  para `.env.local` e troque o valor), o jogo usa a imagem real quando existe
+  e a desenhada quando falta (sem internet e fora do cache, nenhum escudo
+  aparece quebrado). Há escudo real para 481 dos 489 clubes e selo real para
+  29 das 32 ligas (os 82 escudos e 5 selos mais novos vieram da Wikipédia e
+  do Wikimedia Commons, D46); o laboratório troca o modo sem rebuild.
+- **No modo real**, escudos, troféus e federações entram no cache
+  `craque-imagens` conforme aparecem, e Ajustes > "Imagens sem internet" >
+  "Guardar todas" baixa o resto. No modo desenhado essa linha não aparece:
+  não há imagem real para guardar. A suíte ponta a ponta gera o build no modo
+  real, para testar esse caminho.
 - **Páginas de erro estáticas** (404, 403, 500, 503) geradas no build com os
   textos e desenhos do jogo, nos três idiomas (D38).
 
@@ -664,7 +668,7 @@ Durante o jogo: o número escolhe, `h` mostra o histórico, `s` salva, `q` sai.
   com as metas de balanceamento (seção 40) e notas "Como ficou" onde a
   implementação mudou algo.
 - **[docs/DECISOES.md](docs/DECISOES.md)**: cada decisão de arquitetura e de
-  produto, com o porquê (D1 a D45). Decisão nova ganha o próximo número.
+  produto, com o porquê (D1 a D46). Decisão nova ganha o próximo número.
 
 ### Marcos
 

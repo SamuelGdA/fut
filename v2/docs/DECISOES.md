@@ -891,3 +891,23 @@ real.
   uma".
 
 **Por quê.** Pedidos do produto.
+
+## D46. Escudos que faltavam, e o desenhado como padrão
+
+**Decisão (2026-10-08, pedido do produto).** Com a permissão do produto,
+82 escudos de clubes e 5 selos de liga que faltavam foram baixados da
+Wikipédia e do Wikimedia Commons (a imagem principal da página de cada
+clube, conferida uma a uma numa folha de contato) e entraram em
+`apps/game/public/assets/` com a extensão marcada nos dados do mundo. Ficaram
+sem imagem real, desenhados, os 8 clubes e 3 ligas sem escudo encontrável
+(Real Oruro, Vaca Díez, San Juan, Patriotas Boyacá, Santo Domingo, Atlético
+El Vigía, Real Frontera, Marítimo de La Guaira; LigaPro Serie B, Liga 2,
+Liga FUTVE 2). Ao mesmo tempo, o modo padrão de imagens passou a ser
+`gerado`: o jogo sai com os escudos, selos e troféus desenhados, e as
+imagens reais só aparecem num build com `VITE_ASSETS=real`. No modo
+desenhado, "Imagens sem internet" some dos ajustes. A suíte ponta a ponta
+gera o build no modo real, para continuar testando o cache de imagens.
+
+**Por quê.** Pedido do produto: "como padrão, somente os escudos desenhados".
+Os escudos reais são marcas dos clubes; o desenho do jogo é próprio.
+

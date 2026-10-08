@@ -1,7 +1,11 @@
 /** Modo de imagens escolhido no build (GDD 31.1). */
 export type AssetMode = "real" | "gerado";
 
-export const ASSET_MODE: AssetMode = import.meta.env.VITE_ASSETS === "gerado" ? "gerado" : "real";
+/**
+ * O padrão são os escudos desenhados pelo jogo (D46): as imagens reais só
+ * entram num build com `VITE_ASSETS=real`.
+ */
+export const ASSET_MODE: AssetMode = import.meta.env.VITE_ASSETS === "real" ? "real" : "gerado";
 
 export const IS_DEV = import.meta.env.DEV;
 

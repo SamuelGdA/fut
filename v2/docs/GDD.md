@@ -2056,6 +2056,11 @@ Uma variável de ambiente de build, `VITE_ASSETS`, escolhe:
 Bandeiras são sempre as reais (são desenhos de domínio público). Em
 desenvolvimento, o `/lab` permite alternar o modo sem rebuild para comparar.
 
+**Como ficou (D46):** o padrão passou a ser `gerado` (só a arte desenhada);
+`real` é escolha de build. No modo desenhado, a linha "Imagens sem internet"
+dos ajustes some. Há escudo real para 481 dos 489 clubes e selo real para 29
+das 32 ligas.
+
 ### 31.2 Arte gerada (portada do v1)
 
 - **Escudos**: disco de três partes (aro, campo com padrão, símbolo), derivado
