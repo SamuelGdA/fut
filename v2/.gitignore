@@ -1,0 +1,21 @@
+node_modules/
+dist/
+dist-ssr/
+coverage/
+*.tsbuildinfo
+*.local
+.env*
+!.env.example
+.vite/
+.DS_Store
+npm-debug.log*
+pnpm-debug.log*
+package-lock.json
+yarn.lock
+# Saídas da suíte ponta a ponta (pnpm e2e).
+e2e-relatorio/
+e2e-resultados/
+
+# A raiz do repositório ignora qualquer pasta build/ (saída do v1). Aqui,
+# apps/game/build/ é código-fonte: o plugin das páginas de erro estáticas.
+!apps/game/build/

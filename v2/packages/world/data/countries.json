@@ -1,0 +1,4005 @@
+[
+  {
+    "code": "AFG",
+    "iso2": "AF",
+    "names": {
+      "pt": "Afeganistão",
+      "es": "Afganistán",
+      "en": "Afghanistan"
+    },
+    "confederation": "AFC",
+    "strength": 57,
+    "color": "#000001",
+    "kit": {
+      "base": "#000001",
+      "accent": "#009900",
+      "pattern": "solid",
+      "third": "#BF0000"
+    },
+    "flag": true
+  },
+  {
+    "code": "AIA",
+    "iso2": "AI",
+    "names": {
+      "pt": "Anguila",
+      "es": "Anguila",
+      "en": "Anguilla"
+    },
+    "confederation": "CONCACAF",
+    "strength": 40,
+    "color": "#012169",
+    "kit": {
+      "base": "#012169",
+      "accent": "#FFFFFF",
+      "pattern": "solid",
+      "third": "#C8102E"
+    },
+    "flag": true
+  },
+  {
+    "code": "ALB",
+    "iso2": "AL",
+    "names": {
+      "pt": "Albânia",
+      "es": "Albania",
+      "en": "Albania"
+    },
+    "confederation": "UEFA",
+    "strength": 71,
+    "color": "#FF0000",
+    "kit": {
+      "base": "#FF0000",
+      "accent": "#000001",
+      "pattern": "solid",
+      "third": "#000001"
+    },
+    "flag": true
+  },
+  {
+    "code": "ALG",
+    "iso2": "DZ",
+    "names": {
+      "pt": "Argélia",
+      "es": "Argelia",
+      "en": "Algeria"
+    },
+    "confederation": "CAF",
+    "strength": 77,
+    "color": "#006233",
+    "kit": {
+      "base": "#FFFFFF",
+      "accent": "#006233",
+      "pattern": "solid",
+      "third": "#006233"
+    },
+    "flag": true
+  },
+  {
+    "code": "AND",
+    "iso2": "AD",
+    "names": {
+      "pt": "Andorra",
+      "es": "Andorra",
+      "en": "Andorra"
+    },
+    "confederation": "UEFA",
+    "strength": 52,
+    "color": "#0018A8",
+    "kit": {
+      "base": "#0018A8",
+      "accent": "#D0103A",
+      "pattern": "solid",
+      "third": "#FEDF00"
+    },
+    "flag": true
+  },
+  {
+    "code": "ANG",
+    "iso2": "AO",
+    "names": {
+      "pt": "Angola",
+      "es": "Angola",
+      "en": "Angola"
+    },
+    "confederation": "CAF",
+    "strength": 68,
+    "color": "#FF0000",
+    "kit": {
+      "base": "#FF0000",
+      "accent": "#000001",
+      "pattern": "solid",
+      "third": "#FFEC00"
+    },
+    "flag": true
+  },
+  {
+    "code": "ARG",
+    "iso2": "AR",
+    "names": {
+      "pt": "Argentina",
+      "es": "Argentina",
+      "en": "Argentina"
+    },
+    "confederation": "CONMEBOL",
+    "strength": 88,
+    "color": "#74ACDF",
+    "kit": {
+      "base": "#FFFFFF",
+      "accent": "#74ACDF",
+      "pattern": "vertical_stripes",
+      "third": "#000000"
+    },
+    "flag": true
+  },
+  {
+    "code": "ARM",
+    "iso2": "AM",
+    "names": {
+      "pt": "Armênia",
+      "es": "Armenia",
+      "en": "Armenia"
+    },
+    "confederation": "UEFA",
+    "strength": 65,
+    "color": "#D90012",
+    "kit": {
+      "base": "#D90012",
+      "accent": "#0033A0",
+      "pattern": "solid",
+      "third": "#F2A800"
+    },
+    "flag": true
+  },
+  {
+    "code": "ARU",
+    "iso2": "AW",
+    "names": {
+      "pt": "Aruba",
+      "es": "Aruba",
+      "en": "Aruba"
+    },
+    "confederation": "CONCACAF",
+    "strength": 50,
+    "color": "#3399CC",
+    "kit": {
+      "base": "#3399CC",
+      "accent": "#FFFF00",
+      "pattern": "solid",
+      "third": "#CC0000"
+    },
+    "flag": true
+  },
+  {
+    "code": "ASA",
+    "iso2": "AS",
+    "names": {
+      "pt": "Samoa Americana",
+      "es": "Samoa Americana",
+      "en": "American Samoa"
+    },
+    "confederation": "OFC",
+    "strength": 41,
+    "color": "#000066",
+    "kit": {
+      "base": "#000066",
+      "accent": "#FFFFFF",
+      "pattern": "solid",
+      "third": "#BD1021"
+    },
+    "flag": true
+  },
+  {
+    "code": "ATG",
+    "iso2": "AG",
+    "names": {
+      "pt": "Antígua e Barbuda",
+      "es": "Antigua y Barbuda",
+      "en": "Antigua & Barbuda"
+    },
+    "confederation": "CONCACAF",
+    "strength": 54,
+    "color": "#CE1126",
+    "kit": {
+      "base": "#CE1126",
+      "accent": "#000001",
+      "pattern": "solid",
+      "third": "#0072C6"
+    },
+    "flag": true
+  },
+  {
+    "code": "AUS",
+    "iso2": "AU",
+    "names": {
+      "pt": "Austrália",
+      "es": "Australia",
+      "en": "Australia"
+    },
+    "confederation": "AFC",
+    "strength": 76,
+    "color": "#FFCD00",
+    "kit": {
+      "base": "#FFCD00",
+      "accent": "#00843D",
+      "pattern": "solid",
+      "third": "#00843D"
+    },
+    "flag": true
+  },
+  {
+    "code": "AUT",
+    "iso2": "AT",
+    "names": {
+      "pt": "Áustria",
+      "es": "Austria",
+      "en": "Austria"
+    },
+    "confederation": "UEFA",
+    "strength": 79,
+    "color": "#C8102E",
+    "kit": {
+      "base": "#C8102E",
+      "accent": "#FFFFFF",
+      "pattern": "solid",
+      "third": "#FFFFFF"
+    },
+    "flag": true
+  },
+  {
+    "code": "AZE",
+    "iso2": "AZ",
+    "names": {
+      "pt": "Azerbaijão",
+      "es": "Azerbaiyán",
+      "en": "Azerbaijan"
+    },
+    "confederation": "UEFA",
+    "strength": 63,
+    "color": "#3F9C35",
+    "kit": {
+      "base": "#3F9C35",
+      "accent": "#00B9E4",
+      "pattern": "solid",
+      "third": "#ED2939"
+    },
+    "flag": true
+  },
+  {
+    "code": "BAH",
+    "iso2": "BS",
+    "names": {
+      "pt": "Bahamas",
+      "es": "Bahamas",
+      "en": "Bahamas"
+    },
+    "confederation": "CONCACAF",
+    "strength": 47,
+    "color": "#08CED6",
+    "kit": {
+      "base": "#08CED6",
+      "accent": "#000001",
+      "pattern": "solid",
+      "third": "#FFE900"
+    },
+    "flag": true
+  },
+  {
+    "code": "BAN",
+    "iso2": "BD",
+    "names": {
+      "pt": "Bangladesh",
+      "es": "Bangladés",
+      "en": "Bangladesh"
+    },
+    "confederation": "AFC",
+    "strength": 54,
+    "color": "#006A4E",
+    "kit": {
+      "base": "#006A4E",
+      "accent": "#F42A41",
+      "pattern": "solid",
+      "third": "#F42A41"
+    },
+    "flag": true
+  },
+  {
+    "code": "BDI",
+    "iso2": "BI",
+    "names": {
+      "pt": "Burundi",
+      "es": "Burundi",
+      "en": "Burundi"
+    },
+    "confederation": "CAF",
+    "strength": 60,
+    "color": "#FFFFFF",
+    "kit": {
+      "base": "#FFFFFF",
+      "accent": "#CF0921",
+      "pattern": "solid",
+      "third": "#18B637"
+    },
+    "flag": true
+  },
+  {
+    "code": "BEL",
+    "iso2": "BE",
+    "names": {
+      "pt": "Bélgica",
+      "es": "Bélgica",
+      "en": "Belgium"
+    },
+    "confederation": "UEFA",
+    "strength": 82,
+    "color": "#F31830",
+    "kit": {
+      "base": "#F31830",
+      "accent": "#000000",
+      "pattern": "solid",
+      "third": "#FFD90C"
+    },
+    "flag": true
+  },
+  {
+    "code": "BEN",
+    "iso2": "BJ",
+    "names": {
+      "pt": "Benin",
+      "es": "Benín",
+      "en": "Benin"
+    },
+    "confederation": "CAF",
+    "strength": 68,
+    "color": "#319400",
+    "kit": {
+      "base": "#319400",
+      "accent": "#FFD600",
+      "pattern": "solid",
+      "third": "#DE2110"
+    },
+    "flag": true
+  },
+  {
+    "code": "BER",
+    "iso2": "BM",
+    "names": {
+      "pt": "Bermudas",
+      "es": "Bermudas",
+      "en": "Bermuda"
+    },
+    "confederation": "CONCACAF",
+    "strength": 57,
+    "color": "#CF142B",
+    "kit": {
+      "base": "#CF142B",
+      "accent": "#FFFFFF",
+      "pattern": "solid",
+      "third": "#000066"
+    },
+    "flag": true
+  },
+  {
+    "code": "BFA",
+    "iso2": "BF",
+    "names": {
+      "pt": "Burquina Faso",
+      "es": "Burkina Faso",
+      "en": "Burkina Faso"
+    },
+    "confederation": "CAF",
+    "strength": 73,
+    "color": "#DE0000",
+    "kit": {
+      "base": "#DE0000",
+      "accent": "#35A100",
+      "pattern": "solid",
+      "third": "#FFF300"
+    },
+    "flag": true
+  },
+  {
+    "code": "BHR",
+    "iso2": "BH",
+    "names": {
+      "pt": "Barein",
+      "es": "Baréin",
+      "en": "Bahrain"
+    },
+    "confederation": "AFC",
+    "strength": 66,
+    "color": "#CE1126",
+    "kit": {
+      "base": "#CE1126",
+      "accent": "#FFFFFF",
+      "pattern": "solid",
+      "third": "#F2C0C5"
+    },
+    "flag": true
+  },
+  {
+    "code": "BHU",
+    "iso2": "BT",
+    "names": {
+      "pt": "Butão",
+      "es": "Bután",
+      "en": "Bhutan"
+    },
+    "confederation": "AFC",
+    "strength": 45,
+    "color": "#FFD520",
+    "kit": {
+      "base": "#FFD520",
+      "accent": "#FF4E12",
+      "pattern": "solid",
+      "third": "#FFFFFF"
+    },
+    "flag": true
+  },
+  {
+    "code": "BIH",
+    "iso2": "BA",
+    "names": {
+      "pt": "Bósnia e Herzegovina",
+      "es": "Bosnia-Herzegovina",
+      "en": "Bosnia & Herzegovina"
+    },
+    "confederation": "UEFA",
+    "strength": 71,
+    "color": "#000099",
+    "kit": {
+      "base": "#000099",
+      "accent": "#FFCC00",
+      "pattern": "solid",
+      "third": "#FFFFFF"
+    },
+    "flag": true
+  },
+  {
+    "code": "BLR",
+    "iso2": "BY",
+    "names": {
+      "pt": "Bielorrússia",
+      "es": "Bielorrusia",
+      "en": "Belarus"
+    },
+    "confederation": "UEFA",
+    "strength": 64,
+    "color": "#CE1720",
+    "kit": {
+      "base": "#CE1720",
+      "accent": "#007C30",
+      "pattern": "solid",
+      "third": "#FFFFFF"
+    },
+    "flag": true
+  },
+  {
+    "code": "BLZ",
+    "iso2": "BZ",
+    "names": {
+      "pt": "Belize",
+      "es": "Belice",
+      "en": "Belize"
+    },
+    "confederation": "CONCACAF",
+    "strength": 54,
+    "color": "#003F87",
+    "kit": {
+      "base": "#003F87",
+      "accent": "#FFFFFF",
+      "pattern": "solid",
+      "third": "#CE1126"
+    },
+    "flag": true
+  },
+  {
+    "code": "BOL",
+    "iso2": "BO",
+    "names": {
+      "pt": "Bolívia",
+      "es": "Bolivia",
+      "en": "Bolivia"
+    },
+    "confederation": "CONMEBOL",
+    "strength": 69,
+    "color": "#007934",
+    "kit": {
+      "base": "#007934",
+      "accent": "#007934",
+      "pattern": "solid",
+      "third": "#FFE000"
+    },
+    "flag": true
+  },
+  {
+    "code": "BOT",
+    "iso2": "BW",
+    "names": {
+      "pt": "Botsuana",
+      "es": "Botsuana",
+      "en": "Botswana"
+    },
+    "confederation": "CAF",
+    "strength": 60,
+    "color": "#00CBFF",
+    "kit": {
+      "base": "#00CBFF",
+      "accent": "#000001",
+      "pattern": "solid",
+      "third": "#FFFFFF"
+    },
+    "flag": true
+  },
+  {
+    "code": "BRA",
+    "iso2": "BR",
+    "names": {
+      "pt": "Brasil",
+      "es": "Brasil",
+      "en": "Brazil"
+    },
+    "confederation": "CONMEBOL",
+    "strength": 86,
+    "color": "#F8E509",
+    "kit": {
+      "base": "#F8E509",
+      "accent": "#229E45",
+      "pattern": "solid",
+      "third": "#229E45"
+    },
+    "flag": true
+  },
+  {
+    "code": "BRB",
+    "iso2": "BB",
+    "names": {
+      "pt": "Barbados",
+      "es": "Barbados",
+      "en": "Barbados"
+    },
+    "confederation": "CONCACAF",
+    "strength": 52,
+    "color": "#00267F",
+    "kit": {
+      "base": "#00267F",
+      "accent": "#FFC726",
+      "pattern": "solid",
+      "third": "#FFC726"
+    },
+    "flag": true
+  },
+  {
+    "code": "BRU",
+    "iso2": "BN",
+    "names": {
+      "pt": "Brunei",
+      "es": "Brunéi",
+      "en": "Brunei"
+    },
+    "confederation": "AFC",
+    "strength": 46,
+    "color": "#F7E017",
+    "kit": {
+      "base": "#F7E017",
+      "accent": "#FFFFFF",
+      "pattern": "solid",
+      "third": "#000001"
+    },
+    "flag": true
+  },
+  {
+    "code": "BUL",
+    "iso2": "BG",
+    "names": {
+      "pt": "Bulgária",
+      "es": "Bulgaria",
+      "en": "Bulgaria"
+    },
+    "confederation": "UEFA",
+    "strength": 66,
+    "color": "#FFFFFF",
+    "kit": {
+      "base": "#FFFFFF",
+      "accent": "#00966E",
+      "pattern": "solid",
+      "third": "#D62612"
+    },
+    "flag": true
+  },
+  {
+    "code": "CAM",
+    "iso2": "KH",
+    "names": {
+      "pt": "Camboja",
+      "es": "Camboya",
+      "en": "Cambodia"
+    },
+    "confederation": "AFC",
+    "strength": 53,
+    "color": "#032EA1",
+    "kit": {
+      "base": "#032EA1",
+      "accent": "#E00025",
+      "pattern": "solid",
+      "third": "#FFFFFF"
+    },
+    "flag": true
+  },
+  {
+    "code": "CAN",
+    "iso2": "CA",
+    "names": {
+      "pt": "Canadá",
+      "es": "Canadá",
+      "en": "Canada"
+    },
+    "confederation": "CONCACAF",
+    "strength": 76,
+    "color": "#D52B1E",
+    "kit": {
+      "base": "#D52B1E",
+      "accent": "#FFFFFF",
+      "pattern": "solid",
+      "third": "#FFFFFF"
+    },
+    "flag": true
+  },
+  {
+    "code": "CAY",
+    "iso2": "KY",
+    "names": {
+      "pt": "Ilhas Cayman",
+      "es": "Islas Caimán",
+      "en": "Cayman Islands"
+    },
+    "confederation": "CONCACAF",
+    "strength": 46,
+    "color": "#000066",
+    "kit": {
+      "base": "#000066",
+      "accent": "#C8102E",
+      "pattern": "solid",
+      "third": "#FFFFFF"
+    },
+    "flag": true
+  },
+  {
+    "code": "CGO",
+    "iso2": "CG",
+    "names": {
+      "pt": "Congo",
+      "es": "Congo",
+      "en": "Congo"
+    },
+    "confederation": "CAF",
+    "strength": 64,
+    "color": "#FFFF00",
+    "kit": {
+      "base": "#FFFF00",
+      "accent": "#00CA00",
+      "pattern": "solid",
+      "third": "#FF0000"
+    },
+    "flag": true
+  },
+  {
+    "code": "CHA",
+    "iso2": "TD",
+    "names": {
+      "pt": "Chade",
+      "es": "Chad",
+      "en": "Chad"
+    },
+    "confederation": "CAF",
+    "strength": 54,
+    "color": "#002664",
+    "kit": {
+      "base": "#002664",
+      "accent": "#C60C30",
+      "pattern": "solid",
+      "third": "#FECB00"
+    },
+    "flag": true
+  },
+  {
+    "code": "CHI",
+    "iso2": "CL",
+    "names": {
+      "pt": "Chile",
+      "es": "Chile",
+      "en": "Chile"
+    },
+    "confederation": "CONMEBOL",
+    "strength": 75,
+    "color": "#D52B1E",
+    "kit": {
+      "base": "#D52B1E",
+      "accent": "#0039A6",
+      "pattern": "solid",
+      "third": "#FFFFFF"
+    },
+    "flag": true
+  },
+  {
+    "code": "CHN",
+    "iso2": "CN",
+    "names": {
+      "pt": "China",
+      "es": "China",
+      "en": "China"
+    },
+    "confederation": "AFC",
+    "strength": 67,
+    "color": "#EE1C25",
+    "kit": {
+      "base": "#EE1C25",
+      "accent": "#FFFF00",
+      "pattern": "solid",
+      "third": "#FFFF00"
+    },
+    "flag": true
+  },
+  {
+    "code": "CIV",
+    "iso2": "CI",
+    "names": {
+      "pt": "Costa do Marfim",
+      "es": "Costa de Marfil",
+      "en": "Côte d’Ivoire"
+    },
+    "confederation": "CAF",
+    "strength": 78,
+    "color": "#FF9A00",
+    "kit": {
+      "base": "#FF9A00",
+      "accent": "#00CD00",
+      "pattern": "solid",
+      "third": "#FFFFFF"
+    },
+    "flag": true
+  },
+  {
+    "code": "CMR",
+    "iso2": "CM",
+    "names": {
+      "pt": "Camarões",
+      "es": "Camerún",
+      "en": "Cameroon"
+    },
+    "confederation": "CAF",
+    "strength": 76,
+    "color": "#007A5E",
+    "kit": {
+      "base": "#007A5E",
+      "accent": "#CE1126",
+      "pattern": "solid",
+      "third": "#FCD116"
+    },
+    "flag": true
+  },
+  {
+    "code": "COD",
+    "iso2": "CD",
+    "names": {
+      "pt": "RD Congo",
+      "es": "RD Congo",
+      "en": "Congo DR"
+    },
+    "confederation": "CAF",
+    "strength": 74,
+    "color": "#007FFF",
+    "kit": {
+      "base": "#007FFF",
+      "accent": "#CE1021",
+      "pattern": "solid",
+      "third": "#F7D618"
+    },
+    "flag": true
+  },
+  {
+    "code": "COK",
+    "iso2": "CK",
+    "names": {
+      "pt": "Ilhas Cook",
+      "es": "Islas Cook",
+      "en": "Cook Islands"
+    },
+    "confederation": "OFC",
+    "strength": 44,
+    "color": "#000066",
+    "kit": {
+      "base": "#000066",
+      "accent": "#FFFFFF",
+      "pattern": "solid",
+      "third": "#C8102E"
+    },
+    "flag": true
+  },
+  {
+    "code": "COL",
+    "iso2": "CO",
+    "names": {
+      "pt": "Colômbia",
+      "es": "Colombia",
+      "en": "Colombia"
+    },
+    "confederation": "CONMEBOL",
+    "strength": 81,
+    "color": "#FFE800",
+    "kit": {
+      "base": "#FFE800",
+      "accent": "#C8102E",
+      "pattern": "solid",
+      "third": "#00148E"
+    },
+    "flag": true
+  },
+  {
+    "code": "COM",
+    "iso2": "KM",
+    "names": {
+      "pt": "Comores",
+      "es": "Comoras",
+      "en": "Comoros"
+    },
+    "confederation": "CAF",
+    "strength": 64,
+    "color": "#239E46",
+    "kit": {
+      "base": "#239E46",
+      "accent": "#3B5AA3",
+      "pattern": "solid",
+      "third": "#FFFF00"
+    },
+    "flag": true
+  },
+  {
+    "code": "CPV",
+    "iso2": "CV",
+    "names": {
+      "pt": "Cabo Verde",
+      "es": "Cabo Verde",
+      "en": "Cape Verde"
+    },
+    "confederation": "CAF",
+    "strength": 71,
+    "color": "#081873",
+    "kit": {
+      "base": "#081873",
+      "accent": "#DE3929",
+      "pattern": "solid",
+      "third": "#DE3929"
+    },
+    "flag": true
+  },
+  {
+    "code": "CRC",
+    "iso2": "CR",
+    "names": {
+      "pt": "Costa Rica",
+      "es": "Costa Rica",
+      "en": "Costa Rica"
+    },
+    "confederation": "CONCACAF",
+    "strength": 71,
+    "color": "#D90000",
+    "kit": {
+      "base": "#D90000",
+      "accent": "#0000B4",
+      "pattern": "solid",
+      "third": "#FFFFFF"
+    },
+    "flag": true
+  },
+  {
+    "code": "CRO",
+    "iso2": "HR",
+    "names": {
+      "pt": "Croácia",
+      "es": "Croacia",
+      "en": "Croatia"
+    },
+    "confederation": "UEFA",
+    "strength": 81,
+    "color": "#FF0000",
+    "kit": {
+      "base": "#FF0000",
+      "accent": "#FFFFFF",
+      "pattern": "checkerboard",
+      "third": "#171796"
+    },
+    "flag": true
+  },
+  {
+    "code": "CTA",
+    "iso2": "CF",
+    "names": {
+      "pt": "República Centro-Africana",
+      "es": "República Centroafricana",
+      "en": "Central African Republic"
+    },
+    "confederation": "CAF",
+    "strength": 59,
+    "color": "#FFFF00",
+    "kit": {
+      "base": "#FFFF00",
+      "accent": "#FFFFFF",
+      "pattern": "solid",
+      "third": "#009A00"
+    },
+    "flag": true
+  },
+  {
+    "code": "CUB",
+    "iso2": "CU",
+    "names": {
+      "pt": "Cuba",
+      "es": "Cuba",
+      "en": "Cuba"
+    },
+    "confederation": "CONCACAF",
+    "strength": 58,
+    "color": "#002A8F",
+    "kit": {
+      "base": "#002A8F",
+      "accent": "#CB1515",
+      "pattern": "solid",
+      "third": "#FFFFFF"
+    },
+    "flag": true
+  },
+  {
+    "code": "CUW",
+    "iso2": "CW",
+    "names": {
+      "pt": "Curaçao",
+      "es": "Curazao",
+      "en": "Curaçao"
+    },
+    "confederation": "CONCACAF",
+    "strength": 66,
+    "color": "#002B7F",
+    "kit": {
+      "base": "#002B7F",
+      "accent": "#F9E814",
+      "pattern": "solid",
+      "third": "#FFFFFF"
+    },
+    "flag": true
+  },
+  {
+    "code": "CYP",
+    "iso2": "CY",
+    "names": {
+      "pt": "Chipre",
+      "es": "Chipre",
+      "en": "Cyprus"
+    },
+    "confederation": "UEFA",
+    "strength": 63,
+    "color": "#FFFFFF",
+    "kit": {
+      "base": "#FFFFFF",
+      "accent": "#D47600",
+      "pattern": "solid",
+      "third": "#435125"
+    },
+    "flag": true
+  },
+  {
+    "code": "CZE",
+    "iso2": "CZ",
+    "names": {
+      "pt": "Tchéquia",
+      "es": "Chequia",
+      "en": "Czechia"
+    },
+    "confederation": "UEFA",
+    "strength": 75,
+    "color": "#D7141A",
+    "kit": {
+      "base": "#D7141A",
+      "accent": "#FFFFFF",
+      "pattern": "solid",
+      "third": "#FFFFFF"
+    },
+    "flag": true
+  },
+  {
+    "code": "DEN",
+    "iso2": "DK",
+    "names": {
+      "pt": "Dinamarca",
+      "es": "Dinamarca",
+      "en": "Denmark"
+    },
+    "confederation": "UEFA",
+    "strength": 79,
+    "color": "#C8102E",
+    "kit": {
+      "base": "#C8102E",
+      "accent": "#FFFFFF",
+      "pattern": "solid",
+      "third": "#FFFFFF"
+    },
+    "flag": true
+  },
+  {
+    "code": "DJI",
+    "iso2": "DJ",
+    "names": {
+      "pt": "Djibuti",
+      "es": "Yibuti",
+      "en": "Djibouti"
+    },
+    "confederation": "CAF",
+    "strength": 48,
+    "color": "#6699FF",
+    "kit": {
+      "base": "#6699FF",
+      "accent": "#00CC00",
+      "pattern": "solid",
+      "third": "#FFFEFE"
+    },
+    "flag": true
+  },
+  {
+    "code": "DMA",
+    "iso2": "DM",
+    "names": {
+      "pt": "Dominica",
+      "es": "Dominica",
+      "en": "Dominica"
+    },
+    "confederation": "CONCACAF",
+    "strength": 50,
+    "color": "#108C00",
+    "kit": {
+      "base": "#108C00",
+      "accent": "#E72910",
+      "pattern": "solid",
+      "third": "#FFFFFF"
+    },
+    "flag": true
+  },
+  {
+    "code": "DOM",
+    "iso2": "DO",
+    "names": {
+      "pt": "República Dominicana",
+      "es": "República Dominicana",
+      "en": "Dominican Republic"
+    },
+    "confederation": "CONCACAF",
+    "strength": 61,
+    "color": "#002D62",
+    "kit": {
+      "base": "#002D62",
+      "accent": "#CE1126",
+      "pattern": "solid",
+      "third": "#FFFFFF"
+    },
+    "flag": true
+  },
+  {
+    "code": "ECU",
+    "iso2": "EC",
+    "names": {
+      "pt": "Equador",
+      "es": "Ecuador",
+      "en": "Ecuador"
+    },
+    "confederation": "CONMEBOL",
+    "strength": 78,
+    "color": "#FFE800",
+    "kit": {
+      "base": "#FFE800",
+      "accent": "#DA0010",
+      "pattern": "solid",
+      "third": "#00148E"
+    },
+    "flag": true
+  },
+  {
+    "code": "EGY",
+    "iso2": "EG",
+    "names": {
+      "pt": "Egito",
+      "es": "Egipto",
+      "en": "Egypt"
+    },
+    "confederation": "CAF",
+    "strength": 77,
+    "color": "#CE1126",
+    "kit": {
+      "base": "#CE1126",
+      "accent": "#000001",
+      "pattern": "solid",
+      "third": "#FFFFFF"
+    },
+    "flag": true
+  },
+  {
+    "code": "ENG",
+    "iso2": "GB-ENG",
+    "names": {
+      "pt": "Inglaterra",
+      "es": "Inglaterra",
+      "en": "England"
+    },
+    "confederation": "UEFA",
+    "strength": 87,
+    "color": "#FFFFFF",
+    "kit": {
+      "base": "#FFFFFF",
+      "accent": "#CE1124",
+      "pattern": "solid",
+      "third": "#CE1124"
+    },
+    "flag": true
+  },
+  {
+    "code": "EQG",
+    "iso2": "GQ",
+    "names": {
+      "pt": "Guiné Equatorial",
+      "es": "Guinea Ecuatorial",
+      "en": "Equatorial Guinea"
+    },
+    "confederation": "CAF",
+    "strength": 67,
+    "color": "#3E9A00",
+    "kit": {
+      "base": "#3E9A00",
+      "accent": "#E32118",
+      "pattern": "solid",
+      "third": "#FFFFFF"
+    },
+    "flag": true
+  },
+  {
+    "code": "ERI",
+    "iso2": "ER",
+    "names": {
+      "pt": "Eritreia",
+      "es": "Eritrea",
+      "en": "Eritrea"
+    },
+    "confederation": "CAF",
+    "strength": 48,
+    "color": "#BE0027",
+    "kit": {
+      "base": "#BE0027",
+      "accent": "#239E46",
+      "pattern": "solid",
+      "third": "#B4D7F4"
+    },
+    "flag": true
+  },
+  {
+    "code": "ESP",
+    "iso2": "ES",
+    "names": {
+      "pt": "Espanha",
+      "es": "España",
+      "en": "Spain"
+    },
+    "confederation": "UEFA",
+    "strength": 88,
+    "color": "#AA151B",
+    "kit": {
+      "base": "#AA151B",
+      "accent": "#021250",
+      "pattern": "solid",
+      "third": "#F1BF00"
+    },
+    "flag": true
+  },
+  {
+    "code": "EST",
+    "iso2": "EE",
+    "names": {
+      "pt": "Estônia",
+      "es": "Estonia",
+      "en": "Estonia"
+    },
+    "confederation": "UEFA",
+    "strength": 62,
+    "color": "#1791FF",
+    "kit": {
+      "base": "#1791FF",
+      "accent": "#000001",
+      "pattern": "solid",
+      "third": "#FFFFFF"
+    },
+    "flag": true
+  },
+  {
+    "code": "ETH",
+    "iso2": "ET",
+    "names": {
+      "pt": "Etiópia",
+      "es": "Etiopía",
+      "en": "Ethiopia"
+    },
+    "confederation": "CAF",
+    "strength": 59,
+    "color": "#298C08",
+    "kit": {
+      "base": "#298C08",
+      "accent": "#EF2118",
+      "pattern": "solid",
+      "third": "#FFC621"
+    },
+    "flag": true
+  },
+  {
+    "code": "FIJ",
+    "iso2": "FJ",
+    "names": {
+      "pt": "Fiji",
+      "es": "Fiyi",
+      "en": "Fiji"
+    },
+    "confederation": "OFC",
+    "strength": 56,
+    "color": "#68BFE5",
+    "kit": {
+      "base": "#68BFE5",
+      "accent": "#C8102E",
+      "pattern": "solid",
+      "third": "#FFFFFF"
+    },
+    "flag": true
+  },
+  {
+    "code": "FIN",
+    "iso2": "FI",
+    "names": {
+      "pt": "Finlândia",
+      "es": "Finlandia",
+      "en": "Finland"
+    },
+    "confederation": "UEFA",
+    "strength": 69,
+    "color": "#FFFFFF",
+    "kit": {
+      "base": "#FFFFFF",
+      "accent": "#002F6C",
+      "pattern": "solid",
+      "third": "#55749D"
+    },
+    "flag": true
+  },
+  {
+    "code": "FRA",
+    "iso2": "FR",
+    "names": {
+      "pt": "França",
+      "es": "Francia",
+      "en": "France"
+    },
+    "confederation": "UEFA",
+    "strength": 88,
+    "color": "#000091",
+    "kit": {
+      "base": "#000091",
+      "accent": "#E1000F",
+      "pattern": "solid",
+      "third": "#FFFFFF"
+    },
+    "flag": true
+  },
+  {
+    "code": "FRO",
+    "iso2": "FO",
+    "names": {
+      "pt": "Ilhas Faroé",
+      "es": "Islas Feroe",
+      "en": "Faroe Islands"
+    },
+    "confederation": "UEFA",
+    "strength": 58,
+    "color": "#FFFFFF",
+    "kit": {
+      "base": "#FFFFFF",
+      "accent": "#D72828",
+      "pattern": "solid",
+      "third": "#003897"
+    },
+    "flag": true
+  },
+  {
+    "code": "GAB",
+    "iso2": "GA",
+    "names": {
+      "pt": "Gabão",
+      "es": "Gabón",
+      "en": "Gabon"
+    },
+    "confederation": "CAF",
+    "strength": 71,
+    "color": "#36A100",
+    "kit": {
+      "base": "#36A100",
+      "accent": "#FFE700",
+      "pattern": "solid",
+      "third": "#006DBC"
+    },
+    "flag": true
+  },
+  {
+    "code": "GAM",
+    "iso2": "GM",
+    "names": {
+      "pt": "Gâmbia",
+      "es": "Gambia",
+      "en": "Gambia"
+    },
+    "confederation": "CAF",
+    "strength": 66,
+    "color": "#000099",
+    "kit": {
+      "base": "#000099",
+      "accent": "#009900",
+      "pattern": "solid",
+      "third": "#FF0000"
+    },
+    "flag": true
+  },
+  {
+    "code": "GEO",
+    "iso2": "GE",
+    "names": {
+      "pt": "Geórgia",
+      "es": "Georgia",
+      "en": "Georgia"
+    },
+    "confederation": "UEFA",
+    "strength": 73,
+    "color": "#FFFFFF",
+    "kit": {
+      "base": "#FFFFFF",
+      "accent": "#FF0000",
+      "pattern": "solid",
+      "third": "#FF9999"
+    },
+    "flag": true
+  },
+  {
+    "code": "GER",
+    "iso2": "DE",
+    "names": {
+      "pt": "Alemanha",
+      "es": "Alemania",
+      "en": "Germany"
+    },
+    "confederation": "UEFA",
+    "strength": 85,
+    "color": "#000001",
+    "kit": {
+      "base": "#FFFFFF",
+      "accent": "#000000",
+      "pattern": "solid",
+      "third": "#000000"
+    },
+    "flag": true
+  },
+  {
+    "code": "GHA",
+    "iso2": "GH",
+    "names": {
+      "pt": "Gana",
+      "es": "Ghana",
+      "en": "Ghana"
+    },
+    "confederation": "CAF",
+    "strength": 75,
+    "color": "#CE1126",
+    "kit": {
+      "base": "#CE1126",
+      "accent": "#006B3F",
+      "pattern": "solid",
+      "third": "#FCD116"
+    },
+    "flag": true
+  },
+  {
+    "code": "GIB",
+    "iso2": "GI",
+    "names": {
+      "pt": "Gibraltar",
+      "es": "Gibraltar",
+      "en": "Gibraltar"
+    },
+    "confederation": "UEFA",
+    "strength": 50,
+    "color": "#FFFFFF",
+    "kit": {
+      "base": "#FFFFFF",
+      "accent": "#DA000C",
+      "pattern": "solid",
+      "third": "#000001"
+    },
+    "flag": true
+  },
+  {
+    "code": "GNB",
+    "iso2": "GW",
+    "names": {
+      "pt": "Guiné-Bissau",
+      "es": "Guinea-Bisáu",
+      "en": "Guinea-Bissau"
+    },
+    "confederation": "CAF",
+    "strength": 64,
+    "color": "#FCD116",
+    "kit": {
+      "base": "#FCD116",
+      "accent": "#009E49",
+      "pattern": "solid",
+      "third": "#CE1126"
+    },
+    "flag": true
+  },
+  {
+    "code": "GRE",
+    "iso2": "GR",
+    "names": {
+      "pt": "Grécia",
+      "es": "Grecia",
+      "en": "Greece"
+    },
+    "confederation": "UEFA",
+    "strength": 74,
+    "color": "#0D5EAF",
+    "kit": {
+      "base": "#0D5EAF",
+      "accent": "#FFFFFF",
+      "pattern": "solid"
+    },
+    "flag": true
+  },
+  {
+    "code": "GRN",
+    "iso2": "GD",
+    "names": {
+      "pt": "Granada",
+      "es": "Granada",
+      "en": "Grenada"
+    },
+    "confederation": "CONCACAF",
+    "strength": 54,
+    "color": "#CE1126",
+    "kit": {
+      "base": "#CE1126",
+      "accent": "#FCD116",
+      "pattern": "solid",
+      "third": "#007A5E"
+    },
+    "flag": true
+  },
+  {
+    "code": "GUA",
+    "iso2": "GT",
+    "names": {
+      "pt": "Guatemala",
+      "es": "Guatemala",
+      "en": "Guatemala"
+    },
+    "confederation": "CONCACAF",
+    "strength": 66,
+    "color": "#4997D0",
+    "kit": {
+      "base": "#4997D0",
+      "accent": "#FFFFFF",
+      "pattern": "solid",
+      "third": "#4F752E"
+    },
+    "flag": true
+  },
+  {
+    "code": "GUI",
+    "iso2": "GN",
+    "names": {
+      "pt": "Guiné",
+      "es": "Guinea",
+      "en": "Guinea"
+    },
+    "confederation": "CAF",
+    "strength": 72,
+    "color": "#FFFF00",
+    "kit": {
+      "base": "#FFFF00",
+      "accent": "#009900",
+      "pattern": "solid",
+      "third": "#FF0000"
+    },
+    "flag": true
+  },
+  {
+    "code": "GUM",
+    "iso2": "GU",
+    "names": {
+      "pt": "Guam",
+      "es": "Guam",
+      "en": "Guam"
+    },
+    "confederation": "AFC",
+    "strength": 44,
+    "color": "#3B5AA3",
+    "kit": {
+      "base": "#3B5AA3",
+      "accent": "#BE0027",
+      "pattern": "solid",
+      "third": "#CBE0E5"
+    },
+    "flag": true
+  },
+  {
+    "code": "GUY",
+    "iso2": "GY",
+    "names": {
+      "pt": "Guiana",
+      "es": "Guyana",
+      "en": "Guyana"
+    },
+    "confederation": "CONCACAF",
+    "strength": 58,
+    "color": "#399408",
+    "kit": {
+      "base": "#399408",
+      "accent": "#DE2110",
+      "pattern": "solid",
+      "third": "#FFDE08"
+    },
+    "flag": true
+  },
+  {
+    "code": "HAI",
+    "iso2": "HT",
+    "names": {
+      "pt": "Haiti",
+      "es": "Haití",
+      "en": "Haiti"
+    },
+    "confederation": "CONCACAF",
+    "strength": 66,
+    "color": "#00209F",
+    "kit": {
+      "base": "#00209F",
+      "accent": "#D21034",
+      "pattern": "solid",
+      "third": "#FFFFFF"
+    },
+    "flag": true
+  },
+  {
+    "code": "HKG",
+    "iso2": "HK",
+    "names": {
+      "pt": "Hong Kong",
+      "es": "Hong Kong",
+      "en": "Hong Kong"
+    },
+    "confederation": "AFC",
+    "strength": 58,
+    "color": "#EC1B2E",
+    "kit": {
+      "base": "#EC1B2E",
+      "accent": "#FFFFFF",
+      "pattern": "solid",
+      "third": "#F9B3B9"
+    },
+    "flag": true
+  },
+  {
+    "code": "HON",
+    "iso2": "HN",
+    "names": {
+      "pt": "Honduras",
+      "es": "Honduras",
+      "en": "Honduras"
+    },
+    "confederation": "CONCACAF",
+    "strength": 69,
+    "color": "#18C3DF",
+    "kit": {
+      "base": "#18C3DF",
+      "accent": "#FFFFFF",
+      "pattern": "solid",
+      "third": "#D1F3F9"
+    },
+    "flag": true
+  },
+  {
+    "code": "HUN",
+    "iso2": "HU",
+    "names": {
+      "pt": "Hungria",
+      "es": "Hungría",
+      "en": "Hungary"
+    },
+    "confederation": "UEFA",
+    "strength": 74,
+    "color": "#D43516",
+    "kit": {
+      "base": "#D43516",
+      "accent": "#FFFFFF",
+      "pattern": "solid",
+      "third": "#388D00"
+    },
+    "flag": true
+  },
+  {
+    "code": "IDN",
+    "iso2": "ID",
+    "names": {
+      "pt": "Indonésia",
+      "es": "Indonesia",
+      "en": "Indonesia"
+    },
+    "confederation": "AFC",
+    "strength": 66,
+    "color": "#E70011",
+    "kit": {
+      "base": "#E70011",
+      "accent": "#FFFFFF",
+      "pattern": "solid"
+    },
+    "flag": true
+  },
+  {
+    "code": "IND",
+    "iso2": "IN",
+    "names": {
+      "pt": "Índia",
+      "es": "India",
+      "en": "India"
+    },
+    "confederation": "AFC",
+    "strength": 61,
+    "color": "#FF9933",
+    "kit": {
+      "base": "#FF9933",
+      "accent": "#128807",
+      "pattern": "solid",
+      "third": "#FFFFFF"
+    },
+    "flag": true
+  },
+  {
+    "code": "IRL",
+    "iso2": "IE",
+    "names": {
+      "pt": "Irlanda",
+      "es": "Irlanda",
+      "en": "Ireland"
+    },
+    "confederation": "UEFA",
+    "strength": 72,
+    "color": "#009A49",
+    "kit": {
+      "base": "#009A49",
+      "accent": "#FF7900",
+      "pattern": "solid",
+      "third": "#FFFFFF"
+    },
+    "flag": true
+  },
+  {
+    "code": "IRN",
+    "iso2": "IR",
+    "names": {
+      "pt": "Irã",
+      "es": "Irán",
+      "en": "Iran"
+    },
+    "confederation": "AFC",
+    "strength": 77,
+    "color": "#FFFFFF",
+    "kit": {
+      "base": "#FFFFFF",
+      "accent": "#DA0000",
+      "pattern": "solid",
+      "third": "#239F40"
+    },
+    "flag": true
+  },
+  {
+    "code": "IRQ",
+    "iso2": "IQ",
+    "names": {
+      "pt": "Iraque",
+      "es": "Irak",
+      "en": "Iraq"
+    },
+    "confederation": "AFC",
+    "strength": 71,
+    "color": "#CE1126",
+    "kit": {
+      "base": "#CE1126",
+      "accent": "#000001",
+      "pattern": "solid",
+      "third": "#FFFFFF"
+    },
+    "flag": true
+  },
+  {
+    "code": "ISL",
+    "iso2": "IS",
+    "names": {
+      "pt": "Islândia",
+      "es": "Islandia",
+      "en": "Iceland"
+    },
+    "confederation": "UEFA",
+    "strength": 70,
+    "color": "#003897",
+    "kit": {
+      "base": "#003897",
+      "accent": "#D72828",
+      "pattern": "solid",
+      "third": "#FFFFFF"
+    },
+    "flag": true
+  },
+  {
+    "code": "ISR",
+    "iso2": "IL",
+    "names": {
+      "pt": "Israel",
+      "es": "Israel",
+      "en": "Israel"
+    },
+    "confederation": "UEFA",
+    "strength": 70,
+    "color": "#FFFFFF",
+    "kit": {
+      "base": "#FFFFFF",
+      "accent": "#0038B8",
+      "pattern": "solid",
+      "third": "#88A2DE"
+    },
+    "flag": true
+  },
+  {
+    "code": "ITA",
+    "iso2": "IT",
+    "names": {
+      "pt": "Itália",
+      "es": "Italia",
+      "en": "Italy"
+    },
+    "confederation": "UEFA",
+    "strength": 83,
+    "color": "#4B61D1",
+    "kit": {
+      "base": "#4B61D1",
+      "accent": "#4B61D1",
+      "pattern": "solid",
+      "third": "#FFFFFF"
+    },
+    "flag": true
+  },
+  {
+    "code": "JAM",
+    "iso2": "JM",
+    "names": {
+      "pt": "Jamaica",
+      "es": "Jamaica",
+      "en": "Jamaica"
+    },
+    "confederation": "CONCACAF",
+    "strength": 70,
+    "color": "#FFCC00",
+    "kit": {
+      "base": "#FFCC00",
+      "accent": "#009900",
+      "pattern": "solid",
+      "third": "#000001"
+    },
+    "flag": true
+  },
+  {
+    "code": "JOR",
+    "iso2": "JO",
+    "names": {
+      "pt": "Jordânia",
+      "es": "Jordania",
+      "en": "Jordan"
+    },
+    "confederation": "AFC",
+    "strength": 70,
+    "color": "#FF0000",
+    "kit": {
+      "base": "#FF0000",
+      "accent": "#000001",
+      "pattern": "solid",
+      "third": "#009900"
+    },
+    "flag": true
+  },
+  {
+    "code": "JPN",
+    "iso2": "JP",
+    "names": {
+      "pt": "Japão",
+      "es": "Japón",
+      "en": "Japan"
+    },
+    "confederation": "AFC",
+    "strength": 80,
+    "color": "#000555",
+    "kit": {
+      "base": "#000555",
+      "accent": "#BC002D",
+      "pattern": "solid",
+      "third": "#FFFFFF"
+    },
+    "flag": true
+  },
+  {
+    "code": "KAZ",
+    "iso2": "KZ",
+    "names": {
+      "pt": "Cazaquistão",
+      "es": "Kazajistán",
+      "en": "Kazakhstan"
+    },
+    "confederation": "UEFA",
+    "strength": 64,
+    "color": "#00ABC2",
+    "kit": {
+      "base": "#00ABC2",
+      "accent": "#FFEC2D",
+      "pattern": "solid",
+      "third": "#C9DE4C"
+    },
+    "flag": true
+  },
+  {
+    "code": "KEN",
+    "iso2": "KE",
+    "names": {
+      "pt": "Quênia",
+      "es": "Kenia",
+      "en": "Kenya"
+    },
+    "confederation": "CAF",
+    "strength": 66,
+    "color": "#000001",
+    "kit": {
+      "base": "#000001",
+      "accent": "#006600",
+      "pattern": "solid",
+      "third": "#BB0000"
+    },
+    "flag": true
+  },
+  {
+    "code": "KGZ",
+    "iso2": "KG",
+    "names": {
+      "pt": "Quirguistão",
+      "es": "Kirguistán",
+      "en": "Kyrgyzstan"
+    },
+    "confederation": "AFC",
+    "strength": 64,
+    "color": "#FF0000",
+    "kit": {
+      "base": "#FF0000",
+      "accent": "#FFFF00",
+      "pattern": "solid",
+      "third": "#FF7100"
+    },
+    "flag": true
+  },
+  {
+    "code": "KOR",
+    "iso2": "KR",
+    "names": {
+      "pt": "Coreia do Sul",
+      "es": "Corea del Sur",
+      "en": "South Korea"
+    },
+    "confederation": "AFC",
+    "strength": 78,
+    "color": "#FFFFFF",
+    "kit": {
+      "base": "#FFFFFF",
+      "accent": "#000001",
+      "pattern": "solid",
+      "third": "#0047A0"
+    },
+    "flag": true
+  },
+  {
+    "code": "KOS",
+    "iso2": "XK",
+    "names": {
+      "pt": "Kosovo",
+      "es": "Kosovo",
+      "en": "Kosovo"
+    },
+    "confederation": "UEFA",
+    "strength": 68,
+    "color": "#244AA5",
+    "kit": {
+      "base": "#244AA5",
+      "accent": "#D0A650",
+      "pattern": "solid",
+      "third": "#FFFFFF"
+    },
+    "flag": true
+  },
+  {
+    "code": "KSA",
+    "iso2": "SA",
+    "names": {
+      "pt": "Arábia Saudita",
+      "es": "Arabia Saudita",
+      "en": "Saudi Arabia"
+    },
+    "confederation": "AFC",
+    "strength": 72,
+    "color": "#165D31",
+    "kit": {
+      "base": "#165D31",
+      "accent": "#FFFFFF",
+      "pattern": "solid",
+      "third": "#FFFFFF"
+    },
+    "flag": true
+  },
+  {
+    "code": "KUW",
+    "iso2": "KW",
+    "names": {
+      "pt": "Kuwait",
+      "es": "Kuwait",
+      "en": "Kuwait"
+    },
+    "confederation": "AFC",
+    "strength": 62,
+    "color": "#F31830",
+    "kit": {
+      "base": "#F31830",
+      "accent": "#00D941",
+      "pattern": "solid",
+      "third": "#000001"
+    },
+    "flag": true
+  },
+  {
+    "code": "LAO",
+    "iso2": "LA",
+    "names": {
+      "pt": "Laos",
+      "es": "Laos",
+      "en": "Laos"
+    },
+    "confederation": "AFC",
+    "strength": 50,
+    "color": "#CE1126",
+    "kit": {
+      "base": "#CE1126",
+      "accent": "#002868",
+      "pattern": "solid",
+      "third": "#FFFFFF"
+    },
+    "flag": true
+  },
+  {
+    "code": "LBN",
+    "iso2": "LB",
+    "names": {
+      "pt": "Líbano",
+      "es": "Líbano",
+      "en": "Lebanon"
+    },
+    "confederation": "AFC",
+    "strength": 63,
+    "color": "#EE161F",
+    "kit": {
+      "base": "#EE161F",
+      "accent": "#FFFFFF",
+      "pattern": "solid",
+      "third": "#00A850"
+    },
+    "flag": true
+  },
+  {
+    "code": "LBR",
+    "iso2": "LR",
+    "names": {
+      "pt": "Libéria",
+      "es": "Liberia",
+      "en": "Liberia"
+    },
+    "confederation": "CAF",
+    "strength": 60,
+    "color": "#CC0000",
+    "kit": {
+      "base": "#CC0000",
+      "accent": "#FFFFFF",
+      "pattern": "solid",
+      "third": "#000066"
+    },
+    "flag": true
+  },
+  {
+    "code": "LBY",
+    "iso2": "LY",
+    "names": {
+      "pt": "Líbia",
+      "es": "Libia",
+      "en": "Libya"
+    },
+    "confederation": "CAF",
+    "strength": 66,
+    "color": "#000001",
+    "kit": {
+      "base": "#000001",
+      "accent": "#239E46",
+      "pattern": "solid",
+      "third": "#E70013"
+    },
+    "flag": true
+  },
+  {
+    "code": "LCA",
+    "iso2": "LC",
+    "names": {
+      "pt": "Santa Lúcia",
+      "es": "Santa Lucía",
+      "en": "St. Lucia"
+    },
+    "confederation": "CONCACAF",
+    "strength": 52,
+    "color": "#65CFFF",
+    "kit": {
+      "base": "#65CFFF",
+      "accent": "#FFCE00",
+      "pattern": "solid",
+      "third": "#000001"
+    },
+    "flag": true
+  },
+  {
+    "code": "LES",
+    "iso2": "LS",
+    "names": {
+      "pt": "Lesoto",
+      "es": "Lesoto",
+      "en": "Lesotho"
+    },
+    "confederation": "CAF",
+    "strength": 57,
+    "color": "#FFFFFF",
+    "kit": {
+      "base": "#FFFFFF",
+      "accent": "#00209F",
+      "pattern": "solid",
+      "third": "#009543"
+    },
+    "flag": true
+  },
+  {
+    "code": "LIE",
+    "iso2": "LI",
+    "names": {
+      "pt": "Liechtenstein",
+      "es": "Liechtenstein",
+      "en": "Liechtenstein"
+    },
+    "confederation": "UEFA",
+    "strength": 52,
+    "color": "#CE1126",
+    "kit": {
+      "base": "#CE1126",
+      "accent": "#002B7F",
+      "pattern": "solid",
+      "third": "#FFD83D"
+    },
+    "flag": true
+  },
+  {
+    "code": "LTU",
+    "iso2": "LT",
+    "names": {
+      "pt": "Lituânia",
+      "es": "Lituania",
+      "en": "Lithuania"
+    },
+    "confederation": "UEFA",
+    "strength": 61,
+    "color": "#006A44",
+    "kit": {
+      "base": "#006A44",
+      "accent": "#FDB913",
+      "pattern": "solid",
+      "third": "#C1272D"
+    },
+    "flag": true
+  },
+  {
+    "code": "LUX",
+    "iso2": "LU",
+    "names": {
+      "pt": "Luxemburgo",
+      "es": "Luxemburgo",
+      "en": "Luxembourg"
+    },
+    "confederation": "UEFA",
+    "strength": 64,
+    "color": "#ED2939",
+    "kit": {
+      "base": "#ED2939",
+      "accent": "#FFFFFF",
+      "pattern": "solid",
+      "third": "#00A1DE"
+    },
+    "flag": true
+  },
+  {
+    "code": "LVA",
+    "iso2": "LV",
+    "names": {
+      "pt": "Letônia",
+      "es": "Letonia",
+      "en": "Latvia"
+    },
+    "confederation": "UEFA",
+    "strength": 61,
+    "color": "#981E32",
+    "kit": {
+      "base": "#981E32",
+      "accent": "#FFFFFF",
+      "pattern": "solid"
+    },
+    "flag": true
+  },
+  {
+    "code": "MAC",
+    "iso2": "MO",
+    "names": {
+      "pt": "Macau",
+      "es": "Macao",
+      "en": "Macao"
+    },
+    "confederation": "AFC",
+    "strength": 45,
+    "color": "#00785E",
+    "kit": {
+      "base": "#00785E",
+      "accent": "#FFFFFF",
+      "pattern": "solid",
+      "third": "#CCE4DF"
+    },
+    "flag": true
+  },
+  {
+    "code": "MAD",
+    "iso2": "MG",
+    "names": {
+      "pt": "Madagascar",
+      "es": "Madagascar",
+      "en": "Madagascar"
+    },
+    "confederation": "CAF",
+    "strength": 65,
+    "color": "#FFFFFF",
+    "kit": {
+      "base": "#FFFFFF",
+      "accent": "#FC3D32",
+      "pattern": "solid",
+      "third": "#007E3A"
+    },
+    "flag": true
+  },
+  {
+    "code": "MAR",
+    "iso2": "MA",
+    "names": {
+      "pt": "Marrocos",
+      "es": "Marruecos",
+      "en": "Morocco"
+    },
+    "confederation": "CAF",
+    "strength": 82,
+    "color": "#C1272D",
+    "kit": {
+      "base": "#C1272D",
+      "accent": "#006233",
+      "pattern": "solid",
+      "third": "#006233"
+    },
+    "flag": true
+  },
+  {
+    "code": "MAS",
+    "iso2": "MY",
+    "names": {
+      "pt": "Malásia",
+      "es": "Malasia",
+      "en": "Malaysia"
+    },
+    "confederation": "AFC",
+    "strength": 62,
+    "color": "#CC0000",
+    "kit": {
+      "base": "#CC0000",
+      "accent": "#FFFFFF",
+      "pattern": "solid",
+      "third": "#000066"
+    },
+    "flag": true
+  },
+  {
+    "code": "MDA",
+    "iso2": "MD",
+    "names": {
+      "pt": "Moldávia",
+      "es": "Moldavia",
+      "en": "Moldova"
+    },
+    "confederation": "UEFA",
+    "strength": 60,
+    "color": "#DE2110",
+    "kit": {
+      "base": "#DE2110",
+      "accent": "#00319C",
+      "pattern": "solid",
+      "third": "#FFDE00"
+    },
+    "flag": true
+  },
+  {
+    "code": "MDV",
+    "iso2": "MV",
+    "names": {
+      "pt": "Maldivas",
+      "es": "Maldivas",
+      "en": "Maldives"
+    },
+    "confederation": "AFC",
+    "strength": 53,
+    "color": "#D21034",
+    "kit": {
+      "base": "#D21034",
+      "accent": "#007E3A",
+      "pattern": "solid",
+      "third": "#FFFFFF"
+    },
+    "flag": true
+  },
+  {
+    "code": "MEX",
+    "iso2": "MX",
+    "names": {
+      "pt": "México",
+      "es": "México",
+      "en": "Mexico"
+    },
+    "confederation": "CONCACAF",
+    "strength": 78,
+    "color": "#006847",
+    "kit": {
+      "base": "#006847",
+      "accent": "#CE1126",
+      "pattern": "solid",
+      "third": "#FFFFFF"
+    },
+    "flag": true
+  },
+  {
+    "code": "MKD",
+    "iso2": "MK",
+    "names": {
+      "pt": "Macedônia do Norte",
+      "es": "Macedonia del Norte",
+      "en": "North Macedonia"
+    },
+    "confederation": "UEFA",
+    "strength": 68,
+    "color": "#D20000",
+    "kit": {
+      "base": "#D20000",
+      "accent": "#FFE600",
+      "pattern": "solid",
+      "third": "#E45C00"
+    },
+    "flag": true
+  },
+  {
+    "code": "MLI",
+    "iso2": "ML",
+    "names": {
+      "pt": "Mali",
+      "es": "Mali",
+      "en": "Mali"
+    },
+    "confederation": "CAF",
+    "strength": 75,
+    "color": "#FFFF00",
+    "kit": {
+      "base": "#FFFF00",
+      "accent": "#FF0000",
+      "pattern": "solid",
+      "third": "#009A00"
+    },
+    "flag": true
+  },
+  {
+    "code": "MLT",
+    "iso2": "MT",
+    "names": {
+      "pt": "Malta",
+      "es": "Malta",
+      "en": "Malta"
+    },
+    "confederation": "UEFA",
+    "strength": 57,
+    "color": "#CF142B",
+    "kit": {
+      "base": "#CF142B",
+      "accent": "#FFFFFF",
+      "pattern": "solid",
+      "third": "#939393"
+    },
+    "flag": true
+  },
+  {
+    "code": "MNE",
+    "iso2": "ME",
+    "names": {
+      "pt": "Montenegro",
+      "es": "Montenegro",
+      "en": "Montenegro"
+    },
+    "confederation": "UEFA",
+    "strength": 69,
+    "color": "#C40308",
+    "kit": {
+      "base": "#C40308",
+      "accent": "#D3AE3B",
+      "pattern": "solid",
+      "third": "#C78F32"
+    },
+    "flag": true
+  },
+  {
+    "code": "MNG",
+    "iso2": "MN",
+    "names": {
+      "pt": "Mongólia",
+      "es": "Mongolia",
+      "en": "Mongolia"
+    },
+    "confederation": "AFC",
+    "strength": 50,
+    "color": "#DA2032",
+    "kit": {
+      "base": "#DA2032",
+      "accent": "#0066B3",
+      "pattern": "solid",
+      "third": "#FFD900"
+    },
+    "flag": true
+  },
+  {
+    "code": "MOZ",
+    "iso2": "MZ",
+    "names": {
+      "pt": "Moçambique",
+      "es": "Mozambique",
+      "en": "Mozambique"
+    },
+    "confederation": "CAF",
+    "strength": 64,
+    "color": "#FFCA00",
+    "kit": {
+      "base": "#FFCA00",
+      "accent": "#009A00",
+      "pattern": "solid",
+      "third": "#FF0000"
+    },
+    "flag": true
+  },
+  {
+    "code": "MRI",
+    "iso2": "MU",
+    "names": {
+      "pt": "Maurício",
+      "es": "Mauricio",
+      "en": "Mauritius"
+    },
+    "confederation": "CAF",
+    "strength": 54,
+    "color": "#EE2737",
+    "kit": {
+      "base": "#EE2737",
+      "accent": "#151F6D",
+      "pattern": "solid",
+      "third": "#FFCD00"
+    },
+    "flag": true
+  },
+  {
+    "code": "MSR",
+    "iso2": "MS",
+    "names": {
+      "pt": "Montserrat",
+      "es": "Montserrat",
+      "en": "Montserrat"
+    },
+    "confederation": "CONCACAF",
+    "strength": 46,
+    "color": "#012169",
+    "kit": {
+      "base": "#012169",
+      "accent": "#C8102E",
+      "pattern": "solid",
+      "third": "#FFFFFF"
+    },
+    "flag": true
+  },
+  {
+    "code": "MTN",
+    "iso2": "MR",
+    "names": {
+      "pt": "Mauritânia",
+      "es": "Mauritania",
+      "en": "Mauritania"
+    },
+    "confederation": "CAF",
+    "strength": 66,
+    "color": "#006233",
+    "kit": {
+      "base": "#006233",
+      "accent": "#CD2A3E",
+      "pattern": "solid",
+      "third": "#FFC400"
+    },
+    "flag": true
+  },
+  {
+    "code": "MWI",
+    "iso2": "MW",
+    "names": {
+      "pt": "Malaui",
+      "es": "Malaui",
+      "en": "Malawi"
+    },
+    "confederation": "CAF",
+    "strength": 62,
+    "color": "#F41408",
+    "kit": {
+      "base": "#F41408",
+      "accent": "#21873B",
+      "pattern": "solid",
+      "third": "#000001"
+    },
+    "flag": true
+  },
+  {
+    "code": "MYA",
+    "iso2": "MM",
+    "names": {
+      "pt": "Mianmar",
+      "es": "Myanmar",
+      "en": "Myanmar"
+    },
+    "confederation": "AFC",
+    "strength": 57,
+    "color": "#FECB00",
+    "kit": {
+      "base": "#FECB00",
+      "accent": "#EA2839",
+      "pattern": "solid",
+      "third": "#34B233"
+    },
+    "flag": true
+  },
+  {
+    "code": "NAM",
+    "iso2": "NA",
+    "names": {
+      "pt": "Namíbia",
+      "es": "Namibia",
+      "en": "Namibia"
+    },
+    "confederation": "CAF",
+    "strength": 65,
+    "color": "#C70000",
+    "kit": {
+      "base": "#C70000",
+      "accent": "#38A100",
+      "pattern": "solid",
+      "third": "#3662A2"
+    },
+    "flag": true
+  },
+  {
+    "code": "NCA",
+    "iso2": "NI",
+    "names": {
+      "pt": "Nicarágua",
+      "es": "Nicaragua",
+      "en": "Nicaragua"
+    },
+    "confederation": "CONCACAF",
+    "strength": 62,
+    "color": "#0067C6",
+    "kit": {
+      "base": "#0067C6",
+      "accent": "#FFFFFF",
+      "pattern": "solid",
+      "third": "#EBDFA4"
+    },
+    "flag": true
+  },
+  {
+    "code": "NCL",
+    "iso2": "NC",
+    "names": {
+      "pt": "Nova Caledônia",
+      "es": "Nueva Caledonia",
+      "en": "New Caledonia"
+    },
+    "confederation": "OFC",
+    "strength": 57,
+    "color": "#009543",
+    "kit": {
+      "base": "#009543",
+      "accent": "#0035AD",
+      "pattern": "solid",
+      "third": "#FAE600"
+    },
+    "flag": true
+  },
+  {
+    "code": "NED",
+    "iso2": "NL",
+    "names": {
+      "pt": "Países Baixos",
+      "es": "Países Bajos",
+      "en": "Netherlands"
+    },
+    "confederation": "UEFA",
+    "strength": 84,
+    "color": "#F36C21",
+    "kit": {
+      "base": "#F36C21",
+      "accent": "#FFFFFF",
+      "pattern": "solid",
+      "third": "#21468B"
+    },
+    "flag": true
+  },
+  {
+    "code": "NEP",
+    "iso2": "NP",
+    "names": {
+      "pt": "Nepal",
+      "es": "Nepal",
+      "en": "Nepal"
+    },
+    "confederation": "AFC",
+    "strength": 52,
+    "color": "#CE0000",
+    "kit": {
+      "base": "#CE0000",
+      "accent": "#000063",
+      "pattern": "solid",
+      "third": "#FFFFFF"
+    },
+    "flag": true
+  },
+  {
+    "code": "NGA",
+    "iso2": "NG",
+    "names": {
+      "pt": "Nigéria",
+      "es": "Nigeria",
+      "en": "Nigeria"
+    },
+    "confederation": "CAF",
+    "strength": 78,
+    "color": "#008753",
+    "kit": {
+      "base": "#008753",
+      "accent": "#FFFFFF",
+      "pattern": "solid"
+    },
+    "flag": true
+  },
+  {
+    "code": "NIG",
+    "iso2": "NE",
+    "names": {
+      "pt": "Níger",
+      "es": "Níger",
+      "en": "Niger"
+    },
+    "confederation": "CAF",
+    "strength": 61,
+    "color": "#E05206",
+    "kit": {
+      "base": "#E05206",
+      "accent": "#0DB02B",
+      "pattern": "solid",
+      "third": "#FFFFFF"
+    },
+    "flag": true
+  },
+  {
+    "code": "NIR",
+    "iso2": "GB-NIR",
+    "names": {
+      "pt": "Irlanda do Norte",
+      "es": "Irlanda del Norte",
+      "en": "Northern Ireland"
+    },
+    "confederation": "UEFA",
+    "strength": 69,
+    "color": "#FFFFFF",
+    "kit": {
+      "base": "#FFFFFF",
+      "accent": "#CC0000",
+      "pattern": "solid",
+      "third": "#EA9898"
+    },
+    "flag": true
+  },
+  {
+    "code": "NOR",
+    "iso2": "NO",
+    "names": {
+      "pt": "Noruega",
+      "es": "Noruega",
+      "en": "Norway"
+    },
+    "confederation": "UEFA",
+    "strength": 79,
+    "color": "#ED2939",
+    "kit": {
+      "base": "#ED2939",
+      "accent": "#002664",
+      "pattern": "solid",
+      "third": "#FFFFFF"
+    },
+    "flag": true
+  },
+  {
+    "code": "NZL",
+    "iso2": "NZ",
+    "names": {
+      "pt": "Nova Zelândia",
+      "es": "Nueva Zelanda",
+      "en": "New Zealand"
+    },
+    "confederation": "OFC",
+    "strength": 70,
+    "color": "#000000",
+    "kit": {
+      "base": "#000000",
+      "accent": "#C8102E",
+      "pattern": "solid",
+      "third": "#FFFFFF"
+    },
+    "flag": true
+  },
+  {
+    "code": "OMA",
+    "iso2": "OM",
+    "names": {
+      "pt": "Omã",
+      "es": "Omán",
+      "en": "Oman"
+    },
+    "confederation": "AFC",
+    "strength": 68,
+    "color": "#EF2D29",
+    "kit": {
+      "base": "#EF2D29",
+      "accent": "#009025",
+      "pattern": "solid",
+      "third": "#FFFFFF"
+    },
+    "flag": true
+  },
+  {
+    "code": "PAK",
+    "iso2": "PK",
+    "names": {
+      "pt": "Paquistão",
+      "es": "Pakistán",
+      "en": "Pakistan"
+    },
+    "confederation": "AFC",
+    "strength": 50,
+    "color": "#0C590B",
+    "kit": {
+      "base": "#0C590B",
+      "accent": "#FFFFFF",
+      "pattern": "solid",
+      "third": "#2A6D29"
+    },
+    "flag": true
+  },
+  {
+    "code": "PAN",
+    "iso2": "PA",
+    "names": {
+      "pt": "Panamá",
+      "es": "Panamá",
+      "en": "Panama"
+    },
+    "confederation": "CONCACAF",
+    "strength": 72,
+    "color": "#FFFFFF",
+    "kit": {
+      "base": "#FFFFFF",
+      "accent": "#0000AB",
+      "pattern": "solid",
+      "third": "#DB0000"
+    },
+    "flag": true
+  },
+  {
+    "code": "PAR",
+    "iso2": "PY",
+    "names": {
+      "pt": "Paraguai",
+      "es": "Paraguay",
+      "en": "Paraguay"
+    },
+    "confederation": "CONMEBOL",
+    "strength": 76,
+    "color": "#D52B1E",
+    "kit": {
+      "base": "#FFFFFF",
+      "accent": "#D52B1E",
+      "pattern": "vertical_stripes",
+      "third": "#0038A8"
+    },
+    "flag": true
+  },
+  {
+    "code": "PER",
+    "iso2": "PE",
+    "names": {
+      "pt": "Peru",
+      "es": "Perú",
+      "en": "Peru"
+    },
+    "confederation": "CONMEBOL",
+    "strength": 73,
+    "color": "#D91023",
+    "kit": {
+      "base": "#FFFFFF",
+      "accent": "#D91023",
+      "pattern": "diagonal_sash"
+    },
+    "flag": true
+  },
+  {
+    "code": "PHI",
+    "iso2": "PH",
+    "names": {
+      "pt": "Filipinas",
+      "es": "Filipinas",
+      "en": "Philippines"
+    },
+    "confederation": "AFC",
+    "strength": 60,
+    "color": "#0038A8",
+    "kit": {
+      "base": "#0038A8",
+      "accent": "#CE1126",
+      "pattern": "solid",
+      "third": "#FFFFFF"
+    },
+    "flag": true
+  },
+  {
+    "code": "PLE",
+    "iso2": "PS",
+    "names": {
+      "pt": "Palestina",
+      "es": "Palestina",
+      "en": "Palestine"
+    },
+    "confederation": "AFC",
+    "strength": 66,
+    "color": "#000000",
+    "kit": {
+      "base": "#000000",
+      "accent": "#009639",
+      "pattern": "solid",
+      "third": "#ED2E38"
+    },
+    "flag": true
+  },
+  {
+    "code": "PLW",
+    "iso2": "PW",
+    "names": {
+      "pt": "Palau",
+      "es": "Palaos",
+      "en": "Palau"
+    },
+    "confederation": "OFC",
+    "strength": 35,
+    "color": "#4AADD6",
+    "kit": {
+      "base": "#4AADD6",
+      "accent": "#FFDE00",
+      "pattern": "solid",
+      "third": "#BDCC4E"
+    },
+    "flag": true
+  },
+  {
+    "code": "POL",
+    "iso2": "PL",
+    "names": {
+      "pt": "Polônia",
+      "es": "Polonia",
+      "en": "Poland"
+    },
+    "confederation": "UEFA",
+    "strength": 76,
+    "color": "#FFFFFF",
+    "kit": {
+      "base": "#FFFFFF",
+      "accent": "#DC143C",
+      "pattern": "solid",
+      "third": "#DC143C"
+    },
+    "flag": true
+  },
+  {
+    "code": "POR",
+    "iso2": "PT",
+    "names": {
+      "pt": "Portugal",
+      "es": "Portugal",
+      "en": "Portugal"
+    },
+    "confederation": "UEFA",
+    "strength": 86,
+    "color": "#FF0000",
+    "kit": {
+      "base": "#FF0000",
+      "accent": "#006600",
+      "pattern": "solid",
+      "third": "#FFFFFF"
+    },
+    "flag": true
+  },
+  {
+    "code": "PRK",
+    "iso2": "KP",
+    "names": {
+      "pt": "Coreia do Norte",
+      "es": "Corea del Norte",
+      "en": "North Korea"
+    },
+    "confederation": "AFC",
+    "strength": 64,
+    "color": "#C60000",
+    "kit": {
+      "base": "#C60000",
+      "accent": "#3E5698",
+      "pattern": "solid",
+      "third": "#FFFFFF"
+    },
+    "flag": true
+  },
+  {
+    "code": "PUR",
+    "iso2": "PR",
+    "names": {
+      "pt": "Porto Rico",
+      "es": "Puerto Rico",
+      "en": "Puerto Rico"
+    },
+    "confederation": "CONCACAF",
+    "strength": 56,
+    "color": "#ED0000",
+    "kit": {
+      "base": "#ED0000",
+      "accent": "#0050F0",
+      "pattern": "solid",
+      "third": "#FFFFFF"
+    },
+    "flag": true
+  },
+  {
+    "code": "QAT",
+    "iso2": "QA",
+    "names": {
+      "pt": "Catar",
+      "es": "Catar",
+      "en": "Qatar"
+    },
+    "confederation": "AFC",
+    "strength": 71,
+    "color": "#8D1B3D",
+    "kit": {
+      "base": "#8D1B3D",
+      "accent": "#FFFFFF",
+      "pattern": "solid",
+      "third": "#BB768B"
+    },
+    "flag": true
+  },
+  {
+    "code": "ROU",
+    "iso2": "RO",
+    "names": {
+      "pt": "Romênia",
+      "es": "Rumania",
+      "en": "Romania"
+    },
+    "confederation": "UEFA",
+    "strength": 73,
+    "color": "#FFDE00",
+    "kit": {
+      "base": "#FFDE00",
+      "accent": "#DE2110",
+      "pattern": "solid",
+      "third": "#00319C"
+    },
+    "flag": true
+  },
+  {
+    "code": "RSA",
+    "iso2": "ZA",
+    "names": {
+      "pt": "África do Sul",
+      "es": "Sudáfrica",
+      "en": "South Africa"
+    },
+    "confederation": "CAF",
+    "strength": 73,
+    "color": "#FFCD00",
+    "kit": {
+      "base": "#FFCD00",
+      "accent": "#00843D",
+      "pattern": "solid",
+      "third": "#00843D"
+    },
+    "flag": true
+  },
+  {
+    "code": "RUS",
+    "iso2": "RU",
+    "names": {
+      "pt": "Rússia",
+      "es": "Rusia",
+      "en": "Russia"
+    },
+    "confederation": "UEFA",
+    "strength": 75,
+    "color": "#D52B1E",
+    "kit": {
+      "base": "#D52B1E",
+      "accent": "#0039A6",
+      "pattern": "solid",
+      "third": "#FFFFFF"
+    },
+    "flag": true
+  },
+  {
+    "code": "RWA",
+    "iso2": "RW",
+    "names": {
+      "pt": "Ruanda",
+      "es": "Ruanda",
+      "en": "Rwanda"
+    },
+    "confederation": "CAF",
+    "strength": 62,
+    "color": "#00A1DE",
+    "kit": {
+      "base": "#00A1DE",
+      "accent": "#FAD201",
+      "pattern": "solid",
+      "third": "#20603D"
+    },
+    "flag": true
+  },
+  {
+    "code": "SAM",
+    "iso2": "WS",
+    "names": {
+      "pt": "Samoa",
+      "es": "Samoa",
+      "en": "Samoa"
+    },
+    "confederation": "OFC",
+    "strength": 46,
+    "color": "#CE1126",
+    "kit": {
+      "base": "#CE1126",
+      "accent": "#002B7F",
+      "pattern": "solid",
+      "third": "#FFFFFF"
+    },
+    "flag": true
+  },
+  {
+    "code": "SCO",
+    "iso2": "GB-SCT",
+    "names": {
+      "pt": "Escócia",
+      "es": "Escocia",
+      "en": "Scotland"
+    },
+    "confederation": "UEFA",
+    "strength": 74,
+    "color": "#0065BD",
+    "kit": {
+      "base": "#0065BD",
+      "accent": "#FFFFFF",
+      "pattern": "solid",
+      "third": "#DBE9F6"
+    },
+    "flag": true
+  },
+  {
+    "code": "SDN",
+    "iso2": "SD",
+    "names": {
+      "pt": "Sudão",
+      "es": "Sudán",
+      "en": "Sudan"
+    },
+    "confederation": "CAF",
+    "strength": 63,
+    "color": "#000001",
+    "kit": {
+      "base": "#000001",
+      "accent": "#FF0000",
+      "pattern": "solid",
+      "third": "#009A00"
+    },
+    "flag": true
+  },
+  {
+    "code": "SEN",
+    "iso2": "SN",
+    "names": {
+      "pt": "Senegal",
+      "es": "Senegal",
+      "en": "Senegal"
+    },
+    "confederation": "CAF",
+    "strength": 80,
+    "color": "#0B7226",
+    "kit": {
+      "base": "#0B7226",
+      "accent": "#BC0000",
+      "pattern": "solid",
+      "third": "#FFFF00"
+    },
+    "flag": true
+  },
+  {
+    "code": "SEY",
+    "iso2": "SC",
+    "names": {
+      "pt": "Seicheles",
+      "es": "Seychelles",
+      "en": "Seychelles"
+    },
+    "confederation": "CAF",
+    "strength": 46,
+    "color": "#D92223",
+    "kit": {
+      "base": "#D92223",
+      "accent": "#003D88",
+      "pattern": "solid",
+      "third": "#007A39"
+    },
+    "flag": true
+  },
+  {
+    "code": "SIN",
+    "iso2": "SG",
+    "names": {
+      "pt": "Singapura",
+      "es": "Singapur",
+      "en": "Singapore"
+    },
+    "confederation": "AFC",
+    "strength": 57,
+    "color": "#FFFFFF",
+    "kit": {
+      "base": "#FFFFFF",
+      "accent": "#DF0000",
+      "pattern": "solid",
+      "third": "#FBDDDD"
+    },
+    "flag": true
+  },
+  {
+    "code": "SKN",
+    "iso2": "KN",
+    "names": {
+      "pt": "São Cristóvão e Névis",
+      "es": "San Cristóbal y Nieves",
+      "en": "St. Kitts & Nevis"
+    },
+    "confederation": "CONCACAF",
+    "strength": 55,
+    "color": "#000001",
+    "kit": {
+      "base": "#000001",
+      "accent": "#C70000",
+      "pattern": "solid",
+      "third": "#35A100"
+    },
+    "flag": true
+  },
+  {
+    "code": "SLE",
+    "iso2": "SL",
+    "names": {
+      "pt": "Serra Leoa",
+      "es": "Sierra Leona",
+      "en": "Sierra Leone"
+    },
+    "confederation": "CAF",
+    "strength": 64,
+    "color": "#00CD00",
+    "kit": {
+      "base": "#00CD00",
+      "accent": "#FFFFFF",
+      "pattern": "solid",
+      "third": "#0000CD"
+    },
+    "flag": true
+  },
+  {
+    "code": "SLV",
+    "iso2": "SV",
+    "names": {
+      "pt": "El Salvador",
+      "es": "El Salvador",
+      "en": "El Salvador"
+    },
+    "confederation": "CONCACAF",
+    "strength": 66,
+    "color": "#0F47AF",
+    "kit": {
+      "base": "#0F47AF",
+      "accent": "#FFFFFF",
+      "pattern": "solid",
+      "third": "#FFF5CB"
+    },
+    "flag": true
+  },
+  {
+    "code": "SMR",
+    "iso2": "SM",
+    "names": {
+      "pt": "San Marino",
+      "es": "San Marino",
+      "en": "San Marino"
+    },
+    "confederation": "UEFA",
+    "strength": 45,
+    "color": "#FFFFFF",
+    "kit": {
+      "base": "#FFFFFF",
+      "accent": "#19B6EF",
+      "pattern": "solid",
+      "third": "#4FD46B"
+    },
+    "flag": true
+  },
+  {
+    "code": "SOL",
+    "iso2": "SB",
+    "names": {
+      "pt": "Ilhas Salomão",
+      "es": "Islas Salomón",
+      "en": "Solomon Islands"
+    },
+    "confederation": "OFC",
+    "strength": 57,
+    "color": "#0000D6",
+    "kit": {
+      "base": "#0000D6",
+      "accent": "#006000",
+      "pattern": "solid",
+      "third": "#FFCC00"
+    },
+    "flag": true
+  },
+  {
+    "code": "SOM",
+    "iso2": "SO",
+    "names": {
+      "pt": "Somália",
+      "es": "Somalia",
+      "en": "Somalia"
+    },
+    "confederation": "CAF",
+    "strength": 47,
+    "color": "#40A6FF",
+    "kit": {
+      "base": "#40A6FF",
+      "accent": "#FFFFFF",
+      "pattern": "solid",
+      "third": "#D9EDFF"
+    },
+    "flag": true
+  },
+  {
+    "code": "SRB",
+    "iso2": "RS",
+    "names": {
+      "pt": "Sérvia",
+      "es": "Serbia",
+      "en": "Serbia"
+    },
+    "confederation": "UEFA",
+    "strength": 76,
+    "color": "#C6363C",
+    "kit": {
+      "base": "#C6363C",
+      "accent": "#0C4076",
+      "pattern": "solid",
+      "third": "#FFFFFF"
+    },
+    "flag": true
+  },
+  {
+    "code": "SRI",
+    "iso2": "LK",
+    "names": {
+      "pt": "Sri Lanka",
+      "es": "Sri Lanka",
+      "en": "Sri Lanka"
+    },
+    "confederation": "AFC",
+    "strength": 46,
+    "color": "#8D2029",
+    "kit": {
+      "base": "#8D2029",
+      "accent": "#FFB700",
+      "pattern": "solid",
+      "third": "#FF5B00"
+    },
+    "flag": true
+  },
+  {
+    "code": "SSD",
+    "iso2": "SS",
+    "names": {
+      "pt": "Sudão do Sul",
+      "es": "Sudán del Sur",
+      "en": "South Sudan"
+    },
+    "confederation": "CAF",
+    "strength": 55,
+    "color": "#0F47AF",
+    "kit": {
+      "base": "#0F47AF",
+      "accent": "#078930",
+      "pattern": "solid",
+      "third": "#000001"
+    },
+    "flag": true
+  },
+  {
+    "code": "STP",
+    "iso2": "ST",
+    "names": {
+      "pt": "São Tomé e Príncipe",
+      "es": "Santo Tomé y Príncipe",
+      "en": "São Tomé & Príncipe"
+    },
+    "confederation": "CAF",
+    "strength": 50,
+    "color": "#12AD2B",
+    "kit": {
+      "base": "#12AD2B",
+      "accent": "#FFCE00",
+      "pattern": "solid",
+      "third": "#D21034"
+    },
+    "flag": true
+  },
+  {
+    "code": "SUI",
+    "iso2": "CH",
+    "names": {
+      "pt": "Suíça",
+      "es": "Suiza",
+      "en": "Switzerland"
+    },
+    "confederation": "UEFA",
+    "strength": 79,
+    "color": "#FF0000",
+    "kit": {
+      "base": "#FF0000",
+      "accent": "#FFFFFF",
+      "pattern": "solid",
+      "third": "#FFFFFF"
+    },
+    "flag": true
+  },
+  {
+    "code": "SUR",
+    "iso2": "SR",
+    "names": {
+      "pt": "Suriname",
+      "es": "Surinam",
+      "en": "Suriname"
+    },
+    "confederation": "CONCACAF",
+    "strength": 65,
+    "color": "#377E3F",
+    "kit": {
+      "base": "#377E3F",
+      "accent": "#B40A2D",
+      "pattern": "solid",
+      "third": "#FFFFFF"
+    },
+    "flag": true
+  },
+  {
+    "code": "SVK",
+    "iso2": "SK",
+    "names": {
+      "pt": "Eslováquia",
+      "es": "Eslovaquia",
+      "en": "Slovakia"
+    },
+    "confederation": "UEFA",
+    "strength": 73,
+    "color": "#EE1C25",
+    "kit": {
+      "base": "#EE1C25",
+      "accent": "#FFFFFF",
+      "pattern": "solid",
+      "third": "#0B4EA2"
+    },
+    "flag": true
+  },
+  {
+    "code": "SVN",
+    "iso2": "SI",
+    "names": {
+      "pt": "Eslovênia",
+      "es": "Eslovenia",
+      "en": "Slovenia"
+    },
+    "confederation": "UEFA",
+    "strength": 72,
+    "color": "#0000BF",
+    "kit": {
+      "base": "#0000BF",
+      "accent": "#D50000",
+      "pattern": "solid",
+      "third": "#FFFFFF"
+    },
+    "flag": true
+  },
+  {
+    "code": "SWE",
+    "iso2": "SE",
+    "names": {
+      "pt": "Suécia",
+      "es": "Suecia",
+      "en": "Sweden"
+    },
+    "confederation": "UEFA",
+    "strength": 76,
+    "color": "#005293",
+    "kit": {
+      "base": "#005293",
+      "accent": "#FECB00",
+      "pattern": "solid",
+      "third": "#FECB00"
+    },
+    "flag": true
+  },
+  {
+    "code": "SWZ",
+    "iso2": "SZ",
+    "names": {
+      "pt": "Essuatíni",
+      "es": "Esuatini",
+      "en": "Eswatini"
+    },
+    "confederation": "CAF",
+    "strength": 57,
+    "color": "#3E5EB9",
+    "kit": {
+      "base": "#3E5EB9",
+      "accent": "#B10C0C",
+      "pattern": "solid",
+      "third": "#FFD900"
+    },
+    "flag": true
+  },
+  {
+    "code": "SYR",
+    "iso2": "SY",
+    "names": {
+      "pt": "Síria",
+      "es": "Siria",
+      "en": "Syria"
+    },
+    "confederation": "AFC",
+    "strength": 66,
+    "color": "#007A3D",
+    "kit": {
+      "base": "#007A3D",
+      "accent": "#000000",
+      "pattern": "solid",
+      "third": "#FFFFFF"
+    },
+    "flag": true
+  },
+  {
+    "code": "TAH",
+    "iso2": "PF",
+    "names": {
+      "pt": "Polinésia Francesa",
+      "es": "Polinesia Francesa",
+      "en": "French Polynesia"
+    },
+    "confederation": "OFC",
+    "strength": 55,
+    "color": "#DE2010",
+    "kit": {
+      "base": "#DE2010",
+      "accent": "#FFFFFF",
+      "pattern": "solid",
+      "third": "#EF7D08"
+    },
+    "flag": true
+  },
+  {
+    "code": "TAN",
+    "iso2": "TZ",
+    "names": {
+      "pt": "Tanzânia",
+      "es": "Tanzania",
+      "en": "Tanzania"
+    },
+    "confederation": "CAF",
+    "strength": 65,
+    "color": "#000001",
+    "kit": {
+      "base": "#000001",
+      "accent": "#009900",
+      "pattern": "solid",
+      "third": "#0099FF"
+    },
+    "flag": true
+  },
+  {
+    "code": "TCA",
+    "iso2": "TC",
+    "names": {
+      "pt": "Ilhas Turcas e Caicos",
+      "es": "Islas Turcas y Caicos",
+      "en": "Turks & Caicos Islands"
+    },
+    "confederation": "CONCACAF",
+    "strength": 42,
+    "color": "#002868",
+    "kit": {
+      "base": "#002868",
+      "accent": "#C8102E",
+      "pattern": "solid",
+      "third": "#FFFFFF"
+    },
+    "flag": true
+  },
+  {
+    "code": "TGA",
+    "iso2": "TO",
+    "names": {
+      "pt": "Tonga",
+      "es": "Tonga",
+      "en": "Tonga"
+    },
+    "confederation": "OFC",
+    "strength": 44,
+    "color": "#C10000",
+    "kit": {
+      "base": "#C10000",
+      "accent": "#FFFFFF",
+      "pattern": "solid",
+      "third": "#C71717"
+    },
+    "flag": true
+  },
+  {
+    "code": "THA",
+    "iso2": "TH",
+    "names": {
+      "pt": "Tailândia",
+      "es": "Tailandia",
+      "en": "Thailand"
+    },
+    "confederation": "AFC",
+    "strength": 65,
+    "color": "#A51931",
+    "kit": {
+      "base": "#A51931",
+      "accent": "#2D2A4A",
+      "pattern": "solid",
+      "third": "#F4F5F8"
+    },
+    "flag": true
+  },
+  {
+    "code": "TJK",
+    "iso2": "TJ",
+    "names": {
+      "pt": "Tadjiquistão",
+      "es": "Tayikistán",
+      "en": "Tajikistan"
+    },
+    "confederation": "AFC",
+    "strength": 64,
+    "color": "#FFFFFF",
+    "kit": {
+      "base": "#FFFFFF",
+      "accent": "#CC0000",
+      "pattern": "solid",
+      "third": "#006600"
+    },
+    "flag": true
+  },
+  {
+    "code": "TKM",
+    "iso2": "TM",
+    "names": {
+      "pt": "Turcomenistão",
+      "es": "Turkmenistán",
+      "en": "Turkmenistan"
+    },
+    "confederation": "AFC",
+    "strength": 61,
+    "color": "#00843D",
+    "kit": {
+      "base": "#00843D",
+      "accent": "#D22630",
+      "pattern": "solid",
+      "third": "#A94932"
+    },
+    "flag": true
+  },
+  {
+    "code": "TLS",
+    "iso2": "TL",
+    "names": {
+      "pt": "Timor-Leste",
+      "es": "Timor Oriental",
+      "en": "Timor-Leste"
+    },
+    "confederation": "AFC",
+    "strength": 46,
+    "color": "#CB000F",
+    "kit": {
+      "base": "#CB000F",
+      "accent": "#000001",
+      "pattern": "solid",
+      "third": "#F8C00C"
+    },
+    "flag": true
+  },
+  {
+    "code": "TOG",
+    "iso2": "TG",
+    "names": {
+      "pt": "Togo",
+      "es": "Togo",
+      "en": "Togo"
+    },
+    "confederation": "CAF",
+    "strength": 65,
+    "color": "#118600",
+    "kit": {
+      "base": "#118600",
+      "accent": "#FFE300",
+      "pattern": "solid",
+      "third": "#D80000"
+    },
+    "flag": true
+  },
+  {
+    "code": "TPE",
+    "iso2": "TW",
+    "names": {
+      "pt": "Taiwan",
+      "es": "Taiwán",
+      "en": "Taiwan"
+    },
+    "confederation": "AFC",
+    "strength": 54,
+    "color": "#FF0000",
+    "kit": {
+      "base": "#FF0000",
+      "accent": "#000095",
+      "pattern": "solid",
+      "third": "#FFFFFF"
+    },
+    "flag": true
+  },
+  {
+    "code": "TRI",
+    "iso2": "TT",
+    "names": {
+      "pt": "Trinidad e Tobago",
+      "es": "Trinidad y Tobago",
+      "en": "Trinidad & Tobago"
+    },
+    "confederation": "CONCACAF",
+    "strength": 65,
+    "color": "#E00000",
+    "kit": {
+      "base": "#E00000",
+      "accent": "#000001",
+      "pattern": "solid",
+      "third": "#FFFFFF"
+    },
+    "flag": true
+  },
+  {
+    "code": "TUN",
+    "iso2": "TN",
+    "names": {
+      "pt": "Tunísia",
+      "es": "Túnez",
+      "en": "Tunisia"
+    },
+    "confederation": "CAF",
+    "strength": 74,
+    "color": "#E70013",
+    "kit": {
+      "base": "#E70013",
+      "accent": "#FFFFFF",
+      "pattern": "solid",
+      "third": "#EA2232"
+    },
+    "flag": true
+  },
+  {
+    "code": "TUR",
+    "iso2": "TR",
+    "names": {
+      "pt": "Turquia",
+      "es": "Turquía",
+      "en": "Türkiye"
+    },
+    "confederation": "UEFA",
+    "strength": 78,
+    "color": "#E30A17",
+    "kit": {
+      "base": "#E30A17",
+      "accent": "#FFFFFF",
+      "pattern": "solid",
+      "third": "#F1858B"
+    },
+    "flag": true
+  },
+  {
+    "code": "UAE",
+    "iso2": "AE",
+    "names": {
+      "pt": "Emirados Árabes Unidos",
+      "es": "Emiratos Árabes Unidos",
+      "en": "United Arab Emirates"
+    },
+    "confederation": "AFC",
+    "strength": 70,
+    "color": "#FF0000",
+    "kit": {
+      "base": "#FF0000",
+      "accent": "#00732F",
+      "pattern": "solid",
+      "third": "#FFFFFF"
+    },
+    "flag": true
+  },
+  {
+    "code": "UGA",
+    "iso2": "UG",
+    "names": {
+      "pt": "Uganda",
+      "es": "Uganda",
+      "en": "Uganda"
+    },
+    "confederation": "CAF",
+    "strength": 67,
+    "color": "#FFE700",
+    "kit": {
+      "base": "#FFE700",
+      "accent": "#000001",
+      "pattern": "solid",
+      "third": "#DE3908"
+    },
+    "flag": true
+  },
+  {
+    "code": "UKR",
+    "iso2": "UA",
+    "names": {
+      "pt": "Ucrânia",
+      "es": "Ucrania",
+      "en": "Ukraine"
+    },
+    "confederation": "UEFA",
+    "strength": 76,
+    "color": "#0057B8",
+    "kit": {
+      "base": "#0057B8",
+      "accent": "#FFD700",
+      "pattern": "solid"
+    },
+    "flag": true
+  },
+  {
+    "code": "URU",
+    "iso2": "UY",
+    "names": {
+      "pt": "Uruguai",
+      "es": "Uruguay",
+      "en": "Uruguay"
+    },
+    "confederation": "CONMEBOL",
+    "strength": 81,
+    "color": "#0057B8",
+    "kit": {
+      "base": "#0057B8",
+      "accent": "#000000",
+      "pattern": "solid",
+      "third": "#FFFFFF"
+    },
+    "flag": true
+  },
+  {
+    "code": "USA",
+    "iso2": "US",
+    "names": {
+      "pt": "Estados Unidos",
+      "es": "Estados Unidos",
+      "en": "United States"
+    },
+    "confederation": "CONCACAF",
+    "strength": 78,
+    "color": "#192F5D",
+    "kit": {
+      "base": "#FFFFFF",
+      "accent": "#B31942",
+      "pattern": "solid",
+      "third": "#192F5D"
+    },
+    "flag": true
+  },
+  {
+    "code": "UZB",
+    "iso2": "UZ",
+    "names": {
+      "pt": "Uzbequistão",
+      "es": "Uzbekistán",
+      "en": "Uzbekistan"
+    },
+    "confederation": "AFC",
+    "strength": 73,
+    "color": "#FFFFFF",
+    "kit": {
+      "base": "#FFFFFF",
+      "accent": "#1EB53A",
+      "pattern": "solid",
+      "third": "#0099B5"
+    },
+    "flag": true
+  },
+  {
+    "code": "VAN",
+    "iso2": "VU",
+    "names": {
+      "pt": "Vanuatu",
+      "es": "Vanuatu",
+      "en": "Vanuatu"
+    },
+    "confederation": "OFC",
+    "strength": 53,
+    "color": "#009543",
+    "kit": {
+      "base": "#009543",
+      "accent": "#D21034",
+      "pattern": "solid",
+      "third": "#000000"
+    },
+    "flag": true
+  },
+  {
+    "code": "VEN",
+    "iso2": "VE",
+    "names": {
+      "pt": "Venezuela",
+      "es": "Venezuela",
+      "en": "Venezuela"
+    },
+    "confederation": "CONMEBOL",
+    "strength": 74,
+    "color": "#C32148",
+    "kit": {
+      "base": "#C32148",
+      "accent": "#EFBF04",
+      "pattern": "solid",
+      "third": "#FFFFFF"
+    },
+    "flag": true
+  },
+  {
+    "code": "VGB",
+    "iso2": "VG",
+    "names": {
+      "pt": "Ilhas Virgens Britânicas",
+      "es": "Islas Vírgenes Británicas",
+      "en": "British Virgin Islands"
+    },
+    "confederation": "CONCACAF",
+    "strength": 42,
+    "color": "#000066",
+    "kit": {
+      "base": "#000066",
+      "accent": "#C8102E",
+      "pattern": "solid",
+      "third": "#FFFFFF"
+    },
+    "flag": true
+  },
+  {
+    "code": "VIE",
+    "iso2": "VN",
+    "names": {
+      "pt": "Vietnã",
+      "es": "Vietnam",
+      "en": "Vietnam"
+    },
+    "confederation": "AFC",
+    "strength": 65,
+    "color": "#DA251D",
+    "kit": {
+      "base": "#DA251D",
+      "accent": "#FFFF00",
+      "pattern": "solid",
+      "third": "#F3B60A"
+    },
+    "flag": true
+  },
+  {
+    "code": "VIN",
+    "iso2": "VC",
+    "names": {
+      "pt": "São Vicente e Granadinas",
+      "es": "San Vicente y las Granadinas",
+      "en": "St. Vincent & Grenadines"
+    },
+    "confederation": "CONCACAF",
+    "strength": 52,
+    "color": "#F4F100",
+    "kit": {
+      "base": "#F4F100",
+      "accent": "#199A00",
+      "pattern": "solid",
+      "third": "#0058AA"
+    },
+    "flag": true
+  },
+  {
+    "code": "VIR",
+    "iso2": "VI",
+    "names": {
+      "pt": "Ilhas Virgens Americanas",
+      "es": "Islas Vírgenes de EE. UU.",
+      "en": "U.S. Virgin Islands"
+    },
+    "confederation": "CONCACAF",
+    "strength": 42,
+    "color": "#FFFFFF",
+    "kit": {
+      "base": "#FFFFFF",
+      "accent": "#F4C53D",
+      "pattern": "solid",
+      "third": "#846B22"
+    },
+    "flag": true
+  },
+  {
+    "code": "WAL",
+    "iso2": "GB-WLS",
+    "names": {
+      "pt": "Gales",
+      "es": "Gales",
+      "en": "Wales"
+    },
+    "confederation": "UEFA",
+    "strength": 72,
+    "color": "#D21034",
+    "kit": {
+      "base": "#D21034",
+      "accent": "#FFFFFF",
+      "pattern": "solid",
+      "third": "#FFFFFF"
+    },
+    "flag": true
+  },
+  {
+    "code": "YEM",
+    "iso2": "YE",
+    "names": {
+      "pt": "Iêmen",
+      "es": "Yemen",
+      "en": "Yemen"
+    },
+    "confederation": "AFC",
+    "strength": 59,
+    "color": "#FFFFFF",
+    "kit": {
+      "base": "#FFFFFF",
+      "accent": "#F10600",
+      "pattern": "solid",
+      "third": "#000001"
+    },
+    "flag": true
+  },
+  {
+    "code": "ZAM",
+    "iso2": "ZM",
+    "names": {
+      "pt": "Zâmbia",
+      "es": "Zambia",
+      "en": "Zambia"
+    },
+    "confederation": "CAF",
+    "strength": 69,
+    "color": "#198A00",
+    "kit": {
+      "base": "#198A00",
+      "accent": "#EF7D00",
+      "pattern": "solid",
+      "third": "#DE2010"
+    },
+    "flag": true
+  },
+  {
+    "code": "ZIM",
+    "iso2": "ZW",
+    "names": {
+      "pt": "Zimbábue",
+      "es": "Zimbabue",
+      "en": "Zimbabwe"
+    },
+    "confederation": "CAF",
+    "strength": 65,
+    "color": "#006400",
+    "kit": {
+      "base": "#006400",
+      "accent": "#FFD200",
+      "pattern": "solid",
+      "third": "#FFFFFF"
+    },
+    "flag": true
+  }
+]

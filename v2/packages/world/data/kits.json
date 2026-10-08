@@ -1,0 +1,717 @@
+{
+  "botafogo": {
+    "base": "#0a0a0a",
+    "accent": "#ffffff",
+    "pattern": "vertical_stripes"
+  },
+  "corinthians": {
+    "base": "#ffffff",
+    "accent": "#0a0a0a",
+    "pattern": "solid"
+  },
+  "cruzeiro": {
+    "base": "#2F529E",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "flamengo": {
+    "base": "#C52613",
+    "accent": "#0a0a0a",
+    "pattern": "horizontal_stripes"
+  },
+  "fluminense": {
+    "base": "#92062A",
+    "accent": "#006437",
+    "pattern": "horizontal_stripes"
+  },
+  "gremio": {
+    "base": "#0D80BF",
+    "accent": "#0a0a0a",
+    "pattern": "vertical_stripes"
+  },
+  "palmeiras": {
+    "base": "#006437",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "santos": {
+    "base": "#ffffff",
+    "accent": "#0a0a0a",
+    "pattern": "solid"
+  },
+  "vasco-da-gama": {
+    "base": "#0a0a0a",
+    "accent": "#ffffff",
+    "pattern": "diagonal_sash"
+  },
+  "atletico-paranaense": {
+    "base": "#CF181F",
+    "accent": "#0a0a0a",
+    "pattern": "solid"
+  },
+  "atletico-mg": {
+    "base": "#ffffff",
+    "accent": "#0a0a0a",
+    "pattern": "horizontal_stripes"
+  },
+  "bahia": {
+    "base": "#0057B8",
+    "accent": "#C8102E",
+    "pattern": "vertical_stripes"
+  },
+  "internacional": {
+    "base": "#E5050F",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "rb-bragantino": {
+    "base": "#ffffff",
+    "accent": "#C8102E",
+    "pattern": "solid"
+  },
+  "sao-paulo": {
+    "base": "#ffffff",
+    "accent": "#C8102E",
+    "pattern": "solid"
+  },
+  "coritiba": {
+    "base": "#006437",
+    "accent": "#ffffff",
+    "pattern": "vertical_stripes"
+  },
+  "mirassol": {
+    "base": "#166F3D",
+    "accent": "#FFD400",
+    "pattern": "solid"
+  },
+  "vitoria": {
+    "base": "#C8102E",
+    "accent": "#0a0a0a",
+    "pattern": "vertical_stripes"
+  },
+  "chapecoense": {
+    "base": "#00A329",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "remo": {
+    "base": "#0057B8",
+    "accent": "#C8102E",
+    "pattern": "vertical_stripes"
+  },
+  "barcelona": {
+    "base": "#004D98",
+    "accent": "#A50044",
+    "pattern": "vertical_stripes"
+  },
+  "real-madrid": {
+    "base": "#ffffff",
+    "accent": "#0a2f6b",
+    "pattern": "solid"
+  },
+  "atletico-madrid": {
+    "base": "#C8102E",
+    "accent": "#ffffff",
+    "pattern": "vertical_stripes"
+  },
+  "athletic-club": {
+    "base": "#EE2523",
+    "accent": "#ffffff",
+    "pattern": "vertical_stripes"
+  },
+  "celta-vigo": {
+    "base": "#8AC3EE",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "espanyol": {
+    "base": "#0085CC",
+    "accent": "#ffffff",
+    "pattern": "horizontal_stripes"
+  },
+  "real-betis": {
+    "base": "#00954C",
+    "accent": "#ffffff",
+    "pattern": "horizontal_stripes"
+  },
+  "real-sociedad": {
+    "base": "#143C8B",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "sevilla": {
+    "base": "#ffffff",
+    "accent": "#D70F21",
+    "pattern": "solid"
+  },
+  "valencia": {
+    "base": "#ffffff",
+    "accent": "#0a0a0a",
+    "pattern": "solid"
+  },
+  "villarreal": {
+    "base": "#FFDF1C",
+    "accent": "#005187",
+    "pattern": "solid"
+  },
+  "alaves": {
+    "base": "#0232A0",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "deportivo-la-coruna": {
+    "base": "#0085CC",
+    "accent": "#ffffff",
+    "pattern": "horizontal_stripes"
+  },
+  "elche": {
+    "base": "#05642C",
+    "accent": "#ffffff",
+    "pattern": "vertical_stripes"
+  },
+  "getafe": {
+    "base": "#014F97",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "levante": {
+    "base": "#005CA3",
+    "accent": "#C8102E",
+    "pattern": "solid"
+  },
+  "osasuna": {
+    "base": "#D70F27",
+    "accent": "#0a2f6b",
+    "pattern": "solid"
+  },
+  "racing-santander": {
+    "base": "#2D9A29",
+    "accent": "#ffffff",
+    "pattern": "vertical_stripes"
+  },
+  "rayo-vallecano": {
+    "base": "#ffffff",
+    "accent": "#E3351C",
+    "pattern": "diagonal_sash"
+  },
+  "malaga": {
+    "base": "#0085CC",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "inter": {
+    "base": "#00239C",
+    "accent": "#0a0a0a",
+    "pattern": "vertical_stripes"
+  },
+  "juventus": {
+    "base": "#0a0a0a",
+    "accent": "#ffffff",
+    "pattern": "vertical_stripes"
+  },
+  "ac-milan": {
+    "base": "#E4002B",
+    "accent": "#0a0a0a",
+    "pattern": "vertical_stripes"
+  },
+  "as-roma": {
+    "base": "#970A2C",
+    "accent": "#F0B300",
+    "pattern": "solid"
+  },
+  "atalanta": {
+    "base": "#0067B2",
+    "accent": "#0a0a0a",
+    "pattern": "vertical_stripes"
+  },
+  "como": {
+    "base": "#10416A",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "napoli": {
+    "base": "#01A7E1",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "bologna": {
+    "base": "#C8102E",
+    "accent": "#0a2f6b",
+    "pattern": "vertical_stripes"
+  },
+  "cagliari": {
+    "base": "#C8102E",
+    "accent": "#0a2f6b",
+    "pattern": "vertical_stripes"
+  },
+  "fiorentina": {
+    "base": "#61358B",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "genoa": {
+    "base": "#C8102E",
+    "accent": "#0a2f6b",
+    "pattern": "vertical_stripes"
+  },
+  "lazio": {
+    "base": "#85D8F8",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "parma": {
+    "base": "#ffffff",
+    "accent": "#24338A",
+    "pattern": "solid"
+  },
+  "sassuolo": {
+    "base": "#0a0a0a",
+    "accent": "#1EA451",
+    "pattern": "vertical_stripes"
+  },
+  "torino": {
+    "base": "#881F19",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "udinese": {
+    "base": "#0a0a0a",
+    "accent": "#ffffff",
+    "pattern": "vertical_stripes"
+  },
+  "frosinone": {
+    "base": "#FFDF1C",
+    "accent": "#004393",
+    "pattern": "solid"
+  },
+  "lecce": {
+    "base": "#FFDF1C",
+    "accent": "#C8102E",
+    "pattern": "vertical_stripes"
+  },
+  "monza": {
+    "base": "#C8102E",
+    "accent": "#ffffff",
+    "pattern": "vertical_stripes"
+  },
+  "venezia": {
+    "base": "#0a0a0a",
+    "accent": "#ED6B00",
+    "pattern": "solid"
+  },
+  "arsenal": {
+    "base": "#E20613",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "chelsea": {
+    "base": "#153D8A",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "liverpool": {
+    "base": "#DC0714",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "manchester-city": {
+    "base": "#7AB2E1",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "manchester-united": {
+    "base": "#DA020E",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "tottenham": {
+    "base": "#ffffff",
+    "accent": "#000A3C",
+    "pattern": "solid"
+  },
+  "aston-villa": {
+    "base": "#7A003C",
+    "accent": "#7AB2E1",
+    "pattern": "vertical_stripes"
+  },
+  "bournemouth": {
+    "base": "#C8102E",
+    "accent": "#0a0a0a",
+    "pattern": "vertical_stripes"
+  },
+  "brighton": {
+    "base": "#0057B8",
+    "accent": "#ffffff",
+    "pattern": "vertical_stripes"
+  },
+  "crystal-palace": {
+    "base": "#C8102E",
+    "accent": "#0057B8",
+    "pattern": "vertical_stripes"
+  },
+  "everton": {
+    "base": "#014593",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "newcastle": {
+    "base": "#0a0a0a",
+    "accent": "#ffffff",
+    "pattern": "vertical_stripes"
+  },
+  "nottingham-forest": {
+    "base": "#DC0D15",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "brentford": {
+    "base": "#C8102E",
+    "accent": "#ffffff",
+    "pattern": "vertical_stripes"
+  },
+  "coventry": {
+    "base": "#7AB2E1",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "fulham": {
+    "base": "#ffffff",
+    "accent": "#0a0a0a",
+    "pattern": "solid"
+  },
+  "ipswich": {
+    "base": "#3A64A3",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "leeds": {
+    "base": "#ffffff",
+    "accent": "#FFDF00",
+    "pattern": "solid"
+  },
+  "sunderland": {
+    "base": "#C8102E",
+    "accent": "#ffffff",
+    "pattern": "vertical_stripes"
+  },
+  "hull-city": {
+    "base": "#0a0a0a",
+    "accent": "#F18A01",
+    "pattern": "vertical_stripes"
+  },
+  "bayern-munchen": {
+    "base": "#ED0038",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "bayer-leverkusen": {
+    "base": "#E22726",
+    "accent": "#0a0a0a",
+    "pattern": "vertical_stripes"
+  },
+  "borussia-dortmund": {
+    "base": "#FFD900",
+    "accent": "#0a0a0a",
+    "pattern": "solid"
+  },
+  "rb-leipzig": {
+    "base": "#ffffff",
+    "accent": "#DD0741",
+    "pattern": "solid"
+  },
+  "vfb-stuttgart": {
+    "base": "#ffffff",
+    "accent": "#D40723",
+    "pattern": "solid"
+  },
+  "1-fc-koln": {
+    "base": "#ffffff",
+    "accent": "#E20613",
+    "pattern": "solid"
+  },
+  "union-berlin": {
+    "base": "#7A0C1E",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "1899-hoffenheim": {
+    "base": "#1961B5",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "borussia-monchengladbach": {
+    "base": "#ffffff",
+    "accent": "#0a0a0a",
+    "pattern": "solid"
+  },
+  "eintracht-frankfurt": {
+    "base": "#0a0a0a",
+    "accent": "#E1020C",
+    "pattern": "vertical_stripes"
+  },
+  "fc-augsburg": {
+    "base": "#C8102E",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "fsv-mainz-05": {
+    "base": "#AE0F0A",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "sc-freiburg": {
+    "base": "#C8102E",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "werder-bremen": {
+    "base": "#1D9053",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "fc-schalke-04": {
+    "base": "#004B9C",
+    "accent": "#ffffff",
+    "pattern": "vertical_stripes"
+  },
+  "hamburger-sv": {
+    "base": "#ffffff",
+    "accent": "#1E5CB3",
+    "pattern": "solid"
+  },
+  "sc-paderborn-07": {
+    "base": "#005CA8",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "sv-elversberg": {
+    "base": "#ffffff",
+    "accent": "#0a0a0a",
+    "pattern": "solid"
+  },
+  "paris-saint-germain": {
+    "base": "#04174b",
+    "accent": "#DA020E",
+    "pattern": "solid"
+  },
+  "monaco": {
+    "base": "#C8102E",
+    "accent": "#ffffff",
+    "pattern": "horizontal_stripes"
+  },
+  "olympique-de-marseille": {
+    "base": "#ffffff",
+    "accent": "#0097D7",
+    "pattern": "solid"
+  },
+  "olympique-lyonnais": {
+    "base": "#ffffff",
+    "accent": "#0F23AA",
+    "pattern": "solid"
+  },
+  "rc-strasbourg": {
+    "base": "#009FE3",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "lens": {
+    "base": "#C8102E",
+    "accent": "#FFD900",
+    "pattern": "vertical_stripes"
+  },
+  "lille": {
+    "base": "#C8102E",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "nice": {
+    "base": "#C8102E",
+    "accent": "#0a0a0a",
+    "pattern": "solid"
+  },
+  "paris-fc": {
+    "base": "#0A0F2D",
+    "accent": "#C8102E",
+    "pattern": "solid"
+  },
+  "stade-brestois": {
+    "base": "#C8102E",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "toulouse": {
+    "base": "#38284F",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "angers": {
+    "base": "#0a0a0a",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "auxerre": {
+    "base": "#ffffff",
+    "accent": "#004EA2",
+    "pattern": "solid"
+  },
+  "lorient": {
+    "base": "#ED6B00",
+    "accent": "#0a0a0a",
+    "pattern": "vertical_stripes"
+  },
+  "stade-rennais": {
+    "base": "#C8102E",
+    "accent": "#0a0a0a",
+    "pattern": "vertical_stripes"
+  },
+  "estac-troyes": {
+    "base": "#006CB4",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "le-havre": {
+    "base": "#193260",
+    "accent": "#7AB2E1",
+    "pattern": "vertical_stripes"
+  },
+  "le-mans": {
+    "base": "#193260",
+    "accent": "#FFD900",
+    "pattern": "solid"
+  },
+  "boca-juniors": {
+    "base": "#103F79",
+    "accent": "#FFD900",
+    "pattern": "horizontal_stripes"
+  },
+  "river-plate": {
+    "base": "#ffffff",
+    "accent": "#ED192D",
+    "pattern": "diagonal_sash"
+  },
+  "racing-club": {
+    "base": "#8AC3EE",
+    "accent": "#ffffff",
+    "pattern": "vertical_stripes"
+  },
+  "independiente": {
+    "base": "#C8102E",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "san-lorenzo": {
+    "base": "#0057B8",
+    "accent": "#7C1F2C",
+    "pattern": "horizontal_stripes"
+  },
+  "velez-sarsfield": {
+    "base": "#ffffff",
+    "accent": "#0A539C",
+    "pattern": "solid"
+  },
+  "huracan": {
+    "base": "#ffffff",
+    "accent": "#C8102E",
+    "pattern": "solid"
+  },
+  "newells-old-boys": {
+    "base": "#0a0a0a",
+    "accent": "#C8102E",
+    "pattern": "solid"
+  },
+  "rosario-central": {
+    "base": "#0A3D72",
+    "accent": "#FFD900",
+    "pattern": "vertical_stripes"
+  },
+  "argentinos-jrs": {
+    "base": "#C8102E",
+    "accent": "#ffffff",
+    "pattern": "vertical_stripes"
+  },
+  "estudiantes": {
+    "base": "#C8102E",
+    "accent": "#ffffff",
+    "pattern": "vertical_stripes"
+  },
+  "talleres": {
+    "base": "#0A2FA3",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "club-america": {
+    "base": "#FFEB00",
+    "accent": "#04174b",
+    "pattern": "solid"
+  },
+  "guadalajara-chivas": {
+    "base": "#C8102E",
+    "accent": "#ffffff",
+    "pattern": "vertical_stripes"
+  },
+  "cruz-azul": {
+    "base": "#001F60",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "tigres-uanl": {
+    "base": "#0a2f6b",
+    "accent": "#FFD900",
+    "pattern": "solid"
+  },
+  "monterrey": {
+    "base": "#0A2240",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "inter-miami": {
+    "base": "#F7B5CD",
+    "accent": "#0a0a0a",
+    "pattern": "solid"
+  },
+  "los-angeles-galaxy": {
+    "base": "#ffffff",
+    "accent": "#00245D",
+    "pattern": "solid"
+  },
+  "seattle-sounders": {
+    "base": "#2CC84D",
+    "accent": "#0a0a0a",
+    "pattern": "solid"
+  },
+  "club-nacional": {
+    "base": "#ffffff",
+    "accent": "#003362",
+    "pattern": "diagonal_sash"
+  },
+  "penarol": {
+    "base": "#0a0a0a",
+    "accent": "#FFE600",
+    "pattern": "vertical_stripes"
+  },
+  "barcelona-sc": {
+    "base": "#FFF218",
+    "accent": "#0a0a0a",
+    "pattern": "solid"
+  },
+  "ldu-de-quito": {
+    "base": "#ffffff",
+    "accent": "#B70000",
+    "pattern": "solid"
+  },
+  "alianza-lima": {
+    "base": "#0057B8",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "universitario": {
+    "base": "#F1E4C3",
+    "accent": "#7C1F2C",
+    "pattern": "solid"
+  },
+  "sporting-cristal": {
+    "base": "#56C7ED",
+    "accent": "#ffffff",
+    "pattern": "diagonal_sash"
+  }
+}

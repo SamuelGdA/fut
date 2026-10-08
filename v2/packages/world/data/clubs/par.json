@@ -1,0 +1,178 @@
+[
+  {
+    "id": "cerro-porteno",
+    "name": "Cerro Porteño",
+    "short": "Cerro Porteño",
+    "abbr": "CER",
+    "division": 1,
+    "strength": 67,
+    "prestige": 3.0,
+    "color": "#081227",
+    "crest": "svg"
+  },
+  {
+    "id": "libertad-asuncion",
+    "name": "Libertad",
+    "short": "Libertad",
+    "abbr": "LIB",
+    "division": 1,
+    "strength": 67,
+    "prestige": 2.5,
+    "color": "#000000",
+    "crest": "svg"
+  },
+  {
+    "id": "olimpia",
+    "name": "Olimpia",
+    "short": "Olimpia",
+    "abbr": "OLI",
+    "division": 1,
+    "strength": 67,
+    "prestige": 3.2,
+    "color": "#000000",
+    "crest": "svg"
+  },
+  {
+    "id": "2-de-mayo",
+    "name": "2 de Mayo",
+    "short": "2 de Mayo",
+    "abbr": "MAY",
+    "division": 1,
+    "strength": 61,
+    "prestige": 1.1,
+    "color": "#203185",
+    "crest": "svg"
+  },
+  {
+    "id": "club-guarani",
+    "name": "Club Guaraní",
+    "short": "Guaraní",
+    "abbr": "GUA",
+    "division": 1,
+    "strength": 63,
+    "prestige": 1.8,
+    "color": "#FFCC00",
+    "crest": "svg"
+  },
+  {
+    "id": "nacional-asuncion",
+    "name": "Club Nacional",
+    "short": "Nacional",
+    "abbr": "NAC",
+    "division": 1,
+    "strength": 63,
+    "prestige": 1.7,
+    "color": "#065697",
+    "crest": "svg"
+  },
+  {
+    "id": "deportivo-recoleta",
+    "name": "Deportivo Recoleta",
+    "short": "Deportivo Recoleta",
+    "abbr": "REC",
+    "division": 1,
+    "strength": 61,
+    "prestige": 1.0,
+    "color": "#D4AB49",
+    "crest": "svg"
+  },
+  {
+    "id": "sportivo-trinidense",
+    "name": "Sportivo Trinidense",
+    "short": "Sportivo Trinidense",
+    "abbr": "TRI",
+    "division": 1,
+    "strength": 61,
+    "prestige": 1.1,
+    "color": "#251981",
+    "crest": "svg"
+  },
+  {
+    "id": "sportivo-luqueno",
+    "name": "Sportivo Luqueño",
+    "short": "Luqueño",
+    "abbr": "LUQ",
+    "division": 2,
+    "strength": 58,
+    "prestige": 1.5,
+    "color": "#003DA5",
+    "crest": null
+  },
+  {
+    "id": "sol-de-america",
+    "name": "Sol de América",
+    "short": "Sol de América",
+    "abbr": "SOL",
+    "division": 2,
+    "strength": 58,
+    "prestige": 1.4,
+    "color": "#C8102E",
+    "crest": null
+  },
+  {
+    "id": "rubio-nu",
+    "name": "Rubio Ñu",
+    "short": "Rubio Ñu",
+    "abbr": "RUB",
+    "division": 2,
+    "strength": 57,
+    "prestige": 1.1,
+    "color": "#FFD100",
+    "crest": null
+  },
+  {
+    "id": "river-plate-asuncion",
+    "name": "River Plate",
+    "short": "River Plate",
+    "abbr": "RIV",
+    "division": 2,
+    "strength": 56,
+    "prestige": 1.2,
+    "color": "#C8102E",
+    "crest": null
+  },
+  {
+    "id": "atletico-colegiales",
+    "name": "Atlético Colegiales",
+    "short": "Colegiales",
+    "abbr": "CLG",
+    "division": 2,
+    "strength": 56,
+    "prestige": 1.0,
+    "color": "#0033A0",
+    "crest": null
+  },
+  {
+    "id": "independiente-cg",
+    "name": "Independiente de Campo Grande",
+    "short": "Ind. CG",
+    "abbr": "ICG",
+    "division": 2,
+    "strength": 55,
+    "prestige": 1.0,
+    "color": "#C8102E",
+    "crest": null
+  },
+  {
+    "id": "12-de-octubre",
+    "name": "12 de Octubre",
+    "short": "12 de Octubre",
+    "abbr": "DOC",
+    "division": 2,
+    "strength": 56,
+    "prestige": 1.1,
+    "color": "#0B6E4F",
+    "crest": null
+  },
+  {
+    "id": "tacuary",
+    "name": "Tacuary",
+    "short": "Tacuary",
+    "abbr": "TAC",
+    "division": 2,
+    "strength": 55,
+    "prestige": 1.1,
+    "color": "#C8102E",
+    "crest": null
+  }
+]

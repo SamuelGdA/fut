@@ -1,0 +1,45 @@
+/* ---------------------------------------------------------------------------
+   M8: telas de erro, avisos com ação e a abertura do PWA (GDD 34.4 e 37). A
+   ilustração de erro é SVG em linha com as cores do tema; o botão do aviso
+   segue o vocabulário dos botões secundários.
+   ------------------------------------------------------------------------- */
+
+@layer components {
+  .error-art {
+    display: block;
+    color: var(--fg);
+  }
+
+  .error-art svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  /* O botão de ação do aviso ("Atualizar"): pequeno, no corpo do aviso. */
+  .toast-action {
+    display: inline-flex;
+    align-items: center;
+    min-height: 32px;
+    margin-top: 10px;
+    padding: 0 12px;
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-sm);
+    background: var(--panel-2);
+    color: var(--fg);
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .toast-action:hover {
+    border-color: var(--muted);
+  }
+
+  .toast-action:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+}

@@ -1,0 +1,261 @@
+import type { Widen } from "../i18n";
+
+/**
+ * Os textos da carreira em português, a fonte da verdade. Regras editoriais
+ * (GDD 35): nenhum travessão, frase curta, voz de jornalismo esportivo.
+ *
+ * Marcadores: {club}, {owner}, {age}, {role}, {value}, {count}, {list},
+ * {position}, {country}, {number}, {focus}, {year}.
+ */
+export const careerPt = {
+  positions: {
+    gk: "Goleiro",
+    cb: "Zagueiro",
+    lb: "Lateral esquerdo",
+    rb: "Lateral direito",
+    cdm: "Volante",
+    cm: "Meio-campista",
+    cam: "Meia ofensivo",
+    lm: "Meia esquerda",
+    rm: "Meia direita",
+    lw: "Ponta esquerda",
+    rw: "Ponta direita",
+    st: "Centroavante",
+  },
+
+  positionAbbr: {
+    gk: "GOL",
+    cb: "ZAG",
+    lb: "LE",
+    rb: "LD",
+    cdm: "VOL",
+    cm: "MC",
+    cam: "MEI",
+    lm: "ME",
+    rm: "MD",
+    lw: "PE",
+    rw: "PD",
+    st: "CA",
+  },
+
+  roles: {
+    star: "Craque do time",
+    starter: "Titular",
+    rotation: "Rotação",
+    reserve: "Reserva",
+    surplus: "Sem espaço",
+    third: "Terceiro goleiro",
+  },
+
+  talents: {
+    journeyman: "Operário",
+    prospect: "Promissor",
+    class: "Craque",
+    star: "Estrela",
+    phenom: "Fenômeno",
+  },
+
+  traits: {
+    competitor: "Competidor",
+    professional: "Profissional",
+    leader: "Líder",
+    artist: "Artista",
+    hothead: "Pavio curto",
+    fragile: "Vidraça",
+  },
+
+  focus: {
+    burst: { name: "Arranque", body: "Treina o Ritmo: tiros curtos e saídas em velocidade." },
+    finishing: { name: "Pontaria", body: "Treina a Finalização: gol de todos os ângulos." },
+    vision: { name: "Visão de jogo", body: "Treina o Passe: ler a jogada antes dela acontecer." },
+    ballControl: { name: "Bola no pé", body: "Treina o Drible: domínio, condução e giro." },
+    combat: { name: "Marcação", body: "Treina a Defesa: desarme, cobertura e antecipação." },
+    power: { name: "Força", body: "Treina o Físico: ganhar a dividida e o jogo aéreo." },
+    diving: { name: "Voo", body: "Treina a Elasticidade: a bola no ângulo também é sua." },
+    handling: { name: "Mãos firmes", body: "Treina o Manejo: segurar sem dar rebote." },
+    distribution: { name: "Reposição", body: "Treina a Reposição: o primeiro passe sai das suas luvas." },
+    reflexes: { name: "Reflexos", body: "Treina os Reflexos: a defesa que ninguém espera." },
+    explosion: { name: "Explosão", body: "Treina a Velocidade: sair do gol na hora certa." },
+    command: { name: "Comando da área", body: "Treina o Posicionamento: a pequena área é sua." },
+  },
+
+  missions: {
+    academyBet: { name: "Aposta da base", hint: "O clube aposta no que você vai ser. Paciência garantida." },
+    reinforcement: { name: "Reforço", hint: "Chega para somar ao elenco." },
+    projectPiece: { name: "Peça do projeto", hint: "O time vai ser montado em volta de você." },
+    marqueeSigning: { name: "Contratação de peso", hint: "A estrela da janela. Todo mundo vai cobrar." },
+    heir: { name: "Herdeiro da camisa", hint: "Vai substituir um ídolo. A comparação começa no primeiro dia." },
+    rescue: { name: "Missão resgate", hint: "O time foi mal no ano passado. Você chega para mudar isso." },
+    rebuild: { name: "Reconstrução", hint: "O clube acabou de mudar de divisão e recomeça do zero." },
+    homecoming: { name: "Volta para casa", hint: "Você conhece a casa, e a casa conhece você." },
+    experience: { name: "Experiência", hint: "Chega para ensinar os mais novos." },
+    proveYourself: { name: "Mostrar serviço", hint: "Ninguém garante nada. Cada jogo é uma prova." },
+  },
+
+  pressure: {
+    high: "Pressão alta",
+    low: "Pressão baixa",
+    neutral: "Pressão normal",
+  },
+
+  fans: {
+    unknown: "Desconhecido",
+    hostile: "Hostil",
+    cold: "Fria",
+    warm: "Morna",
+    loved: "Querido",
+    idolized: "Idolatrado",
+  },
+
+  legacy: {
+    none: "Sem legado",
+    respected: "Respeitado",
+    idol: "Ídolo",
+    legend: "Lenda",
+  },
+
+  national: {
+    starter: "Titular da seleção",
+    squad: "Convocado",
+    occasional: "Lembrado às vezes",
+    out: "Fora da seleção",
+  },
+
+  injuries: {
+    muscle: "Lesão muscular",
+    ankle: "Entorse no tornozelo",
+    knee: "Lesão no joelho",
+    back: "Dor nas costas",
+    illness: "Doença",
+    groin: "Pubalgia",
+  },
+
+  decision: {
+    base: { title: "O primeiro clube", body: "Três clubes querem você na base. Aos {age} anos, a primeira escolha é onde aprender." },
+    window: { title: "Janela de transferências", body: "{club} fecha a temporada. Você fica ou muda de ares?" },
+    suspended: { title: "Suspenso", body: "A suspensão segue, mas o mercado não para. Você cumpre a pena onde está ou recomeça em outro lugar?" },
+    loan: { title: "Proposta de empréstimo", body: "Falta espaço no elenco. Alguns clubes oferecem minutos garantidos por empréstimo." },
+    returnRetained: { title: "Fim do empréstimo", body: "{owner} quer você de volta. Qual é o próximo passo?" },
+    returnReleased: { title: "Fim do empréstimo", body: "{owner} não conta com você. É hora de achar um clube." },
+    release: { title: "Dispensado", body: "Sem espaço no elenco, {club} decidiu não contar mais com você." },
+    forced: { title: "Fim da linha", body: "Nenhum clube quer contratar você. Chegou a hora de parar." },
+    focus: { title: "Foco de treino", body: "Escolha um atributo para treinar. Ele sobe pelo menos 2 pontos." },
+  },
+
+  option: {
+    stay: "Ficar onde está",
+    refuseLoan: "Recusar o empréstimo",
+    back: "Voltar para o clube",
+    retire: "Pendurar as chuteiras",
+    sign: "Assinar contrato",
+    loan: "Aceitar o empréstimo",
+    buyout: "Ficar no clube do empréstimo",
+  },
+
+  offer: {
+    role: "Papel esperado: {role}",
+    strength: "Força {value}",
+    stars: { one: "{count} estrela", other: "{count} estrelas" },
+    division1: "Primeira divisão",
+    division2: "Segunda divisão",
+    competitions: "Disputa {list}",
+    noCompetitions: "Sem torneio continental",
+    loan: "Empréstimo",
+    buyout: "Compra em definitivo",
+    back: "Volta do empréstimo",
+    shirt: "Camisa {number}",
+    newShirt: "Camisa nova: {number}",
+  },
+
+  event: {
+    chance: "{value}% de chance",
+    ifSuccess: "Se der certo",
+    ifFailure: "Se der errado",
+    success: "Deu certo.",
+    failure: "Deu errado.",
+    noEffect: "Nada muda.",
+  },
+
+  effect: {
+    capacityNow: "OVR {value}",
+    capacityPeriod: "OVR {value} durante o período",
+    capacityLater: "OVR {value} depois do período",
+    potential: "Potencial {value}",
+    attributes: "Atributo em foco {value}",
+    fans: "Torcida {value}",
+    pressureUp: "Mais pressão",
+    pressureDown: "Menos pressão",
+    roleUp: "Sobe um degrau no elenco",
+    roleDown: "Desce um degrau no elenco",
+    roleFixStarter: "Titular garantido",
+    games: "Jogos {value}%",
+    injury: "Risco de lesão {value}%",
+    production: "Gols e assistências {value}%",
+    growth: "Evolução {value}%",
+    boostLeague: "Força do time na liga {value}",
+    boostCup: "Força do time nas copas {value}",
+    boostContinental: "Força do time no continental {value}",
+    finalWin: "Vence a final",
+    finalLose: "Perde a final",
+    nationalForce: "Vai ao torneio da seleção",
+    nationalSkip: "Fica fora do torneio da seleção",
+    suspension: { one: "Suspenso por {count} temporada", other: "Suspenso por {count} temporadas" },
+    suspensionHalf: "Suspenso por meia temporada",
+    transfer: "Transferência para {club}",
+    position: "Passa a jogar de {position}",
+    nationality: "Nova seleção: {country}",
+    shirtTen: "Veste a camisa 10",
+    shirt: "Veste a camisa {number}",
+    block: "O clube fecha as portas para sempre",
+    marketUp: "Mais clubes interessados na próxima janela",
+    marketDown: "Menos clubes interessados na próxima janela",
+    clubStrength: "Força do clube {value}",
+    awardUp: "Mais votos nos prêmios",
+    awardDown: "Menos votos nos prêmios",
+  },
+
+  notice: {
+    signed: "{club} anuncia a sua contratação.",
+    loaned: "{club} anuncia o seu empréstimo.",
+    backHome: "{club} recebe você de volta.",
+    traitor: "{club} não perdoa: para aquela torcida, você agora é traidor.",
+    firstCap: "Primeira convocação para a seleção, aos {age} anos.",
+    focus: "Novo foco de treino: {focus}.",
+    shirt: "Camisa nova: agora você veste a {number}.",
+  },
+
+  end: {
+    age: "Aos 40 anos, o corpo encerrou a carreira.",
+    noRoom: "Sem clube interessado, a carreira chegou ao fim.",
+    noOffers: "Nenhum clube fez proposta. A carreira chegou ao fim.",
+    release: "Depois da dispensa, você decidiu parar.",
+    voluntary: "Você escolheu a hora de parar.",
+  },
+
+  stats: {
+    season: "Temporada",
+    age: "Idade",
+    club: "Clube",
+    role: "Papel",
+    games: "Jogos",
+    goals: "Gols",
+    assists: "Assistências",
+    cleanSheets: "Sem sofrer gol",
+    titles: "Títulos",
+    awards: "Prêmios",
+    ovr: "OVR",
+    fans: "Torcida",
+    value: "Valor de mercado",
+    shirt: "Camisa",
+    suspended: "Suspenso",
+    injury: "{injury}",
+    attributesShort: "atrib.",
+    national: "Seleção",
+    gamesCount: { zero: "{count} jogos", one: "{count} jogo", other: "{count} jogos" },
+    goalsCount: { zero: "{count} gols", one: "{count} gol", other: "{count} gols" },
+    assistsCount: { zero: "{count} assistências", one: "{count} assistência", other: "{count} assistências" },
+    cleanSheetsCount: { zero: "{count} jogos sem sofrer gol", one: "{count} jogo sem sofrer gol", other: "{count} jogos sem sofrer gol" },
+  },
+} as const;
+
+export type CareerMessages = Widen<typeof careerPt>;

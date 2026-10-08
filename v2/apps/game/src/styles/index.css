@@ -1,0 +1,364 @@
+@import "tailwindcss";
+@import "./components.css";
+@import "./game.css";
+@import "./summary.css";
+@import "./challenge.css";
+@import "./resilience.css";
+
+/* ---------------------------------------------------------------------------
+   Tokens. Nomes semânticos no código; a paleta "noite de jogo" do GDD (seção
+   32.2) é o valor. O tema escuro é o padrão e o claro é papel de jornal.
+   ------------------------------------------------------------------------- */
+
+:root,
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --canvas: #0d1110;
+  --stripe: #111815;
+  --panel: #161d1a;
+  --panel-2: #1d2622;
+  --panel-3: #25302b;
+  --line: #2b3631;
+  --rule: #3c4943;
+
+  --fg: #eef1ea;
+  --muted: #9ca79f;
+  --faint: #838e86;
+
+  --good: #3fb26a;
+  --glory: #e3b341;
+  --bad: #ec5b60;
+  --info: #7aa6cf;
+  /* Fundo de botão vermelho com texto branco: o mesmo nos dois temas. */
+  --alert: #bd2c34;
+
+  --accent: #eef1ea;
+  --on-accent: #0d1110;
+  --club: #3fb26a;
+  --on-club: #0d1110;
+
+  --focus: #f2cf4a;
+  --avatar-bg: #1d2622;
+  --scrim: rgb(4 6 5 / 0.72);
+  --lift: 0 1px 0 rgb(0 0 0 / 0.4), 0 18px 40px -18px rgb(0 0 0 / 0.75);
+  --grain-opacity: 0.045;
+}
+
+[data-theme="light"] {
+  color-scheme: light;
+
+  --canvas: #f3f0e8;
+  --stripe: #ece8de;
+  --panel: #fbf9f4;
+  --panel-2: #f0ece3;
+  --panel-3: #e6e1d5;
+  --line: #dad4c7;
+  --rule: #c3bbaa;
+
+  --fg: #161b18;
+  --muted: #545d57;
+  --faint: #646c65;
+
+  --good: #187a42;
+  --glory: #86600b;
+  --bad: #bd2c34;
+  --info: #2f6c9e;
+
+  --accent: #161b18;
+  --on-accent: #f3f0e8;
+  --club: #1e8a4c;
+  --on-club: #fbf9f4;
+
+  --focus: #1d5fd1;
+  --avatar-bg: #e6e1d5;
+  --scrim: rgb(40 36 28 / 0.42);
+  --lift: 0 1px 0 rgb(60 50 30 / 0.08), 0 18px 40px -20px rgb(60 50 30 / 0.35);
+  --grain-opacity: 0.06;
+}
+
+@theme {
+  --color-*: initial;
+  --font-*: initial;
+
+  --text-2xs: 0.6875rem;
+  --text-2xs--line-height: 1;
+  --text-score: 2.75rem;
+  --text-score--line-height: 0.9;
+  --text-hero: 4.5rem;
+  --text-hero--line-height: 0.88;
+}
+
+@theme inline {
+  --color-canvas: var(--canvas);
+  --color-stripe: var(--stripe);
+  --color-panel: var(--panel);
+  --color-panel-2: var(--panel-2);
+  --color-panel-3: var(--panel-3);
+  --color-line: var(--line);
+  --color-rule: var(--rule);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-good: var(--good);
+  --color-glory: var(--glory);
+  --color-bad: var(--bad);
+  --color-alert: var(--alert);
+  --color-info: var(--info);
+  --color-accent: var(--accent);
+  --color-on-accent: var(--on-accent);
+  --color-club: var(--club);
+  --color-on-club: var(--on-club);
+  --color-white: #ffffff;
+  --color-black: #000000;
+
+  --font-display: "Big Shoulders Variable", "Arial Narrow", sans-serif;
+  --font-sans: "Schibsted Grotesk Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Newsreader Variable", ui-serif, Georgia, serif;
+
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 10px;
+
+  /* Altura da barra do jogo, que fica em todas as telas (D43). Num celular
+     baixo ela afina, para o laço da carreira continuar cabendo. */
+  --topbar-row: 56px;
+  --topbar-h: calc(var(--topbar-row) + env(safe-area-inset-top));
+}
+
+@media (max-height: 700px) and (max-width: 1023px) {
+  :root {
+    --topbar-row: 46px;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Base
+   ------------------------------------------------------------------------- */
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    background: var(--canvas);
+  }
+
+  body {
+    margin: 0;
+    min-height: 100dvh;
+    background: var(--canvas);
+    color: var(--fg);
+    font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    font-optical-sizing: auto;
+  }
+
+  /* Grão de papel/transmissão, bem de leve e fixo. Nunca recebe clique. */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: var(--grain-opacity);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.9 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  [data-theme="light"] body::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.2 0 0 0 0 0.15 0 0 0 0 0.05 0 0 0 0.9 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  #root {
+    position: relative;
+    z-index: 1;
+    isolation: isolate;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background: var(--glory);
+    color: var(--canvas);
+  }
+
+  button,
+  [role="button"],
+  [role="radio"],
+  [role="tab"],
+  [role="switch"] {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  button:not(:disabled),
+  [role="radio"],
+  [role="tab"],
+  [role="switch"] {
+    cursor: pointer;
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--rule) transparent;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    margin: 0;
+    font-weight: inherit;
+    font-size: inherit;
+  }
+
+  p {
+    margin: 0;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Utilitários de tipografia e tom
+   ------------------------------------------------------------------------- */
+
+@layer utilities {
+  .display {
+    font-family: var(--font-display);
+    font-optical-sizing: auto;
+    letter-spacing: 0.005em;
+    line-height: 0.92;
+    overflow-wrap: break-word;
+    text-wrap: balance;
+  }
+
+  /* Placar cortado com reticências: a caixa da linha precisa de folga em cima
+     para os acentos das maiúsculas (Á, Ã, Ç) não serem cortados junto. */
+  .display.truncate,
+  .home-title.truncate {
+    line-height: 1.14;
+  }
+
+  .editorial {
+    font-family: var(--font-serif);
+    font-optical-sizing: auto;
+  }
+
+  .numeric {
+    font-variant-numeric: tabular-nums lining-nums;
+  }
+
+  /* Aviso de carregamento que só aparece se a espera passar de um instante (D43). */
+  .loading-delayed {
+    animation: loading-in 0.2s ease-out 0.35s both;
+  }
+
+  @keyframes loading-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  .pitch-stripes {
+    background-image: repeating-linear-gradient(
+      90deg,
+      transparent 0 56px,
+      color-mix(in oklab, var(--fg) 1.6%, transparent) 56px 112px
+    );
+  }
+
+  .text-tone {
+    color: var(--tone, var(--muted));
+  }
+
+  .bg-tone {
+    background-color: var(--tone, var(--muted));
+  }
+
+  .border-tone {
+    border-color: var(--tone, var(--muted));
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+}
+
+/* Sobrelinha: fica na camada de componentes para que utilitários de cor
+   (text-glory, text-tone) possam sobrescrever a cor padrão. */
+@layer components {
+  .eyebrow {
+    font-family: var(--font-sans);
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+}
+
+/* Tons semânticos: um componente declara data-tone e usa var(--tone). */
+[data-tone="good"] {
+  --tone: var(--good);
+}
+[data-tone="bad"] {
+  --tone: var(--bad);
+}
+[data-tone="glory"] {
+  --tone: var(--glory);
+}
+[data-tone="info"] {
+  --tone: var(--info);
+}
+[data-tone="neutral"] {
+  --tone: var(--muted);
+}
+[data-tone="club"] {
+  --tone: var(--club);
+}
+
+/* ---------------------------------------------------------------------------
+   Movimento reduzido: pedido pelo sistema (data-motion="system") ou forçado
+   nos ajustes (data-motion="reduced"). Avisos ficam fora da regra: são pistas
+   curtas que o jogador quer ver (GDD 33.1).
+   ------------------------------------------------------------------------- */
+
+[data-motion="reduced"] *,
+[data-motion="reduced"] *::before,
+[data-motion="reduced"] *::after {
+  animation-duration: 1ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 1ms !important;
+  scroll-behavior: auto !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-motion="system"] *,
+  [data-motion="system"] *::before,
+  [data-motion="system"] *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+[data-motion] .toast,
+[data-motion] .toast * {
+  transition-duration: 280ms !important;
+}

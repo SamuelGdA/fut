@@ -1,0 +1,23 @@
+{
+  "name": "@craque/terminal",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Uma carreira inteira do CRAQUE no terminal: o motor e os textos de verdade, sem a interface",
+  "scripts": {
+    "carreira": "tsx src/cli.ts",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@craque/content": "workspace:*",
+    "@craque/engine": "workspace:*",
+    "@craque/world": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "24.19.0",
+    "tsx": "4.23.15",
+    "typescript": "6.0.3",
+    "vitest": "5.0.2"
+  }
+}

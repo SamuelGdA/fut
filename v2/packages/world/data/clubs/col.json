@@ -1,0 +1,222 @@
+[
+  {
+    "id": "atletico-nacional",
+    "name": "Atlético Nacional",
+    "short": "Nacional",
+    "abbr": "NAC",
+    "division": 1,
+    "strength": 70,
+    "prestige": 3.2,
+    "color": "#00953B",
+    "crest": "svg"
+  },
+  {
+    "id": "america-de-cali",
+    "name": "América de Cali",
+    "short": "América",
+    "abbr": "AME",
+    "division": 1,
+    "strength": 68,
+    "prestige": 2.7,
+    "color": "#000000",
+    "crest": "svg"
+  },
+  {
+    "id": "bucaramanga",
+    "name": "Bucaramanga",
+    "short": "Bucaramanga",
+    "abbr": "BUC",
+    "division": 1,
+    "strength": 66,
+    "prestige": 1.6,
+    "color": "#F3E638",
+    "crest": "svg"
+  },
+  {
+    "id": "deportes-tolima",
+    "name": "Deportes Tolima",
+    "short": "Tolima",
+    "abbr": "DEP",
+    "division": 1,
+    "strength": 67,
+    "prestige": 1.9,
+    "color": "#8D3031",
+    "crest": "svg"
+  },
+  {
+    "id": "independiente-medellin",
+    "name": "Independiente Medellin",
+    "short": "DIM",
+    "abbr": "MED",
+    "division": 1,
+    "strength": 67,
+    "prestige": 2.2,
+    "color": "#252C5E",
+    "crest": "svg"
+  },
+  {
+    "id": "junior",
+    "name": "Junior",
+    "short": "Junior",
+    "abbr": "JUN",
+    "division": 1,
+    "strength": 68,
+    "prestige": 2.5,
+    "color": "#00309B",
+    "crest": "svg"
+  },
+  {
+    "id": "deportivo-cali",
+    "name": "Deportivo Cali",
+    "short": "Dep. Cali",
+    "abbr": "CAL",
+    "division": 1,
+    "strength": 66,
+    "prestige": 2.4,
+    "color": "#2A975E",
+    "crest": "svg"
+  },
+  {
+    "id": "once-caldas",
+    "name": "Once Caldas",
+    "short": "Once Caldas",
+    "abbr": "ONC",
+    "division": 1,
+    "strength": 66,
+    "prestige": 2.2,
+    "color": "#292E6E",
+    "crest": "svg"
+  },
+  {
+    "id": "millonarios",
+    "name": "Millonarios",
+    "short": "Millonarios",
+    "abbr": "MIL",
+    "division": 1,
+    "strength": 68,
+    "prestige": 2.8,
+    "color": "#273479",
+    "crest": "svg"
+  },
+  {
+    "id": "santa-fe",
+    "name": "Santa Fe",
+    "short": "Santa Fe",
+    "abbr": "SAN",
+    "division": 1,
+    "strength": 67,
+    "prestige": 2.3,
+    "color": "#C32523",
+    "crest": "svg"
+  },
+  {
+    "id": "real-cartagena",
+    "name": "Real Cartagena",
+    "short": "R. Cartagena",
+    "abbr": "CTG",
+    "division": 2,
+    "strength": 58,
+    "prestige": 1.3,
+    "color": "#00A94F",
+    "crest": null
+  },
+  {
+    "id": "cucuta-deportivo",
+    "name": "Cúcuta Deportivo",
+    "short": "Cúcuta",
+    "abbr": "CUC",
+    "division": 2,
+    "strength": 59,
+    "prestige": 1.6,
+    "color": "#C8102E",
+    "crest": null
+  },
+  {
+    "id": "atletico-huila",
+    "name": "Atlético Huila",
+    "short": "Huila",
+    "abbr": "HUI",
+    "division": 2,
+    "strength": 59,
+    "prestige": 1.4,
+    "color": "#FFC72C",
+    "crest": null
+  },
+  {
+    "id": "patriotas-boyaca",
+    "name": "Patriotas Boyacá",
+    "short": "Patriotas",
+    "abbr": "PAT",
+    "division": 2,
+    "strength": 58,
+    "prestige": 1.2,
+    "color": "#C8102E",
+    "crest": null
+  },
+  {
+    "id": "jaguares-de-cordoba",
+    "name": "Jaguares de Córdoba",
+    "short": "Jaguares",
+    "abbr": "JAG",
+    "division": 2,
+    "strength": 59,
+    "prestige": 1.2,
+    "color": "#0B6E4F",
+    "crest": null
+  },
+  {
+    "id": "union-magdalena",
+    "name": "Unión Magdalena",
+    "short": "U. Magdalena",
+    "abbr": "UMA",
+    "division": 2,
+    "strength": 59,
+    "prestige": 1.5,
+    "color": "#003DA5",
+    "crest": null
+  },
+  {
+    "id": "deportes-quindio",
+    "name": "Deportes Quindío",
+    "short": "Quindío",
+    "abbr": "QUI",
+    "division": 2,
+    "strength": 58,
+    "prestige": 1.4,
+    "color": "#FFC72C",
+    "crest": null
+  },
+  {
+    "id": "itagui-leones",
+    "name": "Itagüí Leones",
+    "short": "Leones",
+    "abbr": "LEO",
+    "division": 2,
+    "strength": 58,
+    "prestige": 1.1,
+    "color": "#C8102E",
+    "crest": null
+  },
+  {
+    "id": "boca-juniors-de-cali",
+    "name": "Boca Juniors de Cali",
+    "short": "Boca Cali",
+    "abbr": "BJC",
+    "division": 2,
+    "strength": 56,
+    "prestige": 1.0,
+    "color": "#003DA5",
+    "crest": null
+  },
+  {
+    "id": "internacional-de-bogota",
+    "name": "Internacional de Bogotá",
+    "short": "Internacional",
+    "abbr": "INT",
+    "division": 2,
+    "strength": 58,
+    "prestige": 1.1,
+    "color": "#0B6E4F",
+    "crest": null
+  }
+]

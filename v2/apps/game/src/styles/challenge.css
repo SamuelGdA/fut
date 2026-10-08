@@ -1,0 +1,505 @@
+/* ---------------------------------------------------------------------------
+   M7: Desafio do dia, Hall da Fama e conquistas (GDD 27 e 28). A missão é uma
+   ficha com eixo, meta e barra; a escondida é tracejada; o édito é vermelho,
+   em faixa de perigo (teto) ou com barra (piso). O painel em jogo cabe na
+   tela; Hall e conquistas são exploração e rolam.
+   ------------------------------------------------------------------------- */
+
+@layer components {
+  /* ------------------------------------------------------------- missão */
+
+  /* Entrada do desafio (D43): no PC, três colunas numa tela só, sem rolar a
+     página: a mão do dia, o que é seu e, à direita, jogar, ranking e números. */
+  .ch-page {
+    max-width: 72rem;
+    margin: 0 auto;
+    padding: 24px 16px 64px;
+  }
+
+  .ch-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .ch-grid,
+  .ch-side {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    min-width: 0;
+  }
+
+  .ch-play {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  @media (min-width: 1024px) {
+    .ch-page {
+      display: flex;
+      flex-direction: column;
+      max-width: 82rem;
+      height: calc(100dvh - var(--topbar-h));
+      padding: clamp(12px, 2.5dvh, 24px) 24px 16px;
+      /* Numa janela pequena demais, rola por dentro em vez de cortar. */
+      overflow-y: auto;
+    }
+
+    .ch-head {
+      margin-bottom: clamp(12px, 2.5dvh, 24px);
+    }
+
+    /* A mão e o "Você" ocupam as duas linhas; à direita, jogar em cima e o
+       ranking e os números embaixo. */
+    .ch-grid {
+      display: grid;
+      flex: 1;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 330px) minmax(0, 300px);
+      grid-template-rows: auto minmax(0, 1fr);
+      align-items: start;
+      gap: 16px 24px;
+      min-height: 0;
+    }
+
+    .ch-hand {
+      grid-column: 1;
+      grid-row: 1 / span 2;
+    }
+
+    .ch-you {
+      grid-column: 2;
+      grid-row: 1 / span 2;
+    }
+
+    .ch-play {
+      grid-column: 3;
+      grid-row: 1;
+    }
+
+    .ch-side {
+      grid-column: 3;
+      grid-row: 2;
+      gap: 16px;
+    }
+  }
+
+  /* PC estreito (1024 a 1279): as colunas da direita encolhem e a mão do dia,
+     que é a mais alta, ganha largura. */
+  @media (min-width: 1024px) and (max-width: 1279px) {
+    .ch-grid {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 300px) minmax(0, 260px);
+      column-gap: 20px;
+    }
+  }
+
+  .mission {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+    padding: 12px 14px;
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--glory);
+    border-radius: var(--radius-sm);
+    background: var(--panel);
+  }
+
+  .mission-compact {
+    gap: 4px;
+    padding: 8px 11px;
+  }
+
+  .mission[data-done] {
+    border-left-color: var(--good);
+  }
+
+  /* A sacrificada no resumo: à vista, em cinza (GDD 27.6). */
+  .mission[data-muted] {
+    border-left-color: var(--rule);
+    opacity: 0.62;
+  }
+
+  .mission-hidden {
+    border: 1.5px dashed var(--rule);
+    border-left-width: 1.5px;
+    background: transparent;
+  }
+
+  .mission-head {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .mission-axis {
+    flex-shrink: 0;
+    color: var(--glory);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .mission[data-done] .mission-axis {
+    color: var(--good);
+  }
+
+  /* Altura de linha folgada: o corte do texto longo não pode comer o til de "AZARÃO". */
+  .mission-name {
+    min-width: 0;
+    overflow: hidden;
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-weight: 800;
+    line-height: 1.25;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .mission-compact .mission-name {
+    font-size: 1.02rem;
+  }
+
+  .mission-count,
+  .mission-points {
+    margin-left: auto;
+    flex-shrink: 0;
+    font-size: 0.82rem;
+    font-weight: 800;
+    white-space: nowrap;
+  }
+
+  .mission[data-done] .mission-count {
+    color: var(--good);
+  }
+
+  .mission-note {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    color: var(--muted);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .mission-goal {
+    color: var(--muted);
+    font-size: 0.82rem;
+    line-height: 1.3;
+  }
+
+  .mission-compact .mission-goal {
+    font-size: 0.76rem;
+  }
+
+  .mission-bar {
+    height: 6px;
+    overflow: hidden;
+    border-radius: 3px;
+    background: color-mix(in oklab, var(--line) 80%, transparent);
+  }
+
+  .mission-bar > span {
+    display: block;
+    height: 100%;
+    background: var(--glory);
+    transform-origin: left center;
+    transition: transform 0.5s cubic-bezier(0.3, 0.7, 0.2, 1);
+  }
+
+  .mission[data-done] .mission-bar > span {
+    background: var(--good);
+  }
+
+  .reveal-mission .mission-name {
+    font-size: 1.35rem;
+    white-space: normal;
+  }
+
+  .reveal-mission .mission-goal {
+    color: var(--fg);
+    font-size: 0.95rem;
+  }
+
+  /* -------------------------------------------------------------- édito */
+
+  .edict {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 12px 14px 12px 22px;
+    overflow: hidden;
+    border: 1px solid color-mix(in oklab, var(--bad) 55%, var(--line));
+    border-radius: var(--radius-sm);
+    background: color-mix(in oklab, var(--bad) 7%, var(--panel));
+  }
+
+  /* Teto: a faixa de perigo na borda. Piso: faixa lisa, a barra conta. */
+  .edict::before {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 9px;
+    background: repeating-linear-gradient(135deg, var(--bad) 0 6px, transparent 6px 12px);
+  }
+
+  .edict[data-kind="floor"]::before {
+    background: var(--bad);
+  }
+
+  .edict[data-state="broken"] {
+    border-color: var(--bad);
+    background: color-mix(in oklab, var(--bad) 18%, var(--panel));
+  }
+
+  .edict[data-state="broken"]::before {
+    background: var(--bad);
+  }
+
+  .edict[data-state="met"]::before {
+    background: var(--good);
+  }
+
+  .edict-compact {
+    gap: 3px;
+    padding: 8px 11px 8px 19px;
+  }
+
+  .edict-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .edict-label {
+    flex-shrink: 0;
+    color: var(--bad);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .edict-name {
+    min-width: 0;
+    flex: 1;
+    overflow: hidden;
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 800;
+    line-height: 1.25;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .edict-rule {
+    font-size: 0.82rem;
+    line-height: 1.3;
+  }
+
+  .edict-compact .edict-rule {
+    font-size: 0.76rem;
+  }
+
+  .edict-note,
+  .edict-value {
+    color: var(--muted);
+    font-size: 0.72rem;
+  }
+
+  .edict-bar > span {
+    background: var(--bad);
+  }
+
+  .edict[data-state="met"] .edict-bar > span {
+    background: var(--good);
+  }
+
+  /* --------------------------------------------- painel em jogo (celular) */
+
+  .challenge-panel {
+    flex: 1;
+  }
+
+  /* Cinco abas no desafio: a mesma barra, um pouco mais justa. `minmax(0, 1fr)`
+     deixa a coluna encolher abaixo do rótulo (com `1fr`, "HISTÓRICO" empurra a
+     página para fora da tela); o rótulo corta com reticências no pior caso. */
+  .tabbar[data-count="5"] {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+
+  .tabbar[data-count="5"] .tabbar-tab {
+    min-width: 0;
+    font-size: 11px;
+    letter-spacing: 0.02em;
+  }
+
+  .tabbar-label {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* --------------------------------------------------- Hall da Fama */
+
+  .hall-card {
+    display: grid;
+    grid-template-columns: 64px minmax(0, 1fr);
+    gap: 12px;
+    align-items: center;
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--panel);
+  }
+
+  .hall-card-avatar {
+    width: 64px;
+    height: 64px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--avatar-bg);
+  }
+
+  .hall-record {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+    border-top: 3px solid var(--glory);
+    border-radius: var(--radius-sm);
+    background: var(--panel);
+    text-align: left;
+  }
+
+  .hall-record:hover {
+    border-color: var(--rule);
+    border-top-color: var(--glory);
+  }
+
+  /* ------------------------------------------------------- conquistas */
+
+  .achievement {
+    display: grid;
+    grid-template-columns: 40px minmax(0, 1fr);
+    gap: 12px;
+    align-items: start;
+    padding: 12px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--panel);
+  }
+
+  .achievement-mark {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border: 1.5px dashed var(--rule);
+    border-radius: 50%;
+    color: var(--faint);
+  }
+
+  .achievement[data-unlocked] .achievement-mark {
+    border: 0;
+    background: var(--glory);
+    color: var(--canvas);
+  }
+
+  .achievement:not([data-unlocked]) .achievement-name {
+    color: var(--muted);
+  }
+
+  .achievement-name {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 800;
+    line-height: 1.1;
+    text-transform: uppercase;
+  }
+
+  /* --------------------------------------------- Início: desafio do dia */
+
+  .home-challenge {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid color-mix(in oklab, var(--glory) 45%, var(--line));
+    border-radius: var(--radius-md);
+    background:
+      radial-gradient(120% 140% at 100% 0%, color-mix(in oklab, var(--glory) 14%, transparent), transparent 60%),
+      var(--panel);
+  }
+
+  /* --------------------------------------------- pôster: selo do desafio */
+
+  .poster-seal[data-kind="challenge"] {
+    border-color: #e3b341;
+    color: #e3b341;
+  }
+}
+
+@layer components {
+  /* A escolha da original, na decisão onde a linha alternativa se separou:
+     uma etiqueta no canto, sem mudar a altura da linha. */
+  .option[data-original]::after {
+    content: attr(data-original);
+    position: absolute;
+    top: -7px;
+    right: 10px;
+    padding: 1px 6px;
+    border-radius: 3px;
+    background: var(--info);
+    color: var(--canvas);
+    font-size: 9.5px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    line-height: 1.4;
+    text-transform: uppercase;
+  }
+}
+
+@layer components {
+  /* Revelação em tela baixa (até 620 px de altura, como 320 × 568): a página
+     de temporada mais cheia (clube de duas linhas, carta nova, seis atributos,
+     convocação e título) passava do palco. Mesmos elementos, mais justos. */
+  @media (max-height: 620px) {
+    .reveal-stage {
+      gap: 6px;
+    }
+
+    .reveal-row {
+      padding: 6px 10px;
+    }
+
+    .reveal-stats > div {
+      padding: 5px 4px;
+    }
+
+    .reveal-core {
+      gap: 10px;
+    }
+
+    .reveal-core li > span,
+    .reveal-stage > div > span[data-tone] {
+      min-height: 20px;
+      padding-top: 2px;
+      padding-bottom: 2px;
+    }
+  }
+}

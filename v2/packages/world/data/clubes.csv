@@ -1,0 +1,490 @@
+﻿id;pais;divisao;nome;forca;prestigio
+river-plate;ARG;1;River Plate;76;4,5
+boca-juniors;ARG;1;Boca Juniors;75;4,5
+racing-club;ARG;1;Racing Club;73;3,6
+estudiantes;ARG;1;Estudiantes de La Plata;71;3,4
+independiente;ARG;1;Independiente;71;3,9
+talleres;ARG;1;Talleres de Córdoba;71;2,4
+velez-sarsfield;ARG;1;Vélez Sarsfield;71;3,3
+argentinos-jrs;ARG;1;Argentinos Juniors;70;2,6
+lanus;ARG;1;Lanús;70;2,5
+rosario-central;ARG;1;Rosario Central;70;2,9
+san-lorenzo;ARG;1;San Lorenzo;70;3,4
+huracan;ARG;1;Huracán;69;2,3
+belgrano;ARG;1;Belgrano;68;2,3
+defensa-y-justicia;ARG;1;Defensa y Justicia;68;1,8
+newells-old-boys;ARG;1;Newell's Old Boys;68;2,9
+atletico-tucuman;ARG;1;Atlético Tucuman;67;1,9
+banfield;ARG;1;Banfield;67;2
+gimnasia-lp;ARG;1;Gimnasia y Esgrima La Plata;67;2,3
+platense;ARG;1;Platense;67;1,6
+tigre;ARG;1;Tigre;67;1,8
+union;ARG;1;Unión de Santa Fe;67;2
+barracas-central;ARG;1;Barracas Central;66;1,2
+independiente-rivadavia;ARG;1;Independiente Rivadavia;66;1,4
+instituto-cordoba;ARG;1;Instituto de Córdoba;66;1,6
+central-cordoba-de-santiago;ARG;1;Central Córdoba de Santiago del Estero;65;1,3
+sarmiento-junin;ARG;1;Sarmiento de Junin;65;1,3
+aldosivi;ARG;1;Aldosivi;64;1,3
+deportivo-riestra;ARG;1;Deportivo Riestra;64;1
+estudiantes-de-rio-cuarto;ARG;1;Estudiantes de Rio Cuarto;64;1,2
+gimnasia-m;ARG;1;Gimnasia de Mendoza;64;1,3
+godoy-cruz;ARG;2;Godoy Cruz;64;1,8
+colon-santa-fe;ARG;2;Colón de Santa Fe;63;2,1
+san-martin-tucuman;ARG;2;San Martín (T);62;1,6
+patronato;ARG;2;Patronato;61;1,4
+quilmes;ARG;2;Quilmes;61;1,9
+san-martin-sj;ARG;2;San Martín (SJ);61;1,4
+all-boys;ARG;2;All Boys;60;1,4
+almagro;ARG;2;Almagro;60;1,3
+almirante-brown;ARG;2;Almirante Brown;60;1,2
+atletico-de-rafaela;ARG;2;Atlético de Rafaela;60;1,4
+chacarita-juniors;ARG;2;Chacarita Juniors;60;1,6
+ferro-carril-oeste;ARG;2;Ferro Carril Oeste;60;1,8
+nueva-chicago;ARG;2;Nueva Chicago;60;1,4
+temperley;ARG;2;Temperley;60;1,4
+agropecuario;ARG;2;Agropecuario;59;1
+atlanta;ARG;2;Atlanta;59;1,3
+atletico-mitre;ARG;2;Atletico Mitre (SdE);59;1
+ca-estudiantes;ARG;2;Estudiantes;59;1,2
+deportivo-madryn;ARG;2;Deportivo Madryn;59;1
+deportivo-maipu;ARG;2;Deportivo Maipu;59;1
+deportivo-moron;ARG;2;Deportivo Morón;59;1,2
+gimnasia-jujuy;ARG;2;Gimnasia Jujuy;59;1,2
+gimnasia-y-tiro;ARG;2;Gimnasia y Tiro;59;1,1
+los-andes;ARG;2;Los Andes;59;1,2
+chaco-for-ever;ARG;2;Chaco For Ever;58;1,1
+club-atletico-guemes;ARG;2;Club Atlético Güemes;58;1
+defensores-de-belgrano;ARG;2;Defensores de Belgrano;58;1,1
+racing-cordoba;ARG;2;Racing (C);58;1,1
+san-miguel;ARG;2;San Miguel;58;1
+san-telmo;ARG;2;San Telmo;58;1,1
+tristan-suarez;ARG;2;Tristán Suárez;58;1
+acassuso;ARG;2;Acassuso;57;1
+central-norte;ARG;2;Central Norte;57;1
+ciudad-de-bolivar;ARG;2;Ciudad de Bolívar;57;1
+colegiales;ARG;2;Colegiales;57;1
+midland;ARG;2;Midland;57;1
+bolivar;BOL;1;Bolívar;66;2,8
+the-strongest;BOL;1;The Strongest;65;2,6
+always-ready;BOL;1;Always Ready;63;1,6
+blooming;BOL;1;Blooming;62;1,9
+independiente-petrolero;BOL;1;Independiente Petrolero;60;1,2
+nacional-potosi;BOL;1;Nacional Potosí;60;1,3
+guabira;BOL;1;Guabirá;59;1,2
+san-antonio-bulo-bulo;BOL;1;San Antonio Bulo Bulo;59;1
+jorge-wilstermann;BOL;2;Jorge Wilstermann;59;2
+real-potosi;BOL;2;Real Potosí;57;1,3
+universitario-de-vinto;BOL;2;Universitario de Vinto;56;1
+academia-balompie;BOL;2;Academia del Balompié;55;1
+destroyers;BOL;2;Club Destroyers;55;1,2
+real-oruro;BOL;2;Real Oruro;55;1
+vaca-diez;BOL;2;Vaca Díez;54;1
+san-juan-sc;BOL;2;San Juan;53;1
+flamengo;BRA;1;Flamengo;79;4,4
+palmeiras;BRA;1;Palmeiras;79;4
+botafogo;BRA;1;Botafogo;76;3,5
+atletico-mg;BRA;1;Atlético Mineiro;75;3,5
+cruzeiro;BRA;1;Cruzeiro;75;3,6
+fluminense;BRA;1;Fluminense;75;3,6
+sao-paulo;BRA;1;São Paulo;75;3,9
+corinthians;BRA;1;Corinthians;74;4
+internacional;BRA;1;Internacional;74;3,6
+bahia;BRA;1;Bahia;73;2,7
+gremio;BRA;1;Grêmio;73;3,6
+rb-bragantino;BRA;1;Red Bull Bragantino;72;2,2
+santos;BRA;1;Santos;72;3,9
+vasco-da-gama;BRA;1;Vasco da Gama;72;3,5
+atletico-paranaense;BRA;1;Athletico Paranaense;70;2,8
+mirassol;BRA;1;Mirassol;70;1,5
+coritiba;BRA;1;Coritiba;69;2,2
+vitoria;BRA;1;Vitoria;69;2,2
+chapecoense;BRA;1;Chapecoense;67;1,9
+remo;BRA;1;Remo;67;1,8
+ceara;BRA;2;Ceará;66;2,2
+sport-recife;BRA;2;Sport Recife;66;2,4
+america-mg;BRA;2;América-MG;65;2
+cuiaba;BRA;2;Cuiabá;65;1,6
+goias;BRA;2;Goiás;65;2,2
+criciuma;BRA;2;Criciúma;64;1,7
+novorizontino;BRA;2;Novorizontino;64;1,3
+avai;BRA;2;Avaí;63;1,8
+crb;BRA;2;CRB;62;1,4
+guarani;BRA;2;Guarani;62;2
+nautico;BRA;2;Náutico;62;1,9
+operario-pr;BRA;2;Operário-PR;62;1,3
+paysandu;BRA;2;Paysandu;62;1,8
+ponte-preta;BRA;2;Ponte Preta;62;1,9
+vila-nova;BRA;2;Vila Nova;62;1,4
+amazonas;BRA;2;Amazonas;61;1,1
+botafogo-sp;BRA;2;Botafogo-SP;61;1,4
+ferroviaria;BRA;2;Ferroviária;61;1,3
+volta-redonda;BRA;2;Volta Redonda;61;1,2
+athletic-mg;BRA;2;Athletic-MG;60;1
+colo-colo;CHI;1;Colo Colo;69;3,3
+u-catolica;CHI;1;Universidad Católica;68;2,6
+universidad-de-chile;CHI;1;Universidad de Chile;68;2,9
+coquimbo-unido;CHI;1;Coquimbo Unido;66;1,5
+a-italiano;CHI;1;Áudax Italiano;65;1,5
+cobresal;CHI;1;Cobresal;65;1,4
+huachipato;CHI;1;Huachipato;65;1,6
+ohiggins;CHI;1;O'Higgins;65;1,6
+palestino;CHI;1;Palestino;65;1,6
+cobreloa;CHI;2;Cobreloa;61;2,1
+santiago-wanderers;CHI;2;Santiago Wanderers;60;1,8
+deportes-antofagasta;CHI;2;Deportes Antofagasta;59;1,3
+curico-unido;CHI;2;Curicó Unido;58;1,1
+deportes-concepcion;CHI;2;Deportes Concepción;58;1,3
+deportes-copiapo;CHI;2;Deportes Copiapó;58;1,1
+deportes-magallanes;CHI;2;Deportes Magallanes;58;1,3
+deportes-temuco;CHI;2;Deportes Temuco;58;1,2
+rangers-de-talca;CHI;2;Rangers de Talca;58;1,3
+san-marcos-de-arica;CHI;2;San Marcos de Arica;57;1,1
+atletico-nacional;COL;1;Atlético Nacional;70;3,2
+america-de-cali;COL;1;América de Cali;68;2,7
+junior;COL;1;Junior;68;2,5
+millonarios;COL;1;Millonarios;68;2,8
+deportes-tolima;COL;1;Deportes Tolima;67;1,9
+independiente-medellin;COL;1;Independiente Medellin;67;2,2
+santa-fe;COL;1;Santa Fe;67;2,3
+bucaramanga;COL;1;Bucaramanga;66;1,6
+deportivo-cali;COL;1;Deportivo Cali;66;2,4
+once-caldas;COL;1;Once Caldas;66;2,2
+atletico-huila;COL;2;Atlético Huila;59;1,4
+cucuta-deportivo;COL;2;Cúcuta Deportivo;59;1,6
+jaguares-de-cordoba;COL;2;Jaguares de Córdoba;59;1,2
+union-magdalena;COL;2;Unión Magdalena;59;1,5
+deportes-quindio;COL;2;Deportes Quindío;58;1,4
+internacional-de-bogota;COL;2;Internacional de Bogotá;58;1,1
+itagui-leones;COL;2;Itagüí Leones;58;1,1
+patriotas-boyaca;COL;2;Patriotas Boyacá;58;1,2
+real-cartagena;COL;2;Real Cartagena;58;1,3
+boca-juniors-de-cali;COL;2;Boca Juniors de Cali;56;1
+independiente-del-valle;ECU;1;Independiente del Valle;70;2,7
+ldu-de-quito;ECU;1;LDU de Quito;70;3,1
+barcelona-sc;ECU;1;Barcelona SC;68;3
+emelec;ECU;1;Emelec;66;2,6
+universidad-catolica;ECU;1;Universidad Católica;65;1,8
+deportivo-cuenca;ECU;1;Deportivo Cuenca;64;1,7
+libertad;ECU;1;Libertad;64;1,3
+orense-sc;ECU;1;Orense SC;64;1,3
+macara;ECU;1;Macará;63;1,4
+el-nacional;ECU;2;El Nacional;60;2,2
+independiente-juniors;ECU;2;Independiente Juniors;58;1,1
+9-de-octubre;ECU;2;9 de Octubre;57;1,2
+cumbaya;ECU;2;Cumbayá;57;1
+liga-de-portoviejo;ECU;2;Liga de Portoviejo;57;1,2
+gualaceo;ECU;2;Gualaceo;56;1
+cuenca-juniors;ECU;2;Cuenca Juniors;55;1
+santo-domingo-fc;ECU;2;Santo Domingo;55;1
+vinotinto-ecuador;ECU;2;Vinotinto Ecuador;55;1
+arsenal;ENG;1;Arsenal;87;4,4
+liverpool;ENG;1;Liverpool;87;4,7
+manchester-city;ENG;1;Manchester City;87;4,3
+chelsea;ENG;1;Chelsea;84;4,3
+manchester-united;ENG;1;Manchester United;82;4,7
+newcastle;ENG;1;Newcastle United;82;3,5
+aston-villa;ENG;1;Aston Villa;81;3,4
+tottenham;ENG;1;Tottenham;81;3,9
+brighton;ENG;1;Brighton;79;2,5
+crystal-palace;ENG;1;Crystal Palace;78;2,4
+bournemouth;ENG;1;Bournemouth;77;2,2
+brentford;ENG;1;Brentford;77;2,1
+everton;ENG;1;Everton;77;3,2
+fulham;ENG;1;Fulham;77;2,4
+nottingham-forest;ENG;1;Nottingham Forest;77;3
+leeds;ENG;1;Leeds;76;3
+sunderland;ENG;1;Sunderland;75;2,8
+coventry;ENG;1;Coventry City;74;2
+ipswich;ENG;1;Ipswich Town;74;2,1
+hull-city;ENG;1;Hull City;73;1,9
+west-ham;ENG;2;West Ham;76;3,1
+wolves;ENG;2;Wolves;75;2,6
+burnley;ENG;2;Burnley;74;2,2
+southampton;ENG;2;Southampton;73;2,4
+middlesbrough;ENG;2;Middlesbrough;72;2,2
+sheffield-utd;ENG;2;Sheffield United;72;2,3
+norwich;ENG;2;Norwich;71;2,2
+wrexham;ENG;2;Wrexham;71;1,9
+birmingham;ENG;2;Birmingham City;70;2,1
+millwall;ENG;2;Millwall;70;1,8
+stoke-city;ENG;2;Stoke City;70;2
+swansea;ENG;2;Swansea City;70;2
+watford;ENG;2;Watford;70;2
+west-brom;ENG;2;West Brom;70;2,2
+blackburn;ENG;2;Blackburn Rovers;69;2,4
+bristol-city;ENG;2;Bristol City;69;1,8
+cardiff;ENG;2;Cardiff City;69;1,9
+derby;ENG;2;Derby County;69;2,4
+portsmouth;ENG;2;Portsmouth;69;2,1
+preston;ENG;2;Preston;69;1,8
+bolton;ENG;2;Bolton Wanderers;68;2
+charlton;ENG;2;Charlton Athletic;68;1,8
+qpr;ENG;2;Queen's Park Rangers;68;1,9
+lincoln;ENG;2;Lincoln City;67;1,4
+real-madrid;ESP;1;Real Madrid;89;5
+barcelona;ESP;1;Barcelona;88;5
+atletico-madrid;ESP;1;Atlético Madrid;84;4,1
+villarreal;ESP;1;Villarreal;81;3
+athletic-club;ESP;1;Athletic Club;80;3,4
+real-betis;ESP;1;Real Betis;79;2,8
+real-sociedad;ESP;1;Real Sociedad;79;2,9
+sevilla;ESP;1;Sevilla;78;3,7
+celta-vigo;ESP;1;Celta de Vigo;77;2,5
+osasuna;ESP;1;Osasuna;76;2,1
+rayo-vallecano;ESP;1;Rayo Vallecano;76;1,9
+valencia;ESP;1;Valencia;76;3,6
+alaves;ESP;1;Alaves;75;2
+espanyol;ESP;1;Espanyol;75;2,4
+getafe;ESP;1;Getafe;75;2
+elche;ESP;1;Elche;74;1,9
+deportivo-la-coruna;ESP;1;Deportivo La Coruña;73;2,9
+levante;ESP;1;Levante;73;1,9
+malaga;ESP;1;Malaga;73;2,4
+racing-santander;ESP;1;Racing de Santander;73;2,1
+girona;ESP;2;Girona;76;2
+mallorca;ESP;2;Mallorca;74;2,3
+almeria;ESP;2;Almeria;72;1,8
+las-palmas;ESP;2;Las Palmas;72;2
+oviedo;ESP;2;Real Oviedo;72;1,9
+valladolid;ESP;2;Valladolid;72;2
+granada-cf;ESP;2;Granada CF;71;1,9
+cadiz;ESP;2;Cadiz;70;1,8
+leganes;ESP;2;Leganes;70;1,6
+sporting-gijon;ESP;2;Sporting Gijon;70;2,1
+eibar;ESP;2;Eibar;69;1,6
+albacete;ESP;2;Albacete;68;1,5
+burgos;ESP;2;Burgos;68;1,4
+castellon;ESP;2;Castellón;68;1,4
+cordoba;ESP;2;Cordoba;68;1,7
+tenerife;ESP;2;Tenerife;68;1,7
+ad-ceuta-fc;ESP;2;AD Ceuta FC;67;1,1
+fc-andorra;ESP;2;FC Andorra;67;1,3
+eldense;ESP;2;Eldense;66;1,1
+sabadell;ESP;2;Sabadell;66;1,3
+paris-saint-germain;FRA;1;Paris Saint Germain;87;4,3
+monaco;FRA;1;AS Monaco;80;3,1
+olympique-de-marseille;FRA;1;Olympique de Marseille;80;3,6
+lille;FRA;1;Lille;79;2,8
+olympique-lyonnais;FRA;1;Olympique Lyonnais;79;3,5
+lens;FRA;1;Lens;78;2,5
+stade-rennais;FRA;1;Stade Rennais;78;2,4
+nice;FRA;1;Nice;77;2,4
+rc-strasbourg;FRA;1;RC Strasbourg;77;2,3
+stade-brestois;FRA;1;Stade Brestois;75;1,8
+toulouse;FRA;1;Toulouse;75;1,9
+paris-fc;FRA;1;Paris FC;74;1,6
+angers;FRA;1;Angers;73;1,7
+auxerre;FRA;1;Auxerre;73;1,9
+le-havre;FRA;1;Le Havre;73;1,8
+lorient;FRA;1;Lorient;73;1,7
+estac-troyes;FRA;1;Estac Troyes;72;1,6
+le-mans;FRA;1;Le Mans;71;1,6
+nantes;FRA;2;Nantes;74;2,6
+reims;FRA;2;Reims;72;2,3
+saint-etienne;FRA;2;Saint Étienne;72;3
+metz;FRA;2;Metz;71;1,9
+montpellier;FRA;2;Montpellier;71;2,2
+clermont-foot;FRA;2;Clermont Foot;68;1,4
+guingamp;FRA;2;Guingamp;68;1,6
+annecy;FRA;2;Annecy;67;1,2
+dunkerque;FRA;2;Dunkerque;67;1,2
+nancy;FRA;2;Nancy;67;1,6
+dijon;FRA;2;Dijon;66;1,4
+grenoble;FRA;2;Grenoble;66;1,3
+laval;FRA;2;Laval;66;1,3
+pau;FRA;2;PAU;66;1,1
+red-star-fc-93;FRA;2;Red Star FC 93;66;1,4
+rodez;FRA;2;Rodez;66;1,1
+sochaux;FRA;2;Sochaux;66;1,8
+boulogne;FRA;2;Boulogne;65;1,2
+bayern-munchen;GER;1;Bayern München;88;4,9
+borussia-dortmund;GER;1;Borussia Dortmund;83;4
+bayer-leverkusen;GER;1;Bayer Leverkusen;82;3,2
+rb-leipzig;GER;1;RB Leipzig;81;2,8
+vfb-stuttgart;GER;1;VfB Stuttgart;80;2,9
+eintracht-frankfurt;GER;1;Eintracht Frankfurt;79;3
+sc-freiburg;GER;1;SC Freiburg;78;2,3
+1899-hoffenheim;GER;1;1899 Hoffenheim;77;2,2
+borussia-monchengladbach;GER;1;Borussia Mönchengladbach;76;3,1
+fsv-mainz-05;GER;1;FSV Mainz 05;76;2
+werder-bremen;GER;1;Werder Bremen;76;2,9
+1-fc-koln;GER;1;1. FC Köln;75;2,6
+fc-augsburg;GER;1;FC Augsburg;75;1,9
+union-berlin;GER;1;1. FC Union Berlin;75;2,1
+hamburger-sv;GER;1;Hamburger SV;74;3,1
+fc-schalke-04;GER;1;FC Schalke 04;72;3,2
+sc-paderborn-07;GER;1;SC Paderborn 07;72;1,5
+sv-elversberg;GER;1;SV Elversberg;71;1,1
+vfl-wolfsburg;GER;2;VfL Wolfsburg;76;2,6
+fc-st-pauli;GER;2;FC St. Pauli;74;2,1
+1-fc-heidenheim;GER;2;1. FC Heidenheim;73;1,6
+holstein-kiel;GER;2;Holstein Kiel;72;1,6
+hertha-bsc;GER;2;Hertha BSC;71;2,6
+vfl-bochum;GER;2;VfL Bochum;71;1,9
+1-fc-kaiserslautern;GER;2;1. FC Kaiserslautern;70;2,5
+1-fc-nurnberg;GER;2;1. FC Nürnberg;70;2,4
+hannover-96;GER;2;Hannover 96;70;2,3
+arminia-bielefeld;GER;2;Arminia Bielefeld;69;1,8
+karlsruher-sc;GER;2;Karlsruher SC;69;2
+sv-darmstadt-98;GER;2;SV Darmstadt 98;69;1,6
+1-fc-magdeburg;GER;2;1. FC Magdeburg;68;1,6
+dynamo-dresden;GER;2;Dynamo Dresden;68;1,9
+spvgg-greuther-furth;GER;2;SpVgg Greuther Fürth;68;1,6
+eintracht-braunschweig;GER;2;Eintracht Braunschweig;67;1,8
+energie-cottbus;GER;2;Energie Cottbus;67;1,6
+vfl-osnabruck;GER;2;VfL Osnabrück;66;1,3
+inter;ITA;1;Inter;85;4,5
+napoli;ITA;1;Napoli;84;3,8
+ac-milan;ITA;1;AC Milan;83;4,6
+juventus;ITA;1;Juventus;83;4,6
+atalanta;ITA;1;Atalanta;81;3
+as-roma;ITA;1;AS Roma;80;3,6
+bologna;ITA;1;Bologna;79;2,8
+lazio;ITA;1;Lazio;79;3,3
+como;ITA;1;Como;78;1,9
+fiorentina;ITA;1;Fiorentina;77;3,1
+torino;ITA;1;Torino;76;2,8
+genoa;ITA;1;Genoa;75;2,4
+sassuolo;ITA;1;Sassuolo;75;1,9
+udinese;ITA;1;Udinese;75;2,2
+cagliari;ITA;1;Cagliari;74;2,2
+parma;ITA;1;Parma;74;2,6
+lecce;ITA;1;Lecce;73;1,6
+monza;ITA;1;Monza;73;1,6
+venezia;ITA;1;Venezia;73;1,7
+frosinone;ITA;1;Frosinone;72;1,4
+verona;ITA;2;Hellas Verona;72;2,1
+cremonese;ITA;2;Cremonese;71;1,6
+empoli;ITA;2;Empoli;71;1,8
+palermo;ITA;2;Palermo;71;2,2
+pisa;ITA;2;Pisa;70;1,6
+sampdoria;ITA;2;Sampdoria;70;2,7
+modena;ITA;2;Modena;69;1,5
+spezia;ITA;2;Spezia;69;1,6
+bari;ITA;2;Bari;68;1,9
+catanzaro;ITA;2;Catanzaro;68;1,4
+pescara;ITA;2;Pescara;68;1,5
+avellino;ITA;2;Avellino;67;1,4
+cesena;ITA;2;Cesena;67;1,5
+juve-stabia;ITA;2;Juve Stabia;67;1,2
+mantova;ITA;2;Mantova;67;1,3
+padova;ITA;2;Padova;67;1,4
+reggiana;ITA;2;Reggiana;67;1,3
+carrarese;ITA;2;Carrarese;66;1,1
+sudtirol;ITA;2;Sudtirol;66;1,1
+virtus-entella;ITA;2;Virtus Entella;66;1,2
+club-america;MEX;1;Club América;75;3,8
+monterrey;MEX;1;Monterrey;75;3
+tigres-uanl;MEX;1;Tigres UANL;75;3
+cruz-azul;MEX;1;Cruz Azul;74;3,1
+toluca;MEX;1;Toluca;74;2,8
+cf-pachuca;MEX;1;CF Pachuca;73;2,7
+guadalajara-chivas;MEX;1;CD Guadalajara;72;3,4
+leon;MEX;1;Club León;72;2,4
+club-tijuana;MEX;1;Club Tijuana;71;1,9
+unam-pumas;MEX;1;Pumas UNAM;71;2,8
+atlas;MEX;1;Atlas;70;2,3
+santos-laguna;MEX;1;Santos Laguna;70;2,2
+atletico-san-luis;MEX;1;Atletico San Luis;69;1,5
+fc-juarez;MEX;1;FC Juárez;69;1,4
+necaxa;MEX;1;Necaxa;69;2
+club-queretaro;MEX;1;Club Querétaro;68;1,5
+puebla;MEX;1;Puebla;68;1,8
+atlante-fc;MEX;1;Atlante FC;67;1,8
+cerro-porteno;PAR;1;Cerro Porteño;67;3
+libertad-asuncion;PAR;1;Libertad;67;2,5
+olimpia;PAR;1;Olimpia;67;3,2
+club-guarani;PAR;1;Club Guaraní;63;1,8
+nacional-asuncion;PAR;1;Club Nacional;63;1,7
+2-de-mayo;PAR;1;2 de Mayo;61;1,1
+deportivo-recoleta;PAR;1;Deportivo Recoleta;61;1
+sportivo-trinidense;PAR;1;Sportivo Trinidense;61;1,1
+sol-de-america;PAR;2;Sol de América;58;1,4
+sportivo-luqueno;PAR;2;Sportivo Luqueño;58;1,5
+rubio-nu;PAR;2;Rubio Ñu;57;1,1
+12-de-octubre;PAR;2;12 de Octubre;56;1,1
+atletico-colegiales;PAR;2;Atlético Colegiales;56;1
+river-plate-asuncion;PAR;2;River Plate;56;1,2
+independiente-cg;PAR;2;Independiente de Campo Grande;55;1
+tacuary;PAR;2;Tacuary;55;1,1
+universitario;PER;1;Universitario;67;2,9
+alianza-lima;PER;1;Alianza Lima;66;2,8
+sporting-cristal;PER;1;Sporting Cristal;66;2,6
+fbc-melgar;PER;1;FBC Melgar;64;1,8
+cienciano;PER;1;Cienciano;63;2
+cusco;PER;1;Cusco;63;1,4
+alianza-atletico;PER;1;Alianza Atletico;62;1,4
+deportivo-garcilaso;PER;1;Deportivo Garcilaso;62;1,2
+cesar-vallejo;PER;2;César Vallejo;59;1,5
+carlos-mannucci;PER;2;Carlos A. Mannucci;57;1,2
+universidad-san-martin;PER;2;Universidad San Martín;57;1,3
+union-comercio;PER;2;Unión Comercio;56;1,1
+academia-cantolao;PER;2;Academia Cantolao;55;1
+deportivo-coopsol;PER;2;Deportivo Coopsol;55;1
+deportivo-llacuabamba;PER;2;Deportivo Llacuabamba;54;1
+pirata-fc;PER;2;Pirata FC;54;1
+club-nacional;URU;1;Nacional;68;3,5
+penarol;URU;1;Peñarol;68;3,6
+defensor-sporting;URU;1;Defensor Sporting;64;2
+liverpool-montevideo;URU;1;Liverpool;64;1,6
+boston-river;URU;1;Boston River;63;1,2
+atletico-torque;URU;1;Montevideo City Torque;62;1,2
+racing-montevideo;URU;1;Racing de Montevideo;62;1,3
+albion;URU;1;Albion FC;61;1,1
+juventud;URU;1;Juventud;61;1,1
+deportivo-maldonado;URU;2;Deportivo Maldonado;57;1,2
+rampla-juniors;URU;2;Rampla Juniors;57;1,5
+central-espanol;URU;2;Central Español;56;1,3
+rentistas;URU;2;Rentistas;56;1,2
+sud-america;URU;2;Sud América;56;1,2
+atenas-de-san-carlos;URU;2;Atenas de San Carlos;55;1,1
+tacuarembo;URU;2;Tacuarembó;55;1,1
+uruguay-montevideo;URU;2;Uruguay Montevideo;55;1,1
+villa-espanola;URU;2;Villa Española;55;1,1
+inter-miami;USA;1;Inter Miami;74;3
+los-angeles-fc;USA;1;Los Angeles FC;72;2,4
+columbus-crew;USA;1;Columbus Crew;71;2,2
+fc-cincinnati;USA;1;FC Cincinnati;71;1,8
+los-angeles-galaxy;USA;1;Los Angeles Galaxy;71;3
+atlanta-united;USA;1;Atlanta United;70;2,1
+new-york-city-fc;USA;1;New York City FC;70;2
+orlando-city;USA;1;Orlando City;70;1,8
+philadelphia-union;USA;1;Philadelphia Union;70;1,8
+san-diego-fc;USA;1;San Diego FC;70;1,2
+seattle-sounders;USA;1;Seattle Sounders;70;2,4
+vancouver-whitecaps;USA;1;Vancouver Whitecaps;70;1,7
+charlotte-fc;USA;1;Charlotte FC;69;1,4
+minnesota-united;USA;1;Minnesota United;69;1,5
+nashville-sc;USA;1;Nashville SC;69;1,5
+new-york-rb;USA;1;New York RB;69;2,1
+austin-fc;USA;1;Austin FC;68;1,4
+chicago-fire-fc;USA;1;Chicago Fire FC;68;1,7
+fc-dallas;USA;1;FC Dallas;68;1,8
+houston-dynamo;USA;1;Houston Dynamo;68;1,7
+portland-timbers;USA;1;Portland Timbers;68;1,9
+real-salt-lake;USA;1;Real Salt Lake;68;1,7
+colorado-rapids;USA;1;Colorado Rapids;67;1,5
+dc-united;USA;1;DC United;67;2,1
+new-england-revolution;USA;1;New England Revolution;67;1,7
+san-jose-earthquakes;USA;1;San Jose Earthquakes;67;1,6
+sporting-kansas-city;USA;1;Sporting Kansas City;67;1,9
+st-louis-city-sc;USA;1;St. Louis City SC;67;1,3
+toronto-fc;USA;1;Toronto FC;67;1,8
+cf-montreal;USA;1;CF Montreal;66;1,6
+caracas-fc;VEN;1;Caracas FC;64;2,3
+deportivo-tachira-fc;VEN;1;Deportivo Táchira FC;63;2,2
+carabobo-fc;VEN;1;Carabobo FC;62;1,3
+deportivo-la-guaira;VEN;1;Deportivo La Guaira;62;1,5
+puerto-cabello;VEN;1;Puerto Cabello;62;1,3
+metropolitanos-fc;VEN;1;Metropolitanos FC;61;1,2
+monagas-sc;VEN;1;Monagas SC;61;1,3
+ucv;VEN;1;UCV;61;1,3
+mineros-de-guayana;VEN;2;Mineros de Guayana;57;1,6
+trujillanos;VEN;2;Trujillanos;56;1,4
+angostura;VEN;2;Angostura;55;1
+aragua;VEN;2;Aragua;55;1,2
+atletico-el-vigia;VEN;2;Atlético El Vigía;54;1
+maritimo-de-la-guaira;VEN;2;Marítimo de La Guaira;54;1,1
+real-frontera;VEN;2;Real Frontera;54;1
+titanes;VEN;2;Titanes;53;1

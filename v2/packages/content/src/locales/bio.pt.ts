@@ -1,0 +1,383 @@
+import type { Widen } from "../i18n";
+
+/**
+ * A biografia (GDD 25): títulos dos capítulos, plurais e as quatro redações de
+ * cada tema, escritas em português (não traduzidas). Terceira pessoa. Nome de
+ * clube e de competição nunca vem depois de artigo nem de preposição que pede
+ * artigo: entra como sujeito ou depois de dois-pontos. `stopwords` são as
+ * palavras que não contam para a regra de variedade.
+ */
+export const bioPt = {
+  chapters: {
+    origin: "Origem",
+    rise: "Ascensão",
+    peak: "Auge",
+    late: "Reta final",
+    legacy: "Legado",
+  },
+  counts: {
+    times: { one: "uma vez", other: "{count} vezes" },
+    titles: { one: "um título", other: "{count} títulos" },
+    leagueTitles: { one: "um título de liga", other: "{count} títulos de liga" },
+    clubs: { one: "um clube", other: "{count} clubes" },
+    countries: { one: "um país", other: "{count} países" },
+    games: { zero: "nenhum jogo", one: "um jogo", other: "{count} jogos" },
+    goals: { zero: "nenhum gol", one: "um gol", other: "{count} gols" },
+    cleanSheets: { zero: "nenhum jogo sem sofrer gol", one: "um jogo sem sofrer gol", other: "{count} jogos sem sofrer gol" },
+    caps: { one: "um jogo", other: "{count} jogos" },
+  },
+  stopwords:
+    "a o as os um uma uns umas de do da dos das em no na nos nas por pelo pela para com sem e ou mas que se ele dele ela aos ao às foi era é ser tinha teve como mais muito já não nem só seu sua num numa isso esta este essa esse até depois antes quando ali anos ano vez vezes ainda também",
+  themes: {
+    firstClub: [
+      "Aos {age} anos, {club} deu a {surname} o primeiro contrato.",
+      "{club} foi a primeira casa de {surname}, aos {age} anos.",
+      "Tudo começou aos {age} anos, quando {club} apostou num garoto chamado {surname}.",
+      "{surname} tinha {age} anos quando {club} abriu a porta da base.",
+    ],
+    prodigy: [
+      "Desde cedo ficou claro que aquele garoto não era um qualquer.",
+      "Os olheiros falavam dele antes mesmo da estreia: um talento raro, desses que aparecem poucas vezes.",
+      "Aos {age} anos, já tinha a bola colada no pé e a fama de fenômeno.",
+      "O talento chegou antes da idade: aos {age}, ele já parecia pronto.",
+    ],
+    earlyStarter: [
+      "Aos {age} anos, já era titular, coisa rara para um garoto.",
+      "Com {age} anos, ganhou a vaga no time de cima.",
+      "{club} não teve paciência para esperar: aos {age}, ele já era titular.",
+      "Titular aos {age} anos, pulou etapas que outros levam anos para cumprir.",
+    ],
+    slowStart: [
+      "Os primeiros anos foram de paciência: pouco jogo e muito treino.",
+      "O começo foi lento, com mais tempo no banco do que em campo.",
+      "Nas primeiras temporadas, as chances eram raras, e ele esperou a vez.",
+      "Antes de jogar de verdade, conheceu o banco e a espera.",
+    ],
+    startOnLoan: [
+      "Aos {age} anos, foi emprestado para ganhar minutos: {club}.",
+      "Sem espaço em casa, saiu por empréstimo aos {age}: {club}.",
+      "O primeiro passo fora de casa foi um empréstimo, aos {age} anos: {club}.",
+      "Aos {age}, foi rodar por empréstimo: {club}.",
+    ],
+    loanStarter: [
+      "Aos {age} anos, foi emprestado e virou titular por lá: {club}.",
+      "Sem espaço em casa, saiu por empréstimo aos {age}, e {club} deu a ele o que faltava: jogo.",
+      "O empréstimo aos {age} anos deu certo: {club} o fez titular.",
+      "Aos {age}, {club} recebeu o garoto por empréstimo e o colocou para jogar.",
+    ],
+    breakthrough: [
+      "Aos {age} anos, ganhou a vaga de titular.",
+      "A virada veio aos {age}: titular, com jogo toda semana.",
+      "Foi aos {age} anos que {club} passou a escalar o nome dele primeiro.",
+      "Aos {age}, deixou de ser aposta e virou titular.",
+    ],
+    firstTitle: [
+      "O primeiro título veio aos {age} anos: {competition}.",
+      "Aos {age}, levantou a primeira taça: {competition}.",
+      "A primeira conquista chegou aos {age}: {competition}.",
+      "Aos {age} anos, sentiu pela primeira vez o peso de uma taça: {competition}.",
+    ],
+    bigMove: [
+      "Aos {age} anos, deu o grande salto: {club}.",
+      "A mudança de patamar veio aos {age}, quando {club} foi buscá-lo.",
+      "Aos {age}, trocou de prateleira: {club} pagou para tê-lo.",
+      "O telefone tocou aos {age} anos, e era {club}.",
+    ],
+    explosion: [
+      "Aos {age} anos, viveu a temporada da virada: o OVR subiu {delta} pontos.",
+      "A evolução disparou aos {age}: {delta} pontos de OVR numa temporada só.",
+      "Aos {age}, deu um salto: {delta} pontos a mais de OVR.",
+      "Houve uma temporada, aos {age} anos, em que tudo deu certo: {delta} pontos a mais no OVR.",
+    ],
+    firstCap: [
+      "A seleção chamou pela primeira vez aos {age} anos.",
+      "Aos {age}, vestiu pela primeira vez a camisa da seleção.",
+      "A estreia pela seleção veio aos {age} anos.",
+      "Aos {age} anos, chegou a convocação que todo garoto sonha.",
+    ],
+    promotion: [
+      "Aos {age} anos, veio o acesso: {club} subiu para a primeira divisão.",
+      "Aos {age}, comemorou um acesso com {club}.",
+      "Um acesso marcou os {age} anos: {club} subiu, e ele estava em campo.",
+      "Aos {age}, a festa foi de acesso: {club} na primeira divisão.",
+    ],
+    classicShirt: [
+      "Aos {age} anos, herdou a camisa {number}.",
+      "A {number} chegou aos {age}, e com ela a cobrança.",
+      "Aos {age}, ganhou o número que todo jogador da posição quer: {number}.",
+      "Com {age} anos, passou a vestir a {number}.",
+    ],
+    roadNotTaken: [
+      "Aos {age} anos, recusou uma proposta maior: {club}.",
+      "Aos {age}, disse não a um clube mais forte, e nunca se soube o que teria sido.",
+      "Houve um convite que ele deixou passar, aos {age}: {club}.",
+      "Aos {age}, {club} abriu a porta, e ele preferiu não entrar.",
+    ],
+    peak: [
+      "O auge veio aos {age} anos, com OVR {ovr}.",
+      "Aos {age}, chegou ao ponto mais alto da carreira: OVR {ovr}.",
+      "No auge, aos {age} anos, era um jogador de {ovr} de OVR.",
+      "O melhor dele apareceu aos {age}: {ovr} de OVR.",
+    ],
+    ballonOne: [
+      "Aos {age} anos, foi eleito o melhor do mundo.",
+      "A Bola de Ouro veio aos {age}.",
+      "Aos {age}, o mundo inteiro reconheceu: Bola de Ouro.",
+      "O prêmio que todo jogador sonha chegou aos {age} anos: a Bola de Ouro.",
+    ],
+    ballonMany: [
+      "Foi eleito o melhor do mundo {count} vezes.",
+      "Levantou {count} Bolas de Ouro.",
+      "{count} Bolas de Ouro: poucos chegaram tão longe.",
+      "O mundo o escolheu como o melhor em {count} temporadas diferentes.",
+    ],
+    podium: [
+      "Chegou ao pódio da Bola de Ouro {timesText}, sem nunca levar o prêmio.",
+      "Esteve entre os três melhores do mundo {timesText}.",
+      "A Bola de Ouro passou perto {timesText}.",
+      "Terminou entre os três melhores do planeta {timesText}.",
+    ],
+    worldCup: [
+      "Aos {age} anos, foi campeão do mundo.",
+      "A Copa do Mundo veio aos {age}, e com ela um lugar na história.",
+      "Aos {age}, levantou a taça mais pesada do futebol: a Copa do Mundo.",
+      "Campeão do mundo aos {age} anos: nenhuma outra frase resume tão bem a carreira.",
+    ],
+    continental: [
+      "Conquistou o continente {timesText}.",
+      "Levantou {timesText} o principal troféu do continente.",
+      "O torneio mais cobiçado do continente foi dele {timesText}: {competition}.",
+      "{competition}: campeão {timesText}.",
+    ],
+    nationsCup: [
+      "Com a seleção, conquistou o continente {timesText}.",
+      "Pela seleção, foi campeão continental {timesText}.",
+      "A camisa da seleção também rendeu taça: campeão do continente {timesText}.",
+      "Levantou {timesText} o título continental com a seleção.",
+    ],
+    leagues: [
+      "Na conta da carreira: {leaguesText}.",
+      "Somou {leaguesText}.",
+      "Os campeonatos nacionais renderam {leaguesText}.",
+      "Ganhou {leaguesText} ao longo dos anos.",
+    ],
+    perfectSeason: [
+      "Aos {age} anos, viveu a temporada perfeita: liga, copa e continente.",
+      "Houve um ano em que ganhou tudo: aos {age}, liga, copa e o continente.",
+      "A temporada dos {age} anos ficou na história: tríplice coroa.",
+      "Aos {age}, não sobrou competição: liga, copa e continente no mesmo ano.",
+    ],
+    goalsSeason: [
+      "Na melhor temporada, aos {age} anos, fez {goals} gols.",
+      "Aos {age}, marcou {goals} gols numa temporada só.",
+      "O ano mais goleador foi aos {age}: {goals} gols.",
+      "Aos {age} anos, balançou a rede {goals} vezes numa temporada.",
+    ],
+    scorerOne: [
+      "Aos {age} anos, foi o artilheiro: {competition}.",
+      "A artilharia veio aos {age}: ninguém fez mais gols que ele na competição: {competition}.",
+      "Aos {age}, terminou como goleador máximo: {competition}.",
+      "Foi artilheiro uma vez, aos {age} anos: {competition}.",
+    ],
+    scorerMany: [
+      "Foi artilheiro {timesText}. A primeira artilharia, aos {age} anos: {competition}.",
+      "Terminou como goleador máximo de uma competição {timesText}.",
+      "A artilharia foi dele {timesText}, a primeira aos {age}: {competition}.",
+      "Ninguém fez mais gols que ele numa competição, {timesText}.",
+    ],
+    bestOne: [
+      "Aos {age} anos, foi eleito o craque da competição: {competition}.",
+      "O prêmio de melhor jogador veio aos {age}: {competition}.",
+      "Aos {age}, ninguém jogou mais que ele: craque da competição, {competition}.",
+      "Foi o craque da competição uma vez, aos {age} anos: {competition}.",
+    ],
+    bestMany: [
+      "Foi eleito o craque da competição {timesText}. A primeira, aos {age} anos: {competition}.",
+      "O prêmio de melhor jogador de uma competição foi dele {timesText}.",
+      "Craque da competição {timesText}, o primeiro aos {age}: {competition}.",
+      "Terminou {timesText} como o melhor jogador de uma competição.",
+    ],
+    goldenShoe: [
+      "Ganhou a Chuteira de Ouro {timesText}.",
+      "A Chuteira de Ouro foi dele {timesText}.",
+      "Terminou como o maior artilheiro do mundo {timesText}.",
+      "Levou a Chuteira de Ouro para casa {timesText}.",
+    ],
+    goldenGlove: [
+      "Ganhou a Luva de Ouro {timesText}.",
+      "Foi eleito o melhor goleiro {timesText}.",
+      "A Luva de Ouro foi dele {timesText}.",
+      "Levou a Luva de Ouro para casa {timesText}.",
+    ],
+    decline: [
+      "Aos {age} anos, o corpo começou a cobrar, e o OVR caiu para {ovr}.",
+      "Depois do auge, a queda: aos {age}, já era um jogador de {ovr}.",
+      "O tempo chegou aos {age}: o OVR desceu para {ovr}.",
+      "Aos {age}, os números começaram a cair, e o OVR parou em {ovr}.",
+    ],
+    veteranTitle: [
+      "Aos {age} anos, ainda levantou mais uma taça: {competition}.",
+      "Veterano, aos {age}, ainda tinha título para ganhar: {competition}.",
+      "A idade não impediu mais uma conquista aos {age}: {competition}.",
+      "Aos {age}, provou que ainda decidia: {competition}.",
+    ],
+    homecoming: [
+      "Aos {age} anos, voltou para casa: {club}.",
+      "Aos {age}, fez o caminho de volta: {club}.",
+      "A história deu a volta aos {age}, quando {club} o recebeu de novo.",
+      "Aos {age} anos, {club} abriu as portas para a volta.",
+    ],
+    lastClub: [
+      "O último clube foi {club}, a partir dos {age} anos.",
+      "Aos {age}, chegou ao clube que fecharia a carreira: {club}.",
+      "A última camisa: {club}, desde os {age} anos.",
+      "Aos {age} anos, {club} recebeu os últimos capítulos da carreira.",
+    ],
+    seriousInjury: [
+      "Aos {age} anos, veio a pior lesão da carreira: {injury}.",
+      "A lesão mais séria chegou aos {age}: {injury}.",
+      "Aos {age}, passou um bom tempo no departamento médico: {injury}.",
+      "Uma lesão aos {age} anos parou a temporada no meio: {injury}.",
+    ],
+    relegation: [
+      "Aos {age} anos, viveu a dor de um rebaixamento: {club}.",
+      "Houve também a queda: aos {age}, {club} desceu de divisão.",
+      "Aos {age}, conheceu o rebaixamento: {club}.",
+      "Aos {age} anos, {club} caiu, e ele caiu junto.",
+    ],
+    suspension: [
+      "Aos {age} anos, uma suspensão custou uma temporada inteira.",
+      "Aos {age}, passou um ano suspenso, assistindo de fora.",
+      "Uma punição aos {age} anos tirou dele uma temporada.",
+      "Aos {age}, a suspensão o deixou um ano longe dos gramados.",
+    ],
+    released: [
+      "Aos {age} anos, foi dispensado: {club} não contava mais com ele.",
+      "Aos {age}, ouviu o que nenhum jogador quer ouvir: {club} o dispensou.",
+      "A dispensa veio aos {age}: {club}.",
+      "Aos {age} anos, {club} abriu mão dele.",
+    ],
+    endAge: [
+      "Jogou até os {age} anos, o limite do corpo.",
+      "Pendurou as chuteiras aos {age}, depois de ir até onde a idade deixou.",
+      "Aos {age} anos, encerrou a carreira, sem nada a provar.",
+      "A carreira terminou aos {age}, no limite.",
+    ],
+    endNoRoom: [
+      "Aos {age} anos, sem espaço em lugar nenhum, a carreira terminou.",
+      "O fim veio aos {age}: não havia mais lugar para ele.",
+      "Aos {age}, ficou sem clube, e a carreira acabou ali.",
+      "A carreira se encerrou aos {age} anos, sem espaço para continuar.",
+    ],
+    endNoOffers: [
+      "Aos {age} anos, o telefone parou de tocar, e a carreira terminou.",
+      "Sem propostas aos {age}, pendurou as chuteiras.",
+      "Aos {age}, nenhum clube chamou, e foi o fim.",
+      "A carreira acabou aos {age} anos, quando as ofertas sumiram.",
+    ],
+    endRelease: [
+      "Dispensado aos {age} anos, preferiu parar.",
+      "Aos {age}, depois da dispensa, decidiu pendurar as chuteiras.",
+      "A dispensa aos {age} anos virou despedida.",
+      "Aos {age}, saiu pela porta dos fundos e não voltou.",
+    ],
+    endVoluntary: [
+      "Aos {age} anos, decidiu que era hora de parar.",
+      "Pendurou as chuteiras aos {age}, por escolha própria.",
+      "Aos {age}, escolheu a hora de sair.",
+      "A decisão de parar veio aos {age} anos, e foi dele.",
+    ],
+    totals: [
+      "Encerrou a carreira com {gamesText} e {productionText}.",
+      "Os números finais: {gamesText}, {productionText}.",
+      "No total, {gamesText} e {productionText}.",
+      "Deixou o futebol com {gamesText} e {productionText} na conta.",
+    ],
+    titlesTotal: [
+      "Levantou {titlesText} ao todo.",
+      "Na estante: {titlesText}.",
+      "A conta de taças fechou em {titlesText}.",
+      "Somou {titlesText} na carreira.",
+    ],
+    legendOne: [
+      "{club} o guarda como lenda.",
+      "Virou lenda num clube: {club}.",
+      "{club} nunca vai esquecer o nome dele.",
+      "Lenda de verdade: {club}.",
+    ],
+    legendMany: [
+      "Virou lenda em {clubsText}.",
+      "Deixou status de lenda em {clubsText}.",
+      "Poucos são lenda em {clubsText}.",
+      "Foi lenda em {clubsText}, coisa de poucos.",
+    ],
+    idol: [
+      "{club} o tem como ídolo.",
+      "Saiu como ídolo: {club}.",
+      "A torcida que mais o amou: {club}.",
+      "{club} guarda um ídolo.",
+    ],
+    traitor: [
+      "{club} nunca perdoou a troca pelo rival.",
+      "A torcida que se sentiu traída: {club}.",
+      "Ficou uma mágoa: {club} chamou de traição.",
+      "Nem todos o aplaudem: {club} não perdoou.",
+    ],
+    recordBeaten: [
+      "Deixou um recorde do futebol de verdade para trás: {record}.",
+      "Superou uma marca histórica: {record}.",
+      "Entrou para a história com um recorde: {record}.",
+      "Fez o que ninguém tinha feito: {record}.",
+    ],
+    recordMatched: [
+      "Igualou uma marca histórica: {record}.",
+      "Alcançou um recorde do futebol de verdade: {record}.",
+      "Empatou com a história: {record}.",
+      "Chegou à mesma marca dos maiores: {record}.",
+    ],
+    oneClub: [
+      "Jogou a carreira inteira por um clube só: {club}.",
+      "Um clube, uma camisa, uma carreira: {club}.",
+      "Nunca vestiu outra camisa: {club}.",
+      "Fidelidade rara: {club} do começo ao fim.",
+    ],
+    wanderer: [
+      "Rodou o mundo: {clubsText} em {countriesText}.",
+      "Foram {clubsText}, espalhados por {countriesText}.",
+      "Andarilho: {clubsText} e {countriesText} na bagagem.",
+      "A mala nunca ficou vazia: {clubsText} em {countriesText}.",
+    ],
+    meteoric: [
+      "Uma ascensão meteórica: aos {age} anos, já estava no auge.",
+      "Chegou ao topo cedo, aos {age}.",
+      "Poucos sobem tão rápido: o auge veio aos {age}.",
+      "Foi um cometa: no topo aos {age} anos.",
+    ],
+    lateBloomer: [
+      "Floresceu tarde: o auge só veio aos {age} anos.",
+      "O melhor dele demorou a aparecer, e apareceu aos {age}.",
+      "Prova de que não há pressa: o auge chegou aos {age}.",
+      "Quando muitos já paravam, ele chegava ao topo, aos {age}.",
+    ],
+    longevity: [
+      "Foram {seasons} temporadas como profissional.",
+      "A carreira durou {seasons} temporadas.",
+      "Esteve em campo por {seasons} temporadas seguidas.",
+      "{seasons} temporadas de futebol profissional, do começo ao fim.",
+    ],
+    nationalLegacy: [
+      "Pela seleção, foram {capsText} e {nationalGoalsText}.",
+      "Com a camisa da seleção: {capsText}, {nationalGoalsText}.",
+      "Na seleção, somou {capsText} e {nationalGoalsText}.",
+      "A seleção ficou com {capsText} e {nationalGoalsText} dele.",
+    ],
+    nationalLegacyKeeper: [
+      "Pela seleção, foram {capsText}.",
+      "Defendeu o gol da seleção em {capsText}.",
+      "Com a camisa da seleção: {capsText}.",
+      "Na seleção, somou {capsText}.",
+    ],
+  },
+} as const;
+
+export type BioMessages = Widen<typeof bioPt>;
