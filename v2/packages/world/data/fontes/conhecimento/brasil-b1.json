@@ -1,0 +1,43 @@
+{
+  "_fonte": "Conhecimento do assistente: jogadores reais com papel estimado; elencos podem estar desatualizados (D52).",
+  "clubes": {
+    "sport-recife": [
+      { "nome": "Igor Cariús", "posicao": "lb", "alternativas": ["lm"], "nascimento": 1993, "nacionalidade": "BRA", "nivel": "titular", "confianca": "media" },
+      { "nome": "Lucas Lima", "posicao": "cam", "alternativas": ["cm"], "nascimento": 1990, "nacionalidade": "BRA", "nivel": "rotacao", "confianca": "baixa" },
+      { "nome": "Pablo", "posicao": "st", "nascimento": 1991, "nacionalidade": "BRA", "nivel": "rotacao", "confianca": "baixa" },
+      { "nome": "Zé Lucas", "posicao": "cdm", "alternativas": ["cm"], "nascimento": 2008, "nacionalidade": "BRA", "nivel": "jovem", "confianca": "media" }
+    ],
+    "ceara": [
+      { "nome": "Lucas Mugni", "posicao": "cam", "alternativas": ["cm"], "nascimento": 1992, "nacionalidade": "ARG", "nivel": "destaque", "confianca": "media" },
+      { "nome": "Fernando Sobral", "posicao": "cm", "alternativas": ["cdm"], "nascimento": 1994, "nacionalidade": "BRA", "nivel": "titular", "confianca": "media" },
+      { "nome": "Dieguinho", "posicao": "cdm", "alternativas": ["cm"], "nascimento": 1997, "nacionalidade": "BRA", "nivel": "titular", "confianca": "media" },
+      { "nome": "Willian Machado", "posicao": "cb", "nascimento": 1994, "nacionalidade": "BRA", "nivel": "titular", "confianca": "media" },
+      { "nome": "Antonio Galeano", "posicao": "rw", "alternativas": ["lw"], "nascimento": 2000, "nacionalidade": "PAR", "nivel": "rotacao", "confianca": "media" }
+    ],
+    "goias": [
+      { "nome": "Tadeu", "posicao": "gk", "nascimento": 1991, "nacionalidade": "BRA", "nivel": "destaque", "confianca": "media" }
+    ],
+    "america-mg": [
+      { "nome": "Juninho", "posicao": "cdm", "alternativas": ["cm"], "nascimento": 1995, "nacionalidade": "BRA", "nivel": "titular", "confianca": "media" }
+    ],
+    "cuiaba": [
+      { "nome": "Alan Empereur", "posicao": "cb", "nascimento": 1994, "nacionalidade": "BRA", "nivel": "titular", "confianca": "media" },
+      { "nome": "Clayson", "posicao": "lw", "alternativas": ["rw", "lm"], "nascimento": 1995, "nacionalidade": "BRA", "nivel": "rotacao", "confianca": "baixa" }
+    ],
+    "criciuma": [
+      { "nome": "Barreto", "posicao": "cdm", "alternativas": ["cm"], "nascimento": 1992, "nacionalidade": "BRA", "nivel": "titular", "confianca": "media" },
+      { "nome": "Marcelo Hermes", "posicao": "lb", "alternativas": ["lm"], "nascimento": 1995, "nacionalidade": "BRA", "nivel": "titular", "confianca": "media" },
+      { "nome": "Wilker Ángel", "posicao": "cb", "nascimento": 1993, "nacionalidade": "VEN", "nivel": "titular", "confianca": "media" },
+      { "nome": "Miguel Trauco", "posicao": "lb", "alternativas": ["lm"], "nascimento": 1992, "nacionalidade": "PER", "nivel": "rotacao", "confianca": "baixa" },
+      { "nome": "Arthur Caíke", "posicao": "lw", "alternativas": ["rw"], "nascimento": 1992, "nacionalidade": "BRA", "nivel": "rotacao", "confianca": "baixa" }
+    ],
+    "novorizontino": [
+      { "nome": "Jordi", "posicao": "gk", "nascimento": 1993, "nacionalidade": "BRA", "nivel": "titular", "confianca": "media" },
+      { "nome": "César Martins", "posicao": "cb", "nascimento": 1993, "nacionalidade": "BRA", "nivel": "titular", "confianca": "media" },
+      { "nome": "Reverson", "posicao": "lb", "nascimento": 1993, "nacionalidade": "BRA", "nivel": "titular", "confianca": "media" },
+      { "nome": "Raul Prata", "posicao": "rb", "nascimento": 1991, "nacionalidade": "BRA", "nivel": "titular", "confianca": "media" },
+      { "nome": "Waguininho", "posicao": "rw", "alternativas": ["lw", "st"], "nascimento": 1990, "nacionalidade": "BRA", "nivel": "rotacao", "confianca": "baixa" }
+    ],
+    "avai": []
+  }
+}

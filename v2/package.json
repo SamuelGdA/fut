@@ -20,6 +20,8 @@
     "e2e": "pnpm --filter @craque/game e2e",
     "notas:exportar": "node packages/world/scripts/notas.mjs exportar",
     "notas:importar": "node packages/world/scripts/notas.mjs importar",
+    "elencos:coletar": "node packages/world/scripts/elencos/coletar-efootball.mjs",
+    "elencos:montar": "node packages/world/scripts/elencos/montar.mjs",
     "balance": "pnpm --filter @craque/balance balance",
     "balance:check": "pnpm --filter @craque/balance balance --carreiras 2500 --check --sem-arquivo",
     "balance:recordes": "pnpm --filter @craque/balance recordes",

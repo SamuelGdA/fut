@@ -8,7 +8,8 @@
   "exports": {
     ".": "./src/index.ts",
     "./version": "./src/version.ts",
-    "./day": "./src/challenge/day.ts"
+    "./day": "./src/challenge/day.ts",
+    "./coach": "./src/coach/index.ts"
   },
   "scripts": {
     "typecheck": "tsc -p tsconfig.json && tsc -p tsconfig.test.json",

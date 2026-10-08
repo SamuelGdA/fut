@@ -1,0 +1,28 @@
+{
+  "_fonte": "Conhecimento do assistente: jogadores reais com papel estimado; elencos podem estar desatualizados (D52).",
+  "clubes": {
+    "huracan": [],
+    "america-de-cali": [
+      { "nome": "Rodrigo Holgado", "posicao": "st", "nascimento": 1995, "nacionalidade": "ARG", "nivel": "rotacao", "confianca": "baixa" }
+    ],
+    "millonarios": [
+      { "nome": "Radamel Falcao", "posicao": "st", "nascimento": 1986, "nacionalidade": "COL", "nivel": "rotacao", "confianca": "media" }
+    ],
+    "2-de-mayo": [],
+    "club-guarani": [],
+    "nacional-asuncion": [],
+    "sportivo-trinidense": [],
+    "albion": [],
+    "defensor-sporting": [],
+    "juventud": [],
+    "liverpool-montevideo": [],
+    "racing-montevideo": [],
+    "carabobo-fc": [],
+    "caracas-fc": [],
+    "deportivo-la-guaira": [],
+    "deportivo-tachira-fc": [],
+    "metropolitanos-fc": [],
+    "monagas-sc": [],
+    "ucv": []
+  }
+}
