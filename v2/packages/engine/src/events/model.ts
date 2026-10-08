@@ -43,6 +43,7 @@ export type Condition =
   | { readonly kind: "value"; readonly min: number }
   /** A seleção é fraca para ele, ou ele ainda não estreou. */
   | { readonly kind: "nationWeakOrUncapped" }
+  | { readonly kind: "residenceEligible" }
   /** Já foi Ídolo ou Lenda num clube onde não está. */
   | { readonly kind: "legacyElsewhere" }
   /** Ano de torneio de seleção e ele está no elenco. */
@@ -81,6 +82,8 @@ export type TransferTarget =
   | "legacy";
 
 export type Effect =
+  /** Rompimento: só a próxima decisão pode oferecer clubes pelo menos 2 pontos mais fracos. */
+  | { readonly kind: "agentBreakup" }
   /** Capacidade: agora, só durante o período, ou depois dele. */
   | { readonly kind: "capacity"; readonly amount: number; readonly when: Timing }
   /** Potencial, para baixo, nunca abaixo do piso. */
@@ -103,7 +106,7 @@ export type Effect =
   | { readonly kind: "suspension"; readonly seasons: number }
   | { readonly kind: "transfer"; readonly to: TransferTarget }
   | { readonly kind: "position" }
-  | { readonly kind: "nationality" }
+  | { readonly kind: "nationality"; readonly residence?: boolean }
   /** Camisa: a 10, ou o número escolhido na opção. */
   | { readonly kind: "shirt"; readonly number: "ten" | "chosen" }
   /** O clube atual nunca mais oferece nada (torcida expulsou, briga com a diretoria). */
@@ -132,6 +135,8 @@ export interface EventOption {
   readonly kind: OptionKind;
   /** Chance de sucesso, antes do traço. Só em `risky`. */
   readonly chance?: number;
+  /** Probabilidade exata, sem ajuste pelo traço. */
+  readonly fixedChance?: boolean;
   readonly success: readonly Effect[];
   readonly failure?: readonly Effect[];
 }
@@ -169,6 +174,7 @@ export interface EventContext {
   readonly abroadSeasons: number;
   readonly value: number;
   readonly nationWeakOrUncapped: boolean;
+  readonly residenceEligible?: boolean;
   readonly legacyClub: string | null;
   readonly tournamentSquad: boolean;
   readonly fans: number;

@@ -102,7 +102,7 @@
   .pcard-portrait {
     position: absolute;
     top: 5%;
-    right: 4%;
+    left: 18%;
     z-index: 1;
     width: 64%;
     height: 49%;
@@ -1386,56 +1386,13 @@
     }
   }
 
-  /* A mensagem do resultado da escolha (D45): salta por cima do lance e some
-     sozinha. Não ocupa espaço no laço: é uma camada. */
+  /* Resultado no fluxo: nunca cobre a decisão ou os números da temporada. */
   .result-layer {
-    position: fixed;
-    inset-inline: 0;
-    top: calc(var(--topbar-h) + 60px);
-    z-index: 45;
-    display: flex;
-    justify-content: center;
-    padding: 0 16px;
-    pointer-events: none;
-  }
-
-  /* No celular, compacta: tampa o lance e o título da decisão, e só por uns
-     segundos (um toque tira antes). */
-  @media (max-width: 1023px) {
-    .result-msg {
-      gap: 10px;
-      padding: 10px 12px 12px;
-    }
-
-    .result-badge {
-      width: 42px;
-      height: 42px;
-    }
-
-    .result-title {
-      font-size: 1.15rem;
-    }
-
-    .result-body {
-      -webkit-line-clamp: 2;
-      line-clamp: 2;
-      font-size: 0.8rem;
-    }
-  }
-
-  /* No PC, por cima do lance, na coluna da direita: a decisão nova fica livre. */
-  @media (min-width: 1024px) {
-    .result-layer {
-      top: calc(var(--topbar-h) + 100px);
-      justify-content: flex-end;
-      max-width: 1280px;
-      margin-inline: auto;
-      padding-inline: 24px;
-    }
-
-    .result-layer .result-msg {
-      width: 360px;
-    }
+    flex: 0 0 auto;
+    min-height: 0;
+    max-height: 180px;
+    overflow-y: auto;
+    scrollbar-gutter: stable;
   }
 
   .result-msg {
@@ -1443,25 +1400,15 @@
     display: grid;
     grid-template-columns: auto minmax(0, 1fr);
     align-items: start;
-    gap: 12px;
-    width: min(440px, 100%);
-    padding: 14px 16px 16px;
+    gap: 10px;
+    width: 100%;
+    padding: 10px 12px;
     overflow: hidden;
     border: 1px solid color-mix(in oklab, var(--tone) 45%, var(--line));
     border-left: 4px solid var(--tone);
     border-radius: var(--radius-md);
     background: color-mix(in oklab, var(--tone) 7%, var(--panel));
-    box-shadow: var(--lift);
-    /* O toque atravessa o cartão: no celular, ele tampa a opção de cima, e
-       tocar nela tem de escolhê-la, não fechar a mensagem. */
-    pointer-events: none;
-  }
-
-  /* Com mouse, o cartão para o relógio com o ponteiro em cima. */
-  @media (hover: hover) and (pointer: fine) {
-    .result-msg {
-      pointer-events: auto;
-    }
+    pointer-events: auto;
   }
 
   .result-badge {
@@ -1535,29 +1482,6 @@
   }
 
   /* O relógio da mensagem: a barra encolhe e para com o ponteiro em cima. */
-  .result-clock {
-    position: absolute;
-    inset-inline: 0;
-    bottom: 0;
-    height: 3px;
-    background: var(--tone);
-    transform-origin: left center;
-    animation: result-clock var(--result-ms, 4s) linear forwards;
-  }
-
-  .result-msg[data-paused] .result-clock {
-    animation-play-state: paused;
-  }
-
-  @keyframes result-clock {
-    from {
-      transform: scaleX(1);
-    }
-    to {
-      transform: scaleX(0);
-    }
-  }
-
   /* Faíscas do resultado bom: oito pontos que saem do círculo. */
   .result-sparks {
     position: absolute;
@@ -2354,5 +2278,16 @@
     font-family: var(--font-serif);
     font-size: 13.5px;
     line-height: 1.35;
+  }
+}
+
+@layer components {
+  @media (max-width: 1023px) {
+    .result-layer { max-height: 54px; overflow: hidden; }
+    .result-layer .result-msg { padding: 6px 10px; gap: 8px; border-left-width: 3px; }
+    .result-layer .result-badge { width: 32px; height: 32px; }
+    .result-layer .result-eyebrow { font-size: 0.6rem; }
+    .result-layer .result-title { font-size: 0.9rem; }
+    .result-layer .result-body, .result-layer .result-chips { display: none; }
   }
 }

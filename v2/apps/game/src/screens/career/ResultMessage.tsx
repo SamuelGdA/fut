@@ -1,87 +1,46 @@
 import type { Career } from "@craque/engine";
 import { Dumbbell, Handshake } from "lucide-react";
-import { AnimatePresence, m, useReducedMotion } from "motion/react";
-import { type CSSProperties, useEffect, useRef, useState } from "react";
+import { m, useReducedMotion } from "motion/react";
+import type { CSSProperties } from "react";
 import type { PlaySession } from "../../features/career/play";
 import { type ResultView, useResultView } from "../../features/career/resultView";
 import { Crest } from "../../ui/Media";
 import { Chip } from "../../ui/Signals";
 
-/** Quanto tempo a mensagem fica na tela: um pouco mais para quem tem texto longo. */
-function durationOf(view: ResultView): number {
-  return Math.min(7000, 3400 + (view.body?.length ?? 0) * 22);
-}
-
 const SPRING = { type: "spring", stiffness: 420, damping: 24 } as const;
 
 /**
- * A mensagem do resultado da escolha (D45): um cartão que salta no alto da
- * tela logo depois de confirmar, com o desenho do resultado (o certo se
- * desenhando, o errado tremendo, o escudo do clube novo entrando, o haltere do
- * treino), a frase e os efeitos caindo um a um. Some sozinha (no PC, para
- * enquanto o ponteiro está em cima) ou assim que o jogador segue jogando:
- * qualquer toque ou tecla, em qualquer lugar. Não bloqueia nada: no celular o
- * toque atravessa o cartão e chega à opção de baixo. O leitor de tela ouve o
- * lance na região de aviso da carreira, então o cartão fica fora da árvore de
- * acessibilidade.
+ * O resultado acompanha o último lance dentro do layout (D47). Fica até a
+ * próxima escolha: desaparecer no pointerdown deslocava a opção antes do
+ * click no celular. O leitor de tela já ouve o lance na região de aviso.
  */
 export function ResultMessage({ career, play }: { career: Career | null; play: PlaySession | null }) {
   const view = useResultView(career, play);
   return <ResultLayer view={view} />;
 }
 
-/** A camada da mensagem: mostra cada resultado novo uma vez e o tira de cena. */
+/** Resultado mais recente, sem cobrir ou deslocar a decisão durante a leitura. */
 export function ResultLayer({ view }: { view: ResultView | null }) {
-  const [closed, setClosed] = useState<number | null>(null);
-  const visible = view !== null && closed !== view.id;
+  if (view === null) return null;
   return (
     <div className="result-layer" aria-hidden="true">
-      <AnimatePresence>{visible ? <ResultCard key={view.id} view={view} onDone={() => setClosed(view.id)} /> : null}</AnimatePresence>
+      <ResultCard key={view.id} view={view} />
     </div>
   );
 }
 
-function ResultCard({ view, onDone }: { view: ResultView; onDone(): void }) {
+function ResultCard({ view }: { view: ResultView }) {
   const reduced = useReducedMotion() === true;
-  const [paused, setPaused] = useState(false);
-  const remaining = useRef(durationOf(view));
-
-  // O relógio da mensagem: para com o ponteiro em cima e continua de onde parou.
-  useEffect(() => {
-    if (paused) return;
-    const started = performance.now();
-    const timer = window.setTimeout(onDone, Math.max(0, remaining.current));
-    return () => {
-      window.clearTimeout(timer);
-      remaining.current -= performance.now() - started;
-    };
-  }, [paused, onDone]);
-
-  // Seguiu jogando (tocou, clicou ou apertou uma tecla em qualquer lugar): a mensagem sai.
-  useEffect(() => {
-    const leave = () => onDone();
-    window.addEventListener("pointerdown", leave, true);
-    window.addEventListener("keydown", leave, true);
-    return () => {
-      window.removeEventListener("pointerdown", leave, true);
-      window.removeEventListener("keydown", leave, true);
-    };
-  }, [onDone]);
-
   const shake = view.mark === "failure" && !reduced;
   return (
     <m.div
       className="result-msg club-scope"
       data-tone={view.tone}
       data-mark={view.mark}
-      data-paused={paused || undefined}
-      style={{ "--result-ms": `${durationOf(view)}ms` } as CSSProperties}
       initial={reduced ? { opacity: 0 } : { opacity: 0, y: -18, scale: 0.9 }}
       animate={shake ? { opacity: 1, y: 0, scale: 1, x: [0, -7, 7, -5, 5, -2, 0] } : { opacity: 1, y: 0, scale: 1 }}
       exit={reduced ? { opacity: 0 } : { opacity: 0, y: -12, scale: 0.96, transition: { duration: 0.18 } }}
       transition={shake ? { ...SPRING, x: { delay: 0.25, duration: 0.45 } } : SPRING}
-      onPointerEnter={() => setPaused(true)}
-      onPointerLeave={() => setPaused(false)}
     >
       <Badge view={view} reduced={reduced} />
       <div className="result-text">
@@ -114,7 +73,6 @@ function ResultCard({ view, onDone }: { view: ResultView; onDone(): void }) {
           </p>
         ) : null}
       </div>
-      {reduced ? null : <span className="result-clock" />}
     </m.div>
   );
 }

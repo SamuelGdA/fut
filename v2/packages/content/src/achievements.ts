@@ -17,7 +17,8 @@ import { interpolate, type Locale } from "./i18n";
 import { achievementsEn } from "./locales/achievements.en";
 import { achievementsEs } from "./locales/achievements.es";
 import { type AchievementsMessages, achievementsPt } from "./locales/achievements.pt";
-import { careerRecords } from "./records";
+import { careerRecords, REAL_RECORDS, compareRecord, recordText } from "./records";
+import { COMPETITIONS, getCompetition } from "@craque/world";
 
 /**
  * As conquistas (GDD 28.2): permanentes entre carreiras, em oito grupos. Saem
@@ -27,7 +28,7 @@ import { careerRecords } from "./records";
  * terminada. As que têm contagem mostram o progresso.
  */
 
-export const ACHIEVEMENT_GROUPS = ["career", "titles", "awards", "national", "loyalty", "road", "challenge", "curious"] as const;
+export const ACHIEVEMENT_GROUPS = ["career", "titles", "awards", "national", "loyalty", "road", "challenge", "curious", "records", "secret"] as const;
 export type AchievementGroup = (typeof ACHIEVEMENT_GROUPS)[number];
 
 export interface AchievementContext {
@@ -116,6 +117,20 @@ function homecoming(career: Career): boolean {
 const legends = (career: Career) => [...finalLegacy(career.history).values()].filter((level) => level === "legend").length;
 
 export const ACHIEVEMENTS: readonly Achievement[] = [
+  ...REAL_RECORDS.map((record): Achievement => ({
+    id: `record:${record.id}`, group: "records", when: "anytime", target: record.value,
+    count: ({ career }) => compareRecord(record, career.history).value,
+  })),
+  ...COMPETITIONS.map((competition): Achievement => ({
+    id: `title:${competition.id}`, group: "titles", when: "anytime",
+    check: ({ career }) => has(career, (season) => season.titles.includes(competition.id)),
+  })),
+  { id: "retireAtDebut", group: "loyalty", when: "end", check: ({ career }) => {
+    const first = career.history.find((season) => season.games > 0);
+    const last = career.history[career.history.length - 1];
+    return career.end !== null && first !== undefined && last?.club === first.club && career.contract?.club === first.club;
+  } },
+  { id: "newPassport", group: "secret", when: "anytime", check: ({ career }) => career.nationality !== career.setup.identity.nationality },
   // Carreira.
   { id: "firstCareer", group: "career", when: "end", check: ({ career }) => career.end !== null },
   { id: "tenCareers", group: "career", when: "end", across: true, target: 10, count: ({ finishedBefore }) => finishedBefore + 1 },
@@ -218,7 +233,7 @@ export const ACHIEVEMENTS: readonly Achievement[] = [
   { id: "anyRecord", group: "curious", when: "anytime", check: ({ career }) => careerRecords(career.history).some((result) => result.status === "beaten") },
   {
     id: "lateBloomer",
-    group: "curious",
+    group: "secret",
     when: "end",
     check: ({ career }) => {
       const top = peak(career);
@@ -226,8 +241,8 @@ export const ACHIEVEMENTS: readonly Achievement[] = [
       return top >= 80 && (first?.age ?? 0) >= 31;
     },
   },
-  { id: "comeback", group: "curious", when: "anytime", check: ({ career }) => comeback(career) },
-  { id: "turncoat", group: "curious", when: "anytime", check: ({ career }) => traitorMoves(career) > 0 },
+  { id: "comeback", group: "secret", when: "anytime", check: ({ career }) => comeback(career) },
+  { id: "turncoat", group: "secret", when: "anytime", check: ({ career }) => traitorMoves(career) > 0 },
   { id: "assistSeason", group: "curious", when: "anytime", check: ({ career }) => has(career, (record) => record.production.assists >= 20) },
 ];
 
@@ -281,6 +296,14 @@ export const ACHIEVEMENT_TEXTS: Readonly<Record<Locale, AchievementsMessages>> =
 type ItemTexts = Readonly<Record<string, { readonly name: string; readonly description: string }>>;
 
 export function achievementText(locale: Locale, id: string): { name: string; description: string } {
+  if (id.startsWith("record:")) {
+    const record = REAL_RECORDS.find((item) => `record:${item.id}` === id);
+    if (record) return { name: recordText(locale, record).name, description: interpolate(ACHIEVEMENT_TEXTS[locale].recordGoal, { value: record.value }) };
+  }
+  if (id.startsWith("title:")) {
+    const competition = getCompetition(id.slice(6));
+    if (competition) return { name: competition.names[locale], description: interpolate(ACHIEVEMENT_TEXTS[locale].titleGoal, { title: competition.names[locale] }) };
+  }
   const entry = (ACHIEVEMENT_TEXTS[locale].items as ItemTexts)[id];
   return entry ? { name: entry.name, description: entry.description } : { name: id, description: "" };
 }

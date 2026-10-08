@@ -149,7 +149,7 @@ export function AvatarEditor({ value, onChange, kit, onBack, onDone }: AvatarEdi
             ))}
           </BaseTabs.List>
 
-          <BaseTabs.Panel value="face" className="avatar-panel">
+          <BaseTabs.Panel value="face" className="avatar-panel" keepMounted>
             <div className="avatar-columns">
               <Section label={t("appearance.skin")}>
                 <Swatches colors={SKIN_TONES} active={avatar.skin} onPick={(skin) => update({ skin })} />
@@ -254,7 +254,7 @@ export function AvatarEditor({ value, onChange, kit, onBack, onDone }: AvatarEdi
             </div>
           </BaseTabs.Panel>
 
-          <BaseTabs.Panel value="hair" className="avatar-panel">
+          <BaseTabs.Panel value="hair" className="avatar-panel" keepMounted>
             <div className="avatar-columns">
               <Section label={t("appearance.hairSection")}>
                 <Row label={t("appearance.hair")}>
@@ -293,7 +293,7 @@ export function AvatarEditor({ value, onChange, kit, onBack, onDone }: AvatarEdi
             </div>
           </BaseTabs.Panel>
 
-          <BaseTabs.Panel value="details" className="avatar-panel">
+          <BaseTabs.Panel value="details" className="avatar-panel" keepMounted>
             <div className="avatar-columns">
               <Section label={t("appearance.marks")}>
                 <Row label={t("appearance.freckles")}>

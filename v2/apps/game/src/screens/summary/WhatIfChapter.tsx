@@ -9,8 +9,8 @@ import { ConfirmDialog } from "../../ui/Overlays";
 
 /**
  * "E se...?" (GDD 28.3): a linha do tempo de decisões, cada uma com o que foi
- * escolhido e um botão para seguir dali por outro caminho. A original fica no
- * Hall da Fama; a nova é marcada como linha alternativa.
+ * escolhido e um botão para seguir dali por outro caminho. A original sai do save atual;
+ * a nova é marcada como linha alternativa (D47).
  */
 export function WhatIfChapter({ career, onBranch }: { career: Career; onBranch(index: number): void }) {
   const { t, locale } = useT();

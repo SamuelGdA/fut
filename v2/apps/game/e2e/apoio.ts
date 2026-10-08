@@ -28,7 +28,7 @@ export interface Prefs {
 export async function abrir(page: Page, prefs: Prefs = {}, path = "/"): Promise<void> {
   const state = {
     locale: prefs.locale ?? "pt",
-    theme: prefs.theme ?? "dark",
+    theme: prefs.theme ?? "light",
     volume: 0,
     muted: true,
     motion: "system",

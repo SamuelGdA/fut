@@ -228,7 +228,7 @@ export function SummaryView({ career, avatar, mode, alternate = false, onAgain, 
           <Newspaper career={career} />
         </Chapter>
         {chapters.includes("whatIf") && onBranch ? (
-          <Chapter id="whatIf" title={t("summary.chapters.whatIf")}>
+          <Chapter id="whatIf" title={t("summary.chapters.whatIf", { surname: career.setup.identity.surname })}>
             <WhatIfChapter career={career} onBranch={onBranch} />
           </Chapter>
         ) : null}

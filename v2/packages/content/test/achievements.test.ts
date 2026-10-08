@@ -71,7 +71,7 @@ describe("o catálogo de conquistas", () => {
 
   it("cada conquista tem nome e descrição nos três idiomas, e não sobra texto de conquista que não existe", () => {
     for (const locale of LOCALES) {
-      expect(Object.keys(ACHIEVEMENT_TEXTS[locale].items).sort()).toEqual([...ACHIEVEMENT_IDS].sort());
+      expect(Object.keys(ACHIEVEMENT_TEXTS[locale].items).sort()).toEqual(ACHIEVEMENT_IDS.filter((id) => !id.includes(":")).sort());
       for (const id of ACHIEVEMENT_IDS) {
         const text = achievementText(locale, id);
         expect(text.name.length, `${locale} ${id}`).toBeGreaterThan(0);
@@ -177,7 +177,7 @@ describe("texto do Desafio do dia", () => {
           const goal = missionGoal(locale, item.id, target);
           expect(goal.length, `${locale} ${item.id} ${target}`).toBeGreaterThan(0);
           expect(goal, `${locale} ${item.id}`).not.toMatch(/[{}–—]/);
-          if (item.id !== "worldCupRun") expect(goal).toContain(String(target));
+          if (!["worldCupRun", "clubLegend", "twoClubIdol"].includes(item.id)) expect(goal).toContain(String(target));
         }
       }
     }

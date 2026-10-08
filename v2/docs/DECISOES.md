@@ -911,3 +911,134 @@ gera o build no modo real, para continuar testando o cache de imagens.
 **Por quê.** Pedido do produto: "como padrão, somente os escudos desenhados".
 Os escudos reais são marcas dos clubes; o desenho do jogo é próprio.
 
+
+## D47. Participação, continuidade e interface de leitura
+
+**Decisão (2026-10-08, pedido do produto).** Motor `2.0.0-m8.3`.
+Legado considera participação também nos títulos e prêmios; lendas veteranas
+mantêm respeito mesmo no banco. Eventos ligados ao campo exigem rotação e
+participação recente. A disputa com a joia da base é 50/50; estádio lotado
+muda espaço no elenco, para servir a todas as posições. Nacionalização por
+residência exige cinco temporadas seguidas no país e nenhuma estreia por seleção.
+Títulos dão um ponto de OVR após evolução, em vez da antiga moral variável.
+Estrelas acompanham a força, até um degrau da base, com mais resistência no 4/5.
+Missões de legado são objetivos concretos, de uma lenda ou dois clubes como ídolo.
+
+Interface clara por padrão, abas estáveis com movimento reduzido respeitado,
+resultado sem sobreposição, retrato central, jornal esportivo e textos próprios
+para renovação. Conquistas usam os catálogos de recordes e competições, com
+quatro segredos e aposentadoria no clube de estreia. Hall suspenso e arquivos
+antigos apagados; somente o save atual, contagens, conquistas e ranking persistem.
+O caminho alternativo se chama “{sobrenome} hipotético”. README e GDD trazem
+as fórmulas e os limites exatos desta revisão.
+
+**Por quê.** Título coletivo não torna reserva uma lenda; escolhas precisam
+ter efeito compreensível em qualquer posição. A leitura da próxima decisão
+não pode ser coberta pela anterior. Catálogos automáticos evitam conquistas
+faltando quando o mundo ganha competições. O produto pediu suspender o Hall.
+
+**Calibragem da D47.** O bônus de cada temporada campeã é obrigatório,
+inclusive acima do antigo teto suave e no declínio. Por isso a meta Normal
+de pico passa de P±2 para [P−2, P+3], a diferença entre grupos de 2 para 3
+OVR e a média de Bolas de Ouro de 1–2 para 1–2,25. O primeiro lote de 6000
+mediu respectivamente +2,3 em Estrelas, diferença 2,4 e média 2,10; manter
+os limites anteriores exigiria enfraquecer o bônus pedido ou alterar o
+crescimento natural de todos. A fatia com ao menos uma Bola continua 40–60%,
+e as metas de raridade dos recordes não mudam. Os alvos 1/2 das novas missões
+são fixos; a calibragem só decide em quais talentos elas aparecem (15–55%
+de cumprimento comum), evitando dois ídolos para Operários quando é raro demais.
+O resultado fica no layout até a próxima escolha: remover no início do toque
+deslocava os controles antes do clique no celular.
+
+Na disputa com a joia da base, o sorteio altera os jogos planejados em +20% ou
+−20%, em vez de um degrau de papel: subir de estrela já era limitado ao topo
+e podia resultar em nenhuma mudança. Continua 50/50, independente do traço,
+com os limites normais do calendário e das lesões.
+
+O bônus de título é a última etapa, depois da devolução de capacidade temporária
+e da garantia do atributo treinado no fim do período. Teste de regressão encontrou
+um lateral aos 31 em que a garantia absorvia o +1 quando aplicada depois dele.
+Jogo e caixas de areia seguem a mesma ordem; o bônus não pode ser consumido pelo treino.
+
+**Validação da D47 (8/10/2026).** 547 testes unitários aprovados; 44 testes
+ponta a ponta aprovados (quatro duplicações deliberadamente omitidas no celular),
+com build de produção e auditoria de acessibilidade nos dois temas. As 51 metas
+de `pnpm balance` passaram com 6000 carreiras por lote; 3000 carreiras calibraram
+as missões e o lote de 2250 Fenômenos alcançou todas as marcas verificadas por
+`pnpm balance:recordes`. Telas conferidas visualmente no PC e no celular.
+Tipos de app, conteúdo e balanceamento passaram. Lint passou excluindo o script
+preexistente `packages/world/scripts/manager-data.mjs` (escape desnecessário).
+`pnpm verify` ainda para nos quatro exports ausentes de `@craque/world` usados
+pelo módulo preexistente `packages/engine/src/manager/core.ts`: `MANAGER_CLUBS`,
+`MANAGER_COUNTRIES`, `MANAGER_PLAYERS` e `MANAGER_YOUTH_NAMES`. Esse trabalho
+paralelo não foi alterado nesta revisão.
+
+## D48. Residência sem interrupção e validação iterativa obrigatória
+
+**Decisão.** A nacionalização exige cinco temporadas consecutivas no mesmo país
+estrangeiro. Sair interrompe a sequência; voltar exige cinco novas temporadas.
+Transferências entre clubes do mesmo país preservam a sequência. A implementação
+já aplica essa regra; testes de regressão agora cobrem saída, retorno e troca local.
+Toda IA deve testar, corrigir falhas e melhorias necessárias e retestar após cada
+mudança, repetindo até as verificações passarem sem defeitos conhecidos no escopo.
+A obrigação fica centralizada em `AI_RULES.md`, lido pelos arquivos de entrada das IAs.
+
+**Por quê.** Períodos separados não representam residência contínua. A entrega
+precisa comprovar qualidade por verificações repetidas e comunicar qualquer
+bloqueio real, sem confundir testes parciais com validação completa.
+
+**Validação da D48.** Os 547 testes unitários passaram, incluindo regressões de
+residência interrompida, retorno e troca entre clubes do mesmo país. Build e
+lint passaram (lint exclui o script paralelo `manager-data.mjs`, conforme D47).
+`pnpm verify` continua bloqueado pelos quatro exports do módulo `manager`
+listados na D47. `pnpm balance:check`, com 2500 carreiras por lote, passou em
+50 das 51 metas: a média de Bolas de Ouro foi 2,40, acima do teto de 2,25.
+Essa pendência de calibragem não foi ocultada nem teve seu limite relaxado;
+a D48 altera documentação e cobertura de testes, sem mudar resultados do motor.
+
+## D49. Diploma com compromisso, rompimento do empresário e imagens dos troféus
+
+**Decisão.** Estudar combina evolução ×0,9 com risco de lesão ×0,7. Só futebol
+combina evolução ×1,1 com risco ×1,3. Ambos valem pelo período e aparecem no
+preview e no resultado, nos três idiomas. Ficar no ultimato mantém torcida +4,
+mas rompe com o empresário. Um efeito próprio restringe as propostas somente
+na próxima decisão a força ≤ força atual −2. A restrição é consumida ao gerar
+essa decisão, inclusive se for treino ou evento sem transferência, sem durar
+até uma futura janela. Mercado, empréstimo, retorno e transferências de eventos
+respeitam o teto; ficar continua possível e a restrição não força aposentadoria.
+
+Competições e prêmios voltam a priorizar fotos reais, com fallback gerado.
+Escudos e selos conservam o padrão desenhado. O laboratório distingue padrão
+misto, todas reais e todas geradas. A suíte de navegador decodifica todas as
+imagens de competições e prêmios nos dois modos, em celular e desktop.
+
+**Por quê.** Uma opção determinística apenas negativa contra uma opção vazia
+não oferece compromisso interessante. O rompimento precisa cumprir a ameaça
+narrada sem virar penalidade permanente. As fotos das taças haviam sido
+substituídas pelo modo gerado padrão; os desenhos carregavam, mas ocultavam as
+imagens reais esperadas. Cada família de arte deve ter sua origem apropriada.
+
+**Compatibilidade.** Motor `2.0.0-m8.4`, pois os mesmos eventos agora produzem
+consequências diferentes. Saves anteriores seguem a política de versão do jogo.
+
+**Ajustes encontrados na validação.** Troféus e prêmios passam a solicitar suas
+imagens imediatamente, sem aguardar o carregamento adiado. O observador do Vite
+ignora relatórios/resultados do Playwright: reescrevê-los derrubava o servidor
+com `EBUSY` no Windows. O teste de trocar a carreira agora compara sementes,
+pois dois jogadores novos podem sortear o mesmo sobrenome; a exigência de save
+novo é preservada.
+
+**Validação final da D49 (8/10/2026).** 550 testes unitários aprovados; 48
+ponta a ponta aprovados, quatro duplicações omitidas no celular. Build de
+produção/PWA aprovado pela suíte, tipos de app/conteúdo/balanceamento e lint
+aprovados (mesma exclusão do script paralelo `manager-data.mjs` da D47).
+Todas as imagens reais cadastradas e as artes geradas de competições/prêmios
+decodificaram em Chrome, desktop e celular; fotos dos prêmios conferidas
+visualmente no laboratório com o padrão misto. `pnpm balance` completo passou
+nas 51 metas, com média de 2,11 Bolas de Ouro. O modo reduzido `--check` mantém
+a pendência de amostra registrada na D48: 2,40, acima de 2,25; aumentar apenas
+`--carreiras` não amplia o sublote de prêmios, que continua reduzido nesse modo.
+Nenhuma regra de prêmios nem seu limite foi alterado para esconder a falha.
+`pnpm verify` continua bloqueado pelos quatro exports ausentes do módulo
+paralelo `manager`, listados na D47. O servidor de desenvolvimento reiniciado
+com a exclusão dos relatórios permaneceu funcionando após a suíte.

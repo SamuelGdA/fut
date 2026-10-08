@@ -70,6 +70,7 @@ export interface FanSeasonInput {
   readonly champion: boolean;
   readonly aboveExpected: boolean;
   readonly relegated: boolean;
+  readonly veteranLegend?: boolean;
 }
 
 /**
@@ -78,6 +79,8 @@ export interface FanSeasonInput {
  * joga ou não rende perde a arquibancada.
  */
 export function fanDelta(input: FanSeasonInput): number {
+  // A arquibancada respeita quem já construiu a história e agora envelhece.
+  if (input.veteranLegend) return Math.max(input.relegated ? -2 : 0, fanSwing(input));
   if (input.debutSeason) return Math.max(0, fanSwing(input));
   return fanSwing(input);
 }
@@ -101,14 +104,18 @@ function fanSwing(input: FanSeasonInput): number {
 
 /** Pontos de legado de uma temporada no clube (GDD 17.4). */
 export function legacySeasonPoints(stats: PlayerSeasonStats, fans: number, trait: Trait): number {
+  if (stats.games === 0) return 0;
+  const teamGames = stats.competitions.reduce((sum, entry) => sum + entry.games, 0);
+  const participation = Math.min(stats.participation, stats.games / Math.max(1, teamGames));
+  const contribution = clamp(participation / 0.85, 0, 1);
   const points =
-    4 * stats.participation + 10 * stats.titleImportance + 2 * stats.awards.won.length + (fans >= 80 ? 3 : 0);
+    4 * participation + (10 * stats.titleImportance + 2 * stats.awards.won.length + (fans >= 80 ? 3 : 0)) * contribution;
   return points * TRAIT_EFFECTS[trait].legacy;
 }
 
-export function legacyLevel(points: number, seasons: number, prestige: number): LegacyLevel {
-  if (points >= 45 + 10 * prestige && seasons >= 4) return "legend";
-  if (points >= 22 + 5 * prestige && seasons >= 2) return "idol";
+export function legacyLevel(points: number, seasons: number, prestige: number, games: number): LegacyLevel {
+  if (points >= 45 + 10 * prestige && seasons >= 4 && games >= 120) return "legend";
+  if (points >= 22 + 5 * prestige && seasons >= 2 && games >= 60) return "idol";
   if (points >= 8 + 2 * prestige) return "respected";
   return "none";
 }

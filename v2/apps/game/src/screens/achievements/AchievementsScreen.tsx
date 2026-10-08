@@ -1,8 +1,9 @@
 import { type Achievement, ACHIEVEMENT_GROUPS, achievementGroupName, ACHIEVEMENTS, achievementText } from "@craque/content";
+import { Tabs as BaseTabs } from "@base-ui/react/tabs";
 import { ArrowLeft, Check, Lock } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigation } from "../../app/navigation";
-import { type ArchiveEntry, type AttemptEntry, rankedDays } from "../../features/hall/model";
+import { type AttemptEntry, rankedDays } from "../../features/hall/model";
 import { useHall } from "../../features/hall/store";
 import { formatShortDate } from "../../i18n/format";
 import { useT } from "../../i18n/useT";
@@ -10,18 +11,15 @@ import { feedback } from "../../services/feedback";
 import { Button } from "../../ui/Button";
 import { Loading } from "../../ui/Loading";
 
-/**
- * As conquistas (GDD 28.2): permanentes entre carreiras, em oito grupos. A
- * liberada diz quem liberou e quando; a de contagem mostra o progresso: a
- * melhor carreira do Hall (contagem guardada com ela) ou o contador entre
- * carreiras. É exploração: a página rola.
- */
+/** Conquistas permanentes em dez abas; contagens agregadas sem arquivos de carreiras (D47). */
 export function AchievementsScreen() {
   const { t, locale } = useT();
   const go = useNavigation((state) => state.go);
   const status = useHall((state) => state.status);
   const unlocked = useHall((state) => state.achievements);
-  const entries = useHall((state) => state.entries);
+  const progressCounts = useHall((state) => state.progress);
+  const finished = useHall((state) => state.finished);
+  const [tab, setTab] = useState<(typeof ACHIEVEMENT_GROUPS)[number]>("career");
   const attempts = useHall((state) => state.attempts);
 
   useEffect(() => {
@@ -46,11 +44,11 @@ export function AchievementsScreen() {
             size="sm"
             onClick={() => {
               feedback("back");
-              go("hall");
+              go("home");
             }}
           >
             <ArrowLeft size={16} aria-hidden="true" />
-            {t("home.hall")}
+            {t("nav.home")}
           </Button>
         </div>
       </div>
@@ -58,21 +56,31 @@ export function AchievementsScreen() {
       {status !== "ready" ? (
         <Loading label={t("achievements.loading")} className="min-h-[30dvh]" />
       ) : (
-        <div className="flex flex-col gap-8">
-          {ACHIEVEMENT_GROUPS.map((group) => {
+        <BaseTabs.Root className="flex flex-col gap-8" value={tab} onValueChange={(value) => {
+          const next = ACHIEVEMENT_GROUPS.find((group) => group === value);
+          if (next && next !== tab) { setTab(next); feedback("tick"); }
+        }}>
+          <BaseTabs.List className="flex flex-wrap gap-2" aria-label={t("achievements.title")}>
+            {ACHIEVEMENT_GROUPS.map((group) => (
+              <BaseTabs.Tab key={group} value={group} className="explore-tab" data-active={tab === group || undefined}>
+                {achievementGroupName(locale, group)}
+              </BaseTabs.Tab>
+            ))}
+          </BaseTabs.List>
+          {ACHIEVEMENT_GROUPS.filter((group) => group === tab).map((group) => {
             const items = ACHIEVEMENTS.filter((item) => item.group === group);
             const done = items.filter((item) => byId.has(item.id)).length;
             return (
-              <section key={group} aria-labelledby={`grupo-${group}`}>
-                <h2 id={`grupo-${group}`} className="mb-3 flex items-baseline justify-between gap-3 border-b border-line pb-2">
+              <BaseTabs.Panel key={group} value={group}>
+                <h2 id={`titulo-${group}`} className="mb-3 flex items-baseline justify-between gap-3 border-b border-line pb-2">
                   <span className="display text-2xl font-black uppercase">{achievementGroupName(locale, group)}</span>
                   <span className="numeric text-sm text-muted">{t("achievements.count", { count: done, total: items.length })}</span>
                 </h2>
                 <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                   {items.map((item) => {
                     const row = byId.get(item.id);
-                    const text = achievementText(locale, item.id);
-                    const progress = row ? null : bestProgress(item, entries, attempts);
+                    const text = group === "secret" && !row ? { name: t("achievements.secretName"), description: t("achievements.secretHint") } : achievementText(locale, item.id);
+                    const progress = row ? null : bestProgress(item, progressCounts, finished, attempts);
                     return (
                       <li key={item.id} className="achievement" data-unlocked={row ? true : undefined}>
                         <span className="achievement-mark" aria-hidden="true">
@@ -101,22 +109,22 @@ export function AchievementsScreen() {
                     );
                   })}
                 </ul>
-              </section>
+              </BaseTabs.Panel>
             );
           })}
-        </div>
+        </BaseTabs.Root>
       )}
     </div>
   );
 }
 
-/** O progresso de uma conquista de contagem: a melhor carreira do Hall, ou o contador entre carreiras. */
-function bestProgress(item: Achievement, entries: readonly ArchiveEntry[], attempts: readonly AttemptEntry[]) {
+/** O progresso de uma conquista de contagem: as melhores contagens agregadas, ou o contador entre carreiras. */
+function bestProgress(item: Achievement, counts: Readonly<Record<string, number>>, finished: number, attempts: readonly AttemptEntry[]) {
   const target = item.target;
   if (!item.count || target === undefined) return null;
-  let value = 0;
-  if (item.id === "tenCareers") value = entries.filter((entry) => entry.status === "finished").length;
+  let value: number;
+  if (item.id === "tenCareers") value = finished;
   else if (item.id === "challengeWeek") value = rankedDays(attempts);
-  else for (const entry of entries) value = Math.max(value, entry.counts[item.id] ?? 0);
+  else value = counts[item.id] ?? 0;
   return { value: Math.min(value, target), target };
 }

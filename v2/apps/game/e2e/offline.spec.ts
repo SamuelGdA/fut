@@ -32,7 +32,7 @@ test("instalável: manifesto com nome, ícones, cor e modo de aplicativo", async
     theme_color: string;
     icons: Array<{ src: string; sizes: string; purpose?: string }>;
   };
-  expect(manifest).toMatchObject({ name: "CRAQUE: carreira de futebol", short_name: "CRAQUE", display: "standalone", theme_color: "#0d1110" });
+  expect(manifest).toMatchObject({ name: "CRAQUE: carreira de futebol", short_name: "CRAQUE", display: "standalone", theme_color: "#f3f0e8" });
   expect(manifest.icons.map((icon) => icon.sizes)).toEqual(expect.arrayContaining(["192x192", "512x512"]));
   expect(manifest.icons.some((icon) => icon.purpose === "maskable")).toBe(true);
   for (const icon of manifest.icons) {

@@ -69,7 +69,12 @@ describe("invariantes da evolução em carreiras sorteadas", () => {
           if (season.capacity < CAPACITY_RANGE.min || season.capacity > CAPACITY_RANGE.max) return false;
         }
         if (run.final.training.some((value) => value < 0 || value > TRAINING_CAP)) return false;
-        return run.seasons.every((season) => season.ovr <= run.born.potential + 4);
+        // D47: cada temporada campeã pode acrescentar um ponto além do teto natural.
+        let titleSeasons = 0;
+        return run.seasons.every((season) => {
+          if (season.titleImportance > 0) titleSeasons += 1;
+          return season.ovr <= Math.min(99, run.born.potential + 4 + titleSeasons);
+        });
       }),
       settings,
     );

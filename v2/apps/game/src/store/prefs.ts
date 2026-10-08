@@ -31,7 +31,7 @@ export interface PrefsData {
 
 export const DEFAULT_PREFS: Readonly<PrefsData> = {
   locale: "pt",
-  theme: "dark",
+  theme: "light",
   volume: 3,
   muted: false,
   motion: "system",

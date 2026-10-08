@@ -107,6 +107,8 @@ export interface MarketContext {
   /** Clube atual, ou `null` sem contrato. */
   readonly current: string | null;
   readonly excluded: readonly string[];
+  /** Teto temporário das ofertas após rompimento com empresário. */
+  readonly maxStrength?: number;
   readonly bonds: Readonly<Record<string, ClubBond>>;
   /** Primeiro clube da carreira, para a "volta para casa". */
   readonly firstClub: string | null;
@@ -125,7 +127,7 @@ export function interestedClubs(context: MarketContext, below: number = MARKET.b
   for (let index = 0; index < CLUB_COUNT; index += 1) {
     const strength = context.world.strength[index] ?? 0;
     const id = CLUBS[index]?.id ?? "";
-    if (strength >= low && strength <= high && !excluded.has(id)) result.push(index);
+    if (strength >= low && strength <= high && strength <= (context.maxStrength ?? Infinity) && !excluded.has(id)) result.push(index);
   }
   return result;
 }
@@ -227,7 +229,7 @@ export function buildOffer(
     division,
     league: league?.id ?? null,
     role,
-    stars: clamp(Math.round(club.prestige), 1, 5),
+    stars: clubStars(club.prestige, club.strength, strength + Math.max(0, 0.22 * squadRole(context.position, context.ovr, strength).participation * Math.min(15, context.ovr - strength))),
     competitions,
     mission,
     pressure: terms.pressure,
@@ -337,4 +339,13 @@ export function loanOffers(context: MarketContext, count: number, rng: Rng): Clu
 /** Uma oferta de um clube específico (rival histórico, clube de casa, clube do legado). */
 export function offerFrom(context: MarketContext, club: string, rng: Rng): ClubOffer {
   return buildOffer(context, clubIndex(club), rng);
+}
+
+/** Estrelas acompanham a força, até um degrau da base; a fronteira 4/5 exige mais. */
+export function clubStars(prestige: number, base: number, strength: number): number {
+  const stars = clamp(Math.round(prestige), 1, 5);
+  const delta = strength - base;
+  const up = stars === 4 ? 4.5 : 3;
+  const down = stars === 5 ? 4.5 : 3;
+  return clamp(stars + (delta >= up ? 1 : delta <= -down ? -1 : 0), 1, 5);
 }

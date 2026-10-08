@@ -150,7 +150,7 @@ export function DecisionPanel({ career, onChoose, original = null }: DecisionPan
       case "club":
         return c(`missions.${option.offer.mission}.hint`);
       case "stay":
-        return career.contract ? c(`missions.${career.contract.mission}.hint`) : null;
+        return career.contract ? c(`renewals.${career.contract.mission}.hint`) : null;
       case "focus":
         return c(`focus.${option.focus}.body`);
       case "retire":
@@ -394,7 +394,7 @@ function StayRow({ label, career, checked, shirt }: { label: string; career: Car
         <span className="option-detail">
           <span className="flex flex-wrap gap-1.5">
             <Chip tone="neutral" variant="outline">
-              {c(`missions.${contract.mission}.name`)}
+              {c(`renewals.${contract.mission}.name`)}
             </Chip>
             <Chip tone={tone === "high" ? "bad" : tone === "low" ? "good" : "neutral"} glyph={tone !== "neutral"}>
               {c(`pressure.${tone}`)}

@@ -64,7 +64,8 @@ function abroadSeasons(career: Career): number {
 export function bondLegacy(career: Career, club: string): LegacyLevel {
   const bond = career.bonds[club];
   const prestige = getClub(club)?.prestige ?? 1;
-  return bond ? legacyLevel(bond.legacyPoints, bond.seasons, prestige) : "none";
+  const games = career.history.reduce((sum, season) => sum + (season.club === club ? season.games : 0), 0);
+  return bond ? legacyLevel(bond.legacyPoints, bond.seasons, prestige, games) : "none";
 }
 
 /** Prêmios e títulos das últimas três temporadas, para a reputação no mercado. */
@@ -117,6 +118,9 @@ export function marketContext(career: Career, overrides: Partial<MarketContext> 
     nationality: career.nationality,
     current: career.contract?.club ?? null,
     excluded: career.blocked,
+    ...(career.agentRestriction && career.contract ? {
+      maxStrength: (career.world.strength[clubIndex(career.contract.club)] ?? 0) - 2,
+    } : {}),
     bonds: career.bonds,
     firstClub: career.history[0]?.club ?? null,
     proving: career.proving,
@@ -132,6 +136,20 @@ export function historicalRival(club: string | null, career: Career): string | n
     (id) => getClub(id) !== null && !career.blocked.includes(id),
   );
   return [...rivals].sort((a, b) => (career.world.strength[clubIndex(b)] ?? 0) - (career.world.strength[clubIndex(a)] ?? 0))[0] ?? null;
+}
+
+/** País onde completou cinco temporadas consecutivas, ainda sem estreia internacional. */
+export function residenceCountry(career: Career): CountryCode | null {
+  if (career.firstCapAge !== null || career.history.some((season) => season.national.games > 0)) return null;
+  const country = getClub(career.contract?.club)?.country;
+  if (!country || country === career.nationality) return null;
+  let years = 0;
+  for (const season of [...career.history].reverse()) {
+    if (getClub(season.club)?.country !== country) break;
+    years += 1;
+  }
+  const nation = getCountry(country);
+  return years >= 5 && nation && nationalStatus(currentOvr(career), nation.strength) !== "out" ? country : null;
 }
 
 /** Um país de avô para o passaporte: uma seleção mais forte, sorteada pela semente. */
@@ -222,6 +240,7 @@ export function eventContext(career: Career): EventContext {
       canWearTen(position) && shirt !== 10 && (last?.role === "star" || last?.role === "starter") && tenRoll < 0.35,
     abroadSeasons: homeClub(career) === null ? 0 : abroadSeasons(career),
     value: baseMarketValue(ovr, age),
+    residenceEligible: residenceCountry(career) !== null,
     nationWeakOrUncapped:
       grandfatherCountry(career) !== null &&
       ((career.firstCapAge === null && age >= 21) || (nation !== null && ovr >= nation.strength + 6 && nation.strength <= 74)),

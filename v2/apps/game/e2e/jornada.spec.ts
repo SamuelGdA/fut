@@ -42,7 +42,7 @@ test("do Início ao Resumo, montando o jogador", async ({ page }, info) => {
 
   // O resumo: o sobrenome, o motivo do fim e os capítulos.
   await expect(page.getByRole("heading", { name: "RIBEIRO", level: 1 })).toBeVisible();
-  for (const chapter of ["Biografia", "Números", "Linha do tempo", "Troféus", "Jornal", "E se...?"]) {
+  for (const chapter of ["Biografia", "Números", "Linha do tempo", "Troféus", "Jornal", "Ribeiro hipotético"]) {
     await expect(page.getByRole("heading", { name: chapter, level: 2 })).toBeAttached();
   }
 

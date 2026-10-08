@@ -92,6 +92,19 @@ export const careerPt = {
     proveYourself: { name: "Mostrar serviço", hint: "Ninguém garante nada. Cada jogo é uma prova." },
   },
 
+  renewals: {
+    academyBet: { name: "Aposta renovada", hint: "O clube segue apostando no seu futuro." },
+    reinforcement: { name: "Continuidade no elenco", hint: "Fica para somar ao elenco." },
+    projectPiece: { name: "Pilar do projeto", hint: "O time continua sendo montado em volta de você." },
+    marqueeSigning: { name: "Renovação de estrela", hint: "A estrela fica. A torcida espera liderança em campo." },
+    heir: { name: "Sucessão em andamento", hint: "Continua construindo sua história com a camisa." },
+    rescue: { name: "Compromisso com a recuperação", hint: "Fica para ajudar o time a se recuperar." },
+    rebuild: { name: "Reconstrução em andamento", hint: "Permanece para reconstruir o clube." },
+    homecoming: { name: "Em casa", hint: "Continua no clube que conhece bem." },
+    experience: { name: "Experiência que fica", hint: "Fica para ensinar os mais novos." },
+    proveYourself: { name: "Nova oportunidade", hint: "Permanece para conquistar espaço a cada jogo." },
+  },
+
   pressure: {
     high: "Pressão alta",
     low: "Pressão baixa",
@@ -177,6 +190,7 @@ export const careerPt = {
   },
 
   effect: {
+    agentBreakup: "Empresário sai: só clubes mais fracos na próxima decisão, se houver propostas",
     capacityNow: "OVR {value}",
     capacityPeriod: "OVR {value} durante o período",
     capacityLater: "OVR {value} depois do período",

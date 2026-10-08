@@ -86,6 +86,19 @@ export const careerEs: CareerMessages = {
     proveYourself: { name: "Demostrar", hint: "Nadie te garantiza nada. Cada partido es una prueba." },
   },
 
+  renewals: {
+    academyBet: { name: "Apuesta renovada", hint: "El club sigue apostando por tu futuro." },
+    reinforcement: { name: "Continuidad", hint: "Te quedas para aportar al equipo." },
+    projectPiece: { name: "Pilar del proyecto", hint: "El equipo sigue creciendo a tu alrededor." },
+    marqueeSigning: { name: "Renovación estelar", hint: "La estrella se queda. La afición espera liderazgo." },
+    heir: { name: "Sucesión en marcha", hint: "Sigues construyendo tu historia con esta camiseta." },
+    rescue: { name: "Compromiso con la recuperación", hint: "Te quedas para ayudar al equipo a recuperarse." },
+    rebuild: { name: "Reconstrucción en marcha", hint: "Te quedas para reconstruir el club." },
+    homecoming: { name: "En casa", hint: "Sigues en el club que conoces bien." },
+    experience: { name: "Experiencia que sigue", hint: "Te quedas para enseñar a los jóvenes." },
+    proveYourself: { name: "Otra oportunidad", hint: "Te quedas para ganarte un puesto en cada partido." },
+  },
+
   pressure: {
     high: "Presión alta",
     low: "Presión baja",
@@ -171,6 +184,7 @@ export const careerEs: CareerMessages = {
   },
 
   effect: {
+    agentBreakup: "El representante se va: solo clubes más débiles en la próxima decisión, si hay ofertas",
     capacityNow: "OVR {value}",
     capacityPeriod: "OVR {value} durante el período",
     capacityLater: "OVR {value} después del período",

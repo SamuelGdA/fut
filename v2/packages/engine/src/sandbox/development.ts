@@ -1,7 +1,7 @@
 import { clamp, risingLogistic } from "../math";
 import { evolveSeason } from "../evolution/evolve";
 import type { FormKind } from "../evolution/form";
-import { FOCUS_SLOT, focusDueAt, focusesFor, guaranteeFocus, type TrainingFocus } from "../evolution/training";
+import { FOCUS_SLOT, focusDueAt, focusesFor, type TrainingFocus } from "../evolution/training";
 import { TRAINING_CAP } from "../player/attributes";
 import { attributesAt, createPlayer, ovrAt, type Player } from "../player/player";
 import { positionWeights, type Position } from "../player/positions";
@@ -167,15 +167,15 @@ export function runDevelopment(input: DevelopmentInput): DevelopmentRun {
     const titlesRng = stream(input.seed, "titles", year);
     const titleImportance = provisionalTitles(clubStrength, () => titlesRng.next());
 
+    const endsPeriod = (index + 1) % periodLength === 0 || age === LAST_AGE;
     const evolution = evolveSeason(
       player,
-      { age, games, clubStrength, fans, difficulty: input.difficulty, titleImportance, focus: startsPeriod ? focus : null },
+      { age, games, clubStrength, fans, difficulty: input.difficulty, titleImportance, focus: startsPeriod ? focus : null,
+        guarantee: endsPeriod && focus && periodStart ? { focus, start: periodStart.attributes } : undefined },
       stream(input.seed, "growth", year),
     );
     player = evolution.player;
 
-    const endsPeriod = (index + 1) % periodLength === 0 || age === LAST_AGE;
-    if (endsPeriod && focus && periodStart) player = guaranteeFocus(player, focus, periodStart.attributes, age);
 
     const attributes = attributesAt(player, age);
     seasons.push({

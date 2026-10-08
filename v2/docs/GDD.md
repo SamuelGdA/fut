@@ -1,5 +1,93 @@
 # CRAQUE v2: Game Design Document
 
+> **Revisão de 8 de outubro de 2026 (D47, motor `2.0.0-m8.3`).**
+> Esta revisão substitui as regras anteriores indicadas abaixo.
+>
+> - Tema inicial e manifesto PWA claros (#F3F0E8), respeitando a preferência já salva. Abas de aparência com
+>   altura estável no PC e celular (controles com rolagem própria), painéis preservados e transição breve, sem movimento
+>   quando reduzido. Retrato da carta centralizado. Jornal com cabeçalho esportivo,
+>   filetes e estatísticas mais legíveis. Resultado da decisão dentro do layout,
+>   sem cobrir texto, mantido até a próxima escolha; no celular mostra o resultado
+>   curto, com o detalhe no lance.
+> - Renovação usa nome e expectativa próprios em todas as dez missões, por exemplo
+>   “Renovação de estrela” e “Fica para ensinar os mais novos”, sem mudar a cobrança.
+> - Legado: zero jogos dá zero pontos. Pontos = `4 × participação +
+>   (10 × importância dos títulos + 2 × prêmios + bônus de torcida) ×
+>   min(1, participação / 0,85)`, vezes o traço. Participação usa os jogos realmente disputados sobre os jogos
+>   do clube, limitada ao papel no elenco. Ídolo exige 60 jogos no clube e lenda
+>   exige 120, além dos pontos e temporadas. O bônus de torcida é 3 com apoio
+>   de pelo menos 80. Lendas de 33 anos ou mais não perdem apoio pelo banco ou
+>   declínio natural; rebaixamento ainda pode tirar até 2 pontos por temporada.
+> - Clássico, estádio lotado, final, pênalti e cartão vermelho exigem
+>   pelo menos rotação e 12 jogos na temporada
+>   anterior. Estádio lotado agora sobe/desce o papel no elenco e muda torcida
+>   (+5/-3), efeitos úteis em qualquer posição. Disputar a vaga com a joia da base
+>   tem 50% exatos de aumentar os jogos planejados em 20% e 50% de reduzir em
+>   20%, sem ajuste pelo traço, respeitando jogos disponíveis e lesões.
+> - Novo evento “Uma nova seleção” (peso 70 no sorteio de eventos elegíveis):
+>   cinco temporadas consecutivas no mesmo país estrangeiro, mesmo mudando de
+>   clube, nenhuma estreia pela seleção e OVR suficiente para ao menos convocação
+>   ocasional no país de residência. Aceitar muda nacionalidade; recusar mantém.
+>   A decisão depende da agenda, não é automática ao completar cinco anos.
+> - Título de clube ou seleção conquistado na temporada dá **+1 de OVR** sobre a
+>   evolução natural, após crescimento, declínio, devolução de capacidade temporária
+>   e garantia do treino, uma vez por temporada,
+>   até 99 e respeitando atributos limitados a 99. Substitui a antiga moral variável.
+>   OVR continua sendo calculado pelos atributos, nunca por um número separado.
+> - Todos os clubes continuam evoluindo com sucesso, ruído e retorno à força base.
+>   A força fica também limitada a ±10 da base. As estrelas das ofertas acompanham
+>   a força atual, incluindo o impacto projetado do jogador: ±1 estrela no máximo
+>   em relação à nota inicial, entre 1 e 5. Mudança exige ±3 pontos de força;
+>   subir de 4 para 5 ou cair de 5 para 4 exige 4,5. O impacto continua sendo
+>   `0,22 × participação × limitar(OVR - força, -3, 15)`, até +3,135 para um craque
+>   de linha. Ganhar campeonatos ajuda a força, mas não garante uma estrela.
+> - Desafio: “Regra da tentativa” substitui “Édito”; texto explica a penalidade
+>   de metade da pontuação. Catálogo com 37 missões. Missão de temporadas como ídolo substituída por virar
+>   lenda de um clube (alvo 1); nova missão de ídolo ou lenda de dois clubes
+>   (alvo 2). Ambos são alvos fixos do produto, os demais seguem calibrados.
+> - 148 conquistas com abas por categoria: 18 recordes gerados do catálogo e um título
+>   por competição, automaticamente. Aba secreta com quatro conquistas naturais,
+>   escondendo nome e requisito até desbloquear. Nova conquista de terminar no
+>   clube da estreia em campo. Contagens persistem sem precisar guardar carreiras.
+> - Hall da Fama desativado: arquivos antigos são apagados na abertura do banco;
+>   carreiras concluídas/interrompidas e saves incompatíveis não são arquivados.
+>   Permanecem o save atual, conquistas, contagens agregadas e ranking diário.
+>   O resumo e o caminho hipotético continuam disponíveis para o save atual.
+>   O capítulo passa a se chamar “{sobrenome} hipotético”.
+> - Biografia explicita “camisa” ao citar o número 1 ou outro número histórico.
+> - Metas revisadas pelo bônus obrigatório de título: pico médio Normal entre
+>   P−2 e P+3; diferença entre grupos até 3 OVR; Bolas de Ouro de Fenômeno
+>   de ataque com média entre 1 e 2,25, mantendo 40–60% com ao menos uma.
+>   As missões de legado conservam os alvos 1/2 e só entram em faixas em que
+>   15–55% do lote de calibragem os alcança, sem tolerância nesta seleção.
+> - Talento no Difícil usa **pesos** 45/34/15/4/1, soma 99: probabilidades reais
+>   45,45% / 34,34% / 15,15% / 4,04% / 1,01%. Normal: 28/34/22/11/5%.
+> - Validação: 547 testes unitários, 44 ponta a ponta, build e 51 metas de
+>   balanceamento aprovados; todos os recordes alcançados. `pnpm verify` para
+>   em quatro imports ausentes do módulo `manager` preexistente; detalhes na D47.
+
+**Residência consecutiva (D48):** sair do país interrompe a contagem; ao voltar,
+é preciso completar cinco novas temporadas seguidas. Anos de períodos separados
+não se somam. Trocar de clube dentro do mesmo país mantém a sequência.
+O ciclo obrigatório de testar, corrigir e retestar está em `../AI_RULES.md`.
+
+**Revisão D49, motor `2.0.0-m8.4`:** no diploma, estudar reduz evolução em
+10% e risco de lesão em 30%; só futebol aumenta ambos em 10% e 30%,
+respectivamente, durante o período. Ficar no ultimato dá torcida +4 e rompe
+com o empresário: somente a próxima decisão pode trazer ofertas de clubes
+pelo menos 2 pontos de força mais fracos que o atual. Se a decisão for treino
+ou outro evento sem transferência, a restrição acaba mesmo assim. Não obriga
+a sair, não reduz a força dos clubes e não afeta janelas posteriores.
+Escudos e selos continuam desenhados por padrão; competições e prêmios usam
+suas imagens reais quando disponíveis e arte gerada como reserva. O laboratório
+compara o padrão misto, todas reais ou todas geradas; `VITE_ASSETS=gerado`
+continua permitindo um build inteiramente desenhado. Troféus e prêmios carregam
+assim que entram na tela, sem depender do carregamento adiado. O Vite ignora
+os relatórios de testes para evitar travamento do observador no Windows.
+Validação D49: 550 testes unitários, 48 ponta a ponta e 51 metas no
+balanceamento completo aprovados. Bloqueios de `verify` e da amostra reduzida
+continuam explicitados na D49.
+
 Especificação do CRAQUE v2, escrita do zero para a reescrita clean room de
 2026-09-29. Este documento é a **única referência funcional** da implementação:
 o código do v2 nasce daqui, e não do código do v1 nem de qualquer outro jogo.
@@ -730,7 +818,7 @@ até onde se chega; idade, minutos, treinador e sorte decidem quando.
 
 ```
 ganho_bruto = base × T(idade, pico) × S(nível, P) × jogo × treinador × forma
-              × confiança × traço × dificuldade + moral
+              × confiança × traço × dificuldade
 
 T = 1 / (1 + e^((idade - (pico - 2,5)) / 1,8))
 folga = max(P - nível, 0) + 0,35
@@ -783,13 +871,14 @@ tarde (pico mais tarde e folga de um e dois anos). Meia, atacante e lateral
 têm 7% de chance de nascer com longevidade: três anos a mais antes do
 declínio.
 
-### 10.4 Moral de título
+### 10.4 Bônus de título (D47)
 
-```
-moral = min(1,2; 0,25 × Σ importância dos títulos da temporada), só se nível < P + 1
-```
-
-A moral soma ao ganho bruto, antes do teto suave.
+Após forma, crescimento, declínio e treino, se houver ao menos um título na
+temporada, acrescenta exatamente um OVR ao resultado natural (até 99 e os
+limites dos atributos). Número ou importância dos títulos não multiplica o bônus.
+Exemplos: queda natural −5 vira −4; subida +1 vira +2; estabilidade vira +1.
+A capacidade aumenta até o primeiro degrau de atributos que entrega esse OVR;
+o OVR continua sempre derivado da carta. A antiga moral variável foi substituída.
 
 ### 10.5 Foco de treino
 
@@ -1139,7 +1228,7 @@ juventude = limitar((23 - idade) × 0,8, 0, 5) × (índice_da_faixa + 1) / 3
 reputação = min(3, 0,5 × prêmios_recentes + 0,3 × títulos_recentes)   (últimas 3 temporadas)
 dificuldade = 0 no Normal, 3 no Difícil
 veterano = max(0, idade - 32) × 1,5
-empresário = ±2 na próxima janela, pelo evento 30
+empresário = ±2 na próxima janela, pelo evento 30; rompimento no evento 26 limita só a próxima decisão a clubes 2 pontos mais fracos (D49)
 ```
 
 O desconto de veterano é o que faz o mercado encerrar a carreira na idade
@@ -1282,6 +1371,9 @@ primeira temporada a torcida só pode subir.
 
 ### 17.4 Legado por clube
 
+**Como ficou na D47:** vale a fórmula de participação real no início deste GDD; zero jogos dá zero pontos. Ídolo exige 60 jogos e lenda 120, além dos pontos e temporadas. Lenda de 33+ anos não perde torcida por poucos minutos; rebaixamento ainda tira até 2. As fórmulas abaixo registram a regra anterior.
+
+
 ```
 pontos = Σ temporadas no clube: 4 × participação + 10 × importância_dos_títulos
          + 2 × prêmios + (torcida ≥ 80 ? 3 : 0)
@@ -1367,7 +1459,7 @@ Efeito  = capacidade(+x, agora | período | depois)
 | 13 | Tatuagem enorme | 35 | idade ≤ 30 | fazer (torcida + / infecção, perde meia temporada) ou não |
 | 14 | Problema com o fisco | 25 | valor ≥ €20M | acordo (torcida -) ou brigar (absolvição / suspensão de meia temporada) |
 | 15 | Passaporte do avô | 25 | seleção atual fraca ou ainda sem convocação | trocar de seleção (nacionalidade) ou manter |
-| 16 | Diploma | 30 | idade ≤ 19 | estudar (evolução -10% na temporada, biografia) ou focar no futebol |
+| 16 | Diploma | 30 | idade ≤ 19 | estudar (evolução -10%, risco de lesão -30%) ou só futebol (evolução +10%, risco +30%), pelo período (D49) |
 | 17 | Racha no vestiário | 45 | sempre | tomar partido (arriscado) ou ficar neutro |
 | 18 | Volta por cima | 50 | já jogou num clube onde foi Ídolo ou Lenda | voltar como estrela (titular garantido) ou ficar |
 | 19 | Clube ou seleção | 20 | ano de torneio de seleção, jogador convocado | ir ao torneio (risco de lesão) ou ficar no clube (pula o torneio) |
@@ -1377,7 +1469,7 @@ Efeito  = capacidade(+x, agora | período | depois)
 | 23 | Treinador novo | 55 | sempre | impressionar (papel sobe / desce) ou pedir para sair (oferta) |
 | 24 | Clássico decisivo | 60 | clube tem rival histórico na liga | provocar (torcida ++ / --) ou jogo limpo |
 | 25 | Despedida do ídolo | 40 | 5+ temporadas no clube | homenagear (torcida +, pressão +) ou discreto |
-| 26 | Ultimato do empresário | 50 | idade 21-30 | forçar saída (oferta de clube maior, torcida --) ou ficar |
+| 26 | Ultimato do empresário | 50 | idade 21-30 | forçar saída (clube maior, torcida -12) ou ficar (torcida +4, empresário rompe; ofertas só de clubes 2 pontos mais fracos na próxima decisão, se houver), D49 |
 | 27 | Joia da base | 45 | idade ≥ 28 | apadrinhar (torcida +, evolução -) ou disputar |
 | 28 | Contrato de chuteira | 35 | OVR ≥ 75 | chamativo (torcida +, pressão +) ou discreto |
 | 29 | Podcast polêmico | 50 | idade ≥ 20 | falar tudo (torcida ±) ou recusar |
@@ -1809,6 +1901,9 @@ placar) também respeita os 27: o motor recusa antes e o item some do menu.
 
 ### 27.2 A mão do dia
 
+**Como ficou na D47:** 37 missões. “Lenda de um clube” exige uma lenda; “Ídolo em dois clubes” exige dois clubes como ídolo ou lenda. Alvos fixos 1/2; calibragem seleciona somente talentos com cumprimento comum entre 15% e 55%. A interface chama éditos de “Regras da tentativa”.
+
+
 Três missões e um édito:
 
 1. As três missões vêm de **três eixos diferentes**.
@@ -1840,7 +1935,7 @@ no momento em que abre.
 ### 27.3 Eixos e missões
 
 Eixos: Gols, Troféus, Lealdade, Estrada, Evolução, Azarão, Seleção,
-Longevidade, Prêmios. O catálogo tem 36 missões escritas para o v2, cada uma com
+Longevidade, Prêmios. O catálogo tem 37 missões escritas para o v2, cada uma com
 eixo, posições que podem persegui-la, unidade, fórmula de progresso e alvo. Os
 alvos são calibrados pelo harness para que um jogador bom chegue perto de 1
 alvo cheio e 1 parcial numa tentativa típica.
@@ -1932,45 +2027,32 @@ nenhuma temporada apagada).
 
 ## 28. Hall da Fama, conquistas e "E se...?"
 
-### 28.1 Hall da Fama
+### 28.1 Hall suspenso (D47)
 
-- Toda carreira terminada (ou interrompida) é arquivada: replay mais um
-  retrato-resumo (sobrenome, avatar, país, posição, OVR de pico, títulos,
-  prêmios, clubes principais, data, ritmo, dificuldade, pontuação do desafio).
-- Lista ordenável (recentes, pico, títulos, prêmios) e filtrável (desafio,
-  difícil). Abrir leva ao Resumo daquela carreira em modo leitura.
-- Apagar uma entrada pede confirmação.
-- Recordes pessoais no topo: maior pico, mais gols, mais títulos, mais Bolas.
+Não arquivar carreiras concluídas, interrompidas, alternativas ou incompatíveis.
+Ao abrir o banco, apagar entradas antigas de `archive`; a loja permanece vazia
+por compatibilidade do schema. As rotas antigas voltam ao Início/Conquistas.
+Somente o save atual pode abrir o resumo e o caminho hipotético.
 
-**Como ficou no M7 (D32):** o id de cada carreira é um hash do replay, então
-arquivar é idempotente. Entra no Hall a carreira terminada e também a
-interrompida com pelo menos uma temporada: deixada por outra nova, descartada
-no Início ou trocada por um "E se...?". Uma carreira de outra versão do motor
-entra pelo retrato do save e abre só o retrato, com aviso. Ordenar e filtrar
-são fichas que quebram linha (cabem em 320 px em espanhol).
+### 28.2 Conquistas (D47)
 
-### 28.2 Conquistas
+148 conquistas em dez grupos: Carreira, Títulos, Prêmios, Seleção, Lealdade,
+Estrada, Desafio, Curiosas, Recordes e Secretas. São 51 objetivos específicos,
+18 recordes e 79 competições. Recordes e títulos são gerados dos catálogos:
+igualar ou superar a marca, ou vencer a competição, respectivamente.
+Secretas tem quatro objetivos naturais; nome e pista só aparecem após desbloquear.
+Lealdade inclui terminar no clube da estreia em campo.
 
-Cerca de 40 conquistas permanentes entre carreiras, em grupos: Carreira,
-Títulos, Prêmios, Seleção, Lealdade, Estrada, Desafio, Curiosas. Exemplos:
-"Campeão da Champions com um clube que você levou da segunda divisão",
-"Lenda em três clubes", "Bola de Ouro jogando fora da Europa", "Recorde de gols
-numa temporada". Desbloquear toca um aviso próprio. A tela mostra progresso das
-que têm contagem.
-
-**Como ficou no M7 (D33):** 44 conquistas em oito grupos, em
-`@craque/content`. Saem do histórico, do diário e do resultado do desafio, mais
-dois contadores entre carreiras (carreiras terminadas e dias ranqueados).
-Algumas caem no meio da carreira; o aviso espera a revelação terminar, para não
-estragar a página que vai mostrar o título. O progresso das de contagem vem
-guardado com cada carreira do Hall, então a tela não refaz carreira nenhuma.
-Três exemplos do GDD foram ajustados depois de medidos em 400 carreiras (D33).
+Os desbloqueios ficam em `achievements`. As melhores contagens e hashes de
+carreiras terminadas ficam em `craque.v2.progress`, sem guardar replays, histórico
+ou retratos de carreiras. O hash impede contar duas vezes ao recarregar o resumo.
+A carreira alternativa e a compartilhada não avançam conquistas.
 
 ### 28.3 E se...?
 
 No resumo de uma carreira comum, a linha do tempo de decisões permite escolher
 um ponto e **seguir por outro caminho**: nova carreira com o mesmo setup e as
-escolhas até ali, continuando ao vivo. A original fica no Hall da Fama; a nova
+escolhas até ali, continuando ao vivo. A original é substituída no save atual; a nova
 é marcada como "linha alternativa". Desligado para carreiras de desafio.
 
 **Como ficou no M7 (D34):** o capítulo "E se...?" do resumo (e da carreira
@@ -2061,6 +2143,12 @@ desenvolvimento, o `/lab` permite alternar o modo sem rebuild para comparar.
 dos ajustes some. Há escudo real para 481 dos 489 clubes e selo real para 29
 das 32 ligas.
 
+**Como ficou (D49):** o padrão mistura escudos e selos gerados com fotos reais
+das competições e dos prêmios. Cada foto ausente ou que falha ao carregar usa
+a arte gerada. `VITE_ASSETS=real` força todas reais e `VITE_ASSETS=gerado`
+força todas geradas. O laboratório oferece também o padrão misto e conta as
+fotos reais de acordo com o modo dos troféus, separado do modo dos escudos.
+
 ### 31.2 Arte gerada (portada do v1)
 
 - **Escudos**: disco de três partes (aro, campo com padrão, símbolo), derivado
@@ -2096,7 +2184,7 @@ redondos, texto em degradê, animação flutuando sem motivo.
 clube como acento da tela de carreira, textura sutil (grão, faixas de gramado
 cortado) usada com parcimônia.
 
-### 32.2 Tokens (tema escuro, padrão)
+### 32.2 Tokens (tema escuro, opcional)
 
 | Token | Valor | Uso |
 |---|---|---|
@@ -2115,8 +2203,8 @@ cortado) usada com parcimônia.
 | `sky` | #7AA6CF | informação, seleção |
 | `club` | dinâmico | cor do clube atual |
 
-O tema claro é opcional, com papel quente (#F3F0E8) como fundo. O jogo sempre
-começa no escuro.
+O tema claro é o padrão (D47), com papel quente (#F3F0E8) como fundo.
+Uma preferência já salva, clara ou escura, é respeitada.
 
 ### 32.3 Tipografia
 
@@ -2400,8 +2488,8 @@ recarregar** (remove só o save). Ela avisa que a carreira continua salva.
 |---|---|
 | Distribuição de talento, Normal | ~28 / 34 / 22 / 11 / 5 |
 | Distribuição de talento, Difícil | ~45 / 34 / 15 / 4 / 1 |
-| Pico médio por faixa | perto do potencial (±2), nunca acima dele por mais de 3 na média |
-| Justiça entre posições | pico relativo ao potencial dentro de 2 pontos entre os grupos |
+| Pico médio por faixa | entre P−2 e P+3 no Normal, incluindo bônus obrigatório de títulos (D47) |
+| Justiça entre posições | pico relativo ao potencial dentro de 3 pontos entre os grupos (D47) |
 | Idade do pico | mediana entre 26 e 29 |
 | Maior subida de OVR numa temporada | +9, nunca +10 |
 | Subidas de 8 ou mais | no máximo 1% das temporadas, e só até os 21 anos |
@@ -2411,7 +2499,7 @@ recarregar** (remove só o save). Ela avisa que a carreira continua salva.
 | OVR aos 16 entre faixas vizinhas | pelo menos 15% da faixa de cima começa abaixo da mediana da de baixo |
 | Difícil | aos 21 anos, pelo menos 1 ponto abaixo do Normal em todas as faixas; pico entre -3 e +2 do potencial |
 | Os dois ritmos | mesmo jogador: pico médio e OVR médio aos 21 a no máximo 0,6 de diferença por faixa |
-| Bolas de Ouro, carreira de Fenômeno de ataque | média de 1 a 2, e de 40% a 60% ganham ao menos uma (era "mediana de 1 a 2"; D44) |
+| Bolas de Ouro, carreira de Fenômeno de ataque | média de 1 a 2,25, e de 40% a 60% ganham ao menos uma (D47) (era "mediana de 1 a 2"; D44) |
 | Recorde de Bolas de Ouro (8) batido | raro: no máximo 2% dos Fenômenos de ataque (era 6% a 10%; D44) |
 | Quatro Bolas de Ouro seguidas | raro: no máximo 2% dos Fenômenos de ataque (era 5% a 8%; D44) |
 | Recorde de Chuteiras de Ouro (6) | raro: no máximo 3% dos centroavantes Fenômenos que jogam na Europa (era 12% a 15%; D44) |

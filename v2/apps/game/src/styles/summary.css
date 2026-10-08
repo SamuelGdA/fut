@@ -455,7 +455,8 @@
     flex-direction: column;
     height: 620px;
     padding: 20px 22px;
-    border-radius: 3px;
+    border-radius: 1px;
+    border: 1px solid var(--paper-rule);
     background-color: var(--sheet);
     background-image:
       radial-gradient(circle at 18% 12%, rgb(0 0 0 / 0.035) 0 1px, transparent 1px),
@@ -470,13 +471,15 @@
   .paper-nameplate {
     flex-shrink: 0;
     padding: 8px 0;
-    border-top: 4px double var(--ink);
+    border-top: 6px solid var(--spot);
     border-bottom: 1px solid var(--ink);
   }
 
   .paper-nameplate h3 {
-    font-family: var(--font-serif);
-    font-size: 26px;
+    font-family: var(--font-display);
+    font-size: 34px;
+    font-style: italic;
+    text-transform: uppercase;
     font-weight: 800;
     letter-spacing: 0.02em;
     line-height: 1;
@@ -490,8 +493,8 @@
     gap: 8px;
     padding: 6px 0;
     border-bottom: 1px solid var(--paper-rule);
-    color: var(--faint);
-    font-size: 9px;
+    color: var(--soft);
+    font-size: 10px;
     font-weight: 700;
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -618,7 +621,7 @@
     padding: 4px 8px;
     border-bottom: 1px solid var(--paper-rule);
     color: var(--faint);
-    font-size: 7.5px;
+    font-size: 9px;
     font-weight: 900;
     letter-spacing: 0.18em;
     text-align: center;
@@ -628,7 +631,7 @@
   .paper-section-flat {
     margin-bottom: 4px;
     color: var(--faint);
-    font-size: 7.5px;
+    font-size: 9px;
     font-weight: 900;
     letter-spacing: 0.18em;
     text-transform: uppercase;
@@ -652,7 +655,7 @@
 
   .paper-stat dt {
     color: var(--faint);
-    font-size: 8.5px;
+    font-size: 10px;
     font-weight: 700;
     letter-spacing: 0.1em;
     text-transform: uppercase;
@@ -1064,8 +1067,10 @@
 
   .poster-empty {
     color: #c9d0ca;
-    font-family: var(--font-serif);
-    font-size: 26px;
+    font-family: var(--font-display);
+    font-size: 34px;
+    font-style: italic;
+    text-transform: uppercase;
     font-style: italic;
   }
 

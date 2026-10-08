@@ -148,6 +148,9 @@ export function applyEffects(
       case "block":
         if (club && !next.blocked.includes(club)) next = { ...next, blocked: [...next.blocked, club] };
         break;
+      case "agentBreakup":
+        next = { ...next, agentRestriction: true };
+        break;
       case "market":
         next = { ...next, marketBonus: next.marketBonus + effect.amount };
         break;

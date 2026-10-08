@@ -1,5 +1,4 @@
 import { getClub } from "@craque/world";
-import { guaranteeFocus } from "../evolution/training";
 import { clamp } from "../math";
 import { attributesAt, ovrAt } from "../player/player";
 import { baseMarketValue } from "../player/value";
@@ -11,7 +10,7 @@ import { clubIndex } from "../world/model";
 import type { SeasonResults, WorldState } from "../world/types";
 import { bondLegacy } from "./context";
 import { applyLaterCapacity } from "./effects";
-import { fanDelta, legacySeasonPoints } from "./fans";
+import { fanDelta, legacyLevel, legacySeasonPoints } from "./fans";
 import { newBond } from "./move";
 import type { Career, CareerNotice, ClubBond, SeasonRecord } from "./types";
 
@@ -89,6 +88,9 @@ export function simulatePeriod(
       fans: bond.fans,
       // O foco treina uma vez, na primeira temporada do período que vem depois da escolha.
       focus: season === 0 && next.focusAge === career.age ? next.focus : null,
+      // A garantia entra antes do bônus de título, para não absorver o +1 OVR.
+      guarantee: season === length - 1 && next.focus !== null && next.focusAge === career.age
+        ? { focus: next.focus, start: periodStart } : undefined,
       suspended: plan.suspended,
       modifiers: plan.modifiers,
       tally: recordTally(next.history),
@@ -108,6 +110,7 @@ export function simulatePeriod(
       champion: table.position === 1,
       aboveExpected: table.expected > 0 && table.position > 0 && table.position <= table.expected - 2,
       relegated: relegated(results, club),
+      veteranLegend: age >= 33 && bondLegacy(next, club) === "legend",
     });
     const fans = clamp(bond.fans + delta, 0, 100);
     const updatedBond: ClubBond = {
@@ -118,10 +121,7 @@ export function simulatePeriod(
       legacyPoints: bond.legacyPoints + legacySeasonPoints(stats, fans, next.player.trait),
     };
 
-    // Garantia do foco no fim do período (GDD 10.5).
-    const lastOfPeriod = season === length - 1;
-    const trained = next.focus !== null && next.focusAge === career.age;
-    const player = lastOfPeriod && trained && next.focus ? guaranteeFocus(result.player, next.focus, periodStart, age) : result.player;
+    const player = result.player;
     const ovrEnd = ovrAt(player, age);
 
     // Avisos da temporada: entram depois dela, na ordem em que aconteceram.
@@ -152,7 +152,8 @@ export function simulatePeriod(
       pressure: contract.pressure,
       fans,
       loan: contract.loan !== null,
-      legacy: bondLegacy(updated, club),
+      legacy: legacyLevel(updatedBond.legacyPoints, updatedBond.seasons, getClub(club)?.prestige ?? 1,
+        next.history.reduce((sum, season) => sum + (season.club === club ? season.games : 0), 0) + stats.games),
       traitor: season === 0 && traitorMove,
       nationality: next.nationality,
       position: player.position,

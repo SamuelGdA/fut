@@ -104,7 +104,7 @@ describe("decisões e efeitos (D42)", () => {
 
   it("as conquistas novas existem, e a Lenda é do clube, não da carta", () => {
     for (const id of ["seventyThree", "tenClubs", "promotedToContinent", "scoringTitle", "bestOfCompetition"]) expect(getAchievement(id)).not.toBeNull();
-    expect(ACHIEVEMENTS.length).toBe(49);
+    expect(ACHIEVEMENTS.filter((item) => !item.id.includes(":"))).toHaveLength(51);
   });
 });
 

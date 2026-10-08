@@ -144,8 +144,6 @@ export function CareerScreen() {
       <p role="status" className="sr-only">
         {announcement}
       </p>
-      {/* A mensagem animada do resultado da escolha (D45), por cima de tudo, sem ocupar espaço. */}
-      <ResultMessage career={career} play={review === null ? latest : null} />
       <CareerHeader
         career={career}
         alternate={alternate !== null}
@@ -170,6 +168,7 @@ export function CareerScreen() {
               {news}
             </div>
             <div className="career-right">
+              <ResultMessage career={career} play={review === null ? latest : null} />
               {feed(false)}
               <ExploreColumn career={career} onReplay={onReplay} challenge={challenge} />
             </div>
@@ -188,6 +187,7 @@ export function CareerScreen() {
         >
           <main className="career-body">
             <BaseTabs.Panel value="season" className="fit-panel loop-panel">
+              <ResultMessage career={career} play={review === null ? latest : null} />
               {feed(true)}
               {decision}
               {news}

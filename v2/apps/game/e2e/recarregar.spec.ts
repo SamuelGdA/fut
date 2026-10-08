@@ -45,7 +45,8 @@ test("sair para o Início guarda a carreira: abrir o jogo de novo volta para ela
   await jogoRapido(page);
   await jogarTurno(page);
   const title = (await page.locator(".decision-title").textContent()) ?? "";
-  const header = (await page.locator(".career-header .display").first().textContent()) ?? "";
+  const seed = await page.evaluate(() => (JSON.parse(localStorage.getItem("craque.v2.save") ?? "{}") as { setup?: { seed: string } }).setup?.seed);
+  expect(seed).toBeTruthy();
   await page.getByRole("button", { name: "Menu da carreira" }).click();
   await page.getByRole("menuitem", { name: "Voltar ao início" }).click();
   await page.locator(".dialog-popup").getByRole("button", { name: "Sair", exact: true }).click();
@@ -58,17 +59,19 @@ test("sair para o Início guarda a carreira: abrir o jogo de novo volta para ela
   await page.reload();
   await expect(page.locator(".decision-title")).toHaveText(title);
 
-  // Começar outra carreira pelo Início não pergunta nada, e a de antes vai para o Hall.
+  // Começar outra carreira pelo Início troca o save sem perguntar; sobrenomes podem se repetir.
   await page.getByRole("button", { name: "Menu da carreira" }).click();
   await page.getByRole("menuitem", { name: "Voltar ao início" }).click();
   await page.locator(".dialog-popup").getByRole("button", { name: "Sair", exact: true }).click();
   await page.getByRole("button", { name: "Jogo rápido" }).click();
   await expect(page.getByRole("alertdialog")).toHaveCount(0);
   await expect(page.locator(".decision-options .option").first()).toBeVisible();
-  expect((await page.locator(".career-header .display").first().textContent()) ?? "").not.toBe(header);
+  const newSeed = await page.evaluate(() => (JSON.parse(localStorage.getItem("craque.v2.save") ?? "{}") as { setup?: { seed: string } }).setup?.seed);
+  expect(newSeed).toBeTruthy();
+  expect(newSeed).not.toBe(seed);
   await page.getByRole("button", { name: "Menu da carreira" }).click();
   await page.getByRole("menuitem", { name: "Voltar ao início" }).click();
   await page.locator(".dialog-popup").getByRole("button", { name: "Sair", exact: true }).click();
-  await page.getByRole("button", { name: /Hall da Fama/ }).first().click();
-  await expect(page.locator(".hall-card").filter({ hasText: header })).toHaveCount(1);
+  await expect(page.getByRole("button", { name: /Hall da Fama/ })).toHaveCount(0);
+  await expect(page.getByRole("button", { name: /Conquistas/ })).toBeVisible();
 });

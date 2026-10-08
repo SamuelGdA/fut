@@ -28,11 +28,8 @@ export const challengePt = {
     cupTitles: { name: "Copeiro", goal: { one: "{n} título de copa nacional", other: "{n} títulos de copa nacional" } },
     longestStay: { name: "Raiz", goal: { one: "{n} temporada num mesmo clube", other: "{n} temporadas num mesmo clube" } },
     firstClubGames: { name: "Cria da casa", goal: { one: "{n} jogo pelo clube onde começou", other: "{n} jogos pelo clube onde começou" } },
-    idolSeasons: {
-      name: "Ídolo",
-      goal: { one: "{n} temporada como ídolo ou lenda", other: "{n} temporadas como ídolo ou lenda" },
-      hint: "Ídolo e lenda são os dois degraus mais altos do legado num clube.",
-    },
+    clubLegend: { name: "Lenda da casa", goal: { one: "Vire lenda de um clube", other: "Vire lenda de um clube" }, hint: "O legado depende da sua participação em campo." },
+    twoClubIdol: { name: "Duas torcidas", goal: { one: "Vire ídolo ou lenda de pelo menos dois clubes", other: "Vire ídolo ou lenda de pelo menos dois clubes" }, hint: "O legado depende da sua participação em campo." },
     peakFans: {
       name: "Xodó da torcida",
       goal: { one: "Apoio da torcida em {n} num clube", other: "Apoio da torcida em {n} num clube" },

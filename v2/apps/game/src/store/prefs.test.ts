@@ -8,9 +8,9 @@ describe("sanitizePrefs (GDD 34.3)", () => {
     expect(sanitizePrefs(undefined)).toEqual(DEFAULT_PREFS);
   });
 
-  it("o padrão é escuro, português, volume 75% e ritmo intenso", () => {
+  it("o padrão é claro, português, volume 75% e ritmo intenso", () => {
     expect(DEFAULT_PREFS).toMatchObject({
-      theme: "dark",
+      theme: "light",
       locale: "pt",
       volume: 3,
       muted: false,
@@ -22,7 +22,7 @@ describe("sanitizePrefs (GDD 34.3)", () => {
 
   it("um campo inválido cai para o padrão sem derrubar os válidos", () => {
     const result = sanitizePrefs({ theme: "neon", locale: "en", volume: 9, muted: "sim", pace: "normal" });
-    expect(result.theme).toBe("dark");
+    expect(result.theme).toBe("light");
     expect(result.locale).toBe("en");
     expect(result.volume).toBe(3);
     expect(result.muted).toBe(false);

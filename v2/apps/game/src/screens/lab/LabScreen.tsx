@@ -42,6 +42,7 @@ export function LabScreen() {
   const locale = usePrefs((state) => state.locale);
   const theme = usePrefs((state) => state.theme);
   const assetMode = useAssetMode((state) => state.mode);
+  const trophyMode = useAssetMode((state) => state.trophyMode);
   // Abre na área do marco mais recente.
   const [area, setArea] = useState<Area>("challenge");
   const headerRef = useRef<HTMLElement>(null);
@@ -78,7 +79,7 @@ export function LabScreen() {
           <div className="mt-6 flex flex-wrap gap-2">
             <Chip tone="info" variant="outline">
               {t("lab.assetMode", {
-                mode: assetMode === "gerado" ? t("lab.assetGenerated") : t("lab.assetReal"),
+                mode: assetMode !== trophyMode ? t("lab.art.modeDefault") : assetMode === "gerado" ? t("lab.assetGenerated") : t("lab.assetReal"),
               })}
             </Chip>
             <Chip variant="outline">{t(`languages.${locale}`)}</Chip>
