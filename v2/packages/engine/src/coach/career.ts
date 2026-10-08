@@ -397,7 +397,7 @@ function apply(career: CoachCareer, command: CoachCommand): void {
       const own = fixture?.result ? (fixture.home === coachClub ? fixture.result.home : fixture.result.away) : 0;
       const other = fixture?.result ? (fixture.home === coachClub ? fixture.result.away : fixture.result.home) : 0;
       const before = event.match?.aggregate && event.match ? [event.match.aggregate[0] - event.match.score[0], event.match.aggregate[1] - event.match.score[1]] as const : null;
-      const success = matchEventSuccess(event, own, other, before);
+      const success = matchEventSuccess(event, command.option, own, other, before);
       event.chosen = command.option;
       event.outcome = success ? "success" : "failure";
       applyEffects(career, (success ? option?.success : option?.failure)?.filter((effect) => effect.type !== "match") ?? [], null, "event");

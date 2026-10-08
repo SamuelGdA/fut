@@ -376,6 +376,8 @@ export interface EventOption {
   readonly chance: number | null;
   readonly success: readonly EventEffect[];
   readonly failure: readonly EventEffect[];
+  /** Só na decisão no jogo: chances do resultado final com esta escolha. */
+  readonly odds?: { readonly win: number; readonly draw: number; readonly loss: number };
 }
 
 export type EventEffect =

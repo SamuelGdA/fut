@@ -40,6 +40,8 @@ interface AvatarEditorProps {
   onChange(next: AvatarConfig | null): void;
   /** Camisa do retrato. Sem clube, a cinza neutra. */
   kit?: KitDef | null;
+  /** Roupa da prévia: camisa (Craque) ou terno (Técnico). */
+  outfit?: "kit" | "coach";
   /** Rodapé com Voltar e Pronto, para quando o editor é uma tela própria. */
   onBack?(): void;
   onDone?(): void;
@@ -62,7 +64,7 @@ const UNDO_MAX = 30;
  * (Rosto, Cabelo e barba, Detalhes) em vez de todas de uma vez, e um
  * "Desfazer" que volta as últimas mudanças, inclusive um sorteio sem querer.
  */
-export function AvatarEditor({ value, onChange, kit, onBack, onDone }: AvatarEditorProps) {
+export function AvatarEditor({ value, onChange, kit, outfit = "kit", onBack, onDone }: AvatarEditorProps) {
   const { t } = useT();
   const avatar: AvatarConfig = value ?? DEFAULT_AVATAR;
   const [tab, setTab] = useState<EditorTab>("face");
@@ -127,7 +129,7 @@ export function AvatarEditor({ value, onChange, kit, onBack, onDone }: AvatarEdi
       <div className="avatar-editor">
         <div className="avatar-editor-preview">
           <div className="avatar-portrait">
-            <Avatar config={value} kit={kit} className="h-full w-full" />
+            <Avatar config={value} kit={kit} outfit={outfit} className="h-full w-full" />
           </div>
         </div>
 

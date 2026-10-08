@@ -361,12 +361,43 @@ for (const league of leagues) {
  */
 const MIN_MEASURED = 5;
 
-function anchorOf(club) {
+function baseAnchor(club) {
   const own = leagueOffset.get(leagueOf(club).id);
   if (own.value !== null && (own.clubs >= MIN_MEASURED || club.division === 1 && own.clubs >= 3)) return club.strength + own.value;
   const first = leagues.find((league) => league.country === club.country && league.division === 1);
   const top = leagueOffset.get(first.id);
   return club.strength + (top.value ?? 0);
+}
+
+/**
+ * Distância entre a 2ª divisão sem medida e a 1ª do país: o melhor clube
+ * completado fica DIVISION_GAP abaixo do primeiro quartil (os 14 melhores)
+ * dos clubes medidos da 1ª. A força do Craque para a 2ª divisão é baixa
+ * demais perto dos elencos reais: sem isto, um clube recém-rebaixado com
+ * elenco de primeira (Ceará e Sport em 2026) ganhava a Série B com 100
+ * pontos. Só sobe, nunca desce, e só vale para clubes sem jogadores reais
+ * suficientes.
+ */
+const DIVISION_GAP = 2.5;
+const divisionLift = new Map();
+for (const league of leagues) {
+  if (league.division !== 2) continue;
+  const own = leagueOffset.get(league.id);
+  if (own.value !== null && own.clubs >= MIN_MEASURED) continue;
+  const firstClubs = clubs.filter((club) => club.country === league.country && club.division === 1 && squads.get(club.id).length >= 16);
+  if (firstClubs.length < 3) continue;
+  const measured = firstClubs.map((club) => best14(squads.get(club.id))).sort((a, b) => a - b);
+  const quartile = measured[Math.floor((measured.length - 1) * 0.25)];
+  const unmeasured = clubs.filter((club) => club.country === league.country && club.division === 2 && squads.get(club.id).length < 16);
+  if (unmeasured.length === 0) continue;
+  const highest = Math.max(...unmeasured.map(baseAnchor));
+  divisionLift.set(league.id, Math.max(0, quartile - DIVISION_GAP - highest));
+}
+
+function anchorOf(club) {
+  const base = baseAnchor(club);
+  if (club.division !== 2 || squads.get(club.id).length >= 16) return base;
+  return base + (divisionLift.get(leagueOf(club).id) ?? 0);
 }
 
 for (const club of clubs) {
@@ -576,8 +607,8 @@ function report() {
     "",
     "## Por país e divisão",
     "",
-    "| País | Div. | Clubes | Jogadores | FC 27 | eFootball | Conhecimento | Gerados | Reais | Deslocamento da liga |",
-    "|---|---|---|---|---|---|---|---|---|---|",
+    "| País | Div. | Clubes | Jogadores | FC 27 | eFootball | Conhecimento | Gerados | Reais | Deslocamento da liga | Ajuste da 2ª |",
+    "|---|---|---|---|---|---|---|---|---|---|---|",
   ];
   for (const league of [...leagues].sort((a, b) => a.country.localeCompare(b.country) || a.division - b.division)) {
     const leagueClubs = clubs.filter((club) => club.country === league.country && club.division === league.division);
@@ -585,7 +616,7 @@ function report() {
     const count = (origin) => all.filter((player) => player.origin === origin).length;
     const offset = leagueOffset.get(league.id);
     lines.push(
-      `| ${league.country} | ${league.division} | ${leagueClubs.length} | ${all.length} | ${count("f")} | ${count("e")} | ${count("k")} | ${count("g")} | ${pct(all.length - count("g"), all.length)} | ${offset.value === null ? "sem medida" : `${round1(offset.value)} (${offset.clubs} clubes)`} |`,
+      `| ${league.country} | ${league.division} | ${leagueClubs.length} | ${all.length} | ${count("f")} | ${count("e")} | ${count("k")} | ${count("g")} | ${pct(all.length - count("g"), all.length)} | ${offset.value === null ? "sem medida" : `${round1(offset.value)} (${offset.clubs} clubes)`} | ${divisionLift.has(league.id) ? `+${round1(divisionLift.get(league.id))}` : "-"} |`,
     );
   }
   lines.push("", "## Por clube", "", "| Clube | País | Div. | Força | Âncora | Melhores 14 | FC 27 | eFootball | Conhecimento | Gerados |", "|---|---|---|---|---|---|---|---|---|---|");

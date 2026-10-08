@@ -48,6 +48,8 @@ export function probeTargets(probes: ProbeMetrics): TargetResult[] {
   const mid = develop("22 a 25 anos, rápido");
   const prime = develop("26 a 29 anos, rápido");
   const second = probes.budget.find((row) => row.division === 2);
+  const outside = 1 - (probes.clubWorldCup.share["UEFA"] ?? 0);
+  const best = probes.clubWorldCup.bestSouth;
   return [
     {
       id: "tecnico-initial",
@@ -83,6 +85,13 @@ export function probeTargets(probes: ProbeMetrics): TargetResult[] {
       target: "favorito passa em média entre 60% e 85%, nunca acima de 90% (difícil, mas possível)",
       measured: `média ${pct(favoriteMean)}, máximo ${pct(favoriteMax)}`,
       pass: favoriteMean >= 0.6 && favoriteMean <= 0.85 && favoriteMax <= 0.9,
+    },
+    {
+      id: "tecnico-cwc-possible",
+      label: "Mundial de Clubes: difícil, mas possível para quem não é europeu (chaveamento jogado 20 mil vezes com as chances exatas)",
+      target: "fora da Europa entre 1% e 15% dos títulos; o melhor sul-americano com pelo menos 0,5%",
+      measured: `${pct(outside, 1)} fora da Europa; melhor sul-americano ${best ? `${best.club} ${pct(best.chance, 2)}` : "n/d"} (${probes.clubWorldCup.europeans} europeus em ${probes.clubWorldCup.entrants})`,
+      pass: outside >= 0.01 && outside <= 0.15 && Boolean(best && best.chance >= 0.005),
     },
     {
       id: "tecnico-purchase-curve",
@@ -154,10 +163,10 @@ export function careerTargets(metrics: CareerMetrics): TargetResult[] {
     },
     {
       id: "tecnico-cwc",
-      label: "Mundial de Clubes ganho por europeu (só pelo elenco, como os 17 dos últimos 18 da vida real)",
-      target: "entre 85% e 99%",
+      label: "Mundial de Clubes ganho por europeu nas carreiras (só pelo elenco, como os 17 dos últimos 18 da vida real)",
+      target: "pelo menos 85% (a chance exata de quem não é europeu está na sonda)",
       measured: `${pct(metrics.clubWorldCupEurope)} em ${metrics.clubWorldCups} edições; final com sul-americano em ${pct(metrics.clubWorldCupFinalsWithSouth)}`,
-      pass: metrics.clubWorldCups === 0 || (metrics.clubWorldCupEurope >= 0.85 && metrics.clubWorldCupEurope <= 0.99),
+      pass: metrics.clubWorldCups === 0 || metrics.clubWorldCupEurope >= 0.85,
     },
     {
       id: "tecnico-intercontinental",
@@ -189,7 +198,7 @@ export function careerTargets(metrics: CareerMetrics): TargetResult[] {
     },
     {
       id: "tecnico-injuries",
-      label: "Lesões no elenco do treinador por temporada",
+      label: "Lesões de 10 dias ou mais no elenco do treinador, por temporada",
       target: "entre 4 e 15, no máximo 10% graves",
       measured: `${fixed(metrics.injuriesPerSeason, 1)} por temporada, ${pct(metrics.seriousShare)} graves, ${Math.round(metrics.injuryDaysPerSeason)} dias`,
       pass: metrics.injuriesPerSeason >= 4 && metrics.injuriesPerSeason <= 15 && metrics.seriousShare <= 0.1,

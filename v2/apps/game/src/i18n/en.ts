@@ -7,6 +7,43 @@ export const en: Messages = {
     tagline: "Football career",
   },
 
+  brand: {
+    name: "Futeiros",
+    hub: "Futeiros home",
+    games: { craque: "Craque", tecnico: "Técnico" },
+  },
+
+  hub: {
+    eyebrow: "Two football games",
+    title: "Futeiros",
+    lead: "Live football on the pitch, as a player, or from the touchline, as a manager.",
+    craque: {
+      eyebrow: "Player career",
+      title: "Craque",
+      lead: "From the first contract, at 16, to the farewell.",
+      points: { first: "One decision per season", second: "Offers, training and events", third: "Career saved on this device" },
+      play: "Play",
+      continue: "Continue career",
+      summary: "See the summary",
+      saved: "Saved career: {surname}, {age}, OVR {ovr}",
+      open: "Craque home",
+    },
+    tecnico: {
+      eyebrow: "Manager career",
+      title: "Técnico",
+      lead: "24 seasons in the dugout, almost always starting in the second division.",
+      points: { first: "Three actions per stage", second: "Real squads, transfers and academy", third: "A living world, no national teams" },
+      play: "Play",
+      resume: "Back to the career",
+      inProgress: "In progress in this tab",
+      ended: "Legacy on screen",
+      noSave: "No saving",
+      noSaveHint: "Reloading the page ends the Técnico career.",
+    },
+    achievements: "Achievements",
+    achievementsCount: { zero: "None unlocked yet", one: "{count} unlocked", other: "{count} unlocked" },
+  },
+
   common: {
     confirm: "Confirm",
     cancel: "Cancel",
@@ -823,6 +860,7 @@ export const en: Messages = {
 
     areas: {
       label: "Lab areas",
+      tecnico: "Técnico",
       ending: "End of career",
       design: "Design",
       world: "World",

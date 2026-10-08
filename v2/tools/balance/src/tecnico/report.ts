@@ -76,6 +76,11 @@ export function markdownReport(report: TecnicoReport): string {
         `| ${clubName(duel.a)} | ${fixed(duel.strengthA, 1)} | ${clubName(duel.b)} | ${fixed(duel.strengthB, 1)} | ${pct(duel.odds.win)} | ${pct(duel.odds.draw)} | ${pct(duel.odds.loss)} | ${pct(duel.odds.advance)} | ${pct(duel.swapped.advance)} |`,
     ),
     "",
+    `Mundial de Clubes (${probes.clubWorldCup.entrants} clubes, ${probes.clubWorldCup.europeans} europeus), chaveamento jogado 20 mil vezes com as chances exatas: ${Object.entries(probes.clubWorldCup.share)
+      .sort((a, b) => b[1] - a[1])
+      .map(([confederation, value]) => `${confederation} ${pct(value)}`)
+      .join(", ")}. Melhor sul-americano: ${probes.clubWorldCup.bestSouth ? `${clubName(probes.clubWorldCup.bestSouth.club)} ${pct(probes.clubWorldCup.bestSouth.chance, 2)}` : "n/d"} por edição.`,
+    "",
     "## Dificuldade de contratar",
     "",
     "Mediana da chance de o negócio existir (o jogador querer e o clube liberar), por diferença entre o OVR do alvo",

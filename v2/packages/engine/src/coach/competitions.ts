@@ -317,7 +317,7 @@ function genericStrength(club: string): number {
   return GENERIC_CHAMPIONS.find((entry) => entry.id === club)?.strength ?? 60;
 }
 
-function clubWorldCupEntrants(input: SeasonInput, seed: Seeder): string[] {
+export function clubWorldCupEntrants(input: SeasonInput, seed: Seeder): string[] {
   const entrants: string[] = [];
   for (const confederation of CONFEDERATIONS) {
     const quota = CLUB_WORLD_CUP_QUOTA[confederation] ?? 0;

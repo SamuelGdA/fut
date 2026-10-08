@@ -1,0 +1,1054 @@
+/* ---------------------------------------------------------------------------
+   Hub do Futeiros (D50) e o Técnico (GDD 56). Mesmo vocabulário visual do
+   Craque: superfícies chapadas, filete de 1 px, tipografia de placar, cor do
+   clube como acento. O laço do Técnico (etapa, evento, resultados) cabe na
+   tela; elenco, time, clube e competições rolam por dentro.
+   ------------------------------------------------------------------------- */
+
+@layer components {
+  /* ------------------------------------------------------------------ hub */
+
+  .brand-game {
+    padding: 3px 8px;
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-xs);
+    color: var(--muted);
+    font-family: var(--font-display);
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .hub {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 76rem;
+    margin: 0 auto;
+    padding: 20px 16px 40px;
+  }
+
+  .hub-title {
+    font-family: var(--font-display);
+    font-size: clamp(3.6rem, 16vw, 7rem);
+    font-weight: 900;
+    line-height: 0.85;
+    text-transform: uppercase;
+  }
+
+  .hub-lead {
+    max-width: 40rem;
+    margin-top: 10px;
+    color: var(--muted);
+  }
+
+  .hub-games {
+    display: grid;
+    gap: 16px;
+  }
+
+  .hub-card {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 16px;
+    padding: 16px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--panel);
+    box-shadow: var(--lift);
+    overflow: hidden;
+  }
+
+  .hub-card::before {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 4px;
+    background: var(--glory);
+  }
+
+  .hub-card[data-game="tecnico"]::before {
+    background: var(--info);
+  }
+
+  .hub-card-art {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hub-card-art .pcard {
+    --card-w: 112px !important;
+  }
+
+  .hub-coach {
+    width: 112px;
+    height: 112px;
+    overflow: hidden;
+    border-radius: var(--radius-md);
+    background: var(--avatar-bg);
+  }
+
+  .hub-card-body {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .hub-card-title {
+    font-family: var(--font-display);
+    font-size: 2.6rem;
+    font-weight: 900;
+    line-height: 0.9;
+    text-transform: uppercase;
+  }
+
+  .hub-points {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: 0.85rem;
+  }
+
+  .hub-points li::before {
+    content: "▸ ";
+    color: var(--faint);
+  }
+
+  .hub-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 4px;
+  }
+
+  .hub-meta {
+    color: var(--faint);
+    font-size: 0.75rem;
+  }
+
+  .hub-footer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  @media (max-width: 420px) {
+    .hub-card {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .hub-card-art {
+      display: none;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .hub {
+      height: calc(100dvh - var(--topbar-h));
+      justify-content: center;
+      padding-block: clamp(16px, 4dvh, 40px);
+      overflow-y: auto;
+    }
+
+    .hub-games {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 24px;
+    }
+
+    .hub-card {
+      padding: 24px;
+      gap: 24px;
+    }
+
+    .hub-card-art .pcard {
+      --card-w: 168px !important;
+    }
+
+    .hub-coach {
+      width: 168px;
+      height: 168px;
+    }
+
+    .hub-card-title {
+      font-size: 3.4rem;
+    }
+  }
+
+  /* ------------------------------------------------- identidade do técnico */
+
+  .nation-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(128px, 1fr));
+    gap: 6px;
+  }
+
+  .nation-cell {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 6px 10px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--panel-2);
+    color: var(--fg);
+    font-size: 0.85rem;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .nation-cell[data-checked] {
+    border-color: var(--club);
+    box-shadow: inset 0 0 0 1px var(--club);
+    background: var(--panel-3);
+  }
+
+  .nation-cell:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  .nation-mark {
+    margin-left: auto;
+    color: var(--faint);
+    font-size: 10px;
+  }
+
+  .coach-portrait {
+    width: 96px;
+    height: 96px;
+    flex-shrink: 0;
+    overflow: hidden;
+    border-radius: var(--radius-md);
+    background: var(--avatar-bg);
+  }
+
+  .coach-portrait-lg {
+    width: 128px;
+    height: 128px;
+  }
+
+  /* -------------------------------------------------------------- a tela */
+
+  .tecnico-columns {
+    display: grid;
+    grid-template-columns: 300px minmax(0, 1fr) 400px;
+    gap: 24px;
+    height: 100%;
+    max-width: 1360px;
+    margin: 0 auto;
+    padding: 16px 24px 20px;
+  }
+
+  .tecnico-columns > * {
+    min-height: 0;
+  }
+
+  .tecnico-columns .fit-panel {
+    max-width: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .tec-side {
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--panel);
+  }
+
+  .tec-side .scroll-panel-inner {
+    padding: 14px;
+  }
+
+  .tec-center {
+    gap: 10px;
+  }
+
+  .tec-money {
+    gap: 14px;
+    text-align: right;
+  }
+
+  .tec-money dt {
+    color: var(--muted);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .tec-money dd {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-variant-numeric: tabular-nums;
+    font-weight: 800;
+    line-height: 1;
+  }
+
+  .tec-bars {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 12px;
+  }
+
+  .tec-bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    line-height: 1;
+  }
+
+  .tec-bar-name {
+    color: var(--muted);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .tec-bar-track {
+    position: relative;
+    width: 40px;
+    height: 5px;
+    overflow: hidden;
+    border-radius: 3px;
+    background: var(--panel-3);
+  }
+
+  .tec-bar-track > span {
+    position: absolute;
+    inset: 0;
+    background: var(--tone, var(--good));
+    transform-origin: left;
+  }
+
+  .tec-bar[data-tone="good"] {
+    --tone: var(--good);
+  }
+
+  .tec-bar[data-tone="neutral"] {
+    --tone: var(--info);
+  }
+
+  .tec-bar[data-tone="bad"] {
+    --tone: var(--bad);
+  }
+
+  .tec-bar-word {
+    font-weight: 700;
+  }
+
+  /* Passos da etapa. */
+  .tec-steps {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 4px;
+    flex-shrink: 0;
+  }
+
+  .tec-steps li {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    color: var(--faint);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .tec-step-dot {
+    width: 100%;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--panel-3);
+  }
+
+  .tec-steps li[data-state="done"] .tec-step-dot {
+    background: var(--club);
+    opacity: 0.55;
+  }
+
+  .tec-steps li[data-state="current"] {
+    color: var(--fg);
+  }
+
+  .tec-steps li[data-state="current"] .tec-step-dot {
+    background: var(--club);
+  }
+
+  .tec-stage,
+  .tec-event,
+  .tec-results {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-height: 0;
+    height: 100%;
+  }
+
+  .tec-slots {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  .tec-slot {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    min-height: 28px;
+    border: 1px dashed var(--rule);
+    border-radius: 999px;
+    color: var(--faint);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .tec-slot[data-used] {
+    border-style: solid;
+    border-color: var(--club);
+    background: color-mix(in srgb, var(--club) 16%, transparent);
+    color: var(--fg);
+  }
+
+  .tec-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  .tec-action {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    column-gap: 8px;
+    align-items: center;
+    min-height: 52px;
+    padding: 7px 10px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--panel);
+    color: var(--fg);
+    text-align: left;
+    transition: border-color 140ms ease-out, transform 140ms ease-out;
+  }
+
+  .tec-action:hover:not([data-disabled]) {
+    border-color: var(--club);
+  }
+
+  .tec-action:active:not([data-disabled]) {
+    transform: translateY(1px);
+  }
+
+  .tec-action:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  .tec-action[data-disabled] {
+    opacity: 0.5;
+  }
+
+  .tec-action-icon {
+    grid-row: span 2;
+    color: var(--club);
+  }
+
+  .tec-action-name {
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    font-weight: 800;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  .tec-action-hint {
+    overflow: hidden;
+    color: var(--muted);
+    font-size: 11px;
+    line-height: 1.2;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* A sétima ação ocupa a linha inteira na grade de duas colunas. */
+  .tec-actions > :last-child:nth-child(odd) {
+    grid-column: span 2;
+  }
+
+  .tec-free {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .tec-advance {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: auto;
+    padding-top: 8px;
+    border-top: 1px solid var(--line);
+  }
+
+  .tec-flow-banner {
+    padding: 8px 12px;
+    border: 1px solid var(--info);
+    border-radius: var(--radius-sm);
+    background: color-mix(in srgb, var(--info) 14%, transparent);
+    color: var(--fg);
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-align: left;
+  }
+
+  .tec-card {
+    padding: 14px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--panel);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    min-height: 0;
+  }
+
+  .tec-choice {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--panel-2);
+    color: var(--fg);
+    text-align: left;
+    transition: border-color 140ms ease-out;
+  }
+
+  .tec-choice-row {
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .tec-choice:hover:not(:disabled) {
+    border-color: var(--club);
+  }
+
+  .tec-choice[data-checked] {
+    border-color: var(--club);
+    box-shadow: inset 0 0 0 1px var(--club);
+  }
+
+  .tec-choice:disabled {
+    opacity: 0.5;
+  }
+
+  .tec-choice:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  .tec-pill {
+    min-height: 36px;
+    padding: 4px 12px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--panel-2);
+    color: var(--fg);
+    font-weight: 700;
+  }
+
+  .tec-pill[data-checked] {
+    border-color: var(--club);
+    background: var(--club);
+    color: var(--on-club);
+  }
+
+  .tec-pill:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  /* Folha do processo. */
+  .tec-sheet-footer {
+    position: sticky;
+    bottom: -1px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 0 -4px;
+    padding: 10px 4px 2px;
+    border-top: 1px solid var(--line);
+    background: var(--panel);
+  }
+
+  .tec-pick-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .tec-pick {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--panel-2);
+    color: var(--fg);
+    text-align: left;
+  }
+
+  .tec-pick[data-checked] {
+    border-color: var(--club);
+    box-shadow: inset 0 0 0 1px var(--club);
+  }
+
+  .tec-pick[aria-disabled="true"] {
+    opacity: 0.55;
+  }
+
+  .tec-pick:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  .tec-check {
+    display: grid;
+    flex-shrink: 0;
+    place-items: center;
+    width: 20px;
+    height: 20px;
+    border: 1.5px solid var(--rule);
+    border-radius: var(--radius-xs);
+  }
+
+  .tec-pick[data-checked] .tec-check {
+    border-color: var(--club);
+    background: var(--club);
+    color: var(--on-club);
+  }
+
+  .tec-select select {
+    min-height: 36px;
+    padding: 4px 10px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--panel-2);
+    color: var(--fg);
+    font-size: 0.85rem;
+  }
+
+  .tec-toggle,
+  .tec-chosen {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    min-height: 32px;
+    padding: 3px 10px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--panel-2);
+    color: var(--fg);
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+
+  .tec-toggle[aria-pressed="true"] {
+    border-color: var(--club);
+  }
+
+  .tec-response {
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--panel-2);
+  }
+
+  .tec-impact {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+    margin-top: 8px;
+  }
+
+  .tec-impact dt {
+    color: var(--muted);
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .tec-impact dd {
+    font-size: 0.85rem;
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+  }
+
+  /* Linha de jogador. */
+  .tec-player {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .tec-pos {
+    width: 34px;
+    flex-shrink: 0;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 800;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  .tec-ovr {
+    display: grid;
+    flex-shrink: 0;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-sm);
+    background: var(--panel-3);
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-weight: 900;
+  }
+
+  .tec-row {
+    display: flex;
+    width: 100%;
+    padding: 7px 4px;
+    border-bottom: 1px solid var(--line);
+    color: var(--fg);
+    text-align: left;
+  }
+
+  .tec-row:hover:not(:disabled) {
+    background: var(--panel-2);
+  }
+
+  .tec-row:disabled {
+    cursor: default;
+  }
+
+  .tec-row-target:not(:disabled) {
+    background: color-mix(in srgb, var(--club) 8%, transparent);
+  }
+
+  .tec-row:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: -2px;
+  }
+
+  /* Campo da escalação. */
+  .tec-pitch {
+    position: relative;
+    aspect-ratio: 4 / 4.6;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background:
+      linear-gradient(var(--line), var(--line)) center 50% / 100% 1px no-repeat,
+      radial-gradient(circle at 50% 50%, transparent 17%, var(--line) 17.4%, transparent 18%),
+      repeating-linear-gradient(0deg, var(--panel-2) 0 12.5%, var(--panel) 12.5% 25%);
+  }
+
+  .tec-slot-btn {
+    position: absolute;
+    display: flex;
+    width: 72px;
+    flex-direction: column;
+    align-items: center;
+    gap: 1px;
+    transform: translate(-50%, -50%);
+    color: var(--fg);
+  }
+
+  .tec-slot-ovr {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border: 2px solid var(--club);
+    border-radius: 50%;
+    background: var(--panel);
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    font-weight: 900;
+  }
+
+  .tec-slot-btn[data-selected] .tec-slot-ovr {
+    background: var(--club);
+    color: var(--on-club);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--club) 35%, transparent);
+  }
+
+  .tec-slot-btn[data-empty] .tec-slot-ovr {
+    border-style: dashed;
+    border-color: var(--bad);
+  }
+
+  .tec-slot-name {
+    max-width: 100%;
+    overflow: hidden;
+    padding: 0 3px;
+    border-radius: var(--radius-xs);
+    background: color-mix(in srgb, var(--canvas) 80%, transparent);
+    font-size: 10.5px;
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .tec-slot-pos {
+    color: var(--muted);
+    font-size: 9px;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+
+  .tec-slot-btn:focus-visible .tec-slot-ovr {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  /* Propostas. */
+  .tec-offer {
+    position: relative;
+    padding: 14px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--panel);
+  }
+
+  .tec-offer[data-stay] {
+    border-color: var(--glory);
+  }
+
+  .tec-offer-facts {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px 12px;
+    margin-top: 8px;
+  }
+
+  .tec-offer-facts dt {
+    color: var(--muted);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .tec-offer-facts dd {
+    font-size: 0.9rem;
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+  }
+
+  /* Resultados e avaliação: o miolo rola, o botão fica embaixo. */
+  .tec-results-scroll {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 14px;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding-right: 2px;
+  }
+
+  /* Placar da decisão no jogo. */
+  .tec-scoreboard {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 8px;
+  }
+
+  /* Tabelas e chaves. */
+  .tec-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8rem;
+  }
+
+  .tec-table th {
+    padding: 4px 3px;
+    border-bottom: 1px solid var(--rule);
+    color: var(--muted);
+    font-size: 10px;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  .tec-table td {
+    padding: 4px 3px;
+    border-bottom: 1px solid var(--line);
+    text-align: center;
+  }
+
+  .tec-table td:nth-child(2) {
+    max-width: 9rem;
+  }
+
+  .tec-table tr[data-own] td {
+    background: color-mix(in srgb, var(--club) 14%, transparent);
+    font-weight: 700;
+  }
+
+  .tec-table tr[data-zone="up"] td:first-child {
+    box-shadow: inset 3px 0 0 var(--good);
+  }
+
+  .tec-table tr[data-zone="down"] td:first-child {
+    box-shadow: inset 3px 0 0 var(--bad);
+  }
+
+  .tec-fixture {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 6px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    font-size: 0.8rem;
+  }
+
+  .tec-fixture-own {
+    border-color: var(--club);
+  }
+
+  .tec-season {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  /* Simulando: a bola gira pelo compositor, mesmo com a página ocupada. */
+  .tec-busy {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    display: grid;
+    place-items: center;
+    background: var(--scrim);
+  }
+
+  .tec-busy-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    max-width: 22rem;
+    padding: 24px 28px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--panel);
+    text-align: center;
+  }
+
+  .tec-busy-ball {
+    width: 34px;
+    height: 34px;
+    border: 4px solid var(--club);
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: tec-spin 0.8s linear infinite;
+  }
+
+  @keyframes tec-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  [data-motion="reduced"] .tec-busy-ball {
+    animation-duration: 2.4s;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tec-busy-ball {
+      animation-duration: 2.4s;
+    }
+  }
+
+  /* Celular baixo: a etapa afina para caber sem rolar. */
+  @media (max-height: 700px) and (max-width: 1023px) {
+    .tec-action {
+      min-height: 44px;
+      padding: 5px 8px;
+    }
+
+    .tec-action-hint {
+      display: none;
+    }
+
+    .tec-free .eyebrow {
+      display: none;
+    }
+
+    .tec-stage > .text-xs {
+      display: none;
+    }
+  }
+}
+
+@layer components {
+  .tec-free-row {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .tec-free-row > * {
+    flex-shrink: 0;
+  }
+
+  .tec-upcoming {
+    flex-shrink: 1;
+  }
+
+  @media (max-width: 1023px) {
+    .tec-objective {
+      display: none;
+    }
+
+    .tec-advance > :only-child,
+    .tec-advance > button:last-child {
+      margin-left: auto;
+    }
+
+    .tec-bars {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 3px 10px;
+    }
+
+    .tec-bar-track {
+      width: 28px;
+    }
+  }
+}
