@@ -45,7 +45,7 @@ import type {
 import { FORMATIONS } from "./types";
 import { CAREER_SEASONS, COACH_VERSION, EVALUATION, OFFERS, PREDICTABILITY, PROMISES, REPUTATION, SATISFACTION } from "./tuning";
 import { absDay, coachRng } from "./util";
-import { assignRoles, createWorldState, squadOf, type WorldData } from "./world";
+import { assignRoles, COACH_COUNTRIES, createWorldState, squadOf, type WorldData } from "./world";
 
 /**
  * A carreira do Técnico (GDD 56): estado em memória, sem save (spec 17). Toda
@@ -60,6 +60,7 @@ function emptyLedger(): PeriodLedger {
 }
 
 export function createCoachCareer(setup: CoachSetup, data: WorldData): CoachCareer {
+  if (!COACH_COUNTRIES.includes(setup.identity.nationality)) throw new Error(`coach: nacionalidade sem segunda divisão: ${setup.identity.nationality}`);
   const world = createWorldState(setup.seed, setup.startYear, data);
   const career: CoachCareer = {
     setup,
@@ -266,9 +267,27 @@ export interface CoachStep {
   readonly error: string | null;
 }
 
+/**
+ * Comandos que só mexem na tática e no processo aberto: a cópia leve divide
+ * jogadores, clubes, jogos e competições com o estado anterior (nenhum deles
+ * é alterado por estes comandos). São os toques mais frequentes da tela.
+ */
+const LIGHT_COMMANDS: ReadonlySet<CoachCommand["type"]> = new Set(["setTactics", "autoLineup", "openAction", "cancelAction"]);
+
+function lightCopy(career: CoachCareer): CoachCareer {
+  const deep = <T>(value: T): T => JSON.parse(JSON.stringify(value)) as T;
+  return {
+    ...career,
+    coach: career.coach ? deep(career.coach) : null,
+    actions: [...career.actions],
+    flow: career.flow ? deep(career.flow) : null,
+    ledger: deep(career.ledger),
+  };
+}
+
 /** Aplica um comando. Nunca altera o estado recebido. */
 export function coachCommand(career: CoachCareer, command: CoachCommand): CoachStep {
-  const next = cloneCareer(career);
+  const next = LIGHT_COMMANDS.has(command.type) ? lightCopy(career) : cloneCareer(career);
   try {
     apply(next, command);
     return { career: next, error: null };
@@ -561,15 +580,13 @@ function finishPeriod(career: CoachCareer): void {
     const legacy = career.legacy[player.id];
     if (legacy) legacy.bestOvr = Math.max(legacy.bestOvr, player.ovr);
   }
-  let promoted = false;
-  let relegated = false;
   let relations: RelationChange[];
   if (final) {
     const movement = closeLeagues(career);
     career.movement = { promoted: [...movement.promoted], relegated: [...movement.relegated] };
     seasonPrizes(career, movement.promoted, movement.relegated);
-    promoted = movement.promoted.has(coach.club);
-    relegated = movement.relegated.has(coach.club);
+    const promoted = movement.promoted.has(coach.club);
+    const relegated = movement.relegated.has(coach.club);
     relations = periodRelations(career, true, promoted, relegated);
     const review = evaluateSeason(career, promoted, relegated);
     const objective = coach.objective;

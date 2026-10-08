@@ -16,7 +16,7 @@ import type {
   Moment,
   Sector,
 } from "./types";
-import { INJURY, PREDICTABILITY, SATISFACTION, SUBSTITUTIONS, TRAINING } from "./tuning";
+import { CALENDAR_DAYS, INJURY, PREDICTABILITY, SATISFACTION, SUBSTITUTIONS, TRAINING } from "./tuning";
 import type { Rng } from "../rng";
 import { absDay, coachRng, unit } from "./util";
 import { squadIndex } from "./world";
@@ -455,10 +455,15 @@ export function periodStart(career: CoachCareer): number {
   return 0;
 }
 
-/** Último dia do período atual (o rápido vai até o fim da temporada, inclusive o Mundial nas férias). */
+/**
+ * Último dia do período atual. O período final vai até o fim das férias:
+ * as fases do Mundial de Clubes são sorteadas uma depois da outra, nas
+ * férias, e todas precisam caber no período (antes, só a primeira fase
+ * cabia, e o Mundial nunca terminava).
+ */
 export function periodEnd(career: CoachCareer): number {
-  if (career.setup.mode === "slow" && career.half === 0) return 149;
-  return Math.max(299, ...career.fixtures.map((fixture) => fixture.day));
+  if (career.setup.mode === "slow" && career.half === 0) return CALENDAR_DAYS.half - 1;
+  return CALENDAR_DAYS.season + CALENDAR_DAYS.offseason - 1;
 }
 
 /**

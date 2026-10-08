@@ -1,4 +1,4 @@
-import { CLUBS } from "@craque/world";
+import { CLUBS, type CountryCode, leagueAt, PLAYABLE_COUNTRIES } from "@craque/world";
 import type { SquadPlayer } from "@craque/world/squads";
 import { clamp } from "../math";
 import { baseMarketValue } from "../player/value";
@@ -20,6 +20,12 @@ export interface WorldData {
   readonly players: readonly SquadPlayer[];
   readonly free: readonly SquadPlayer[];
 }
+
+/**
+ * Nacionalidades do treinador (D53): países com segunda divisão no jogo, porque
+ * as propostas iniciais saem 95% dela. México e Estados Unidos ficam de fora.
+ */
+export const COACH_COUNTRIES: readonly CountryCode[] = PLAYABLE_COUNTRIES.filter((country) => Boolean(leagueAt(country, 2)));
 
 export function squadValue(squad: readonly CoachPlayer[], year: number): number {
   return squad.reduce((total, player) => total + baseMarketValue(player.ovr, ageOf(player, year)), 0);

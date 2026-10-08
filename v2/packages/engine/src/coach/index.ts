@@ -39,5 +39,30 @@ export { financeLabel, initialOfferDivision, leaguePosition, leagueState, object
 export { developBonus } from "./evolution";
 export { EVENT_IDS, MATCH_EVENT_OPTIONS, eventWeights } from "./events";
 export { periodEnd } from "./season";
-export { squadOf, createWorldState, type WorldData } from "./world";
+export { COACH_COUNTRIES, squadOf, createWorldState, type WorldData } from "./world";
 export { absDay, stageKey } from "./util";
+export { growthStep, type GrowthInput } from "./evolution";
+export {
+  PHILOSOPHIES,
+  affordability,
+  aiPhilosophyMix,
+  clubDuel,
+  clubRatings,
+  confederationOf,
+  developCandidates,
+  developRange,
+  developTrial,
+  flatRatings,
+  initialDivisionShare,
+  matchOdds,
+  paceTrial,
+  philosophyGrid,
+  purchaseCurve,
+  type Affordability,
+  type ClubDuel,
+  type DevelopTrial,
+  type MatchOdds,
+  type PaceTrial,
+  type PhilosophyRow,
+  type PurchasePoint,
+} from "./probes";
