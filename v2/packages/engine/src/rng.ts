@@ -203,6 +203,9 @@ export const RNG_SYSTEMS = [
   // Escolhas de jogadores automáticos (harness, caixa de areia). Nunca é lido
   // pela simulação, para que trocar de política não mude o mundo.
   "policy",
+  // O Técnico (GDD 56). Um sistema só, separado por rótulo nas partes
+  // ("match", "youth", "offers"...): acrescentá-lo não muda nenhum fluxo do Craque.
+  "coach",
 ] as const;
 
 export type RngSystem = (typeof RNG_SYSTEMS)[number];

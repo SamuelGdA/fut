@@ -1,0 +1,17 @@
+{
+  "_fonte": "Conhecimento do assistente: jogadores reais com papel estimado; elencos podem estar desatualizados (D52).",
+  "clubes": {
+    "crb": [
+      { "nome": "Anselmo Ramon", "posicao": "st", "nascimento": 1988, "nacionalidade": "BRA", "nivel": "rotacao", "confianca": "baixa" }
+    ],
+    "ferroviaria": [
+      { "nome": "Carlão", "posicao": "st", "nascimento": 1986, "nacionalidade": "BRA", "nivel": "titular", "confianca": "media" }
+    ],
+    "botafogo-sp": [],
+    "volta-redonda": [],
+    "amazonas": [
+      { "nome": "Sassá", "posicao": "st", "nascimento": 1994, "nacionalidade": "BRA", "nivel": "titular", "confianca": "baixa" }
+    ],
+    "athletic-mg": []
+  }
+}
