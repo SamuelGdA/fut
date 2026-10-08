@@ -1,0 +1,2358 @@
+/* Estilos das telas do jogo (M5): carta, carreira, revelação, entrada.
+   Mesma regra do components.css: aqui fica o que depende de estado (data-*),
+   de variáveis ou de geometria que não cabe numa linha de classe. */
+
+@layer components {
+  /* ------------------------------------------------------- cor do clube */
+
+  /* As variáveis vêm de clubStyle(); o acento muda com o tema para nunca
+     sumir no fundo (GDD 32.2). */
+  .club-scope {
+    --club: var(--club-dark);
+    --on-club: var(--on-club-dark);
+  }
+
+  [data-theme="light"] .club-scope {
+    --club: var(--club-light);
+    --on-club: var(--on-club-light);
+  }
+
+  /* --------------------------------------------- brilho atrás do escudo */
+
+  .crest-backdrop {
+    display: inline-grid;
+    place-items: center;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle at 50% 46%,
+      rgb(255 255 255 / 0.14),
+      rgb(255 255 255 / 0.05) 50%,
+      transparent 70%
+    );
+  }
+
+  [data-theme="light"] .crest-backdrop {
+    background: radial-gradient(
+      circle at 50% 46%,
+      rgb(40 32 18 / 0.08),
+      rgb(40 32 18 / 0.03) 50%,
+      transparent 70%
+    );
+  }
+
+  /* ----------------------------------------------------------- a carta */
+
+  /* Silhueta de escudo (D43): cantos de cima chanfrados, laterais retas e a
+     ponta rasa embaixo. O mesmo desenho recortado de novo, por dentro, faz o
+     filete. Tudo em `em`, medido pela largura da carta. */
+  .pcard {
+    --shape: polygon(9% 0, 91% 0, 100% 6.5%, 100% 88%, 50% 100%, 0 88%, 0 6.5%);
+    position: relative;
+    flex-shrink: 0;
+    width: var(--card-w, 220px);
+    aspect-ratio: 5 / 7;
+    font-size: calc(var(--card-w, 220px) / 15);
+    filter: drop-shadow(0 0.5em 0.9em rgb(0 0 0 / 0.42));
+    user-select: none;
+  }
+
+  [data-theme="light"] .pcard {
+    filter: drop-shadow(0 0.45em 0.8em rgb(60 45 20 / 0.28));
+  }
+
+  .pcard-face {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    color: var(--ink);
+    background: var(--material);
+    clip-path: var(--shape);
+  }
+
+  /* O filete por dentro, no mesmo desenho: um polígono sem preenchimento. */
+  .pcard-rule {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+
+  .pcard-rule polygon {
+    fill: none;
+    stroke: var(--rule-ink);
+    stroke-width: 1.2px;
+  }
+
+  /* O brilho do material atrás do retrato, como um holofote. */
+  .pcard-face::after {
+    content: "";
+    position: absolute;
+    top: 4%;
+    left: 22%;
+    width: 72%;
+    height: 54%;
+    z-index: 0;
+    background: radial-gradient(circle at 50% 55%, var(--glow) 0, transparent 68%);
+    pointer-events: none;
+  }
+
+  .pcard-portrait {
+    position: absolute;
+    top: 5%;
+    right: 4%;
+    z-index: 1;
+    width: 64%;
+    height: 49%;
+  }
+
+  .pcard-portrait svg {
+    display: block;
+  }
+
+  /* OVR e posição no alto à esquerda. */
+  .pcard-rating {
+    position: absolute;
+    top: 9%;
+    left: 9%;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.1em;
+    min-width: 2.4em;
+  }
+
+  .pcard-ovr-num {
+    font-family: var(--font-display);
+    font-size: 3.05em;
+    font-weight: 900;
+    line-height: 0.82;
+  }
+
+  .pcard-pos {
+    padding-top: 0.14em;
+    border-top: 1px solid var(--rule-ink);
+    font-family: var(--font-display);
+    font-size: 1.05em;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    line-height: 1;
+  }
+
+  .pcard-shirt {
+    position: absolute;
+    top: 8%;
+    right: 9%;
+    z-index: 2;
+    font-family: var(--font-display);
+    font-size: 0.95em;
+    font-weight: 900;
+    opacity: 0.72;
+  }
+
+  /* O selo de Difícil ou Desafio, carimbado de lado sobre o retrato. */
+  .pcard-seal {
+    position: absolute;
+    top: 38%;
+    right: 5%;
+    z-index: 4;
+    padding: 0.2em 0.5em;
+    border: 0.14em solid currentColor;
+    border-radius: 0.2em;
+    background: rgb(13 17 16 / 0.82);
+    color: #ec5b60;
+    font-family: var(--font-display);
+    font-size: 0.82em;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    line-height: 1;
+    text-transform: uppercase;
+    transform: rotate(-9deg);
+    box-shadow: 0 0.2em 0.5em rgb(0 0 0 / 0.35);
+  }
+
+  .pcard-seal[data-kind="challenge"] {
+    color: #e3b341;
+  }
+
+  .pcard-body {
+    position: absolute;
+    right: 7%;
+    bottom: 10%;
+    left: 7%;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    height: 35%;
+  }
+
+  .pcard-name {
+    overflow: hidden;
+    padding: 0.06em 0 0.18em;
+    border-bottom: 1px solid var(--rule-ink);
+    font-family: var(--font-display);
+    font-size: 1.5em;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    line-height: 1;
+    text-align: center;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  /* Os seis atributos numa linha: sigla em cima, número embaixo. */
+  .pcard-attrs {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    align-items: center;
+    margin: 0.32em 0 0;
+  }
+
+  .pcard-attrs > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.08em;
+  }
+
+  .pcard-attrs dt {
+    font-size: 0.56em;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    opacity: 0.8;
+  }
+
+  .pcard-attrs dd {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 1.32em;
+    font-weight: 900;
+    line-height: 1;
+  }
+
+  /* Bandeira, liga e clube, centrados no pé. */
+  .pcard-foot {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55em;
+    margin-top: auto;
+  }
+
+  .pcard-flag {
+    display: block;
+    width: 1.55em;
+    height: 1.12em;
+    box-shadow: 0 0 0 1px rgb(0 0 0 / 0.28);
+  }
+
+  .pcard-league {
+    display: block;
+    width: 1.45em;
+    height: 1.45em;
+  }
+
+  .pcard-crest {
+    display: block;
+    width: 1.6em;
+    height: 1.6em;
+  }
+
+  /* Materiais (GDD 30): cobre fosco, aço escovado, ouro com trama, ouro com
+     tira de foil, preto com relevo e filete dourado. Nada brilha em loop. */
+  .pcard[data-tier="bronze"] {
+    --ink: #2a1709;
+    --rule-ink: rgb(42 23 9 / 0.3);
+    --glow: rgb(255 226 196 / 0.38);
+    --material: radial-gradient(circle at 20% 15%, rgb(255 220 190 / 0.18), transparent 45%),
+      linear-gradient(165deg, #c78d5d 0%, #a4663b 46%, #774421 100%);
+  }
+
+  .pcard[data-tier="silver"] {
+    --ink: #1b2025;
+    --rule-ink: rgb(27 32 37 / 0.26);
+    --glow: rgb(255 255 255 / 0.55);
+    --material: repeating-linear-gradient(90deg, rgb(255 255 255 / 0.12) 0 1px, transparent 1px 3px),
+      linear-gradient(165deg, #e7ebee 0%, #b8c0c7 50%, #89919a 100%);
+  }
+
+  .pcard[data-tier="gold"] {
+    --ink: #2b1f05;
+    --rule-ink: rgb(43 31 5 / 0.26);
+    --glow: rgb(255 246 200 / 0.6);
+    --material: repeating-linear-gradient(45deg, rgb(255 255 255 / 0.08) 0 1px, transparent 1px 5px),
+      repeating-linear-gradient(-45deg, rgb(90 60 0 / 0.08) 0 1px, transparent 1px 5px),
+      linear-gradient(165deg, #f1d47c 0%, #d3a63d 48%, #a77b1f 100%);
+  }
+
+  .pcard[data-tier="elite"] {
+    --ink: #221600;
+    --rule-ink: rgb(34 22 0 / 0.28);
+    --glow: rgb(255 250 220 / 0.7);
+    --material: linear-gradient(
+        90deg,
+        transparent 60%,
+        rgb(255 252 232 / 0.5) 64.5%,
+        rgb(255 236 170 / 0.18) 68%,
+        transparent 71%
+      ),
+      repeating-linear-gradient(45deg, rgb(255 255 255 / 0.07) 0 1px, transparent 1px 5px),
+      repeating-linear-gradient(-45deg, rgb(90 60 0 / 0.1) 0 1px, transparent 1px 5px),
+      linear-gradient(165deg, #f7df8e 0%, #dba92c 44%, #8c620e 100%);
+  }
+
+  .pcard[data-tier="legend"] {
+    --ink: #f2d688;
+    --rule-ink: rgb(216 178 76 / 0.75);
+    --glow: rgb(227 179 65 / 0.22);
+    --material: radial-gradient(circle at 28% 18%, rgb(255 255 255 / 0.07), transparent 42%),
+      repeating-linear-gradient(135deg, rgb(255 255 255 / 0.03) 0 2px, transparent 2px 6px),
+      linear-gradient(165deg, #26262a 0%, #0c0c0d 100%);
+  }
+
+  /* Carta que vira na troca de faixa (o laboratório mostra a virada). */
+  .pcard-flip {
+    position: relative;
+    perspective: 1100px;
+  }
+
+  .pcard-flip-inner {
+    position: relative;
+    transform-style: preserve-3d;
+  }
+
+  .pcard-flip-face {
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+
+  .pcard-flip-back {
+    position: absolute;
+    inset: 0;
+    transform: rotateY(180deg);
+  }
+
+  /* ---------------------------------------------------------- entrada */
+
+  /* Início (D43): no celular, as peças empilhadas; no PC, três colunas da
+     altura da janela, sem rolar a página. */
+  .home-board {
+    display: grid;
+    gap: 24px;
+    max-width: 72rem;
+    margin: 0 auto;
+    padding: 24px 16px 64px;
+  }
+
+  .home-hero,
+  .home-main,
+  .home-side {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-width: 0;
+  }
+
+  .home-hero {
+    gap: 0;
+  }
+
+  .home-card {
+    display: none;
+  }
+
+  .home-title {
+    font-family: var(--font-display);
+    font-size: clamp(4.2rem, 19vw, 9.5rem);
+    font-weight: 900;
+    letter-spacing: 0.01em;
+    line-height: 0.82;
+    text-transform: uppercase;
+  }
+
+  @media (min-width: 1024px) {
+    .home-board {
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr) 320px;
+      align-items: start;
+      gap: 28px;
+      max-width: 82rem;
+      height: calc(100dvh - var(--topbar-h));
+      padding: clamp(16px, 3dvh, 32px) 24px 16px;
+      /* Numa janela pequena demais, rola por dentro em vez de cortar. */
+      overflow-y: auto;
+    }
+
+    .home-title {
+      font-size: clamp(4.5rem, 11dvh, 7.5rem);
+    }
+
+    .home-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      margin-top: clamp(12px, 3dvh, 28px);
+    }
+
+    .home-card .pcard {
+      --card-w: clamp(150px, calc((100dvh - 420px) * 0.714), 230px) !important;
+    }
+
+    .home-main,
+    .home-side {
+      gap: clamp(12px, 2dvh, 20px);
+    }
+  }
+
+  /* Identidade (D43): no celular, uma etapa por vez; no PC, três colunas numa
+     tela só, a altura da janela, sem rolar a página. */
+  .id-page {
+    max-width: 72rem;
+    margin: 0 auto;
+    padding: 20px 16px 144px;
+  }
+
+  .id-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .id-grid,
+  .id-card-column,
+  .id-middle {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    min-width: 0;
+  }
+
+  @media (min-width: 1024px) {
+    .id-page {
+      --id-card: clamp(150px, calc((100dvh - 470px) * 0.714), 230px);
+      display: flex;
+      flex-direction: column;
+      max-width: 82rem;
+      height: calc(100dvh - var(--topbar-h));
+      padding: clamp(12px, 2.5dvh, 24px) 24px 16px;
+      /* Numa janela pequena demais, rola por dentro em vez de cortar. */
+      overflow-y: auto;
+    }
+
+    .id-grid {
+      display: grid;
+      flex: 1;
+      grid-template-columns: 250px minmax(0, 1fr) minmax(0, 330px);
+      gap: 28px;
+      min-height: 0;
+    }
+
+    .id-card-column,
+    .id-middle {
+      gap: 18px;
+      min-height: 0;
+    }
+
+    .id-step[data-grow] {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    .id-step[data-grow] .nation-picker {
+      flex: 1;
+    }
+
+    .id-step[data-grow] .country-list {
+      flex: 1;
+      max-height: none;
+    }
+
+    /* Nome e posição lado a lado: o campo ganha a altura da coluna inteira. */
+    .id-middle {
+      display: grid;
+      grid-template-columns: minmax(15rem, 1fr) minmax(0, 1.05fr);
+      gap: 24px;
+    }
+
+    /* O campo mede a altura e a largura que sobram na coluna, a que for menor. */
+    .id-middle .pitch-wrap {
+      flex: 1;
+      min-height: 0;
+      container-type: size;
+    }
+
+    .id-middle .pitch {
+      flex: none;
+      width: min(100cqw, calc((100cqh - 44px) * 0.708), 380px);
+    }
+  }
+  @media (max-width: 1023px) {
+    .id-step:not([data-active]) {
+      display: none;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .id-stepper,
+    .id-step-nav {
+      display: none;
+    }
+  }
+
+  .id-stepper {
+    display: grid;
+    grid-template-columns: repeat(var(--steps, 4), 1fr);
+    gap: 4px;
+  }
+
+  .id-stepper > span {
+    height: 4px;
+    border-radius: 1px;
+    background: var(--panel-3);
+  }
+
+  .id-stepper > span[data-done] {
+    background: var(--fg);
+  }
+
+  /* Campo de posições: o gramado visto de cima, ataque para cima. */
+  .pitch {
+    --pitch-a: #13261b;
+    --pitch-b: #172d20;
+    --pitch-line: rgb(238 241 234 / 0.32);
+    position: relative;
+    width: 100%;
+    max-width: 380px;
+    aspect-ratio: 68 / 96;
+    margin: 0 auto;
+    overflow: hidden;
+    border-radius: var(--radius-md);
+    /* As posições medem a largura do campo: no campo pequeno, elas encolhem juntas. */
+    container-type: inline-size;
+    background: repeating-linear-gradient(180deg, var(--pitch-a) 0 12.5%, var(--pitch-b) 12.5% 25%);
+  }
+
+  [data-theme="light"] .pitch {
+    --pitch-a: #4f8a5c;
+    --pitch-b: #57946a;
+    --pitch-line: rgb(255 255 255 / 0.62);
+  }
+
+  .pitch-lines {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    fill: none;
+    stroke: var(--pitch-line);
+    stroke-width: 0.5;
+  }
+
+  .pitch-spot {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    display: grid;
+    place-items: center;
+    width: min(52px, 22cqw);
+    height: min(44px, 16cqw);
+    border: 1.5px solid rgb(238 241 234 / 0.55);
+    border-radius: var(--radius-sm);
+    background: rgb(13 17 16 / 0.62);
+    color: #eef1ea;
+    font-family: var(--font-display);
+    font-size: min(17px, 6.4cqw);
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    transform: translate(-50%, -50%);
+    transition:
+      background-color 140ms ease-out,
+      border-color 140ms ease-out,
+      color 140ms ease-out,
+      transform 140ms ease-out;
+  }
+
+  .pitch-spot:hover:not([data-checked]) {
+    border-color: #eef1ea;
+  }
+
+  .pitch-spot[data-checked] {
+    border-color: var(--glory);
+    background: var(--glory);
+    color: #0d1110;
+    transform: translate(-50%, -50%) scale(1.06);
+  }
+
+  .pitch-spot:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  /* Busca de país. */
+  .search-input {
+    width: 100%;
+    height: 42px;
+    padding: 0 12px 0 40px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--panel-2);
+    color: var(--fg);
+    font-size: 16px;
+    transition: border-color 140ms ease-out;
+  }
+
+  .search-input::placeholder {
+    color: var(--faint);
+  }
+
+  .search-input:hover {
+    border-color: var(--rule);
+  }
+
+  .search-input:focus {
+    border-color: var(--fg);
+    outline: none;
+  }
+
+  .search-input:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  /* Lista de países com busca: compacta, rola por dentro. */
+  .nation-picker {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-height: 0;
+  }
+
+  .country-list {
+    max-height: min(46dvh, 340px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--panel);
+  }
+
+  .country-row {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    width: 100%;
+    min-height: 38px;
+    padding: 0 10px;
+    border: 0;
+    border-bottom: 1px solid var(--line);
+    background: none;
+    color: var(--fg);
+    font-size: 14px;
+    font-weight: 600;
+    text-align: left;
+  }
+
+  .country-row:last-child {
+    border-bottom: 0;
+  }
+
+  .country-row:hover {
+    background: var(--panel-2);
+  }
+
+  .country-row[aria-selected="true"] {
+    background: var(--accent);
+    color: var(--on-accent);
+  }
+
+  .country-row:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: -2px;
+  }
+
+  /* --------------------------------------------------------- a carreira */
+
+  /* O laço do jogo cabe na tela (diretriz do produto, M6): a página nunca rola.
+     Cabeçalho, corpo e abas são as três linhas de uma grade da altura da
+     janela. A decisão e o painel do jogador cabem inteiros; só as vistas de
+     exploração (histórico, troféus, seleção) rolam, por dentro do painel. */
+  /* Coluna `minmax(0, 1fr)`: a largura vem da tela, nunca do conteúdo mais
+     largo (cinco abas no desafio passavam de 320 px e arrastavam tudo). */
+  .career {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+    height: calc(100dvh - var(--topbar-h));
+    overflow: hidden;
+  }
+
+  /* No celular, as abas envolvem o corpo e a barra de baixo. */
+  .career-tabs {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) auto;
+    min-height: 0;
+  }
+
+  .career-header {
+    position: relative;
+    z-index: 30;
+    background: var(--canvas);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .career-plate {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 52px;
+    background: var(--club-solid);
+    color: var(--on-club-solid);
+  }
+
+  .career-ovr {
+    font-family: var(--font-display);
+    font-size: 2.15rem;
+    font-weight: 900;
+    line-height: 0.85;
+  }
+
+  @media (min-width: 1024px) {
+    .career-plate {
+      width: 64px;
+    }
+
+    .career-ovr {
+      font-size: 3rem;
+    }
+  }
+
+  /* Celular baixo: o placar e a faixa do lance afinam antes das opções. */
+  @media (max-height: 700px) and (max-width: 1023px) {
+    .career-plate {
+      width: 44px;
+    }
+
+    .career-ovr {
+      font-size: 1.8rem;
+    }
+
+    .career-header .display {
+      font-size: 1.3rem;
+    }
+
+    .play-strip-row + .play-strip-row {
+      display: none;
+    }
+
+    .play-toggle {
+      min-height: 40px;
+      padding-block: 5px;
+    }
+
+    .loop-panel .decision-body {
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+    }
+
+    .loop-panel {
+      gap: 8px;
+      padding-top: 8px;
+      padding-bottom: 8px;
+    }
+
+    /* O jornal vira uma linha: só a manchete, em serifa. */
+    .news-bar {
+      padding: 5px 10px;
+    }
+
+    .news-bar .cover-masthead {
+      display: none;
+    }
+
+    .news-bar .cover-headline {
+      margin-top: 0;
+      font-size: 1rem;
+    }
+  }
+
+  /* O celular mais baixo (640 px): o texto da decisão numa linha só. */
+  @media (max-height: 650px) and (max-width: 1023px) {
+    .loop-panel .decision-body {
+      -webkit-line-clamp: 1;
+      line-clamp: 1;
+    }
+  }
+
+  /* Celular de altura média ou baixa: a linha de detalhes da oferta fica numa
+     linha só (a liga encurta, as estrelas saem), e as opções cabem sem rolar. */
+  @media (max-height: 760px) and (max-width: 1023px) {
+    .decision-options:not([data-layout]) .option-meta {
+      flex-wrap: nowrap;
+      overflow: hidden;
+    }
+
+    .decision-options:not([data-layout]) .option-meta > * {
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+
+    .decision-options:not([data-layout]) .option-meta > .option-league,
+    .decision-options:not([data-layout]) .option-meta > .truncate {
+      flex-shrink: 1;
+      min-width: 0;
+    }
+
+    .decision-options:not([data-layout]) .option-stars {
+      display: none;
+    }
+
+    /* Evento que leva a outro clube, sem sorteio: o nome do clube vale mais
+       que o "Sem sorteio" (o cartão marcado ainda diz o que acontece). */
+    .decision-options:not([data-layout]) .option-meta > .truncate ~ .option-norisk {
+      display: none;
+    }
+
+    .decision-options:not([data-layout]) .option-league .truncate {
+      max-width: 7.5rem;
+    }
+  }
+
+  .career-body {
+    position: relative;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  /* Painel que cabe: coluna flexível, sem rolagem da página. */
+  .fit-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    height: 100%;
+    min-height: 0;
+    max-width: 36rem;
+    margin: 0 auto;
+    padding: 12px 16px;
+  }
+
+  /* Painel de exploração: rola por dentro, nunca a página. */
+  .scroll-panel {
+    height: 100%;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .scroll-panel-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 36rem;
+    margin: 0 auto;
+    padding: 16px 16px 24px;
+  }
+
+  /* Desktop: o jogador à esquerda, a decisão no meio e a exploração à
+     direita, cada coluna com a altura da janela. */
+  .career-columns {
+    display: grid;
+    grid-template-columns: 272px minmax(0, 1fr) 360px;
+    gap: 28px;
+    height: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 16px 24px 20px;
+  }
+
+  .career-columns > * {
+    min-height: 0;
+  }
+
+  /* Sem a margem automática do celular: num item de grade ela desliga o
+     estica-e-preenche e a coluna encolhe até o conteúdo. */
+  .career-columns .fit-panel {
+    max-width: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* No desktop a confirmação vem logo depois das opções, não no pé da coluna. */
+  .career-columns .decision-options {
+    flex: 0 1 auto;
+  }
+
+  /* PC: o lance no alto da coluna da direita, a exploração embaixo dele. */
+  .career-right {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-height: 0;
+  }
+
+  .career-right .career-explore {
+    flex: 1;
+  }
+
+  .career-explore {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--panel);
+  }
+
+  .career-explore .scroll-panel {
+    flex: 1;
+    height: auto;
+    min-height: 0;
+  }
+
+  .career-explore .scroll-panel-inner {
+    padding: 14px;
+  }
+
+  /* Abas de baixo, no celular (GDD 32.5): a última linha da grade. */
+  .tabbar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    padding-bottom: env(safe-area-inset-bottom);
+    background: var(--panel);
+    border-top: 1px solid var(--line);
+  }
+
+  @media (min-width: 1024px) {
+    .tabbar {
+      display: none;
+    }
+  }
+
+  .tabbar-tab {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    min-height: 56px;
+    padding: 0 2px;
+    border: 0;
+    background: none;
+    color: var(--muted);
+    font-family: var(--font-display);
+    font-size: 12.5px;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    transition: color 140ms ease-out;
+  }
+
+  .tabbar-tab[data-active] {
+    color: var(--fg);
+  }
+
+  .tabbar-tab[data-active]::before {
+    content: "";
+    position: absolute;
+    top: -1px;
+    left: 24%;
+    right: 24%;
+    height: 3px;
+    background: var(--club);
+  }
+
+  .tabbar-tab:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: -3px;
+  }
+
+  /* Abas da coluna de exploração, no desktop. */
+  .explore-tabs {
+    display: grid;
+    grid-auto-columns: 1fr;
+    grid-auto-flow: column;
+    flex-shrink: 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .explore-tab {
+    position: relative;
+    min-height: 44px;
+    border: 0;
+    background: none;
+    color: var(--muted);
+    font-family: var(--font-display);
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .explore-tab[data-active] {
+    color: var(--fg);
+  }
+
+  .explore-tab[data-active]::after {
+    content: "";
+    position: absolute;
+    right: 18%;
+    bottom: -1px;
+    left: 18%;
+    height: 3px;
+    background: var(--club);
+  }
+
+  .explore-tab:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: -3px;
+  }
+
+  /* ------------------------------------------------------------ o lance */
+
+  /* O lance (D43): o que a última escolha produziu, no alto da coluna da
+     decisão. Compacto e sem rolar: numa tela baixa, as linhas de detalhe saem
+     pela altura (regras no fim do bloco). */
+  .loop-panel {
+    gap: 10px;
+  }
+
+  .play {
+    position: relative;
+    display: flex;
+    flex-shrink: 0;
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px 12px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--club, var(--line));
+    border-radius: var(--radius-sm);
+    background: var(--panel);
+  }
+
+  .play[data-review] {
+    border-left-color: var(--info);
+  }
+
+  /* No celular, o lance fechado é uma faixa de duas linhas que abre com um toque. */
+  .play-compact {
+    padding: 0;
+  }
+
+  .play-compact[data-open] {
+    padding: 0 12px 10px;
+  }
+
+  .play-compact[data-open] .play-toggle {
+    margin: 0 -12px;
+    border-bottom: 1px dashed var(--line);
+  }
+
+  .play-toggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    width: auto;
+    min-height: 44px;
+    padding: 7px 8px 7px 12px;
+    text-align: left;
+  }
+
+  .play-toggle:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: -3px;
+  }
+
+  .play-chevron {
+    flex-shrink: 0;
+    color: var(--faint);
+    transition: transform 0.2s ease;
+  }
+
+  .play-toggle[aria-expanded="true"] .play-chevron {
+    transform: rotate(180deg);
+  }
+
+  .play-strip {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+  }
+
+  .play-strip-row {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    min-width: 0;
+  }
+
+  .play-season {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+
+  .play-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 26px;
+  }
+
+  .play-when {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+
+  .play-year {
+    font-size: 1.55rem;
+    font-weight: 900;
+    line-height: 0.9;
+  }
+
+  .play-years {
+    display: inline-flex;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-xs);
+  }
+
+  .play-year-tab {
+    min-height: 26px;
+    padding: 0 9px;
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .play-year-tab + .play-year-tab {
+    border-left: 1px solid var(--line);
+  }
+
+  .play-year-tab[aria-pressed="true"] {
+    background: var(--fg);
+    color: var(--canvas);
+  }
+
+  .play-year-tab:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: -2px;
+  }
+
+  .play-club {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+  }
+
+  .play-club-chips {
+    display: flex;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 4px;
+    max-width: 45%;
+  }
+
+  .play-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(0, 1.25fr);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-xs);
+    background: var(--panel-2);
+  }
+
+  .play-stats > div {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 2px;
+    padding: 5px 9px;
+  }
+
+  .play-stats > div + div {
+    border-left: 1px solid var(--line);
+  }
+
+  .play-stats .eyebrow {
+    overflow: hidden;
+    font-size: 10px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .play-stats dd {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    font-size: 1.35rem;
+    font-weight: 900;
+    line-height: 1;
+  }
+
+  .play-ovr dd {
+    color: var(--glory);
+  }
+
+  .play-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .play-honours {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    padding: 5px 8px;
+    border: 1px solid color-mix(in oklab, var(--glory) 40%, var(--line));
+    border-radius: var(--radius-xs);
+    background: color-mix(in oklab, var(--glory) 8%, var(--panel));
+  }
+
+  .play-honours-art {
+    display: flex;
+    flex-shrink: 0;
+    align-items: flex-end;
+    gap: 4px;
+  }
+
+  /* Título que acabou de sair: um brilho que passa uma vez pela faixa. */
+  .play-honours-fresh {
+    animation: glory-sheen 1.6s ease-out 0.6s 1 both;
+    background-image: linear-gradient(
+      100deg,
+      transparent 30%,
+      color-mix(in oklab, var(--glory) 26%, transparent) 50%,
+      transparent 70%
+    );
+    background-repeat: no-repeat;
+    background-size: 220% 100%;
+  }
+
+  @keyframes glory-sheen {
+    from {
+      background-position: 140% 0;
+    }
+    to {
+      background-position: -60% 0;
+    }
+  }
+
+  .play-event {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding-bottom: 8px;
+    border-bottom: 1px dashed var(--line);
+  }
+
+  .play-event-head {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    min-width: 0;
+    font-size: 12.5px;
+  }
+
+  .play-event-text {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    font-size: 13px;
+    line-height: 1.35;
+  }
+
+  .play-challenge {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 10px;
+    padding-top: 8px;
+    border-top: 1px dashed var(--line);
+  }
+
+  /* Numa tela baixa, o lance encolhe antes da decisão: primeiro as
+     miniaturas, depois o texto do evento, depois os chips. */
+  @media (max-height: 760px) {
+    .play-event-text {
+      -webkit-line-clamp: 1;
+      line-clamp: 1;
+    }
+  }
+
+  @media (max-height: 700px) {
+    .play-honours-art {
+      display: none;
+    }
+
+    .play-notes li:nth-child(n + 5) {
+      display: none;
+    }
+  }
+
+  @media (max-height: 640px) {
+    .play-event-text,
+    .play-notes {
+      display: none;
+    }
+  }
+
+  /* Números que contam quando mudam (D43). */
+  .anum {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.2em;
+  }
+
+  .anum[data-change="up"] > span:first-child {
+    animation: anum-up 1.4s ease-out 1 both;
+  }
+
+  .anum[data-change="down"] > span:first-child {
+    animation: anum-down 1.4s ease-out 1 both;
+  }
+
+  .anum-delta {
+    font-size: 0.55em;
+    font-weight: 800;
+    animation: anum-delta 2.2s ease-out 1 both;
+  }
+
+  .anum[data-change="up"] .anum-delta {
+    color: var(--good);
+  }
+
+  .anum[data-change="down"] .anum-delta {
+    color: var(--bad);
+  }
+
+  @keyframes anum-up {
+    0%,
+    55% {
+      color: var(--good);
+    }
+    100% {
+      color: inherit;
+    }
+  }
+
+  @keyframes anum-down {
+    0%,
+    55% {
+      color: var(--bad);
+    }
+    100% {
+      color: inherit;
+    }
+  }
+
+  @keyframes anum-delta {
+    0% {
+      opacity: 0;
+      transform: translateY(0.3em);
+    }
+    15%,
+    70% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .anum > span:first-child,
+    .anum-delta,
+    .play-honours-fresh {
+      animation: none;
+    }
+  }
+
+  /* A mensagem do resultado da escolha (D45): salta por cima do lance e some
+     sozinha. Não ocupa espaço no laço: é uma camada. */
+  .result-layer {
+    position: fixed;
+    inset-inline: 0;
+    top: calc(var(--topbar-h) + 60px);
+    z-index: 45;
+    display: flex;
+    justify-content: center;
+    padding: 0 16px;
+    pointer-events: none;
+  }
+
+  /* No celular, compacta: tampa o lance e o título da decisão, e só por uns
+     segundos (um toque tira antes). */
+  @media (max-width: 1023px) {
+    .result-msg {
+      gap: 10px;
+      padding: 10px 12px 12px;
+    }
+
+    .result-badge {
+      width: 42px;
+      height: 42px;
+    }
+
+    .result-title {
+      font-size: 1.15rem;
+    }
+
+    .result-body {
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      font-size: 0.8rem;
+    }
+  }
+
+  /* No PC, por cima do lance, na coluna da direita: a decisão nova fica livre. */
+  @media (min-width: 1024px) {
+    .result-layer {
+      top: calc(var(--topbar-h) + 100px);
+      justify-content: flex-end;
+      max-width: 1280px;
+      margin-inline: auto;
+      padding-inline: 24px;
+    }
+
+    .result-layer .result-msg {
+      width: 360px;
+    }
+  }
+
+  .result-msg {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: start;
+    gap: 12px;
+    width: min(440px, 100%);
+    padding: 14px 16px 16px;
+    overflow: hidden;
+    border: 1px solid color-mix(in oklab, var(--tone) 45%, var(--line));
+    border-left: 4px solid var(--tone);
+    border-radius: var(--radius-md);
+    background: color-mix(in oklab, var(--tone) 7%, var(--panel));
+    box-shadow: var(--lift);
+    /* O toque atravessa o cartão: no celular, ele tampa a opção de cima, e
+       tocar nela tem de escolhê-la, não fechar a mensagem. */
+    pointer-events: none;
+  }
+
+  /* Com mouse, o cartão para o relógio com o ponteiro em cima. */
+  @media (hover: hover) and (pointer: fine) {
+    .result-msg {
+      pointer-events: auto;
+    }
+  }
+
+  .result-badge {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 52px;
+    height: 52px;
+    border-radius: 999px;
+    background: color-mix(in oklab, var(--tone) 18%, var(--panel-2));
+    color: var(--tone);
+  }
+
+  .result-icon {
+    width: 30px;
+    height: 30px;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 3;
+  }
+
+  .result-glyph {
+    display: grid;
+    place-items: center;
+  }
+
+  .result-text {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+  }
+
+  .result-eyebrow {
+    color: var(--tone);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .result-title {
+    overflow: hidden;
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    font-weight: 900;
+    line-height: 1.05;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .result-body {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    color: var(--muted);
+    font-size: 0.85rem;
+    line-height: 1.35;
+  }
+
+  .result-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 6px;
+    margin-top: 5px;
+  }
+
+  /* O relógio da mensagem: a barra encolhe e para com o ponteiro em cima. */
+  .result-clock {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    height: 3px;
+    background: var(--tone);
+    transform-origin: left center;
+    animation: result-clock var(--result-ms, 4s) linear forwards;
+  }
+
+  .result-msg[data-paused] .result-clock {
+    animation-play-state: paused;
+  }
+
+  @keyframes result-clock {
+    from {
+      transform: scaleX(1);
+    }
+    to {
+      transform: scaleX(0);
+    }
+  }
+
+  /* Faíscas do resultado bom: oito pontos que saem do círculo. */
+  .result-sparks {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .result-sparks i {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 5px;
+    height: 5px;
+    border-radius: 999px;
+    background: var(--tone);
+    opacity: 0;
+    animation: result-spark 0.65s 0.3s ease-out both;
+  }
+
+  @keyframes result-spark {
+    0% {
+      opacity: 1;
+      transform: translate(-50%, -50%) rotate(var(--a)) translateY(-14px) scale(1);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(-50%, -50%) rotate(var(--a)) translateY(-40px) scale(0.4);
+    }
+  }
+
+  /* O jornalzinho do pé da coluna (D43): a capa da temporada, sempre à vista. */
+  .news-bar {
+    flex-shrink: 0;
+    padding: 7px 12px 8px;
+  }
+
+  .news-bar .cover-masthead {
+    padding-bottom: 3px;
+  }
+
+  .news-bar .cover-paper {
+    font-size: 14px;
+  }
+
+  .news-bar .cover-headline {
+    margin-top: 5px;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    font-size: clamp(1rem, 2.6dvh, 1.45rem);
+  }
+
+  .news-bar .cover-support {
+    margin-top: 3px;
+    -webkit-line-clamp: 1;
+    line-clamp: 1;
+    font-size: 12.5px;
+  }
+
+  @media (max-width: 1023px), (max-height: 700px) {
+    .news-bar .cover-support {
+      display: none;
+    }
+  }
+
+  @media (max-height: 700px) {
+
+    .news-bar .cover-headline {
+      -webkit-line-clamp: 1;
+      line-clamp: 1;
+    }
+  }
+
+  /* Títulos e prêmios de uma temporada do histórico, lado a lado (D43). */
+  .history-honours {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 3px;
+    margin-top: 2px;
+  }
+
+  .pitch-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .pitch-caption {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2rem;
+    text-align: center;
+  }
+
+  /* --------------------------------------------------------- a decisão */
+
+  .decision {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    gap: 10px;
+    min-height: 0;
+  }
+
+  /* Faixa da decisão: a cor do clube como régua do título. */
+  .decision-title {
+    padding-left: 10px;
+    border-left: 4px solid var(--club);
+    font-family: var(--font-display);
+    font-size: clamp(1.4rem, 3.7dvh, 2.15rem);
+    font-weight: 800;
+    line-height: 0.95;
+    text-transform: uppercase;
+    text-wrap: balance;
+  }
+
+  .decision-body {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    color: var(--muted);
+    font-size: 13.5px;
+    line-height: 1.4;
+  }
+
+  /* As opções ocupam o que sobra. Se a janela for baixa demais (paisagem no
+     celular), só esta lista rola, nunca a página. */
+  .decision-options {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    gap: 6px;
+    min-height: 0;
+    margin: 0 -4px;
+    padding: 2px 4px 4px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  /* Os seis focos de treino em duas colunas: cabem sem rolar. */
+  .decision-options[data-layout="grid"] {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-content: start;
+  }
+
+  .decision-options[data-layout="grid"] .option-title {
+    font-size: 1.05rem;
+  }
+
+  /* Duas colunas num celular estreito: o ícone sai e o texto fica com a coluna. */
+  @media (max-width: 479px) {
+    .decision-options[data-layout="grid"] .option {
+      grid-template-columns: minmax(0, 1fr) auto;
+      column-gap: 8px;
+      padding-inline: 10px;
+    }
+
+    .decision-options[data-layout="grid"] .option-lead {
+      display: none;
+    }
+
+    .decision-options[data-layout="grid"] .option-title {
+      font-size: 0.98rem;
+    }
+  }
+
+  .decision-confirm {
+    flex-shrink: 0;
+    padding-top: 2px;
+  }
+
+  /* Uma opção é uma linha compacta; marcada, ela abre os detalhes. */
+  .option {
+    position: relative;
+    display: grid;
+    flex-shrink: 0;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    column-gap: 12px;
+    width: 100%;
+    min-height: 52px;
+    padding: 6px 12px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--panel);
+    color: var(--fg);
+    text-align: left;
+    transition:
+      border-color 140ms ease-out,
+      box-shadow 140ms ease-out,
+      transform 140ms ease-out;
+  }
+
+  .option:hover {
+    border-color: var(--rule);
+  }
+
+  .option:active {
+    transform: translateY(1px);
+  }
+
+  .option[aria-checked="true"] {
+    border-color: var(--option-tone, var(--club));
+    box-shadow:
+      inset 4px 0 0 var(--option-tone, var(--club)),
+      0 0 0 1px var(--option-tone, var(--club));
+  }
+
+  .option[data-tone="bad"] {
+    --option-tone: var(--bad);
+  }
+
+  .option:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  .option-lead {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+  }
+
+  .option-icon {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-sm);
+    background: var(--panel-2);
+    color: var(--fg);
+  }
+
+  .option[data-tone="bad"] .option-icon {
+    color: var(--bad);
+  }
+
+  .option-main {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+  }
+
+  /* Linha de 1,14: com reticências, os acentos das maiúsculas precisam de folga. */
+  .option-title {
+    overflow: hidden;
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 800;
+    line-height: 1.14;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  /* Opção de evento: o texto da escolha pode precisar de duas linhas. */
+  .option-title[data-wrap] {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    white-space: normal;
+  }
+
+  .option-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 3px 7px;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.2;
+  }
+
+  .option-league,
+  .option-shirt {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .option-league .truncate {
+    max-width: 12rem;
+  }
+
+  .option-shirt {
+    color: var(--fg);
+    font-weight: 600;
+  }
+
+  .option-stars {
+    font-size: 11px;
+    letter-spacing: -0.02em;
+  }
+
+  .option-mark {
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--rule);
+    border-radius: 50%;
+    transition:
+      border-color 140ms ease-out,
+      background-color 140ms ease-out;
+  }
+
+  .option[aria-checked="true"] .option-mark {
+    border-color: var(--option-tone, var(--club));
+    background: radial-gradient(circle, var(--option-tone, var(--club)) 0 45%, transparent 50%);
+  }
+
+  .option-detail {
+    display: flex;
+    grid-column: 1 / -1;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 6px;
+    padding-top: 6px;
+    border-top: 1px solid var(--line);
+    animation: option-open 180ms ease-out;
+  }
+
+  @keyframes option-open {
+    from {
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+  }
+
+  /* Itens do menu da carreira. */
+  .menu-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+    padding: 0 12px;
+    border-radius: 3px;
+    color: var(--fg);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    outline: none;
+  }
+
+  .menu-item[data-highlighted] {
+    background: var(--panel-2);
+  }
+
+  .menu-item[data-tone="bad"] {
+    color: var(--bad);
+  }
+
+  /* ------------------------------------------------------- o jogador */
+
+  /* A carta mede o que a altura deixa: nunca empurra o resto para fora. */
+  .player-panel {
+    --card-fit: clamp(104px, calc((100dvh - 456px) * 0.714), 152px);
+  }
+
+  .player-top {
+    display: grid;
+    flex-shrink: 0;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 14px;
+  }
+
+  .player-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+
+  .player-stats > div {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 2px;
+    padding: 7px 9px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--panel);
+  }
+
+  .player-box {
+    flex-shrink: 0;
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--panel);
+  }
+
+  @media (min-width: 1024px) {
+    .player-panel {
+      --card-fit: clamp(140px, calc((100dvh - 530px) * 0.714), 216px);
+    }
+
+    .player-top {
+      grid-template-columns: 1fr;
+      justify-items: center;
+    }
+
+    .player-stats {
+      width: 100%;
+    }
+  }
+
+  /* Vitrine (GDD 24.5): a grade mede a largura e o tamanho vem do cálculo
+     (showcaseLayout). O espaço entre as peças é o SHOWCASE_GAP. */
+  .showcase {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, var(--cell-w));
+    grid-auto-rows: var(--cell-h);
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .showcase-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+    padding: 10px 6px 8px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--panel);
+    text-align: center;
+    content-visibility: auto;
+    contain-intrinsic-size: var(--cell-w) var(--cell-h);
+  }
+
+  .showcase-item[data-kind="award"] {
+    border-color: color-mix(in oklab, var(--glory) 45%, var(--line));
+    background: color-mix(in oklab, var(--glory) 6%, var(--panel));
+  }
+
+  .showcase:not([data-labels]) .showcase-item {
+    padding: 8px 4px 6px;
+  }
+
+  .showcase-art {
+    position: relative;
+    display: grid;
+    flex: 1;
+    place-items: end center;
+    min-height: 0;
+  }
+
+  .showcase-count {
+    position: absolute;
+    right: -12px;
+    bottom: -4px;
+    padding: 1px 5px;
+    border-radius: 3px;
+    background: var(--glory);
+    color: #16130a;
+    font-family: var(--font-display);
+    font-size: 14px;
+    font-weight: 900;
+    line-height: 1.1;
+  }
+
+  .showcase-label {
+    display: -webkit-box;
+    overflow: hidden;
+    height: 2.5em;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    font-size: 11.5px;
+    font-weight: 600;
+    line-height: 1.25;
+  }
+
+  .shelf-empty {
+    display: grid;
+    place-items: center;
+    min-height: 160px;
+    padding: 20px;
+    border: 1.5px dashed var(--rule);
+    border-radius: var(--radius-md);
+    color: var(--muted);
+    text-align: center;
+  }
+
+  /* --------------------------------------------------- a revelação */
+
+  /* A revelação também cabe na tela (diretriz do M6): faixa, palco e rodapé
+     são as linhas de uma grade da altura da janela. Nada nasce abaixo da
+     dobra; o palco só rola em janelas muito baixas, como último recurso. */
+  .reveal {
+    --reveal-card: clamp(70px, 12.5dvh, 118px);
+    position: fixed;
+    inset: 0;
+    z-index: 75;
+    display: grid;
+    grid-template-rows: 6px minmax(0, 1fr) auto;
+    background: var(--canvas);
+    outline: none;
+  }
+
+  .reveal-band {
+    background: var(--club-solid);
+  }
+
+  .reveal-stage {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    max-width: 560px;
+    min-height: 0;
+    margin: 0 auto;
+    padding: calc(10px + env(safe-area-inset-top)) 16px 8px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    cursor: pointer;
+  }
+
+  .reveal-footer {
+    display: flex;
+    justify-content: center;
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+    background: var(--canvas);
+    border-top: 1px solid var(--line);
+  }
+
+  .reveal-head {
+    display: flex;
+    flex-shrink: 0;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .reveal-year {
+    font-family: var(--font-display);
+    font-size: clamp(2.4rem, 7dvh, 3.6rem);
+    font-weight: 900;
+    line-height: 0.82;
+    transform-origin: 0% 0%;
+  }
+
+  .reveal-digits {
+    display: inline-flex;
+    overflow: hidden;
+  }
+
+  .reveal-digits > span {
+    display: inline-block;
+  }
+
+  .reveal-row {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 12px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--panel);
+  }
+
+  .reveal-stats {
+    display: grid;
+    flex-shrink: 0;
+    grid-template-columns: repeat(3, 1fr);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--panel);
+  }
+
+  .reveal-stats > div {
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    gap: 3px;
+    padding: 7px 4px;
+  }
+
+  .reveal-stats > div + div {
+    border-left: 1px solid var(--line);
+  }
+
+  .reveal-stat {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 4.4dvh, 2.25rem);
+    font-weight: 900;
+    line-height: 0.9;
+  }
+
+  .reveal-core {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .reveal-ovr {
+    font-family: var(--font-display);
+    font-size: clamp(2.6rem, 8dvh, 4rem);
+    font-weight: 900;
+    line-height: 0.85;
+  }
+
+  /* Momento de glória: o fundo acende em ouro, uma vez por leva. */
+  .glory-flash {
+    position: fixed;
+    inset: 0;
+    z-index: 74;
+    pointer-events: none;
+    background: radial-gradient(circle at 50% 38%, color-mix(in oklab, var(--glory) 34%, transparent), transparent 62%);
+  }
+
+  /* O holofote dos títulos: ocupa o palco inteiro durante o momento de
+     glória e sai quando a capa chega, deixando a tira compacta no lugar. */
+  .spotlight {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    padding: 16px;
+    background:
+      radial-gradient(circle at 50% 42%, color-mix(in oklab, var(--glory) 20%, transparent), transparent 70%),
+      var(--canvas);
+  }
+
+  .spotlight-shelf {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 14px 18px;
+    max-width: 100%;
+  }
+
+  .spotlight-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    max-width: 150px;
+    min-width: 92px;
+    text-align: center;
+  }
+
+  /* A tira dos títulos depois do holofote. */
+  .honours-strip {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 12px;
+    border: 1px solid color-mix(in oklab, var(--glory) 55%, var(--line));
+    border-radius: var(--radius-sm);
+    background: color-mix(in oklab, var(--glory) 9%, var(--panel));
+  }
+
+  .honours-strip-art {
+    display: flex;
+    flex-shrink: 0;
+    align-items: flex-end;
+    gap: 4px;
+  }
+
+  /* Confete (GDD 33.1): só transform e opacity. */
+  .confetti {
+    position: fixed;
+    inset: 0;
+    z-index: 90;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .confetti > i {
+    position: absolute;
+    top: 22vh;
+    left: 50%;
+    width: var(--w);
+    height: calc(var(--w) * 0.42);
+    border-radius: 1px;
+    opacity: 0;
+    animation: confetti-burst var(--dur) cubic-bezier(0.18, 0.62, 0.32, 1) var(--delay) forwards;
+  }
+
+  .confetti > i[data-shape="square"] {
+    height: var(--w);
+  }
+
+  .confetti > i[data-shape="dot"] {
+    height: var(--w);
+    border-radius: 50%;
+  }
+
+  @keyframes confetti-burst {
+    0% {
+      opacity: 1;
+      transform: translate3d(var(--x0), 0, 0) rotate(0deg);
+    }
+    28% {
+      opacity: 1;
+      transform: translate3d(var(--x1), var(--y1), 0) rotate(calc(var(--r) * 0.3));
+    }
+    100% {
+      opacity: 0;
+      transform: translate3d(var(--x2), 82vh, 0) rotate(var(--r));
+    }
+  }
+
+  /* Capa do jornal (GDD 21.2): papel impresso nos dois temas. Compacta: o
+     nome do jornal e a data numa linha, manchete e apoio com limite de linhas,
+     para caber no palco. */
+  .cover {
+    --paper: #f2ede1;
+    --paper-ink: #1a1815;
+    flex-shrink: 1;
+    min-height: 0;
+    padding: 10px 14px 12px;
+    overflow: hidden;
+    border: 1px solid #c9bfa8;
+    border-radius: 2px;
+    background: var(--paper);
+    color: var(--paper-ink);
+    box-shadow: var(--lift);
+  }
+
+  .cover-masthead {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+    padding-bottom: 5px;
+    border-bottom: 3px double var(--paper-ink);
+  }
+
+  .cover-paper {
+    overflow: hidden;
+    font-family: var(--font-serif);
+    font-size: 17px;
+    font-weight: 800;
+    letter-spacing: 0.01em;
+    line-height: 1.05;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .cover-dateline {
+    flex-shrink: 0;
+    font-family: var(--font-serif);
+    font-size: 11px;
+    font-style: italic;
+  }
+
+  .cover-headline {
+    display: -webkit-box;
+    margin-top: 8px;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    padding-top: 0.08em;
+    font-family: var(--font-display);
+    font-size: clamp(1.3rem, 3.7dvh, 2.1rem);
+    font-weight: 900;
+    line-height: 1;
+    text-transform: uppercase;
+    text-wrap: balance;
+  }
+
+  .cover[data-tone="bad"] .cover-headline {
+    color: #8b1c22;
+  }
+
+  .cover-support {
+    display: -webkit-box;
+    margin-top: 6px;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    font-family: var(--font-serif);
+    font-size: 13.5px;
+    line-height: 1.35;
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "name": "@craque/content",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "description": "Os textos do CRAQUE: eventos, decisões, missões e avisos em português, espanhol e inglês, e os nomes da geração futura",
+  "exports": {
+    ".": "./src/index.ts",
+    "./career-text": "./src/careerText.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@craque/engine": "workspace:*",
+    "@craque/world": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "24.19.0",
+    "typescript": "6.0.3",
+    "vitest": "5.0.2"
+  }
+}

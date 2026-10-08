@@ -1,0 +1,178 @@
+[
+  {
+    "id": "alianza-lima",
+    "name": "Alianza Lima",
+    "short": "Alianza Lima",
+    "abbr": "ALI",
+    "division": 1,
+    "strength": 66,
+    "prestige": 2.8,
+    "color": "#192745",
+    "crest": "svg"
+  },
+  {
+    "id": "sporting-cristal",
+    "name": "Sporting Cristal",
+    "short": "Sporting Cristal",
+    "abbr": "SPO",
+    "division": 1,
+    "strength": 66,
+    "prestige": 2.6,
+    "color": "#56C7ED",
+    "crest": "svg"
+  },
+  {
+    "id": "universitario",
+    "name": "Universitario",
+    "short": "Universitario",
+    "abbr": "UNI",
+    "division": 1,
+    "strength": 67,
+    "prestige": 2.9,
+    "color": "#8C1619",
+    "crest": "svg"
+  },
+  {
+    "id": "alianza-atletico",
+    "name": "Alianza Atletico",
+    "short": "Alianza Atlético",
+    "abbr": "AAT",
+    "division": 1,
+    "strength": 62,
+    "prestige": 1.4,
+    "color": "#222677",
+    "crest": "svg"
+  },
+  {
+    "id": "cienciano",
+    "name": "Cienciano",
+    "short": "Cienciano",
+    "abbr": "CIE",
+    "division": 1,
+    "strength": 63,
+    "prestige": 2.0,
+    "color": "#0A214E",
+    "crest": "svg"
+  },
+  {
+    "id": "cusco",
+    "name": "Cusco",
+    "short": "Cusco",
+    "abbr": "CUS",
+    "division": 1,
+    "strength": 63,
+    "prestige": 1.4,
+    "color": "#CA9A56",
+    "crest": "svg"
+  },
+  {
+    "id": "deportivo-garcilaso",
+    "name": "Deportivo Garcilaso",
+    "short": "Deportivo Garcilaso",
+    "abbr": "GAR",
+    "division": 1,
+    "strength": 62,
+    "prestige": 1.2,
+    "color": "#ED0103",
+    "crest": "svg"
+  },
+  {
+    "id": "fbc-melgar",
+    "name": "FBC Melgar",
+    "short": "Melgar",
+    "abbr": "MEL",
+    "division": 1,
+    "strength": 64,
+    "prestige": 1.8,
+    "color": "#EC1C24",
+    "crest": "svg"
+  },
+  {
+    "id": "cesar-vallejo",
+    "name": "César Vallejo",
+    "short": "C. Vallejo",
+    "abbr": "UCV",
+    "division": 2,
+    "strength": 59,
+    "prestige": 1.5,
+    "color": "#0B6E4F",
+    "crest": null
+  },
+  {
+    "id": "carlos-mannucci",
+    "name": "Carlos A. Mannucci",
+    "short": "Mannucci",
+    "abbr": "MAN",
+    "division": 2,
+    "strength": 57,
+    "prestige": 1.2,
+    "color": "#003DA5",
+    "crest": null
+  },
+  {
+    "id": "union-comercio",
+    "name": "Unión Comercio",
+    "short": "U. Comercio",
+    "abbr": "UCO",
+    "division": 2,
+    "strength": 56,
+    "prestige": 1.1,
+    "color": "#00A94F",
+    "crest": null
+  },
+  {
+    "id": "deportivo-coopsol",
+    "name": "Deportivo Coopsol",
+    "short": "Coopsol",
+    "abbr": "COO",
+    "division": 2,
+    "strength": 55,
+    "prestige": 1.0,
+    "color": "#0033A0",
+    "crest": null
+  },
+  {
+    "id": "academia-cantolao",
+    "name": "Academia Cantolao",
+    "short": "Cantolao",
+    "abbr": "CAN",
+    "division": 2,
+    "strength": 55,
+    "prestige": 1.0,
+    "color": "#0B2E5C",
+    "crest": null
+  },
+  {
+    "id": "universidad-san-martin",
+    "name": "Universidad San Martín",
+    "short": "San Martín",
+    "abbr": "USM",
+    "division": 2,
+    "strength": 57,
+    "prestige": 1.3,
+    "color": "#0033A0",
+    "crest": null
+  },
+  {
+    "id": "deportivo-llacuabamba",
+    "name": "Deportivo Llacuabamba",
+    "short": "Llacuabamba",
+    "abbr": "LLA",
+    "division": 2,
+    "strength": 54,
+    "prestige": 1.0,
+    "color": "#009639",
+    "crest": null
+  },
+  {
+    "id": "pirata-fc",
+    "name": "Pirata FC",
+    "short": "Pirata",
+    "abbr": "PIR",
+    "division": 2,
+    "strength": 54,
+    "prestige": 1.0,
+    "color": "#12161C",
+    "crest": null
+  }
+]

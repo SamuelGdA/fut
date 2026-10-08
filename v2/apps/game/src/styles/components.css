@@ -1,0 +1,1223 @@
+/* Estilos das primitivas que dependem de atributos de estado (data-*) ou de
+   variáveis expostas pelo Base UI. Layout comum fica nas classes utilitárias
+   do próprio componente; aqui só o que não cabe bem numa linha de classe. */
+
+@layer components {
+  /* ---------------------------------------------------------------- shell */
+
+  .skip-link {
+    position: absolute;
+    left: 12px;
+    top: -60px;
+    z-index: 100;
+    padding: 10px 14px;
+    border-radius: var(--radius-sm);
+    background: var(--accent);
+    color: var(--on-accent);
+    font-weight: 700;
+    text-decoration: none;
+    transition: top 120ms ease-out;
+  }
+
+  .skip-link:focus {
+    top: 8px;
+  }
+
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    height: var(--topbar-h);
+    padding-top: env(safe-area-inset-top);
+    background: var(--canvas);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .topbar-inner {
+    height: var(--topbar-row);
+  }
+
+  /* ----------------------------------------------------------- laboratório */
+
+  /* Altura da barra de áreas que gruda sob a barra superior. Tudo que gruda
+     dentro do laboratório desconta as duas. */
+  .lab-root {
+    --subbar: 47px;
+  }
+
+  .lab-areas {
+    position: sticky;
+    top: calc(56px + env(safe-area-inset-top));
+    z-index: 30;
+    background: var(--canvas);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .lab-anchor {
+    scroll-margin-top: calc(76px + var(--subbar, 0px));
+  }
+
+  .lab-toolbar {
+    position: sticky;
+    top: calc(56px + env(safe-area-inset-top) + var(--subbar, 0px));
+    z-index: 20;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px 12px;
+    margin: 0 -16px;
+    padding: 10px 16px;
+    background: var(--canvas);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .lab-grid {
+    display: grid;
+    gap: 40px;
+  }
+
+  .lab-index {
+    display: none;
+  }
+
+  @media (min-width: 1024px) {
+    .lab-grid {
+      grid-template-columns: 180px minmax(0, 1fr);
+    }
+
+    .lab-index {
+      display: block;
+      position: sticky;
+      top: calc(80px + var(--subbar, 0px));
+      align-self: start;
+    }
+  }
+
+  /* Curva de evolução do laboratório. */
+  .evo-frame {
+    display: grid;
+    grid-template-columns: 26px minmax(0, 1fr);
+    grid-template-rows: auto 22px;
+    column-gap: 6px;
+  }
+
+  .evo-axis-y {
+    position: relative;
+  }
+
+  .evo-axis-y > span,
+  .evo-axis-x > span {
+    position: absolute;
+    color: var(--faint);
+    font-size: 11px;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+  }
+
+  .evo-axis-y > span {
+    right: 0;
+    transform: translateY(-50%);
+  }
+
+  .evo-axis-x {
+    position: relative;
+    grid-column: 2;
+  }
+
+  .evo-axis-x > span {
+    top: 8px;
+    transform: translateX(-50%);
+  }
+
+  .evo-plot {
+    position: relative;
+    height: 220px;
+    border-bottom: 1px solid var(--rule);
+    cursor: crosshair;
+    touch-action: pan-y;
+  }
+
+  @media (min-width: 640px) {
+    .evo-plot {
+      height: 280px;
+    }
+  }
+
+  .evo-plot > svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  .evo-plot line,
+  .evo-plot polyline,
+  .evo-plot polygon {
+    vector-effect: non-scaling-stroke;
+  }
+
+  .evo-grid {
+    stroke: var(--line);
+    stroke-width: 1;
+  }
+
+  .evo-band {
+    fill: var(--good);
+    fill-opacity: 0.16;
+    stroke: none;
+  }
+
+  .evo-median {
+    fill: none;
+    stroke: var(--muted);
+    stroke-width: 1.5;
+    stroke-dasharray: 4 4;
+  }
+
+  .evo-cursor {
+    stroke: var(--rule);
+    stroke-width: 1;
+  }
+
+  .evo-line {
+    fill: none;
+    stroke: var(--glory);
+    stroke-width: 2.5;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+  }
+
+  .evo-mark {
+    position: absolute;
+    font-size: 10px;
+    line-height: 1;
+    pointer-events: none;
+    transform: translate(-50%, -150%);
+  }
+
+  .evo-mark[data-form="stumble"] {
+    transform: translate(-50%, 60%);
+  }
+
+  .evo-dot {
+    position: absolute;
+    width: 11px;
+    height: 11px;
+    border: 2px solid var(--canvas);
+    border-radius: 50%;
+    background: var(--glory);
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+  }
+
+  .evo-key {
+    display: inline-block;
+    width: 18px;
+    height: 10px;
+  }
+
+  .evo-key-line {
+    height: 3px;
+    background: var(--glory);
+  }
+
+  .evo-key-band {
+    background: color-mix(in srgb, var(--good) 22%, transparent);
+  }
+
+  .evo-key-median {
+    height: 0;
+    border-top: 2px dashed var(--muted);
+  }
+
+  /* Pílula de escolha entre muitas opções (países, confederações, camisas). */
+  .pick-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    max-width: 100%;
+    min-height: 38px;
+    padding: 0 11px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--panel);
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.1;
+    cursor: pointer;
+    transition:
+      color 120ms ease-out,
+      background-color 120ms ease-out,
+      border-color 120ms ease-out;
+  }
+
+  .pick-chip:hover:not([data-checked]) {
+    border-color: var(--rule);
+    color: var(--fg);
+  }
+
+  .pick-chip[data-checked] {
+    border-color: var(--accent);
+    background: var(--accent);
+    color: var(--on-accent);
+  }
+
+  .pick-chip-count {
+    margin-left: 6px;
+    color: var(--faint);
+  }
+
+  .pick-chip[data-checked] .pick-chip-count {
+    color: inherit;
+  }
+
+  .pick-chip:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  /* Gomos de prestígio: cada um enche até --fill (70% do gomo para x,7). */
+  .pips {
+    display: inline-flex;
+    gap: 3px;
+    vertical-align: middle;
+  }
+
+  .pips > i {
+    display: block;
+    width: 8px;
+    height: 8px;
+    border-radius: 1px;
+    background: linear-gradient(90deg, var(--glory) var(--fill, 0%), var(--panel-3) var(--fill, 0%));
+  }
+
+  .code-pill {
+    display: inline-block;
+    padding: 3px 8px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-xs);
+    background: var(--panel-2);
+    color: var(--fg);
+    font-family: ui-monospace, "Cascadia Mono", Consolas, "SFMono-Regular", monospace;
+    font-size: 12.5px;
+    line-height: 1.5;
+  }
+
+  /* Capitular de jornal no texto editorial. */
+  .dropcap::first-letter {
+    float: left;
+    margin: 0.06em 0.08em 0 0;
+    font-family: var(--font-display);
+    font-size: 3.6em;
+    font-weight: 900;
+    line-height: 0.78;
+    color: var(--glory);
+  }
+
+  /* ------------------------------------------------- editor de aparência */
+
+  /* Editor de aparência (D43): prévia grande e fixa, opções em abas. No PC
+     cabe numa tela só; no celular a prévia gruda no alto e o painel rola. */
+  .avatar-shell {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .avatar-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .avatar-editor {
+    display: grid;
+    gap: 12px;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* No celular a prévia gruda logo abaixo da barra, pequena, e os controles
+     rolam por baixo dela: dá para ver o rosto mudar sem subir a página. */
+  .avatar-editor-preview {
+    position: sticky;
+    top: calc(var(--topbar-h) + var(--subbar, 0px));
+    z-index: 5;
+    display: flex;
+    justify-content: center;
+    padding: 8px 0 10px;
+    background: var(--canvas);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .avatar-portrait {
+    width: 132px;
+    aspect-ratio: 1;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: radial-gradient(circle at 50% 42%, var(--panel-2), var(--panel) 70%);
+  }
+
+  .avatar-tabs {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    min-height: 0;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--panel);
+  }
+
+  .avatar-panel {
+    padding: 12px;
+  }
+
+  /* As seções em colunas de jornal (D45): cada uma desce logo abaixo da de
+     cima, sem o buraco que a grade deixava quando uma seção curta (Pele)
+     dividia a linha com uma alta (Olhos). */
+  .avatar-columns {
+    columns: 1;
+    column-gap: 10px;
+  }
+
+  .avatar-columns > .avatar-editor-section {
+    margin-bottom: 10px;
+    break-inside: avoid;
+  }
+
+  @media (min-width: 640px) {
+    .avatar-columns {
+      columns: 2;
+    }
+  }
+
+  /* PC: a tela do tamanho do que tem dentro, nunca maior que a janela; se
+     faltar altura, só o painel de opções rola. */
+  @media (min-width: 1024px) {
+    .appearance-page {
+      display: flex;
+      flex-direction: column;
+      max-height: calc(100dvh - var(--topbar-h));
+      padding-block: clamp(12px, 2.5dvh, 24px) 16px;
+      /* Numa janela pequena demais, rola por dentro em vez de cortar. */
+      overflow-y: auto;
+    }
+
+    .appearance-page .avatar-shell {
+      flex: 0 1 auto;
+      min-height: 0;
+    }
+
+    .appearance-page .avatar-editor {
+      flex: 0 1 auto;
+      min-height: 0;
+    }
+
+    /* O painel de opções tem a altura do que tem dentro; numa janela baixa,
+       para no que sobra da tela (cabeçalho, abas e rodapé somam uns 280 px)
+       e rola por dentro. */
+    .appearance-page .avatar-panel {
+      max-height: max(240px, calc(100dvh - var(--topbar-h) - 280px));
+      overflow-y: auto;
+      overscroll-behavior: contain;
+    }
+
+    .avatar-columns {
+      columns: 3 200px;
+    }
+  }
+
+  .avatar-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding-top: 12px;
+    border-top: 1px solid var(--line);
+  }
+
+  @media (min-width: 1024px) {
+    .avatar-editor {
+      grid-template-columns: 260px minmax(0, 1fr);
+      align-items: start;
+    }
+
+    .avatar-editor-preview {
+      top: calc(var(--topbar-h) + 16px + var(--subbar, 0px));
+      padding: 0;
+      border-bottom: 0;
+      background: none;
+    }
+
+    .avatar-portrait {
+      width: 100%;
+    }
+  }
+
+  .avatar-editor-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--panel-2);
+  }
+
+  .avatar-swatch {
+    width: 30px;
+    height: 30px;
+    border: 1px solid rgb(255 255 255 / 0.12);
+    border-radius: 6px;
+    transition: transform 120ms ease-out;
+  }
+
+  .avatar-swatch:hover {
+    transform: scale(1.08);
+  }
+
+  .avatar-swatch-active {
+    outline: 2px solid var(--fg);
+    outline-offset: 2px;
+  }
+
+  .avatar-chip {
+    padding: 6px 10px;
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    background: var(--panel-2);
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.1;
+    transition:
+      color 120ms ease-out,
+      background-color 120ms ease-out;
+  }
+
+  .avatar-chip:hover {
+    color: var(--fg);
+  }
+
+  .avatar-chip-active,
+  .avatar-chip-active:hover {
+    border-color: var(--accent);
+    background: var(--accent);
+    color: var(--on-accent);
+  }
+
+  .avatar-range {
+    width: 100%;
+    max-width: 160px;
+    height: 22px;
+    background: transparent;
+    cursor: pointer;
+    appearance: none;
+  }
+
+  .avatar-range::-webkit-slider-runnable-track {
+    height: 4px;
+    border-radius: 2px;
+    background: var(--panel-3);
+  }
+
+  .avatar-range::-moz-range-track {
+    height: 4px;
+    border-radius: 2px;
+    background: var(--panel-3);
+  }
+
+  .avatar-range::-webkit-slider-thumb {
+    width: 16px;
+    height: 16px;
+    margin-top: -6px;
+    border: 0;
+    border-radius: 3px;
+    background: var(--fg);
+    appearance: none;
+  }
+
+  .avatar-range::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border: 0;
+    border-radius: 3px;
+    background: var(--fg);
+  }
+
+  /* ---------------------------------------------------------- carregador */
+
+  .bars {
+    display: inline-flex;
+    align-items: flex-end;
+    gap: 3px;
+    height: 14px;
+  }
+
+  .bars > i {
+    display: block;
+    width: 3px;
+    height: 30%;
+    background: currentColor;
+    animation: bars-pulse 900ms ease-in-out infinite;
+  }
+
+  .bars > i:nth-child(2) {
+    animation-delay: 120ms;
+  }
+
+  .bars > i:nth-child(3) {
+    animation-delay: 240ms;
+  }
+
+  @keyframes bars-pulse {
+    0%,
+    100% {
+      height: 30%;
+    }
+    50% {
+      height: 100%;
+    }
+  }
+
+  /* ---------------------------------------------------------------- pílulas */
+
+  /* O texto puxa um pouco para a cor do texto do tema: sobre o fundo tingido
+     do próprio tom, o vermelho puro ficava em 4,3:1 no escuro (GDD 36 pede
+     4,5:1). No escuro clareia, no claro escurece; a cor continua a do tom. */
+  .chip-soft {
+    background: color-mix(in oklab, var(--tone) 15%, transparent);
+    color: color-mix(in oklab, var(--tone) 82%, var(--fg));
+  }
+
+  .chip-solid {
+    background: var(--tone);
+    color: var(--canvas);
+  }
+
+  .chip-solid[data-tone="club"] {
+    color: var(--on-club);
+  }
+
+  .chip-outline {
+    border: 1px solid color-mix(in oklab, var(--tone) 55%, transparent);
+    color: var(--tone);
+  }
+
+  /* ---------------------------------------------------- controle segmentado */
+
+  .seg {
+    position: relative;
+    display: inline-flex;
+    gap: 2px;
+    padding: 3px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--panel);
+  }
+
+  .seg[data-block] {
+    display: flex;
+    width: 100%;
+  }
+
+  .seg[data-block] .seg-item {
+    flex: 1 1 0;
+  }
+
+  .seg-item {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 38px;
+    padding: 0 14px;
+    border-radius: 3px;
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 650;
+    line-height: 1;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+    user-select: none;
+    transition: color 160ms ease-out;
+    outline-offset: 1px;
+  }
+
+  .seg[data-size="sm"] .seg-item {
+    min-height: 30px;
+    padding: 0 10px;
+    font-size: 12px;
+  }
+
+  .seg-item:hover:not([data-checked]) {
+    color: var(--fg);
+  }
+
+  .seg-item[data-checked] {
+    color: var(--on-accent);
+  }
+
+  .seg-item[data-tone][data-checked] {
+    color: #fff;
+  }
+
+  .seg-item[data-tone="glory"][data-checked] {
+    color: var(--canvas);
+  }
+
+  .seg-thumb {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    border-radius: 3px;
+    background: var(--accent);
+  }
+
+  .seg-item[data-tone] .seg-thumb {
+    background: var(--tone);
+  }
+
+  .seg-label {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* --------------------------------------------------------------- switch */
+
+  .switch {
+    position: relative;
+    display: inline-flex;
+    flex-shrink: 0;
+    padding: 0;
+    width: 44px;
+    height: 26px;
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    background: var(--panel-3);
+    transition:
+      background-color 160ms ease-out,
+      border-color 160ms ease-out;
+  }
+
+  .switch[data-checked] {
+    border-color: var(--good);
+    background: var(--good);
+  }
+
+  .switch[data-disabled] {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  .switch-thumb {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 18px;
+    height: 18px;
+    border-radius: 999px;
+    background: var(--fg);
+    transition: transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  .switch[data-checked] .switch-thumb {
+    transform: translateX(18px);
+    background: #fff;
+  }
+
+  /* --------------------------------------------------------------- slider */
+
+  .slider {
+    width: 100%;
+    touch-action: none;
+  }
+
+  .slider-control {
+    display: flex;
+    align-items: center;
+    height: 30px;
+  }
+
+  .slider-track {
+    position: relative;
+    width: 100%;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--panel-3);
+  }
+
+  .slider-indicator {
+    border-radius: 2px;
+    background: var(--fg);
+  }
+
+  .slider[data-muted] .slider-indicator {
+    background: var(--faint);
+  }
+
+  .slider-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 3px;
+    background: var(--fg);
+    box-shadow: 0 0 0 4px var(--panel);
+  }
+
+  .slider-thumb:has(:focus-visible) {
+    outline: 2px solid var(--focus);
+    outline-offset: 3px;
+  }
+
+  .slider-ticks {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 4px;
+    padding: 0 7px;
+  }
+
+  .slider-ticks > span {
+    width: 1px;
+    height: 6px;
+    background: var(--rule);
+  }
+
+  /* ------------------------------------------------------ folha inferior */
+
+  .sheet-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 70;
+    background: var(--scrim);
+    opacity: calc(1 - var(--drawer-swipe-progress, 0));
+    transition: opacity 320ms cubic-bezier(0.32, 0.72, 0, 1);
+  }
+
+  .sheet-backdrop[data-starting-style],
+  .sheet-backdrop[data-ending-style] {
+    opacity: 0;
+  }
+
+  .sheet-viewport {
+    position: fixed;
+    inset: 0;
+    z-index: 71;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+  }
+
+  .sheet-popup {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 560px;
+    max-height: min(88dvh, 780px);
+    border: 1px solid var(--line);
+    border-bottom: 0;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    background: var(--panel);
+    box-shadow: var(--lift);
+    padding-bottom: env(safe-area-inset-bottom);
+    outline: none;
+    transform: translateY(var(--drawer-swipe-movement-y, 0px));
+    transition: transform 380ms cubic-bezier(0.32, 0.72, 0, 1);
+  }
+
+  .sheet-popup[data-starting-style],
+  .sheet-popup[data-ending-style] {
+    transform: translateY(100%);
+  }
+
+  .sheet-popup[data-ending-style] {
+    transition-duration: calc(var(--drawer-swipe-strength, 1) * 360ms);
+  }
+
+  .sheet-popup[data-swiping] {
+    transition: none;
+    user-select: none;
+  }
+
+  .sheet-handle {
+    flex-shrink: 0;
+    width: 40px;
+    height: 4px;
+    margin: 10px auto 4px;
+    border-radius: 2px;
+    background: var(--rule);
+  }
+
+  .sheet-content {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 6px 20px 20px;
+  }
+
+  /* --------------------------------------------------------------- diálogo */
+
+  .dialog-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 80;
+    background: var(--scrim);
+    transition: opacity 200ms ease-out;
+  }
+
+  .dialog-backdrop[data-starting-style],
+  .dialog-backdrop[data-ending-style] {
+    opacity: 0;
+  }
+
+  .dialog-viewport {
+    position: fixed;
+    inset: 0;
+    z-index: 81;
+    display: grid;
+    place-items: center;
+    padding: 16px;
+  }
+
+  .dialog-popup {
+    width: min(420px, 100%);
+    border: 1px solid var(--line);
+    border-top: 3px solid var(--tone, var(--rule));
+    border-radius: var(--radius-md);
+    background: var(--panel);
+    box-shadow: var(--lift);
+    padding: 20px;
+    outline: none;
+    transition:
+      transform 220ms cubic-bezier(0.2, 0.9, 0.3, 1),
+      opacity 180ms ease-out;
+  }
+
+  .dialog-popup[data-starting-style],
+  .dialog-popup[data-ending-style] {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+
+  /* ---------------------------------------------------------------- camadas */
+
+  .layer-popover {
+    z-index: 90;
+  }
+
+  /* --------------------------------------------------------------- popover */
+
+  /* A altura vem do espaço que sobra na tela (`--available-height`, do Base UI):
+     os ajustes passavam de 568 px e o fim do painel ficava fora de alcance.
+     Painel é tela secundária: rola por dentro. */
+  .popover-popup {
+    min-width: 240px;
+    max-width: min(360px, calc(100vw - 24px));
+    max-height: var(--available-height, calc(100dvh - 24px));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--panel);
+    box-shadow: var(--lift);
+    padding: 16px;
+    outline: none;
+    transform-origin: var(--transform-origin);
+    transition:
+      transform 160ms ease-out,
+      opacity 160ms ease-out;
+  }
+
+  .popover-popup[data-starting-style],
+  .popover-popup[data-ending-style] {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.97);
+  }
+
+  .popover-popup[data-size="tip"] {
+    min-width: 0;
+    max-width: min(280px, calc(100vw - 24px));
+    padding: 10px 12px;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+
+  .infotip-trigger {
+    display: inline-grid;
+    place-items: center;
+    width: 20px;
+    height: 20px;
+    margin: -2px;
+    border: 0;
+    border-radius: 999px;
+    background: none;
+    color: var(--faint);
+    transition: color 120ms ease-out;
+  }
+
+  .infotip-trigger:hover,
+  .infotip-trigger[data-popup-open] {
+    color: var(--fg);
+  }
+
+  /* ----------------------------------------------------------------- avisos */
+
+  .toast-viewport {
+    position: fixed;
+    z-index: 60;
+    top: calc(56px + 10px + env(safe-area-inset-top));
+    left: 12px;
+    right: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    pointer-events: none;
+    outline: none;
+  }
+
+  @media (min-width: 768px) {
+    .toast-viewport {
+      left: auto;
+      right: 16px;
+      width: 380px;
+      align-items: stretch;
+    }
+  }
+
+  .toast {
+    pointer-events: auto;
+    display: flex;
+    width: 100%;
+    max-width: 380px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--panel);
+    box-shadow: var(--lift);
+    transform: translateX(var(--toast-swipe-movement-x, 0px));
+    transition:
+      transform 280ms cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 280ms ease-out;
+  }
+
+  .toast[data-starting-style] {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.98);
+  }
+
+  .toast[data-ending-style] {
+    opacity: 0;
+    transform: translateX(24px) scale(0.98);
+  }
+
+  .toast[data-ending-style][data-swipe-direction="right"] {
+    transform: translateX(calc(var(--toast-swipe-movement-x, 0px) + 120%));
+  }
+
+  .toast[data-limited] {
+    display: none;
+  }
+
+  .toast-mark {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 38px;
+    border-right: 1px solid var(--line);
+    background: color-mix(in oklab, var(--tone) 15%, transparent);
+    color: var(--tone);
+    font-size: 15px;
+  }
+
+  .toast-body {
+    flex: 1;
+    min-width: 0;
+    padding: 10px 12px 11px;
+  }
+
+  .toast-close {
+    align-self: flex-start;
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border: 0;
+    background: none;
+    color: var(--faint);
+  }
+
+  .toast-close:hover {
+    color: var(--fg);
+  }
+
+  /* ------------------------------------------------------------------ abas */
+
+  .tabs-list {
+    position: relative;
+    display: flex;
+    overflow-x: auto;
+    border-bottom: 1px solid var(--line);
+    scrollbar-width: none;
+  }
+
+  .tabs-list::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* As abas não encolhem até virar reticências: se não cabem, a lista rola de
+     lado (a aba ativa é trazida para a tela por quem monta a lista). */
+  .tabs-tab {
+    position: relative;
+    flex: 1 0 auto;
+    min-width: 0;
+    min-height: 46px;
+    padding: 0 4px;
+    border: 0;
+    background: none;
+    color: var(--muted);
+    font-family: var(--font-display);
+    font-size: 15px;
+    font-weight: 800;
+    font-variation-settings: "opsz" 72;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color 140ms ease-out;
+  }
+
+  @media (min-width: 640px) {
+    .tabs-tab {
+      flex: 1 0 auto;
+      padding: 0 16px;
+      font-size: 16px;
+      letter-spacing: 0.06em;
+    }
+  }
+
+  .tabs-tab:hover {
+    color: var(--fg);
+  }
+
+  .tabs-tab[data-active] {
+    color: var(--fg);
+  }
+
+  .tabs-indicator {
+    position: absolute;
+    left: 0;
+    bottom: -1px;
+    height: 3px;
+    width: var(--active-tab-width);
+    transform: translateX(var(--active-tab-left));
+    background: var(--tone, var(--fg));
+    transition:
+      transform 240ms cubic-bezier(0.2, 0.8, 0.2, 1),
+      width 240ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  .tabs-panel {
+    outline: none;
+  }
+
+  .tabs-panel[data-starting-style] {
+    opacity: 0;
+  }
+
+  /* ---------------------------------------------------------------- medidor */
+
+  .meter-track {
+    position: relative;
+    height: 8px;
+    overflow: hidden;
+    border-radius: 1px;
+    background: var(--panel-3);
+  }
+
+  .meter-track[data-segments] {
+    -webkit-mask-image: repeating-linear-gradient(
+      90deg,
+      #000 0 calc(10% - 2px),
+      transparent calc(10% - 2px) 10%
+    );
+    mask-image: repeating-linear-gradient(
+      90deg,
+      #000 0 calc(10% - 2px),
+      transparent calc(10% - 2px) 10%
+    );
+  }
+
+  .meter-fill {
+    width: 100%;
+    height: 100%;
+    transform-origin: left center;
+    background: var(--tone, var(--fg));
+    transition: transform 700ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  /* ------------------------------------------------------ barra de chance */
+
+  .odds {
+    display: flex;
+    gap: 2px;
+    height: 6px;
+    overflow: hidden;
+    border-radius: 1px;
+  }
+
+  .odds > span {
+    display: block;
+    height: 100%;
+    min-width: 2px;
+    background: var(--tone);
+  }
+
+  /* ------------------------------------------------------ campo de texto */
+
+  .field-input {
+    width: 100%;
+    height: 50px;
+    padding: 0 14px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--panel-2);
+    color: var(--fg);
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 750;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    transition: border-color 140ms ease-out;
+  }
+
+  .field-input::placeholder {
+    color: var(--faint);
+    font-weight: 600;
+  }
+
+  .field-input:hover {
+    border-color: var(--rule);
+  }
+
+  .field-input:focus {
+    border-color: var(--fg);
+    outline: none;
+  }
+
+  .field-input:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  .field-input[aria-invalid="true"] {
+    border-color: var(--bad);
+  }
+}

@@ -1,0 +1,200 @@
+[
+  {
+    "id": "guadalajara-chivas",
+    "name": "CD Guadalajara",
+    "short": "Chivas",
+    "abbr": "GUA",
+    "division": 1,
+    "strength": 72,
+    "prestige": 3.4,
+    "color": "#002856",
+    "crest": "svg"
+  },
+  {
+    "id": "club-america",
+    "name": "Club América",
+    "short": "América",
+    "abbr": "CLU",
+    "division": 1,
+    "strength": 75,
+    "prestige": 3.8,
+    "color": "#FFEB00",
+    "crest": "svg"
+  },
+  {
+    "id": "cruz-azul",
+    "name": "Cruz Azul",
+    "short": "Cruz Azul",
+    "abbr": "CRU",
+    "division": 1,
+    "strength": 74,
+    "prestige": 3.1,
+    "color": "#001F60",
+    "crest": "svg"
+  },
+  {
+    "id": "tigres-uanl",
+    "name": "Tigres UANL",
+    "short": "Tigres UANL",
+    "abbr": "UAN",
+    "division": 1,
+    "strength": 75,
+    "prestige": 3.0,
+    "color": "#015DAA",
+    "crest": "svg"
+  },
+  {
+    "id": "toluca",
+    "name": "Toluca",
+    "short": "Toluca",
+    "abbr": "TOL",
+    "division": 1,
+    "strength": 74,
+    "prestige": 2.8,
+    "color": "#D53741",
+    "crest": "svg"
+  },
+  {
+    "id": "cf-pachuca",
+    "name": "CF Pachuca",
+    "short": "Pachuca",
+    "abbr": "PAC",
+    "division": 1,
+    "strength": 73,
+    "prestige": 2.7,
+    "color": "#162577",
+    "crest": "svg"
+  },
+  {
+    "id": "leon",
+    "name": "Club León",
+    "short": "León",
+    "abbr": "CLU",
+    "division": 1,
+    "strength": 72,
+    "prestige": 2.4,
+    "color": "#187B56",
+    "crest": "svg"
+  },
+  {
+    "id": "club-tijuana",
+    "name": "Club Tijuana",
+    "short": "Tijuana",
+    "abbr": "CLU",
+    "division": 1,
+    "strength": 71,
+    "prestige": 1.9,
+    "color": "#ED1B26",
+    "crest": "svg"
+  },
+  {
+    "id": "monterrey",
+    "name": "Monterrey",
+    "short": "Monterrey",
+    "abbr": "MON",
+    "division": 1,
+    "strength": 75,
+    "prestige": 3.0,
+    "color": "#0A2240",
+    "crest": "svg"
+  },
+  {
+    "id": "unam-pumas",
+    "name": "Pumas UNAM",
+    "short": "Pumas UNAM",
+    "abbr": "UNA",
+    "division": 1,
+    "strength": 71,
+    "prestige": 2.8,
+    "color": "#132347",
+    "crest": "svg"
+  },
+  {
+    "id": "atlas",
+    "name": "Atlas",
+    "short": "Atlas",
+    "abbr": "ATL",
+    "division": 1,
+    "strength": 70,
+    "prestige": 2.3,
+    "color": "#EC1C24",
+    "crest": "svg"
+  },
+  {
+    "id": "atletico-san-luis",
+    "name": "Atletico San Luis",
+    "short": "San Luis",
+    "abbr": "ASL",
+    "division": 1,
+    "strength": 69,
+    "prestige": 1.5,
+    "color": "#2A2F61",
+    "crest": "svg"
+  },
+  {
+    "id": "fc-juarez",
+    "name": "FC Juárez",
+    "short": "Juárez",
+    "abbr": "JUA",
+    "division": 1,
+    "strength": 69,
+    "prestige": 1.4,
+    "color": "#21CB35",
+    "crest": "svg"
+  },
+  {
+    "id": "necaxa",
+    "name": "Necaxa",
+    "short": "Necaxa",
+    "abbr": "NEC",
+    "division": 1,
+    "strength": 69,
+    "prestige": 2.0,
+    "color": "#E1001E",
+    "crest": "svg"
+  },
+  {
+    "id": "santos-laguna",
+    "name": "Santos Laguna",
+    "short": "Santos Laguna",
+    "abbr": "SAN",
+    "division": 1,
+    "strength": 70,
+    "prestige": 2.2,
+    "color": "#008066",
+    "crest": "svg"
+  },
+  {
+    "id": "atlante-fc",
+    "name": "Atlante FC",
+    "short": "Atlante",
+    "abbr": "ATL",
+    "division": 1,
+    "strength": 67,
+    "prestige": 1.8,
+    "color": "#111231",
+    "crest": "svg"
+  },
+  {
+    "id": "club-queretaro",
+    "name": "Club Querétaro",
+    "short": "Querétaro",
+    "abbr": "QUE",
+    "division": 1,
+    "strength": 68,
+    "prestige": 1.5,
+    "color": "#0056B3",
+    "crest": "svg"
+  },
+  {
+    "id": "puebla",
+    "name": "Puebla",
+    "short": "Puebla",
+    "abbr": "PUE",
+    "division": 1,
+    "strength": 68,
+    "prestige": 1.8,
+    "color": "#2B4B75",
+    "crest": "svg"
+  }
+]

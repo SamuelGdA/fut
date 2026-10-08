@@ -1,0 +1,26 @@
+{
+  "name": "@craque/engine",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "description": "O motor do CRAQUE: funções puras, semeadas e imutáveis. Não conhece React, Zustand nem o navegador.",
+  "exports": {
+    ".": "./src/index.ts",
+    "./version": "./src/version.ts",
+    "./day": "./src/challenge/day.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json && tsc -p tsconfig.test.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@craque/world": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "24.19.0",
+    "fast-check": "4.10.2",
+    "typescript": "6.0.3",
+    "vitest": "5.0.2"
+  }
+}

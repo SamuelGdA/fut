@@ -1,0 +1,322 @@
+[
+  {
+    "id": "liga-profesional",
+    "name": "Liga Profesional",
+    "country": "ARG",
+    "division": 1,
+    "games": 29,
+    "promotionSlots": 2,
+    "crest": "svg",
+    "trophy": "png"
+  },
+  {
+    "id": "primera-nacional",
+    "name": "Primera Nacional",
+    "country": "ARG",
+    "division": 2,
+    "games": 35,
+    "promotionSlots": 2,
+    "crest": "svg",
+    "trophy": "png"
+  },
+  {
+    "id": "liga-bolivia",
+    "name": "Liga Bolivia",
+    "country": "BOL",
+    "division": 1,
+    "games": 30,
+    "promotionSlots": 1,
+    "crest": "svg",
+    "trophy": null
+  },
+  {
+    "id": "copa-simon-bolivar",
+    "name": "Copa Simón Bolívar",
+    "country": "BOL",
+    "division": 2,
+    "games": 22,
+    "promotionSlots": 1,
+    "crest": null,
+    "trophy": null
+  },
+  {
+    "id": "brasileirao",
+    "name": "Brasileirão",
+    "country": "BRA",
+    "division": 1,
+    "games": 38,
+    "promotionSlots": 4,
+    "crest": "svg",
+    "trophy": "png"
+  },
+  {
+    "id": "brasileirao-serie-b",
+    "name": "Brasileirão Série B",
+    "country": "BRA",
+    "division": 2,
+    "games": 38,
+    "promotionSlots": 4,
+    "crest": "svg",
+    "trophy": "svg"
+  },
+  {
+    "id": "liga-de-primera",
+    "name": "Liga de Primera",
+    "country": "CHI",
+    "division": 1,
+    "games": 30,
+    "promotionSlots": 1,
+    "crest": "svg",
+    "trophy": "png"
+  },
+  {
+    "id": "primera-b",
+    "name": "Primera B",
+    "country": "CHI",
+    "division": 2,
+    "games": 30,
+    "promotionSlots": 1,
+    "crest": null,
+    "trophy": null
+  },
+  {
+    "id": "liga-dimayor",
+    "name": "Liga Dimayor",
+    "country": "COL",
+    "division": 1,
+    "games": 40,
+    "promotionSlots": 1,
+    "crest": "svg",
+    "trophy": "png"
+  },
+  {
+    "id": "torneo-dimayor",
+    "name": "Torneo Dimayor",
+    "country": "COL",
+    "division": 2,
+    "games": 36,
+    "promotionSlots": 1,
+    "crest": null,
+    "trophy": null
+  },
+  {
+    "id": "ligapro-serie-a",
+    "name": "LigaPro Serie A",
+    "country": "ECU",
+    "division": 1,
+    "games": 30,
+    "promotionSlots": 1,
+    "crest": "svg",
+    "trophy": "svg"
+  },
+  {
+    "id": "ligapro-serie-b",
+    "name": "LigaPro Serie B",
+    "country": "ECU",
+    "division": 2,
+    "games": 30,
+    "promotionSlots": 1,
+    "crest": null,
+    "trophy": null
+  },
+  {
+    "id": "premier-league",
+    "name": "Premier League",
+    "country": "ENG",
+    "division": 1,
+    "games": 38,
+    "promotionSlots": 3,
+    "crest": "svg",
+    "trophy": "png"
+  },
+  {
+    "id": "championship",
+    "name": "Championship",
+    "country": "ENG",
+    "division": 2,
+    "games": 46,
+    "promotionSlots": 3,
+    "crest": "svg",
+    "trophy": "webp"
+  },
+  {
+    "id": "laliga",
+    "name": "LaLiga",
+    "country": "ESP",
+    "division": 1,
+    "games": 38,
+    "promotionSlots": 3,
+    "crest": "svg",
+    "trophy": "png"
+  },
+  {
+    "id": "laliga-2",
+    "name": "LaLiga 2",
+    "country": "ESP",
+    "division": 2,
+    "games": 42,
+    "promotionSlots": 3,
+    "crest": "svg",
+    "trophy": "png"
+  },
+  {
+    "id": "ligue-1",
+    "name": "Ligue 1",
+    "country": "FRA",
+    "division": 1,
+    "games": 34,
+    "promotionSlots": 3,
+    "crest": "svg",
+    "trophy": "png"
+  },
+  {
+    "id": "ligue-2",
+    "name": "Ligue 2",
+    "country": "FRA",
+    "division": 2,
+    "games": 34,
+    "promotionSlots": 3,
+    "crest": "svg",
+    "trophy": "png"
+  },
+  {
+    "id": "bundesliga",
+    "name": "Bundesliga",
+    "country": "GER",
+    "division": 1,
+    "games": 34,
+    "promotionSlots": 3,
+    "crest": "svg",
+    "trophy": "png"
+  },
+  {
+    "id": "2-bundesliga",
+    "name": "2. Bundesliga",
+    "country": "GER",
+    "division": 2,
+    "games": 34,
+    "promotionSlots": 3,
+    "crest": "svg",
+    "trophy": "png"
+  },
+  {
+    "id": "serie-a",
+    "name": "Serie A",
+    "country": "ITA",
+    "division": 1,
+    "games": 38,
+    "promotionSlots": 3,
+    "crest": "svg",
+    "trophy": "png"
+  },
+  {
+    "id": "serie-b",
+    "name": "Serie B",
+    "country": "ITA",
+    "division": 2,
+    "games": 38,
+    "promotionSlots": 3,
+    "crest": "svg",
+    "trophy": "webp"
+  },
+  {
+    "id": "liga-mx",
+    "name": "Liga MX",
+    "country": "MEX",
+    "division": 1,
+    "games": 34,
+    "promotionSlots": 0,
+    "crest": "svg",
+    "trophy": "png"
+  },
+  {
+    "id": "copa-de-primera",
+    "name": "Copa de Primera",
+    "country": "PAR",
+    "division": 1,
+    "games": 44,
+    "promotionSlots": 1,
+    "crest": "svg",
+    "trophy": "png"
+  },
+  {
+    "id": "division-intermedia",
+    "name": "División Intermedia",
+    "country": "PAR",
+    "division": 2,
+    "games": 30,
+    "promotionSlots": 1,
+    "crest": null,
+    "trophy": null
+  },
+  {
+    "id": "liga1",
+    "name": "Liga1",
+    "country": "PER",
+    "division": 1,
+    "games": 34,
+    "promotionSlots": 1,
+    "crest": "svg",
+    "trophy": "svg"
+  },
+  {
+    "id": "liga2",
+    "name": "Liga 2",
+    "country": "PER",
+    "division": 2,
+    "games": 30,
+    "promotionSlots": 1,
+    "crest": null,
+    "trophy": null
+  },
+  {
+    "id": "liga-uruguaya",
+    "name": "Liga Uruguaya",
+    "country": "URU",
+    "division": 1,
+    "games": 37,
+    "promotionSlots": 1,
+    "crest": "svg",
+    "trophy": "png"
+  },
+  {
+    "id": "segunda-division-uruguaya",
+    "name": "Segunda División",
+    "country": "URU",
+    "division": 2,
+    "games": 30,
+    "promotionSlots": 1,
+    "crest": null,
+    "trophy": null
+  },
+  {
+    "id": "usa-mls",
+    "name": "MLS",
+    "country": "USA",
+    "division": 1,
+    "games": 34,
+    "promotionSlots": 0,
+    "crest": "svg",
+    "trophy": "png"
+  },
+  {
+    "id": "liga-futve",
+    "name": "Liga FUTVE",
+    "country": "VEN",
+    "division": 1,
+    "games": 30,
+    "promotionSlots": 1,
+    "crest": "svg",
+    "trophy": "png"
+  },
+  {
+    "id": "liga-futve-2",
+    "name": "Liga FUTVE 2",
+    "country": "VEN",
+    "division": 2,
+    "games": 26,
+    "promotionSlots": 1,
+    "crest": null,
+    "trophy": null
+  }
+]

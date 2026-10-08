@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "types": ["node"],
+    // Código portado do v1 sem alteração (D1): duas funções de campo recebem
+    // um parâmetro que não usam. Mexer no arquivo quebraria a regra do porte,
+    // então só estas duas checagens ficam desligadas neste pacote.
+    "noUnusedLocals": false,
+    "noUnusedParameters": false
+  },
+  "include": ["src", "test"]
+}

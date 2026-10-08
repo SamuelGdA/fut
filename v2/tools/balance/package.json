@@ -1,0 +1,24 @@
+{
+  "name": "@craque/balance",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Roda milhares de carreiras com políticas fixas e compara com as metas do GDD (seção 40)",
+  "scripts": {
+    "balance": "tsx src/cli.ts",
+    "desafio:calibrar": "tsx src/calibrate.ts",
+    "recordes": "tsx src/recordsCli.ts",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@craque/engine": "workspace:*",
+    "@craque/world": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "24.19.0",
+    "tsx": "4.23.15",
+    "typescript": "6.0.3",
+    "vitest": "5.0.2"
+  }
+}

@@ -1,0 +1,200 @@
+[
+  {
+    "id": "club-nacional",
+    "name": "Nacional",
+    "short": "Nacional",
+    "abbr": "CLU",
+    "division": 1,
+    "strength": 68,
+    "prestige": 3.5,
+    "color": "#003362",
+    "crest": "svg"
+  },
+  {
+    "id": "penarol",
+    "name": "Peñarol",
+    "short": "Peñarol",
+    "abbr": "PEN",
+    "division": 1,
+    "strength": 68,
+    "prestige": 3.6,
+    "color": "#FFE600",
+    "crest": "svg"
+  },
+  {
+    "id": "albion",
+    "name": "Albion FC",
+    "short": "Albion FC",
+    "abbr": "ALB",
+    "division": 1,
+    "strength": 61,
+    "prestige": 1.1,
+    "color": "#00306D",
+    "crest": "svg"
+  },
+  {
+    "id": "boston-river",
+    "name": "Boston River",
+    "short": "Boston River",
+    "abbr": "BOS",
+    "division": 1,
+    "strength": 63,
+    "prestige": 1.2,
+    "color": "#EB3236",
+    "crest": "svg"
+  },
+  {
+    "id": "defensor-sporting",
+    "name": "Defensor Sporting",
+    "short": "Defensor Sporting",
+    "abbr": "DEF",
+    "division": 1,
+    "strength": 64,
+    "prestige": 2.0,
+    "color": "#560090",
+    "crest": "svg"
+  },
+  {
+    "id": "juventud",
+    "name": "Juventud",
+    "short": "Juventud",
+    "abbr": "JUV",
+    "division": 1,
+    "strength": 61,
+    "prestige": 1.1,
+    "color": "#2E5099",
+    "crest": "svg"
+  },
+  {
+    "id": "liverpool-montevideo",
+    "name": "Liverpool",
+    "short": "Liverpool",
+    "abbr": "LIV",
+    "division": 1,
+    "strength": 64,
+    "prestige": 1.6,
+    "color": "#004292",
+    "crest": "svg"
+  },
+  {
+    "id": "atletico-torque",
+    "name": "Montevideo City Torque",
+    "short": "City Torque",
+    "abbr": "TOR",
+    "division": 1,
+    "strength": 62,
+    "prestige": 1.2,
+    "color": "#6CADDF",
+    "crest": "svg"
+  },
+  {
+    "id": "racing-montevideo",
+    "name": "Racing de Montevideo",
+    "short": "Racing",
+    "abbr": "RAC",
+    "division": 1,
+    "strength": 62,
+    "prestige": 1.3,
+    "color": "#27682E",
+    "crest": "svg"
+  },
+  {
+    "id": "rampla-juniors",
+    "name": "Rampla Juniors",
+    "short": "Rampla",
+    "abbr": "RAM",
+    "division": 2,
+    "strength": 57,
+    "prestige": 1.5,
+    "color": "#C8102E",
+    "crest": null
+  },
+  {
+    "id": "central-espanol",
+    "name": "Central Español",
+    "short": "C. Español",
+    "abbr": "CES",
+    "division": 2,
+    "strength": 56,
+    "prestige": 1.3,
+    "color": "#C8102E",
+    "crest": null
+  },
+  {
+    "id": "sud-america",
+    "name": "Sud América",
+    "short": "Sud América",
+    "abbr": "SUD",
+    "division": 2,
+    "strength": 56,
+    "prestige": 1.2,
+    "color": "#FFD100",
+    "crest": null
+  },
+  {
+    "id": "villa-espanola",
+    "name": "Villa Española",
+    "short": "V. Española",
+    "abbr": "VES",
+    "division": 2,
+    "strength": 55,
+    "prestige": 1.1,
+    "color": "#0033A0",
+    "crest": null
+  },
+  {
+    "id": "uruguay-montevideo",
+    "name": "Uruguay Montevideo",
+    "short": "Uruguay Mvd",
+    "abbr": "UMO",
+    "division": 2,
+    "strength": 55,
+    "prestige": 1.1,
+    "color": "#0057B8",
+    "crest": null
+  },
+  {
+    "id": "atenas-de-san-carlos",
+    "name": "Atenas de San Carlos",
+    "short": "Atenas",
+    "abbr": "ATE",
+    "division": 2,
+    "strength": 55,
+    "prestige": 1.1,
+    "color": "#C8102E",
+    "crest": null
+  },
+  {
+    "id": "tacuarembo",
+    "name": "Tacuarembó",
+    "short": "Tacuarembó",
+    "abbr": "TCB",
+    "division": 2,
+    "strength": 55,
+    "prestige": 1.1,
+    "color": "#0033A0",
+    "crest": null
+  },
+  {
+    "id": "rentistas",
+    "name": "Rentistas",
+    "short": "Rentistas",
+    "abbr": "REN",
+    "division": 2,
+    "strength": 56,
+    "prestige": 1.2,
+    "color": "#C8102E",
+    "crest": null
+  },
+  {
+    "id": "deportivo-maldonado",
+    "name": "Deportivo Maldonado",
+    "short": "D. Maldonado",
+    "abbr": "MAL",
+    "division": 2,
+    "strength": 57,
+    "prestige": 1.2,
+    "color": "#FFD100",
+    "crest": null
+  }
+]

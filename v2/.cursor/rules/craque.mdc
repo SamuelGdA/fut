@@ -1,0 +1,17 @@
+---
+description: Regras do projeto CRAQUE v2 (documentação obrigatória e as duas perguntas)
+alwaysApply: true
+---
+
+Leia e siga `AI_RULES.md` (na raiz de `v2/`) antes de qualquer mudança. As
+regras moram só lá.
+
+REGRA ABSOLUTA: Toda e qualquer IA que modificar, adicionar ou remover
+funcionalidades, alterar a arquitetura ou mexer nas lógicas do motor deste
+projeto, tem a OBRIGAÇÃO de atualizar o `README.md` e o `GDD.md`
+imediatamente para refletir as mudanças. A documentação deve ser sempre a
+fonte da verdade exata do código atual.
+
+Antes de criar ou mudar uma funcionalidade, avalie: 1. Ela cria uma
+funcionalidade interessante? 2. O jogador consegue entender seu efeito
+facilmente?

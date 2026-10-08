@@ -1,0 +1,36 @@
+{
+  "trophies": {
+    "cup-ARG": "png",
+    "cup-BRA": "png",
+    "cup-CHI": "png",
+    "cup-COL": "png",
+    "cup-ECU": "png",
+    "cup-ENG": "png",
+    "cup-ESP": "png",
+    "cup-FRA": "png",
+    "cup-GER": "png",
+    "cup-ITA": "png",
+    "cup-PAR": "png",
+    "cup-URU": "png",
+    "cup-USA": "png",
+    "cup-VEN": "png",
+    "uefa-champions-league": "png",
+    "uefa-europa-league": "png",
+    "conmebol-libertadores": "png",
+    "conmebol-sudamericana": "png",
+    "concacaf-champions-cup": "svg",
+    "nations-UEFA": "svg",
+    "nations-CONMEBOL": "png",
+    "nations-CONCACAF": "svg",
+    "nations-CAF": "svg",
+    "nations-AFC": "svg",
+    "nations-OFC": "png",
+    "world-cup": "png",
+    "club-world-cup": "png"
+  },
+  "awards": {
+    "ballon-dor": "png",
+    "golden-glove": "png",
+    "golden-shoe": "png"
+  }
+}

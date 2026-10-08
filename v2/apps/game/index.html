@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="dark" data-motion="system">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#0d1110" />
+    <meta
+      name="description"
+      content="CRAQUE: crie um jogador de 16 anos e conduza a carreira inteira, decisão por decisão, até a aposentadoria."
+    />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="CRAQUE" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+    <title>CRAQUE: carreira de futebol</title>
+    <style>
+      /* A abertura antes do jogo: a marca no centro, nas cores do tema. Some
+         quando o jogo desenha a primeira tela. */
+      .boot {
+        display: grid;
+        min-height: 100dvh;
+        place-items: center;
+        padding: 24px;
+        background: #0d1110;
+        color: #9ca79f;
+        font: 600 14px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        text-align: center;
+      }
+      [data-theme="light"] .boot {
+        background: #f3f0e8;
+        color: #545d57;
+      }
+      .boot svg {
+        display: block;
+        width: 28px;
+        height: 38px;
+        margin: 0 auto 14px;
+        color: currentColor;
+      }
+      .boot-error {
+        display: none;
+        max-width: 22rem;
+      }
+      .boot-error button {
+        margin-top: 14px;
+        min-height: 44px;
+        padding: 0 20px;
+        border: 0;
+        border-radius: 4px;
+        background: #e3b341;
+        color: #0d1110;
+        font: inherit;
+        font-weight: 800;
+        text-transform: uppercase;
+        cursor: pointer;
+      }
+      .boot[data-failed] .boot-loading {
+        display: none;
+      }
+      .boot[data-failed] .boot-error {
+        display: block;
+      }
+    </style>
+    <script>
+      // Aplica tema e idioma salvos antes da primeira pintura, para a página
+      // nunca piscar no tema errado. Qualquer falha cai no padrão (escuro, pt).
+      (function () {
+        try {
+          var raw = window.localStorage.getItem("craque.v2.prefs");
+          if (!raw) return;
+          var state = (JSON.parse(raw) || {}).state || {};
+          var root = document.documentElement;
+          if (state.theme === "light") {
+            root.setAttribute("data-theme", "light");
+            var meta = document.querySelector('meta[name="theme-color"]');
+            if (meta) meta.setAttribute("content", "#f3f0e8");
+          }
+          if (state.motion === "reduced") root.setAttribute("data-motion", "reduced");
+          if (state.locale === "es") root.setAttribute("lang", "es");
+          if (state.locale === "en") root.setAttribute("lang", "en");
+        } catch (error) {
+          /* armazenamento bloqueado ou corrompido: fica o padrão */
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root">
+      <div class="boot" role="status" aria-live="polite">
+        <div>
+          <svg viewBox="0 0 24 32" aria-hidden="true" focusable="false" fill="none">
+            <rect x="2" y="1.5" width="20" height="29" rx="1.5" stroke="currentColor" stroke-width="2.2" />
+            <line x1="2" y1="16" x2="22" y2="16" stroke="currentColor" stroke-width="2.2" />
+            <circle cx="12" cy="16" r="4.2" stroke="#e3b341" stroke-width="2.2" />
+          </svg>
+          <p class="boot-loading" data-boot="loading">Abrindo o CRAQUE</p>
+          <div class="boot-error">
+            <p data-boot="failed">Não deu para abrir o jogo. Sua carreira continua salva; recarregue para tentar de novo.</p>
+            <button type="button" data-boot="reload" onclick="location.reload()">Recarregar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <noscript>
+      <p style="padding: 24px; font-family: system-ui, sans-serif">O CRAQUE precisa de JavaScript ligado para jogar.</p>
+    </noscript>
+    <script>
+      // Nunca uma tela branca: se o jogo não desenhar em 12 segundos (o pacote
+      // não baixou), a abertura vira a mensagem de erro com o botão de recarregar.
+      (function () {
+        var texts = {
+          es: {
+            loading: "Abriendo CRAQUE",
+            failed: "No se pudo abrir el juego. Tu carrera sigue guardada; recarga para intentarlo de nuevo.",
+            reload: "Recargar",
+          },
+          en: {
+            loading: "Opening CRAQUE",
+            failed: "The game could not open. Your career is still saved; reload to try again.",
+            reload: "Reload",
+          },
+        };
+        var lang = document.documentElement.getAttribute("lang");
+        var dict = texts[lang];
+        if (dict) {
+          [].forEach.call(document.querySelectorAll("[data-boot]"), function (element) {
+            element.textContent = dict[element.getAttribute("data-boot")];
+          });
+        }
+        window.setTimeout(function () {
+          if (window.__craqueMounted) return;
+          var boot = document.querySelector(".boot");
+          if (boot) boot.setAttribute("data-failed", "");
+        }, 12000);
+      })();
+    </script>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
