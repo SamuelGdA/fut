@@ -10,7 +10,7 @@ import { useUnlocks } from "../hall/unlocks";
 import { useTecnicoPresence } from "./presence";
 
 /**
- * A carreira do Técnico (GDD 56), só em memória (D51): nenhum save, nenhum
+ * A carreira do Técnico (GDD 42), só em memória (D51): nenhum save, nenhum
  * banco, nada no armazenamento. Recarregar ou fechar a aba encerra a
  * carreira; a tela avisa antes de começar e antes de sair. Este módulo é o
  * único que carrega o motor do Técnico e os elencos, e só entra quando o

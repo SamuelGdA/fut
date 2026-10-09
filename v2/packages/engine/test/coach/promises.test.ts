@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { type CoachCareer, cloneCareer, squadOf } from "../../src/coach";
-import { addPromise } from "../../src/coach/events";
+import { addPromise, resolveEventChoice } from "../../src/coach/events";
+import { PROMISES } from "../../src/coach/tuning";
 import { must, playStage, started } from "./helpers";
 
 describe("promessas (spec 12): registradas com prazo e cobradas sozinhas", () => {
@@ -44,4 +45,46 @@ describe("promessas (spec 12): registradas com prazo e cobradas sozinhas", () =>
     }
     expect(after.lastReport?.promises.map((promise) => promise.id)).toContain(starts?.id);
   }, 60_000);
+
+  it("desfazer a promessa numa conversa não conta como cumprida", () => {
+    const career = cloneCareer(base);
+    addPromise(career, "minutes", reserve.id, 6, "talk");
+    let next = must(career, { type: "openAction", kind: "locker" });
+    next = must(next, { type: "confirmAction", payload: { kind: "locker", mode: "talk", players: [reserve.id] } });
+    const talk = next.flow?.kind === "locker" ? next.flow.talks[0] : undefined;
+    expect(talk?.concern).toBe("promise");
+    next = must(next, { type: "respond", item: talk?.id ?? "", decision: "release" });
+    expect(next.promises.find((promise) => promise.kind === "minutes")?.status).toBe("released");
+  });
+
+  it("os eventos criam as promessas de não vender e de jogos para os jovens", () => {
+    const career = cloneCareer(base);
+    career.phase = "event";
+    career.event = {
+      id: "sellReserve",
+      kind: "opportunity",
+      subject: reserve.id,
+      params: {},
+      options: [{ id: "keep", chance: null, success: [{ type: "promise", kind: "keep", target: 1 }], failure: [] }],
+      match: null,
+      chosen: null,
+      outcome: null,
+    } as unknown as CoachCareer["event"];
+    resolveEventChoice(career, "keep");
+    expect(career.promises.some((promise) => promise.kind === "keep" && promise.player === reserve.id && promise.status === "active")).toBe(true);
+    career.event = {
+      id: "veteranYouth",
+      kind: "crisis",
+      subject: reserve.id,
+      params: {},
+      options: [{ id: "youth", chance: null, success: [{ type: "promise", kind: "youth", target: PROMISES.youthGames }], failure: [] }],
+      match: null,
+      chosen: null,
+      outcome: null,
+    } as unknown as CoachCareer["event"];
+    resolveEventChoice(career, "youth");
+    const youth = career.promises.find((promise) => promise.kind === "youth");
+    expect(youth?.player).toBeNull();
+    expect(youth?.target).toBe(PROMISES.youthGames);
+  });
 });

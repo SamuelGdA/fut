@@ -45,9 +45,9 @@ export default defineConfig({
       includeManifestIcons: false,
       manifest: {
         id: "./",
-        name: "CRAQUE: carreira de futebol",
-        short_name: "CRAQUE",
-        description: "Crie um jogador de 16 anos e conduza a carreira inteira, decisão por decisão, até a aposentadoria.",
+        name: "Futeiros: dois jogos de futebol",
+        short_name: "Futeiros",
+        description: "Craque, a carreira de jogador, e Técnico, a carreira de treinador: dois jogos de futebol decididos por escolhas.",
         lang: "pt-BR",
         dir: "ltr",
         start_url: "./",

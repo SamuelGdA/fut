@@ -31,7 +31,7 @@ const EXPLORE = ["squad", "team", "competitions", "history"] as const;
 type Explore = (typeof EXPLORE)[number];
 
 /**
- * O Técnico (GDD 56): a tela muda pela fase do motor, não pela rota.
+ * O Técnico (GDD 42): a tela muda pela fase do motor, não pela rota.
  * Propostas, etapa (ações), evento, decisão no jogo, resultados e avaliação.
  * No celular, abas embaixo (Etapa, Elenco, Time, Clube, Mais) e a etapa cabe
  * sem rolar; no PC, o clube à esquerda, a etapa no meio e a exploração à
@@ -206,7 +206,8 @@ export function TecnicoScreen() {
       {desktop ? (
         <main className="career-body">
           <div className="tecnico-columns">
-            <aside className="scroll-panel tec-side" aria-label={tt("club.title")}>
+            {/* Rola sozinha: entra no Tab para quem usa teclado (os painéis das abas já entram). */}
+            <aside className="scroll-panel tec-side" aria-label={tt("club.title")} tabIndex={0}>
               <div className="scroll-panel-inner">
                 <ClubView career={career} />
               </div>

@@ -3,7 +3,7 @@ import type { Rng } from "../rng";
 import { ageOf, hasTrait, output, sectorOf } from "./players";
 import { expectedGoals, sectorRatings, type OnField, type SectorRatings, type SideSetup } from "./tactics";
 import type { CoachPlayer, FormationId, GoalEvent, Philosophy } from "./types";
-import { INJURY, MATCH, RATING, SUBSTITUTIONS } from "./tuning";
+import { INJURY, MATCH, RATING, SUBSTITUTIONS, TRAIT_EFFECTS } from "./tuning";
 
 /**
  * Partidas (spec 9 e 10). Uma única conta de gols esperados vale para todos os
@@ -371,7 +371,7 @@ function playMinute(live: LiveMatch, input: DetailedInput, minute: number, looku
       const player = lookup(entry.id);
       const age = ageOf(player, input.year);
       const ageFactor = 1 + Math.max(0, age - INJURY.ageFrom) * INJURY.agePerYear;
-      const traitFactor = hasTrait(player, "tireless") ? 0.75 : 1;
+      const traitFactor = hasTrait(player, "tireless") ? TRAIT_EFFECTS.tireless : 1;
       if (!rng.chance((INJURY.per90 / 90) * ageFactor * traitFactor)) continue;
       const { days, kind } = injuryDays(rng);
       live.injuries.push({ player: entry.id, minute, days, kind });

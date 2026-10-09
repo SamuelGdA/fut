@@ -16,7 +16,7 @@ import {
 import { type Rng, stream } from "@craque/engine";
 
 /**
- * Carreiras automáticas do Técnico para o harness (GDD 56.12): uma política
+ * Carreiras automáticas do Técnico para o harness (GDD 42.12): uma política
  * simples joga as 24 temporadas usando as ações, eventos e decisões. A
  * política nunca é lida pelo motor: trocar de política não muda o mundo.
  */

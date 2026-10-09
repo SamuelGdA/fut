@@ -1,7 +1,7 @@
 import type { Widen } from "../i18n";
 
 /**
- * Os textos de jogo do Técnico (GDD 56), pelas chaves do motor
+ * Os textos de jogo do Técnico (GDD 42), pelas chaves do motor
  * (`@craque/engine/coach`): eventos fora de campo, decisões no meio da
  * partida, conversas do vestiário, reunião, pedido de verba, objetivos,
  * motivos das barras, momentos e avaliação.
@@ -130,7 +130,7 @@ export const coachPt = {
       body: "{buyer} oferece {price} por {player}, que tem jogado pouco.",
       options: {
         sell: { label: "Vender", result: "Dinheiro no caixa. A torcida não gosta de reforçar quem é de fora." },
-        keep: { label: "Manter no elenco", result: "Ele se sente valorizado." },
+        keep: { label: "Manter no elenco", result: "Ele se sente valorizado, e você promete não vendê-lo até o fim da temporada." },
       },
     },
     raiseRequest: {
@@ -170,7 +170,7 @@ export const coachPt = {
       body: "{player} discutiu feio com os jovens do elenco depois do treino.",
       options: {
         veteran: { label: "Apoiar o veterano", result: "Ele se sente respaldado; os jovens ficam chateados." },
-        youth: { label: "Apoiar os jovens", result: "Os jovens ganham moral; o veterano se fecha." },
+        youth: { label: "Apoiar os jovens", result: "Os jovens ganham moral e a promessa de mais jogos; o veterano se fecha." },
         fine: {
           label: "Multar os dois lados",
           success: "Regra é regra: o grupo entende.",
@@ -222,7 +222,6 @@ export const coachPt = {
       losing: { title: "Perdendo aos {minute}'", body: "O placar está contra. O que muda?" },
       drawing: { title: "Empate aos {minute}'", body: "Jogo travado. Arriscar ou segurar?" },
       winning: { title: "Ganhando aos {minute}'", body: "A vantagem é sua. Como fechar o jogo?" },
-      injury: { title: "Lesão aos {minute}'", body: "{player} saiu machucado. O time precisa se ajustar." },
     },
     options: {
       allIn: { label: "Tudo ao ataque", hint: "Mais gols a favor e muito mais exposição.", goal: "Buscar pelo menos o empate" },
@@ -314,7 +313,7 @@ export const coachPt = {
   },
 
   bars: {
-    board: { name: "Diretoria", hint: "Confiança da diretoria no seu trabalho. Abaixo de 35 na avaliação, você é demitido." },
+    board: { name: "Diretoria", hint: "Confiança da diretoria no seu trabalho. Abaixo de 27 na avaliação, você é demitido." },
     fans: { name: "Torcida", hint: "Humor da arquibancada. Pesa na avaliação e reage a clássicos, títulos e vendas." },
     squad: { name: "Elenco", hint: "Média da satisfação dos jogadores. Quem está insatisfeito rende menos." },
   },
@@ -378,7 +377,7 @@ export const coachPt = {
     loyal: { name: "Casa de verdade", description: "Treine o mesmo clube por 10 temporadas." },
     abroad: { name: "Passaporte carimbado", description: "Treine um clube de outro país." },
     threeCountries: { name: "Cidadão do mundo", description: "Treine clubes de três países diferentes." },
-    revelations: { name: "Fábrica de craques", description: "Revele 5 jogadores da base que viraram titulares." },
+    revelations: { name: "Fábrica de craques", description: "Suba 5 jogadores da base que chegam a 30 jogos com você." },
     comeback: { name: "A volta por cima", description: "Seja demitido e, depois, ganhe um título." },
     reputation: { name: "Lenda da prancheta", description: "Chegue a 90 de reputação." },
   },

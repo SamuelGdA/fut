@@ -83,14 +83,18 @@ export function wageBillOf(career: CoachCareer, clubId: string): number {
 }
 
 export function financeLabel(club: CoachClub, wageBill: number): ClubOffer["finances"] {
-  if (club.cash < 0 || wageBill * 12 >= club.revenue * 0.65) return "tight";
-  if (club.cash >= club.revenue * 0.15 && wageBill * 12 <= club.revenue * 0.5) return "healthy";
+  const { tightWages, healthyWages, healthyCash } = FINANCE.label;
+  if (club.cash < 0 || wageBill * 12 >= club.revenue * tightWages) return "tight";
+  if (club.cash >= club.revenue * healthyCash && wageBill * 12 <= club.revenue * healthyWages) return "healthy";
   return "balanced";
 }
 
 /** Verba de contratações no começo da temporada: parte da receita mais um pouco da sobra de caixa. */
 export function seasonBudget(club: CoachClub, leftover: number): number {
-  return Math.max(0, FINANCE.budgetShare * club.revenue + 0.3 * Math.max(0, club.cash - 0.2 * club.revenue) + 0.5 * leftover);
+  return Math.max(
+    0,
+    FINANCE.budgetShare * club.revenue + FINANCE.budgetFromCash * Math.max(0, club.cash - FINANCE.cashFloor * club.revenue) + FINANCE.budgetFromLeftover * leftover,
+  );
 }
 
 /** Receitas e salários de um período, para todos os clubes; o do treinador vai para o diário. */

@@ -82,7 +82,8 @@ function UpcomingGames({ career }: { career: CoachCareer }) {
   const games = career.fixtures.filter((fixture) => !fixture.result && (fixture.home === club || fixture.away === club)).slice(0, 5);
   if (games.length === 0) return null;
   return (
-    <div className="tec-card tec-upcoming">
+    // A lista encolhe para a etapa caber e pode rolar: entra no Tab.
+    <div className="tec-card tec-upcoming" tabIndex={0} role="region" aria-label={tt("competitions.upcoming")}>
       <p className="eyebrow mb-1">{tt("competitions.upcoming")}</p>
       <ul className="flex flex-col gap-1">
         {games.map((fixture) => {

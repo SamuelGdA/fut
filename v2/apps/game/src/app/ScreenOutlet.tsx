@@ -3,7 +3,7 @@ import { useT } from "../i18n/useT";
 import { IS_DEV } from "../lib/env";
 import { Loading } from "../ui/Loading";
 import { Boundary, ErrorPanel } from "./ErrorBoundary";
-import { type Screen, useNavigation } from "./navigation";
+import { SCREEN_GAME, type Screen, useNavigation } from "./navigation";
 
 /**
  * Um componente por tela registrada, cada um no próprio pedaço do bundle: a
@@ -92,6 +92,7 @@ export function ScreenOutlet() {
           onRetry={reset}
           onHome={screen === "hub" ? undefined : () => go("hub", { force: true })}
           offerReset={READS_SAVE.has(screen)}
+          game={SCREEN_GAME[screen] === "tecnico" ? "tecnico" : "craque"}
         />
       )}
     >

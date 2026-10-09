@@ -16,6 +16,7 @@ import type {
   MatchContext,
   Sector,
 } from "./types";
+import { PROMISES, STAGE_EVENTS } from "./tuning";
 import { absDay, coachRng, stageKey, unit } from "./util";
 import { squadOf } from "./world";
 
@@ -267,7 +268,7 @@ const CATALOG: readonly EventDefinition[] = [
         params: { buyer, price, rival: rival ? 1 : 0 },
         options: [
           option("sell", null, [{ type: "sell", price, buyer }, { type: "fans", amount: rival ? -5 : -1 }]),
-          option("keep", null, [{ type: "satisfaction", target: "subject", amount: 5 }]),
+          option("keep", null, [{ type: "satisfaction", target: "subject", amount: 5 }, { type: "promise", kind: "keep", target: 1 }]),
         ],
       };
     },
@@ -336,7 +337,11 @@ const CATALOG: readonly EventDefinition[] = [
         params: {},
         options: [
           option("veteran", null, [{ type: "satisfaction", target: "subject", amount: 6 }, { type: "satisfaction", target: "youth", amount: -6 }]),
-          option("youth", null, [{ type: "satisfaction", target: "youth", amount: 5 }, { type: "satisfaction", target: "subject", amount: -8 }]),
+          option("youth", null, [
+            { type: "satisfaction", target: "youth", amount: 5 },
+            { type: "satisfaction", target: "subject", amount: -8 },
+            { type: "promise", kind: "youth", target: PROMISES.youthGames },
+          ]),
           option("fine", 0.6, [{ type: "board", amount: 2 }, { type: "satisfaction", target: "squad", amount: 1 }], [{ type: "satisfaction", target: "squad", amount: -3 }]),
         ],
       };
@@ -418,7 +423,7 @@ export function pickStageEvent(career: CoachCareer): { match: boolean; event: Co
   const key = stageKey(career.year, career.half);
   const rng = coachRng(career.setup.seed, "event", key);
   const eligible = CATALOG.map((definition) => [definition, definition.weight(context)] as const).filter(([, weight]) => weight > 0);
-  const matchShare = eligible.length === 0 ? 1 : 0.38;
+  const matchShare = eligible.length === 0 ? 1 : STAGE_EVENTS.matchShare;
   if (rng.chance(matchShare)) return { match: true, event: null };
   const shuffled = rng.shuffle(eligible);
   while (shuffled.length > 0) {
@@ -452,10 +457,6 @@ const MATCH_OPTIONS: Readonly<Record<MatchContext["situation"], ReadonlyArray<{ 
     { id: "close", forMult: 0.75, againstMult: 0.62 },
     { id: "keepGoing", forMult: 1.22, againstMult: 1.12 },
     { id: "manage", forMult: 0.95, againstMult: 0.9 },
-  ],
-  injury: [
-    { id: "adjust", forMult: 1, againstMult: 1 },
-    { id: "hold", forMult: 0.78, againstMult: 0.68 },
   ],
 };
 
@@ -625,7 +626,8 @@ export function applyEffects(career: CoachCareer, effects: readonly EventEffect[
         break;
       }
       case "promise":
-        addPromise(career, effect.kind, subjectId, effect.target, origin);
+        // A promessa aos jovens é com o grupo, não com o jogador do evento.
+        addPromise(career, effect.kind, effect.kind === "youth" ? null : subjectId, effect.target, origin);
         break;
       case "injury":
         if (effect.days < 0) {

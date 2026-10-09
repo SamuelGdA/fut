@@ -21,9 +21,10 @@ export interface Prefs {
 }
 
 /**
- * Abre o Início com as preferências dadas (som e vibração desligados). As
- * preferências entram só na primeira abertura da aba: recarregar no meio do
- * teste mantém o que o jogo gravou.
+ * Abre o jogo com as preferências dadas (som e vibração desligados). A
+ * abertura é sempre o hub do Futeiros (D50). As preferências entram só na
+ * primeira abertura da aba: recarregar no meio do teste mantém o que o jogo
+ * gravou.
  */
 export async function abrir(page: Page, prefs: Prefs = {}, path = "/"): Promise<void> {
   const state = {
@@ -45,6 +46,32 @@ export async function abrir(page: Page, prefs: Prefs = {}, path = "/"): Promise<
   // Espera a tela de verdade desenhar (o título dela), não só o `load` da página:
   // sob carga, um Início ainda carregando leria o que o teste gravar em seguida.
   await expect(page.locator("#conteudo h1").first()).toBeVisible();
+}
+
+/** O cartão de um dos dois jogos no hub. */
+export const cartao = (page: Page, jogo: "craque" | "tecnico") => page.locator(`.hub-card[data-game="${jogo}"]`);
+
+/** Do hub para o Início do Craque ("Jogar", ou "Início do Craque" com carreira salva). */
+export async function entrarNoCraque(page: Page): Promise<void> {
+  await expect(page.getByRole("heading", { name: "Futeiros", level: 1 })).toBeVisible();
+  await cartao(page, "craque")
+    .getByRole("button", { name: /^(Jogar|Início do Craque)$/ })
+    .click();
+  await expect(page.getByRole("heading", { name: "CRAQUE", level: 1 })).toBeVisible();
+}
+
+/** Abre o jogo e entra no Início do Craque. */
+export async function abrirCraque(page: Page, prefs: Prefs = {}): Promise<void> {
+  await abrir(page, prefs);
+  await entrarNoCraque(page);
+}
+
+/** No hub, o cartão do Craque retoma a carreira salva ("Continuar carreira" ou "Ver o resumo"). */
+export async function retomarCraque(page: Page): Promise<void> {
+  await expect(page.getByRole("heading", { name: "Futeiros", level: 1 })).toBeVisible();
+  await cartao(page, "craque")
+    .getByRole("button", { name: /^(Continuar carreira|Ver o resumo)$/ })
+    .click();
 }
 
 export async function jogoRapido(page: Page): Promise<void> {

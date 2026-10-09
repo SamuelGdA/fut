@@ -4,7 +4,7 @@ import type { CareerMetrics } from "./metrics";
 import type { ProbeMetrics } from "./probes";
 
 /**
- * Metas do Técnico (GDD 56.12). Cada meta diz o que o jogador sente: o
+ * Metas do Técnico (GDD 42.12). Cada meta diz o que o jogador sente: o
  * sorteio inicial é justo, nenhuma filosofia é sempre a melhor, só o elenco
  * decide entre continentes, contratar muito acima do próprio nível é quase
  * impossível, as ações valem a pena e o mundo não desanda em 24 temporadas.

@@ -5,7 +5,7 @@ import { AvatarEditor } from "../../features/appearance/AvatarEditor";
 import { useCoachDraft } from "../../features/tecnico/draft";
 
 /**
- * Aparência do treinador (GDD 56.2): o mesmo editor do Craque, com o retrato
+ * Aparência do treinador (GDD 42.2): o mesmo editor do Craque, com o retrato
  * de terno e a gravata na cor da seleção do país escolhido.
  */
 export function TecnicoAppearanceScreen() {

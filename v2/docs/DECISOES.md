@@ -1042,3 +1042,260 @@ Nenhuma regra de prêmios nem seu limite foi alterado para esconder a falha.
 `pnpm verify` continua bloqueado pelos quatro exports ausentes do módulo
 paralelo `manager`, listados na D47. O servidor de desenvolvimento reiniciado
 com a exclusão dos relatórios permaneceu funcionando após a suíte.
+
+## D50. Futeiros: um hub com dois jogos, aberto sempre na primeira tela
+
+**Decisão.** O site passa a se chamar **Futeiros** e abre sempre no hub
+(`apps/game/src/screens/hub/HubScreen.tsx`), com dois cartões: **Craque**, a
+carreira de jogador que já existia, e **Técnico**, a carreira de treinador
+nova. `startScreen` devolve `hub` para qualquer abertura no endereço do jogo;
+só um caminho desconhecido (página não encontrada), um link de carreira
+(`#c=`) e o `#lab` em desenvolvimento abrem outra coisa. A carreira salva do
+Craque não abre mais sozinha: o cartão dele mostra o resumo do save e oferece
+"Continuar carreira" (ou "Ver o resumo") e "Início do Craque". O Craque não
+mudou de regra: `ENGINE_VERSION` continua `2.0.0-m8.4`, e o h1 do Início dele
+continua "CRAQUE".
+
+`SCREEN_GAME` (`app/navigation.ts`) diz de que jogo é cada tela: a barra mostra
+a marca Futeiros (que volta ao hub) e uma etiqueta do jogo atual, e o painel de
+erro de uma tela do Técnico não promete carreira salva nem oferece limpar o
+save (D51). Manifesto, título, tela de abertura e páginas estáticas de erro
+dizem "Futeiros". A página não encontrada volta ao hub. A tela de conquistas
+tem a troca Craque/Técnico, e o Início do Craque conta só as dele (D54).
+
+O hub não baixa motor nenhum: o motor do Técnico, os elencos e os textos dele
+ficam em pedaços próprios, carregados só quando o jogador começa (medido no
+build: o pedaço de entrada e o do hub não contêm `createCoachCareer` nem os
+elencos; os elencos são um pedaço de cerca de 1 MB, guardado pelo service
+worker para jogar sem internet).
+
+**Por quê.** Pedido do produto: um portal com os dois jogos, o Técnico como
+jogo de verdade e não como modo escondido. Abrir no hub é a única regra que
+funciona para os dois ao mesmo tempo: o Técnico não tem save (D51), então
+recarregar não pode "voltar para onde estava"; e o Craque continua a um toque,
+pelo cartão. Manter o Craque byte a byte igual nas regras evita reabrir a
+validação das 51 metas dele.
+
+## D51. Técnico sem salvamento
+
+**Decisão.** A carreira do Técnico vive só na memória da aba
+(`features/tecnico/store.ts`, Zustand sem `persist`). Nada da carreira vai para
+`localStorage`, `sessionStorage` ou IndexedDB. Ficam guardados só o rascunho
+da identidade (`craque.v2.tecnico.draft`: nome, país, ritmo e aparência, como
+o rascunho do Craque) e as conquistas liberadas (D54). A tela avisa em todos os
+pontos: o cartão do hub ("Sem salvamento"), a identidade antes de começar, o
+pedido de confirmação ao sair do Técnico, o `beforeunload` do navegador ao
+recarregar ou fechar, o aviso de versão nova e o painel de erro. Recarregar
+encerra a carreira e abre o hub. Sair para o hub sem recarregar mantém a
+carreira nesta aba ("Em andamento nesta aba", "Voltar à carreira"); o legado
+fica na tela até o jogador sair dele.
+
+O motor continua determinístico e semeado (`coachRng(semente, rótulo, ...)`),
+mas a semente é sorteada a cada carreira; só a suíte ponta a ponta fixa uma
+pelo `sessionStorage` (`futeiros.e2e.seed`).
+
+**Por quê.** Pedido explícito da especificação: sem save de carreira. Um
+estado de 24 temporadas com o mundo inteiro jogado partida a partida também
+seria grande para guardar e migrar entre versões; sem save, o Técnico pode
+mudar de regra (`COACH_VERSION`) sem política de compatibilidade. O custo é
+perder a carreira ao recarregar, e por isso o aviso aparece antes de cada
+ação que pode perdê-la. A suíte ponta a ponta audita o armazenamento depois de
+uma carreira inteira.
+
+## D52. Elencos reais: FC 27, eFootball real com +4, conhecimento e gerados
+
+**Decisão.** O Técnico joga com elencos de verdade nos mesmos clubes e ligas do
+Craque. A montagem (`packages/world/scripts/elencos/`, `pnpm elencos:montar`,
+offline e determinística) segue camadas, nesta ordem:
+
+1. **EA FC 27** (`players.csv`, só homens). O FC 27 decide o clube de cada
+   jogador, inclusive para tirar quem saiu de um clube do jogo para uma liga
+   que o jogo não tem.
+2. **eFootball**, só para clubes com menos de 20 jogadores do FC 27, e só
+   jogadores reais (`fake_version = 0`). OVR = carta base + 4. Times sem
+   licença (jogadores fictícios) são descartados e listados no relatório.
+3. **Conhecimento**: jogadores reais escritos à mão, com OVR estimado, para
+   completar elencos sem fonte (Série B, ligas sul-americanas pequenas).
+4. **Gerados** pelo jogo, até 22 jogadores com 2 goleiros, na escala dos reais
+   da mesma liga. Na tela, jogador gerado tem a marca ◆ "Fictício".
+
+Medido na montagem: em 80 jogadores presentes nas duas fontes, o FC 27 fica
+4,5 abaixo da carta base do eFootball + 4 (mediana). O +4 foi mantido como
+pedido, e o laboratório mostra a diferença. Segundas divisões sem pelo menos
+cinco clubes medidos ganham um **ajuste da 2ª** (`DIVISION_GAP = 2,5` abaixo
+do percentil 25 dos 14 melhores da primeira divisão do país), para os elencos
+gerados não ficarem fracos demais perto dos reais rebaixados. Cada clube fica
+com no máximo 30 jogadores acima de 21 anos; os cortados vão para os livres.
+
+Resultado (`packages/world/data/squads/relatorio.md`): 12.609 jogadores em 489
+clubes, 8.415 do FC 27, 818 do eFootball, 133 do conhecimento e 3.243 gerados.
+As primeiras divisões europeias, a MLS e a Liga MX são 100% reais; a Série A
+95%; a Série B 16%; as segundas divisões sul-americanas quase todas geradas.
+
+**Por quê.** Pedido do produto, com a ordem de fontes definida pelo usuário.
+Jogador fictício do eFootball não é jogador real, então não entra. As lacunas
+são sinalizadas na interface (◆ e o aviso na escolha do país), nunca
+escondidas. O ajuste da 2ª corrige o que o harness mostrou: com Ceará e Sport
+reais caindo numa Série B gerada, o campeão fazia 100 pontos.
+
+## D53. Nacionalidades do treinador e inscrição
+
+**Decisão.** O treinador escolhe entre os 15 países que têm segunda divisão no
+jogo (`COACH_COUNTRIES`): ARG, BOL, BRA, CHI, COL, ECU, ENG, ESP, FRA, GER,
+ITA, PAR, PER, URU e VEN. México e Estados Unidos ficam de fora: sem segunda
+divisão, o sorteio de 95% de segunda das propostas iniciais seria impossível.
+Os dez países com segunda divisão completada com gerados levam a marca ◆ na
+escolha.
+
+Inscrição automática (`REGISTRATION`): Inglaterra com 25 acima de 21 anos e os
+mais jovens fora do teto; os demais com 30 e o mesmo corte de idade. A regra de
+formados no país (homegrown) não é aplicada. Banco de 12 no Brasil, Itália e
+Argentina e de 9 nos demais; cinco substituições em três paradas além do
+intervalo (IFAB).
+
+**Por quê.** A regra das propostas iniciais é o começo do jogo e precisa valer
+para todos. A inscrição inglesa completa (homegrown) complica sem criar escolha
+interessante; o teto de idade já faz o jogador pensar em quem subir da base.
+
+## D54. Conquistas do Técnico
+
+**Decisão.** O Técnico tem 19 conquistas próprias (`COACH_ACHIEVEMENTS` em
+`packages/content/src/coach.ts`, ids `tecnico:*`): primeira temporada,
+carreira completa, acesso, dois acessos, salvar da queda, primeiro título,
+liga, continental, Mundial de Clubes, Mundial com clube de fora da Europa,
+tríplice coroa, dez títulos, do fundo ao topo, fiel a um clube, trabalho no
+exterior, três países, revelações da base, recuperação e reputação. Ficam no
+mesmo banco de conquistas do Craque, liberadas quando a temporada vira ou a
+carreira acaba. O hub e a tela de conquistas contam cada jogo em separado; o
+Início do Craque conta só as do Craque.
+
+**Por quê.** As conquistas são a única coisa do Técnico que sobrevive ao
+recarregar (D51): dão memória ao jogo sem save. Separar a contagem evita que o
+Técnico mude os números que o Craque já mostrava.
+
+## D55. Calendário e competições do Técnico: só clubes, por enquanto
+
+**Decisão.** O Técnico joga as mesmas competições de clubes do Craque, partida
+a partida: liga em turno e returno (método do círculo), copa nacional em
+mata-mata (Copa do Brasil em ida e volta a partir das oitavas), copa da liga
+inglesa (semifinal em ida e volta), supercopas, continentais com preliminar,
+grupos e mata-mata conforme o número de classificados, supercopa continental,
+Intercontinental e Mundial de Clubes nos anos em que `ano % 4 == 1` (cotas
+UEFA 12, CONMEBOL 6, CONCACAF 4). A temporada tem 300 dias de jogos e 65 de
+férias; no ritmo lento, o primeiro turno termina no dia 149. Cada fase de
+mata-mata é sorteada quando a anterior acaba: o resultado do treinador muda
+quem segue.
+
+**O Técnico não tem seleções nem competições de seleções, por enquanto**
+(instrução do usuário em 8/10/2026). Nenhuma convocação, Copa do Mundo, copa
+continental de seleções ou data FIFA entra no calendário dele; a tela de
+competições diz "Só competições de clubes" e o hub diz "Mundo vivo, sem
+seleções". O Craque continua com as seleções dele.
+
+**Por quê.** Calendário de clubes completo já entrega o que o técnico decide
+(elenco, rotação, mata-mata), e as seleções exigiriam convocações e datas que o
+pedido deixou para depois. Força relativa: só o elenco conta, sem bônus de
+continente (a sonda "trocado" do harness inverte o resultado quando os elencos
+trocam de clube).
+
+## D56. Contratar muito acima do próprio nível é quase impossível
+
+**Decisão.** A chance de um negócio é a do jogador querer vezes a do clube dele
+liberar (`coach/market.ts`, números em `PURCHASE`). O jogador compara a
+**atratividade** do comprador (força, prestígio, liga, continental, reputação
+do técnico) com a **expectativa** dele: o próprio OVR, menos um desconto de
+ambição de até 3 pontos quando ele está num clube abaixo do próprio nível
+(livre: OVR − 3). A vontade cai com a lacuna, `σ((2,5 − lacuna) / 1,6)`, com a
+descida de nível, com ser estrela (85+) e com o papel que teria; nunca é zero
+(piso 0,0001). O clube libera pelo papel (estrela 25%, titular 55%, rotação
+80%, reserva 92%), menos ainda para um comprador mais fraco. A tela mostra a
+faixa (quase impossível abaixo de 5%, difícil abaixo de 25%, possível abaixo de
+55%, provável), e a busca esconde os quase impossíveis até o jogador pedir. O
+laboratório abre a conta inteira, termo a termo.
+
+Na mesma calibragem: a verba da temporada é 40% da receita
+(`FINANCE.budgetShare`), mais 30% do caixa acima de 20% da receita e metade da
+sobra da temporada anterior, para quase todo clube de segunda divisão ter pelo
+menos três alvos do próprio nível ao alcance (98,2% no harness); avaliação com crédito inicial 0,5 por clube novo, confiança
+`50 + 12s + 15C` e demissão abaixo de 27, para 8% a 15% de demissões por
+temporada com a política equilibrada.
+
+**Por quê.** Pedido do produto: trazer alguém muito melhor deve ser muito
+difícil, e um craque mundial num clube pequeno, quase impossível, com a conta
+à vista. Medido no harness: Mbappé no Flamengo 0,0497%; a mediana cai a cada
+degrau de diferença de OVR; +8 fica abaixo de 5% e +12, abaixo de 0,5%.
+
+## D57. O `verify` volta a rodar inteiro: lote completo de Fenômenos no modo reduzido e metas do Técnico
+
+**Decisão.** No `pnpm balance:check`, o lote de Fenômenos de ataque joga as
+mesmas 400 carreiras do `pnpm balance` completo (antes, só as 150 primeiras da
+mesma semente). Nenhuma meta mudou. O `pnpm verify` passa a rodar também o
+`pnpm balance:tecnico:check`, a mesma rodada do relatório versionado (16
+carreiras de 24 temporadas, semente `tecnico-m1`), sem gravar arquivo, depois
+das metas do Craque e antes do build.
+
+**Por quê.** A pendência registrada na D48 e na D49 era de amostra, não de
+regra: as 150 primeiras carreiras dão média de 2,40 Bolas de Ouro, acima do
+teto de 2,25, e as 400 dão 2,11, dentro da faixa, como o relatório completo.
+Usar o lote inteiro custa cerca de 14 segundos e deixa o modo reduzido medir o
+mesmo que o completo. As metas do Técnico são determinísticas pela semente.
+Uma rodada menor (8 carreiras de 12 temporadas, 48 temporadas da política
+equilibrada) oscilava por amostra: 18,8% de demissões contra 11,5% nas 192 da
+rodada completa. Por isso o `verify` roda a mesma rodada do relatório, cerca
+de 3 minutos; uma mudança no motor do Técnico que quebre uma meta para a
+entrega, e o que ele mede é o que o relatório mostra. O Craque não mudou de regra
+(`ENGINE_VERSION` continua `2.0.0-m8.4`); as notas da D47 à D49 sobre o
+módulo `manager` falavam de um módulo que não existe neste repositório (D50).
+
+## D58. Ajustes do Técnico na revisão final
+
+**Decisão.** Cinco correções no Técnico, achadas ao conferir o código contra a
+especificação e contra a tela:
+
+1. **Pedir verba tem confirmação.** Abrir a ação mostra as chances de muita
+   verba, pouca verba e recusa, com os valores (`fundsPreview`); confirmar
+   gasta a ação e sorteia a resposta; cancelar antes não custa nada, como em
+   todas as ações. `FUNDS.large` e `FUNDS.small` passam a ser as frações da
+   receita (6% e 2,5%) que a conta já usava.
+2. **Desfazer uma promessa não é cumpri-la.** A resposta "Desfazer a promessa"
+   deixa a promessa com o estado "desfeita", que não conta na avaliação (antes
+   contava como cumprida e valia +0,2).
+3. **As promessas de não vender e de jogos para os jovens existem de verdade.**
+   "Manter no elenco" (Proposta pelo reserva) promete não vender o jogador até
+   o fim da temporada; "Apoiar os jovens" (Briga no vestiário) promete 8 jogos
+   aos jovens de até 21 anos (`PROMISES.youthGames`). A cobrança, o bloqueio
+   da venda e a prioridade dos jovens na escalação já estavam no motor, sem
+   nada que criasse essas promessas. Os textos dos resultados dizem a promessa.
+4. **Veteranos do começo não desabam.** A longevidade dos jogadores que já
+   estão num elenco no início tem um piso: o declínio não pode ter começado
+   mais de um ano antes (`EVOLUTION.veteranOverStart`). Um meia de 36 anos com
+   longevidade sorteada de −3 perdia de 8 a 10 de OVR já na primeira temporada.
+5. **Limpeza.** Sai a situação "lesão" da decisão no jogo (nunca era
+   disparada); os números escritos à mão viram constantes do `tuning.ts`
+   (Incansável, Líder, volta da fase sem jogar, situação financeira, verba da
+   temporada); saem constantes sem uso. A conquista "Fábrica de craques" passa
+   a pedir o que o texto diz: 5 jogadores subidos da base que chegam a 30 jogos
+   com o treinador. No legado, os números dos jogadores ganham rótulo ("41
+   jogos · melhor OVR 76"). Na tela, os rótulos em caixa alta não cortam mais
+   o til e o acento, e a identidade empilha os botões abaixo de 400 px.
+
+**Por quê.** Toda ação precisa mostrar o efeito antes de gastar a vaga, e
+"cancelar antes de confirmar não gasta ação" vale para as sete. Promessa
+desfeita contando como cumprida premiava a quebra. As promessas de não vender
+e de dar chance aos jovens estavam na especificação e no motor, mas nenhum
+caminho as criava. O despencar dos veteranos aparecia no primeiro resultado de
+quase toda carreira. As metas do harness seguem 23 de 23
+(`tools/balance/relatorios/tecnico.md`).
+
+**Validação da entrega D50 a D58 (9/10/2026).** `pnpm verify` passou inteiro:
+tipos, regras, 632 testes unitários (motor 281, conteúdo 139, app 144, mundo
+35, balanceamento 10, terminal 15, arte 8), as 51 metas do Craque no
+`balance:check`, as 23 metas do Técnico na rodada do relatório e o build.
+A suíte ponta a ponta passou duas vezes seguidas (57 testes, 5 pulados de
+propósito: duplicações no celular), com o Chromium do contêiner
+(`PW_CHROMIUM_PATH`). Uma rodada anterior falhou uma vez no teste "sem
+internet" do celular sob carga (o hub não abriu sem rede); não voltou em três
+rodadas completas nem em 18 repetições com 4 trabalhadores, e fica registrada
+aqui. Telas do Técnico conferidas por fotos em 360 × 640, 375 × 812 e
+1280 × 800, claro e escuro, em português, espanhol e inglês, sem rolagem
+lateral nem erro no console.

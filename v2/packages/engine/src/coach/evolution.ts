@@ -1,6 +1,6 @@
 import { clamp, fallingLogistic } from "../math";
 import type { Rng } from "../rng";
-import { ageOf, sectorOf } from "./players";
+import { ageOf, declineStartOf, sectorOf } from "./players";
 import type { CoachCareer, CoachPlayer, CoachTrait, PlayerChange } from "./types";
 import { DEVELOP, EVOLUTION, TRAIT_EFFECTS } from "./tuning";
 import { coachRng, stageKey } from "./util";
@@ -85,7 +85,7 @@ export function growthStep(player: CoachPlayer, input: GrowthInput, rng: Rng): n
     minutesFactor(input.games, input.fraction) *
     (1 + EVOLUTION.performanceWeight * input.performance) *
     input.mentor;
-  const declineAge = EVOLUTION.declineStart + (sector === "gk" ? 2 : sector === "def" ? 1 : 0) + player.longevity;
+  const declineAge = declineStartOf(player.position) + player.longevity;
   const over = age - declineAge;
   if (over > 0) {
     let decline = input.fraction * (EVOLUTION.declineLinear * over + EVOLUTION.declineQuadratic * over * over);
