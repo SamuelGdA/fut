@@ -1,9 +1,9 @@
 import { expect, test } from "@playwright/test";
-import { abrir, auditar } from "./apoio";
+import { abrirCraque, auditar } from "./apoio";
 
 for (const theme of ["light", "dark"] as const) {
   test(`aparência sem salto entre abas, ${theme}`, async ({ page }, info) => {
-    await abrir(page, { theme });
+    await abrirCraque(page, { theme });
     await page.getByRole("button", { name: "Começar carreira", exact: true }).click();
     if (info.project.name === "celular") {
       await page.getByLabel("Sobrenome").fill("Silva");

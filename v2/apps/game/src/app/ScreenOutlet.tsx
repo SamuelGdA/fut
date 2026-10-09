@@ -3,7 +3,7 @@ import { useT } from "../i18n/useT";
 import { IS_DEV } from "../lib/env";
 import { Loading } from "../ui/Loading";
 import { Boundary, ErrorPanel } from "./ErrorBoundary";
-import { type Screen, useNavigation } from "./navigation";
+import { SCREEN_GAME, type Screen, useNavigation } from "./navigation";
 
 /**
  * Um componente por tela registrada, cada um no próprio pedaço do bundle: a
@@ -13,6 +13,7 @@ import { type Screen, useNavigation } from "./navigation";
 type Loader = () => Promise<{ default: ComponentType }>;
 
 const SCREEN_LOADERS: Readonly<Record<Screen, Loader>> = {
+  hub: () => import("../screens/hub/HubScreen").then((module) => ({ default: module.HubScreen })),
   home: () => import("../screens/home/HomeScreen").then((module) => ({ default: module.HomeScreen })),
   identity: () => import("../screens/identity/IdentityScreen").then((module) => ({ default: module.IdentityScreen })),
   appearance: () => import("../screens/appearance/AppearanceScreen").then((module) => ({ default: module.AppearanceScreen })),
@@ -25,6 +26,10 @@ const SCREEN_LOADERS: Readonly<Record<Screen, Loader>> = {
   achievements: () => import("../screens/achievements/AchievementsScreen").then((module) => ({ default: module.AchievementsScreen })),
   notFound: () => import("../screens/notFound/NotFoundScreen").then((module) => ({ default: module.NotFoundScreen })),
   lab: () => import("../screens/lab/LabScreen").then((module) => ({ default: module.LabScreen })),
+  tecnicoIdentity: () => import("../screens/tecnico/TecnicoIdentityScreen").then((module) => ({ default: module.TecnicoIdentityScreen })),
+  tecnicoAppearance: () => import("../screens/tecnico/TecnicoAppearanceScreen").then((module) => ({ default: module.TecnicoAppearanceScreen })),
+  tecnico: () => import("../screens/tecnico/TecnicoScreen").then((module) => ({ default: module.TecnicoScreen })),
+  tecnicoLegacy: () => import("../screens/tecnico/TecnicoLegacyScreen").then((module) => ({ default: module.TecnicoLegacyScreen })),
 };
 
 const SCREEN_COMPONENTS = Object.fromEntries(
@@ -32,7 +37,7 @@ const SCREEN_COMPONENTS = Object.fromEntries(
 ) as Readonly<Record<Screen, LazyExoticComponent<ComponentType>>>;
 
 /** As telas que o jogador costuma abrir, na ordem provável, para baixar antes do clique. */
-const PRELOAD: readonly Screen[] = ["identity", "career", "challenge", "summary", "appearance", "hall", "achievements"];
+const PRELOAD: readonly Screen[] = ["home", "tecnicoIdentity", "identity", "career", "challenge", "summary", "appearance", "hall", "achievements"];
 
 /**
  * Baixa as outras telas em segundo plano, quando o navegador está ocioso
@@ -85,8 +90,9 @@ export function ScreenOutlet() {
           error={error}
           layout="screen"
           onRetry={reset}
-          onHome={screen === "home" ? undefined : () => go("home", { force: true })}
+          onHome={screen === "hub" ? undefined : () => go("hub", { force: true })}
           offerReset={READS_SAVE.has(screen)}
+          game={SCREEN_GAME[screen] === "tecnico" ? "tecnico" : "craque"}
         />
       )}
     >

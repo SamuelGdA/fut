@@ -92,7 +92,10 @@ function main() {
   const worldMetrics = computeWorldMetrics(worldBatch);
   const worldGoals = worldTargets(worldMetrics, 25);
   const batches = {
-    phenoms: runCareers({ seed: `${args.seed}:fen`, careers: quick ? 150 : 400, band: "phenom", positions: ATTACKING, region: "europe" }),
+    // Os Fenômenos de ataque jogam o lote inteiro também no --check: com só os
+    // 150 primeiros, a média de Bolas de Ouro oscilava acima do teto (2,40
+    // contra 2,11 nos 400), uma falha de amostra e não de regra (D57).
+    phenoms: runCareers({ seed: `${args.seed}:fen`, careers: 400, band: "phenom", positions: ATTACKING, region: "europe" }),
     phenomStrikers: runCareers({ seed: `${args.seed}:fen-ca`, careers: quick ? 80 : 160, band: "phenom", positions: ["st"], region: "europe" }),
     classStrikers: runCareers({ seed: `${args.seed}:cra-ca`, careers: quick ? 100 : 200, band: "class", positions: ["st"], region: "europe" }),
     smallLeague: runCareers({ seed: `${args.seed}:chi`, careers: quick ? 50 : 80, band: "star", positions: ATTACKING, region: "home", nationality: "CHI" }),

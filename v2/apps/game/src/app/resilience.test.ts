@@ -43,7 +43,7 @@ describe("endereço do jogo e página não encontrada", () => {
   it("caminho desconhecido abre a página não encontrada, antes de qualquer save", () => {
     expect(startScreen("", "/vestiario/12")).toBe("notFound");
     expect(startScreen("#c=abc", "/nao")).toBe("notFound");
-    expect(startScreen("", "/")).toBe("home");
+    expect(startScreen("", "/")).toBe("hub");
   });
 
   it("a página não encontrada é uma tela registrada como as outras", () => {

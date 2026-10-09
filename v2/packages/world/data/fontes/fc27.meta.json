@@ -1,0 +1,12 @@
+{
+  "origem": "EA SPORTS FC 27 (players.csv enviado pelo usuário)",
+  "edicao": [
+    "fc27"
+  ],
+  "snapshot": [
+    "2026-09-12"
+  ],
+  "jogadores": 17849,
+  "descartadas": 1940,
+  "observacao": "Só futebol masculino e as colunas usadas pela montagem dos elencos do Técnico."
+}

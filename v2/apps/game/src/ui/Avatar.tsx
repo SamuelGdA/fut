@@ -7,6 +7,8 @@ interface AvatarProps {
   kit?: KitDef | null;
   showBackground?: boolean;
   className?: string;
+  /** Camisa do clube (padrão) ou o terno do treinador. */
+  outfit?: "kit" | "coach";
 }
 
 /**
@@ -17,8 +19,8 @@ interface AvatarProps {
  * Cada retrato ganha um prefixo de id próprio: com vários na mesma página, o
  * recorte da camisa de um nunca aponta para o `<clipPath>` de outro.
  */
-export function Avatar({ config, kit, showBackground = true, className = "" }: AvatarProps) {
+export function Avatar({ config, kit, showBackground = true, className = "", outfit = "kit" }: AvatarProps) {
   const idPrefix = `av${useId().replace(/[^a-zA-Z0-9_-]/g, "")}`;
-  const markup = renderAvatarSvg(config, { kit, showBackground, className, idPrefix });
+  const markup = renderAvatarSvg(config, { kit, showBackground, className, idPrefix, outfit });
   return <span style={{ display: "contents" }} dangerouslySetInnerHTML={{ __html: markup }} />;
 }

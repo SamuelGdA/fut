@@ -1,0 +1,58 @@
+{
+  "_fonte": "Conhecimento do assistente: jogadores reais com papel estimado; elencos podem estar desatualizados (D52).",
+  "clubes": {
+    "always-ready": [
+      { "nome": "Marcelo Suárez", "posicao": "cb", "nascimento": 2000, "nacionalidade": "BOL", "nivel": "rotacao", "confianca": "baixa" }
+    ],
+    "guabira": [],
+    "independiente-petrolero": [],
+    "nacional-potosi": [],
+    "san-antonio-bulo-bulo": [],
+    "the-strongest": [
+      { "nome": "Guillermo Viscarra", "posicao": "gk", "nascimento": 1993, "nacionalidade": "BOL", "nivel": "titular", "confianca": "baixa" },
+      { "nome": "Diego Wayar", "posicao": "cm", "alternativas": ["cdm", "cam"], "nascimento": 1993, "nacionalidade": "BOL", "nivel": "titular", "confianca": "media" },
+      { "nome": "Adrián Jusino", "posicao": "cb", "nascimento": 1992, "nacionalidade": "BOL", "nivel": "titular", "confianca": "baixa" },
+      { "nome": "Alejandro Chumacero", "posicao": "cm", "alternativas": ["cam"], "nascimento": 1991, "nacionalidade": "BOL", "nivel": "rotacao", "confianca": "baixa" }
+    ],
+    "emelec": [
+      { "nome": "Christian Cueva", "posicao": "cam", "alternativas": ["cm", "rw"], "nascimento": 1991, "nacionalidade": "PER", "nivel": "destaque", "confianca": "baixa" },
+      { "nome": "Pedro Ortiz", "posicao": "gk", "nascimento": 1990, "nacionalidade": "ECU", "nivel": "titular", "confianca": "baixa" }
+    ],
+    "libertad": [],
+    "orense-sc": [],
+    "universidad-catolica": [],
+    "alianza-lima": [
+      { "nome": "Ángelo Campos", "posicao": "gk", "nascimento": 1993, "nacionalidade": "PER", "nivel": "titular", "confianca": "media" },
+      { "nome": "Carlos Zambrano", "posicao": "cb", "nascimento": 1989, "nacionalidade": "PER", "nivel": "titular", "confianca": "alta" },
+      { "nome": "Renzo Garcés", "posicao": "cb", "nascimento": 1996, "nacionalidade": "PER", "nivel": "titular", "confianca": "media" },
+      { "nome": "Gianfranco Chávez", "posicao": "cb", "nascimento": 1998, "nacionalidade": "PER", "nivel": "rotacao", "confianca": "baixa" },
+      { "nome": "Marco Huamán", "posicao": "rb", "alternativas": ["rm"], "nascimento": 2001, "nacionalidade": "PER", "nivel": "rotacao", "confianca": "media" },
+      { "nome": "Sergio Peña", "posicao": "cm", "alternativas": ["cam"], "nascimento": 1995, "nacionalidade": "PER", "nivel": "destaque", "confianca": "alta" },
+      { "nome": "Jesús Castillo", "posicao": "cdm", "alternativas": ["cm"], "nascimento": 2001, "nacionalidade": "PER", "nivel": "titular", "confianca": "media" },
+      { "nome": "Pablo Ceppelini", "posicao": "cam", "alternativas": ["cm", "lw"], "nascimento": 1991, "nacionalidade": "URU", "nivel": "titular", "confianca": "alta" },
+      { "nome": "Fernando Gaibor", "posicao": "cm", "alternativas": ["cam"], "nascimento": 1991, "nacionalidade": "ECU", "nivel": "rotacao", "confianca": "media" },
+      { "nome": "Gaspar Gentile", "posicao": "rw", "alternativas": ["lw", "st"], "nascimento": 1995, "nacionalidade": "ARG", "nivel": "rotacao", "confianca": "media" },
+      { "nome": "Kevin Quevedo", "posicao": "lw", "alternativas": ["rw", "lm"], "nascimento": 1997, "nacionalidade": "PER", "nivel": "rotacao", "confianca": "media" },
+      { "nome": "Alan Cantero", "posicao": "lw", "alternativas": ["rw"], "nascimento": 1998, "nacionalidade": "ARG", "nivel": "titular", "confianca": "baixa" },
+      { "nome": "Eryc Castillo", "posicao": "rw", "alternativas": ["cam", "lw"], "nascimento": 1995, "nacionalidade": "ECU", "nivel": "rotacao", "confianca": "baixa" },
+      { "nome": "Paolo Guerrero", "posicao": "st", "nascimento": 1984, "nacionalidade": "PER", "nivel": "destaque", "confianca": "alta" },
+      { "nome": "Piero Cari", "posicao": "cm", "alternativas": ["cam"], "nascimento": 2005, "nacionalidade": "PER", "nivel": "jovem", "confianca": "media" }
+    ],
+    "universitario": [
+      { "nome": "Martín Pérez Guedes", "posicao": "cm", "alternativas": ["cdm", "cam"], "nascimento": 1991, "nacionalidade": "ARG", "nivel": "titular", "confianca": "alta" },
+      { "nome": "Jairo Vélez", "posicao": "cam", "alternativas": ["lw", "rw"], "nascimento": 1995, "nacionalidade": "ECU", "nivel": "rotacao", "confianca": "baixa" }
+    ],
+    "cienciano": [],
+    "cusco": [],
+    "deportivo-garcilaso": [],
+    "fbc-melgar": [
+      { "nome": "Carlos Cáceda", "posicao": "gk", "nascimento": 1991, "nacionalidade": "PER", "nivel": "titular", "confianca": "media" },
+      { "nome": "Alec Deneumostier", "posicao": "rb", "nascimento": 1999, "nacionalidade": "PER", "nivel": "titular", "confianca": "media" },
+      { "nome": "Matías Lazo", "posicao": "lb", "nascimento": 1996, "nacionalidade": "ARG", "nivel": "titular", "confianca": "baixa" },
+      { "nome": "Horacio Orzán", "posicao": "cdm", "alternativas": ["cm"], "nascimento": 1988, "nacionalidade": "ARG", "nivel": "titular", "confianca": "media" },
+      { "nome": "Cristian Bordacahar", "posicao": "lw", "alternativas": ["lm", "rw"], "nascimento": 1996, "nacionalidade": "PER", "nivel": "titular", "confianca": "media" },
+      { "nome": "Walter Tandazo", "posicao": "cm", "alternativas": ["rm"], "nascimento": 1999, "nacionalidade": "PER", "nivel": "rotacao", "confianca": "baixa" },
+      { "nome": "Bernardo Cuesta", "posicao": "st", "nascimento": 1988, "nacionalidade": "ARG", "nivel": "titular", "confianca": "baixa" }
+    ]
+  }
+}

@@ -75,20 +75,30 @@ interface ErrorPanelProps {
   onHome?: () => void;
   /** Oferece limpar o save (telas que leem a carreira). */
   offerReset: boolean;
+  /**
+   * O jogo da tela que quebrou. O Técnico não tem save (D51): o texto não
+   * promete carreira salva e avisa que recarregar encerra a carreira.
+   */
+  game?: "craque" | "tecnico";
 }
 
 /** A tela de erro: o lance, o que aconteceu, e o que fazer. */
-export function ErrorPanel({ error, layout, onRetry, onHome, offerReset }: ErrorPanelProps) {
+export function ErrorPanel({ error, layout, onRetry, onHome, offerReset, game = "craque" }: ErrorPanelProps) {
   const { t } = useT();
   const chunk = errorKind(error) === "chunk";
+  const tecnico = game === "tecnico";
   const title = chunk ? t("errors.chunkTitle") : layout === "page" ? t("errors.title") : t("errors.screenTitle");
   const body = chunk
     ? isOffline()
       ? t("errors.chunkOffline")
-      : t("errors.chunkUpdate")
+      : tecnico
+        ? t("errors.chunkUpdateTecnico")
+        : t("errors.chunkUpdate")
     : layout === "page"
       ? t("errors.body")
-      : t("errors.screenBody");
+      : tecnico
+        ? t("errors.screenBodyTecnico")
+        : t("errors.screenBody");
 
   return (
     <div

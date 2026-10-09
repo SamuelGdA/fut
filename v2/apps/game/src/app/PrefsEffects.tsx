@@ -23,7 +23,7 @@ export function PrefsEffects() {
 
   useEffect(() => {
     document.documentElement.lang = HTML_LANG[locale];
-    document.title = `${translate(locale, "app.name")}: ${translate(locale, "app.tagline").toLowerCase()}`;
+    document.title = `${translate(locale, "brand.name")}: ${translate(locale, "hub.eyebrow").toLowerCase()}`;
   }, [locale]);
 
   useEffect(() => {

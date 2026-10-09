@@ -1,10 +1,10 @@
 import { expect, test } from "@playwright/test";
-import { abrir, encerrar, jogarTurno, jogoRapido, OPCOES } from "./apoio";
+import { abrirCraque, encerrar, jogarTurno, jogoRapido, OPCOES } from "./apoio";
 
 /** Caminho hipotético sem arquivo de carreiras; conquistas preservadas (D47). */
 
 test("carreira hipotética e conquistas sem Hall", async ({ page }) => {
-  await abrir(page);
+  await abrirCraque(page);
   await jogoRapido(page);
   for (let turn = 0; turn < 3; turn += 1) await jogarTurno(page);
   await encerrar(page);

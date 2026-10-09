@@ -300,7 +300,7 @@ function DailyChallengeCard({ save }: { save: SavePeek }) {
 function MemoryPanel() {
   const { t, tp } = useT();
   const go = useNavigation((state) => state.go);
-  const unlocked = useHall((state) => state.achievements.length);
+  const unlocked = useHall((state) => state.achievements.filter((row) => !row.id.startsWith("tecnico:")).length);
 
   useEffect(() => {
     void useHall.getState().load();

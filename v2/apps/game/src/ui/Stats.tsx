@@ -19,7 +19,8 @@ export function StatTile({ label, value, delta, hint, className }: StatTileProps
   return (
     <div className={cn("flex min-w-0 flex-col gap-2 rounded-sm border border-line bg-panel-2 px-3 py-2.5", className)}>
       <div className="flex min-w-0 items-center justify-between gap-1">
-        <span className="eyebrow truncate">{label}</span>
+        {/* Altura de linha maior que a do eyebrow: o truncate cortava o til e o acento das maiúsculas. */}
+        <span className="eyebrow truncate py-0.5 leading-[1.3]">{label}</span>
         {hint ? <InfoTip label={label}>{hint}</InfoTip> : null}
       </div>
       <div className="flex min-w-0 flex-wrap items-baseline gap-x-2 gap-y-0.5">

@@ -6,7 +6,8 @@
   "sideEffects": false,
   "description": "O mundo do CRAQUE: países, ligas, clubes, competições, kits e rivalidades",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./squads": "./src/squads.ts"
   },
   "scripts": {
     "typecheck": "tsc -p tsconfig.json",

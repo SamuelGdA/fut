@@ -11,6 +11,43 @@ export const pt = {
     tagline: "Carreira de futebol",
   },
 
+  brand: {
+    name: "Futeiros",
+    hub: "Início do Futeiros",
+    games: { craque: "Craque", tecnico: "Técnico" },
+  },
+
+  hub: {
+    eyebrow: "Dois jogos de futebol",
+    title: "Futeiros",
+    lead: "Viva o futebol dentro de campo, como jogador, ou da beira do gramado, como técnico.",
+    craque: {
+      eyebrow: "Carreira de jogador",
+      title: "Craque",
+      lead: "Do primeiro contrato, aos 16 anos, até a despedida.",
+      points: { first: "Uma decisão por temporada", second: "Ofertas, treinos e eventos", third: "Carreira salva neste aparelho" },
+      play: "Jogar",
+      continue: "Continuar carreira",
+      summary: "Ver o resumo",
+      saved: "Carreira salva: {surname}, {age} anos, OVR {ovr}",
+      open: "Início do Craque",
+    },
+    tecnico: {
+      eyebrow: "Carreira de técnico",
+      title: "Técnico",
+      lead: "24 temporadas no banco, quase sempre começando na segunda divisão.",
+      points: { first: "Três ações por etapa", second: "Elencos reais, mercado e base", third: "Mundo vivo, sem seleções" },
+      play: "Jogar",
+      resume: "Voltar à carreira",
+      inProgress: "Em andamento nesta aba",
+      ended: "Legado na tela",
+      noSave: "Sem salvamento",
+      noSaveHint: "Recarregar a página encerra a carreira do Técnico.",
+    },
+    achievements: "Conquistas",
+    achievementsCount: { zero: "Nenhuma liberada ainda", one: "{count} liberada", other: "{count} liberadas" },
+  },
+
   common: {
     confirm: "Confirmar",
     cancel: "Cancelar",
@@ -617,9 +654,11 @@ export const pt = {
     details: "Detalhes técnicos",
     screenTitle: "Esta tela não abriu",
     screenBody: "O resto do jogo segue de pé, e sua carreira continua salva. Tente de novo ou volte ao início.",
+    screenBodyTecnico: "O resto do jogo segue de pé, e a carreira do Técnico continua nesta aba. Tente de novo ou volte ao início; recarregar a página encerra a carreira.",
     home: "Voltar ao início",
     chunkTitle: "Faltou um pedaço do jogo",
-    chunkUpdate: "Saiu uma versão nova do CRAQUE enquanto a aba estava aberta. Recarregue para continuar: sua carreira continua salva.",
+    chunkUpdate: "Saiu uma versão nova do Futeiros enquanto a aba estava aberta. Recarregue para continuar: a carreira do Craque continua salva.",
+    chunkUpdateTecnico: "Saiu uma versão nova do Futeiros enquanto a aba estava aberta. Recarregar encerra a carreira do Técnico, que não é salva.",
     chunkOffline: "Sem internet, esta parte do jogo ainda não estava guardada no aparelho. Conecte e recarregue; depois disso ela abre sem internet.",
     reload: "Recarregar",
     sectionTitle: "Este trecho não abriu",
@@ -629,7 +668,7 @@ export const pt = {
   notFound: {
     eyebrow: "Erro 404",
     title: "Bola fora",
-    body: "Este endereço não existe no CRAQUE. O jogo continua na tela de início.",
+    body: "Este endereço não existe no Futeiros. O jogo continua na tela de início.",
     home: "Voltar ao jogo",
   },
 
@@ -644,7 +683,7 @@ export const pt = {
     e404: {
       eyebrow: "Erro 404",
       title: "Bola fora",
-      body: "Este endereço não existe no CRAQUE. O jogo continua na tela de início.",
+      body: "Este endereço não existe no Futeiros. O jogo continua na tela de início.",
     },
     e500: {
       eyebrow: "Erro 500",
@@ -654,13 +693,13 @@ export const pt = {
     e503: {
       eyebrow: "Erro 503",
       title: "Jogo adiado",
-      body: "O CRAQUE está em manutenção. Sua carreira continua salva no seu aparelho; volte em alguns minutos.",
+      body: "O Futeiros está em manutenção. Sua carreira continua salva no seu aparelho; volte em alguns minutos.",
     },
   },
 
   pwa: {
-    updateTitle: "Versão nova do CRAQUE",
-    updateBody: "Atualize quando quiser: sua carreira continua salva.",
+    updateTitle: "Versão nova do Futeiros",
+    updateBody: "Atualize quando quiser. A carreira do Craque continua salva; a do Técnico acaba ao atualizar.",
     update: "Atualizar",
     readyTitle: "Pronto para jogar sem internet",
     readyBody: "O jogo ficou guardado no aparelho. Escudos e troféus entram conforme aparecem.",
@@ -827,6 +866,7 @@ export const pt = {
 
     areas: {
       label: "Áreas do laboratório",
+      tecnico: "Técnico",
       ending: "Fim de carreira",
       design: "Design",
       world: "Mundo",
