@@ -39,6 +39,7 @@ const FORBIDDEN: ReadonlyArray<readonly [string, RegExp]> = [
   ["zustand", /from\s+["']zustand/],
   ["node:", /from\s+["']node:/],
   ["@craque/game", /from\s+["']@craque\/game/],
+  ["@craque/content", /from\s+["']@craque\/content/],
 ];
 
 describe("pureza do motor (D4)", () => {

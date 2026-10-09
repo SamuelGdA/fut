@@ -7,7 +7,8 @@
   "description": "Os textos do CRAQUE: eventos, decisões, missões e avisos em português, espanhol e inglês, e os nomes da geração futura",
   "exports": {
     ".": "./src/index.ts",
-    "./career-text": "./src/careerText.ts"
+    "./career-text": "./src/careerText.ts",
+    "./coach": "./src/coach.ts"
   },
   "scripts": {
     "typecheck": "tsc -p tsconfig.json",

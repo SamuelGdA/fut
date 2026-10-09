@@ -1,4 +1,15 @@
-# CRAQUE v2
+# Futeiros v2: Craque e Técnico
+
+> **Futeiros (D50 a D58).** O site virou um hub com dois jogos de futebol e
+> abre sempre nele: **Craque**, a carreira de jogador descrita neste README
+> (regras inalteradas, motor `2.0.0-m8.4`), e **Técnico**, a carreira de
+> treinador nova (motor próprio `COACH_VERSION 1.0.0`, 24 temporadas, elencos
+> reais, sem salvamento, só competições de clubes por enquanto). O Técnico tem
+> README próprio, com todas as contas: **[README-TECNICO.md](README-TECNICO.md)**,
+> e a especificação na [seção 42 do GDD](docs/GDD.md#42-técnico-a-carreira-de-treinador).
+> O hub está na [seção 41](docs/GDD.md#41-o-hub-do-futeiros). O módulo `manager`
+> citado nas notas da D47 à D49 nunca existiu neste repositório: o modo de
+> treinador é o Técnico (`packages/engine/src/coach`).
 
 > **Revisão de 8 de outubro de 2026 (D47, motor `2.0.0-m8.3`).**
 > Esta revisão substitui as regras anteriores indicadas abaixo.
@@ -63,8 +74,8 @@
 > - Talento no Difícil usa **pesos** 45/34/15/4/1, soma 99: probabilidades reais
 >   45,45% / 34,34% / 15,15% / 4,04% / 1,01%. Normal: 28/34/22/11/5%.
 > - Validação: 547 testes unitários, 44 ponta a ponta, build e 51 metas de
->   balanceamento aprovados; todos os recordes alcançados. `pnpm verify` para
->   em quatro imports ausentes do módulo `manager` preexistente; detalhes na D47.
+>   balanceamento aprovados; todos os recordes alcançados. (As notas da época
+>   citavam um módulo `manager` que não existe neste repositório; ver D50.)
 
 **Residência consecutiva (D48):** sair do país interrompe a contagem; ao voltar,
 é preciso completar cinco novas temporadas seguidas. Anos de períodos separados
@@ -85,16 +96,23 @@ continua permitindo um build inteiramente desenhado. Troféus e prêmios carrega
 assim que entram na tela, sem depender do carregamento adiado. O Vite ignora
 os relatórios de testes para evitar travamento do observador no Windows.
 Validação D49: 550 testes unitários, 48 ponta a ponta e 51 metas no
-balanceamento completo aprovados. Bloqueios de `verify` e da amostra reduzida
-continuam explicitados na D49.
+balanceamento completo aprovados. A pendência da amostra reduzida foi
+resolvida na D57 (lote completo de Fenômenos no `balance:check`), e o `verify`
+roda inteiro.
 
-Simulador de carreira de futebol jogado por decisões. Você monta um jogador de
+**Craque** é o simulador de carreira de jogador, jogado por decisões. Você monta um jogador de
 16 anos, escolhe onde jogar, no que treinar e como reagir ao que acontece, e
 vê a carreira inteira acontecer dentro de um mundo de futebol simulado:
 tabelas, copas, continentais, seleções, prêmios e recordes reais. Uma carreira
 completa leva poucos minutos.
 
-Este documento é a referência do projeto: quem nunca viu o código deve
+O Futeiros abre no hub (`apps/game/src/screens/hub`), com um cartão para cada
+jogo. O cartão do Craque retoma a carreira salva ("Continuar carreira"); o do
+Técnico mostra a carreira em memória nesta aba, se houver. Recarregar a página
+sempre abre o hub (D50).
+
+Este documento é a referência do projeto (e do Craque em detalhe; o Técnico
+está no [README-TECNICO.md](README-TECNICO.md)): quem nunca viu o código deve
 entender, só por ele, como o jogo funciona, como o motor calcula e onde cada
 coisa mora. O detalhe completo de cada regra está no
 [GDD](docs/GDD.md) (a especificação, com notas "Como ficou" onde a
@@ -534,13 +552,16 @@ só para leitura, sem tocar no save de quem abre.
 
 ```
 v2/
-├─ packages/world/    dados do mundo e consultas (países, ligas, clubes, competições, prêmios, kits)
-├─ packages/engine/   o motor: puro, semeado, imutável; depende só de world
+├─ packages/world/    dados do mundo e consultas (países, ligas, clubes, competições, prêmios, kits);
+│                     elencos reais do Técnico em `@craque/world/squads` (data/squads, D52)
+├─ packages/engine/   o motor: puro, semeado, imutável; depende só de world. O motor do Técnico
+│                     fica em src/coach, exportado em `@craque/engine/coach`
 ├─ packages/content/  todos os textos do jogo (pt, es, en): eventos, capas, manchetes, biografia,
-│                     recordes, desafio, conquistas, nomes da geração futura; depende de engine e world
+│                     recordes, desafio, conquistas, nomes da geração futura; os do Técnico em
+│                     `@craque/content/coach`; depende de engine e world
 ├─ packages/art/      arte gerada: escudos, selos, troféus e o avatar (portados do v1, byte a byte)
 ├─ apps/game/         o jogo: Vite + React 19; depende de todos acima
-├─ tools/balance/     harness de balanceamento: metas do GDD 40 e relatórios
+├─ tools/balance/     harness de balanceamento: metas do GDD 40 (Craque), do GDD 42.12 (Técnico) e relatórios
 ├─ tools/terminal/    uma carreira inteira no terminal (pnpm carreira)
 └─ docs/              GDD.md (especificação) e DECISOES.md (D1 em diante)
 ```
@@ -563,17 +584,19 @@ v2/
 |---|---|
 | Pilha | Vite 8, React 19 com React Compiler, TypeScript 6, Tailwind 4.3, Base UI, Motion 13, Zustand 5 |
 | `src/app/` | Casca (barra do topo sempre visível), navegação por `history.state` (a URL não muda entre telas, nenhum host precisa de regra de reescrita), barreiras de erro em três níveis, telas carregadas sob demanda e baixadas em segundo plano depois da primeira pintura |
-| `src/screens/` | Início, Identidade, Aparência, Carreira (decisão, lance, jornal, mensagem do resultado), Resumo, link compartilhado, Desafio, Conquistas, 404 e o laboratório |
-| `src/features/` | Estado da carreira (`career/store.ts`, Zustand), save, rascunho do jogador, lance (`play.ts`) e mensagem (`resultView.ts`), "E se...?", resumo (pôster, link, vitrine), desafio (relógio), persistência (pasta `hall`: banco, ranking, conquistas), aparência, ajustes |
+| `src/screens/` | Hub do Futeiros; do Craque: Início, Identidade, Aparência, Carreira (decisão, lance, jornal, mensagem do resultado), Resumo, link compartilhado, Desafio; do Técnico (`screens/tecnico`): identidade, aparência, a carreira (propostas, etapa, processos, evento, decisão no jogo, resultados, avaliação) e o legado; Conquistas (Craque e Técnico), 404 e o laboratório |
+| `src/features/` | Estado da carreira (`career/store.ts`, Zustand), save, rascunho do jogador, lance (`play.ts`) e mensagem (`resultView.ts`), "E se...?", resumo (pôster, link, vitrine), desafio (relógio), persistência (pasta `hall`: banco, ranking, conquistas), aparência, ajustes; o Técnico em `features/tecnico` (carreira só em memória, presença para o hub, rascunho, `view.ts` que esconde o rendimento) |
 | `src/services/` | Som, vibração, `localStorage` seguro, IndexedDB com espelho em memória, imagens offline |
 | `src/ui/` | Sistema de design: botões, carta do jogador, números que contam, sinais e pílulas, painéis, janelas, avisos |
-| `src/i18n/` | Português (fonte), espanhol, inglês |
+| `src/i18n/` | Português (fonte), espanhol, inglês; o Técnico em `i18n/tecnico`, carregado só pelas telas dele |
 
 **Save.** `localStorage`: `craque.v2.save` (replay + retrato + avatar + tela),
 `craque.v2.draft` (o último jogador montado) e `craque.v2.prefs` (idioma,
 tema, volume, movimento, vibração, ritmo, dificuldade). Cada escolha grava
-na hora; recarregar abre na mesma tela. Save corrompido é descartado com
-aviso, e o rascunho fica.
+na hora; recarregar abre o hub, e o cartão do Craque volta para a mesma tela
+(D50). Save corrompido é descartado com aviso no Início do Craque, e o
+rascunho fica. O Técnico não tem save (D51): guarda só o rascunho da
+identidade (`craque.v2.tecnico.draft`) e as conquistas.
 
 **Acessibilidade.** Laço inteiro por teclado (Tab, Enter, Espaço), o foco
 volta ao título da decisão nova, o lance é anunciado numa frase para o leitor
@@ -608,12 +631,16 @@ clubes), movimento reduzido respeitado (do sistema ou dos ajustes).
   propriedades, regras), conteúdo (textos sem marcador sobrando, idiomas
   iguais, biografia coerente), app (save, lance, contagens, desafio).
 - **Ponta a ponta** (Playwright no Chrome instalado, sobre o build de
-  produção, celular 375 × 812 e desktop 1280 × 800): jornada do Início ao
-  Resumo, recarregar, Desafio, caminho hipotético, conquistas, erros, offline e
-  acessibilidade (axe nos dois temas, teclado, leitor de tela).
+  produção, celular 375 × 812 e desktop 1280 × 800): hub, jornada do Craque
+  do hub ao Resumo, recarregar, Desafio, caminho hipotético, conquistas, erros,
+  offline e acessibilidade (axe nos dois temas, teclado, leitor de tela); a
+  jornada do Técnico (`e2e/tecnico.spec.ts`: propostas, ações, evento,
+  simulação, avaliação, legado, ritmo lento, recarregar, sair, 360 × 640 e
+  auditoria do armazenamento).
 - **Balanceamento** (`tools/balance`): milhares de carreiras com políticas
   automáticas contra as 51 metas do GDD 40 (evolução, mundo, carreira,
-  fluxo, desafio), e o relatório de recordes.
+  fluxo, desafio), e o relatório de recordes. O Técnico tem 23 metas próprias
+  (`pnpm balance:tecnico`, relatório `tools/balance/relatorios/tecnico.md`).
 
 ---
 
@@ -642,11 +669,15 @@ pnpm start
 | `pnpm test` | Testes unitários de todos os pacotes |
 | `pnpm typecheck` | Checagem de tipos |
 | `pnpm lint` | Regras de código (ESLint) |
-| `pnpm verify` | Tipos, regras, testes, metas de balanceamento e build: rode antes de entregar qualquer mudança |
+| `pnpm verify` | Tipos, regras, testes, metas de balanceamento (Craque e Técnico, modo reduzido) e build: rode antes de entregar qualquer mudança |
 | `pnpm e2e` | Suíte ponta a ponta (precisa do Google Chrome; fica fora do `verify`) |
 | `pnpm balance` | Metas do GDD 40 com milhares de carreiras; grava `tools/balance/relatorios/` |
 | `pnpm balance:check` | O mesmo, menor e sem gravar arquivo; falha se alguma meta falhar |
 | `pnpm balance:recordes` | Fenômenos perseguindo recordes; grava `relatorios/recordes.md` |
+| `pnpm balance:tecnico` | As 23 metas do Técnico (sondas exatas e carreiras automáticas em paralelo); grava `relatorios/tecnico.md` |
+| `pnpm balance:tecnico:check` | A mesma rodada do relatório (16 carreiras de 24 temporadas, semente `tecnico-m1`), sem gravar arquivo; falha se alguma meta falhar (entra no `verify`) |
+| `pnpm elencos:montar` | Remonta os elencos do Técnico (`packages/world/data/squads`) a partir das fontes versionadas, offline |
+| `pnpm elencos:coletar` | Coleta o eFootball (rede e Chromium; fora do `verify`) |
 | `pnpm desafio:calibrar` | Recalibra os alvos das missões do Desafio do dia |
 | `pnpm carreira` | Uma carreira inteira no terminal, com o motor e os textos de verdade |
 | `pnpm notas:exportar` / `pnpm notas:importar` | Planilha de força e prestígio dos clubes, ida e volta |
@@ -655,7 +686,12 @@ pnpm start
 ### 6.1 Laboratório
 
 Só em desenvolvimento: http://localhost:5173/#lab (ou o botão Laboratório no
-pé do Início). Áreas:
+pé do hub). Áreas:
+
+- **Técnico** (a primeira): elencos e fontes, sorteio das propostas, finanças,
+  eventos, simulador de partida e Europa × América do Sul, filosofias, a conta
+  da contratação termo a termo, Desenvolver, rendimento escondido e temporadas
+  inteiras simuladas no navegador. Detalhe no [README-TECNICO.md](README-TECNICO.md).
 
 - **Desafio**: as mãos de hoje e dos próximos 13 dias, com Simular.
 - **Fim de carreira**: uma carreira jogada sozinha, com pôster, biografia e
@@ -679,7 +715,8 @@ pnpm e2e
 ```
 
 Gera o build, sobe o `vite preview` em http://localhost:4173 (feche qualquer
-outro servidor nessa porta antes) e joga no Chrome do sistema. O relatório
+outro servidor nessa porta antes) e joga no Chrome do sistema. Sem Google
+Chrome, aponte `PW_CHROMIUM_PATH` para um Chromium instalado. O relatório
 fica em `apps/game/e2e-relatorio/`; falhas deixam foto e rastro em
 `apps/game/e2e-resultados/`. Uma parte só:
 

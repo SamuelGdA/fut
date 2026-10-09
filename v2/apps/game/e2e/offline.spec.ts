@@ -1,5 +1,5 @@
 import { expect, type Page, test } from "@playwright/test";
-import { abrir, jogarTurno, jogoRapido } from "./apoio";
+import { abrir, entrarNoCraque, jogarTurno, jogoRapido } from "./apoio";
 
 /**
  * PWA (GDD 37): instalável, e a casca e o jogo funcionam sem internet. Imagem
@@ -32,7 +32,7 @@ test("instalável: manifesto com nome, ícones, cor e modo de aplicativo", async
     theme_color: string;
     icons: Array<{ src: string; sizes: string; purpose?: string }>;
   };
-  expect(manifest).toMatchObject({ name: "CRAQUE: carreira de futebol", short_name: "CRAQUE", display: "standalone", theme_color: "#f3f0e8" });
+  expect(manifest).toMatchObject({ name: "Futeiros: dois jogos de futebol", short_name: "Futeiros", display: "standalone", theme_color: "#f3f0e8" });
   expect(manifest.icons.map((icon) => icon.sizes)).toEqual(expect.arrayContaining(["192x192", "512x512"]));
   expect(manifest.icons.some((icon) => icon.purpose === "maskable")).toBe(true);
   for (const icon of manifest.icons) {
@@ -47,7 +47,7 @@ test("sem internet: o jogo abre, joga, e nenhuma imagem quebra", async ({ page, 
   await controlada(page);
   await context.setOffline(true);
   await page.reload();
-  await expect(page.getByRole("heading", { name: "CRAQUE", level: 1 })).toBeVisible();
+  await entrarNoCraque(page);
 
   await jogoRapido(page);
   await jogarTurno(page);
@@ -91,6 +91,7 @@ test("guardar todas as imagens nos ajustes: sem internet, os escudos são os rea
     const status = await page.evaluate(async (url) => (await fetch(url ?? "")).status, path);
     expect(status, path).toBe(200);
   }
+  await entrarNoCraque(page);
   await jogoRapido(page);
   await jogarTurno(page);
   await expect.poll(() => brokenImages(page)).toEqual([]);

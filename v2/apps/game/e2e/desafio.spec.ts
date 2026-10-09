@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { abrir, encerrar, esperarQueCaiba, idade, jogarTurno, OPCOES } from "./apoio";
+import { abrirCraque, encerrar, esperarQueCaiba, idade, jogarTurno, OPCOES } from "./apoio";
 
 /**
  * O Desafio do dia (GDD 27): a entrada com a mão do dia, a tentativa com o
@@ -9,7 +9,7 @@ import { abrir, encerrar, esperarQueCaiba, idade, jogarTurno, OPCOES } from "./a
 
 test("da entrada do desafio ao resultado ranqueado", async ({ page }, info) => {
   const celular = info.project.name === "celular";
-  await abrir(page);
+  await abrirCraque(page);
   await page.getByRole("button", { name: "Ver o desafio" }).click();
   await expect(page.getByRole("heading", { name: /^A mão de / })).toBeVisible();
   await expect(page.getByText("Missão surpresa")).toBeVisible();

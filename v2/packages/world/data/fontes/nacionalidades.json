@@ -1,0 +1,23 @@
+{
+  "_leia": "Nome da nacionalidade na fonte -> código do countries.json, quando o nome em inglês não bate. Nome desconhecido faz a montagem falhar.",
+  "fc27": {
+    "Holland": "NED",
+    "Korea Republic": "KOR",
+    "Republic of Ireland": "IRL",
+    "China PR": "CHN",
+    "Turkey": "TUR",
+    "Côte d'Ivoire": "CIV",
+    "Czech Republic": "CZE",
+    "Bosnia and Herzegovina": "BIH",
+    "Cape Verde Islands": "CPV",
+    "Trinidad and Tobago": "TRI",
+    "St. Kitts and Nevis": "SKN",
+    "Antigua and Barbuda": "ATG",
+    "Chinese Taipei": "TPE",
+    "São Tomé e Príncipe": "STP",
+    "Korea DPR": "PRK"
+  },
+  "efootball": {
+    "Cabo Verde": "CPV"
+  }
+}

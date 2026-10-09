@@ -7,6 +7,43 @@ export const es: Messages = {
     tagline: "Carrera de fútbol",
   },
 
+  brand: {
+    name: "Futeiros",
+    hub: "Inicio de Futeiros",
+    games: { craque: "Craque", tecnico: "Técnico" },
+  },
+
+  hub: {
+    eyebrow: "Dos juegos de fútbol",
+    title: "Futeiros",
+    lead: "Vive el fútbol dentro de la cancha, como jugador, o desde la banda, como entrenador.",
+    craque: {
+      eyebrow: "Carrera de jugador",
+      title: "Craque",
+      lead: "Del primer contrato, a los 16 años, hasta la despedida.",
+      points: { first: "Una decisión por temporada", second: "Ofertas, entrenamientos y eventos", third: "Carrera guardada en este dispositivo" },
+      play: "Jugar",
+      continue: "Seguir la carrera",
+      summary: "Ver el resumen",
+      saved: "Carrera guardada: {surname}, {age} años, OVR {ovr}",
+      open: "Inicio de Craque",
+    },
+    tecnico: {
+      eyebrow: "Carrera de entrenador",
+      title: "Técnico",
+      lead: "24 temporadas en el banquillo, casi siempre empezando en segunda división.",
+      points: { first: "Tres acciones por etapa", second: "Plantillas reales, mercado y cantera", third: "Mundo vivo, sin selecciones" },
+      play: "Jugar",
+      resume: "Volver a la carrera",
+      inProgress: "En curso en esta pestaña",
+      ended: "Legado en pantalla",
+      noSave: "Sin guardado",
+      noSaveHint: "Recargar la página termina la carrera de Técnico.",
+    },
+    achievements: "Logros",
+    achievementsCount: { zero: "Ninguno desbloqueado todavía", one: "{count} desbloqueado", other: "{count} desbloqueados" },
+  },
+
   common: {
     confirm: "Confirmar",
     cancel: "Cancelar",
@@ -613,9 +650,11 @@ export const es: Messages = {
     details: "Detalles técnicos",
     screenTitle: "Esta pantalla no se abrió",
     screenBody: "El resto del juego sigue en pie y tu carrera sigue guardada. Inténtalo de nuevo o vuelve al inicio.",
+    screenBodyTecnico: "El resto del juego sigue en pie y la carrera de Técnico sigue en esta pestaña. Inténtalo de nuevo o vuelve al inicio; recargar la página termina la carrera.",
     home: "Volver al inicio",
     chunkTitle: "Faltó una parte del juego",
-    chunkUpdate: "Salió una versión nueva de CRAQUE mientras la pestaña estaba abierta. Recarga para seguir: tu carrera sigue guardada.",
+    chunkUpdate: "Salió una versión nueva de Futeiros mientras la pestaña estaba abierta. Recarga para seguir: la carrera de Craque sigue guardada.",
+    chunkUpdateTecnico: "Salió una versión nueva de Futeiros mientras la pestaña estaba abierta. Recargar termina la carrera de Técnico, que no se guarda.",
     chunkOffline: "Sin internet, esta parte del juego todavía no estaba guardada en el dispositivo. Conéctate y recarga; después se abre sin internet.",
     reload: "Recargar",
     sectionTitle: "Este tramo no se abrió",
@@ -625,7 +664,7 @@ export const es: Messages = {
   notFound: {
     eyebrow: "Error 404",
     title: "Balón afuera",
-    body: "Esta dirección no existe en CRAQUE. El juego sigue en la pantalla de inicio.",
+    body: "Esta dirección no existe en Futeiros. El juego sigue en la pantalla de inicio.",
     home: "Volver al juego",
   },
 
@@ -640,7 +679,7 @@ export const es: Messages = {
     e404: {
       eyebrow: "Error 404",
       title: "Balón afuera",
-      body: "Esta dirección no existe en CRAQUE. El juego sigue en la pantalla de inicio.",
+      body: "Esta dirección no existe en Futeiros. El juego sigue en la pantalla de inicio.",
     },
     e500: {
       eyebrow: "Error 500",
@@ -650,13 +689,13 @@ export const es: Messages = {
     e503: {
       eyebrow: "Error 503",
       title: "Partido suspendido",
-      body: "CRAQUE está en mantenimiento. Tu carrera sigue guardada en tu dispositivo; vuelve en unos minutos.",
+      body: "Futeiros está en mantenimiento. Tu carrera sigue guardada en tu dispositivo; vuelve en unos minutos.",
     },
   },
 
   pwa: {
-    updateTitle: "Versión nueva de CRAQUE",
-    updateBody: "Actualiza cuando quieras: tu carrera sigue guardada.",
+    updateTitle: "Versión nueva de Futeiros",
+    updateBody: "Actualiza cuando quieras. La carrera de Craque sigue guardada; la de Técnico termina al actualizar.",
     update: "Actualizar",
     readyTitle: "Listo para jugar sin internet",
     readyBody: "El juego quedó guardado en el dispositivo. Escudos y trofeos se guardan a medida que aparecen.",
@@ -823,6 +862,7 @@ export const es: Messages = {
 
     areas: {
       label: "Áreas del laboratorio",
+      tecnico: "Técnico",
       ending: "Fin de carrera",
       design: "Diseño",
       world: "Mundo",

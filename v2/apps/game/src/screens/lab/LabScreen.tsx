@@ -8,10 +8,11 @@ import { Bars } from "../../ui/Button";
 import { Chip } from "../../ui/Signals";
 import { Tab, TabList, TabPanel, TabsRoot } from "../../ui/Tabs";
 
-const AREAS = ["design", "world", "art", "avatar", "cards", "engine", "seasons", "ending", "challenge"] as const;
+const AREAS = ["tecnico", "design", "world", "art", "avatar", "cards", "engine", "seasons", "ending", "challenge"] as const;
 type Area = (typeof AREAS)[number];
 
 const AREA_COMPONENTS: Readonly<Record<Area, ComponentType>> = {
+  tecnico: lazy(() => import("./areas/TecnicoArea").then((module) => ({ default: module.TecnicoArea }))),
   design: lazy(() => import("./areas/DesignArea").then((module) => ({ default: module.DesignArea }))),
   world: lazy(() => import("./areas/WorldArea").then((module) => ({ default: module.WorldArea }))),
   art: lazy(() => import("./areas/ArtArea").then((module) => ({ default: module.ArtArea }))),
@@ -44,7 +45,7 @@ export function LabScreen() {
   const assetMode = useAssetMode((state) => state.mode);
   const trophyMode = useAssetMode((state) => state.trophyMode);
   // Abre na área do marco mais recente.
-  const [area, setArea] = useState<Area>("challenge");
+  const [area, setArea] = useState<Area>("tecnico");
   const headerRef = useRef<HTMLElement>(null);
   const tabsRef = useRef<HTMLDivElement>(null);
 

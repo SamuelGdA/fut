@@ -1,0 +1,57 @@
+{
+  "_fonte": "Conhecimento do assistente: jogadores reais com papel estimado; elencos podem estar desatualizados (D52).",
+  "clubes": {
+    "cruzeiro": [
+      { "nome": "Christian", "posicao": "cm", "alternativas": ["cdm"], "nascimento": 2001, "nacionalidade": "BRA", "nivel": "titular", "confianca": "media" },
+      { "nome": "Eduardo", "posicao": "cam", "alternativas": ["cm"], "nascimento": 1990, "nacionalidade": "BRA", "nivel": "rotacao", "confianca": "media" },
+      { "nome": "Walace", "posicao": "cdm", "alternativas": ["cm"], "nascimento": 1995, "nacionalidade": "BRA", "nivel": "rotacao", "confianca": "media" }
+    ],
+    "flamengo": [
+      { "nome": "Arrascaeta", "posicao": "cam", "alternativas": ["cm", "lw"], "nascimento": 1994, "nacionalidade": "URU", "nivel": "destaque", "confianca": "alta" },
+      { "nome": "Danilo", "posicao": "cb", "alternativas": ["rb"], "nascimento": 1991, "nacionalidade": "BRA", "nivel": "titular", "confianca": "alta" },
+      { "nome": "Alex Sandro", "posicao": "lb", "alternativas": ["cb"], "nascimento": 1991, "nacionalidade": "BRA", "nivel": "titular", "confianca": "alta" },
+      { "nome": "Matheus Cunha", "posicao": "gk", "nascimento": 2001, "nacionalidade": "BRA", "nivel": "reserva", "confianca": "alta" },
+      { "nome": "Viña", "posicao": "lb", "alternativas": ["lm"], "nascimento": 1997, "nacionalidade": "URU", "nivel": "rotacao", "confianca": "media" }
+    ],
+    "gremio": [
+      { "nome": "Arthur", "posicao": "cm", "alternativas": ["cdm"], "nascimento": 1996, "nacionalidade": "BRA", "nivel": "titular", "confianca": "media" },
+      { "nome": "Francis Amuzu", "posicao": "lw", "alternativas": ["rw", "lm"], "nascimento": 1999, "nacionalidade": "BEL", "nivel": "titular", "confianca": "media" },
+      { "nome": "Jemerson", "posicao": "cb", "nascimento": 1992, "nacionalidade": "BRA", "nivel": "rotacao", "confianca": "media" },
+      { "nome": "Miguel Monsalve", "posicao": "cam", "alternativas": ["cm"], "nascimento": 2004, "nacionalidade": "COL", "nivel": "rotacao", "confianca": "baixa" }
+    ],
+    "atletico-mg": [
+      { "nome": "Everson", "posicao": "gk", "nascimento": 1990, "nacionalidade": "BRA", "nivel": "titular", "confianca": "media" },
+      { "nome": "Gustavo Scarpa", "posicao": "cam", "alternativas": ["lm", "cm"], "nascimento": 1994, "nacionalidade": "BRA", "nivel": "destaque", "confianca": "media" },
+      { "nome": "Bernard", "posicao": "cam", "alternativas": ["lw"], "nascimento": 1992, "nacionalidade": "BRA", "nivel": "rotacao", "confianca": "media" },
+      { "nome": "Dudu", "posicao": "lw", "alternativas": ["rw", "cam"], "nascimento": 1992, "nacionalidade": "BRA", "nivel": "titular", "confianca": "media" },
+      { "nome": "Vitor Hugo", "posicao": "cb", "nascimento": 1991, "nacionalidade": "BRA", "nivel": "titular", "confianca": "media" },
+      { "nome": "Renzo Saravia", "posicao": "rb", "nascimento": 1993, "nacionalidade": "ARG", "nivel": "rotacao", "confianca": "media" },
+      { "nome": "Caio Paulista", "posicao": "lb", "alternativas": ["lm"], "nascimento": 1998, "nacionalidade": "BRA", "nivel": "rotacao", "confianca": "baixa" },
+      { "nome": "Reinier", "posicao": "cam", "alternativas": ["cm"], "nascimento": 2002, "nacionalidade": "BRA", "nivel": "rotacao", "confianca": "baixa" }
+    ],
+    "internacional": [
+      { "nome": "Wesley", "posicao": "lw", "alternativas": ["rw", "lm"], "nascimento": 1999, "nacionalidade": "BRA", "nivel": "titular", "confianca": "media" },
+      { "nome": "Braian Aguirre", "posicao": "rb", "alternativas": ["rm"], "nascimento": 2000, "nacionalidade": "ARG", "nivel": "titular", "confianca": "media" },
+      { "nome": "Vitão", "posicao": "cb", "nascimento": 2000, "nacionalidade": "BRA", "nivel": "titular", "confianca": "media" },
+      { "nome": "Bruno Gomes", "posicao": "cdm", "alternativas": ["cm"], "nascimento": 2001, "nacionalidade": "BRA", "nivel": "rotacao", "confianca": "media" },
+      { "nome": "Fernando", "posicao": "cdm", "nascimento": 1987, "nacionalidade": "BRA", "nivel": "rotacao", "confianca": "baixa" },
+      { "nome": "Gustavo Prado", "posicao": "rw", "alternativas": ["lw"], "nascimento": 2005, "nacionalidade": "BRA", "nivel": "jovem", "confianca": "media" },
+      { "nome": "Ricardo Mathias", "posicao": "st", "nascimento": 2004, "nacionalidade": "BRA", "nivel": "jovem", "confianca": "baixa" }
+    ],
+    "mirassol": [
+      { "nome": "Reinaldo", "posicao": "lb", "alternativas": ["lm"], "nascimento": 1989, "nacionalidade": "BRA", "nivel": "titular", "confianca": "media" },
+      { "nome": "Iury Castilho", "posicao": "st", "alternativas": ["lw"], "nascimento": 1995, "nacionalidade": "BRA", "nivel": "titular", "confianca": "media" }
+    ],
+    "vitoria": [
+      { "nome": "Willian Oliveira", "posicao": "cdm", "alternativas": ["cm"], "nascimento": 1993, "nacionalidade": "BRA", "nivel": "titular", "confianca": "media" },
+      { "nome": "Neris", "posicao": "cb", "nascimento": 1994, "nacionalidade": "BRA", "nivel": "rotacao", "confianca": "media" },
+      { "nome": "Wellington Rato", "posicao": "rw", "alternativas": ["rm", "lw"], "nascimento": 1992, "nacionalidade": "BRA", "nivel": "rotacao", "confianca": "baixa" }
+    ],
+    "chapecoense": [],
+    "remo": [
+      { "nome": "Marcelo Rangel", "posicao": "gk", "nascimento": 1988, "nacionalidade": "BRA", "nivel": "titular", "confianca": "media" },
+      { "nome": "Pavani", "posicao": "cm", "alternativas": ["cdm"], "nascimento": 1995, "nacionalidade": "BRA", "nivel": "titular", "confianca": "baixa" },
+      { "nome": "Jaderson", "posicao": "cm", "alternativas": ["cdm"], "nascimento": 1999, "nacionalidade": "BRA", "nivel": "rotacao", "confianca": "baixa" }
+    ]
+  }
+}

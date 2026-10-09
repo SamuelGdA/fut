@@ -12,7 +12,7 @@ describe("páginas estáticas de erro", () => {
       const html = errorPageHtml(code, "/");
       expect(html.startsWith("<!doctype html>")).toBe(true);
       expect(html).toContain(`<h1 data-t="title">${titles[code]}</h1>`);
-      expect(html).toContain(`<title>${titles[code]}: CRAQUE</title>`);
+      expect(html).toContain(`<title>${titles[code]}: Futeiros</title>`);
       expect(html).toContain('href="/"');
       expect(html).toContain("<svg");
     }

@@ -9,7 +9,8 @@
     "desafio:calibrar": "tsx src/calibrate.ts",
     "recordes": "tsx src/recordsCli.ts",
     "typecheck": "tsc -p tsconfig.json",
-    "test": "vitest run"
+    "test": "vitest run",
+    "tecnico": "tsx src/tecnico/cli.ts"
   },
   "dependencies": {
     "@craque/engine": "workspace:*",

@@ -1,0 +1,30 @@
+{
+  "_fonte": "Conhecimento do assistente: jogadores reais com papel estimado; elencos podem estar desatualizados (D52).",
+  "clubes": {
+    "ponte-preta": [
+      { "nome": "Elvis", "posicao": "cam", "alternativas": ["cm"], "nascimento": 1990, "nacionalidade": "BRA", "nivel": "destaque", "confianca": "media" },
+      { "nome": "Nilson Castrillón", "posicao": "rb", "alternativas": ["rm"], "nascimento": 1996, "nacionalidade": "COL", "nivel": "rotacao", "confianca": "baixa" }
+    ],
+    "guarani": [
+      { "nome": "Vladimir", "posicao": "gk", "nascimento": 1989, "nacionalidade": "BRA", "nivel": "titular", "confianca": "media" }
+    ],
+    "nautico": [
+      { "nome": "Paulo Sérgio", "posicao": "st", "nascimento": 1993, "nacionalidade": "BRA", "nivel": "titular", "confianca": "baixa" }
+    ],
+    "vila-nova": [
+      { "nome": "Alesson", "posicao": "lw", "alternativas": ["st"], "nascimento": 1997, "nacionalidade": "BRA", "nivel": "titular", "confianca": "baixa" }
+    ],
+    "paysandu": [
+      { "nome": "Matheus Nogueira", "posicao": "gk", "nascimento": 1997, "nacionalidade": "BRA", "nivel": "titular", "confianca": "media" },
+      { "nome": "Leandro Vilela", "posicao": "cdm", "alternativas": ["cm"], "nascimento": 1995, "nacionalidade": "BRA", "nivel": "titular", "confianca": "media" },
+      { "nome": "Rossi", "posicao": "rw", "alternativas": ["lw", "rm"], "nascimento": 1993, "nacionalidade": "BRA", "nivel": "destaque", "confianca": "media" },
+      { "nome": "Esli García", "posicao": "lw", "alternativas": ["rw", "st"], "nascimento": 1993, "nacionalidade": "VEN", "nivel": "rotacao", "confianca": "media" },
+      { "nome": "Nicolas", "posicao": "st", "nascimento": 1989, "nacionalidade": "BRA", "nivel": "titular", "confianca": "baixa" },
+      { "nome": "Edílson", "posicao": "rb", "alternativas": ["rm"], "nascimento": 1986, "nacionalidade": "BRA", "nivel": "rotacao", "confianca": "baixa" },
+      { "nome": "Robinho", "posicao": "cm", "alternativas": ["cam"], "nascimento": 1987, "nacionalidade": "BRA", "nivel": "rotacao", "confianca": "baixa" },
+      { "nome": "Jean Dias", "posicao": "cam", "alternativas": ["cm"], "nascimento": 1996, "nacionalidade": "BRA", "nivel": "rotacao", "confianca": "baixa" },
+      { "nome": "Jorge Benítez", "posicao": "st", "nascimento": 1992, "nacionalidade": "PAR", "nivel": "rotacao", "confianca": "baixa" }
+    ],
+    "operario-pr": []
+  }
+}

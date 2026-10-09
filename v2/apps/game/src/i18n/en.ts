@@ -7,6 +7,43 @@ export const en: Messages = {
     tagline: "Football career",
   },
 
+  brand: {
+    name: "Futeiros",
+    hub: "Futeiros home",
+    games: { craque: "Craque", tecnico: "Técnico" },
+  },
+
+  hub: {
+    eyebrow: "Two football games",
+    title: "Futeiros",
+    lead: "Live football on the pitch, as a player, or from the touchline, as a coach.",
+    craque: {
+      eyebrow: "Player career",
+      title: "Craque",
+      lead: "From the first contract, at 16, to the farewell.",
+      points: { first: "One decision per season", second: "Offers, training and events", third: "Career saved on this device" },
+      play: "Play",
+      continue: "Continue career",
+      summary: "See the summary",
+      saved: "Saved career: {surname}, {age}, OVR {ovr}",
+      open: "Craque home",
+    },
+    tecnico: {
+      eyebrow: "Coach career",
+      title: "Técnico",
+      lead: "24 seasons in the dugout, almost always starting in the second division.",
+      points: { first: "Three actions per stage", second: "Real squads, transfers and academy", third: "A living world, no national teams" },
+      play: "Play",
+      resume: "Back to the career",
+      inProgress: "In progress in this tab",
+      ended: "Legacy on screen",
+      noSave: "No saving",
+      noSaveHint: "Reloading the page ends the Técnico career.",
+    },
+    achievements: "Achievements",
+    achievementsCount: { zero: "None unlocked yet", one: "{count} unlocked", other: "{count} unlocked" },
+  },
+
   common: {
     confirm: "Confirm",
     cancel: "Cancel",
@@ -613,9 +650,11 @@ export const en: Messages = {
     details: "Technical details",
     screenTitle: "This screen did not open",
     screenBody: "The rest of the game is still standing and your career is still saved. Try again or go back home.",
+    screenBodyTecnico: "The rest of the game is still standing and your Técnico career is still in this tab. Try again or go back home; reloading the page ends the career.",
     home: "Back to home",
     chunkTitle: "A piece of the game is missing",
-    chunkUpdate: "A new version of CRAQUE came out while this tab was open. Reload to carry on: your career is still saved.",
+    chunkUpdate: "A new version of Futeiros came out while this tab was open. Reload to carry on: your Craque career is still saved.",
+    chunkUpdateTecnico: "A new version of Futeiros came out while this tab was open. Reloading ends your Técnico career, which is not saved.",
     chunkOffline: "Without internet, this part of the game was not stored on this device yet. Connect and reload; after that it opens offline.",
     reload: "Reload",
     sectionTitle: "This part did not open",
@@ -625,7 +664,7 @@ export const en: Messages = {
   notFound: {
     eyebrow: "Error 404",
     title: "Out of play",
-    body: "This address does not exist in CRAQUE. The game carries on at the home screen.",
+    body: "This address does not exist in Futeiros. The game carries on at the home screen.",
     home: "Back to the game",
   },
 
@@ -640,7 +679,7 @@ export const en: Messages = {
     e404: {
       eyebrow: "Error 404",
       title: "Out of play",
-      body: "This address does not exist in CRAQUE. The game carries on at the home screen.",
+      body: "This address does not exist in Futeiros. The game carries on at the home screen.",
     },
     e500: {
       eyebrow: "Error 500",
@@ -650,13 +689,13 @@ export const en: Messages = {
     e503: {
       eyebrow: "Error 503",
       title: "Match postponed",
-      body: "CRAQUE is under maintenance. Your career is still saved on your device; come back in a few minutes.",
+      body: "Futeiros is under maintenance. Your career is still saved on your device; come back in a few minutes.",
     },
   },
 
   pwa: {
-    updateTitle: "New version of CRAQUE",
-    updateBody: "Update whenever you like: your career is still saved.",
+    updateTitle: "New version of Futeiros",
+    updateBody: "Update whenever you like. Your Craque career stays saved; a Técnico career ends when you update.",
     update: "Update",
     readyTitle: "Ready to play offline",
     readyBody: "The game is stored on this device. Crests and trophies are added as they appear.",
@@ -823,6 +862,7 @@ export const en: Messages = {
 
     areas: {
       label: "Lab areas",
+      tecnico: "Técnico",
       ending: "End of career",
       design: "Design",
       world: "World",

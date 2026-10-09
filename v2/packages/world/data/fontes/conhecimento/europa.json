@@ -1,0 +1,59 @@
+{
+  "_fonte": "Conhecimento do assistente: jogadores reais com papel estimado; elencos podem estar desatualizados (D52).",
+  "clubes": {
+    "cadiz": [
+      { "nome": "Álex Fernández", "posicao": "cm", "alternativas": ["cam"], "nascimento": 1992, "nacionalidade": "ESP", "nivel": "rotacao", "confianca": "media" },
+      { "nome": "Fali", "posicao": "cb", "alternativas": ["cdm"], "nascimento": 1993, "nacionalidade": "ESP", "nivel": "rotacao", "confianca": "media" },
+      { "nome": "Álvaro Bastida", "posicao": "cdm", "alternativas": ["cm"], "nascimento": 2004, "nacionalidade": "ESP", "nivel": "rotacao", "confianca": "baixa" }
+    ],
+    "granada-cf": [
+      { "nome": "Ricard Sánchez", "posicao": "rb", "alternativas": ["rm"], "nascimento": 2000, "nacionalidade": "ESP", "nivel": "rotacao", "confianca": "media" },
+      { "nome": "Manu Trigueros", "posicao": "cm", "alternativas": ["cam"], "nascimento": 1991, "nacionalidade": "ESP", "nivel": "rotacao", "confianca": "media" },
+      { "nome": "Stoichkov", "posicao": "st", "alternativas": ["lw"], "nascimento": 1993, "nacionalidade": "ESP", "nivel": "rotacao", "confianca": "baixa" }
+    ],
+    "lens": [
+      { "nome": "Wesley Saïd", "posicao": "st", "alternativas": ["lw", "rw"], "nascimento": 1995, "nacionalidade": "FRA", "nivel": "rotacao", "confianca": "media" }
+    ],
+    "empoli": [
+      { "nome": "Nicolas Haas", "posicao": "cm", "alternativas": ["cdm", "cam"], "nascimento": 1996, "nacionalidade": "SUI", "nivel": "rotacao", "confianca": "media" },
+      { "nome": "Tyronne Ebuehi", "posicao": "rb", "alternativas": ["rm"], "nascimento": 1995, "nacionalidade": "NGA", "nivel": "rotacao", "confianca": "baixa" }
+    ],
+    "avellino": [
+      { "nome": "Facundo Lescano", "posicao": "st", "nascimento": 1996, "nacionalidade": "ARG", "nivel": "rotacao", "confianca": "baixa" }
+    ],
+    "bari": [
+      { "nome": "Gaetano Castrovilli", "posicao": "cm", "alternativas": ["cam"], "nascimento": 1997, "nacionalidade": "ITA", "nivel": "destaque", "confianca": "media" },
+      { "nome": "Francesco Vicari", "posicao": "cb", "nascimento": 1994, "nacionalidade": "ITA", "nivel": "titular", "confianca": "media" },
+      { "nome": "Raffaele Pucino", "posicao": "rb", "alternativas": ["cb"], "nascimento": 1991, "nacionalidade": "ITA", "nivel": "rotacao", "confianca": "media" },
+      { "nome": "Valerio Mantovani", "posicao": "cb", "nascimento": 1996, "nacionalidade": "ITA", "nivel": "rotacao", "confianca": "baixa" },
+      { "nome": "Raffaele Maiello", "posicao": "cdm", "alternativas": ["cm"], "nascimento": 1991, "nacionalidade": "ITA", "nivel": "rotacao", "confianca": "media" },
+      { "nome": "Giuseppe Sibilli", "posicao": "lw", "alternativas": ["st", "cam"], "nascimento": 1996, "nacionalidade": "ITA", "nivel": "titular", "confianca": "media" }
+    ],
+    "pescara": [
+      { "nome": "Riccardo Brosco", "posicao": "cb", "nascimento": 1991, "nacionalidade": "ITA", "nivel": "titular", "confianca": "media" },
+      { "nome": "Davide Merola", "posicao": "lw", "alternativas": ["st", "cam"], "nascimento": 2000, "nacionalidade": "ITA", "nivel": "titular", "confianca": "media" },
+      { "nome": "Gianmarco Cangiano", "posicao": "rw", "alternativas": ["lw"], "nascimento": 2001, "nacionalidade": "ITA", "nivel": "rotacao", "confianca": "baixa" },
+      { "nome": "Luca Valzania", "posicao": "cm", "alternativas": ["cdm"], "nascimento": 1996, "nacionalidade": "ITA", "nivel": "rotacao", "confianca": "baixa" }
+    ],
+    "reggiana": [
+      { "nome": "Lorenzo Libutti", "posicao": "rb", "alternativas": ["rm"], "nascimento": 1997, "nacionalidade": "ITA", "nivel": "titular", "confianca": "media" },
+      { "nome": "Paolo Rozzio", "posicao": "cb", "nascimento": 1992, "nacionalidade": "ARG", "nivel": "titular", "confianca": "media" },
+      { "nome": "Manolo Portanova", "posicao": "cm", "alternativas": ["cam"], "nascimento": 2000, "nacionalidade": "ITA", "nivel": "rotacao", "confianca": "media" },
+      { "nome": "Manuel Marras", "posicao": "rw", "alternativas": ["rm"], "nascimento": 1993, "nacionalidade": "ITA", "nivel": "rotacao", "confianca": "baixa" },
+      { "nome": "Alessandro Sampirisi", "posicao": "rb", "alternativas": ["cb"], "nascimento": 1992, "nacionalidade": "ITA", "nivel": "reserva", "confianca": "baixa" },
+      { "nome": "Cedric Gondo", "posicao": "st", "nascimento": 1996, "nacionalidade": "CIV", "nivel": "rotacao", "confianca": "baixa" }
+    ],
+    "spezia": [
+      { "nome": "Petko Hristov", "posicao": "cb", "nascimento": 1999, "nacionalidade": "BUL", "nivel": "titular", "confianca": "media" },
+      { "nome": "Dimitrios Nikolaou", "posicao": "cb", "nascimento": 1998, "nacionalidade": "GRE", "nivel": "titular", "confianca": "media" },
+      { "nome": "Luca Vignali", "posicao": "rb", "alternativas": ["rm"], "nascimento": 1996, "nacionalidade": "ITA", "nivel": "rotacao", "confianca": "media" },
+      { "nome": "Edoardo Soleri", "posicao": "st", "nascimento": 1997, "nacionalidade": "ITA", "nivel": "rotacao", "confianca": "baixa" },
+      { "nome": "Gianluca Lapadula", "posicao": "st", "nascimento": 1990, "nacionalidade": "PER", "nivel": "rotacao", "confianca": "baixa" }
+    ],
+    "sudtirol": [
+      { "nome": "Raphael Odogwu", "posicao": "st", "nascimento": 1991, "nacionalidade": "AUT", "nivel": "rotacao", "confianca": "media" },
+      { "nome": "Giacomo Poluzzi", "posicao": "gk", "nascimento": 1988, "nacionalidade": "ITA", "nivel": "reserva", "confianca": "media" },
+      { "nome": "Jasmin Kurtić", "posicao": "cm", "alternativas": ["cdm"], "nascimento": 1989, "nacionalidade": "SVN", "nivel": "rotacao", "confianca": "baixa" }
+    ]
+  }
+}

@@ -12,9 +12,15 @@ import { defineConfig } from "@playwright/test";
  *
  * O relatório HTML fica em `e2e-relatorio/` e, quando algo falha, o rastro e a
  * foto ficam em `e2e-resultados/`.
+ *
+ * Sem Google Chrome na máquina (um contêiner de CI, por exemplo), aponte
+ * `PW_CHROMIUM_PATH` para um Chromium já instalado:
+ *
+ *   PW_CHROMIUM_PATH=/caminho/do/chrome pnpm e2e
  */
 
 const PORT = 4173;
+const CHROMIUM = process.env["PW_CHROMIUM_PATH"];
 
 export default defineConfig({
   testDir: "./e2e",
@@ -27,7 +33,7 @@ export default defineConfig({
   outputDir: "e2e-resultados",
   use: {
     baseURL: `http://localhost:${PORT}`,
-    channel: "chrome",
+    ...(CHROMIUM ? { launchOptions: { executablePath: CHROMIUM } } : { channel: "chrome" }),
     locale: "pt-BR",
     // Um fuso longe de UTC: o Desafio do dia tem de virar pela meia-noite UTC, não pela local.
     timezoneId: "America/Sao_Paulo",

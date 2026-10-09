@@ -6,6 +6,7 @@ import { create } from "zustand";
  * componente. O laboratório só abre em desenvolvimento.
  */
 export const SCREENS = [
+  "hub",
   "home",
   "identity",
   "appearance",
@@ -18,11 +19,39 @@ export const SCREENS = [
   "achievements",
   "notFound",
   "lab",
+  "tecnicoIdentity",
+  "tecnicoAppearance",
+  "tecnico",
+  "tecnicoLegacy",
 ] as const;
 
 export type Screen = (typeof SCREENS)[number];
 
-export const INITIAL_SCREEN: Screen = "home";
+/** O Futeiros abre no hub (D50): dali, o Craque e o Técnico. */
+export const INITIAL_SCREEN: Screen = "hub";
+
+/** A que jogo cada tela pertence: decide a etiqueta da marca e para onde o erro volta. */
+export type Game = "hub" | "craque" | "tecnico";
+
+export const SCREEN_GAME: Readonly<Record<Screen, Game>> = {
+  hub: "hub",
+  home: "craque",
+  identity: "craque",
+  appearance: "craque",
+  career: "craque",
+  summary: "craque",
+  shared: "craque",
+  challenge: "craque",
+  hall: "craque",
+  archived: "craque",
+  achievements: "hub",
+  notFound: "hub",
+  lab: "hub",
+  tecnicoIdentity: "tecnico",
+  tecnicoAppearance: "tecnico",
+  tecnico: "tecnico",
+  tecnicoLegacy: "tecnico",
+};
 
 export function isScreen(value: unknown): value is Screen {
   return typeof value === "string" && (SCREENS as readonly string[]).includes(value);

@@ -89,4 +89,6 @@ export const STORAGE_KEYS = {
   prefs: "craque.v2.prefs",
   draft: "craque.v2.draft",
   save: "craque.v2.save",
+  /** Rascunho da identidade do treinador (D51): preferência, nunca a carreira. */
+  tecnicoDraft: "craque.v2.tecnico.draft",
 } as const;
