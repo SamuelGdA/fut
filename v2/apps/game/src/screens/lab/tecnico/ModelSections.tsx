@@ -189,7 +189,7 @@ export function PurchaseSection({ index }: { index: number }) {
           ))}
         </div>
       ) : null}
-      <dl className="mt-4 grid max-w-3xl gap-x-6 sm:grid-cols-2">
+      <div className="mt-4 grid max-w-3xl gap-x-6 sm:grid-cols-2">
         <div>
           <p className="eyebrow mb-1">{tt("lab.purchase.attractiveness")}</p>
           <LabTable
@@ -227,7 +227,7 @@ export function PurchaseSection({ index }: { index: number }) {
             />
           </div>
         ) : null}
-      </dl>
+      </div>
       <p className="eyebrow mt-6 mb-1">{tt("lab.purchase.curve")}</p>
       <p className="mb-2 text-xs text-muted">{tt("lab.purchase.curveLead")}</p>
       <LabTable

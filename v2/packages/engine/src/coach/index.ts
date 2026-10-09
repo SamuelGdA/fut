@@ -1,5 +1,5 @@
 /**
- * O motor do Técnico (GDD 56), exportado em `@craque/engine/coach`. Fica fora
+ * O motor do Técnico (GDD 42), exportado em `@craque/engine/coach`. Fica fora
  * do índice do motor para o Craque não carregar nada dele.
  */
 
@@ -10,7 +10,8 @@ export {
   canStartAction,
   concernOf,
   developable,
-  fundsChances,
+  fundsPreview,
+  type FundsPreview,
   purchasePreview,
   registeredIds,
   salePreview,

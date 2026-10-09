@@ -1,16 +1,20 @@
 import { expect, test } from "@playwright/test";
-import { abrir, encerrar, esperarQueCaiba, idade, jogarTurno, jogoRapido, OPCOES } from "./apoio";
+import { abrir, abrirCraque, encerrar, entrarNoCraque, esperarQueCaiba, idade, jogarTurno, jogoRapido, OPCOES } from "./apoio";
 
 /**
- * A jornada inteira de um jogador (GDD 40.2): do Início, pela identidade, até
+ * A jornada inteira de um jogador (GDD 40.2): do hub, pelo Início e pela identidade, até
  * o fim da carreira e o resumo, com o pôster e o "Jogar de novo". No celular,
  * o laço é medido a cada turno: cabe na tela, sem rolar (D23).
  */
 
-test("do Início ao Resumo, montando o jogador", async ({ page }, info) => {
+test("do hub ao Resumo, montando o jogador", async ({ page }, info) => {
   const celular = info.project.name === "celular";
   await abrir(page, { pace: "normal" });
-  await expect(page.getByRole("heading", { name: "CRAQUE", level: 1 })).toBeVisible();
+  // A abertura é o hub do Futeiros (D50), com os dois jogos.
+  await expect(page.getByRole("heading", { name: "Futeiros", level: 1 })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Craque", level: 2 })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Técnico", level: 2 })).toBeVisible();
+  await entrarNoCraque(page);
 
   // Identidade: no celular em etapas, no desktop tudo de uma vez.
   await page.getByRole("button", { name: "Começar carreira" }).click();
@@ -59,7 +63,7 @@ test("do Início ao Resumo, montando o jogador", async ({ page }, info) => {
 });
 
 test("o link da carreira abre o resumo só de leitura, sem tocar no save de quem abre", async ({ page }) => {
-  await abrir(page);
+  await abrirCraque(page);
   await jogoRapido(page);
   for (let turn = 0; turn < 3; turn += 1) await jogarTurno(page);
   await encerrar(page);

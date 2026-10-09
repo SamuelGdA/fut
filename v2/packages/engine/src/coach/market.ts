@@ -11,7 +11,7 @@ import { invalidateSquads, roleFor, squadOf } from "./world";
  * mais difícil, até ser quase impossível: o jogador mede o clube pela
  * atratividade (força, prestígio, liga, continental e reputação do
  * treinador) e o clube dono quase nunca libera um titular para um clube menor.
- * As duas chances se multiplicam (GDD 56.7).
+ * As duas chances se multiplicam (GDD 42.7).
  */
 
 function sigmoid(x: number): number {

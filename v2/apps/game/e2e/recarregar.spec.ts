@@ -1,14 +1,14 @@
 import { expect, test } from "@playwright/test";
-import { abrir, encerrar, esperarNumeros, jogarTurno, jogoRapido } from "./apoio";
+import { abrirCraque, encerrar, esperarNumeros, jogarTurno, jogoRapido, retomarCraque } from "./apoio";
 
 /**
- * Recarregar no meio (GDD 34.2 e invariante 23): a carreira volta na mesma
- * decisão, o lance volta como a última temporada (sem o evento e sem
- * comemorar), e o resumo volta no resumo.
+ * Recarregar no meio (GDD 34.2 e invariante 23): o jogo abre no hub (D50), e o
+ * cartão do Craque retoma a carreira na mesma decisão, o lance como a última
+ * temporada (sem o evento e sem comemorar), e o resumo no resumo.
  */
 
-test("recarregar no meio da carreira volta na mesma decisão, com a última temporada na tela", async ({ page }) => {
-  await abrir(page);
+test("recarregar no meio da carreira abre o hub, e continuar volta na mesma decisão, com a última temporada na tela", async ({ page }) => {
+  await abrirCraque(page);
   await jogoRapido(page);
   await jogarTurno(page);
   await jogarTurno(page);
@@ -19,6 +19,7 @@ test("recarregar no meio da carreira volta na mesma decisão, com a última temp
   const header = (await page.locator(".career-header").textContent()) ?? "";
 
   await page.reload();
+  await retomarCraque(page);
   await expect(page.locator(".decision-title")).toHaveText(title);
   await expect(page.locator(".career-header")).toHaveText(header);
   // O lance da tela recarregada é a última temporada; o aviso do leitor de tela fica quieto.
@@ -29,19 +30,20 @@ test("recarregar no meio da carreira volta na mesma decisão, com a última temp
   expect(await jogarTurno(page)).toBe(true);
 });
 
-test("recarregar no resumo volta para o resumo", async ({ page }) => {
-  await abrir(page);
+test("recarregar no resumo abre o hub, e o cartão do Craque leva de volta ao resumo", async ({ page }) => {
+  await abrirCraque(page);
   await jogoRapido(page);
   await jogarTurno(page);
   await encerrar(page);
   const surname = (await page.getByRole("heading", { level: 1 }).textContent()) ?? "";
   await page.reload();
+  await retomarCraque(page);
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(surname);
   await expect(page.locator(".summary")).toBeVisible();
 });
 
-test("sair para o Início guarda a carreira: abrir o jogo de novo volta para ela, e começar outra não pergunta nada", async ({ page }) => {
-  await abrir(page);
+test("sair para o Início guarda a carreira: o hub retoma ela, e começar outra não pergunta nada", async ({ page }) => {
+  await abrirCraque(page);
   await jogoRapido(page);
   await jogarTurno(page);
   const title = (await page.locator(".decision-title").textContent()) ?? "";
@@ -55,8 +57,10 @@ test("sair para o Início guarda a carreira: abrir o jogo de novo volta para ela
   await expect(page.getByRole("heading", { name: "CRAQUE", level: 1 })).toBeVisible();
   await expect(page.getByText("Carreira em andamento")).toHaveCount(0);
 
-  // Abrir o jogo de novo volta para a carreira guardada.
+  // Abrir o jogo de novo abre o hub, que mostra e retoma a carreira guardada.
   await page.reload();
+  await expect(page.locator('.hub-card[data-game="craque"]')).toContainText("Carreira salva");
+  await retomarCraque(page);
   await expect(page.locator(".decision-title")).toHaveText(title);
 
   // Começar outra carreira pelo Início troca o save sem perguntar; sobrenomes podem se repetir.

@@ -31,7 +31,7 @@ function textsFor(code: PageCode) {
   return Object.fromEntries(
     (Object.keys(LOCALES) as PageLocale[]).map((locale) => {
       const pages = LOCALES[locale].errorPages;
-      return [locale, { ...pages[key], home: pages.home, retry: pages.retry, tagline: LOCALES[locale].app.tagline }];
+      return [locale, { ...pages[key], home: pages.home, retry: pages.retry, tagline: LOCALES[locale].hub.eyebrow }];
     }),
   ) as Record<PageLocale, { eyebrow: string; title: string; body: string; home: string; retry: string; tagline: string }>;
 }
@@ -67,7 +67,7 @@ export function errorPageHtml(code: PageCode, base: string): string {
   const texts = textsFor(code);
   const pt = texts.pt;
   // O script troca idioma e tema antes de pintar; sem JavaScript, fica o português escuro.
-  const script = `(function(){var t=${JSON.stringify(texts)};try{var raw=localStorage.getItem("craque.v2.prefs");var s=raw?(JSON.parse(raw)||{}).state||{}:{};var r=document.documentElement;if(s.theme==="light"){r.setAttribute("data-theme","light");var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute("content","#f3f0e8");}var l=t[s.locale]?s.locale:null;if(!l){var n=(navigator.language||"").slice(0,2);l=t[n]?n:"pt";}if(l!=="pt"){var x=t[l];r.setAttribute("lang",l==="es"?"es":"en");document.title=x.title+": CRAQUE";[].forEach.call(document.querySelectorAll("[data-t]"),function(e){e.textContent=x[e.getAttribute("data-t")];});}}catch(e){}})();`;
+  const script = `(function(){var t=${JSON.stringify(texts)};try{var raw=localStorage.getItem("craque.v2.prefs");var s=raw?(JSON.parse(raw)||{}).state||{}:{};var r=document.documentElement;if(s.theme==="light"){r.setAttribute("data-theme","light");var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute("content","#f3f0e8");}var l=t[s.locale]?s.locale:null;if(!l){var n=(navigator.language||"").slice(0,2);l=t[n]?n:"pt";}if(l!=="pt"){var x=t[l];r.setAttribute("lang",l==="es"?"es":"en");document.title=x.title+": Futeiros";[].forEach.call(document.querySelectorAll("[data-t]"),function(e){e.textContent=x[e.getAttribute("data-t")];});}}catch(e){}})();`;
   const retry = page.retry ? `<button class="button" type="button" data-t="retry" onclick="location.reload()">${escape(pt.retry)}</button>` : "";
   return `<!doctype html>
 <html lang="pt-BR" data-theme="dark">
@@ -77,12 +77,12 @@ export function errorPageHtml(code: PageCode, base: string): string {
 <meta name="theme-color" content="#0d1110" />
 <meta name="robots" content="noindex" />
 <link rel="icon" type="image/svg+xml" href="${base}favicon.svg" />
-<title>${escape(pt.title)}: CRAQUE</title>
+<title>${escape(pt.title)}: Futeiros</title>
 <style>${STYLE}</style>
 </head>
 <body>
 <main>
-<a class="brand" href="${base}">${MARK}<span>CRAQUE</span><small data-t="tagline">${escape(pt.tagline)}</small></a>
+<a class="brand" href="${base}">${MARK}<span>Futeiros</span><small data-t="tagline">${escape(pt.tagline)}</small></a>
 <span class="art">${errorArt(page.art)}</span>
 <p class="eyebrow" data-t="eyebrow">${escape(pt.eyebrow)}</p>
 <h1 data-t="title">${escape(pt.title)}</h1>

@@ -6,6 +6,7 @@ import {
   DEVELOP,
   demandOf,
   developable,
+  fundsPreview,
   type Preview,
   purchaseChance,
   purchasePreview,
@@ -120,6 +121,7 @@ function SelectStep({ career, kind, run, t }: { career: CoachCareer; kind: NonNu
   if (kind === "youth" && candidate) payload = { kind: "youth", candidate };
   if (kind === "locker" && lockerMode === "talk" && selected.length > 0) payload = { kind: "locker", mode: "talk", players: selected };
   if (kind === "locker" && lockerMode === "meeting" && meeting) payload = { kind: "locker", mode: "meeting", choice: meeting };
+  if (kind === "funds") payload = { kind: "funds" };
 
   let body: ReactNode = null;
   if (kind === "sell") body = <SellPick career={career} selected={selected} toggle={toggle} t={t} />;
@@ -127,6 +129,7 @@ function SelectStep({ career, kind, run, t }: { career: CoachCareer; kind: NonNu
   else if (kind === "develop") body = <DevelopPick career={career} selected={selected} toggle={toggle} t={t} />;
   else if (kind === "train") body = <TrainPick career={career} value={sector} onChange={setSector} t={t} />;
   else if (kind === "youth") body = <YouthPick career={career} value={candidate} onChange={setCandidate} t={t} />;
+  else if (kind === "funds") body = <FundsOdds career={career} t={t} />;
   else if (kind === "locker")
     body = (
       <LockerPick
@@ -245,7 +248,7 @@ function DevelopPick({ career, selected, toggle, t }: { career: CoachCareer; sel
       {rows.map((row) => (
         <CheckRow key={row.id} checked={selected.includes(row.id)} onToggle={() => toggle(row.id)} disabled={allowed.has(row.id) ? null : tt("develop.marked")}>
           <PlayerLine row={row} t={t}>
-            <span>{tt(`squad.potential.${row.potential}`)}</span>
+            <span>{tt(`squad.potential.${row.potentialHint}`)}</span>
           </PlayerLine>
         </CheckRow>
       ))}
@@ -372,6 +375,36 @@ function BuySearch({ career, selected, toggle, t }: { career: CoachCareer; selec
           })}
         </ul>
       )}
+    </div>
+  );
+}
+
+/** As chances e os valores do pedido de verba, antes de gastar a ação. */
+function FundsOdds({ career, t }: { career: CoachCareer; t: TecnicoTranslator }) {
+  const { tt, money, percent } = t;
+  const preview = fundsPreview(career);
+  const rows = [
+    { key: "large", chance: preview.large, amount: preview.largeAmount, tone: "good" },
+    { key: "small", chance: preview.small, amount: preview.smallAmount, tone: "neutral" },
+    { key: "refused", chance: preview.refused, amount: null, tone: "bad" },
+  ] as const;
+  return (
+    <div className="flex flex-col gap-2">
+      <p className="eyebrow">{tt("funds.odds")}</p>
+      <ul className="flex flex-col gap-1.5">
+        {rows.map((row) => (
+          <li key={row.key} className="tec-response flex items-center justify-between gap-3 text-sm">
+            <span className="min-w-0">
+              <span className="block font-semibold">{tt(`funds.outcomes.${row.key}`)}</span>
+              {row.amount !== null ? <span className="numeric text-xs text-muted">{money(row.amount)}</span> : null}
+            </span>
+            <span data-tone={row.tone} className="numeric text-tone shrink-0 font-semibold">
+              {percent(row.chance)}
+            </span>
+          </li>
+        ))}
+      </ul>
+      <p className="text-2xs text-faint">{tt("funds.conditionHint")}</p>
     </div>
   );
 }

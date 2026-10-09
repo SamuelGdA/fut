@@ -3,6 +3,7 @@ import {
   ACTIONS_PER_STAGE,
   type CoachCareer,
   FUNDS,
+  fundsPreview,
   purchaseChance,
   purchasePreview,
   squadOf,
@@ -157,10 +158,19 @@ describe("as sete ações e o limite por etapa (spec 6)", () => {
     expect(refused(career, { type: "confirmAction", payload: { kind: "youth", candidate: candidate.id } })).toBe("candidate");
   });
 
-  it("pedir verba: a resposta vem ao abrir (gasta a ação) e só vale no aceite; limite por temporada", () => {
+  it("pedir verba: as chances aparecem antes, cancelar é de graça, confirmar gasta a ação e só vale no aceite; limite por temporada", () => {
+    const preview = fundsPreview(base);
+    expect(preview.large + preview.small + preview.refused).toBeCloseTo(1, 9);
+    expect(preview.largeAmount).toBeGreaterThan(preview.smallAmount);
     let career = must(base, { type: "openAction", kind: "funds" });
+    expect(career.actionsUsed).toBe(0);
+    const cancelled = must(career, { type: "cancelAction" });
+    expect(cancelled.actionsUsed).toBe(0);
+    expect(cancelled.coach?.fundsRequests).toBe(base.coach?.fundsRequests);
+    career = must(career, { type: "confirmAction", payload: { kind: "funds" } });
     expect(career.actionsUsed).toBe(1);
     const response = career.flow?.kind === "funds" ? career.flow.response : null;
+    if (response && response.outcome !== "refused") expect(response.amount).toBe(response.outcome === "large" ? preview.largeAmount : preview.smallAmount);
     expect(response).not.toBeNull();
     if (response?.status === "pending") {
       const budget = career.coach?.budget ?? 0;

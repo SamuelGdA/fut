@@ -16,7 +16,7 @@ import type {
   Moment,
   Sector,
 } from "./types";
-import { CALENDAR_DAYS, INJURY, PREDICTABILITY, SATISFACTION, SUBSTITUTIONS, TRAINING } from "./tuning";
+import { CALENDAR_DAYS, FORM, INJURY, PREDICTABILITY, SATISFACTION, SUBSTITUTIONS, TRAINING } from "./tuning";
 import type { Rng } from "../rng";
 import { absDay, coachRng, unit } from "./util";
 import { squadIndex } from "./world";
@@ -373,7 +373,7 @@ function applyCoachUsage(run: Run, fixture: Fixture, log: CoachMatchLog, live: L
       delta = accepts || player.listed ? 0 : benched ? table.bench : table.out;
       if (rested.includes(player.id)) delta = 0;
       // Fase volta devagar ao normal sem jogar.
-      player.form = Math.abs(player.form) < 0.1 ? 0 : player.form - Math.sign(player.form) * 0.1;
+      player.form = Math.abs(player.form) < FORM.decayWithoutGames ? 0 : player.form - Math.sign(player.form) * FORM.decayWithoutGames;
     }
     player.satisfaction = Math.max(0, Math.min(100, player.satisfaction + delta));
   }

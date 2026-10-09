@@ -43,12 +43,12 @@ import type {
   Tactics,
 } from "./types";
 import { FORMATIONS } from "./types";
-import { CAREER_SEASONS, COACH_VERSION, EVALUATION, OFFERS, PREDICTABILITY, PROMISES, REPUTATION, SATISFACTION } from "./tuning";
+import { CAREER_SEASONS, COACH_VERSION, EVALUATION, OFFERS, PREDICTABILITY, PROMISES, REPUTATION, SATISFACTION, TRAIT_EFFECTS } from "./tuning";
 import { absDay, coachRng } from "./util";
 import { assignRoles, COACH_COUNTRIES, createWorldState, squadOf, type WorldData } from "./world";
 
 /**
- * A carreira do Técnico (GDD 56): estado em memória, sem save (spec 17). Toda
+ * A carreira do Técnico (GDD 42): estado em memória, sem save (spec 17). Toda
  * mudança passa por `coachCommand`, que nunca altera o estado recebido:
  * devolve um estado novo ou o mesmo com o motivo da recusa. Comando fora de
  * fase é recusado sem efeito, e é isso que impede cliques repetidos de
@@ -532,7 +532,7 @@ function periodSatisfaction(career: CoachCareer): void {
   const objective = coach.objective;
   const results = position === null ? 0 : clamp((objective.expected - position) / Math.max(2, objective.tableSize / 5), -1, 1);
   const leader = squad.some((player) => player.traits.includes("leader"));
-  const delta = results * SATISFACTION.resultsCap * (results < 0 && leader ? 0.6 : 1);
+  const delta = results * SATISFACTION.resultsCap * (results < 0 && leader ? TRAIT_EFFECTS.leader : 1);
   for (const player of squad) {
     player.satisfaction = clamp(player.satisfaction + delta, 0, 100);
     player.satisfaction += SATISFACTION.reversion * (SATISFACTION.target - player.satisfaction);

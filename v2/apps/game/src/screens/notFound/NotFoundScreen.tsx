@@ -6,9 +6,9 @@ import { feedback } from "../../services/feedback";
 import { Button } from "../../ui/Button";
 
 /**
- * Página não encontrada, dentro do jogo (GDD 37): um endereço que o CRAQUE não
- * conhece abre aqui, com a casca de pé e a volta para o Início. Sair limpa o
- * endereço (a navegação troca a URL pela raiz do jogo).
+ * Página não encontrada, dentro do jogo (GDD 37): um endereço que o Futeiros
+ * não conhece abre aqui, com a casca de pé e a volta para o hub (D50). Sair
+ * limpa o endereço (a navegação troca a URL pela raiz do jogo).
  */
 export function NotFoundScreen() {
   const { t } = useT();
@@ -25,7 +25,7 @@ export function NotFoundScreen() {
           size="lg"
           onClick={() => {
             feedback("back");
-            go("home", { replace: true });
+            go("hub", { replace: true });
           }}
         >
           {t("notFound.home")}

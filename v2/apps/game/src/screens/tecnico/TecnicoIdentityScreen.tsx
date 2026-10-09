@@ -28,7 +28,7 @@ import { Segmented } from "../../ui/Segmented";
 type Step = "who" | "how";
 
 /**
- * Identidade do treinador (GDD 56.2): nome, país de origem (só os 15 com
+ * Identidade do treinador (GDD 42.2): nome, país de origem (só os 15 com
  * segunda divisão, D53), ritmo e aparência de terno. No celular, duas etapas
  * para caber na tela; no PC, tudo de uma vez. Começar avisa que não há save
  * (D51) e, se já houver uma carreira nesta aba, pede confirmação.
@@ -196,7 +196,8 @@ export function TecnicoIdentityScreen() {
       ) : (
         <div className="flex flex-col gap-4">
           {step === "who" ? who : how}
-          <div className="flex gap-3">
+          {/* Abaixo de 400 px os dois botões não cabem lado a lado: o principal vai em cima. */}
+          <div className="flex flex-col-reverse gap-2 min-[400px]:flex-row min-[400px]:gap-3">
             <Button
               variant="ghost"
               onClick={() => {
@@ -208,7 +209,7 @@ export function TecnicoIdentityScreen() {
               <ArrowLeft size={16} aria-hidden="true" />
               {tt("identity.back")}
             </Button>
-            <div className="flex-1">
+            <div className="min-w-0 flex-1">
               {step === "who" ? (
                 <Button
                   size="lg"

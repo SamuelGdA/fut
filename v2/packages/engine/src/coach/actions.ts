@@ -20,7 +20,7 @@ import type {
   TalkResult,
   YouthCandidate,
 } from "./types";
-import { ACTIONS_PER_STAGE, DEVELOP, FINANCE, FUNDS, PURCHASE, SALE, YOUTH } from "./tuning";
+import { ACTIONS_PER_STAGE, DEVELOP, FINANCE, FUNDS, PROMISES, PURCHASE, SALE, YOUTH } from "./tuning";
 import { coachRng, stageKey } from "./util";
 import { invalidateSquads, squadOf } from "./world";
 
@@ -70,16 +70,9 @@ export function openAction(career: CoachCareer, kind: ActionKind): void {
     develop: { kind: "develop", number, step: "select" },
     youth: { kind: "youth", number, step: "select" },
     locker: { kind: "locker", number, step: "select", mode: null, talks: [], meeting: null },
-    funds: { kind: "funds", number, step: "responses", response: { outcome: "refused", amount: 0, condition: null, status: "none" } },
+    funds: { kind: "funds", number, step: "select", response: { outcome: "refused", amount: 0, condition: null, status: "none" } },
   };
   career.flow = flows[kind];
-  if (kind === "funds") {
-    // Pedir verba não tem alvo: abrir já é a confirmação, e a resposta vem junto.
-    consume(career, "funds");
-    const flow = career.flow as Extract<ActionFlow, { kind: "funds" }>;
-    flow.response = fundsResponse(career, number);
-    if (flow.response.outcome === "refused") flow.response.status = "none";
-  }
 }
 
 /** Fecha sem confirmar: não gasta ação. Só antes da confirmação. */
@@ -103,7 +96,8 @@ export type ConfirmPayload =
   | { readonly kind: "develop"; readonly players: readonly string[] }
   | { readonly kind: "youth"; readonly candidate: string }
   | { readonly kind: "locker"; readonly mode: "talk"; readonly players: readonly string[] }
-  | { readonly kind: "locker"; readonly mode: "meeting"; readonly choice: "support" | "demand" };
+  | { readonly kind: "locker"; readonly mode: "meeting"; readonly choice: "support" | "demand" }
+  | { readonly kind: "funds" };
 
 /** Confirma o processo aberto: gasta a ação e produz as respostas. */
 export function confirmAction(career: CoachCareer, payload: ConfirmPayload): void {
@@ -209,6 +203,14 @@ export function confirmAction(career: CoachCareer, payload: ConfirmPayload): voi
       locker.mode = "meeting";
       locker.meeting = { choice: payload.choice, outcome: meeting(career, payload.choice, locker.number, squad) };
       locker.step = "responses";
+      return;
+    }
+    case "funds": {
+      // As chances e os valores aparecem antes (fundsPreview); confirmar gasta a ação e sorteia a resposta.
+      const funds = flow as Extract<ActionFlow, { kind: "funds" }>;
+      consume(career, "funds");
+      funds.response = fundsResponse(career, funds.number);
+      funds.step = "responses";
       return;
     }
   }
@@ -577,12 +579,12 @@ interface TalkEffect {
 }
 
 export const TALK_EFFECTS: Readonly<Record<string, TalkEffect>> = {
-  promiseStarts: { chance: null, success: [{ type: "satisfaction", target: "subject", amount: 12 }, { type: "promise", kind: "starts", target: 0.6 }], failure: [] },
+  promiseStarts: { chance: null, success: [{ type: "satisfaction", target: "subject", amount: 12 }, { type: "promise", kind: "starts", target: PROMISES.startsShare }], failure: [] },
   patience: { chance: 0.6, success: [{ type: "satisfaction", target: "subject", amount: 5 }], failure: [{ type: "satisfaction", target: "subject", amount: -4 }] },
   honest: { chance: 0.6, success: [{ type: "satisfaction", target: "subject", amount: -2 }], failure: [{ type: "satisfaction", target: "subject", amount: -10 }], acceptBench: true },
   list: { chance: null, success: [{ type: "listed" }, { type: "satisfaction", target: "subject", amount: 6 }], failure: [] },
   convince: { chance: 0.45, success: [{ type: "satisfaction", target: "subject", amount: 12 }], failure: [{ type: "satisfaction", target: "subject", amount: -8 }] },
-  promiseMinutes: { chance: null, success: [{ type: "satisfaction", target: "subject", amount: 8 }, { type: "promise", kind: "minutes", target: 6 }], failure: [] },
+  promiseMinutes: { chance: null, success: [{ type: "satisfaction", target: "subject", amount: 8 }, { type: "promise", kind: "minutes", target: PROMISES.minutesGames }], failure: [] },
   reassure: { chance: null, success: [{ type: "satisfaction", target: "subject", amount: 3 }], failure: [] },
   release: { chance: null, success: [{ type: "satisfaction", target: "subject", amount: -6 }], failure: [], releasePromise: true },
   confidence: { chance: 0.65, success: [{ type: "form", target: "subject", amount: 1 }, { type: "satisfaction", target: "subject", amount: 2 }], failure: [{ type: "satisfaction", target: "subject", amount: -2 }] },
@@ -603,7 +605,7 @@ function resolveTalk(career: CoachCareer, talk: TalkResult, decision: string, nu
   const player = career.players[talk.player];
   if (effect.acceptBench && success && player) player.acceptsBench = true;
   if (effect.releasePromise) {
-    for (const promise of career.promises) if (promise.status === "active" && promise.player === talk.player) promise.status = "kept";
+    for (const promise of career.promises) if (promise.status === "active" && promise.player === talk.player) promise.status = "released";
   }
   applyEffects(career, success ? effect.success : effect.failure, talk.player, "talk");
 }
@@ -642,7 +644,17 @@ function meeting(career: CoachCareer, choice: "support" | "demand", number: numb
  * caixa do clube. Pedidos repetidos rendem menos; condição (objetivo mais
  * alto) aparece antes de aceitar.
  */
-export function fundsChances(career: CoachCareer): { large: number; small: number; refused: number } {
+export interface FundsPreview {
+  readonly large: number;
+  readonly small: number;
+  readonly refused: number;
+  /** Quanto cada resposta libera (já com o desconto dos pedidos anteriores). */
+  readonly largeAmount: number;
+  readonly smallAmount: number;
+}
+
+/** Chances e valores do próximo pedido de verba, mostrados antes de confirmar. */
+export function fundsPreview(career: CoachCareer): FundsPreview {
   const coach = coachOf(career);
   const club = career.clubs[coach.club];
   const sigmoid = (x: number) => 1 / (1 + Math.exp(-x));
@@ -651,7 +663,14 @@ export function fundsChances(career: CoachCareer): { large: number; small: numbe
   const repeat = FUNDS.repeatFactor ** coach.fundsRequests;
   const large = 0.45 * trust * health * repeat;
   const small = Math.min(1 - large, 0.55 * (0.5 + 0.5 * trust) * (0.4 + 0.6 * health) * repeat);
-  return { large, small, refused: Math.max(0, 1 - large - small) };
+  const revenue = club?.revenue ?? 0;
+  return {
+    large,
+    small,
+    refused: Math.max(0, 1 - large - small),
+    largeAmount: roundPrice(revenue * FUNDS.large * repeat),
+    smallAmount: roundPrice(revenue * FUNDS.small * repeat),
+  };
 }
 
 const RAISE: Readonly<Record<ObjectiveKind, ObjectiveKind>> = {
@@ -665,19 +684,16 @@ const RAISE: Readonly<Record<ObjectiveKind, ObjectiveKind>> = {
 
 function fundsResponse(career: CoachCareer, number: number): FundsResponse {
   const coach = coachOf(career);
-  const club = career.clubs[coach.club];
-  const chances = fundsChances(career);
+  const preview = fundsPreview(career);
   coach.fundsRequests += 1;
   const rng = coachRng(career.setup.seed, "funds", stageKey(career.year, career.half), number);
   const roll = rng.next();
-  const revenue = club?.revenue ?? 0;
-  const repeat = FUNDS.repeatFactor ** (coach.fundsRequests - 1);
-  if (roll < chances.large) {
+  if (roll < preview.large) {
     const condition = rng.chance(0.5) && coach.objective.kind !== "title" && coach.objective.kind !== "promotion" ? RAISE[coach.objective.kind] : null;
-    return { outcome: "large", amount: roundPrice(revenue * 0.06 * repeat * (FUNDS.large / 0.35)), condition, status: "pending" };
+    return { outcome: "large", amount: preview.largeAmount, condition, status: "pending" };
   }
-  if (roll < chances.large + chances.small) {
-    return { outcome: "small", amount: roundPrice(revenue * 0.025 * repeat * (FUNDS.small / 0.12)), condition: null, status: "pending" };
+  if (roll < preview.large + preview.small) {
+    return { outcome: "small", amount: preview.smallAmount, condition: null, status: "pending" };
   }
   return { outcome: "refused", amount: 0, condition: null, status: "none" };
 }

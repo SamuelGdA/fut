@@ -4,7 +4,7 @@ import { DevelopSection, MatchSection, OutputSection, PhilosophySection, Purchas
 import { SeasonSection } from "../tecnico/SeasonSection";
 
 /**
- * O Técnico no laboratório (GDD 56.12): as mesmas contas que o harness
+ * O Técnico no laboratório (GDD 42.12): as mesmas contas que o harness
  * (`pnpm balance:tecnico`) mede, com controles para mexer. Nada aqui é
  * sorteado à parte: são as funções do motor, com os elencos de verdade.
  */

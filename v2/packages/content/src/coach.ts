@@ -7,7 +7,7 @@ import { type CoachMessages, coachPt } from "./locales/coach.pt";
 import { generatedName } from "./names/generate";
 
 /**
- * Textos e conquistas do Técnico (GDD 56), em `@craque/content/coach`: o
+ * Textos e conquistas do Técnico (GDD 42), em `@craque/content/coach`: o
  * Craque não carrega nada disto. Os nomes dos jogadores gerados (lacunas dos
  * elencos, jovens da base e da IA) saem daqui, pelo id e pela nacionalidade.
  */
@@ -128,7 +128,7 @@ export const COACH_ACHIEVEMENTS: readonly CoachAchievement[] = [
     check: (career) => career.history.some((entry) => countryOf(entry.club) !== career.setup.identity.nationality),
   },
   { id: "tecnico:threeCountries", when: "anytime", check: (career) => new Set(career.history.map((entry) => countryOf(entry.club))).size >= 3 },
-  { id: "tecnico:revelations", when: "anytime", check: (career) => Object.values(career.legacy).filter((legacy) => legacy.revealed).length >= 5 },
+  { id: "tecnico:revelations", when: "anytime", check: (career) => Object.values(career.legacy).filter((legacy) => legacy.revealed && legacy.apps >= 30).length >= 5 },
   {
     id: "tecnico:comeback",
     when: "anytime",

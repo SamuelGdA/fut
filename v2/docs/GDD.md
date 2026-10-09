@@ -1,4 +1,11 @@
-# CRAQUE v2: Game Design Document
+# Futeiros v2: Game Design Document
+
+> **Futeiros (D50 a D58).** Este documento especifica os dois jogos do hub.
+> As seções 0 a 40 são o **Craque** (carreira de jogador, regras inalteradas);
+> a [seção 41](#41-o-hub-do-futeiros) é o hub e a
+> [seção 42](#42-técnico-a-carreira-de-treinador) é o **Técnico** (carreira de
+> treinador). O Técnico tem também um README próprio,
+> [`README-TECNICO.md`](../README-TECNICO.md).
 
 > **Revisão de 8 de outubro de 2026 (D47, motor `2.0.0-m8.3`).**
 > Esta revisão substitui as regras anteriores indicadas abaixo.
@@ -63,8 +70,8 @@
 > - Talento no Difícil usa **pesos** 45/34/15/4/1, soma 99: probabilidades reais
 >   45,45% / 34,34% / 15,15% / 4,04% / 1,01%. Normal: 28/34/22/11/5%.
 > - Validação: 547 testes unitários, 44 ponta a ponta, build e 51 metas de
->   balanceamento aprovados; todos os recordes alcançados. `pnpm verify` para
->   em quatro imports ausentes do módulo `manager` preexistente; detalhes na D47.
+>   balanceamento aprovados; todos os recordes alcançados. (As notas da época
+>   citavam um módulo `manager` que não existe neste repositório; ver D50.)
 
 **Residência consecutiva (D48):** sair do país interrompe a contagem; ao voltar,
 é preciso completar cinco novas temporadas seguidas. Anos de períodos separados
@@ -85,8 +92,9 @@ continua permitindo um build inteiramente desenhado. Troféus e prêmios carrega
 assim que entram na tela, sem depender do carregamento adiado. O Vite ignora
 os relatórios de testes para evitar travamento do observador no Windows.
 Validação D49: 550 testes unitários, 48 ponta a ponta e 51 metas no
-balanceamento completo aprovados. Bloqueios de `verify` e da amostra reduzida
-continuam explicitados na D49.
+balanceamento completo aprovados. A pendência da amostra reduzida foi
+resolvida na D57 (lote completo de Fenômenos no `balance:check`), e o `verify`
+roda inteiro.
 
 Especificação do CRAQUE v2, escrita do zero para a reescrita clean room de
 2026-09-29. Este documento é a **única referência funcional** da implementação:
@@ -129,7 +137,8 @@ os comandos, está no [`README.md`](../README.md).
 | 17 | Torcida e legado | 38 | Ferramentas de desenvolvimento |
 | 18 | Eventos de carreira | 39 | Invariantes |
 | 19 | Número da camisa | 40 | Metas de balanceamento e testes |
-| 20 | O rival | | |
+| 20 | O rival | 41 | O hub do Futeiros |
+| | | 42 | Técnico: a carreira de treinador |
 
 ---
 
@@ -2564,3 +2573,1127 @@ dia até o resultado ranqueado, o Hall com "E se...?" e conquistas, os erros
 páginas estáticas, jogo que não começa), o PWA (manifesto, jogo inteiro sem
 internet, imagens guardadas) e a acessibilidade (axe nos dois temas, teclado,
 leitor de tela). No celular, o laço é medido a cada turno: cabe na tela.
+
+**Como ficou (D50):** a suíte abre no hub, entra no Craque pelo cartão dele
+(recarregar volta ao hub, e "Continuar carreira" retoma a mesma decisão) e
+tem a jornada do Técnico (42.12). Sem Google Chrome, `PW_CHROMIUM_PATH` aponta
+para um Chromium instalado.
+
+---
+
+## 41. O hub do Futeiros
+
+O site se chama **Futeiros** e reúne dois jogos de futebol: o **Craque**, a
+carreira de jogador das seções 1 a 40, e o **Técnico**, a carreira de treinador
+da seção 42. O hub (`apps/game/src/screens/hub/HubScreen.tsx`) é a primeira
+tela. Ele não carrega motor nenhum: o motor do Técnico, os elencos e os textos
+dele só entram quando o jogador começa uma carreira (a identidade importa
+`features/tecnico/store.ts` na hora de começar).
+
+### 41.1 Abertura e navegação
+
+`startScreen` (`apps/game/src/app/startup.ts`) decide onde o jogo abre. A
+primeira regra que se aplicar vence:
+
+| Endereço | Abre |
+|---|---|
+| Caminho que não é o do jogo | Página não encontrada (`notFound`) |
+| Fragmento `#c=` (link de carreira, seção 29.2) | Resumo compartilhado (`shared`) |
+| `#lab`, só em desenvolvimento | Laboratório (`lab`) |
+| Qualquer outro | Hub (`hub`) |
+
+- Abrir ou recarregar o site sempre cai no hub. A carreira salva do Craque não
+  abre mais sozinha: ela continua pelo cartão do Craque (41.2). O Técnico não
+  tem save (D51), então recarregar nunca volta para a carreira dele.
+- A URL continua a mesma entre telas (seção 5); o botão voltar do sistema anda
+  pelo histórico.
+- `SCREEN_GAME` (`apps/game/src/app/navigation.ts`) diz de que jogo é cada tela:
+
+| Jogo | Telas |
+|---|---|
+| `hub` | `hub`, `achievements`, `notFound`, `lab` |
+| `craque` | `home`, `identity`, `appearance`, `career`, `summary`, `shared`, `challenge`, `hall`, `archived` |
+| `tecnico` | `tecnicoIdentity`, `tecnicoAppearance`, `tecnico`, `tecnicoLegacy` |
+
+- A barra mostra a marca Futeiros, que volta ao hub, e, dentro de um jogo, a
+  etiqueta dele ("Craque" ou "Técnico").
+- Sair do Técnico (marca, menu "Sair do Técnico", voltar do sistema) pede
+  confirmação ("Sair do Técnico?"). Confirmar leva ao destino e **não** apaga a
+  carreira: ela segue na memória da aba até a página ser recarregada. A ida
+  para o legado passa sem confirmação.
+- A tela da carreira e a do legado, abertas sem carreira em memória (depois de
+  recarregar, por exemplo), voltam ao hub.
+
+**Como ficou (D50):** substitui, na seção 5, a regra de recarregar retomando a
+Carreira ou o Resumo do Craque. O Craque não mudou de regra: `ENGINE_VERSION`
+continua `2.0.0-m8.4` e o título do Início dele continua "CRAQUE".
+
+### 41.2 Os cartões dos dois jogos
+
+No PC, os dois cartões ficam lado a lado sem rolar; no celular, empilhados.
+Cada cartão diz o que o jogo é em três linhas, mostra quantas conquistas
+daquele jogo foram liberadas e tem o botão de jogar.
+
+| | Craque | Técnico |
+|---|---|---|
+| Arte | A carta do rascunho do jogador | O avatar do rascunho do treinador, de terno (`outfit="coach"`) |
+| Linha de apoio | "Do primeiro contrato, aos 16 anos, até a despedida." | "24 temporadas no banco, quase sempre começando na segunda divisão." |
+| Três pontos | Uma decisão por temporada; ofertas, treinos e eventos; carreira salva neste aparelho | Três ações por etapa; elencos reais, mercado e base; mundo vivo, sem seleções |
+| Selo | nenhum | "Sem salvamento" |
+| Sem carreira | "Jogar" (abre o Início do Craque) | "Jogar" (abre a identidade) e o aviso "Recarregar a página encerra a carreira do Técnico." |
+| Com carreira | "Carreira salva: {sobrenome}, {idade} anos, OVR {ovr}", com "Continuar carreira" (ou "Ver o resumo", se o save está no resumo) e "Início do Craque" | "Em andamento nesta aba: {clube} · {ano}" (ou "Legado na tela"), com "Voltar à carreira" (ou ao legado) e "Jogar" |
+
+- O cartão do Técnico lê só `features/tecnico/presence.ts` (ativo, clube, ano,
+  encerrada), atualizado pelo store a cada comando: o hub não precisa do motor.
+- "Jogar" com uma carreira do Técnico em memória abre a identidade; começar
+  pede confirmação ("Começar outra carreira?") e encerra a anterior.
+- O rodapé leva às conquistas (com o total liberado dos dois jogos) e, só em
+  desenvolvimento, ao laboratório.
+
+### 41.3 Marca, PWA e erros
+
+- Título da página, manifesto (`name` "Futeiros: dois jogos de futebol",
+  `short_name` "Futeiros"), tela de abertura ("Abrindo o Futeiros"), aviso sem
+  JavaScript e páginas estáticas 404, 403, 500 e 503 dizem "Futeiros".
+- A página não encontrada ("Bola fora") volta ao hub ("Voltar ao jogo").
+- O painel de erro de uma tela usa `SCREEN_GAME`. Numa tela do Técnico, o texto
+  não promete carreira salva: "a carreira do Técnico continua nesta aba [...];
+  recarregar a página encerra a carreira". O botão de limpar dados só aparece
+  nas telas que leem o save do Craque (`career` e `summary`).
+- Pedaço de tela que não baixa por versão nova: no Técnico, o texto avisa que
+  recarregar encerra a carreira, que não é salva.
+- Aviso de versão nova do PWA: "Atualize quando quiser. A carreira do Craque
+  continua salva; a do Técnico acaba ao atualizar."
+
+### 41.4 Conquistas por jogo
+
+- As conquistas dos dois jogos ficam no mesmo banco. As do Técnico têm id
+  `tecnico:*` (`COACH_ACHIEVEMENTS`, `packages/content/src/coach.ts`; lista na
+  42.14).
+- A tela de conquistas tem a troca Craque/Técnico, com contagem própria de cada
+  jogo. O cartão de cada jogo no hub conta só as dele; o Início do Craque conta
+  só as que não começam com `tecnico:`.
+- As do Técnico são conferidas quando o histórico ganha uma temporada (fim de
+  temporada ou aposentadoria no meio dela) e quando a carreira acaba. São a
+  única coisa do Técnico que sobrevive ao recarregar.
+
+**Como ficou (D54):** separar a contagem evita que o Técnico mude os números
+que o Craque já mostrava.
+
+---
+
+## 42. Técnico: a carreira de treinador
+
+### 42.1 Visão e o laço da temporada
+
+O Técnico é uma carreira de **24 temporadas** (`CAREER_SEASONS`) no banco de
+reservas, nos mesmos clubes e competições de clubes do Craque, com elencos
+reais. O jogador decide pouco e com peso: **até 3 ações por etapa**
+(`ACTIONS_PER_STAGE`), escalação e tática livres, e um evento por etapa. O
+resto é simulado partida a partida, no mundo inteiro.
+
+- Motor puro e semeado em `packages/engine/src/coach/` (`@craque/engine/coach`,
+  fora do índice do motor do Craque). Todo sorteio passa por
+  `coachRng(semente, rótulo, ...partes)`. Versão `COACH_VERSION = 1.0.0`.
+- Todos os números de equilíbrio estão em `packages/engine/src/coach/tuning.ts`.
+- Toda mudança passa por `coachCommand`, que nunca altera o estado recebido:
+  devolve um estado novo ou o mesmo com o código da recusa. Comando fora de
+  fase é recusado sem efeito: clique repetido não duplica venda, receita nem
+  simulação.
+- A semente é sorteada a cada carreira. A primeira temporada é 2026.
+
+```
+propostas ──► etapa (até 3 ações + tática) ──► evento ──► simulação ──► resultados
+                 ▲                                │ (pausa: decisão no jogo)  │
+                 │                                ▼                           │
+                 └── 2º turno (só no lento) ◄──────────────────────────────────┤
+                                                                              ▼
+                       próxima temporada ◄── propostas ◄── avaliação ◄────────┘
+```
+
+**Ritmos** (`COACH_MODES`):
+
+| Ritmo | Etapas por temporada | Períodos simulados |
+|---|---|---|
+| Rápido (`fast`) | 1 | dias 0 a 364 |
+| Lento (`slow`) | 2, uma por turno | dias 0 a 149 e 150 a 364 |
+
+A temporada tem 300 dias de jogos e 65 de férias (`CALENDAR_DAYS`). O último
+período vai até o fim das férias para caber o Mundial de Clubes. No lento,
+cada turno tem as próprias 3 ações e o próprio evento; evolução, salários e
+receitas usam metade da temporada em cada turno (fração 0,5), e as duas
+metades somam o mesmo que o período único do rápido.
+
+**Resumo do período** (`report.ts`): posição e campanha na liga, fase alcançada
+em cada copa, evolução de OVR (com a marca de quem foi desenvolvido), lesões de
+10 dias ou mais, mudanças nas relações com o motivo, dinheiro do período
+(receitas, salários, transferências, premiações, caixa e verba), momentos,
+destaques (as 3 melhores notas médias entre quem fez 3 jogos ou mais),
+revelações (até 21 anos, 4 jogos ou mais, nota média de 6,8 ou mais, ou +2 de
+OVR), quem ficou abaixo do esperado (estrela ou titular com 4 jogos ou mais e
+nota média abaixo de 6,3), promessas resolvidas e características novas.
+
+### 42.2 Identidade do treinador
+
+- **Nome**: até 16 caracteres.
+- **Nacionalidade**: só os 15 países com segunda divisão no jogo
+  (`COACH_COUNTRIES`): ARG, BOL, BRA, CHI, COL, ECU, ENG, ESP, FRA, GER, ITA,
+  PAR, PER, URU e VEN. México e Estados Unidos ficam de fora, porque não têm
+  segunda divisão. Os dez países com segunda divisão completada por jogadores
+  gerados (ARG, BOL, BRA, CHI, COL, ECU, PAR, PER, URU e VEN) levam a marca ◆
+  na escolha.
+- **Ritmo**: rápido ou lento (42.1).
+- **Aparência**: o editor do Craque, com o avatar de terno (`outfit="coach"`) e
+  o uniforme do país; botão de sortear.
+- A tela avisa antes de começar: "A carreira do Técnico não é salva. Recarregar
+  ou fechar a página encerra a carreira e volta para o início."
+- Ficam guardados só o rascunho (`craque.v2.tecnico.draft`: nome,
+  nacionalidade, ritmo e aparência) e as conquistas. A carreira vive no store
+  `features/tecnico/store.ts`, sem `persist`.
+
+**Como ficou (D51 e D53):** além da identidade, o aviso de que não há save
+aparece no cartão do hub, na confirmação de saída, no `beforeunload` do
+navegador, no aviso de versão nova e no painel de erro (41.3). A suíte ponta a
+ponta fixa a semente pelo `sessionStorage` (`futeiros.e2e.seed`) e audita o
+armazenamento depois de uma carreira.
+
+### 42.3 Propostas
+
+**Iniciais** (`initialOffers`): três sorteios **independentes**. Cada um tira a
+divisão sozinho: 95% segunda, 5% primeira (`INITIAL_OFFERS.secondDivisionChance`),
+e depois um clube daquela divisão no país do treinador, sem repetir clube. Sem
+clube disponível na divisão, vale qualquer divisão do país. A chance de ao
+menos uma proposta de primeira é `1 − 0,95³ = 14,3%`.
+
+**O cartão de proposta** (`OfferCard`): clube, divisão, país (com a marca "Fora
+do país" quando é outro), força (média do OVR do melhor time), objetivo,
+verba, folha mensal, receita anual, finanças (saudável, equilibrada ou
+apertada, 42.11), dificuldade e, quando 25% ou mais do elenco é gerado, a
+fração gerada.
+
+```
+dificuldade = limitar(arredondar(1 + pressão_do_objetivo + pressão_financeira + prestígio + meta_apertada); 1; 5)
+pressão_do_objetivo: título 1,6; acesso 1,2; parte de cima 0,9; meio 0,4; evitar a queda 1,1; fazer o possível 0,3
+pressão_financeira: apertada 1; equilibrada 0,4; saudável 0
+prestígio: 4 ou mais = 1; 3 = 0,5; menos = 0
+meta_apertada: 0,6 se a posição exigida é melhor que a esperada
+```
+
+Na tela: 1 Tranquila, 2 Moderada, 3 Exigente, 4 Difícil, 5 Muito difícil.
+Clube maior não é emprego mais fácil.
+
+**Ao assinar** (`setCoachClub`): diretoria 60, torcida 50, crédito 0,5
+(`EVALUATION.creditStart`), verba da temporada, objetivo, papéis do elenco e a
+formação que rende mais com o elenco (filosofia inicial posse). As propostas
+depois de cada temporada estão na 42.13.
+
+### 42.4 Calendário e competições
+
+**O Técnico não tem seleções nem competições de seleções, por enquanto**
+(instrução do usuário). Nenhuma convocação, Copa do Mundo, copa continental de
+seleções ou data FIFA entra no calendário. A tela de competições diz "Só
+competições de clubes"; o hub diz "Mundo vivo, sem seleções". O Craque continua
+com as seleções dele.
+
+O Técnico joga as mesmas competições de clubes do Craque, partida a partida
+(`competitions.ts`). A memória da temporada anterior (tabelas, copas,
+continentais) vem do aquecimento do mundo do Craque com a mesma semente, e a
+classificação continental segue a seção 8.7.
+
+| Competição | Formato | Dias |
+|---|---|---|
+| Liga | Turno e returno pelo método do círculo, `games` rodadas por clube; mando alterna | rodadas espalhadas do dia 8 ao 292 |
+| Supercopa nacional | Campeão da liga contra o campeão da copa do ano anterior (o vice da liga, se for o mesmo); jogo único, neutro | 2 |
+| Supercopa continental | Campeões da primária e da secundária; jogo único, neutro | 4 |
+| Copa nacional | Todos os clubes do país, mata-mata; Copa do Brasil em ida e volta a partir das oitavas | os últimos dias da lista 24, 52, 80, 108, 164, 192, 220, 262, um por fase (final no 262) |
+| Copa da liga (ENG) | Mata-mata; semifinal em ida e volta | os últimos dias da lista 17, 45, 73, 101, 157, 185, 213, 241 (final no 241) |
+| Continentais | Preliminar, grupos e mata-mata conforme o número de classificados | preliminar 31; grupos 38, 59, 87, 115, 129, 143; mata-mata 171 e 178, 199 e 206, 227 e 234; final 283 (secundária e terciária, um dia depois) |
+| Intercontinental | Chaveamento dos campeões de CONMEBOL e CONCACAF da temporada e dos adversários genéricos (AFC 72, CAF 74, OFC 60); o vencedor enfrenta o campeão europeu da temporada anterior | 289, 292, 295, 298 |
+| Mundial de Clubes | Anos com `ano % 4 == 1`; cotas UEFA 12, CONMEBOL 6, CONCACAF 4 | 303, 306, 310, 314, 318 (férias) |
+
+- **Tabela**: pontos, saldo, gols pró, vitórias e, por fim, a força.
+- **Acesso e queda**: os `promotionSlots` últimos da primeira trocam com os
+  primeiros da segunda (seção 8.4).
+- **Copas**: cabeça de chave por força, com +20 para clubes da primeira
+  divisão; os mais fortes ganham folga até a potência de 2, e na primeira fase
+  o cabeça enfrenta o mais fraco que sobrou. As fases seguintes são sorteadas
+  livremente. Jogo único em casa do mais forte; em ida e volta, o mais forte
+  decide em casa. Final em jogo único é em campo neutro; na Copa do Brasil, a
+  final também é em ida e volta.
+- **Continentais**: com 32 ou mais classificados, chave de 32 (preliminar para
+  o excedente, 8 grupos de 4, os dois primeiros às oitavas); de 16 a 31, chave
+  de 16 (preliminar para o excedente, 4 grupos, quartas); com menos de 16,
+  mata-mata direto. Grupos em turno e returno, potes por força. Mata-mata em
+  ida e volta, final única e neutra.
+- **Mundial de Clubes**: os campeões das primárias nas quatro temporadas
+  anteriores, completados pelos mais fortes de cada confederação até a cota.
+  São 22 clubes numa chave de 16: os 12 mais fracos jogam a preliminar. Todos
+  os jogos em campo neutro. Começando em 2026, uma carreira de 24 temporadas
+  tem 6 edições.
+- **Cada fase de mata-mata é sorteada quando a anterior termina**: o resultado
+  do treinador muda quem segue. Jogo de copa marcado num dia em que um dos
+  clubes já joga muda para o dia livre mais próximo, até 3 dias de distância.
+- **Jogo decisivo empatado** (no placar ou no agregado): prorrogação com um
+  terço dos gols esperados (`MATCH.extraTime`) e pênaltis.
+
+**Como ficou (D55):** com número ímpar de clubes, cada volta da liga tem uma
+folga por rodada. Força relativa: só o elenco conta, sem bônus de continente
+(42.5).
+
+### 42.5 A partida
+
+Uma só conta de gols esperados vale para todos os jogos do mundo
+(`tactics.ts`, números em `MATCH` e `SECTOR_MIX`):
+
+```
+λ = 1,32 × e^(0,045 × (ATQ − DEF_adv) + 0,02 × (MEI − MEI_adv) ± 0,11)
+    × filosofia_a_favor × filosofia_contra_do_adversário × bola_parada
+    × reforço_a_favor × reforço_contra_do_adversário
+    × (1 − 0,1 × faltando) × (1 + 0,1 × faltando_adversário)
+λ limitado a [0,12; 4,2]; mando +0,11 em casa, −0,11 fora, 0 em campo neutro
+ATQ = 0,75 × ataque + 0,25 × meio
+DEF = 0,65 × defesa + 0,20 × goleiro + 0,15 × meio
+setor = média do rendimento de quem joga nele + 1,2 × (jogadores no setor − base)
+base: 4 defensores, 4 meias, 2 atacantes; setor vazio: média geral − 6 (goleiro: − 15)
+bola_parada = 1 + mín(0,04; 0,02 × titulares com Bola parada)
+```
+
+Os reforços vêm do treino (42.9), da previsibilidade (42.6) e da decisão no
+jogo (42.10).
+
+**Jogo da IA contra a IA** (`quickMatch`): gols por `Poisson(λ)` de cada lado.
+Cada clube joga com o melhor time disponível na formação fixa dele, com
+rendimento `nível + limitar(fase; −2; 2) + penalidade de posição` (contra o
+treinador, `nível + fase`, −3 fora da posição). Depois do placar, cada titular
+tem chance `0,022 × fator de idade` de se machucar.
+
+**Jogo do treinador** (`match.ts`), minuto a minuto:
+
+- Gol com chance `λ / 90` por minuto, recalculado com quem está em campo.
+- Autor sorteado pelo peso da vaga vezes `(nível / 70)³`: centroavante 0,32,
+  pontas 0,2, meia ofensivo 0,16, meias abertos 0,12, meia central 0,07,
+  volante 0,04, zagueiro 0,045, laterais 0,03, goleiro 0.
+- Assistência em 78% dos gols, peso da vaga vezes `(nível / 70)²`.
+- Nota: base 6,2; gol +0,9; assistência +0,45; vitória +0,35; derrota −0,35;
+  sem sofrer gol +0,4 (goleiro, zagueiros e laterais); ruído `N(0; 0,55)`;
+  entre 3 e 10 (`RATING`).
+- Lesão: chance por minuto `(0,022 / 90) × (1 + 0,04 × máx(0; idade − 28))`,
+  vezes 0,75 com Incansável (`INJURY`). Gravidade: leve 70% (4 a 14 dias),
+  média 25% (15 a 45), grave 5% (60 a 180).
+- Substituições automáticas pela Lei 3 da IFAB (`SUBSTITUTIONS`): até 5 trocas
+  em 3 paradas além do intervalo. Paradas táticas aos 60', 71' e 81': duas
+  trocas aos 60', depois uma (duas com placar de 2 gols ou mais). Sai quem tem
+  a pior nota no jogo, descontado o cansaço da idade (Incansável cansa menos),
+  nunca o goleiro; o reserva só entra se não for mais de 6 pontos pior, salvo
+  promessa de minutos. Lesionado sai no minuto; sem troca legal, o time segue
+  com um a menos.
+- Pênaltis: cinco cobranças, depois alternadas; conversão
+  `limitar(0,76 − 0,004 × (goleiro adversário − 70); 0,62; 0,86)`.
+
+**Só o elenco decide.** Nenhum bônus de continente ou de liga entra na conta. A
+sonda "trocado" do harness refaz o duelo com os elencos trocados de clube e o
+resultado inverte (erro 2,2e-16). No relatório, em jogo único e campo neutro,
+Barcelona (86,7) passa pelo Flamengo (80,9) em 70,1%; com os elencos trocados,
+29,9%.
+
+### 42.6 Tática, escalação e inscrição
+
+Não há barra de adequação tática: a formação só decide quantos jogadores cada
+setor tem e em que posição cada um joga.
+
+| Formação | Vagas |
+|---|---|
+| `4-4-2` | GOL, LD, ZAG, ZAG, LE, MD, MC, MC, ME, CA, CA |
+| `4-3-3` | GOL, LD, ZAG, ZAG, LE, MC, VOL, MC, PD, CA, PE |
+| `4-2-3-1` | GOL, LD, ZAG, ZAG, LE, VOL, MC, PD, MEI, PE, CA |
+| `3-5-2` | GOL, ZAG, ZAG, ZAG, MD, MC, VOL, MC, ME, CA, CA |
+| `5-3-2` | GOL, LD, ZAG, ZAG, ZAG, LE, MC, VOL, MC, CA, CA |
+| `4-1-4-1` | GOL, LD, ZAG, ZAG, LE, VOL, MD, MC, MC, ME, CA |
+
+**Filosofias** (`PHILOSOPHY`), multiplicadores dos gols a favor e contra:
+
+| Filosofia | A favor | Contra |
+|---|---|---|
+| Ofensiva | × 1,2 | `limitar(1,12 − 0,004 × (DEF própria − ATQ adversário); 1,05; 1,2)` |
+| Defensiva | × 0,8 | × 0,76 |
+| Posse | `1 + limitar(0,02 × (MEI − MEI adv); −0,1; 0,1)` | × 0,92 |
+| Contra-ataque | × 1,13 contra ofensiva ou posse, × 0,86 contra defensiva, × 1 contra contra-ataque; vezes `1 + mín(0,06; 0,02 × titulares velozes)` | × 0,94 |
+
+Nenhuma é sempre melhor. Pontos por jogo contra a mistura de abordagens da IA,
+no relatório: com 12 ou 8 pontos a menos, a defensiva; com 5 a menos, o
+contra-ataque; com 3 a menos, a defensiva; em forças iguais, o contra-ataque
+(diferença de 0,053 ponto para a pior); com 3 ou 5 a mais, a posse; com 8 ou 12
+a mais, a ofensiva.
+
+**A IA** escolhe a abordagem pela força: mais de 3 pontos acima, 55% ofensiva e
+45% posse; mais de 3 abaixo, 50% defensiva e 50% contra-ataque; perto, posse
+30%, ofensiva 25%, contra-ataque 25%, defensiva 20%. A formação da IA é fixa por
+clube: `4-3-3` 35%, `4-2-3-1` 25%, `4-4-2` 20%, `3-5-2` 10%, `4-1-4-1` 6%,
+`5-3-2` 4%.
+
+**Previsibilidade** (`PREDICTABILITY`), de 0 a 1:
+
+- Cada jogo soma 0,04. O adversário ganha `+6% × p` de gols e o time perde
+  `3% × p`.
+- Mudar reduz `p` por sorteio, conforme o que os rivais leem mais na temporada
+  (formação ou filosofia, 50% cada): formação lida `× U(0,3; 0,9)`, não lida
+  `× U(0,6; 0,95)`; filosofia lida `× U(0,05; 0,45)`, não lida `× U(0,3; 0,8)`;
+  4 titulares novos ou mais `× U(0,6; 0,95)`.
+- Metade de `p` passa para a temporada seguinte.
+- Com `p ≥ 0,5`, a etapa dá a pista: "Os adversários estão lendo o
+  seu esquema. Mudar formação ou filosofia pode surpreender."
+
+**Escalação.** O jogador escolhe titulares por vaga e o banco, livremente, na
+etapa e no evento, antes de simular; "Escalar automático" monta o melhor time
+disponível na formação. Trocar a formação mantém os mesmos onze nas vagas mais
+parecidas. Para cada jogo, o motor monta a ficha (`coachSheet`):
+
+- quem não pode jogar (lesionado ou fora da inscrição) é trocado pelo melhor
+  disponível para a vaga;
+- em jogo que não é grande, quem não é estrela e tem 6 jogos seguidos como
+  titular descansa com chance de 20%; em jogo de copa de menor peso (fora da
+  liga e dos grupos, com 5 pontos de força ou mais de vantagem), até 2 titulares
+  descansam, com 50% cada; o substituto não pode ser mais de 8 pontos pior
+  (`ROTATION`);
+- promessas de titularidade atrasadas tiram a vaga do titular mais fraco da
+  mesma posição, nunca de uma estrela (42.11);
+- o banco completa até o limite do país, promessas primeiro.
+
+Jogo grande: mata-mata decisivo (jogo único ou volta), semifinal ou final.
+
+**Penalidade de posição** (`POSITION_FIT`): posição alternativa −1, mesmo setor
+−3, outro setor −7, goleiro fora do gol (ou jogador de linha no gol) −25.
+Versátil perde metade, menos no gol.
+
+**Inscrição automática** (`REGISTRATION`): jovens de até 21 anos no ano da
+temporada ficam fora do teto; dos demais, entram os de maior OVR até 25 na
+Inglaterra e 30 nos outros países. Quem fica fora da lista não joga. A regra de
+formados no país (homegrown) não é aplicada. Contratar alguém acima de 21 anos
+é bloqueado quando o elenco já tem mais 5 que o teto.
+
+**Banco** (`BENCH_SIZE`): 12 no Brasil, na Itália e na Argentina; 9 nos demais.
+**Elenco mínimo** (`SQUAD_MINIMUM`): 18 jogadores com 2 goleiros; nenhuma venda
+pode deixar menos.
+
+**Como ficou (D53):** a inscrição inglesa completa complica sem criar escolha
+interessante; o teto de idade já faz o jogador pensar em quem subir da base.
+
+### 42.7 Mercado: vender e contratar
+
+**Vender** (`SALE`). O treinador oferece até 3 jogadores; cada um só uma vez
+por etapa.
+
+```
+compradores = clubes com força entre OVR − 6 e OVR + 3
+              e caixa + 0,4 × receita ≥ 0,8 × valor
+procura = compradores × 0,4 (32 anos ou mais) ou × 1,3 (até 24)
+          × 1,4 (à venda) × 0,5 (lesionado)
+procura: 14 ou mais = muita; 5 ou mais = média; menos = pouca
+chance de proposta: pouca 30%, média 60%, muita 85%
+preço = valor × U(0,75; 1,25) × (0,9 pouca; 1 média; 1,08 muita)
+```
+
+O comprador é um clube de força entre `OVR − 6` e `OVR + 4` que pode pagar,
+com peso `1 + máx(0; 6 − |força − OVR|)`. O vendido segue a trajetória dele no
+novo clube. Aceitar uma venda põe o preço no caixa e 60% dele na verba
+(`FINANCE.saleToBudget`). Nenhuma venda pode deixar o elenco abaixo do mínimo
+(42.6).
+
+Reação à venda: ídolo (60 jogos ou mais com o treinador, ou 30 se veio da base
+do clube) tira 9 da torcida, dá 2 à diretoria e tira 2 da satisfação de cada um
+do elenco; estrela tira 4 da torcida; reserva ou rotação insatisfeito vendido
+dá 1 de satisfação ao grupo; caixa negativo dá 2 à diretoria.
+
+**Contratar** (`PURCHASE`, `market.ts`). A busca mostra jogadores de outros
+clubes com OVR entre `força − 12` e `força + 20` do clube. Por padrão: OVR até
+`força + 4`, só quem cabe na verba e **sem os quase impossíveis** (o jogador
+pode pedir para vê-los). Os resultados vêm ordenados pela faixa de chance, e o
+treinador escolhe até 3 alvos.
+
+A chance de um negócio é a do jogador querer vezes a do clube dele liberar:
+
+```
+atratividade = força + 2 × (prestígio − 3) + 0,25 × (força média da liga − 70)
+               + continental (primária 1,5; secundária ou terciária 0,7)
+               + 0,06 × (reputação do técnico − 40)   (só no clube do treinador)
+expectativa = OVR − mín(3; 0,5 × máx(0; OVR − atratividade do clube atual))
+              (sem clube: OVR − 3)
+lacuna = expectativa − atratividade do comprador
+descida = força do vendedor − força do comprador
+folga = 4, + 4 se não é estrela nem titular onde está, + 3 com 32 anos ou mais
+jogador = limitar(σ((2,5 − lacuna) / 1,6) × σ((folga − descida) / 2,2) × estrela × papel; 0,0001; 0,97)
+estrela = máx(0,05; 1 − 0,15 × (OVR − 84)) se OVR ≥ 85 e a atratividade do comprador < OVR − 1
+papel no comprador: estrela ou titular × 1,15; reserva × 0,5; rotação ou promessa × 1
+clube = base do papel lá (estrela 0,25; titular 0,55; rotação 0,8; reserva 0,92; promessa 0,7)
+        × σ((força comprador − força vendedor + 3) / 2,5) × 1,6   (só estrela ou titular)
+        × 1,5 (à venda) × 1,3 (31 anos ou mais), limitado a [0,01; 0,97]; sem clube: 1
+```
+
+O teto do desconto de ambição é `PURCHASE.ambitionCap` (3): o craque de um
+clube pequeno aceita um vizinho do mesmo porte, nunca um clube bem menor. O
+piso `PURCHASE.playerFloor` (0,0001) faz o negócio nunca ser impossível.
+
+A tela mostra uma faixa, nunca a conta: abaixo de 5% "Quase impossível"; abaixo
+de 25% "Difícil"; abaixo de 55% "Possível"; acima, "Provável". Confirmar sorteia
+as duas respostas: o clube não libera, o jogador não tem interesse, ou o clube
+aceita vender com preço e salário pedidos.
+
+```
+preço = valor × U(faixa do papel) × (1 + 0,03 × máx(0; descida))
+faixa: estrela 1,35 a 1,6; titular 1,15 a 1,35; rotação 1 a 1,15; reserva 0,85 a 1; promessa 1,1 a 1,4
+salário = máx(salário atual × U(1,05; 1,3); salário do OVR) × (1 + 0,04 × máx(0; descida))
+```
+
+Aceitar exige verba, caixa acima de `−25%` da receita
+(`FINANCE.debtLimit`), folha abaixo do teto (70% da receita por mês) e vaga
+na inscrição; a tela mostra verba, caixa e folha depois do negócio antes do
+aceite. Cada aceite é validado de novo: um negócio aceito pode impedir o
+seguinte.
+
+No relatório, a mediana da chance cai a cada degrau de diferença entre o OVR
+do alvo e a força do comprador. Flamengo (80,9): 72,3% no próprio nível, 52,5%
+com +2, 27,8% com +4, 16,1% com +6, 0,869% com +8. Goiás (70,5): 54,2%, 27,3%,
+7,5%, 1,2%, 0,132%. Mbappé (91, Real Madrid) no Flamengo: 0,0497%; no
+Manchester City: 23,6588%.
+
+**Como ficou (D56):** o pedido do produto é que trazer alguém muito melhor seja
+muito difícil e um craque mundial num clube pequeno, quase impossível, com a
+conta à vista no laboratório.
+
+### 42.8 O jogador e o que a tela mostra
+
+| Escondido (só no motor) | O que a tela mostra |
+|---|---|
+| Nível contínuo (`level`) | OVR, o nível arredondado |
+| Potencial (`potential`) | Uma frase: pode crescer muito, ainda deve crescer, pode crescer um pouco, perto do limite, no auge, na fase final da carreira |
+| Satisfação de 0 a 100 | Uma palavra: satisfeito, neutro, insatisfeito |
+| Fase de −2 a +2 | Uma palavra: em grande fase, boa fase, fase normal, fase ruim, fase péssima |
+| Rendimento efetivo | Nada |
+| Longevidade, notas recentes | Nada |
+
+A projeção `apps/game/src/features/tecnico/view.ts` é a única porta da tela
+para os jogadores, e `view.test.ts` reprova se `level`, `potential`,
+`satisfaction`, `longevity` ou `recentRatings` aparecerem. Só o laboratório, em
+desenvolvimento, mostra os valores escondidos.
+
+**Criação** (`players.ts`): `nível = OVR + U(−0,45; 0,45)`. Potencial escondido
+pela idade: até 18 anos `OVR + U(5; 15)`, mais `U(3; 8)` em 8% dos casos; até
+20, `U(3; 12)` mais `U(2; 6)` em 6%; até 23, `U(1; 8)`; até 26, `U(0; 4)`;
+depois, `U(0; 1,2)`; teto 97. Longevidade `N(0; 1,5)` anos, com um piso para
+quem já está num elenco no começo: o declínio não pode ter começado mais de 1
+ano antes (`EVOLUTION.veteranOverStart`), senão um meia de 36 anos perderia de 8
+a 10 de OVR já na primeira temporada. Satisfação inicial `62 + U(−6; 6)`.
+
+**Indicação do potencial**: `folga = potencial + erro fixo − nível`, com erro
+fixo por jogador entre −3 e +3. 31 anos ou mais: fase final; 27 ou mais com
+folga abaixo de 2: no auge; folga acima de 10: pode crescer muito; acima de 5:
+ainda deve crescer; acima de 1,5: pode crescer um pouco; senão, perto do limite.
+
+**Satisfação** (`SATISFACTION`). Satisfeito com 66 ou mais, insatisfeito abaixo
+de 40. Por jogo, conforme o papel:
+
+| Papel | Titular | Entrou no jogo | No banco sem entrar | Fora |
+|---|---|---|---|---|
+| Estrela | +0,5 | +0,3 | −1,6 | −1,8 |
+| Titular | +0,4 | +0,24 | −1,2 | −1,4 |
+| Rotação | +0,7 | +0,42 | −0,25 | −0,45 |
+| Reserva | +0,8 | +0,48 | −0,05 | −0,1 |
+| Promessa | +1 | +0,6 | 0 | −0,05 |
+
+Quem aceita ser reserva (de saída, quem tem 31 anos ou mais e 35% dos outros;
+uma conversa pode convencer) não perde enquanto as vezes no banco sem entrar
+forem até 25% dos jogos disponíveis; posto à venda ou poupado pela rotação
+também não perde. No fim de cada período, a campanha mexe em todos:
+
+```
+satisfação += limitar((esperada − posição) / máx(2; n / 5); −1; 1) × 4   (60% da queda com um Líder no elenco)
+satisfação += 0,1 × (60 − satisfação)
+na virada, mais: satisfação += 0,2 × (60 − satisfação)
+```
+
+**Fase**: média das últimas 6 notas: abaixo de 5,8 é −2; abaixo de 6,25, −1;
+abaixo de 6,85, 0; abaixo de 7,25, +1; acima, +2. Sem jogar, a fase volta 0,1
+por jogo em direção a 0.
+
+**Rendimento efetivo** (escondido):
+
+```
+rendimento = nível + limitar(máx(−4; humor + fase) + características; −4; 3) + penalidade de posição
+humor, pela satisfação: insatisfeito −3; neutro 0; satisfeito +1
+```
+
+Um 75 insatisfeito rende como 72.
+
+**Papel esperado** (`roleFor`): posto do jogador no setor dele (titulares: 1
+goleiro, 4 defensores, 3 meias, 3 atacantes). Titular com OVR pelo menos 3
+acima da força do clube é estrela; titular comum, titular; quem não é titular
+e tem até 20 anos é promessa; os 2 seguintes de cada setor de linha são
+rotação; o resto, reserva. Definido na chegada e na virada, quando cai no
+máximo um degrau por temporada no clube do treinador.
+
+**Características** (`TRAIT_EFFECTS`), no máximo 2 por jogador:
+
+| Característica | Efeito |
+|---|---|
+| Veloz | +2% de gols a favor por titular no contra-ataque, até +6% |
+| Bola parada | +2% de gols a favor por titular, até +4% |
+| Decisivo | +2 de rendimento em jogo grande |
+| Muralha | +1 de rendimento como zagueiro ou volante |
+| Incansável | 75% do risco de lesão; cansa menos nas trocas |
+| Versátil | metade da penalidade fora da posição |
+| Líder | o grupo sente 60% da queda de satisfação por resultados |
+| Clássico | +2 de rendimento contra o rival |
+| Mentor | jovens de até 21 anos do elenco evoluem 15% mais |
+
+As iniciais vêm das fontes (42.15). No clube do treinador, com fase de +1 ou
+mais, o jogador pode ganhar uma, com chance de 6% por candidata
+(`EVOLUTION.traitChance`): Decisivo com 2 gols em jogos grandes, Clássico com 2
+em clássicos, Bola parada com 2 de bola parada, Líder com 28 anos ou mais, 15
+jogos como titular e nota média 7, Incansável com mais de 10 jogos disponíveis
+e 85 minutos por jogo disponível. Mentor também chega por evento.
+
+**Evolução** (`evolution.ts`), uma atualização por período, para todo o mundo:
+
+```
+ganho = fração × 5 × idade × folga × minutos × (1 + 0,15 × desempenho) × mentor
+idade = 1 / (1 + e^((idade − (pico − 2)) / 1,6)); pico: goleiro 30, defesa 28, meio 27,5, ataque 26,5
+folga = (máx(potencial − nível; 0) + 0,3) / (máx(potencial − nível; 0) + 5,3)
+minutos = 0,45 + 0,55 × mín(1; jogos por temporada / 32)
+desempenho = limitar((nota média − 6,6) / 0,6; −1; 1)   (só no clube do treinador; IA: 0)
+declínio = fração × (0,35 × x + 0,08 × x²) × (1 − 0,2 × desempenho)
+x = idade − (31 + 2 goleiro ou + 1 defensor + longevidade), se positivo
+nível novo = limitar(nível + ganho − declínio + N(0; 0,6 × √fração); 30; 97)
+o ganho nunca passa de potencial + 1
+```
+
+Na IA, os jogos vêm do posto no elenco: os 11 melhores 30 por temporada, os 7
+seguintes 12, os outros 6 (até 20 anos) ou 3. A fase da IA é sorteada a cada
+período, `N(0; 0,7)`.
+
+**Valor e salário**: valor estimado pela curva do Craque (OVR e idade; a tela
+diz que é estimativa). Salário mensal pelo OVR, igual em qualquer clube:
+`máx(2.000; 0,11 × valor de base aos 27 anos / 12)`, em passos de 500.
+
+Jogador gerado tem a marca ◆ "Fictício".
+
+### 42.9 Treinar, desenvolver, base, vestiário e verba
+
+**O processo de cada ação.** Abrir e escolher alvos é livre. Confirmar gasta 1
+das 3 ações e produz as respostas; aceitar ou recusar cada resposta não gasta
+nada. "Concluir" fecha o processo e recusa o que ficou pendente (conversa sem
+resposta fica com a primeira opção). Cancelar antes de confirmar não custa
+nada. Dinheiro, folha e elenco só mudam no aceite. Um processo aberto de cada
+vez. Escalação, tática e a consulta ao elenco são livres.
+
+| Ação | Alvos | Respostas |
+|---|---|---|
+| Vender | até 3 do elenco | uma proposta ou nenhuma por jogador (42.7) |
+| Contratar | até 3 de outros clubes ou livres | uma resposta por alvo (42.7) |
+| Treinar | 1 setor | aplica na hora |
+| Desenvolver | até 3 do elenco | aplica na hora |
+| Base | 1 dos 5 garotos | aplica na hora |
+| Vestiário | até 3 conversas ou uma reunião | uma resposta por conversa, ou o resultado da reunião |
+| Pedir verba | nenhum: a folha mostra as chances e os valores de agora | a resposta da diretoria |
+
+**Treinar** (`TRAINING`): cada vez no mesmo setor rende menos: +4%, +2,5% e
++1,5%, no máximo 3 vezes e 8% por setor. Ataque multiplica os gols a favor por
+`1 + treino`; defesa multiplica os gols sofridos por `1 − treino`; meio-campo
+dá metade do valor para os dois lados. Vale no período simulado a seguir.
+
+**Desenvolver** (`DEVELOP`): até 3 jogadores ainda não marcados na etapa. O
+bônus entra inteiro na próxima atualização:
+
+```
+bônus = limitar(0,25 × (potencial − nível); 0,8; 2,2) × fator + |N(0; 0,25)|
+fator: até 21 anos 1; até 25, 0,8; até 29, 0,5
+acima de 29: sem bônus; se o período for de queda, a queda cai pela metade
+```
+
+No relatório, até 21 anos o ganho médio sobe de 2,81 para 4,74 (+1,93); de 22 a
+25, de 1,98 para 3,19 (+1,21); de 26 a 29, a chance de o OVR subir vai de 69,0%
+para 90,8%.
+
+**Base** (`YOUTH`): cinco garotos por etapa, sorteados no começo dela e
+guardados; repetir a ação escolhe outro entre os que sobraram.
+
+| Faixa | Peso | OVR (sobre a âncora do clube) | Potencial (sobre a âncora) |
+|---|---|---|---|
+| Fraco | 25 | −22 a −16 | −12 a −6 |
+| Mediano | 60 | −18 a −12 | −6 a +1 |
+| Bom | 12 | −14 a −8 | +1 a +6 |
+| Craque | 3 | −10 a −2 | +6 a +14 |
+
+Idade de 16 a 19 anos, com `+1,2 × (idade − 17)` de OVR; potencial pelo menos
+OVR + 2; OVR entre 40 e 85. A tela mostra só posição, idade, país (8% de
+estrangeiros), característica (30% dos bons e craques, 6% dos outros), custo e
+salário. A descrição ("Cru", "Regular", "Promissor", "Especial") aponta a faixa
+vizinha em 30% das vezes. OVR e potencial aparecem depois de subir. Custo
+`2% × U(0,6; 1,4)` do valor de um titular do clube (OVR da âncora, 26 anos),
+pago do caixa; salário `máx(1.500; 25% × U(0,6; 1,2)` do salário do OVR da
+âncora). Quem sobe chega como promessa, com satisfação 70, e conta como
+revelado pelo treinador.
+
+**Vestiário.** Conversar com até 3: às vezes, só de conversar o jogador já
+melhora (satisfeito: +3; os outros: 50% de chance de +2 a +5). O que ele diz
+depende do momento, na ordem: promessa ativa; quer sair (à venda, ou
+satisfação abaixo de 32); quer minutos (estrela ou titular com menos de metade
+dos jogos como titular em 4 disponíveis, ou rotação com menos de um quarto em
+6); fase ruim (−1 ou pior); reserva sem estar satisfeito; saudade de casa
+(estrangeiro de até 23 anos com satisfação abaixo de 58); tudo bem.
+
+| O que ele diz | Respostas (chance; deu certo / não deu) |
+|---|---|
+| Quer minutos | prometer vaga (+12, promessa de titular em 60%); pedir paciência (60%; +5 / −4); ser franco (60%; −2 e aceita o banco / −10) |
+| Quer sair | pôr à venda (+6); convencer (45%; +12 / −8); prometer minutos (+8, promessa de 6 jogos) |
+| Promessa | garantir (+3); desfazer (−6; a promessa fica "desfeita": sai da lista e não conta nem como cumprida nem como quebrada) |
+| Fase ruim | dar confiança (65%; fase +1 e +2 / −2); poupar (+2, fase +0,5) |
+| Papel | explicar (60%; +4 e aceita o banco / −4); prometer minutos (+8, 6 jogos) |
+| Saudade | ajudar com a família (+10, 20 mil do caixa); pedir paciência (60%; +5 / −4) |
+| Tudo bem | elogiar (+4); desafiar (60%; fase +1 / −3) |
+
+Reunião com o grupo: **apoiar** dá +4 a todos quando torcida ou diretoria está
+abaixo de 50 (senão +2), e +2 a mais aos insatisfeitos; **cobrar** dá certo em
+55% quando o momento é ruim (senão 35%): fase +0,5 aos titulares e +2 à
+diretoria; dando errado, −4 de satisfação a todos.
+
+**Pedir verba** (`FUNDS`): no máximo duas liberações por temporada. Não há
+alvo: a folha mostra as chances e os valores do pedido (`fundsPreview`);
+confirmar gasta a ação e sorteia a resposta, e cancelar antes não custa nada.
+
+```
+confiança = σ((diretoria − 55) / 8); saúde = σ((caixa / receita + 0,05) / 0,08)
+repetição = 0,6 ^ pedidos anteriores na temporada
+grande = 0,45 × confiança × saúde × repetição               → FUNDS.large (6%) da receita × repetição
+pequena = mín(1 − grande; 0,55 × (0,5 + 0,5 × confiança) × (0,4 + 0,6 × saúde) × repetição) → FUNDS.small (2,5%) da receita × repetição
+recusa = o resto
+```
+
+Metade das liberações grandes vem com condição, mostrada antes do aceite: o
+objetivo sobe um degrau (evitar a queda ou fazer o possível para meio; meio
+para parte de cima; parte de cima para título) e a posição exigida sobe 2.
+Objetivo de título ou de acesso não recebe condição.
+
+### 42.10 Eventos e decisões no meio do jogo
+
+Um evento por etapa, sem gastar ação, sorteado ao ir para o evento
+(`events.ts`). Em 38% das etapas (`STAGE_EVENTS.matchShare`) o evento é uma
+decisão no meio de um jogo, que fica armada para a simulação; no resto, sai um
+evento fora de campo pelo peso, entre os que se aplicam. Sem nenhum evento
+fora de campo possível, a etapa tem decisão no jogo. O evento fora de campo é
+resolvido antes de simular; a tela mostra a chance de cada opção ou "Sem
+sorteio".
+
+| Evento | Tipo | Quando (peso) | Opções |
+|---|---|---|---|
+| Titular insatisfeito | pedido | estrela ou titular insatisfeito (6) | prometer (+14, titular em 70%); aumento de 30% do salário (+10; o caixa paga 12 meses do aumento); firmeza (50%; +3 e grupo +2 / −10 e à venda) |
+| Pedido para sair | pedido | insatisfeito com OVR 60 ou mais (5) | vender (preço `valor × U(0,95; 1,2)`, grupo +1); recusar (40%; +2 / −14 e grupo −2); prometer 6 jogos (+8) |
+| Joia da base | oportunidade | até 20 anos com 5 ou mais de folga (5) | dar chance (+10, 5 jogos, torcida +2); elogiar em público (55%; torcida +3 e fase +1 / fase −1); paciência (−3, titulares +2) |
+| Crise de lesões | crise | 3 lesionados ou mais (6) | departamento médico (2% da receita, recuperações 10 dias mais curtas); rodar o elenco (reservas +4, treino de meio) |
+| Semana de clássico | clube | clássico por jogar (4) | inflamar (60%; treino de ataque e torcida +3 / fase −1 dos titulares); acalmar (treino de defesa, grupo +1) |
+| Diretoria animada | oportunidade | diretoria 55 ou mais (3), senão (1) | aceitar 6% da receita na verba (diretoria −2); recusar (diretoria +3) |
+| Patrocínio polêmico | oportunidade | sempre (3) | aceitar 5% da receita no caixa (torcida −4); recusar (torcida +3) |
+| Protesto da torcida | crise | torcida abaixo de 38 (7) | conversar (55%; torcida +9 / −4); focar no trabalho (diretoria +2, torcida −3, treino de meio) |
+| Vazamento | crise | 2 insatisfeitos ou mais (4) | caçar o culpado (50%; grupo +3 e diretoria +2 / grupo −5); unir (grupo +2, diretoria −2) |
+| Veterano quer ajudar | clube | 31 anos ou mais sem Mentor e um jovem de até 21 (3) | aceitar (ganha Mentor, +6, jovens +3); focar nele (fase +1) |
+| Proposta pelo reserva | oportunidade | rotação ou reserva com OVR 55 ou mais; a proposta vem do rival, quando houver (3) | vender (preço `valor × U(1,15; 1,45)`, torcida −5 se for o rival, senão −1); manter (+5 e promessa de não vendê-lo até o fim da temporada) |
+| Pedido de aumento | pedido | fase +1 com 3 participações em gol (4) | aumento de 35% (+12; o caixa paga 12 meses do aumento); recusar (60%; −2 / −12 e fase −1) |
+| Dor no treino | crise | estrela ou titular (2) | arriscar (50%; 6 dias fora / 32 dias); poupar (18 dias, +3) |
+| Caixa no vermelho | crise | caixa negativo (7) | pôr o maior salário à venda (diretoria +4, ele −4); cortar 3% da receita da verba (diretoria +2) |
+| Briga no vestiário | crise | um de 30 anos ou mais e um de até 22 (2) | apoiar o veterano (+6, jovens −6); apoiar os jovens (jovens +5, ele −8, promessa de 8 jogos para os jovens, `PROMISES.youthGames`); multar (60%; diretoria +2 e grupo +1 / grupo −3) |
+| Pressão por resultados | clube | 5 jogos e pelo menos 4 posições abaixo da esperada (6) | blindar o grupo (grupo +3, torcida −2); cobrar (50%; fase +1 do grupo / grupo −3) |
+| Boa fase | oportunidade | 5 jogos e pelo menos 2 posições acima da esperada (5) | comemorar (torcida +4, grupo +2); investir 4% da receita na verba (diretoria +2) |
+| Excursão de pré-temporada | clube | primeira etapa sem jogos (3) | excursão (3% da receita no caixa; 70%, senão também fase −1 dos titulares); concentração (treino de meio) |
+
+Números de satisfação sem alvo são do jogador do evento. Treino ganho por
+evento soma ao treino da etapa (42.9).
+
+**Decisão no jogo.** A etapa avisa antes de simular: "Um jogo desta etapa vai
+pedir uma decisão sua." O evento armado dispara no primeiro jogo do treinador no
+período cuja importância alcança a exigida pelo andamento; o último jogo do
+período sempre dispara.
+
+| Importância | Jogo |
+|---|---|
+| 5 | final |
+| 4 | mata-mata decisivo |
+| 3 | clássico |
+| 2 | outro mata-mata, fase de grupos, ou liga depois da 8ª rodada contra um vizinho de até 2 posições |
+| 1 | o resto |
+
+Exigida: 5 até 30% dos jogos do período, 4 até 55%, 3 até 75%, 2 até 90%, 1
+depois. O jogo pausa no primeiro minuto a partir dos 55' com no máximo um gol
+de diferença (no agregado, se houver); senão, aos 70'.
+
+| Situação | Opção | Gols a favor | Gols contra | Dá certo se |
+|---|---|---|---|---|
+| Perdendo | Tudo ao ataque | × 1,5 | × 1,4 | pelo menos empatar |
+| Perdendo | Ajustar sem desespero | × 1,18 | × 1,05 | pelo menos empatar |
+| Perdendo | Evitar o vexame | × 0,85 | × 0,75 | não piorar o placar |
+| Empatando | Ir para cima | × 1,32 | × 1,25 | vencer |
+| Empatando | Equilibrar | × 1,08 | × 0,95 | não perder |
+| Empatando | Segurar o ponto | × 0,78 | × 0,68 | não perder |
+| Ganhando | Fechar a casinha | × 0,75 | × 0,62 | manter a vitória |
+| Ganhando | Buscar mais gols | × 1,22 | × 1,12 | manter a vitória |
+| Ganhando | Administrar | × 0,95 | × 0,9 | manter a vitória |
+
+Cada opção mostra o objetivo, a chance de dar certo e as chances exatas de
+vitória, empate e derrota no fim, calculadas pelo próprio modelo: os gols
+esperados de cada lado no resto do jogo (`λ × mín. restantes / 90`, pelo menos
+5 minutos), com o elenco em campo naquele minuto e o multiplicador da opção,
+numa grade de Poisson de 0 a 8 gols. A chance mostrada fica entre 3% e 97%. A
+escolha vale até o fim do jogo; o que já aconteceu fica igual, e o resto usa um
+fluxo de sorteio próprio da opção. Dar certo soma 1 à torcida (3 numa final).
+
+### 42.11 Diretoria, torcida, elenco, objetivo, finanças e promessas
+
+**Barras**, de 0 a 100, sempre à vista no placar do técnico, em palavra:
+
+| Barra | 65 ou mais | 45 a 64 | 30 a 44 | abaixo de 30 |
+|---|---|---|---|---|
+| Diretoria | Confiante | Atenta | Impaciente | No limite |
+| Torcida | Apaixonada | Exigente | Irritada | Revoltada |
+| Elenco | Unido | Estável | Dividido | Rachado |
+
+A barra do elenco é a média das satisfações (nunca a de um jogador); o número
+inteiro de cada barra só vai para o leitor de tela. Diretoria começa em 60 e
+torcida em 50 em cada clube novo. O placar também mostra caixa, verba e
+reputação.
+
+No fim de cada período, com `r = limitar((esperada − posição) / máx(2; n / 5); −1,5; 1,5)`:
+
+- torcida `+ r × 3,5` no 1º turno do lento, `+ r × 5` no fim da temporada;
+  ±2 por clássico ganho ou perdido;
+- diretoria `+ r × 4` no 1º turno do lento;
+- no fim da temporada: torcida +6 por título, +8 pelo acesso, −10 pela queda; a
+  diretoria passa a valer a confiança da avaliação (42.13).
+
+Mudanças abaixo de meio ponto não contam; as outras são arredondadas.
+
+**Objetivo** (`objectiveFor`). A expectativa de cada clube na liga é
+`força + 1,2 × (prestígio − 3)`, e a posição esperada é o posto dele nessa
+ordem. A mesma colocação pode ser sucesso num clube e fracasso em outro.
+
+| Divisão | Posição esperada | Objetivo | Cumpre com |
+|---|---|---|---|
+| 2ª | até as vagas de acesso | Subir de divisão | o acesso |
+| 2ª | até 2 × vagas + 2 | Parte de cima | 2 × vagas + 2 ou melhor |
+| 2ª | até n − 3 | Meio da tabela | metade de cima |
+| 2ª | pior | Fazer o possível | n − 2 ou melhor |
+| 1ª | 1º ou 2º | Brigar pelo título | 2º ou melhor |
+| 1ª | até n / 4 | Parte de cima | máx(4; n / 4) ou melhor |
+| 1ª | até 60% da tabela | Meio da tabela | metade de cima |
+| 1ª | pior, com rebaixamento | Evitar a queda | n − vagas de queda ou melhor |
+| 1ª | pior, sem rebaixamento | Fazer o possível | n − 3 ou melhor |
+
+**Finanças** (`FINANCE`, euros, salário mensal):
+
+```
+receita inicial = 0,3 × valor do elenco × (1ª divisão 1; 2ª 0,8)
+caixa inicial = receita × U(−0,08; 0,3), fixo por clube
+por período: caixa += receita × fração − folha × 12 × fração
+teto da folha = 70% da receita, por mês
+verba da temporada = 0,4 × receita + 0,3 × máx(0; caixa − 0,2 × receita) + 0,5 × sobra da verba anterior
+receita seguinte = (0,8 × receita + 0,2 × 0,3 × valor do elenco × divisão)
+                   × 1,25 (acesso) × 0,8 (queda) × 1,05 (algum título), no mínimo 500 mil
+```
+
+Premiação no fim da temporada, em fração da receita: liga `0,6% × posições
+acima do último` mais 12% ao campeão; título de copa nacional, copa da liga,
+supercopa nacional ou Intercontinental 6%; título continental (inclusive a
+supercopa continental) ou Mundial de Clubes 20%; acesso +25%; queda −5%
+(`−20% × 0,25`).
+
+Finanças na tela: **apertada** com caixa negativo ou folha anual de 65% da
+receita ou mais; **saudável** com caixa de 15% da receita ou mais e folha anual
+de até 50%; senão, **equilibrada**. No relatório, 222 de 226 clubes de segunda
+divisão e 259 de 263 de primeira têm 3 alvos do próprio nível ao alcance da
+verba e da folha logo no começo; os que não têm estão com a folha acima do
+teto e precisam vender antes.
+
+**Promessas.** Nascem de conversas e eventos e aparecem no Clube com o prazo.
+
+| Promessa | Origem | Cobrança no prazo |
+|---|---|---|
+| Titular em uma parte dos jogos | conversa (60%, `PROMISES.startsShare`), Titular insatisfeito (70%) | titularidades sobre jogos disponíveis desde a promessa |
+| Pelo menos N jogos | conversa (6, `PROMISES.minutesGames`), Pedido para sair (6), Joia da base (5) | jogos desde a promessa ≥ `mín(N; metade dos disponíveis)` |
+| Não ser vendido | Proposta pelo reserva (manter) | ainda no clube no prazo; enquanto vale, aceitar uma venda dele é bloqueado |
+| N jogos para os jovens | Briga no vestiário (apoiar os jovens, 8) | jogos somados dos jovens de até 21 anos do elenco desde a promessa ≥ N; os jovens do banco entram primeiro nas trocas |
+
+- Prazo: fim do turno no 1º turno do lento; senão, fim da temporada. "Não
+  ser vendido" vale sempre até o fim da temporada.
+- Desfazer a promessa numa conversa (42.9) a deixa "desfeita": não conta na
+  avaliação.
+- Lesão suspende a cobrança: com menos de 3 jogos disponíveis desde a
+  promessa, ela conta como cumprida.
+- Cumprida (`PROMISES.kept`): +12 ao jogador e +0,5 a cada um do elenco
+  (relação do elenco +2). Quebrada (`PROMISES.broken`): −22 ao jogador, −1 a
+  cada um do elenco (relação −4) e −3 à diretoria.
+- A ficha do jogo respeita as promessas: titularidade atrasada ganha a vaga do
+  titular mais fraco da posição (custa força em campo nesses jogos); promessa
+  de minutos entra primeiro nas trocas e no banco.
+- Na avaliação, cada promessa da temporada vale ±0,2, limitado a ±0,6.
+
+### 42.12 Metas de balanceamento e laboratório
+
+`pnpm balance:tecnico` (`tools/balance/src/tecnico/`) mede o Técnico e grava o
+relatório versionado `tools/balance/relatorios/tecnico.md`. As **sondas** fazem
+contas exatas sobre o modelo, sem sorteio (`coach/probes.ts`, as mesmas do
+laboratório). As **carreiras automáticas** jogam o mundo inteiro com uma
+política fixa: equilibrada (treina, desenvolve, contrata ou sobe da base),
+passiva (nenhuma ação) e gastadora (contrata em toda etapa). A rodada versionada
+usa a semente `tecnico-m1`, 16 carreiras e 384 temporadas (8 equilibradas, 4
+passivas, 4 gastadoras). `pnpm verify` roda a mesma rodada sem gravar
+o arquivo (`balance:tecnico:check`). Metas em
+`tools/balance/src/tecnico/targets.ts`: **23 de 23 atendidas**.
+
+| Meta | Alvo | Medido |
+|---|---|---|
+| Propostas iniciais: cada sorteio independente, 95% segunda divisão | 95% ± 0,5 ponto em 60 mil sorteios | 95,14% (pelo menos uma de 1ª em 13,9% das carreiras; esperado 14,3%) |
+| Filosofias: cada uma é a melhor em alguma faixa de força, nenhuma em todas | as quatro aparecem como melhor | defensiva, contra-ataque, posse, ofensiva |
+| Filosofias em forças iguais: diferença entre a melhor e a pior | no máximo 0,2 ponto por jogo | 0,053 |
+| Só o elenco decide: trocar os elencos de dois clubes troca as chances (nenhum bônus de continente) | erro abaixo de 1e-9 | 2,2e-16 |
+| Elite europeia × melhores do Brasil e da Argentina, mata-mata de jogo único | favorito passa em média entre 60% e 85%, nunca acima de 90% (difícil, mas possível) | média 79,9%, máximo 87,8% |
+| Mundial de Clubes: difícil, mas possível para quem não é europeu (chaveamento jogado 20 mil vezes com as chances exatas) | fora da Europa entre 1% e 15% dos títulos; o melhor sul-americano com pelo menos 0,5% | 2,8% fora da Europa; melhor sul-americano Flamengo 1,27% (12 europeus em 22) |
+| Contratar acima do próprio nível: quanto maior a diferença, mais difícil | mediana cai a cada degrau (resolução de 0,01 ponto); +8 abaixo de 5%; +12 ou mais abaixo de 0,5% | curvas em queda em todos os clubes |
+| Mbappé no Flamengo: quase impossível, não impossível | entre 0,001% e 0,1% | 0,0497% |
+| Desenvolver em jovens: ganho a mais na próxima atualização | pelo menos +1 de nível até 21 e de 22 a 25 anos | até 21: +1,93; 22 a 25: +1,21 |
+| Desenvolver perto do auge (26 a 29 anos, com folga): chance de o OVR subir | pelo menos 90% e 15 pontos acima de não desenvolver | 90,8% contra 69,0% |
+| Rápido = lento: evolução média numa temporada sem ações | diferença de no máximo 0,15 de nível | rápido 1,02, lento 0,97 |
+| Verba de início dá para contratar sem pedir dinheiro (clubes de 2ª divisão) | pelo menos 90% com 3 alvos do nível ao alcance | 98,2% (sem: Ceará, Deportes Concepción, Jaguares de Córdoba, Palermo) |
+| Comandos válidos da política nunca são recusados pelo motor | nenhum | nenhum |
+| Campeão da primeira divisão é o clube mais forte do começo da temporada | entre 35% e 60% | 56,9% |
+| Mundial de Clubes ganho por europeu nas carreiras (só pelo elenco, como os 17 dos últimos 18 da vida real) | pelo menos 85% (a chance exata de quem não é europeu está na sonda) | 99,0% em 96 edições; final com sul-americano em 7,3% |
+| Intercontinental ganho pelo campeão europeu | entre 60% e 95% | 84,0% em 381 edições |
+| Elencos da IA estáveis: tamanho entre 22 e 34 | pelo menos 95% dos clubes em todas as temporadas | 99,1% (menor 17, maior 40) |
+| Jogadores ativos no mundo depois de todas as temporadas | a no máximo 10% do começo | 12619 → 13315 (+5,5%) |
+| Força média das primeiras divisões no fim, contra o começo | todas a no máximo 3 pontos | pior: Liga FUTVE -2,6 |
+| Lesões de 10 dias ou mais no elenco do treinador, por temporada | entre 4 e 15, no máximo 10% graves | 6,2 por temporada, 8,0% graves, 173 dias |
+| Demissões por temporada com a política equilibrada | entre 8% e 15% | 11,5% em 192 temporadas (na primeira: 0,0%) |
+| Usar as ações vale a pena: objetivo cumprido, equilibrada contra passiva | equilibrada à frente | 52,1% contra 37,5% |
+| Negócio disponível cabe na verba e na folha (contratando em toda etapa, sem pedir verba) | pelo menos 70% das respostas positivas | 90,6% (77 de 85; 264 alvos procurados) |
+
+No relatório, uma temporada leva em média 1320 ms no rápido e 1851 ms no lento
+(Node, trabalhadores em paralelo), e criar o mundo leva 190 ms.
+
+**Laboratório** (`apps/game/src/screens/lab/areas/TecnicoArea.tsx` e
+`apps/game/src/screens/lab/tecnico/*`), com os números de verdade do motor, em
+dez seções:
+
+| Seção | O que mostra |
+|---|---|
+| Elencos e fontes | de onde vem cada jogador, por país, divisão e clube |
+| Sorteio das propostas iniciais | a fatia de segundas divisões em muitas carreiras e as propostas de uma semente |
+| Simulador de partida | a conta exata de Poisson entre dois clubes, com os elencos trocados, e Europa contra América do Sul |
+| Filosofias | pontos por jogo de cada filosofia por diferença de força |
+| A conta da contratação | atratividade, expectativa, lacuna e cada fator, termo a termo, a faixa da tela e a curva do comprador |
+| Desenvolver | o mesmo jogador com a mesma sorte, com e sem a marca, e rápido contra lento |
+| Rendimento escondido | OVR, satisfação, fase e quanto o jogador rende |
+| Eventos | o catálogo com o peso de cada evento no clube escolhido |
+| Finanças e verba | receita, folha, teto, verba e alvos ao alcance de cada clube |
+| Temporada simulada | o mundo inteiro jogo a jogo no navegador, com uma carreira automática (equilibrada ou passiva) |
+
+**Testes**: motor em `packages/engine/test/coach/*` (ações, modelo, propostas,
+promessas, temporada); a projeção em `apps/game/src/features/tecnico/view.test.ts`;
+ponta a ponta em `apps/game/e2e/tecnico.spec.ts` (do hub ao legado, recarregar
+encerra a carreira e abre o hub, sair pede confirmação, ritmo lento com ações
+renovadas no 2º turno, a etapa cabe em 360 × 640).
+
+### 42.13 Avaliação, demissão e reputação
+
+**Avaliação anual** (`evaluateSeason`, números em `EVALUATION`):
+
+```
+s = objetivo + copas + finanças + promessas + torcida
+objetivo = limitar((esperada − posição) / máx(2; n / 5); −2; 2) + (cumpriu ? 0,3 : −0,3)
+           + 0,8 (acesso) − 1,2 (queda)
+copas = mín(1,5; Σ peso da competição × valor da fase) × 0,4
+peso: primária 1,5; secundária 1; terciária 0,7; copa 0,8; copa da liga 0,4; supercopa 0,25;
+      supercopa continental 0,3; Intercontinental 0,8; Mundial 1,5
+fase: campeão 1; final 0,6; semifinal 0,4; quartas 0,25; oitavas 0,12; grupos 0,05
+finanças = −1 (caixa abaixo de −25% da receita), −0,6 (caixa negativo) ou +0,2 (saldo do período positivo);
+           −0,3 se a folha anual passa de 70% da receita
+promessas = limitar(0,2 × (cumpridas − quebradas); −0,6; 0,6)
+torcida = (torcida − 50) / 100
+C' = limitar(0,6 × C + 0,4 × s; −1,5; 1,5)      (C começa em 0,5 em cada clube novo)
+confiança = limitar(arredondar(50 + 12 × s + 15 × C'); 0; 100)
+demitido se confiança < 27
+```
+
+A tela mostra a confiança, explica o termo que mais pesou (objetivo, copas,
+finanças, promessas, torcida ou histórico) e, sem demissão, o tom da diretoria: confia (`s ≥ 0,5`); paciência pelo
+histórico (`s < 0` com crédito anterior acima de 0,2); aviso (`s < 0` sem esse
+crédito); neutra. O clube que demite não oferece emprego por 3 temporadas
+(`OFFERS.banSeasons`).
+
+**Reputação** (`REPUTATION`), de 0 a 100, começa em 15:
+
+```
+Δ = 3,2 × limitar(s; −2; 2) + 4 por título grande + 2 por outro título
+    + 3 (acesso) + 2 (livrou da queda) + 1 × mín(3; revelados com 10 jogos ou mais)
+título grande: liga de qualquer divisão, primária continental, Mundial ou Intercontinental
+Δ positivo × limitar(0,6 + (força − 60) / 40; 0,6; 1,4)
+Δ limitado a ±12
+```
+
+Livrar da queda é cumprir o objetivo "Evitar a queda" sem cair.
+
+**Propostas para a temporada seguinte** (`seasonOffers`, `OFFERS`):
+
+- Mantido: o clube atual oferece renovação, mais 1 a 3 propostas (com
+  reputação abaixo de 25, 40% de chance de uma a menos). Demitido: 2 a 4
+  propostas, uma delas garantida de segunda divisão, de preferência em casa, e
+  nunca menos de 2.
+- A reputação aponta uma faixa de clubes pelo percentil de força no mundo:
+
+```
+alvo = limitar(0,15 + 0,008 × reputação + 0,2 × máx(0; melhor trabalho − clube atual) − 0,08 (demitido); 0,05; 0,98)
+peso do clube = máx(0; 0,12 − |percentil − alvo|) × país
+país: casa (país do clube atual ou do treinador) 1; fora 0,35 com reputação 35 ou mais, senão 0,1
+```
+
+"Melhor trabalho" é o percentil do maior clube em que o treinador cumpriu o
+objetivo. Na última temporada não há propostas: só ver o legado. No relatório,
+a política equilibrada termina com reputação 44, a passiva com 14 e a gastadora
+com 22.
+
+**Como ficou (D56):** crédito inicial 0,5, confiança `50 + 12s + 15C` e demissão
+abaixo de 27 dão 11,5% de demissões por temporada com a política equilibrada,
+dentro da meta de 8% a 15%.
+
+### 42.14 Virada da temporada, mundo da IA, aposentadoria, legado e conquistas
+
+**Fim da temporada**, numa ordem fixa e uma vez só, depois das promessas, da
+satisfação, da evolução e das finanças do período: ligas fechadas, acesso e
+queda, premiação, relações, avaliação, reputação, histórico e propostas. Depois
+da decisão (ficar, assinar com outro clube, encerrar), as férias
+(`rollover.ts`):
+
+1. **Âncora** de cada clube: `âncora + 0,3 × (base − âncora) + sucesso + N(0; 0,6)`,
+   limitada a ±10 da base; sucesso: título de liga +0,4, primária +0,6, acesso
+   +0,5, queda −0,8 (`AI_MARKET.anchorDrift`).
+2. **Receitas** da temporada seguinte (42.11).
+3. **Aposentadorias** a partir dos 34 anos:
+   `0,15 + 0,13 × (idade − 34) − 0,04 × longevidade`, pela metade com OVR 80
+   ou mais, +0,25 sem clube; aos 41, todos param (`RETIREMENT`). Sem clube, em
+   qualquer idade, `0,35 + 0,08 × máx(0; idade − 26)`, até 95%.
+4. **Jovens da IA** (`AI_YOUTH`), pelo tamanho do elenco: 30 ou mais, nenhum;
+   27 a 29, 0 ou 1; 24 a 26, 1 ou 2; menos, 2 ou 3. OVR
+   `âncora − 14 + N(0; 4)` (+5 nos 3% de craques), entre 42 e 80; 17 ou 18 anos;
+   88% do país do clube.
+5. **Mercado da IA** (`AI_MARKET`): elenco acima de 32 corta os piores acima
+   de 21 anos para os livres; abaixo de 24, completa com livres de até
+   `âncora + 2` e até 35 anos; depois, até 2 reforços por clube para a vaga
+   mais fraca do time, com jogadores de até 31 anos de clubes menores, de OVR
+   entre o do titular mais fraco + 2 e `âncora + 5`, pela mesma curva de interesse do treinador
+   (mínimo 15%), pagando o valor, se o caixa aguenta ficar até 20% da receita
+   no negativo. O clube do treinador fica fora: as vendas e compras dele são
+   só dele.
+6. **Elenco viável** para todos: jovens até ter 18 jogadores e 2 goleiros.
+7. **Força** refeita pelo elenco, papéis (no clube do treinador, no máximo um
+   degrau de queda) e estatísticas da temporada zeradas.
+
+Ficando no clube: objetivo novo, verba com metade da sobra, pedidos de verba
+zerados, metade da previsibilidade e foco de leitura sorteado de novo. Mudando:
+tudo de clube novo (42.3).
+
+**Aposentadoria do treinador**: a partir do fim da primeira temporada, pelo
+menu ou pela avaliação, nunca com um processo aberto, um evento sem escolha ou
+uma decisão no jogo pendente. No meio de uma temporada, ela entra no histórico
+como incompleta. Ao fim das 24 temporadas, a carreira termina completa.
+
+**Legado** (`TecnicoLegacyScreen.tsx`): clubes, temporadas, títulos, acessos,
+quedas, demissões e reputação final; sala de troféus; temporada a temporada;
+jogadores marcantes (homens de confiança, revelados pela base, contratações);
+momentos. "Este legado não é salvo. Ao sair desta tela, ele some."
+
+**Conquistas** (19, `COACH_ACHIEVEMENTS`):
+
+| Id (`tecnico:`) | Nome | Requisito |
+|---|---|---|
+| `firstSeason` | Primeira prancheta | terminar a primeira temporada |
+| `fullCareer` | Vinte e quatro anos de banco | completar as 24 temporadas |
+| `promotion` | Acesso | subir um clube |
+| `twoPromotions` | Especialista em acesso | dois acessos |
+| `rescue` | Bombeiro | livrar da queda um clube com esse objetivo |
+| `firstTitle` | Primeira taça | primeiro título |
+| `league` | Campeão nacional | liga de uma primeira divisão |
+| `continental` | Rei do continente | principal torneio continental |
+| `clubWorldCup` | Campeão do mundo | Mundial de Clubes |
+| `underdogWorld` | Davi contra Golias | Mundial com clube de fora da Europa |
+| `treble` | Tríplice coroa | liga da primeira divisão, copa nacional e primária na mesma temporada |
+| `tenTitles` | Galeria cheia | 10 títulos |
+| `fromBottom` | Do porão ao topo | subir com um clube e depois ganhar a primeira divisão com ele |
+| `loyal` | Casa de verdade | 10 temporadas seguidas no mesmo clube |
+| `abroad` | Passaporte carimbado | treinar um clube de outro país |
+| `threeCountries` | Cidadão do mundo | clubes de três países |
+| `revelations` | Fábrica de craques | 5 jogadores subidos da base que chegam a 30 jogos com o treinador |
+| `comeback` | A volta por cima | ser demitido e depois ganhar um título |
+| `reputation` | Lenda da prancheta | 90 de reputação |
+
+### 42.15 Elencos e fontes de dados
+
+O Técnico joga com elencos de verdade nos mesmos clubes e ligas do Craque
+(`packages/world/data/squads/*.ts`, `@craque/world/squads`). A montagem é
+offline e determinística (`pnpm elencos:montar`,
+`packages/world/scripts/elencos/*.mjs`), por camadas, nesta ordem:
+
+1. **EA FC 27**, só futebol masculino. O FC 27 decide o clube de cada jogador:
+   quem aparece no FC em outro clube, mesmo numa liga fora do jogo, não entra
+   por outra fonte.
+2. **eFootball**, só em clube com menos de 20 jogadores do FC 27
+   (`EF_THRESHOLD`) e só jogadores reais (`fake_version = 0`), com
+   `OVR = carta base + 4` (`EF_BONUS`). Times com jogadores fictícios são
+   descartados e listados no relatório (18 times).
+3. **Conhecimento**: jogadores reais escritos à mão, com OVR estimado pela
+   âncora do clube e pelo papel (destaque +3, titular 0, rotação −3, reserva
+   −6, jovem −8, mais `U(−1,5; 1,5)`).
+4. **Gerados**: o que faltar para 22 jogadores (`TARGET`) e para a composição
+   mínima de 2 goleiros, 6 defensores, 6 meias e 3 atacantes, na escala dos
+   reais da mesma liga. Na tela, ◆ "Fictício"; o nome sai do id e da nacionalidade, sempre o
+   mesmo.
+
+- **Calibração medida**: em 80 jogadores presentes nas duas fontes, o FC 27
+  fica 4,5 abaixo da carta base do eFootball + 4 (mediana; média 4,8). O +4
+  foi mantido como pedido.
+- **Âncora da liga**: a força do clube no Craque mais o deslocamento medido na
+  liga: a mediana, entre os clubes com 16 jogadores reais ou mais, da média
+  dos 14 melhores menos a força do clube. Segunda divisão com menos de 5 clubes
+  medidos usa a régua da primeira (a primeira precisa de 3).
+- **Ajuste da 2ª** (`DIVISION_GAP = 2,5`): numa segunda divisão sem medida, o
+  melhor clube completado fica 2,5 abaixo do primeiro quartil dos 14 melhores
+  dos clubes medidos da primeira do país. Só sobe, e só vale para clubes sem
+  jogadores reais suficientes.
+- **Teto inicial**: no máximo 30 jogadores acima de 21 anos por clube; os
+  cortados vão para os livres (10 no início).
+- **Características iniciais** vêm dos números das fontes (velocidade, bola
+  parada, cabeceio, impulsão, fôlego, estilos de jogo, posições, capitania).
+  Gerados começam sem nenhuma; os do conhecimento, no máximo Versátil, pelas
+  posições alternativas.
+
+Resultado (`packages/world/data/squads/relatorio.md`): **12.609 jogadores em
+489 clubes**: 8.415 do FC 27, 818 do eFootball, 133 do conhecimento e 3.243
+gerados.
+
+| Grupo | Jogadores reais |
+|---|---|
+| Primeiras divisões de ENG, ESP, FRA, GER e ITA; Championship, 2. Bundesliga e Ligue 2; MLS e Liga MX | 100% |
+| Brasileirão (Série A) | 95% |
+| LaLiga 2 | 95% |
+| Serie B italiana | 85% |
+| Brasileirão Série B | 16% |
+| Primeiras divisões de ARG, CHI e COL | 99% a 100% |
+| Primeiras divisões de BOL, ECU, PAR, PER, URU e VEN | 46% a 69% |
+| Segundas divisões de COL, CHI e ARG | 37%, 15% e 1% |
+| Segundas divisões de BOL, ECU, PAR, PER, URU e VEN | 0% |
+
+**Limitação conhecida, dita com franqueza:** as segundas divisões
+sul-americanas são quase todas geradas, e a Série B tem só 16% de jogadores
+reais. Como o treinador sul-americano quase sempre começa numa segunda divisão
+(42.3), boa parte das primeiras carreiras começa com elencos fictícios. A tela
+avisa: ◆ na escolha do país (42.2), a fração gerada no cartão da proposta
+(42.3) e ◆ "Fictício" em cada jogador gerado.
+
+**Como ficou (D52):** a ordem de fontes foi definida pelo usuário. Jogador
+fictício do eFootball não é jogador real, então não entra. O ajuste da 2ª
+corrige o que o harness mostrou: com Ceará e Sport reais caindo numa Série B
+gerada, o campeão fazia 100 pontos.

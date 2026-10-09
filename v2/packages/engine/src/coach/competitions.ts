@@ -16,7 +16,7 @@ import { CALENDAR_DAYS } from "./tuning";
 import { coachRng, nextPow2 } from "./util";
 
 /**
- * Calendário e competições do Técnico (GDD 56.4): as mesmas competições de
+ * Calendário e competições do Técnico (GDD 42.4): as mesmas competições de
  * clubes do Craque, agora jogadas partida a partida. Liga em turno e returno
  * (método do círculo), copas em mata-mata com folga para os cabeças de chave,
  * continentais com preliminar, grupos e mata-mata conforme o número de

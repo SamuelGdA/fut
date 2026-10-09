@@ -33,7 +33,8 @@ export function ResultsView({ career, onContinue }: { career: CoachCareer; onCon
   return (
     <section className="tec-results" aria-labelledby="tec-results-title">
       <StageSteps career={career} />
-      <div className="tec-results-scroll">
+      {/* Rola por dentro: entra no Tab, para o teclado chegar ao fim do relatório. */}
+      <div className="tec-results-scroll" tabIndex={0} role="region" aria-labelledby="tec-results-title">
         <p className="eyebrow text-glory">{tt("results.eyebrow")}</p>
         <h2 id="tec-results-title" className="display text-3xl leading-none font-black uppercase">
           {report.final ? tt("results.titleSeason") : tt("results.titleHalf")}

@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { abrir, auditar, encerrar, jogarTurno, jogoRapido } from "./apoio";
+import { abrir, abrirCraque, auditar, encerrar, entrarNoCraque, jogarTurno, jogoRapido } from "./apoio";
 
 /**
  * Acessibilidade (GDD 36): o axe audita cada tela nos dois temas (WCAG 2.1 A e
@@ -10,6 +10,8 @@ import { abrir, auditar, encerrar, jogarTurno, jogoRapido } from "./apoio";
 for (const theme of ["dark", "light"] as const) {
   test(`axe nas telas do jogo, tema ${theme === "dark" ? "escuro" : "claro"}`, async ({ page }) => {
     await abrir(page, { theme });
+    await auditar(page, "Hub");
+    await entrarNoCraque(page);
     await auditar(page, "Início");
 
     await page.getByRole("button", { name: "Começar carreira" }).click();
@@ -67,7 +69,7 @@ test("os avisos, parados na tela, também passam no axe", async ({ page }, info)
 
 test("um turno inteiro só com o teclado", async ({ page }, info) => {
   test.skip(info.project.name === "celular", "teclado é do desktop");
-  await abrir(page);
+  await abrirCraque(page);
 
   // Do topo da página até o Jogo rápido, só com Tab.
   for (let presses = 0; presses < 40; presses += 1) {
@@ -108,7 +110,7 @@ test("um turno inteiro só com o teclado", async ({ page }, info) => {
 
 test("o leitor de tela ouve o lance numa frase, a cada jogada", async ({ page }, info) => {
   test.skip(info.project.name === "celular", "basta um tamanho");
-  await abrir(page);
+  await abrirCraque(page);
   await jogoRapido(page);
   const live = page.locator(".career > [role='status']");
   await expect(live).toHaveText("");

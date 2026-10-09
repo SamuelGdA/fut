@@ -16,7 +16,7 @@ interface HeaderProps {
 }
 
 /**
- * O placar do técnico (GDD 56.11): a placa do clube, o nome, temporada e
+ * O placar do técnico (GDD 42.11): a placa do clube, o nome, temporada e
  * período, dinheiro, e as três relações em palavra (diretoria, torcida,
  * elenco), sempre à vista. O menu leva de volta ao hub ou aposenta.
  */

@@ -133,7 +133,7 @@ export function PlayerSheet({ career, row, open, onOpenChange }: { career: Coach
         <Fact label={tt("common.value")}>{tt("common.estimate", { money: money(row.value) })}</Fact>
         <Fact label={tt("common.wage")}>{tt("common.perMonth", { money: money(row.wage) })}</Fact>
         <Fact label={tt("squad.roleHint")}>{tt(`squad.roles.${row.role}`)}</Fact>
-        <Fact label={tt("develop.title")}>{tt(`squad.potential.${row.potential}`)}</Fact>
+        <Fact label={tt("develop.title")}>{tt(`squad.potential.${row.potentialHint}`)}</Fact>
         <Fact label={tt("player.contract", { year: row.joinedYear })}>{row.registered ? tt("squad.registered") : tt("squad.notRegistered")}</Fact>
       </dl>
       <p className="mt-1 text-2xs text-faint">{tt("player.estimateHint")}</p>

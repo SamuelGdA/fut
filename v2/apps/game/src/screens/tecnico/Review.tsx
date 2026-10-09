@@ -38,7 +38,7 @@ export function ReviewView({
 
   return (
     <section className="tec-results" aria-labelledby="tec-review-title">
-      <div className="tec-results-scroll">
+      <div className="tec-results-scroll" tabIndex={0} role="region" aria-labelledby="tec-review-title">
         <p className="eyebrow text-glory">{tt("review.eyebrow")}</p>
         <h2 id="tec-review-title" className="display text-3xl leading-none font-black uppercase">
           {review.dismissed ? t.g("evaluation.dismissed") : review.objectiveMet ? tt("review.met") : tt("review.missed")}

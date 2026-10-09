@@ -46,7 +46,7 @@ export function markdownReport(report: TecnicoReport): string {
     `Técnico ${COACH_VERSION}, semente \`${report.seed}\`, ${careers.careers} carreiras automáticas (${careers.seasons} temporadas). **${passed} de ${targets.length} metas atendidas.**`,
     "",
     "Gerado por `pnpm balance:tecnico`. As sondas fazem contas exatas sobre o modelo (sem sorteio); as carreiras",
-    "jogam o mundo inteiro com uma política fixa (GDD 56.12). As mesmas sondas aparecem no laboratório.",
+    "jogam o mundo inteiro com uma política fixa (GDD 42.12). As mesmas sondas aparecem no laboratório.",
     "",
     "## Metas",
     "",

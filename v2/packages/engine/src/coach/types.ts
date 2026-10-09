@@ -3,7 +3,7 @@ import type { SquadOrigin } from "@craque/world/squads";
 import type { Position } from "../player/positions";
 
 /**
- * Tipos do Técnico (GDD 56). O estado é dado simples (números, textos,
+ * Tipos do Técnico (GDD 42). O estado é dado simples (números, textos,
  * listas, objetos): nada de classes, para a interface ler direto e os testes
  * compararem por valor. O motor nunca guarda texto de tela: devolve ids.
  */
@@ -286,7 +286,8 @@ export interface CoachPromise {
   readonly origin: "talk" | "event";
   /** Números do jogador (ou dos jovens) no momento da promessa: a cobrança conta daí em diante. */
   readonly baseline: { readonly starts: number; readonly available: number; readonly apps: number };
-  status: "active" | "kept" | "broken";
+  /** `released`: desfeita numa conversa; não conta como cumprida nem quebrada. */
+  status: "active" | "kept" | "broken" | "released";
 }
 
 // --------------------------------------------------------------- ações
@@ -364,7 +365,7 @@ export type ActionFlow =
       talks: TalkResult[];
       meeting: { choice: "support" | "demand" | null; outcome: "good" | "bad" | null } | null;
     }
-  | { readonly kind: "funds"; readonly number: number; step: "responses"; response: FundsResponse };
+  | { readonly kind: "funds"; readonly number: number; step: "select" | "responses"; response: FundsResponse };
 
 // ------------------------------------------------------------- eventos
 
@@ -408,7 +409,7 @@ export interface MatchContext {
   readonly aggregate: readonly [number, number] | null;
   readonly derby: boolean;
   readonly final: boolean;
-  readonly situation: "losing" | "drawing" | "winning" | "injury";
+  readonly situation: "losing" | "drawing" | "winning";
 }
 
 export interface CoachEvent {

@@ -95,6 +95,12 @@ function hiddenPotential(rng: Rng, ovr: number, age: number): number {
   return Math.min(97, ovr + room);
 }
 
+/** Idade em que o declínio começa para longevidade zero, pelo setor. */
+export function declineStartOf(position: Position): number {
+  const sector = sectorOf(position);
+  return EVOLUTION.declineStart + (sector === "gk" ? 2 : sector === "def" ? 1 : 0);
+}
+
 export function createPlayer(seed: string, row: SquadPlayer, year: number): CoachPlayer {
   const age = year - row.birthYear;
   const rng = coachRng(seed, "player", row.id);
@@ -111,7 +117,7 @@ export function createPlayer(seed: string, row: SquadPlayer, year: number): Coac
     level,
     ovr: row.ovr,
     potential,
-    longevity: rng.normal(0, EVOLUTION.longevitySpread),
+    longevity: Math.max(rng.normal(0, EVOLUTION.longevitySpread), age - declineStartOf(row.position) - EVOLUTION.veteranOverStart),
     form: 0,
     recentRatings: [],
     traits: [...row.traits],

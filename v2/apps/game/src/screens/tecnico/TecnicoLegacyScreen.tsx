@@ -67,7 +67,7 @@ export function TecnicoLegacyScreen() {
         </div>
       </div>
 
-      <dl className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-7">
+      <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-7">
         <StatTile label={tt("legacy.seasons")} value={number(seasons)} />
         <StatTile label={tt("legacy.clubs")} value={number(clubs.length)} />
         <StatTile label={tt("legacy.titles")} value={number(titles.length)} />
@@ -75,7 +75,7 @@ export function TecnicoLegacyScreen() {
         <StatTile label={tt("legacy.relegations")} value={number(history.filter((entry) => entry.relegated).length)} />
         <StatTile label={tt("legacy.dismissals")} value={number(history.filter((entry) => entry.dismissed).length)} />
         <StatTile label={tt("legacy.reputation")} value={number(Math.round(career.reputation))} />
-      </dl>
+      </div>
 
       <div className="mt-6 grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
         <Panel title={tt("legacy.trophyCase")}>
@@ -108,7 +108,10 @@ export function TecnicoLegacyScreen() {
                   {(list as typeof legacies).length === 0 ? <li className="text-muted">-</li> : null}
                   {(list as typeof legacies).map((legacy) => (
                     <li key={legacy.player} className="truncate">
-                      {nameOf(legacy.player)} <span className="numeric text-2xs text-muted">· {legacy.apps} · OVR {legacy.bestOvr}</span>
+                      {nameOf(legacy.player)}{" "}
+                      <span className="numeric text-2xs text-muted">
+                        · {ttp("legacy.games", legacy.apps)} · {tt("legacy.bestOvr", { ovr: legacy.bestOvr })}
+                      </span>
                     </li>
                   ))}
                 </ul>

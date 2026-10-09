@@ -19,7 +19,7 @@ import type { Position } from "@craque/engine";
 import type { CountryCode } from "@craque/world";
 
 /**
- * A tela do Técnico só enxerga isto (GDD 56.8): o OVR mostrado, o estado de
+ * A tela do Técnico só enxerga isto (GDD 42.8): o OVR mostrado, o estado de
  * satisfação em palavra, a fase em palavra e o potencial como faixa. Nível
  * oculto, potencial, satisfação em número e rendimento efetivo nunca saem
  * daqui; um teste serializa as vistas e reprova se aparecerem.
@@ -42,7 +42,7 @@ export interface PlayerRow {
   readonly traits: readonly CoachTrait[];
   /** Dias até voltar, ou `null` sem lesão. */
   readonly injuryDays: number | null;
-  readonly potential: PotentialHint;
+  readonly potentialHint: PotentialHint;
   readonly listed: boolean;
   readonly promised: boolean;
   readonly developed: boolean;
@@ -83,7 +83,7 @@ export function playerRow(career: CoachCareer, player: CoachPlayer, registeredId
     wage: player.wage,
     traits: player.traits,
     injuryDays,
-    potential: potentialHint(player, career.year),
+    potentialHint: potentialHint(player, career.year),
     listed: player.listed,
     promised,
     developed: player.developedAt === stage,

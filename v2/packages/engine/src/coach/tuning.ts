@@ -1,7 +1,7 @@
 import type { CountryCode } from "@craque/world";
 
 /**
- * Todos os números do Técnico (GDD 56), num lugar só. Cada bloco explica o
+ * Todos os números do Técnico (GDD 42), num lugar só. Cada bloco explica o
  * que o número faz na tela; o harness `pnpm balance:tecnico` mede as metas.
  *
  * Unidades: dinheiro em euros; salário sempre mensal; tempo em dias de
@@ -65,7 +65,7 @@ export const BENCH_SIZE: { readonly default: number } & Partial<Record<CountryCo
 };
 
 /** Lei 3 da IFAB com cinco substituições: três paradas além do intervalo. */
-export const SUBSTITUTIONS = { max: 5, windows: 3, minimumOnField: 7 } as const;
+export const SUBSTITUTIONS = { max: 5, windows: 3 } as const;
 
 // ---------------------------------------------------------------- partidas
 
@@ -165,13 +165,14 @@ export const TRAIT_EFFECTS = {
 export const RATING = { base: 6.2, goal: 0.9, assist: 0.45, win: 0.35, loss: -0.35, cleanSheet: 0.4, noise: 0.55 } as const;
 
 /** Fase pelas notas dos últimos jogos (spec 7): temporária, de −2 a +2. */
-export const FORM = { window: 6, thresholds: [5.8, 6.25, 6.85, 7.25] as const, decayWithoutGames: 0.5 } as const;
+/** Sem jogar, a fase volta ao normal esta fração por jogo do time. */
+export const FORM = { window: 6, thresholds: [5.8, 6.25, 6.85, 7.25] as const, decayWithoutGames: 0.1 } as const;
 
 // ------------------------------------------------------------------ lesões
 
 /**
- * Lesões (spec 10): risco por minuto jogado. 1,1% a cada 90 minutos aos 26
- * anos; mais com a idade. Duração: 70% leves, 25% médias, 5% graves (que
+ * Lesões (spec 10): risco por minuto jogado. 2,2% a cada 90 minutos até os
+ * 28 anos; 4% a mais por ano depois disso. Duração: 70% leves, 25% médias, 5% graves (que
  * podem atravessar etapas).
  */
 export const INJURY = {
@@ -215,7 +216,11 @@ export const SATISFACTION = {
   target: 60,
 } as const;
 
-/** Promessas (spec 13): consequências de cumprir e de quebrar. */
+/**
+ * Promessas (spec 13): os alvos padrão (conversa no vestiário e "apoiar os
+ * jovens") e as consequências de cumprir e de quebrar. Alguns eventos usam
+ * alvos próprios, escritos no catálogo.
+ */
 export const PROMISES = {
   startsShare: 0.6,
   minutesGames: 6,
@@ -242,12 +247,25 @@ export const EVOLUTION = {
   declineLinear: 0.35,
   declineQuadratic: 0.08,
   longevitySpread: 1.5,
+  /**
+   * Quem já está num elenco no começo da carreira envelheceu bem até aqui: o
+   * sorteio da longevidade não põe o começo do declínio mais que isto (em
+   * anos) no passado. Sem o piso, um meia de 36 anos com longevidade −3
+   * perderia de 8 a 10 de OVR já na primeira temporada.
+   */
+  veteranOverStart: 1,
   /** Teto absoluto acima do potencial. */
   potentialTolerance: 1,
   /** Chance por período, com boa fase e estatística que combina, de ganhar uma característica. */
   traitChance: 0.06,
   maxTraits: 2,
 } as const;
+
+/**
+ * Evento da etapa (spec 13): um por etapa. Esta fatia das etapas arma uma
+ * decisão no meio de um jogo; o resto tira um evento fora de campo pelo peso.
+ */
+export const STAGE_EVENTS = { matchShare: 0.38 } as const;
 
 /** Desenvolver (spec 6.4): bônus aplicado inteiro na próxima atualização. */
 export const DEVELOP = {
@@ -312,12 +330,18 @@ export const AI_YOUTH = {
 
 /**
  * Finanças (spec 12): receita anual = 30% do valor do elenco inicial ×
- * fator da divisão; folha ideal até 55% da receita, teto de 70%.
+ * fator da divisão; folha anual com teto de 70% da receita (contratar acima
+ * disso é bloqueado).
  */
 export const FINANCE = {
   revenueShare: 0.3,
   divisionFactor: { 1: 1, 2: 0.8 },
-  wageTarget: 0.55,
+  /** Situação mostrada: apertada com caixa negativo ou folha anual acima disto da receita; saudável com caixa e folha folgados. */
+  label: { tightWages: 0.65, healthyWages: 0.5, healthyCash: 0.15 },
+  /** Verba da temporada: budgetShare da receita, mais esta parte do caixa acima de cashFloor da receita, mais esta parte da sobra. */
+  budgetFromCash: 0.3,
+  cashFloor: 0.2,
+  budgetFromLeftover: 0.5,
   wageCap: 0.7,
   budgetShare: 0.4,
   /** Caixa inicial entre estes múltiplos da receita, fixo por clube. */
@@ -361,7 +385,12 @@ export const PURCHASE = {
 } as const;
 
 /** Pedir verba (spec 6.7). */
-export const FUNDS = { large: 0.35, small: 0.12, maxGrants: 2, repeatFactor: 0.6 } as const;
+/**
+ * Pedir verba (spec 6.7): muito libera 6% da receita, pouco 2,5%; cada pedido
+ * na temporada multiplica valores e chances por repeatFactor. As chances vêm da
+ * confiança da diretoria e do caixa (`fundsPreview`).
+ */
+export const FUNDS = { large: 0.06, small: 0.025, maxGrants: 2, repeatFactor: 0.6 } as const;
 
 // ------------------------------------------------- avaliação e reputação
 

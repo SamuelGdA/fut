@@ -7,6 +7,7 @@ import {
   FINANCE,
   initialDivisionShare,
   seasonBudget,
+  STAGE_EVENTS,
   wageBillOf,
 } from "@craque/engine/coach";
 import { type CountryCode, getClub } from "@craque/world";
@@ -226,7 +227,7 @@ export function EventsSection({ index }: { index: number }) {
   const total = weights.reduce((sum, entry) => sum + entry.weight, 0);
   return (
     <LabSection id="tec-eventos" index={index} title={tt("lab.events.title")}>
-      <p className="mb-3 max-w-3xl text-sm text-muted">{tt("lab.events.lead")}</p>
+      <p className="mb-3 max-w-3xl text-sm text-muted">{tt("lab.events.lead", { share: t.percent(STAGE_EVENTS.matchShare) })}</p>
       <LabTable
         head={["", tt("lab.events.kind"), tt("lab.events.weight")]}
         rows={weights.map((entry) => [
@@ -235,7 +236,7 @@ export function EventsSection({ index }: { index: number }) {
             <span className="block text-2xs text-muted">{t.g(`events.${entry.id}.body`, { player: "…", buyer: "…", rival: "…", price: "…", amount: "…", raise: "…", cost: "…", injured: "…" })}</span>
           </span>,
           tt(`event.kinds.${entry.kind}`),
-          total > 0 ? t.percent((entry.weight / total) * 0.62) : "-",
+          total > 0 ? t.percent((entry.weight / total) * (1 - STAGE_EVENTS.matchShare)) : "-",
         ])}
       />
     </LabSection>

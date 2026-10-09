@@ -279,6 +279,9 @@ export const tecnicoPt = {
     title: "Pedir verba",
     lead: "A diretoria responde pela confiança no seu trabalho e pelo caixa do clube. No máximo duas liberações por temporada.",
     acceptWith: "Aceitar com a condição",
+    odds: "Chances agora",
+    outcomes: { large: "Muita verba", small: "Pouca verba", refused: "Recusa" },
+    conditionHint: "Com muita verba, a diretoria às vezes pede um objetivo mais alto. Cada pedido na temporada rende menos.",
   },
 
   event: {
@@ -454,7 +457,7 @@ export const tecnicoPt = {
       keep: "Não ser vendido",
       youth: "{count} jogos para os jovens da base",
     },
-    promiseStatus: { active: "Em andamento", kept: "Cumprida", broken: "Quebrada" },
+    promiseStatus: { active: "Em andamento", kept: "Cumprida", broken: "Quebrada", released: "Desfeita" },
     deadline: { half: "fim do turno", season: "fim da temporada" },
     idols: "Ídolos",
   },
@@ -526,6 +529,8 @@ export const tecnicoPt = {
     newCareer: "Nova carreira de técnico",
     backHub: "Voltar ao início",
     notSaved: "Este legado não é salvo. Ao sair desta tela, ele some.",
+    games: { one: "{count} jogo", other: "{count} jogos" },
+    bestOvr: "melhor OVR {ovr}",
   },
 
   leave: {
@@ -560,7 +565,7 @@ export const tecnicoPt = {
       squad: "Elenco",
       origin: { f: "FC 27", e: "eFootball +4", k: "Conhecimento", g: "Gerado", y: "Base" },
       totals: "{players} jogadores em {clubs} clubes: {fc} do FC 27, {ef} do eFootball, {kb} do conhecimento e {gen} gerados.",
-      calibration: "Nos jogadores que estão nas duas fontes, a carta base do eFootball + 4 fica em média 4,5 acima do FC 27. O +4 foi mantido como pedido; os elencos completados de cada liga seguem a escala dos reais da mesma liga.",
+      calibration: "Nos jogadores que estão nas duas fontes, a carta base do eFootball + 4 fica 4,5 acima do FC 27 na mediana (4,8 na média). O +4 foi mantido como pedido; os elencos completados de cada liga seguem a escala dos reais da mesma liga.",
     },
     draw: {
       title: "Sorteio das propostas iniciais",
@@ -643,7 +648,7 @@ export const tecnicoPt = {
     },
     events: {
       title: "Eventos",
-      lead: "O catálogo de eventos fora de campo, com o peso de cada um no clube escolhido agora. Um evento por etapa; 38% das etapas têm decisão no meio de um jogo.",
+      lead: "O catálogo de eventos fora de campo, com o peso de cada um no clube escolhido agora. Um evento por etapa; {share} das etapas têm decisão no meio de um jogo.",
       weight: "Peso agora",
       kind: "Tipo",
     },
