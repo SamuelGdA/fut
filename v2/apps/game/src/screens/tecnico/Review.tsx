@@ -1,5 +1,5 @@
 import { CAREER_SEASONS, type CoachCareer } from "@craque/engine/coach";
-import { BookOpen, Flag as FlagIcon, Trophy } from "lucide-react";
+import { BookOpen, Flag as FlagIcon } from "lucide-react";
 import { useState } from "react";
 import { useTecnicoT } from "../../i18n/tecnico/useTecnicoT";
 import { feedback } from "../../services/feedback";
@@ -10,7 +10,9 @@ import { Chip } from "../../ui/Signals";
 import { signed } from "../../ui/tone";
 import { OfferCard } from "./Offers";
 import { Fact } from "./shared";
-import { competitionName } from "./text";
+import { revisionText } from "../../i18n/tecnico/revision";
+import { SeasonHonours } from "./SeasonHonours";
+import { d67 } from "../../i18n/tecnico/d67";
 
 /**
  * Avaliação anual (spec 14): objetivo, confiança da diretoria com o termo que
@@ -39,12 +41,14 @@ export function ReviewView({
   return (
     <section className="tec-results" aria-labelledby="tec-review-title">
       <div className="tec-results-scroll" tabIndex={0} role="region" aria-labelledby="tec-review-title">
-        <p className="eyebrow text-glory">{tt("review.eyebrow")}</p>
+        <p className="eyebrow text-glory">{last ? revisionText(t.locale, "finalSeason") : tt("review.eyebrow")}</p>
+        {last ? <div className="tec-final-season"><p className="display">{career.setup.identity.name} · {entry.year}</p><p>{revisionText(t.locale, "finalHint")}</p></div> : null}
         <h2 id="tec-review-title" className="display text-3xl leading-none font-black uppercase">
           {review.dismissed ? t.g("evaluation.dismissed") : review.objectiveMet ? tt("review.met") : tt("review.missed")}
         </h2>
         <p className="text-sm text-muted">{t.g(`evaluation.reasons.${review.reason}`)}</p>
-        {!review.dismissed ? <p className="text-sm">{t.g(`evaluation.tolerance.${review.tolerance}`)}</p> : null}
+        {review.objectiveMet && (review.ambition?.penalty ?? 0) >= 1 ? <p className="text-sm text-glory">{d67(t.locale, "ambitionWarning")}</p> : null}
+        {!last && !review.dismissed ? <p className="text-sm">{t.g(`evaluation.tolerance.${review.tolerance}`)}</p> : null}
 
         <dl>
           <Fact label={tt("review.confidence")}>
@@ -65,13 +69,9 @@ export function ReviewView({
         <div className="flex flex-wrap gap-2">
           {entry.promoted ? <Chip tone="good" glyph>{tt("review.promoted")}</Chip> : null}
           {entry.relegated ? <Chip tone="bad" glyph>{tt("review.relegated")}</Chip> : null}
-          {entry.titles.map((title) => (
-            <Chip key={title} tone="glory" glyph>
-              <Trophy size={12} aria-hidden="true" />
-              {competitionName(title, t.locale)}
-            </Chip>
-          ))}
+
         </div>
+        <SeasonHonours titles={entry.titles} awards={entry.awards?.filter(award => award.player === null)} year={entry.year} />
 
         {last ? (
           <p className="text-sm text-glory">{tt("review.lastSeason")}</p>

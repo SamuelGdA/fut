@@ -67,7 +67,7 @@ export function coverTone(angle: CoverAngle): CoverTone {
  * Prêmios individuais que viram o ângulo "honraria" (a Bola de Ouro tem o seu;
  * a artilharia e o craque de competição também, com o nome da competição).
  */
-const HONOURS: readonly AwardKey[] = ["goldenShoe", "goldenGlove", "youngPlayer"];
+const HONOURS: readonly AwardKey[] = ["kingOfAmerica", "goldenShoe", "goldenGlove", "youngPlayer"];
 
 export interface CoverFacts {
   readonly record: SeasonRecord;

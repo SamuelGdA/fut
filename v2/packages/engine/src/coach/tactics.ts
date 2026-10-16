@@ -9,15 +9,9 @@ import { MATCH, PHILOSOPHY, PREDICTABILITY, SECTOR_MIX, TRAIT_EFFECTS } from "./
  * que posição cada um joga; a filosofia muda gols a favor e contra.
  */
 
-/** As 11 vagas de cada formação, do goleiro ao ataque. */
-export const FORMATION_SLOTS: Readonly<Record<FormationId, readonly Position[]>> = {
-  "4-4-2": ["gk", "rb", "cb", "cb", "lb", "rm", "cm", "cm", "lm", "st", "st"],
-  "4-3-3": ["gk", "rb", "cb", "cb", "lb", "cm", "cdm", "cm", "rw", "st", "lw"],
-  "4-2-3-1": ["gk", "rb", "cb", "cb", "lb", "cdm", "cm", "rw", "cam", "lw", "st"],
-  "3-5-2": ["gk", "cb", "cb", "cb", "rm", "cm", "cdm", "cm", "lm", "st", "st"],
-  "5-3-2": ["gk", "rb", "cb", "cb", "cb", "lb", "cm", "cdm", "cm", "st", "st"],
-  "4-1-4-1": ["gk", "rb", "cb", "cb", "lb", "cdm", "rm", "cm", "cm", "lm", "st"],
-};
+import { FORMATION_SLOTS } from "./formations";
+import { optimalLineup } from "./assignment";
+export { FORMATION_SLOTS } from "./formations";
 
 const BASE_COUNT: Readonly<Record<"def" | "mid" | "att", number>> = { def: 4, mid: 4, att: 2 };
 
@@ -79,36 +73,11 @@ export function bestEleven(
   rate: (player: CoachPlayer, slot: Position) => number = aiOutput,
 ): OnField[] {
   const slots = FORMATION_SLOTS[formation];
-  const order = slots
-    .map((slot, index) => ({ slot, index }))
-    .sort((a, b) => scarcity(a.slot) - scarcity(b.slot) || a.index - b.index);
-  const used = new Set<string>();
-  const chosen: Array<OnField | null> = slots.map(() => null);
-  for (const { slot, index } of order) {
-    let best: CoachPlayer | null = null;
-    let bestValue = -Infinity;
-    for (const player of players) {
-      if (used.has(player.id)) continue;
-      const value = rate(player, slot);
-      if (value > bestValue || (value === bestValue && best && player.id < best.id)) {
-        best = player;
-        bestValue = value;
-      }
-    }
-    if (best) {
-      used.add(best.id);
-      chosen[index] = { player: best, slot };
-    }
-  }
-  return chosen.filter((entry): entry is OnField => entry !== null);
-}
-
-function scarcity(slot: Position): number {
-  if (slot === "gk") return 0;
-  if (slot === "cb") return 1;
-  if (slot === "lb" || slot === "rb") return 2;
-  if (slot === "st") return 3;
-  return 4;
+  const byId = new Map(players.map(player=>[player.id,player]));
+  return optimalLineup(players,formation,rate,true).flatMap((id,index)=>{
+    const player=byId.get(id),slot=slots[index];
+    return player && slot ? [{player,slot}] : [];
+  });
 }
 
 /** Força geral mostrada na tela: média do OVR do melhor time na formação mais natural. */
@@ -181,7 +150,8 @@ function againstMultiplier(side: SideSetup, other: SideSetup): number {
 /** Gols esperados de `side` contra `other` em 90 minutos. */
 export function expectedGoals(side: SideSetup, other: SideSetup): number {
   const venue = side.neutral ? 0 : side.home ? MATCH.home : -MATCH.home;
-  const exponent = MATCH.attackSlope * (side.ratings.attack - other.ratings.defense) + MATCH.midSlope * (side.ratings.mid - other.ratings.mid) + venue;
+  const competitive = (rating:number)=>rating<=MATCH.eliteFrom ? rating : MATCH.eliteFrom+(rating-MATCH.eliteFrom)*MATCH.eliteFactor;
+  const exponent = MATCH.attackSlope * (competitive(side.ratings.attack) - competitive(other.ratings.defense)) + MATCH.midSlope * (competitive(side.ratings.mid) - competitive(other.ratings.mid)) + venue;
   const setPiece = 1 + Math.min(TRAIT_EFFECTS.setPieceCap, TRAIT_EFFECTS.setPiece * side.setPiecePlayers);
   const missing = Math.max(0, 11 - side.playersOnField) * MATCH.shortHanded;
   const extra = Math.max(0, 11 - other.playersOnField) * MATCH.shortHanded;

@@ -1,5 +1,5 @@
 import { Menu } from "@base-ui/react/menu";
-import { type Career, canRetireNow } from "@craque/engine";
+import { type Career, canRetireNow, currentStrength, playerClubImpact } from "@craque/engine";
 import { getClub } from "@craque/world";
 import { Flag as FlagIcon, Home, MoreVertical } from "lucide-react";
 import { currentOvr, lastRecord } from "../../features/career/view";
@@ -9,6 +9,9 @@ import { IconButton } from "../../ui/Button";
 import { Crest } from "../../ui/Media";
 import { AnimatedNumber } from "../../ui/AnimatedNumber";
 import { PitchMark } from "../../ui/PitchMark";
+import { InfoTip } from "../../ui/InfoTip";
+import { craqueRevision } from "../../i18n/craqueRevision";
+import { d64 } from "../../i18n/tecnico/d64";
 import { Delta } from "../../ui/Signals";
 
 interface CareerHeaderProps {
@@ -27,12 +30,13 @@ interface CareerHeaderProps {
  * cima; aqui, o menu da carreira.
  */
 export function CareerHeader({ career, alternate = false, onLeave, onRetire }: CareerHeaderProps) {
-  const { t, c } = useT();
+  const { t, c, locale } = useT();
   const ovr = currentOvr(career);
   const last = lastRecord(career);
-  const delta = last ? last.ovrEnd - last.ovrStart : 0;
+  const delta = last ? ovr - last.ovrStart : 0;
   const club = career.contract?.club ?? null;
   const age = Math.min(career.age, 40);
+  const strength = club ? currentStrength(career.world,club) : 0;
 
   return (
     <header className="career-header">
@@ -48,13 +52,14 @@ export function CareerHeader({ career, alternate = false, onLeave, onRetire }: C
             <p className="mt-1 truncate text-xs text-muted lg:text-sm">
               {c(`positionAbbr.${career.player.position}`)} · {club ? getClub(club)?.name : t("career.header.noClub")} ·{" "}
               {t("career.header.age", { age })}
+              {career.contract?.loan ? <span className="text-info"> · {t("reveal.loan")}</span> : null}
               {alternate ? <span className="text-info"> · {t("career.alternate")}</span> : null}
             </p>
           </div>
           <div className="flex shrink-0 flex-col items-end gap-1">
-            <p className="career-ovr numeric">
+            <p className="career-ovr numeric flex items-center gap-2">
               <span className="sr-only">OVR </span>
-              <AnimatedNumber value={ovr} showDelta={false} />
+              <AnimatedNumber value={ovr} showDelta={false} /><InfoTip label="OVR"><p>{craqueRevision(locale,"ovr")}</p>{club?<><p className="mt-2">{craqueRevision(locale,"impact").replace("{strength}",strength.toFixed(1)).replace("{impact}",Math.max(0,playerClubImpact(strength,ovr,1)).toFixed(1))}</p><p className="mt-2">{d64(locale,"clubProgress")}</p></>:null}</InfoTip>
             </p>
             {delta !== 0 ? <Delta value={delta} className="text-2xs leading-none" /> : <span className="eyebrow text-2xs leading-none">OVR</span>}
           </div>

@@ -8,7 +8,7 @@ import { canStoreImages, RUNTIME_IMAGE_BYTES, runtimeImageUrls } from "./offline
 describe("imagens para jogar sem internet", () => {
   const urls = runtimeImageUrls();
 
-  it("a lista tem todo escudo e troféu real, sem repetir e sem nada que já entra na instalação", () => {
+  it("a lista tem imagens reais de todas as categorias sob demanda, sem repetir", () => {
     expect(urls.length).toBeGreaterThan(300);
     expect(new Set(urls).size).toBe(urls.length);
     for (const url of urls) expect(url, url).toMatch(RUNTIME_IMAGE_PATTERN);
@@ -16,14 +16,15 @@ describe("imagens para jogar sem internet", () => {
     const trophies = new Set(COMPETITIONS.filter((competition) => competition.trophy?.startsWith("trophies/")).map((competition) => competition.trophy)).size;
     expect(urls.filter((url) => url.includes("/assets/clubs/"))).toHaveLength(crests);
     expect(urls.filter((url) => url.includes("/assets/trophies/"))).toHaveLength(trophies);
-    // Bandeiras, selos de liga e prêmios vão no cache da instalação, não aqui.
-    expect(urls.some((url) => /\/assets\/(flags|leagues|awards)\//.test(url))).toBe(false);
+    // D62: estas categorias passam a entrar sob demanda, não na instalação.
+    for (const folder of ["flags", "leagues", "awards"]) expect(urls.some((url) => url.includes(`/assets/${folder}/`))).toBe(true);
   });
 
   it("o padrão do service worker pega as pastas dele e só elas", () => {
     expect(IMAGE_CACHE).toBe("craque-imagens");
     for (const folder of RUNTIME_IMAGE_DIRS) expect(RUNTIME_IMAGE_PATTERN.test(`/assets/${folder}/x.svg`)).toBe(true);
-    expect(RUNTIME_IMAGE_PATTERN.test("/assets/flags/br.svg")).toBe(false);
+    expect(RUNTIME_IMAGE_PATTERN.test("/assets/flags/br.svg")).toBe(true);
+    expect(RUNTIME_IMAGE_PATTERN.test("/assets/unknown/br.svg")).toBe(false);
     expect(RUNTIME_IMAGE_PATTERN.test("/assets/index-abc.js")).toBe(false);
   });
 

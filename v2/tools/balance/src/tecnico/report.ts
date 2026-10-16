@@ -18,8 +18,9 @@ const PHILOSOPHY_NAME: Readonly<Record<Philosophy, string>> = {
 };
 
 const POLICY_NAME: Readonly<Record<string, string>> = {
-  balanced: "Equilibrada (treina, desenvolve, contrata ou sobe da base)",
+  balanced: "Equilibrada (treina, desenvolve, contrata ou sobe da base e adapta o plano)",
   passive: "Passiva (nenhuma ação)",
+  trainBuy:"Treina ataque e defesa, contrata somente acima da força atual",
   spender: "Gastadora (contrata em toda etapa)",
 };
 
@@ -45,8 +46,9 @@ export function markdownReport(report: TecnicoReport): string {
     "",
     `Técnico ${COACH_VERSION}, semente \`${report.seed}\`, ${careers.careers} carreiras automáticas (${careers.seasons} temporadas). **${passed} de ${targets.length} metas atendidas.**`,
     "",
-    "Gerado por `pnpm balance:tecnico`. As sondas fazem contas exatas sobre o modelo (sem sorteio); as carreiras",
-    "jogam o mundo inteiro com uma política fixa (GDD 42.12). As mesmas sondas aparecem no laboratório.",
+    "Gerado por `pnpm balance:tecnico`. As sondas usam as contas do modelo; o Mundial amostra 20 mil",
+    "chaveamentos, com desempate por força. As carreiras jogam o mundo inteiro com uma política definida",
+    "(GDD 42.12). As mesmas sondas aparecem no laboratório.",
     "",
     "## Metas",
     "",

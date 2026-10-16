@@ -15,6 +15,7 @@ export interface Podium {
 
 /** O que sobra de uma temporada e decide a seguinte (classificação, supercopas). */
 export interface SeasonMemory {
+  readonly performanceSpots?: readonly CountryCode[];
   readonly year: number;
   /** Ids dos clubes na ordem final, por liga. */
   readonly tables: Readonly<Record<string, readonly string[]>>;
@@ -34,6 +35,8 @@ export interface WorldState {
   readonly year: number;
   /** Força atual de cada clube, na ordem de `CLUBS`. */
   readonly strength: readonly number[];
+  /** Temporadas consecutivas sem título de clube, na ordem de CLUBS. */
+  readonly titleDrought?: readonly number[];
   /** Divisão atual de cada clube, na ordem de `CLUBS`. */
   readonly division: readonly Division[];
   readonly memory: SeasonMemory;

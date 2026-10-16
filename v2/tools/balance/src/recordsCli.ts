@@ -37,7 +37,7 @@ function main() {
   const report = [
     "# Recordes ao alcance",
     "",
-    `Motor ${ENGINE_VERSION}, semente \`${args.seed}\`, ${args.careers} Fenômenos por posição em cada lote (ambicioso, fiel e fiel ao gigante), jogados pelas decisões sem aposentar por vontade própria, ritmo Normal (uma temporada por decisão). ${seconds} s.`,
+    `Motor ${ENGINE_VERSION}, semente \`${args.seed}\`, ${args.careers} Fenômenos por posição em cada lote (ambicioso, fiel e fiel ao gigante), jogados pelas decisões sem aposentar por vontade própria, ritmo Intensa (uma temporada por decisão). ${seconds} s.`,
     "",
     "Recorde não é para ser comum: a meta (D33, D42 e D44) é que cada marca seja possível para um jogador",
     "extraordinário com muita sorte, e que cada passo além dela seja mais raro que o anterior (colunas +1, +2",

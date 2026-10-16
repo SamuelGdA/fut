@@ -39,6 +39,7 @@ export interface CareerMetrics {
   readonly errors: readonly string[];
   readonly msPerSeason: number;
   readonly byPolicy: readonly PolicyStats[];
+  readonly pairedActions: { readonly pairs: number; readonly balanced: number; readonly passive: number };
   readonly leagues: readonly LeagueStats[];
   readonly strongestShare: number;
   readonly clubWorldCups: number;
@@ -120,7 +121,13 @@ export function computeCareerMetrics(summaries: readonly CareerSummary[]): Caree
     return mean(own.map((summary) => summary.ms / summary.seasons.length));
   };
 
+  const pairs = summaries.filter(summary => summary.options.policy === "passive").flatMap(passive => {
+    const balanced = summaries.find(summary => summary.options.policy === "balanced" && summary.options.seed === passive.options.seed && summary.options.mode === passive.options.mode && summary.options.nationality === passive.options.nationality);
+    return balanced ? [{ balanced, passive }] : [];
+  });
+  const met = (policy: "balanced" | "passive") => { const played = pairs.flatMap(pair => pair[policy].seasons).flatMap(season => season.coach ? [season.coach] : []); return played.filter(season => season.met).length / Math.max(1,played.length); };
   return {
+    pairedActions: { pairs: pairs.length, balanced: met("balanced"), passive: met("passive") },
     careers: summaries.length,
     seasons: seasons.length,
     errors,

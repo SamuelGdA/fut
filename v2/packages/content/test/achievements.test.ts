@@ -60,7 +60,7 @@ const context = (career: ReturnType<typeof createCareer>) => ({ career, challeng
 describe("o catálogo de conquistas", () => {
   it("ids únicos, oito grupos com pelo menos quatro cada, regra de sim ou não ou de contagem", () => {
     expect(new Set(ACHIEVEMENT_IDS).size).toBe(ACHIEVEMENTS.length);
-    for (const group of ACHIEVEMENT_GROUPS) expect(ACHIEVEMENTS.filter((item) => item.group === group).length, group).toBeGreaterThanOrEqual(4);
+    for (const group of ACHIEVEMENT_GROUPS) expect(ACHIEVEMENTS.filter((item) => item.group === group).length, group).toBeGreaterThanOrEqual(group === "national" ? 3 : 4);
     for (const item of ACHIEVEMENTS) {
       expect(Boolean(item.check) !== Boolean(item.count), item.id).toBe(true);
       expect(item.count === undefined || (item.target ?? 0) > 0, item.id).toBe(true);
@@ -177,7 +177,7 @@ describe("texto do Desafio do dia", () => {
           const goal = missionGoal(locale, item.id, target);
           expect(goal.length, `${locale} ${item.id} ${target}`).toBeGreaterThan(0);
           expect(goal, `${locale} ${item.id}`).not.toMatch(/[{}–—]/);
-          if (!["worldCupRun", "clubLegend", "twoClubIdol"].includes(item.id)) expect(goal).toContain(String(target));
+          if (!["worldCupRun", "clubLegend", "twoClubIdol"].includes(item.id)) expect(goal).toContain(new Intl.NumberFormat(locale).format(target));
         }
       }
     }

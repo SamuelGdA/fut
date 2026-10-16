@@ -27,6 +27,7 @@ export interface PrefsData {
   haptics: boolean;
   pace: Pace;
   difficulty: Difficulty;
+  seasonDetails: boolean;
 }
 
 export const DEFAULT_PREFS: Readonly<PrefsData> = {
@@ -35,9 +36,10 @@ export const DEFAULT_PREFS: Readonly<PrefsData> = {
   volume: 3,
   muted: false,
   motion: "system",
-  haptics: true,
+  haptics: false,
   pace: "intense",
   difficulty: "normal",
+  seasonDetails: false,
 };
 
 /**
@@ -52,10 +54,11 @@ export function sanitizePrefs(input: unknown): PrefsData {
     theme: oneOf(source["theme"], THEMES, DEFAULT_PREFS.theme),
     volume: intInRange(source["volume"], 0, VOLUME_STEPS, DEFAULT_PREFS.volume),
     muted: bool(source["muted"], DEFAULT_PREFS.muted),
-    motion: oneOf(source["motion"], MOTION_MODES, DEFAULT_PREFS.motion),
+    motion: "system",
     haptics: bool(source["haptics"], DEFAULT_PREFS.haptics),
     pace: oneOf(source["pace"], PACES, DEFAULT_PREFS.pace),
     difficulty: oneOf(source["difficulty"], DIFFICULTIES, DEFAULT_PREFS.difficulty),
+    seasonDetails: bool(source["seasonDetails"], DEFAULT_PREFS.seasonDetails),
   };
 }
 
@@ -69,6 +72,7 @@ export interface PrefsActions {
   setHaptics(haptics: boolean): void;
   setPace(pace: Pace): void;
   setDifficulty(difficulty: Difficulty): void;
+  setSeasonDetails(open: boolean): void;
 }
 
 export type PrefsState = PrefsData & PrefsActions;
@@ -83,6 +87,7 @@ function pickData(state: PrefsState): PrefsData {
     haptics: state.haptics,
     pace: state.pace,
     difficulty: state.difficulty,
+    seasonDetails: state.seasonDetails,
   };
 }
 
@@ -101,13 +106,14 @@ export const usePrefs = create<PrefsState>()(
       setHaptics: (haptics) => set({ haptics }),
       setPace: (pace) => set({ pace }),
       setDifficulty: (difficulty) => set({ difficulty }),
+      setSeasonDetails: (seasonDetails) => set({ seasonDetails }),
     }),
     {
       name: STORAGE_KEYS.prefs,
-      version: 1,
+      version: 2,
       storage: createJSONStorage(() => safeStorage),
       partialize: pickData,
-      migrate: (persisted) => sanitizePrefs(persisted),
+      migrate: (persisted) => ({ ...sanitizePrefs(persisted), haptics: false }),
       merge: (persisted, current) => ({ ...current, ...sanitizePrefs(persisted) }),
     },
   ),

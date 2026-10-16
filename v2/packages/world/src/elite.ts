@@ -1,4 +1,5 @@
 import eliteJson from "../data/elite.json";
+import americaJson from "../data/elite-americas.json";
 import type { CountryCode } from "./types";
 
 /**
@@ -26,6 +27,8 @@ export interface EliteProfile {
   readonly retireAge: number;
   /** Joga num clube da UEFA (conta para a Chuteira de Ouro). */
   readonly europe: boolean;
+  /** Atua na elite das Américas na projeção do jogo, não é a nacionalidade. */
+  readonly americas: boolean;
 }
 
 function position(value: string, id: string): ElitePosition {
@@ -34,8 +37,10 @@ function position(value: string, id: string): ElitePosition {
   return match;
 }
 
-export const ELITE: readonly EliteProfile[] = eliteJson.map((row) => ({
+export const ELITE: readonly EliteProfile[] = [...eliteJson, ...americaJson].map((row) => ({
   ...row,
+  europe: row.europe && row.id !== "vitor-roque",
+  americas: !row.europe && row.id !== "bento" || row.id === "vitor-roque",
   position: position(row.position, row.id),
 }));
 

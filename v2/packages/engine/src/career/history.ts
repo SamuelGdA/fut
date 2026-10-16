@@ -69,7 +69,8 @@ export function careerTotals(history: readonly SeasonRecord[]): CareerTotals {
     assists += record.production.assists;
     cleanSheets += record.production.cleanSheets;
     titles += record.titles.length;
-    awards += record.awards.won.length;
+    // O selo anual resume Craque/artilheiro; cada competição ganha conta uma vez.
+    awards += record.awards.won.filter(id=>id!=="bestPlayer" && id!=="topScorer").length + record.awards.crowns.length;
     nationalGames += record.national.games;
     nationalGoals += record.national.goals;
     peakOvr = Math.max(peakOvr, record.ovrEnd);

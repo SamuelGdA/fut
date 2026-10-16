@@ -48,7 +48,8 @@ function jobs(count: number, seasons: number, seed: string): RunOptions[] {
     const slot = index % 4;
     const policy: Policy = slot === 1 ? "passive" : slot === 3 ? "spender" : "balanced";
     const mode: CoachMode = slot === 2 ? "slow" : "fast";
-    list.push({ seed: `${seed}:${index}`, mode, policy, nationality: NATIONS[index % NATIONS.length] ?? "BRA", seasons });
+    const pairedIndex = policy === "passive" ? index - 1 : index;
+    list.push({ seed: `${seed}:${pairedIndex}`, mode, policy, nationality: NATIONS[pairedIndex % NATIONS.length] ?? "BRA", seasons });
   }
   return list;
 }

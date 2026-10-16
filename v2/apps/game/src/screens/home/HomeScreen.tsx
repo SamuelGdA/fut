@@ -3,7 +3,6 @@ import { ArrowRight, Award, Crosshair, Dices, FlaskConical, Pencil, Play, Timer 
 import { useEffect, useState } from "react";
 import { useNavigation } from "../../app/navigation";
 import { useDraft } from "../../features/career/draft";
-import { clearSave, peekSave, type SavePeek } from "../../features/career/saveRecord";
 import { useChallengeClock } from "../../features/challenge/clock";
 import { dayRanking } from "../../features/hall/model";
 import { useHall } from "../../features/hall/store";
@@ -13,7 +12,6 @@ import { IS_DEV } from "../../lib/env";
 import { feedback } from "../../services/feedback";
 import { type Difficulty, type Pace, usePrefs } from "../../store/prefs";
 import { Button } from "../../ui/Button";
-import { ConfirmDialog } from "../../ui/Overlays";
 import { Panel } from "../../ui/Panel";
 import { PlayerCard } from "../../ui/PlayerCard";
 import { Segmented } from "../../ui/Segmented";
@@ -28,19 +26,11 @@ import { Segmented } from "../../ui/Segmented";
  * interrompida. O motor só é baixado quando o jogador começa uma carreira.
  */
 export function HomeScreen() {
-  const { t, c, locale, number } = useT();
+  const { t, locale, number } = useT();
   const go = useNavigation((state) => state.go);
   const pace = usePrefs((state) => state.pace);
   const difficulty = usePrefs((state) => state.difficulty);
   const draft = useDraft();
-  const [save, setSave] = useState<SavePeek>(() => peekSave());
-  // O save quebrado sai do disco depois que o aviso já está na tela. Apagar
-  // dentro do inicializador perdia o aviso: se a primeira renderização fosse
-  // descartada (algo suspendeu), a segunda já não achava save nenhum.
-  useEffect(() => {
-    if (save.kind === "invalid") clearSave();
-  }, [save.kind]);
-  const [confirmDiscard, setConfirmDiscard] = useState(false);
   const [starting, setStarting] = useState(false);
 
   const startQuick = async () => {
@@ -64,15 +54,6 @@ export function HomeScreen() {
   const onQuick = () => {
     feedback("select");
     void startQuick();
-  };
-
-  const discard = async () => {
-    // A carreira descartada com ao menos uma temporada vai para o Hall como interrompida.
-    const { archiveSavedCareer } = await import("../../features/hall/session");
-    void archiveSavedCareer();
-    clearSave();
-    setSave({ kind: "none" });
-    feedback("back");
   };
 
   const card = (width: number) => (
@@ -115,25 +96,6 @@ export function HomeScreen() {
       </section>
 
       <div className="home-main">
-        {save.kind === "present" && !save.current ? (
-          <Panel data-tone="bad" className="border-l-4 border-l-bad">
-            <p className="eyebrow text-tone">{t("home.staleTitle")}</p>
-            <p className="mt-2 text-sm text-muted">{t("home.staleBody")}</p>
-            <p className="display mt-3 text-2xl font-extrabold uppercase">
-              {save.snapshot.surname} · {c(`positionAbbr.${save.snapshot.position}`)} · OVR {save.snapshot.ovr}
-            </p>
-            <Button className="mt-4" size="sm" variant="danger" onClick={() => setConfirmDiscard(true)}>
-              {t("home.discard")}
-            </Button>
-          </Panel>
-        ) : null}
-        {save.kind === "invalid" ? (
-          <Panel data-tone="bad">
-            <p className="eyebrow text-tone">{t("home.invalidTitle")}</p>
-            <p className="mt-2 text-sm text-muted">{t("home.invalidBody")}</p>
-          </Panel>
-        ) : null}
-
         <Panel title={t("home.setup")}>
           <div className="grid gap-5 sm:grid-cols-2">
             <div>
@@ -198,7 +160,7 @@ export function HomeScreen() {
       </div>
 
       <aside className="home-side">
-        <DailyChallengeCard save={save} />
+        <DailyChallengeCard />
         <MemoryPanel />
         <Panel title={t("home.world")}>
           <dl className="grid grid-cols-3 divide-x divide-line">
@@ -230,15 +192,6 @@ export function HomeScreen() {
         ) : null}
       </aside>
 
-      <ConfirmDialog
-        open={confirmDiscard}
-        onOpenChange={setConfirmDiscard}
-        title={t("home.discardTitle")}
-        description={t("home.discardBody")}
-        confirmLabel={t("home.discard")}
-        cancelLabel={t("common.cancel")}
-        onConfirm={() => void discard()}
-      />
     </div>
   );
 }
@@ -247,13 +200,12 @@ export function HomeScreen() {
  * O Desafio do dia no Início (GDD 27): a mesma carreira para todo mundo, a
  * contagem até a virada da meia-noite UTC e, se já jogou hoje, a ranqueada.
  */
-function DailyChallengeCard({ save }: { save: SavePeek }) {
+function DailyChallengeCard() {
   const { t } = useT();
   const go = useNavigation((state) => state.go);
   const clock = useChallengeClock();
   const attempts = useHall((state) => state.attempts);
   const ranked = dayRanking(attempts, clock.day).find((attempt) => attempt.ranked) ?? null;
-  const inProgress = save.kind === "present" && save.current && save.challengeId === clock.day && save.snapshot.end === null;
 
   return (
     <section className="home-challenge p-5" aria-labelledby="desafio-do-dia">
@@ -275,9 +227,7 @@ function DailyChallengeCard({ save }: { save: SavePeek }) {
       <p className="mt-3 max-w-xl text-sm text-muted">{t("home.challengeBody")}</p>
       <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
         <p className="text-sm">
-          {inProgress ? (
-            <span className="text-info">{t("home.challengeInProgress")}</span>
-          ) : ranked ? (
+          {ranked ? (
             <span className="text-glory">{t("home.challengeRanked", { score: ranked.score })}</span>
           ) : null}
         </p>

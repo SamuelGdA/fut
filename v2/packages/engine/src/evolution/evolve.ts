@@ -22,6 +22,8 @@ import { CAPACITY_RANGE } from "./tuning";
 export interface SeasonEvolutionInput extends GrowthContext {
   /** Soma das importâncias dos títulos da temporada (GDD 7.5). */
   readonly titleImportance: number;
+  /** Reconhecimentos da temporada, com teto único de três pontos de OVR. */
+  readonly successBonus?: number;
   /** Foco de treino escolhido para esta temporada (a primeira do período), se houver. */
   readonly focus: TrainingFocus | null;
   /** Multiplica o crescimento esperado (evento: diploma, apadrinhar a joia da base). */
@@ -33,6 +35,7 @@ export interface SeasonEvolutionInput extends GrowthContext {
 }
 
 export interface SeasonEvolutionReport {
+  readonly breakthroughGain?: number;
   readonly form: SeasonForm;
   readonly factors: GrowthFactors;
   /** Ganho esperado antes da forma. */
@@ -64,7 +67,7 @@ export function evolveSeason(player: Player, input: SeasonEvolutionInput, rng: R
   const form = drawSeasonForm(rng, input.age, input.games);
   const factors = growthFactors(player, input);
   const expected = expectedGrowth(factors) * (input.growthScale ?? 1);
-  const morale = input.titleImportance > 0 ? 1 : 0;
+  const morale = clamp(input.successBonus ?? (input.titleImportance > 0 ? 1 : 0), 0, 3);
 
   const gain = capSeasonGain(expected * form.multiplier);
   const loss = ageDecline(player, input.age, input.difficulty);
@@ -78,7 +81,7 @@ export function evolveSeason(player: Player, input: SeasonEvolutionInput, rng: R
   if (input.restoreCapacity) next = { ...next, capacity: next.capacity - input.restoreCapacity };
   if (input.guarantee) next = guaranteeFocus(next, input.guarantee.focus, input.guarantee.start, input.age);
   if (morale > 0) {
-    const target = Math.min(99, ovrAt(next, input.age) + 1);
+    const target = Math.min(99, ovrAt(next, input.age) + morale);
     // OVR sempre deriva dos atributos: achar o primeiro degrau, mesmo perto do 99.
     for (let step = 0; step < 200 && ovrAt(next, input.age) < target && next.capacity < CAPACITY_RANGE.max; step += 1) {
       next = { ...next, capacity: Math.min(CAPACITY_RANGE.max, next.capacity + 0.05) };

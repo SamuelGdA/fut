@@ -1,44 +1,13 @@
-# dependencies
 node_modules/
-.pnp
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
-
-# build output
-.next/
-out/
-build/
 dist/
-.turbo/
-
-# testing
+dist-ssr/
 coverage/
-
-# misc
-.DS_Store
-*.pem
-
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
-
-# env files (can opt-in for committing if needed)
-.env*
-
-# vercel
-.vercel
-
-# typescript
+.vite/
 *.tsbuildinfo
-next-env.d.ts
-
-# Lockfiles from other package managers. The repo is pnpm (see ADR 0001), and a
-# stray package-lock.json installs a different tree than everyone else has.
+.env*
+!.env.example
+*.pem
+.DS_Store
+*-debug.log*
 package-lock.json
 yarn.lock

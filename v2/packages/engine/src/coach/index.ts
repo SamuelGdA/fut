@@ -36,10 +36,13 @@ export { aiFormation, aiPhilosophy, bestEleven, displayStrength, expectedGoals, 
 export { leagueRounds, sortTable, COMPETITION_DAYS } from "./competitions";
 export { quickMatch, shootout, startLive, playUntil, type QuickSide, type DetailedInput, type LiveMatch } from "./match";
 export { benchSize, registered, registrationRule, viableSquad, isAvailable } from "./lineup";
-export { financeLabel, initialOfferDivision, leaguePosition, leagueState, objectiveFor, seasonBudget, wageBillOf, titlesOf, cupScore } from "./review";
+export { financeLabel, initialOfferDivision, leaguePosition, leagueState, objectiveFor, seasonBudget, wageBillOf, titlesOf, cupScore, titleAmbition } from "./review";
 export { developBonus } from "./evolution";
-export { EVENT_IDS, MATCH_EVENT_OPTIONS, eventWeights } from "./events";
+export { EVENT_IDS, MATCH_EVENT_OPTIONS, eventWeights, eventTargets, canAffordEvent, eventCost } from "./events";
 export { periodEnd } from "./season";
+export { promiseProgress } from "./promises";
+export { cupObjectivesFor } from "./objectives";
+export { isClubIdol } from "./legacy";
 export { COACH_COUNTRIES, squadOf, createWorldState, type WorldData } from "./world";
 export { absDay, stageKey } from "./util";
 export { growthStep, type GrowthInput } from "./evolution";
@@ -69,3 +72,5 @@ export {
   type PhilosophyRow,
   type PurchasePoint,
 } from "./probes";
+
+export { championsTable, CHAMPIONS_DAYS, CHAMPIONS_KNOCKOUT } from "./champions";

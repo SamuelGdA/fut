@@ -1,20 +1,21 @@
 import type { AvatarConfig } from "@craque/art";
 import { coachAchievementsMet, coachAchievementText } from "@craque/content/coach";
-import { type CoachCareer, type CoachCommand, type CoachMode, coachCommand, createCoachCareer, type WorldData } from "@craque/engine/coach";
+import { COACH_VERSION, type CoachCareer, type CoachCommand, type CoachMode, coachCommand, createCoachCareer, type WorldData } from "@craque/engine/coach";
 import type { CountryCode } from "@craque/world";
 import { FREE_PLAYERS, SQUAD_PLAYERS } from "@craque/world/squads";
 import { create } from "zustand";
+import { sanitizeAvatar } from "../appearance/avatarSchema";
 import { usePrefs } from "../../store/prefs";
 import { useHall } from "../hall/store";
 import { useUnlocks } from "../hall/unlocks";
 import { useTecnicoPresence } from "./presence";
+import { clearCoachSave, readCoachSave, writeCoachSave } from "./save";
+import { feedback } from "../../services/feedback";
 
 /**
- * A carreira do Técnico (GDD 42), só em memória (D51): nenhum save, nenhum
- * banco, nada no armazenamento. Recarregar ou fechar a aba encerra a
- * carreira; a tela avisa antes de começar e antes de sair. Este módulo é o
- * único que carrega o motor do Técnico e os elencos, e só entra quando o
- * jogador começa.
+ * A carreira do Técnico (D61): a última sessão em andamento é retomada por
+ * um diário de comandos versionado. Encerrar limpa esse registro. Este módulo
+ * carrega o motor e os elencos quando o jogador começa ou retoma.
  *
  * Cada comando passa pelo motor (`coachCommand`), que devolve um estado novo
  * ou recusa sem mudar nada. Os comandos que simulam (simular, decisão no meio
@@ -56,6 +57,10 @@ interface TecnicoState {
   busy: boolean;
   /** Último comando recusado (código do motor), para a tela avisar. */
   lastError: string | null;
+  commands: CoachCommand[];
+  focusPlayer: string | null;
+  internalTesting: boolean;
+  hydrate(): Promise<void>;
   start(input: StartInput): void;
   /** Aplica um comando na hora. Devolve o código do erro, ou `null`. */
   run(command: CoachCommand): string | null;
@@ -94,13 +99,37 @@ export const useTecnico = create<TecnicoState>()((set, get) => ({
   avatar: null,
   busy: false,
   lastError: null,
+  commands: [],
+  focusPlayer: null,
+  internalTesting: false,
+
+  async hydrate() {
+    if (get().career || get().busy) return;
+    const saved = readCoachSave();
+    if (!saved || saved.version !== COACH_VERSION) { clearCoachSave(); publish(null); return; }
+    set({ busy: true });
+    await nextFrame();
+    try {
+      let career = createCoachCareer(saved.setup, WORLD);
+      for (const command of saved.commands) {
+        if (HEAVY.has(command.type)) await nextFrame();
+        const result = coachCommand(career, command);
+        if (result.error) throw new Error(result.error);
+        career = result.career;
+      }
+      if (career.phase === "ended") throw new Error("ended");
+      set({ career, avatar: sanitizeAvatar(saved.avatar), commands: saved.commands, busy: false, lastError: null, internalTesting: false });
+      publish(career);
+    } catch { clearCoachSave(); set({ busy: false, lastError: "save" }); publish(null); }
+  },
 
   start(input) {
     const career = createCoachCareer(
       { seed: newSeed(), startYear: 2026, mode: input.mode, identity: { name: input.name.trim(), nationality: input.nationality } },
       WORLD,
     );
-    set({ career, avatar: input.avatar, lastError: null, busy: false });
+    set({ career, avatar: input.avatar, lastError: null, busy: false, commands: [], focusPlayer: null, internalTesting: false });
+    writeCoachSave(career, input.avatar, []);
     publish(career);
   },
 
@@ -113,9 +142,16 @@ export const useTecnico = create<TecnicoState>()((set, get) => ({
       return result.error;
     }
     const historyBefore = career.history.length;
-    set({ career: result.career, lastError: null });
+    const commands = [...get().commands, command];
+    set({ career: result.career, lastError: null, commands });
+    if (career.phase !== "results" && result.career.phase === "results") {
+      const report = result.career.lastReport;
+      if (report?.competitions.some((entry) => entry.champion) || report?.awards?.length) feedback("trophy");
+      else feedback("whistle");
+    }
+    if (!get().internalTesting) writeCoachSave(result.career, get().avatar, commands);
     publish(result.career);
-    if (result.career.history.length !== historyBefore || result.career.phase === "ended") unlockAchievements(result.career);
+    if (!get().internalTesting && (result.career.history.length !== historyBefore || result.career.phase === "ended")) unlockAchievements(result.career);
     return null;
   },
 
@@ -129,7 +165,9 @@ export const useTecnico = create<TecnicoState>()((set, get) => ({
   },
 
   abandon() {
-    set({ career: null, avatar: null, busy: false, lastError: null });
-    publish(null);
+    if (!get().internalTesting) clearCoachSave();
+    set({ career: null, avatar: null, busy: false, lastError: null, commands: [], focusPlayer: null, internalTesting: false });
+    const saved = readCoachSave();
+    useTecnicoPresence.getState().set({ active: saved !== null, club: saved?.club ?? null, year: saved?.year ?? null, ended: false });
   },
 }));

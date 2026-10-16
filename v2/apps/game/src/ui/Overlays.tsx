@@ -13,13 +13,14 @@ interface SheetProps {
   children: ReactNode;
   /** Ações fixas no rodapé, fora da área que rola. */
   footer?: ReactNode;
+  contained?: boolean;
 }
 
 /**
  * Folha que sobe da borda de baixo. Fecha arrastando para baixo, tocando fora
  * ou com Esc. No desktop, fica centralizada com largura limitada.
  */
-export function Sheet({ open, onOpenChange, title, description, closeLabel, children, footer }: SheetProps) {
+export function Sheet({ open, onOpenChange, title, description, closeLabel, children, footer, contained }: SheetProps) {
   return (
     <Drawer.Root open={open} onOpenChange={(next) => onOpenChange(next)} swipeDirection="down">
       <Drawer.Portal>
@@ -27,7 +28,7 @@ export function Sheet({ open, onOpenChange, title, description, closeLabel, chil
         <Drawer.Viewport className="sheet-viewport">
           <Drawer.Popup className="sheet-popup">
             <div className="sheet-handle" aria-hidden="true" />
-            <Drawer.Content className="sheet-content">
+            <Drawer.Content className={contained ? "sheet-content sheet-contained" : "sheet-content"}>
               <div className="mb-4 flex items-start justify-between gap-4">
                 <div className="min-w-0">
                   <Drawer.Title className="display text-3xl font-extrabold uppercase">{title}</Drawer.Title>

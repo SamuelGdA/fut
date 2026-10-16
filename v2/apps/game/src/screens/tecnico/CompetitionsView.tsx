@@ -1,4 +1,5 @@
-import { type CoachCareer, type CompetitionState, type Fixture, sortTable, type TableRow } from "@craque/engine/coach";
+import { d66 } from "../../i18n/tecnico/d66";
+import { type CoachCareer, type CompetitionState, type Fixture, sortTable, type TableRow, championsTable } from "@craque/engine/coach";
 import { getLeague, leagueAt } from "@craque/world";
 import { useState } from "react";
 import { useTecnicoT } from "../../i18n/tecnico/useTecnicoT";
@@ -7,19 +8,20 @@ import { cn } from "../../ui/cn";
 import { SectionRule } from "../../ui/Panel";
 import { ClubTag } from "./shared";
 import { competitionName, roundName } from "./text";
+import { revisionText } from "../../i18n/tecnico/revision";
 
 /**
  * Competições (spec 15): só de clubes (D55), com tabela de verdade
  * atualizada jogo a jogo, chaves com ida, volta, agregado e pênaltis, e o
  * calendário do time. Nada de seleções neste modo.
  */
-export function CompetitionsView({ career }: { career: CoachCareer }) {
+export function CompetitionsView({ career, all=false }: { career: CoachCareer; all?:boolean }) {
   const t = useTecnicoT();
   const { tt } = t;
   const coach = career.coach;
   const own = coach
     ? Object.values(career.competitions)
-        .filter((state) => state.entrants.includes(coach.club))
+        .filter((state) => all || state.entrants.includes(coach.club))
         .sort((a, b) => (a.kind === "league" ? -1 : b.kind === "league" ? 1 : a.id.localeCompare(b.id)))
     : [];
   const [selected, setSelected] = useState<string>(own[0]?.id ?? "calendar");
@@ -47,14 +49,14 @@ export function CompetitionsView({ career }: { career: CoachCareer }) {
           ))}
         </select>
       </label>
-      {selected === "calendar" || !current ? <Calendar career={career} /> : <CompetitionDetail career={career} state={current} />}
+      {selected === "calendar" || !current ? <Calendar career={career} /> : <CompetitionDetail key={current.id} career={career} state={current} />}
     </section>
   );
 }
 
-function Table({ career, rows, highlight, zones }: { career: CoachCareer; rows: readonly TableRow[]; highlight: string; zones?: { up: number; down: number } }) {
+function Table({ career, rows, highlight, zones, champions = false }: { career: CoachCareer; rows: readonly TableRow[]; highlight: string; zones?: { up: number; down: number }; champions?:boolean }) {
   const { tt } = useTecnicoT();
-  const sorted = sortTable(rows as TableRow[], (club) => career.clubs[club]?.strength ?? 0);
+  const sorted = champions ? championsTable(rows,career.fixtures.filter(f=>f.competition==="cont1:UEFA"),club=>career.competitions["cont1:UEFA"]?.coefficients?.[club] ?? 0) : sortTable(rows as TableRow[], (club) => career.clubs[club]?.strength ?? 0);
   return (
     <table className="tec-table">
       <thead>
@@ -99,24 +101,30 @@ function CompetitionDetail({ career, state }: { career: CoachCareer; state: Comp
   const t = useTecnicoT();
   const { tt } = t;
   const club = career.coach?.club ?? "";
+  const fixtures = career.fixtures.filter((fixture) => fixture.competition === state.id);
+  const rounds = [...new Set(fixtures.map((fixture) => fixture.round))].filter((round) => !/^G\d+$/.test(round) && !round.startsWith("group"));
+  const [group, setGroup] = useState(state.groups?.find((entry) => entry.clubs.includes(club))?.name ?? state.groups?.[0]?.name ?? "");
+  const [selectedRound, setRound] = useState(rounds.filter((round) => fixtures.some((fixture) => fixture.round === round && (fixture.home === club || fixture.away === club))).at(-1) ?? rounds.at(-1) ?? "");
   if (state.kind === "league" && state.table) {
     const league = getLeague(state.id.replace(/^league:/, ""));
     const up = league && league.division === 2 ? (leagueAt(league.country, 1)?.promotionSlots ?? 0) : 0;
     const down = league && league.division === 1 && leagueAt(league.country, 2) ? league.promotionSlots : 0;
     return <Table career={career} rows={state.table} highlight={club} zones={{ up, down }} />;
   }
-  const fixtures = career.fixtures.filter((fixture) => fixture.competition === state.id);
-  const rounds = [...new Set(fixtures.map((fixture) => fixture.round))];
   return (
     <div className="flex flex-col gap-4">
-      {state.groups?.map((group) => (
-        <div key={group.name}>
-          <p className="eyebrow mb-1">{tt("competitions.group", { name: group.name })}</p>
-          <Table career={career} rows={group.rows} highlight={club} />
+      {state.associationException?<p className="text-xs text-muted">{d66(t.locale,"drawException")}</p>:null}
+      {state.id==="cont1:UEFA" && state.table ? <Table career={career} rows={state.table} highlight={club} champions zones={{up:8,down:12}} /> : null}
+      {state.groups?.length ? <div className="tec-cup-nav"><span className="eyebrow">{revisionText(t.locale, "group")}</span><div>{state.groups.map((entry) => <button key={entry.name} type="button" aria-pressed={group === entry.name} onClick={() => setGroup(entry.name)}>{entry.name}</button>)}</div></div> : null}
+      {state.groups?.filter((entry) => entry.name === group).map((entry) => (
+        <div key={entry.name}>
+          <p className="eyebrow mb-1">{tt("competitions.group", { name: entry.name })}</p>
+          <Table career={career} rows={entry.rows} highlight={club} />
         </div>
       ))}
+      {rounds.length ? <label className="tec-select"><span className="eyebrow">{revisionText(t.locale, "rounds")}</span><select value={selectedRound} onChange={(event) => setRound(event.target.value)}>{rounds.map((round) => <option key={round} value={round}>{roundName(tt, round)}</option>)}</select></label> : null}
       {rounds
-        .filter((round) => !round.startsWith("group"))
+        .filter((round) => round === selectedRound)
         .map((round) => (
           <div key={round}>
             <p className="eyebrow mb-1">{roundName(tt, round)}</p>

@@ -8,6 +8,7 @@ import {
   initialDivisionShare,
   seasonBudget,
   STAGE_EVENTS,
+  TALK_EFFECTS,
   wageBillOf,
 } from "@craque/engine/coach";
 import { type CountryCode, getClub } from "@craque/world";
@@ -20,6 +21,8 @@ import { Button } from "../../../ui/Button";
 import { Crest } from "../../../ui/Media";
 import { Chip } from "../../../ui/Signals";
 import { OfferCard } from "../../tecnico/Offers";
+import { RiskPreview } from "../../tecnico/DecisionUX";
+import { FinanceMeter } from "../../tecnico/FinanceMeter";
 import { LabSection } from "../LabSection";
 import { CountrySelect, LabTable } from "./LabControls";
 import { labCareer, labStarted } from "./labCareer";
@@ -199,7 +202,7 @@ export function FinanceSection({ index }: { index: number }) {
         </Button>
       </div>
       <LabTable
-        head={[tt("lab.sources.club"), tt("club.revenue"), tt("club.wages"), tt("club.wageCap"), tt("club.budget"), tt("club.financeState"), tt("lab.finance.affordable")]}
+        head={[tt("lab.sources.club"), tt("club.budget"), tt("club.wages"), tt("club.financeState"), tt("lab.finance.affordable")]}
         rows={clubs.map((club) => {
           const wages = wageBillOf(career, club.id);
           const reach = rows?.find((row) => row.club === club.id);
@@ -214,6 +217,7 @@ export function FinanceSection({ index }: { index: number }) {
           ];
         })}
       />
+      {clubs[0] ? <div className="grid max-w-3xl gap-4 sm:grid-cols-2"><FinanceMeter label={tt("club.wages")} used={wageBillOf(career, clubs[0].id)} limit={clubs[0].revenue * FINANCE.wageCap / 12} t={t} /><FinanceMeter label={tt("ux.estimate")} used={0} pending={seasonBudget(clubs[0], 0) * 1.2} limit={seasonBudget(clubs[0], 0)} t={t} /></div> : null}
     </LabSection>
   );
 }
@@ -228,6 +232,7 @@ export function EventsSection({ index }: { index: number }) {
   return (
     <LabSection id="tec-eventos" index={index} title={tt("lab.events.title")}>
       <p className="mb-3 max-w-3xl text-sm text-muted">{tt("lab.events.lead", { share: t.percent(STAGE_EVENTS.matchShare) })}</p>
+      <div className="tec-card mb-4 max-w-lg"><p className="font-semibold">{t.g("talks.options.rest.label")}</p><RiskPreview chance={TALK_EFFECTS["rest"]?.chance ?? null} success={TALK_EFFECTS["rest"]?.success ?? []} failure={TALK_EFFECTS["rest"]?.failure ?? []} t={t} /></div>
       <LabTable
         head={["", tt("lab.events.kind"), tt("lab.events.weight")]}
         rows={weights.map((entry) => [

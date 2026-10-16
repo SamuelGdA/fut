@@ -1,12 +1,22 @@
 import type { ClubOffer, CoachCareer, Moment } from "@craque/engine/coach";
-import { getClub, getCompetition } from "@craque/world";
+import { getClub, getCompetition, getCountry } from "@craque/world";
 import { playerRow } from "../../features/tecnico/view";
 import type { TecnicoTranslator } from "../../i18n/tecnico/useTecnicoT";
 
 /** Textos montados das telas do Técnico (sem componentes, para o recarregamento rápido do Vite). */
 
-export function clubName(id: string | null | undefined): string {
+export function clubName(id: string | null | undefined, locale: "pt" | "es" | "en" = "pt"): string {
   if (!id) return "";
+  if(id.startsWith("guest:UEFA:")) {
+    const [, ,country,number]=id.split(":");
+    return `${getCountry(country ?? "")?.names[locale] ?? country} · ${locale==="en"?"representative":"representante"} ${Number(number)+1}`;
+  }
+  if (id.startsWith("generic:")) {
+    const [, confederation, number] = id.split(":");
+    const regions = { pt: { AFC: "Ásia", CAF: "África", OFC: "Oceania" }, en: { AFC: "Asia", CAF: "Africa", OFC: "Oceania" }, es: { AFC: "Asia", CAF: "África", OFC: "Oceanía" } };
+    const region = regions[locale][confederation as "AFC" | "CAF" | "OFC"] ?? confederation;
+    return number ? `${region} · ${locale === "en" ? "representative" : "representante"} ${number}` : `${locale === "en" ? "Champion of" : locale === "es" ? "Campeón de" : "Campeão de"} ${region}`;
+  }
   return getClub(id)?.name ?? id;
 }
 
@@ -17,6 +27,8 @@ export function competitionName(id: string, locale: "pt" | "es" | "en"): string 
 
 /** Rótulo de uma fase ou rodada ("R16", "group:3", "12"). */
 export function roundName(tt: TecnicoTranslator["tt"], round: string): string {
+  if(round.startsWith("LP"))return `${tt("competitions.rounds.LP")} ${round.slice(2)}`;
+  if(round==="PO")return tt("competitions.rounds.PO");
   if (/^\d+$/.test(round)) return tt("competitions.rounds.league", { round });
   if (round.startsWith("group")) return tt("competitions.rounds.group");
   const known = ["F", "FF", "SF", "QF", "R16", "R32", "R64", "R128", "P1", "G", "prelim", "entered", "champion"] as const;
@@ -57,7 +69,12 @@ export function momentText(career: CoachCareer, moment: Moment, t: TecnicoTransl
     case "promotion":
     case "relegation":
       return t.g(`moments.${moment.kind}`);
-    case "hatTrick":
+    case "learnedPosition": return t.g("moments.learnedPosition",{player:playerName(career,moment.player),position:t.c(`positionAbbr.${moment.position}`)});
+    case "hatTrick": {
+      const fixture=career.fixtures.find(entry=>entry.id===moment.fixture);
+      const opponent=moment.opponent ?? (fixture?.home===career.coach?.club ? fixture?.away : fixture?.home);
+      return t.g("moments.hatTrick",{player:playerName(career,moment.player),opponent:opponent ? club(opponent) : ""});
+    }
     case "debut":
       return t.g(`moments.${moment.kind}`, { player: playerName(career, moment.player) });
     case "matchEvent":

@@ -1,3 +1,6 @@
+import { useTecnicoT } from "../../i18n/tecnico/useTecnicoT";
+import { revisionText } from "../../i18n/tecnico/revision";
+import { d64 } from "../../i18n/tecnico/d64";
 import type { EventEffect } from "@craque/engine/coach";
 import { getCountry } from "@craque/world";
 import type { ReactNode } from "react";
@@ -13,10 +16,11 @@ import { clubName } from "./text";
 /** Peças pequenas das telas do Técnico, usadas em mais de uma vista. */
 
 export function ClubTag({ club, size = 20, className }: { club: string; size?: number; className?: string }) {
+  const { locale } = useTecnicoT();
   return (
     <span className={cn("inline-flex min-w-0 items-center gap-1.5", className)}>
       <Crest club={club} size={size} decorative />
-      <span className="truncate">{clubName(club)}</span>
+      <span className="truncate">{clubName(club,locale)}</span>
     </span>
   );
 }
@@ -32,17 +36,19 @@ export function PlayerLine({
   row,
   t,
   right,
+  extra,
   children,
 }: {
   row: PlayerRow;
   t: TecnicoTranslator;
   right?: ReactNode;
+  extra?: ReactNode;
   children?: ReactNode;
 }) {
   return (
     <span className="tec-player">
       <span className="tec-pos numeric">{t.c(`positionAbbr.${row.position}`)}</span>
-      <span className="tec-ovr numeric">{row.ovr}</span>
+      <span className="tec-ovr numeric">{row.ovr}{row.traits.length > 0 ? <span className="tec-trait-star" aria-label={row.traits.map((trait) => t.tt(`squad.traits.${trait}.name`)).join(", ")}>★</span> : null}</span>
       <span className="min-w-0 flex-1">
         <span className="flex min-w-0 items-center gap-1.5">
           <NationFlag code={row.nationality} locale={t.locale} size={14} />
@@ -55,11 +61,13 @@ export function PlayerLine({
           ) : null}
         </span>
         <span className="flex flex-wrap items-center gap-x-2 text-2xs text-muted">
-          <span>{t.tt("common.years", { age: row.age })}</span>
+          <span className="tec-inline-age">{t.tt("common.years", { age: row.age })}</span>
           {children}
         </span>
       </span>
+      <span className="tec-player-age numeric" title={t.tt("common.years",{age:row.age})}>{row.age}</span>
       {right}
+      {extra}
     </span>
   );
 }
@@ -86,9 +94,12 @@ export function EffectChips({ effects, t }: { effects: readonly EventEffect[]; t
       case "reputation":
         chips.push({ key, tone: toneOf(effect.amount), text: t.tt(`event.effects.${effect.type}`, { delta: signed(effect.amount) }) });
         break;
+      case "wage":
+        chips.push({ key, tone: effect.amount < 0 ? "good" : "bad", text: effect.relative ? t.tt("event.effects.wageScale", { percent: `${effect.amount < 0 ? "−" : "+"}${t.percent(Math.abs(effect.amount))}` }) : t.tt("event.effects.wage", { money: t.money(effect.amount) }) });
+        break;
       case "cash":
       case "budget":
-        chips.push({ key, tone: toneOf(effect.amount), text: t.tt(`event.effects.${effect.type}`, { money: `${effect.amount >= 0 ? "+" : "−"}${t.money(Math.abs(effect.amount))}` }) });
+        chips.push({ key, tone: toneOf(effect.amount), text: t.tt("event.effects.budget", { money: `${effect.amount >= 0 ? "+" : "−"}${t.money(Math.abs(effect.amount))}` }) });
         break;
       case "training":
         chips.push({ key, tone: "good", text: t.tt("event.effects.training", { sector: t.tt(`train.sectors.${effect.sector}.name`) }) });
@@ -97,14 +108,14 @@ export function EffectChips({ effects, t }: { effects: readonly EventEffect[]; t
         chips.push({
           key,
           tone: "info",
-          text: t.tt(`event.effects.promise.${effect.kind}`, { percent: t.percent(effect.target), count: effect.target }),
+          text: d64(t.locale,"nextStarter"),
         });
         break;
       case "injury":
         chips.push({
           key,
           tone: effect.days < 0 ? "good" : "bad",
-          text: effect.days < 0 ? t.tt("event.effects.injury.shorter", { days: Math.abs(effect.days) }) : t.tt("event.effects.injury.out", { days: effect.days }),
+          text: effect.days < 0 ? t.tt("event.effects.injury.shorter", { days: 1 }) : revisionText(t.locale, "injury", { count: effect.days >= 300 ? 2 : 1 }),
         });
         break;
       case "sell":
@@ -133,7 +144,7 @@ export function EffectChips({ effects, t }: { effects: readonly EventEffect[]; t
 }
 
 /** Uma linha "rótulo · valor" das fichas e resumos. */
-export function Fact({ label, children, className }: { label: string; children: ReactNode; className?: string }) {
+export function Fact({ label, children, className }: { label: ReactNode; children: ReactNode; className?: string }) {
   return (
     <div className={cn("flex min-w-0 items-baseline justify-between gap-3 border-b border-line py-1.5 last:border-b-0", className)}>
       <dt className="text-xs text-muted">{label}</dt>

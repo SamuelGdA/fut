@@ -67,6 +67,7 @@ describe("totais, auge e honras", () => {
     expect(totals.seasons).toBe(career.history.length);
     expect(totals.games).toBe(career.history.reduce((sum, record) => sum + record.games, 0));
     expect(totals.titles).toBe(career.history.reduce((sum, record) => sum + record.titles.length, 0));
+    expect(totals.awards).toBe(career.history.reduce((sum,record)=>sum+record.awards.won.filter(id=>id!=="bestPlayer" && id!=="topScorer").length+record.awards.crowns.length,0));
   });
 
   it("o auge é a temporada de maior OVR, a mais antiga no empate", () => {

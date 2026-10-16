@@ -68,8 +68,8 @@ export function CareerScreen() {
 
   // Antes da primeira pintura: o replay é síncrono, e a tela já abre pronta.
   useLayoutEffect(() => {
-    useCareer.getState().hydrate();
-  }, []);
+    if(status==="idle")useCareer.getState().hydrate();
+  }, [status]);
 
   // Sem carreira para mostrar (save de outra versão, quebrado ou apagado): Início.
   useEffect(() => {

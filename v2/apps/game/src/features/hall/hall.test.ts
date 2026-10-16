@@ -7,7 +7,6 @@ import {
   challengeSetup,
   createCareer,
   dailyHand,
-  ENGINE_VERSION,
   replay,
   policyChoice,
   retireNow,
@@ -273,7 +272,7 @@ describe("linha alternativa e E se...? (GDD 28.3)", () => {
     expect(points.map((point) => point.index)).toEqual(career.choices.map((_, index) => index));
   });
 
-  it("seguir de uma decisão refaz até ali, marca a linha alternativa e guarda no save", () => {
+  it("seguir de uma decisão refaz até ali, marca a linha alternativa sem gravar uma sessão", () => {
     const original = retireNow(playN(createCareer(SETUP), 6));
     const source = saveOf(original);
     expect(useCareer.getState().branch(source, DEFAULT_AVATAR, 3)).toBe(true);
@@ -282,11 +281,8 @@ describe("linha alternativa e E se...? (GDD 28.3)", () => {
     expect(state.career?.decision?.id).toBe(source.choices[3]?.decision);
     expect(state.alternate).toEqual({ from: archiveId(source), decision: source.choices[3]?.decision, original: source.choices[3]?.option });
 
-    const read = readSave();
-    expect(read.kind === "ok" ? read.record.alternate : null).toEqual(state.alternate);
-    const peek = peekSave();
-    expect(peek.kind === "present" ? peek.alternate : null).toBe(true);
-    expect(peek.kind === "present" ? peek.current : null).toBe(read.kind === "ok" && read.record.engine === ENGINE_VERSION);
+    expect(readSave().kind).toBe("none");
+    expect(peekSave().kind).toBe("none");
   });
 
   it("a linha alternativa é só para se divertir: não entra no Hall, nem terminada nem interrompida (D43)", async () => {
@@ -327,11 +323,13 @@ describe("linha alternativa e E se...? (GDD 28.3)", () => {
     expect(peek.kind).toBe("none");
   });
 
-  it("o save do desafio diz o dia, sem precisar do motor", () => {
+  it("o replay do desafio identifica o dia sem persistir a sessão", () => {
     const career = createCareer(challengeSetup(dailyHand(DAY), { surname: "DIA", foot: "left", dreamNumber: 7 }));
-    writeSave(recordOf(career, null, "career"));
+    const record = recordOf(career, null, "career");
+    expect(record.setup.challengeId).toBe(DAY);
+    writeSave(record);
     const peek = peekSave();
-    expect(peek.kind === "present" ? peek.challengeId : null).toBe(DAY);
+    expect(peek.kind).toBe("none");
     expect(sanitizeArchiveEntry({ id: "x", format: ARCHIVE_FORMAT })).toBeNull();
   });
 });

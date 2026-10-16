@@ -1,3 +1,4 @@
+import { showcaseItems } from "../../features/summary/showcase";
 import { type AvatarConfig } from "@craque/art";
 import { competitionName } from "@craque/content";
 import {
@@ -160,8 +161,8 @@ export function HistoryPanel({ career, onReplay }: { career: Career; onReplay(in
         const keeper = isGoalkeeper(record.position);
         const entry = leagueEntry(record);
         const movement = movementOf(record);
-        const awards = record.awards.won.filter((key) => key !== "topScorer" && key !== "bestPlayer");
-        const honours = record.titles.length + awards.length;
+        const collection = showcaseItems([record]);
+        const honours = collection.length;
         return (
           <li key={record.year}>
             <button
@@ -209,15 +210,7 @@ export function HistoryPanel({ career, onReplay }: { career: Career; onReplay(in
                   </span>
                 ) : null}
                 {honours > 0 ? (
-                  <span className="history-honours" title={[...record.titles.map((id) => competitionName(id, locale)), ...awards.map((key) => AWARDS[key].names[locale])].join(", ")}>
-                    {record.titles.map((id) => {
-                      const competition = getCompetition(id);
-                      return competition ? <TrophyArt key={id} competition={competition} size={24} language={locale} /> : null;
-                    })}
-                    {awards.map((key) => (
-                      <AwardArt key={key} award={AWARDS[key]} size={24} language={locale} />
-                    ))}
-                  </span>
+                  <span className="history-honours" title={collection.map(item => item.kind === "title" ? competitionName(item.id,locale) : `${AWARDS[item.id].names[locale]}${item.competition ? ` · ${competitionName(item.competition,locale)}` : ""}`).join(", ")}>{collection.map(item => { const comp = item.kind === "title" ? getCompetition(item.id) : null; const label = item.kind === "title" ? competitionName(item.id,locale) : `${AWARDS[item.id].names[locale]}${item.competition ? ` · ${competitionName(item.competition,locale)}` : ""}`; return item.kind === "award" ? <AwardArt key={`${item.id}:${item.competition ?? ""}`} award={AWARDS[item.id]} size={24} language={locale} tooltip={label} /> : comp ? <TrophyArt key={item.id} competition={comp} size={24} language={locale} /> : null; })}</span>
                 ) : null}
               </span>
               <span className="flex flex-col items-end">

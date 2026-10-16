@@ -718,6 +718,9 @@
     color: var(--spot);
   }
 
+  .paper-honours[data-compact] { flex-direction: row; flex-wrap: wrap; gap: 5px; }
+  .paper-honours[data-compact] li > span { display: none; }
+
   .paper-more {
     color: var(--faint);
     font-size: 9.5px;
@@ -1137,3 +1140,22 @@
     text-transform: uppercase;
   }
 }
+
+/* A identificação continua legível na prévia e no PNG do pôster. */
+@layer components {
+  .ovr-curve-label { fill: var(--ink); font-family: var(--font-display); font-size: 16px; font-weight: 800; }
+  .poster .ovr-curve-label { fill: #e3b341; font-size: 22px; }
+  .poster-showcase li:not(.poster-more) { display: flex; flex-direction: column; align-items: center; flex: 0 0 104px; }
+  .poster-trophy-name { display: block; width: 104px; margin-top: 10px; min-height: 34px; color: #f0eee5; font-size: 13px; font-weight: 600; line-height: 1.25; text-align: center; }
+  .poster-count { bottom: auto; top: 54px; right: -8px; font-size: 20px; }
+}
+
+@layer components { .poster { gap: 20px; } }
+
+/* A coleção completa pode alongar o pôster, mantendo largura e composição. */
+.poster { height: auto; min-height: 1350px; overflow: visible; }
+.poster-scale { height: auto; }
+.poster-showcase { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); align-items: start; gap: 22px 24px; }
+.poster-showcase li:not(.poster-more) { width: 100%; min-width: 0; padding-top: 5px; }
+.poster-trophy-name { width: 100%; overflow-wrap: anywhere; min-height: 42px; }
+.poster-count { top: 64px; right: 0; bottom: auto; font-size: 18px; padding: 2px 5px; }

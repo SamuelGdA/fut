@@ -21,7 +21,7 @@ export type SectorOrGk = Sector | "gk";
 export const PHILOSOPHIES = ["attacking", "defensive", "possession", "counter"] as const;
 export type Philosophy = (typeof PHILOSOPHIES)[number];
 
-export const FORMATIONS = ["4-4-2", "4-3-3", "4-2-3-1", "3-5-2", "5-3-2", "4-1-4-1"] as const;
+export const FORMATIONS = ["3-4-3", "3-5-2", "4-4-2", "4-3-3", "4-2-3-1", "4-1-4-1", "5-3-2", "5-4-1"] as const;
 export type FormationId = (typeof FORMATIONS)[number];
 
 /** Características duradouras (spec 7): as das fontes mais as que se ganham jogando. */
@@ -46,6 +46,7 @@ export type AbsDay = number;
 // ----------------------------------------------------------------- jogador
 
 export interface Injury {
+  readonly turns?: 1 | 2;
   readonly kind: "light" | "medium" | "serious";
   /** Dia absoluto em que volta a estar disponível. */
   readonly until: AbsDay;
@@ -77,6 +78,7 @@ export interface CoachPlayer {
   readonly nationality: CountryCode;
   readonly position: Position;
   readonly alternates: readonly Position[];
+  improvised?: Partial<Record<Position,{apps:number;ratingSum:number}>>;
   readonly birthYear: number;
   readonly origin: PlayerOrigin;
   /** Nível oculto contínuo; o OVR mostrado é o arredondamento. */
@@ -92,6 +94,7 @@ export interface CoachPlayer {
   traits: CoachTrait[];
   club: string;
   joinedYear: number;
+  arrival?: { readonly year: number; readonly kind: "purchase" | "board" | "youth" };
   /** Salário mensal em euros. */
   wage: number;
   /** Satisfação oculta (0–100); só pesa no clube do treinador. */
@@ -114,12 +117,17 @@ export interface CoachPlayer {
 // ------------------------------------------------------------------- clube
 
 export interface CoachClub {
+  readonly continentalGuest?: boolean;
   readonly id: string;
   readonly country: CountryCode;
   division: Division;
   /** Âncora de força (deriva como no Craque) para jovens e mercado da IA. */
   anchor: number;
+  /** Jejum anual de títulos; influencia a âncora para base e contratações. */
+  titleDrought?: number;
   readonly baseAnchor: number;
+  investment?: number;
+  previousInvestment?: number;
   /** Força derivada do elenco (média ponderada do melhor time), atualizada por rodada. */
   strength: number;
   /** Receita anual de referência. */
@@ -171,6 +179,7 @@ export interface GoalEvent {
 }
 
 export interface MatchResult {
+  readonly participants?: Readonly<Record<"home"|"away",readonly {player:string;from:number;to:number;rating:number}[]>>;
   readonly home: number;
   readonly away: number;
   /** Prorrogação e pênaltis só em jogo decisivo empatado. */
@@ -213,6 +222,10 @@ export interface GroupState {
 }
 
 export interface CompetitionState {
+  leagueRanking?: string[];
+  associationException?: boolean;
+  knockoutSeeds?: Record<string,number>;
+  coefficients?: Record<string,number>;
   readonly id: string;
   readonly kind: CompetitionKind;
   readonly country: CountryCode | null;
@@ -339,6 +352,7 @@ export interface FundsResponse {
 export interface YouthCandidate {
   readonly id: string;
   readonly position: Position;
+  readonly alternates?: readonly Position[];
   readonly birthYear: number;
   readonly nationality: CountryCode;
   readonly description: "raw" | "steady" | "promising" | "special";
@@ -386,6 +400,7 @@ export type EventEffect =
   | { readonly type: "form"; readonly target: "subject" | "squad" | "starters"; readonly amount: number }
   | { readonly type: "board"; readonly amount: number }
   | { readonly type: "fans"; readonly amount: number }
+  | { readonly type: "wage"; readonly amount: number; readonly target?: "subject" | "squad"; readonly relative?: boolean }
   | { readonly type: "cash"; readonly amount: number }
   | { readonly type: "budget"; readonly amount: number }
   | { readonly type: "reputation"; readonly amount: number }
@@ -450,7 +465,8 @@ export interface PeriodReport {
   readonly tableSize: number;
   readonly objective: Objective;
   readonly record: { readonly won: number; readonly drawn: number; readonly lost: number; readonly goalsFor: number; readonly goalsAgainst: number };
-  readonly competitions: readonly { readonly competition: string; readonly reached: string; readonly champion: boolean }[];
+  readonly competitions: readonly { readonly competition: string; readonly reached: string; readonly champion: boolean; readonly active?: boolean }[];
+  readonly awards?: readonly CoachAward[];
   readonly highlights: readonly string[];
   readonly revelations: readonly string[];
   readonly disappointments: readonly string[];
@@ -465,12 +481,13 @@ export interface PeriodReport {
 }
 
 export type Moment =
+  | {readonly kind:"learnedPosition";readonly player:string;readonly position:Position}
   | { readonly kind: "derbyWin" | "derbyLoss"; readonly fixture: string; readonly score: readonly [number, number]; readonly opponent: string }
   | { readonly kind: "bigWin" | "bigLoss"; readonly fixture: string; readonly score: readonly [number, number]; readonly opponent: string }
   | { readonly kind: "title"; readonly competition: string }
   | { readonly kind: "eliminated"; readonly competition: string; readonly round: string }
   | { readonly kind: "promotion" | "relegation" }
-  | { readonly kind: "hatTrick"; readonly player: string; readonly fixture: string }
+  | { readonly kind: "hatTrick"; readonly player: string; readonly fixture: string; readonly opponent?: string }
   | { readonly kind: "matchEvent"; readonly event: string; readonly outcome: "success" | "failure"; readonly fixture: string }
   | { readonly kind: "debut"; readonly player: string }
   | { readonly kind: "signing"; readonly player: string; readonly fee: number }
@@ -479,6 +496,9 @@ export type Moment =
 // --------------------------------------------------------------- histórico
 
 export interface SeasonHistory {
+  readonly invincible?: boolean;
+  /** Esquema escolhido no encerramento, para a prancheta do auge. */
+  readonly formation?: FormationId;
   readonly year: number;
   readonly club: string;
   readonly league: string;
@@ -497,9 +517,30 @@ export interface SeasonHistory {
   readonly reputationAfter: number;
   readonly topScorer: { readonly player: string; readonly goals: number } | null;
   readonly bestPlayer: { readonly player: string; readonly ovr: number } | null;
+  readonly record?: PeriodReport["record"];
+  readonly awards?: readonly CoachAward[];
+}
+
+export interface CoachAward {
+  readonly year: number;
+  readonly kind: "coachWorld" | "coachLeague" | "coachContinental" | "playerWorld" | "scorer" | "playerCompetition" | "kingOfAmerica";
+  readonly competition: string | null;
+  readonly player: string | null;
+}
+
+export interface CompetitionStats {
+  starts?:number;
+  minutes?:number;
+  cleanSheets?:number;
+  goalsConceded?:number;
+  apps: number;
+  goals: number;
+  assists: number;
+  ratingSum: number;
 }
 
 export interface PlayerLegacy {
+  byClub?: Record<string, { apps: number; goals: number; assists: number; seasons: number; ratingSum: number; rated: number; bestOvr: number }>;
   readonly player: string;
   readonly name: string;
   readonly nationality: CountryCode;
@@ -512,6 +553,10 @@ export interface PlayerLegacy {
   revealed: boolean;
   signed: boolean;
   firstOvr: number;
+  peak?: CoachPlayer;
+  peakYear?: number;
+  awards?: CoachAward[];
+  assists?: number;
 }
 
 // ------------------------------------------------------------- propostas
@@ -532,6 +577,7 @@ export interface ClubOffer {
   readonly fictionalShare: number;
   /** Oferta de continuidade do clube atual. */
   readonly stay: boolean;
+  readonly internationals?: readonly string[];
 }
 
 // ------------------------------------------------------------- carreira
@@ -554,6 +600,7 @@ export type CoachPhase =
   | "event"
   | "matchEvent"
   | "results"
+  | "transferOffers"
   | "review"
   | "ended";
 
@@ -571,6 +618,7 @@ export interface CoachClubState {
   fundsGranted: number;
   fundsRequests: number;
   objective: Objective;
+  cupObjectives?: Array<{ competition: string; target: string }>;
   /** Objetivo elevado por condição de verba. */
   raisedObjective: boolean;
   credit: number;
@@ -599,8 +647,16 @@ export interface CoachCareer {
   actionsUsed: number;
   actions: ActionRecord[];
   flow: ActionFlow | null;
+  savedFlows: Partial<Record<"buy" | "sell", ActionFlow>>;
+  transferOffers: SaleOffer[];
+  competitionStats: Record<string, Record<string, CompetitionStats>>;
+  seasonAwards: CoachAward[];
+  /** Guarda a entrega anual mesmo quando nenhum prêmio veio para o nosso clube. */
+  seasonAwardsYear?: number;
+  news: { retired: string[]; arrivals: string[] };
   youth: YouthCandidate[];
   event: CoachEvent | null;
+  eventsSeen: string[];
   /** Evento de partida armado para esta etapa (gatilho avaliado na simulação). */
   matchEventArmed: boolean;
   pendingMatch: PendingMatch | null;
@@ -623,6 +679,8 @@ export interface CoachCareer {
 }
 
 export interface PreviousSeason {
+  readonly uefaCoefficients?: Readonly<Record<string,readonly number[]>>;
+  readonly performanceSpots?: readonly CountryCode[];
   readonly year: number;
   readonly tables: Readonly<Record<string, readonly string[]>>;
   readonly cups: Readonly<Record<string, { readonly winner: string; readonly runnerUp: string }>>;
@@ -650,7 +708,8 @@ export interface SeasonReview {
   readonly creditAfter: number;
   readonly dismissed: boolean;
   /** Termo que mais pesou na avaliação, para a explicação. */
-  readonly reason: "objective" | "cups" | "finances" | "promises" | "fans" | "history";
+  readonly reason: "objective" | "cups" | "finances" | "promises" | "fans" | "history" | "ambition";
+  readonly ambition?: { readonly weight: number; readonly debt: number; readonly penalty: number };
   readonly tolerance: "trusted" | "warned" | "patience" | "none";
   readonly reputationBefore: number;
   readonly reputationAfter: number;

@@ -15,9 +15,8 @@ export function isGamePath(pathname: string, base: string = import.meta.env.BASE
 /**
  * Onde o jogo abre (GDD 5 e D50): um endereço desconhecido abre a página não
  * encontrada; um link de carreira (`#c=`) abre o resumo compartilhado; todo o
- * resto abre o hub do Futeiros. A carreira salva do Craque continua pelo
- * cartão do hub ("Continuar carreira"); o Técnico não tem save, então
- * recarregar sempre volta ao hub. Em desenvolvimento, `#lab` abre o
+ * resto abre o hub do Futeiros. O Craque é uma sessão em memória; o Técnico pode retomar a última
+ * carreira em andamento pelo hub. Recarregar sempre abre o hub. Em desenvolvimento, `#lab` abre o
  * laboratório.
  */
 export function startScreen(

@@ -1,5 +1,5 @@
 import { honours, type SeasonRecord } from "@craque/engine";
-import type { AwardKey } from "@craque/world";
+import { compareHonours, type AwardKey } from "@craque/world";
 
 /**
  * A vitrine (GDD 24.5): troféus e prêmios agrupados por competição com ×N, numa
@@ -9,9 +9,9 @@ import type { AwardKey } from "@craque/world";
 
 export type ShowcaseItem =
   | { readonly kind: "title"; readonly id: string; readonly count: number; readonly years: readonly number[] }
-  | { readonly kind: "award"; readonly id: AwardKey; readonly count: number; readonly years: readonly number[] };
+  | { readonly kind: "award"; readonly id: AwardKey; readonly competition?: string; readonly count: number; readonly years: readonly number[] };
 
-/** Títulos primeiro, os mais repetidos na frente (como o motor agrupa), depois os prêmios. */
+/** Coleção inteira pela importância da conquista, independentemente da quantidade. */
 export function showcaseItems(history: readonly SeasonRecord[]): ShowcaseItem[] {
   const grouped = honours(history);
   const yearsOf = (matches: (record: SeasonRecord) => boolean) =>
@@ -25,7 +25,7 @@ export function showcaseItems(history: readonly SeasonRecord[]): ShowcaseItem[] 
         years: yearsOf((record) => record.titles.includes(honour.id)),
       }),
     ),
-    ...grouped.awards.map(
+    ...grouped.awards.filter((honour) => honour.id !== "topScorer" && honour.id !== "bestPlayer").map(
       (honour): ShowcaseItem => ({
         kind: "award",
         id: honour.id,
@@ -33,7 +33,14 @@ export function showcaseItems(history: readonly SeasonRecord[]): ShowcaseItem[] 
         years: yearsOf((record) => record.awards.won.includes(honour.id)),
       }),
     ),
-  ];
+    ...[...new Set(history.flatMap((record) => record.awards.crowns.map((crown) => `${crown.award}:${crown.competition}`)))].map((key): ShowcaseItem => {
+      const at = key.indexOf(":");
+      const id = key.slice(0, at) as AwardKey;
+      const competition = key.slice(at + 1);
+      const years = history.filter((record) => record.awards.crowns.some((crown) => crown.award === id && crown.competition === competition)).map((record) => record.year);
+      return { kind: "award", id, competition, count: years.length, years };
+    }),
+  ].sort(compareHonours);
 }
 
 export interface ShowcaseLayout {
@@ -69,12 +76,15 @@ function measure(count: number, width: number, maxHeight: number, art: number, l
  * O maior tamanho em que `count` peças cabem em `width` × `maxHeight`. Se nem
  * o menor cabe, devolve o menor mesmo (a vitrine rola), com `fits` falso.
  */
-export function showcaseLayout(count: number, width: number, maxHeight: number, maxArt: number = LABELED[0]): ShowcaseLayout {
+export function showcaseLayout(count: number, width: number, maxHeight: number, maxArt: number = LABELED[0], keepLabels = false): ShowcaseLayout {
   const usable = Math.max(width, 120);
   for (const art of LABELED.filter((size) => size <= maxArt)) {
     const layout = measure(count, usable, maxHeight, art, true);
     if (layout.fits) return layout;
   }
+  // No resumo, identificar o torneio vale mais que limitar a altura da coleção.
+  // A página pode crescer; painéis do jogo continuam com o comportamento compacto.
+  if (keepLabels) return measure(count, usable, maxHeight, Math.max(SMALLEST, Math.min(maxArt, LABELED.at(-1)!)), true);
   for (const art of BARE) {
     const layout = measure(count, usable, maxHeight, art, false);
     if (layout.fits) return layout;

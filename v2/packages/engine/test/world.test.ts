@@ -156,11 +156,13 @@ describe("classificação continental (GDD 8.7)", () => {
     const table = [...(world.memory.tables[league.id] ?? [])];
     return {
       ...world.memory,
-      cups: { ...world.memory.cups, [`cup:${country}`]: { winner: cupWinner, runnerUp: table[1] ?? "" } },
+      continental: {},
+      performanceSpots: [],
+      cups: { ...world.memory.cups, [`cup:${country}`]: { winner: cupWinner, runnerUp: table[1] ?? "" }, [`leaguecup:${country}`]: {winner: table[0] ?? "", runnerUp: table[1] ?? ""} },
     };
   }
 
-  it("Inglaterra: 4 na primária, o 5º e o campeão da copa na secundária, o 6º na terciária", () => {
+  it("Inglaterra sem vaga extra: 4 na primária, o 5º e a FA Cup na secundária; Copa da Liga repetida passa à liga", () => {
     const base = createWorld("vagas", 2026).memory;
     const table = base.tables["premier-league"] ?? [];
     const cupWinner = table[10] ?? "";
@@ -179,7 +181,7 @@ describe("classificação continental (GDD 8.7)", () => {
     expect(english("cont3:UEFA")).toEqual([table[6]]);
   });
 
-  it("no Brasil, 6 mais o campeão da copa na Libertadores e 6 na Sul-Americana", () => {
+  it("no Brasil, cinco da liga mais dois finalistas da copa na Libertadores e seis na Sul-Americana", () => {
     const entrants = continentalEntrants(createWorld("vagas", 2026).memory);
     const brazilian = (competition: string) => (entrants[competition] ?? []).filter((id) => getClub(id)?.country === "BRA");
     expect(brazilian("cont1:CONMEBOL").length).toBeGreaterThanOrEqual(7);
@@ -207,22 +209,21 @@ describe("classificação continental (GDD 8.7)", () => {
 });
 
 describe("torneios entre continentes e de seleções (GDD 8.10 a 8.12)", () => {
-  it("Intercontinental: o campeão europeu do ano anterior contra o vencedor do chaveamento", () => {
-    run.results.forEach((season, index) => {
-      const memory = run.worlds[index]?.memory as SeasonMemory;
+  it("Intercontinental: o campeão europeu da temporada contra o vencedor do chaveamento", () => {
+    run.results.forEach((season) => {
       const result = season.intercontinental;
-      expect(result?.final.home).toBe(memory.continental["cont1:UEFA"]?.winner);
+      expect(result?.final.home).toBe(season.continental["cont1:UEFA"]?.order[0]);
       expect(result?.final.away).toBe(result?.bracket[0]);
       expect(result?.bracket).toContain("generic:AFC");
       expect(result?.bracket).toContain(season.continental["cont1:CONMEBOL"]?.order[0]);
     });
   });
 
-  it("Mundial de Clubes só nos anos certos, com 22 clubes", () => {
+  it("Mundial de Clubes só nos anos certos, com 32 clubes", () => {
     for (const season of run.results) {
       if (season.year % 4 === 1) {
-        expect(season.clubWorldCup?.order).toHaveLength(22);
-        expect(new Set(season.clubWorldCup?.order).size).toBe(22);
+        expect(season.clubWorldCup?.order).toHaveLength(32);
+        expect(new Set(season.clubWorldCup?.order).size).toBe(32);
       } else {
         expect(season.clubWorldCup).toBeNull();
       }

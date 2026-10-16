@@ -1,12 +1,16 @@
 import { competitionName, decisionText, describeEffect, effectTone, eventOutcomeText, missionGoal, missionName } from "@craque/content";
 import { type Career, isGoalkeeper, leagueEntry, movementOf, type SeasonRecord } from "@craque/engine";
-import { AWARDS, getClub, getCompetition, getLeague } from "@craque/world";
+import { getClub, getLeague } from "@craque/world";
 import { m, useReducedMotion } from "motion/react";
 import { ChevronDown, X } from "lucide-react";
 import { type CSSProperties, type ReactNode, useEffect, useRef, useState } from "react";
 import { clubStyle } from "../../features/career/clubColors";
 import type { ChallengePage, EventPage, PlaySession, SeasonPage } from "../../features/career/play";
 import { attributeDeltas } from "../../features/career/view";
+import { craqueRevision } from "../../i18n/craqueRevision";
+import { showcaseItems } from "../../features/summary/showcase";
+import { usePrefs } from "../../store/prefs";
+import { HonourToken } from "../../ui/HonourToken";
 import { attributeText } from "../../i18n/attributes";
 import { useT } from "../../i18n/useT";
 import { feedback } from "../../services/feedback";
@@ -15,7 +19,7 @@ import { cardTier } from "../../ui/cardTier";
 import { cn } from "../../ui/cn";
 import { Confetti } from "../../ui/Confetti";
 import { CountUp } from "../../ui/CountUp";
-import { AwardArt, Crest, LeagueBadge, TrophyArt } from "../../ui/Media";
+import { Crest, LeagueBadge } from "../../ui/Media";
 import { Chip, Delta, Glyph } from "../../ui/Signals";
 import { TONE_GLYPH, type Tone } from "../../ui/tone";
 
@@ -43,7 +47,7 @@ interface PlayFeedProps {
  * empurra a decisão.
  */
 export function PlayFeed({ career, play, reviewing, onCloseReview, compact = false }: PlayFeedProps) {
-  const { t } = useT();
+  const { t, locale } = useT();
   const reduced = useReducedMotion();
   const seasons = play.pages.filter((page): page is SeasonPage => page.kind === "season");
   const event = play.pages.find((page): page is EventPage => page.kind === "event") ?? null;
@@ -100,6 +104,7 @@ export function PlayFeed({ career, play, reviewing, onCloseReview, compact = fal
       data-open={open || undefined}
     >
       {toggle}
+      {seasons.length > 1 && honours ? <div className="play-batch-honours" aria-label={craqueRevision(locale, "honours")}>{seasons.map((item) => { const season = career.history[item.index]; if (!season) return null; const collection = showcaseItems([season]); if (!collection.length) return null; return <div key={item.index}><button type="button" className="numeric" onClick={() => setPicked({ session: play.id, index: item.index })}>{season.year}</button><span className="play-honours-art">{collection.map((honour) => <HonourToken key={`${honour.kind}:${honour.id}:${honour.kind === "award" ? honour.competition ?? "" : ""}`} id={honour.kind === "award" ? honour.competition ?? honour.id : honour.id} award={honour.kind === "award" ? honour.id : undefined} year={season.year} size={26} language={locale} />)}</span></div>; })}</div> : null}
       {open && event ? <EventLine page={event} animate={animate} /> : null}
       {open ? <SeasonLine
         key={`${play.id}-${page.index}`}
@@ -226,7 +231,7 @@ function EventLine({ page, animate }: { page: EventPage; animate: boolean }) {
   const tone: Tone = page.success === null ? "neutral" : page.success ? "good" : "bad";
   const title = decisionText(locale, page.before, page.decision).title;
   const outcome = eventOutcomeText(locale, page.before, page.eventId, page.option, page.success);
-  const effects = page.effects.flatMap((effect, index) => {
+  const effects = page.effects.filter((effect) => effect.kind !== "injury").flatMap((effect, index) => {
     const text = describeEffect(locale, effect, page.option.target);
     return text === null ? [] : [{ key: `${effect.kind}-${index}`, text, tone: effectTone(effect) as Tone }];
   });
@@ -271,11 +276,14 @@ interface SeasonLineProps {
 /** Uma temporada jogada: quem, onde, como terminou, os números e o que mudou no jogador. */
 function SeasonLine({ page, record, animate, tabs, review }: SeasonLineProps) {
   const { t, c, locale, ordinal, number } = useT();
+  const detailsOpen = usePrefs((state) => state.seasonDetails);
   const club = getClub(record.club);
   const league = getLeague(record.league);
   const entry = leagueEntry(record);
   const movement = movementOf(record);
   const keeper = isGoalkeeper(record.position);
+  const defender = ["cb", "lb", "rb"].includes(record.position);
+  const seasonHonours = showcaseItems([record]);
   const ovrDelta = record.ovrEnd - page.previousOvr;
   const newTier = cardTier(record.ovrEnd);
   const tierChanged = cardTier(page.previousOvr) !== newTier;
@@ -286,12 +294,13 @@ function SeasonLine({ page, record, animate, tabs, review }: SeasonLineProps) {
   const stats = [
     { key: "games", label: c("stats.games"), value: record.games },
     keeper
-      ? { key: "cleanSheets", label: c("stats.cleanSheets"), value: record.production.cleanSheets }
+      ? { key: "cleanSheets", label: craqueRevision(locale,"cleanShort"), value: record.production.cleanSheets }
       : { key: "goals", label: c("stats.goals"), value: record.production.goals },
     keeper
       ? { key: "national", label: t("reveal.national"), value: record.national.games }
       : { key: "assists", label: t("career.play.assists"), value: record.production.assists },
   ];
+  if (defender) stats.push({ key: "cleanSheets", label: craqueRevision(locale,"cleanShort"), value: record.production.cleanSheets });
 
   const chips: Array<{ key: string; tone: Tone | "club"; solid: boolean; text: string }> = [];
   if (entry?.champion) chips.push({ key: "champion", tone: "glory", solid: true, text: t("reveal.champion") });
@@ -311,7 +320,8 @@ function SeasonLine({ page, record, animate, tabs, review }: SeasonLineProps) {
       text: crown.award === "topScorer" ? t("career.play.topScorer", { competition: name }) : t("career.play.bestPlayer", { competition: name }),
     });
   }
-  if (record.injury) notes.push({ key: "injury", tone: "bad", text: c("stats.injury", { injury: c(`injuries.${record.injury.type}`) }) });
+  if(record.breakthrough)notes.push({key:"breakthrough",tone:"glory",text:craqueRevision(locale,"lateBloom")});
+  if (record.injury) notes.push({ key: "injury", tone: "bad", text: `${c("stats.injury", { injury: c(`injuries.${record.injury.type}`) })} · −${record.injury.lostGames} ${c("stats.games")}` });
   if (!keeper && record.national.games > 0) {
     notes.push({ key: "national", tone: "info", text: t("career.play.national", { games: record.national.games, goals: record.national.goals }) });
   }
@@ -328,7 +338,6 @@ function SeasonLine({ page, record, animate, tabs, review }: SeasonLineProps) {
     });
   }
 
-  const awards = record.awards.won.filter((key) => key !== "topScorer" && key !== "bestPlayer");
   const enter = (delay: number) =>
     animate ? { initial: { opacity: 0, y: 6 }, animate: { opacity: 1, y: 0 }, transition: { delay, duration: 0.28 } } : {};
 
@@ -366,10 +375,10 @@ function SeasonLine({ page, record, animate, tabs, review }: SeasonLineProps) {
         ) : null}
       </m.div>
 
-      <m.dl className="play-stats" {...enter(0.12)}>
+      <m.dl className="play-stats" style={{ "--play-cols": stats.length + 1 } as CSSProperties} {...enter(0.12)}>
         {stats.map((stat) => (
           <div key={stat.key}>
-            <dt className="eyebrow">{stat.label}</dt>
+            <dt className="eyebrow" title={stat.key==="cleanSheets"?c("stats.cleanSheets"):stat.label}>{stat.label}</dt>
             <dd className="display numeric">
               <CountUp to={stat.value} play={animate} duration={800} delay={150} format={(value) => number(value)} />
             </dd>
@@ -385,7 +394,7 @@ function SeasonLine({ page, record, animate, tabs, review }: SeasonLineProps) {
       </m.dl>
 
       {deltas.length > 0 || notes.length > 0 ? (
-        <m.ul className="play-chips play-notes" aria-label={t("reveal.attributes")} {...enter(0.2)}>
+        <details className="play-season-details" open={detailsOpen} onToggle={(event) => { if (event.currentTarget.open !== detailsOpen) usePrefs.getState().setSeasonDetails(event.currentTarget.open); }}><summary>{craqueRevision(locale, "details")}</summary><m.ul className="play-chips play-notes" aria-label={t("reveal.attributes")} {...enter(0.2)}>
           {deltas.map((item) => (
             <li key={item.key}>
               <Chip tone={item.value > 0 ? "good" : "bad"} glyph size="sm">
@@ -401,23 +410,12 @@ function SeasonLine({ page, record, animate, tabs, review }: SeasonLineProps) {
               </Chip>
             </li>
           ))}
-        </m.ul>
+        </m.ul></details>
       ) : null}
 
-      {record.titles.length > 0 || awards.length > 0 ? (
+      {seasonHonours.length > 0 ? (
         <m.div className={cn("play-honours", animate && "play-honours-fresh")} {...enter(0.3)}>
-          <span className="play-honours-art" aria-hidden="true">
-            {record.titles.slice(0, 6).map((id) => {
-              const competition = getCompetition(id);
-              return competition ? <TrophyArt key={id} competition={competition} size={30} language={locale} decorative /> : null;
-            })}
-            {awards.slice(0, 3).map((key) => (
-              <AwardArt key={key} award={AWARDS[key]} size={30} language={locale} decorative />
-            ))}
-          </span>
-          <span className="min-w-0 truncate text-xs font-semibold text-glory">
-            {[...record.titles.map((id) => competitionName(id, locale)), ...awards.map((key) => AWARDS[key].names[locale])].join(" · ")}
-          </span>
+          <span className="play-honours-art">{seasonHonours.map((item) => <HonourToken key={`${item.kind}:${item.id}:${item.kind === "award" ? item.competition ?? "" : ""}`} id={item.kind === "award" ? item.competition ?? item.id : item.id} award={item.kind === "award" ? item.id : undefined} year={record.year} size={30} language={locale} />)}</span>
         </m.div>
       ) : null}
     </div>

@@ -45,6 +45,8 @@ test("instalável: manifesto com nome, ícones, cor e modo de aplicativo", async
 test("sem internet: o jogo abre, joga, e nenhuma imagem quebra", async ({ page, context }) => {
   await abrir(page);
   await controlada(page);
+  await entrarNoCraque(page);
+  await expect.poll(() => page.evaluate(() => document.documentElement.dataset.offlineCraque), { timeout: 60_000 }).toBe("ready");
   await context.setOffline(true);
   await page.reload();
   await entrarNoCraque(page);
@@ -84,6 +86,9 @@ test("guardar todas as imagens nos ajustes: sem internet, os escudos são os rea
   expect(crest).toBeTruthy();
   expect(trophy).toBeTruthy();
 
+  // Guardar imagens não antecipa um modo: primeiro abre o jogo ainda conectado.
+  await entrarNoCraque(page);
+  await expect.poll(() => page.evaluate(() => document.documentElement.dataset.offlineCraque), { timeout: 60_000 }).toBe("ready");
   await context.setOffline(true);
   await page.reload();
   // Sem rede, o service worker entrega do cache o escudo e o troféu reais.

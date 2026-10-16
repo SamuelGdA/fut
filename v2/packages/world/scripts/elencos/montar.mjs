@@ -651,7 +651,8 @@ for (const [file, text] of outputs) {
   const url = new URL(file, SQUADS);
   if (check) {
     const current = existsSync(url) ? readFileSync(url, "utf8") : null;
-    if (current !== text) stale.push(file);
+    // O checkout do Windows pode usar CRLF; isso não altera os dados montados.
+    if (current?.replace(/\r\n/g, "\n") !== text.replace(/\r\n/g, "\n")) stale.push(file);
   } else {
     writeText(url, text);
   }

@@ -1,11 +1,12 @@
 import { type CareerHeadline, careerHeadlines, type SeasonCover, seasonCovers } from "@craque/content";
 import { type Career, isGoalkeeper, movementOf, type SeasonRecord } from "@craque/engine";
-import { AWARDS, getClub, getCompetition, getCountry, getLeague, titleImportance } from "@craque/world";
+import { AWARDS, compareHonours, getClub, getCompetition, getLeague } from "@craque/world";
 import { animate } from "motion";
 import { useReducedMotion } from "motion/react";
 import { type KeyboardEvent, useCallback, useEffect, useRef, useState } from "react";
 import { useT } from "../../i18n/useT";
-import { AwardArt, Crest, TrophyArt } from "../../ui/Media";
+import { Crest } from "../../ui/Media";
+import { HonourToken } from "../../ui/HonourToken";
 
 /**
  * O jornal da carreira, portado do v1 (D10, GDD 24.6): uma primeira página por
@@ -34,7 +35,6 @@ const DRAG_SWEEP_FRACTION = 0.55;
 /** Piso da animação de soltar: a folha cai, nunca teleporta os últimos graus. */
 const SETTLE_MIN_MS = 280;
 /** Limites das listas da coluna da direita: a página tem altura fixa. */
-const HONOUR_LIMIT = 5;
 const ALSO_ITEM_LIMIT = 4;
 /** Altura de uma linha de nota, em px, e o espaço entre linhas. */
 const ALSO_ROW_HEIGHT = 13;
@@ -45,7 +45,7 @@ interface Honour {
   readonly key: string;
   readonly name: string;
   readonly award: boolean;
-  readonly art: { readonly kind: "title"; readonly id: string } | { readonly kind: "award"; readonly id: keyof typeof AWARDS };
+  readonly art: { readonly kind: "title"; readonly id: string } | { readonly kind: "award"; readonly id: keyof typeof AWARDS; readonly competition?:string };
 }
 
 interface Edition {
@@ -74,22 +74,19 @@ function buildEditions(career: Career, locale: "pt" | "es" | "en"): Edition[] {
     running.assists += record.production.assists;
     running.cleanSheets += record.production.cleanSheets;
     running.titles += record.titles.length;
-    // As taças na ordem do que valem para o clube daquela temporada (a confederação do clube, não a do passaporte).
-    const confederation = getCountry(getClub(record.club)?.country)?.confederation;
     const titles = [...record.titles]
-      .map((id) => ({ id, weight: titleImportance(getCompetition(id)?.kind ?? "superCup", confederation) }))
-      .sort((a, b) => b.weight - a.weight)
       .map(
-        ({ id }): Honour => ({
+        (id): Honour => ({
           key: `t-${id}`,
           name: getCompetition(id)?.names[locale] ?? id,
           award: false,
           art: { kind: "title", id },
         }),
       );
-    const awards = record.awards.won.map(
+    const awards = record.awards.won.filter(id=>id!=="bestPlayer" && id!=="topScorer").map(
       (id): Honour => ({ key: `a-${id}`, name: AWARDS[id].names[locale], award: true, art: { kind: "award", id } }),
     );
+    const crowns=record.awards.crowns.map((crown):Honour=>({key:`a-${crown.award}-${crown.competition}`,name:`${AWARDS[crown.award].names[locale]} · ${getCompetition(crown.competition)?.names[locale] ?? crown.competition}`,award:true,art:{kind:"award",id:crown.award,competition:crown.competition}}));
     return [
       {
         cover,
@@ -98,7 +95,7 @@ function buildEditions(career: Career, locale: "pt" | "es" | "en"): Edition[] {
         clubName: getClub(record.club)?.name ?? record.club,
         leagueName: getLeague(record.league)?.name ?? null,
         ovrDelta: previous ? record.ovrEnd - previous.ovrEnd : null,
-        honours: [...titles, ...awards],
+        honours: [...titles, ...awards,...crowns].sort((a,b)=>compareHonours(a.art,b.art)),
         items: headlines.filter((headline) => headline.year === record.year && headline.key !== "title" && headline.key !== "award"),
         toDate: { ...running },
       },
@@ -420,18 +417,13 @@ function FrontPage({ edition, total, keeper }: { edition: Edition; total: number
           {honours.length > 0 ? (
             <div className="paper-box">
               <p className="paper-section">{honours.some((honour) => !honour.award) ? t("summary.newspaper.trophies") : t("summary.newspaper.awards")}</p>
-              <ul className="paper-honours">
-                {honours.slice(0, HONOUR_LIMIT).map((honour) => (
+              <ul className="paper-honours" data-compact={honours.length>5 || undefined}>
+                {honours.map((honour) => (
                   <li key={honour.key} data-award={honour.award || undefined}>
-                    <HonourArt honour={honour} locale={locale} />
+                    <HonourToken id={honour.art.kind==="award" ? honour.art.competition ?? honour.art.id : honour.art.id} award={honour.art.kind==="award" ? honour.art.id : undefined} language={locale} size={20} label={`${honour.name} · ${record.year}`} />
                     <span>{honour.name}</span>
                   </li>
                 ))}
-                {honours.length > HONOUR_LIMIT ? (
-                  <li className="paper-more" title={honours.slice(HONOUR_LIMIT).map((honour) => honour.name).join(" · ")}>
-                    {t("summary.newspaper.more", { count: honours.length - HONOUR_LIMIT })}
-                  </li>
-                ) : null}
               </ul>
             </div>
           ) : null}
@@ -464,11 +456,6 @@ function FrontPage({ edition, total, keeper }: { edition: Edition; total: number
   );
 }
 
-function HonourArt({ honour, locale }: { honour: Honour; locale: "pt" | "es" | "en" }) {
-  if (honour.art.kind === "award") return <AwardArt award={AWARDS[honour.art.id]} size={20} language={locale} decorative />;
-  const competition = getCompetition(honour.art.id);
-  return competition ? <TrophyArt competition={competition} size={20} language={locale} decorative /> : null;
-}
 
 function Stat({ label, value, delta }: { label: string; value: string; delta?: number | null }) {
   return (
@@ -516,7 +503,7 @@ function tagText(
     case "loan":
       return t("reveal.loan");
     case "injury":
-      return record.injury ? c("stats.injury", { injury: c(`injuries.${record.injury.type}`) }) : "";
+      return record.injury ? `${c("stats.injury", { injury: c(`injuries.${record.injury.type}`) })} · −${record.injury.lostGames} ${c("stats.games")}` : "";
   }
 }
 

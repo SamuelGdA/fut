@@ -8,6 +8,8 @@ import { bestEleven } from "./tactics";
 import type { CoachCareer, CoachClub, CoachPlayer } from "./types";
 import { AI_MARKET, AI_YOUTH, FINANCE, RETIREMENT } from "./tuning";
 import { coachRng } from "./util";
+import { clubTrophyProgress } from "../world/clubProgress";
+import { youthAlternates } from "./eligibility";
 import { assignRoles, invalidateSquads, refreshStrength, roleFor, seasonRole, squadIndex, squadValue } from "./world";
 
 /**
@@ -88,14 +90,15 @@ function newYouth(career: CoachCareer, club: CoachClub, index: number, position?
   const rng = coachRng(career.setup.seed, "aiYouth", id);
   const star = rng.chance(AI_YOUTH.starChance);
   const ovr = clamp(Math.round(club.anchor - AI_YOUTH.ovrBelowAnchor + rng.normal(0, AI_YOUTH.ovrSpread) + (star ? 5 : 0)), 42, 80);
-  const potential = clamp(club.anchor - 3 + rng.normal(0, 5) + (star ? 10 : 0), ovr + 2, 95);
+  const potential = clamp(club.anchor - (club.id === career.coach?.club ? 3 : 1.5) + rng.normal(0, 5) + (star ? 10 : 0), ovr + 2, 95);
   const age = rng.int(17, 18);
+  const natural = position ?? rng.pick(YOUTH_POSITIONS);
   return {
     id,
     name: "",
     nationality: rng.chance(0.88) ? club.country : rng.pick(["ARG", "BRA", "URU", "COL", "FRA", "ESP", "POR", "NGA", "SEN", "GHA"]),
-    position: position ?? rng.pick(YOUTH_POSITIONS),
-    alternates: [],
+    position: natural,
+    alternates: youthAlternates(natural, rng),
     birthYear: career.year - age,
     origin: "y",
     level: ovr + rng.real(-0.4, 0.4),
@@ -164,10 +167,11 @@ function ensureViable(career: CoachCareer): string[] {
 function moveAi(career: CoachCareer, player: CoachPlayer, to: string, fee: number): void {
   const from = player.club ? career.clubs[player.club] : null;
   const destination = career.clubs[to];
-  if (from) from.cash += fee;
-  if (destination) destination.cash -= fee;
+  if (from) { from.cash += fee; from.investment=(from.investment ?? 0)-fee; }
+  if (destination) { destination.cash -= fee; destination.investment=(destination.investment ?? 0)+fee; }
   player.club = to;
   player.joinedYear = career.year;
+  player.arrival = { year: career.year, kind: "purchase" };
   player.listed = false;
   player.wage = Math.max(player.wage, wageFor(player.ovr));
   player.satisfaction = 64;
@@ -246,6 +250,8 @@ function aiMarket(career: CoachCareer): void {
         if (player.club === club.id || player.club === coachClub) continue;
         const seller = career.clubs[player.club];
         if (!seller || seller.anchor >= club.anchor - 1) continue;
+        const remaining = (index.get(seller.id) ?? []).filter(other => other.id !== player.id);
+        if (remaining.length < 18 || remaining.filter(other => other.position === "gk").length < 2 || !viableSquad(remaining)) continue;
         candidates.push(player);
         if (candidates.length >= 5) break;
       }
@@ -276,14 +282,18 @@ function aiMarket(career: CoachCareer): void {
 /** Âncora deriva como a força no Craque: volta à base, soma sucesso, ruído pequeno. */
 function driftAnchors(career: CoachCareer, movement: Movement): void {
   const drift = AI_MARKET.anchorDrift;
+  const titles = new Map<string, string[]>();
+  for (const state of Object.values(career.competitions)) {
+    if (!state.champion) continue;
+    const won = titles.get(state.champion) ?? [];
+    won.push(state.id);
+    titles.set(state.champion, won);
+  }
   for (const club of Object.values(career.clubs)) {
     const rng = coachRng(career.setup.seed, "anchor", career.year, club.id);
-    let success = 0;
-    for (const state of Object.values(career.competitions)) {
-      if (state.champion !== club.id) continue;
-      if (state.kind === "league") success += drift.title;
-      if (state.kind === "cont1") success += drift.continental;
-    }
+    const progress = clubTrophyProgress(titles.get(club.id) ?? [], club.titleDrought);
+    club.titleDrought = progress.drought;
+    let success = progress.growth + progress.penalty;
     if (movement.promoted.has(club.id)) success += drift.promotion;
     if (movement.relegated.has(club.id)) success += drift.relegation;
     const next = club.anchor + drift.reversion * (club.baseAnchor - club.anchor) + success + rng.normal(0, drift.noise);
@@ -300,6 +310,10 @@ function updateRevenues(career: CoachCareer, movement: Movement): void {
     if (movement.promoted.has(club.id)) next *= FINANCE.nextRevenue.promotion;
     if (movement.relegated.has(club.id)) next *= FINANCE.nextRevenue.relegation;
     if (Object.values(career.competitions).some((state) => state.champion === club.id)) next *= FINANCE.nextRevenue.titleBonus;
+    const league = Object.values(career.competitions).find(state => state.kind === "league" && state.entrants.includes(club.id));
+    const position = league?.table ? sortTable(league.table, id => career.clubs[id]?.strength ?? 0).findIndex(row => row.club === club.id) + 1 : 0;
+    const expected = league ? [...league.entrants].sort((a,b) => (career.clubs[b]?.strength ?? 0) - (career.clubs[a]?.strength ?? 0)).indexOf(club.id) + 1 : 0;
+    if (position > 0 && expected > position) next *= 1 + Math.min(0.04, (expected - position) * 0.004);
     club.revenue = Math.max(500_000, next);
   }
 }
@@ -311,12 +325,47 @@ function updateRevenues(career: CoachCareer, movement: Movement): void {
 export function offseason(career: CoachCareer, movement: Movement): { retired: string[]; added: string[] } {
   driftAnchors(career, movement);
   updateRevenues(career, movement);
+  for(const club of Object.values(career.clubs)) { club.previousInvestment=club.investment ?? 0;club.investment=0; }
   career.year += 1;
   career.seasonIndex += 1;
   const retired = retirements(career);
   aiYouth(career);
   aiMarket(career);
   const added = ensureViable(career);
+  const coachClub = career.coach ? career.clubs[career.coach.club] : null;
+  if (coachClub) {
+    const rng = coachRng(career.setup.seed, "boardArrivals", career.year, coachClub.id);
+    for (let index = 0, count = rng.int(1, 3); index < count; index += 1) {
+      const squad = Object.values(career.players).filter((entry) => entry.club === coachClub.id);
+      const missing = YOUTH_POSITIONS.filter((slot) => !squad.some((entry) => entry.position === slot || entry.alternates.includes(slot)));
+      const room = coachClub.revenue * FINANCE.wageCap / 12 - squad.reduce((sum, entry) => sum + entry.wage, 0);
+      let signed: CoachPlayer | undefined;
+      if (rng.chance(0.35) && squad.length < 26 && missing.length > 0) {
+        const budget = Math.min(Math.max(0, coachClub.cash), coachClub.revenue * FINANCE.budgetShare);
+        const currentSquads = squadIndex(career.players);
+        const pool = Object.values(career.players).filter((entry) => entry.club !== coachClub.id && !entry.injury
+          && entry.ovr >= coachClub.anchor - 6 && entry.ovr <= coachClub.anchor + 4
+          && room >= 2 * Math.max(entry.wage, wageFor(entry.ovr))
+          && (!entry.club || valueOf(entry, career.year) <= budget)
+          && (!missing.length || missing.some((slot) => entry.position === slot || entry.alternates.includes(slot)))
+          && (!entry.club || viableSquad((currentSquads.get(entry.club) ?? []).filter((other) => other.id !== entry.id))))
+          .sort((a,b) => a.id.localeCompare(b.id));
+        if (pool.length) {
+          signed = rng.pick(pool);
+          moveAi(career, signed, coachClub.id, signed.club ? valueOf(signed, career.year) : 0);
+          signed.arrival = { year: career.year, kind: "board" };
+        }
+      }
+      if (!signed) {
+        const player = newYouth(career, coachClub, 200 + index, missing.length ? rng.pick(missing) : undefined);
+        player.arrival = { year: career.year, kind: "youth" };
+        career.players[player.id] = player;
+        signed = player;
+      }
+      added.push(signed.id);
+    }
+    invalidateSquads(career);
+  }
   const index = squadIndex(career.players);
   for (const club of Object.values(career.clubs)) {
     const squad = index.get(club.id) ?? [];
@@ -328,6 +377,8 @@ export function offseason(career: CoachCareer, movement: Movement): { retired: s
     }
   }
   for (const player of Object.values(career.players)) {
+    player.wage = Math.max(2000,Math.round((player.wage*0.65+wageFor(player.ovr)*0.35)/500)*500);
+    player.improvised={};
     player.season = emptySeason();
     player.recentRatings = player.recentRatings.slice(-2);
     player.offeredAt = null;

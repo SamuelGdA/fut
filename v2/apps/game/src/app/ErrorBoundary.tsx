@@ -147,7 +147,7 @@ export function ErrorPanel({ error, layout, onRetry, onHome, offerReset, game = 
 /** A barreira da raiz: tela inteira, com tentar de novo e limpar o save. */
 export function ErrorBoundary({ children }: { children: ReactNode }) {
   return (
-    <Boundary label="raiz" fallback={(error, reset) => <ErrorPanel error={error} layout="page" onRetry={reset} offerReset />}>
+    <Boundary label="raiz" fallback={(error, reset) => <ErrorPanel error={error} layout="page" onRetry={reset} offerReset={false} />}>
       {children}
     </Boundary>
   );

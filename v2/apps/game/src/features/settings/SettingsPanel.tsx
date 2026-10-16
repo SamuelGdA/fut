@@ -4,8 +4,9 @@ import { useT } from "../../i18n/useT";
 import { useAssetMode } from "../../lib/assets";
 import { LOCALES, type Locale } from "../../i18n/types";
 import { feedback } from "../../services/feedback";
+import { useMediaQuery } from "../../lib/useMediaQuery";
 import { canVibrate } from "../../services/haptics";
-import { type MotionMode, type Theme, usePrefs, VOLUME_STEPS } from "../../store/prefs";
+import { type Theme, usePrefs, VOLUME_STEPS } from "../../store/prefs";
 import { IconButton } from "../../ui/Button";
 import { StepSlider, Switch } from "../../ui/Fields";
 import { Segmented } from "../../ui/Segmented";
@@ -31,7 +32,7 @@ export function SettingsPanel() {
   const theme = usePrefs((state) => state.theme);
   const volume = usePrefs((state) => state.volume);
   const muted = usePrefs((state) => state.muted);
-  const motion = usePrefs((state) => state.motion);
+  const mobile = useMediaQuery("(pointer: coarse)");
   const haptics = usePrefs((state) => state.haptics);
   const actions = usePrefs.getState();
 
@@ -128,24 +129,7 @@ export function SettingsPanel() {
         </div>
       </SettingRow>
 
-      <SettingRow label={t("settings.motion")} note={t("settings.motionHint")}>
-        <Segmented<MotionMode>
-          block
-          size="sm"
-          label={t("settings.motion")}
-          value={motion}
-          onValueChange={(next) => {
-            actions.setMotion(next);
-            feedback("tick");
-          }}
-          options={[
-            { value: "system", label: t("settings.motionSystem") },
-            { value: "reduced", label: t("settings.motionReduced") },
-          ]}
-        />
-      </SettingRow>
-
-      <div className="border-t border-line pt-2">
+      {mobile ? <div className="border-t border-line pt-2">
         <Switch
           label={t("settings.haptics")}
           description={vibration ? undefined : t("settings.hapticsUnsupported")}
@@ -156,7 +140,7 @@ export function SettingsPanel() {
             feedback("tick");
           }}
         />
-      </div>
+      </div> : null}
 
       {/* No modo desenhado (o padrão, D46) não há imagem real para guardar. */}
       {assetMode === "real" ? (

@@ -1,5 +1,5 @@
 import type { AvatarConfig } from "@craque/art";
-import { POSITIONS, type Position } from "@craque/engine";
+import { POSITIONS, type Position } from "@craque/engine/positions";
 import { type CountryCode, getCountry } from "@craque/world";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";

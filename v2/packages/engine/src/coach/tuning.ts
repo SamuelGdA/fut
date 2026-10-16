@@ -9,7 +9,22 @@ import type { CountryCode } from "@craque/world";
  * férias).
  */
 
-export const COACH_VERSION = "1.0.0";
+export const COACH_VERSION = "1.7.0";
+
+/** D59: benefícios conservadores têm custo; elogio e descanso podem falhar. */
+export const DECISION_TRADEOFFS = {
+  rotationStarters: -3,
+  calmForm: -0.5,
+  mentorForm: -0.5,
+  focusYouth: -3,
+  celebrationCost: 0.01,
+  investmentFans: -2,
+  campCost: 0.01,
+  supportBoard: -2,
+  praiseChance: 0.75,
+  restChance: 0.75,
+  balancedAgainst: 1.05,
+} as const;
 
 /** A carreira dura 24 temporadas, nos dois modos (spec 17). */
 export const CAREER_SEASONS = 24;
@@ -82,6 +97,9 @@ export const MATCH = {
   home: 0.11,
   minLambda: 0.12,
   maxLambda: 4.2,
+  /** No topo, a qualidade continua ajudando, com retornos decrescentes. */
+  eliteFrom: 80,
+  eliteFactor: 0.7,
   /** Prorrogação: fração de um jogo. */
   extraTime: 1 / 3,
   /** Um jogador a menos em campo tira esta fração dos gols e aumenta os sofridos. */
@@ -119,10 +137,10 @@ export const PHILOSOPHY = {
  */
 export const PREDICTABILITY = {
   perMatch: 0.04,
-  opponentBoost: 0.06,
-  ownPenalty: 0.03,
+  opponentBoost: 0.28,
+  ownPenalty: 0.16,
   /** Fração de p que passa de uma temporada para a outra. */
-  carryOver: 0.5,
+  carryOver: 0.85,
   /** Faixas sorteadas do que sobra de p ao mudar, conforme o que os rivais leem mais. */
   formationChange: { read: [0.3, 0.9], unread: [0.6, 0.95] },
   philosophyChange: { read: [0.05, 0.45], unread: [0.3, 0.8] },
@@ -171,18 +189,17 @@ export const FORM = { window: 6, thresholds: [5.8, 6.25, 6.85, 7.25] as const, d
 // ------------------------------------------------------------------ lesões
 
 /**
- * Lesões (spec 10): risco por minuto jogado. 2,2% a cada 90 minutos até os
- * 28 anos; 4% a mais por ano depois disso. Duração: 70% leves, 25% médias, 5% graves (que
- * podem atravessar etapas).
+ * Lesões (spec 10): risco por minuto jogado. 0,25% a cada 90 minutos até os
+ * 28 anos; 4% a mais por ano depois disso. Duração: 75% um turno e 25% dois
+ * turnos, com recuperação somente no planejamento.
  */
 export const INJURY = {
-  per90: 0.022,
+  per90: 0.0025,
   agePerYear: 0.04,
   ageFrom: 28,
   severity: [
-    { kind: "light", weight: 70, days: [4, 14] },
-    { kind: "medium", weight: 25, days: [15, 45] },
-    { kind: "serious", weight: 5, days: [60, 180] },
+    { kind: "light", weight: 75, days: [150, 150] },
+    { kind: "medium", weight: 25, days: [365, 365] },
   ],
 } as const;
 
@@ -341,9 +358,10 @@ export const FINANCE = {
   /** Verba da temporada: budgetShare da receita, mais esta parte do caixa acima de cashFloor da receita, mais esta parte da sobra. */
   budgetFromCash: 0.3,
   cashFloor: 0.2,
-  budgetFromLeftover: 0.5,
-  wageCap: 0.7,
-  budgetShare: 0.4,
+  budgetFromLeftover: 0.3,
+  wageCap: 0.65,
+  budgetShare: 0.32,
+  operatingShare: 0.2,
   /** Caixa inicial entre estes múltiplos da receita, fixo por clube. */
   cashRange: [-0.08, 0.3] as const,
   /** Dívida máxima aceita antes de bloquear operações. */
@@ -396,10 +414,8 @@ export const FUNDS = { large: 0.06, small: 0.025, maxGrants: 2, repeatFactor: 0.
 
 /**
  * Avaliação anual (spec 14): nota da temporada s, crédito acumulado C com
- * memória decrescente (começa em 0,5 a cada clube novo: o técnico recém-chegado
- * tem um pouco de paciência), confiança = 50 + 12s + 15C; abaixo de 27,
- * dispensa. Calibrado para 8% a 15% de demissões por temporada com a política
- * equilibrada do harness.
+ * memória decrescente (começa em 0,5 a cada clube novo). Confiança =
+ * 50 + 12s + 15C. D67: grandes também cobram conquistas, não só colocação.
  */
 export const EVALUATION = {
   creditStart: 0.5,
@@ -408,15 +424,42 @@ export const EVALUATION = {
   confidenceBase: 50,
   seasonWeight: 12,
   creditWeight: 15,
-  dismissBelow: 27,
+  dismissBelow: 12,
   financePenalty: -0.6,
   financeBonus: 0.2,
   promiseWeight: 0.2,
   promiseCap: 0.6,
   cupWeight: 0.4,
+  ambition: {
+    strength: 80,
+    prestige: 4,
+    topShare: 0.25,
+    challengerWeight: 0.8,
+    firstYear: 0.45,
+    perYear: 0.6,
+    grace: 1,
+    maxPenalty: 3.5,
+    cupRelief: 0.5,
+    dismissBelow: 28,
+  },
 } as const;
 
-export const REPUTATION = { start: 15, maxChange: 12, perScore: 3.2, title: 4, minorTitle: 2, promotion: 3, rescue: 2, revelation: 1 } as const;
+/** D60: resultados mexem nas relações durante a simulação; crise extrema no primeiro turno. */
+export const LIVE_RELATIONS = {
+  boardStep: 0.35,
+  drawScore: 0.4,
+  dismissalReputation: 4,
+  fansStep: 0.5,
+  derby: 0.6,
+  expectationBase: 0.65,
+  expectationRank: 0.3,
+  minGames: 12,
+  pointsPerGame: 0.65,
+  rankGapShare: 0.35,
+  minRankGap: 6,
+  maxConfidence: 58,
+} as const;
+export const REPUTATION = { start: 15, maxChange: 10, perScore: 2.2, title: 3, minorTitle: 1, promotion: 2, rescue: 0.5, revelation: 0.4 } as const;
 
 /**
  * Propostas depois da primeira temporada (spec 14). A reputação aponta uma
@@ -424,11 +467,11 @@ export const REPUTATION = { start: 15, maxChange: 12, perScore: 3.2, title: 4, m
  * forte): 15% com reputação zero, 95% com reputação 100.
  */
 export const OFFERS = {
-  kept: [1, 3] as const,
+  kept: [3, 3] as const,
   dismissed: [2, 4] as const,
   percentileBase: 0.15,
-  percentilePerReputation: 0.008,
-  percentileSpread: 0.12,
+  percentilePerReputation: 0.0088,
+  percentileSpread: 0.07,
   abroadFromReputation: 35,
   abroadChance: 0.35,
   abroadLowReputation: 0.1,
@@ -443,5 +486,5 @@ export const AI_MARKET = {
   squadTarget: [24, 30] as const,
   buysPerClub: 2,
   upgradeMargin: 2,
-  anchorDrift: { reversion: 0.3, noise: 0.6, title: 0.4, continental: 0.6, promotion: 0.5, relegation: -0.8, range: 10 },
+  anchorDrift: { reversion: 0.3, noise: 0.6, promotion: 0.5, relegation: -0.8, range: 10 },
 } as const;

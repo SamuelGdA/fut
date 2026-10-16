@@ -1,9 +1,8 @@
 import { getClub, getCountryKit } from "@craque/world";
-import { ArrowRight, Award, BookOpen, FlaskConical, Play, RotateCcw, ShieldAlert } from "lucide-react";
-import { useEffect, useState } from "react";
+import { ArrowRight, Award, BookOpen, FlaskConical, Play, RotateCcw } from "lucide-react";
+import { useEffect } from "react";
 import { useNavigation } from "../../app/navigation";
 import { useDraft } from "../../features/career/draft";
-import { peekSave, type SavePeek } from "../../features/career/saveRecord";
 import { useHall } from "../../features/hall/store";
 import { useCoachDraft } from "../../features/tecnico/draft";
 import { useTecnicoPresence } from "../../features/tecnico/presence";
@@ -14,19 +13,16 @@ import { Avatar } from "../../ui/Avatar";
 import { Button } from "../../ui/Button";
 import { Crest } from "../../ui/Media";
 import { PlayerCard } from "../../ui/PlayerCard";
-import { Chip } from "../../ui/Signals";
 
 /**
  * O hub do Futeiros (D50): a primeira tela. Dois cartões, um por jogo, cada
  * um com o que o jogo é em três linhas e o botão de jogar. O Craque continua
- * a carreira salva por aqui; o Técnico mostra a carreira em memória desta aba
- * (ele não tem save, D51). No PC, os dois lado a lado sem rolar; no celular,
+ * apenas nesta sessão; o Técnico retoma a última carreira em andamento (D61). No PC, os dois lado a lado sem rolar; no celular,
  * empilhados. Nenhum motor é baixado aqui.
  */
 export function HubScreen() {
   const { t, tp } = useT();
   const go = useNavigation((state) => state.go);
-  const [save] = useState<SavePeek>(() => peekSave());
   const unlocked = useHall((state) => state.achievements);
 
   useEffect(() => {
@@ -45,7 +41,7 @@ export function HubScreen() {
       </header>
 
       <div className="hub-games">
-        <CraqueCard save={save} achievements={craqueCount} />
+        <CraqueCard achievements={craqueCount} />
         <TecnicoCard achievements={tecnicoCount} />
       </div>
 
@@ -80,12 +76,10 @@ export function HubScreen() {
   );
 }
 
-function CraqueCard({ save, achievements }: { save: SavePeek; achievements: number }) {
+function CraqueCard({ achievements }: { achievements: number }) {
   const { t, tp } = useT();
   const go = useNavigation((state) => state.go);
   const draft = useDraft();
-  const resumable = save.kind === "present" && save.current;
-  const target = resumable ? save.screen : null;
 
   return (
     <article className="hub-card" data-game="craque" aria-labelledby="hub-craque">
@@ -114,43 +108,7 @@ function CraqueCard({ save, achievements }: { save: SavePeek; achievements: numb
           <li>{t("hub.craque.points.second")}</li>
           <li>{t("hub.craque.points.third")}</li>
         </ul>
-        {resumable && save.kind === "present" ? (
-          <p className="text-xs text-info">{t("hub.craque.saved", { surname: save.snapshot.surname, age: save.snapshot.age, ovr: save.snapshot.ovr })}</p>
-        ) : null}
-        <div className="hub-actions">
-          {target ? (
-            <>
-              <Button
-                onClick={() => {
-                  feedback("confirm");
-                  go(target);
-                }}
-              >
-                <Play size={17} aria-hidden="true" />
-                {target === "summary" ? t("hub.craque.summary") : t("hub.craque.continue")}
-              </Button>
-              <Button
-                variant="secondary"
-                onClick={() => {
-                  feedback("select");
-                  go("home");
-                }}
-              >
-                {t("hub.craque.open")}
-              </Button>
-            </>
-          ) : (
-            <Button
-              onClick={() => {
-                feedback("confirm");
-                go("home");
-              }}
-            >
-              <Play size={17} aria-hidden="true" />
-              {t("hub.craque.play")}
-            </Button>
-          )}
-        </div>
+        <div className="hub-actions"><Button onClick={() => { feedback("confirm"); go("home"); }}><Play size={17} aria-hidden="true" />{t("hub.craque.play")}</Button></div>
         <p className="hub-meta">{tp("hub.achievementsCount", achievements)}</p>
       </div>
     </article>
@@ -174,10 +132,7 @@ function TecnicoCard({ achievements }: { achievements: number }) {
       <div className="hub-card-body">
         <div className="flex flex-wrap items-center gap-2">
           <p className="eyebrow text-glory">{t("hub.tecnico.eyebrow")}</p>
-          <Chip tone="bad" size="sm">
-            <ShieldAlert size={12} aria-hidden="true" />
-            {t("hub.tecnico.noSave")}
-          </Chip>
+
         </div>
         <h2 id="hub-tecnico" className="hub-card-title">
           {t("hub.tecnico.title")}

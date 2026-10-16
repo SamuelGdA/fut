@@ -35,7 +35,7 @@ describe("elite real", () => {
 
   it("projeções plausíveis: pico de 80 a 95, auge de 26 a 31, aposentadoria depois do auge", () => {
     for (const profile of ELITE) {
-      expect(profile.born).toBeGreaterThanOrEqual(1996);
+      expect(profile.born).toBeGreaterThanOrEqual(1987);
       expect(profile.born).toBeLessThanOrEqual(2009);
       expect(profile.peakOvr).toBeGreaterThanOrEqual(80);
       expect(profile.peakOvr).toBeLessThanOrEqual(95);

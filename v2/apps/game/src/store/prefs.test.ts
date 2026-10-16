@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { DEFAULT_PREFS, sanitizePrefs, usePrefs } from "./prefs";
+import { safeStorage, STORAGE_KEYS } from "../services/storage";
 
 describe("sanitizePrefs (GDD 34.3)", () => {
   it("entrada que não é objeto vira o padrão inteiro", () => {
@@ -59,4 +60,16 @@ describe("volume e mudo", () => {
     usePrefs.getState().setVolume(-3);
     expect(usePrefs.getState().volume).toBe(0);
   });
+});
+
+it("detalhes começam fechados e a preferência sobrevive à reidratação", async () => {
+  expect(sanitizePrefs({}).seasonDetails).toBe(false);
+  usePrefs.getState().setSeasonDetails(true);
+  const stored = safeStorage.getItem(STORAGE_KEYS.prefs);
+  expect(JSON.parse(stored!).state.seasonDetails).toBe(true);
+  usePrefs.setState({seasonDetails:false});
+  safeStorage.setItem(STORAGE_KEYS.prefs, stored!);
+  await usePrefs.persist.rehydrate();
+  expect(usePrefs.getState().seasonDetails).toBe(true);
+  usePrefs.getState().setSeasonDetails(false);
 });

@@ -1,3 +1,5 @@
+import { canLearnPosition } from "./eligibility";
+import type { Position } from "../player/positions";
 import { clamp, fallingLogistic } from "../math";
 import type { Rng } from "../rng";
 import { ageOf, declineStartOf, sectorOf } from "./players";
@@ -68,6 +70,16 @@ export interface GrowthInput {
   readonly developed: boolean;
 }
 
+/** Aprender exige experiência, notas boas e vizinhança entre as posições. */
+export function learnedPosition(player: CoachPlayer, fraction: number, rng: Rng): Position | null {
+  for (const [position, row] of Object.entries(player.improvised ?? {})) {
+    const slot = position as Position;
+    if (row && row.apps >= 8 && row.ratingSum / row.apps >= 7 && canLearnPosition(player.position, slot)
+      && !player.alternates.includes(slot) && rng.chance(0.06 * fraction)) return slot;
+  }
+  return null;
+}
+
 /**
  * Novo nível oculto de um jogador depois de um período. Função pura (o
  * sorteio vem de fora) para o laboratório e o harness compararem o mesmo
@@ -92,6 +104,7 @@ export function growthStep(player: CoachPlayer, input: GrowthInput, rng: Rng): n
     decline *= 1 - 0.2 * input.performance;
     gain -= decline;
   }
+  gain += input.fraction * Math.min(0,input.performance) * 0.9;
   gain += rng.normal(0, EVOLUTION.noise * Math.sqrt(input.fraction));
   if (input.developed) {
     if (age <= 29) gain += developBonus(player, input.year) + Math.abs(rng.normal(0, 0.25));
@@ -100,7 +113,7 @@ export function growthStep(player: CoachPlayer, input: GrowthInput, rng: Rng): n
   const ceiling = player.potential + EVOLUTION.potentialTolerance;
   let level = player.level + gain;
   if (gain > 0 && level > ceiling) level = Math.max(player.level, ceiling);
-  return clamp(level, 30, 97);
+  return clamp(level, 30, 99);
 }
 
 /**
@@ -115,6 +128,9 @@ export function evolvePeriod(career: CoachCareer, fraction: number): PlayerChang
   const key = stageKey(career.year, career.half);
   const mentorBoost = coachClub && (index.get(coachClub) ?? []).some((player) => player.traits.includes("mentor")) ? TRAIT_EFFECTS.mentor : 0;
   const changes: PlayerChange[] = [];
+  // A fase dos clubes sem treinador também tem campanhas boas e ruins,
+  // além da pequena oscilação individual, em vez de cancelar na média dos onze.
+  const clubForm = new Map(Object.keys(career.clubs).map(club=>[club,coachRng(career.setup.seed,"clubForm",career.year,club).normal(0,1.3)]));
   for (const player of Object.values(career.players)) {
     const rng = coachRng(career.setup.seed, "growth", key, player.id);
     const age = ageOf(player, career.year);
@@ -129,8 +145,15 @@ export function evolvePeriod(career: CoachCareer, fraction: number): PlayerChang
     player.ovr = Math.round(player.level);
     if (developed) player.developedAt = null;
     if (inCoachClub && (player.ovr !== before || developed)) changes.push({ player: player.id, from: before, to: player.ovr, developed });
-    if (!inCoachClub) player.form = clamp(rng.normal(0, 0.7), -2, 2);
-    if (inCoachClub) maybeTrait(career, player, rng.next());
+    if (!inCoachClub) player.form = clamp((clubForm.get(player.club) ?? 0)+rng.normal(0, 0.5), -2, 2);
+    if (inCoachClub) {
+      maybeTrait(career, player, rng.next());
+      const learned = learnedPosition(player, fraction, coachRng(career.setup.seed,"learnPosition",key,player.id));
+      if (learned) {
+        career.players[player.id]={...player,alternates:[...player.alternates,learned]};
+        career.ledger.moments.push({kind:"learnedPosition",player:player.id,position:learned});
+      }
+    }
   }
   return changes;
 }

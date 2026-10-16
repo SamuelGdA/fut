@@ -41,6 +41,7 @@ export interface Player {
   readonly capacity: number;
   /** Chegou pronto aos 16 (GDD 9.6). */
   readonly prodigy: boolean;
+  readonly breakthroughAge?: number;
   readonly maturity: Maturity;
   readonly peakAge: number;
   /**

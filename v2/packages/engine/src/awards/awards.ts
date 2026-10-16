@@ -33,7 +33,7 @@ export const BALLON = {
    * centenas de jogadores reais num punhado de nomes; o bônus representa o
    * resto do mundo que também disputa o prêmio. Calibrado pelo harness.
    */
-  fieldBonus: 3.3,
+  fieldBonus: 8.25,
   /** Fama: abaixo desta idade, o votante desconfia de quem acabou de chegar. */
   fameAge: 22,
   famePenaltyPerYear: 0.8,
@@ -97,6 +97,8 @@ export interface PlayerAwardInput {
   readonly leagueGoals: number;
   readonly cleanSheets: number;
   readonly playsInUefa: boolean;
+  readonly playsInAmericas?: boolean;
+  readonly eliteDivision?: boolean;
   readonly success: {
     readonly league: boolean;
     readonly cup: boolean;
@@ -128,6 +130,7 @@ export interface Mark {
 }
 
 export interface AwardsOutcome {
+  readonly kingOfAmerica?: Ballot;
   readonly ballonDor: Ballot;
   readonly goldenGlove: Ballot;
   readonly youngPlayer: Ballot;
@@ -359,6 +362,22 @@ export function decideAwards(
   if (youngEligible) youngEntries.push({ id: PLAYER, score: playerYoung + (player.bonus ?? 0) });
   const youngPlayer = ballot(youngEntries, youngEligible, playerYoung);
 
+  // El País elege quem atua nas Américas, independentemente da nacionalidade.
+  // OVR ajuda a votar, mas não substitui presença e desempenho excepcionais.
+  const americaRng = stream(seed, "awards", year, "america");
+  const americaEntries = elite.filter((season) => season.candidate.profile.americas).map((season) => ({
+    id: season.candidate.profile.id,
+    score: season.candidate.ovr + BALLON.successWeight * season.success
+      + 2 * productionTerm(season.candidate.profile.position, season.goals, season.assists, season.cleanSheets)
+      + POSITION_ADJUSTMENT[season.candidate.profile.position] + 4 + americaRng.normal(0, BALLON.noise),
+  }));
+  const americaEligible = player.eligible && player.playsInAmericas === true && player.eliteDivision === true
+    && player.games >= 25 && player.ovr >= 78 && production >= 0;
+  const americaScore = player.ovr + BALLON.successWeight * ((player.success.league ? 1 : 0) + (player.success.cup ? 0.3 : 0) + (player.success.primary ? 2.5 : 0))
+    + 2 * production + POSITION_ADJUSTMENT[player.position] + americaRng.normal(0, BALLON.noise);
+  if (americaEligible) americaEntries.push({ id: PLAYER, score: americaScore });
+  const kingOfAmerica = ballot(americaEntries, americaEligible, americaScore);
+
   // Chuteira de Ouro: só clubes da UEFA, contra um patamar sorteado.
   const shoeRng = stream(seed, "awards", year, "shoe");
   const shoeMark = Math.max(GOLDEN_SHOE.floor, Math.round(shoeRng.normal(GOLDEN_SHOE.mean, GOLDEN_SHOE.deviation)));
@@ -409,6 +428,7 @@ export function decideAwards(
   if (goldenGlove.winner === PLAYER) won.push("goldenGlove");
   if (goldenShoe.winner === PLAYER) won.push("goldenShoe");
   if (youngPlayer.winner === PLAYER) won.push("youngPlayer");
+  if (kingOfAmerica.winner === PLAYER) won.push("kingOfAmerica");
   if (crowns.some((crown) => crown.award === "topScorer")) won.push("topScorer");
   if (crowns.some((crown) => crown.award === "bestPlayer")) won.push("bestPlayer");
 
@@ -417,6 +437,7 @@ export function decideAwards(
     ballonDor,
     goldenGlove,
     youngPlayer,
+    kingOfAmerica,
     goldenShoe,
     crowns,
     won,
@@ -426,6 +447,7 @@ export function decideAwards(
       goldenGlove: append(history.goldenGlove, goldenGlove.winner),
       goldenShoe: append(history.goldenShoe, goldenShoe.winner),
       youngPlayer: append(history.youngPlayer, youngPlayer.winner),
+      kingOfAmerica: append(history.kingOfAmerica, kingOfAmerica.winner),
     },
   };
 }

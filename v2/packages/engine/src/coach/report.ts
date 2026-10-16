@@ -31,7 +31,7 @@ export function buildReport(career: CoachCareer, changes: readonly PlayerChange[
     .slice(0, 3);
   const competitions = Object.values(career.competitions)
     .filter((state) => state.entrants.includes(coach.club) && state.kind !== "league")
-    .map((state) => ({ competition: state.id, reached: state.reached[coach.club] ?? "entered", champion: state.champion === coach.club }));
+    .map((state) => ({ competition: state.id, reached: state.reached[coach.club] ?? "entered", champion: state.champion === coach.club, active: !state.done && state.alive.includes(coach.club) }));
   const moments: Moment[] = [...career.ledger.moments];
   for (const state of Object.values(career.competitions)) {
     if (state.champion === coach.club && final) moments.push({ kind: "title", competition: state.id });
@@ -73,5 +73,6 @@ export function buildReport(career: CoachCareer, changes: readonly PlayerChange[
     predictabilityHint: predictabilityHint(coach.predictability.value),
     promises: career.promises.filter((promise) => promise.status !== "active" && promise.until <= career.day).map((promise) => ({ id: promise.id, status: promise.status })),
     newTraits: [...career.ledger.newTraits],
+    awards: final ? [...career.seasonAwards] : [],
   };
 }

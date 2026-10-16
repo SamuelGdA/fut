@@ -190,6 +190,8 @@ function build(): Competition[] {
     art: { key: "leaguecup:ENG", category: "cup" },
   });
 
+  list.push({ id: "leaguecup:CHI", kind: "leagueCup", names: same("Copa de la Liga"), country: "CHI", confederation: "CONMEBOL", trophy: null, art: { key: "leaguecup:CHI", category: "cup" } });
+
   for (const [confederation, set] of Object.entries(CONTINENTAL) as [Confederation, ContinentalSet][]) {
     const continental: Array<[CompetitionKind, string, LocalizedText | undefined, string]> = [
       ["continental1", `cont1:${confederation}`, set.continental1, `cont:${confederation}:continental_primary`],
@@ -298,7 +300,7 @@ export function titleImportance(kind: CompetitionKind, clubConfederation?: Confe
 
 // ----------------------------------------------------------------- prêmios
 
-export const AWARD_KEYS = ["ballonDor", "goldenGlove", "goldenShoe", "youngPlayer", "topScorer", "bestPlayer"] as const;
+export const AWARD_KEYS = ["ballonDor", "goldenGlove", "goldenShoe", "youngPlayer", "topScorer", "bestPlayer", "kingOfAmerica"] as const;
 
 export type AwardKey = (typeof AWARD_KEYS)[number];
 
@@ -319,6 +321,12 @@ function awardImage(name: string): string | null {
 }
 
 export const AWARDS: Readonly<Record<AwardKey, Award>> = {
+  kingOfAmerica: {
+    key: "kingOfAmerica",
+    names: { pt: "Rei da América", es: "Rey de América", en: "King of America" },
+    image: null,
+    art: "award:king-of-america",
+  },
   ballonDor: {
     key: "ballonDor",
     names: { pt: "Bola de Ouro", es: "Balón de Oro", en: "Ballon d'Or" },
@@ -351,7 +359,7 @@ export const AWARDS: Readonly<Record<AwardKey, Award>> = {
   },
   bestPlayer: {
     key: "bestPlayer",
-    names: { pt: "Craque da competição", es: "Mejor jugador del torneo", en: "Player of the tournament" },
+    names: { pt: "Craque", es: "Mejor jugador", en: "Best player" },
     image: null,
     art: "award:best-player",
   },

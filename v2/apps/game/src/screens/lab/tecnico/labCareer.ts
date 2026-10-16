@@ -1,4 +1,4 @@
-import { type CoachCareer, type CoachCommand, coachCommand, createCoachCareer, developable, type WorldData } from "@craque/engine/coach";
+import { type CoachCareer, type CoachCommand, coachCommand, canAffordEvent, createCoachCareer, developable, type WorldData } from "@craque/engine/coach";
 import type { CountryCode } from "@craque/world";
 import { FREE_PLAYERS, SQUAD_PLAYERS } from "@craque/world/squads";
 
@@ -46,8 +46,14 @@ function step(career: CoachCareer, command: CoachCommand): CoachCareer {
 
 /** Joga uma etapa inteira (ações da política, evento, simulação, resultados). */
 function playStage(career: CoachCareer, policy: LabPolicy): CoachCareer {
-  let current = career;
+  let current = career.phase === "transferOffers" ? step(career, { type: "continueTransfers" }) : career;
   if (policy === "balanced") {
+    const coach=current.coach;
+    if(coach && coach.predictability.value>=0.5) {
+      const strong=coach.objective.expected<=coach.objective.tableSize/3;
+      const philosophy=strong ? coach.tactics.philosophy==="attacking"?"possession":"attacking" : coach.tactics.philosophy==="defensive"?"counter":"defensive";
+      current=step(current,{type:"setTactics",philosophy});
+    }
     current = step(current, { type: "openAction", kind: "train" });
     current = step(current, { type: "confirmAction", payload: { kind: "train", sector: "mid" } });
     const young = developable(current)
@@ -60,14 +66,15 @@ function playStage(career: CoachCareer, policy: LabPolicy): CoachCareer {
     }
   }
   current = step(current, { type: "advance" });
-  if (current.event && !current.event.chosen) current = step(current, { type: "chooseEvent", option: current.event.options[0]?.id ?? "" });
+  if (current.event && !current.event.chosen) current = step(current, { type: "chooseEvent", option: current.event.options.find(option=>canAffordEvent(current,option))?.id ?? "" });
   current = step(current, { type: "simulate" });
   let guard = 0;
   while (current.phase === "matchEvent" && guard < 5) {
     guard += 1;
     current = step(current, { type: "chooseMatchEvent", option: current.event?.options[1]?.id ?? current.event?.options[0]?.id ?? "" });
   }
-  return step(current, { type: "continue" });
+  current = step(current, { type: "continue" });
+  return current.phase === "transferOffers" ? step(current, { type: "continueTransfers" }) : current;
 }
 
 /** Uma temporada inteira até a avaliação; depois decide (fica ou assina a primeira proposta). */

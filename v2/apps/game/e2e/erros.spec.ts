@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { abrir, abrirCraque, encerrar, entrarNoCraque, jogarTurno, jogoRapido, retomarCraque } from "./apoio";
+import { abrir, abrirCraque, entrarNoCraque, jogarTurno, jogoRapido } from "./apoio";
 
 /**
  * Resiliência (GDD 34.4 e 37): nenhum erro deixa o jogador numa tela branca.
@@ -17,7 +17,7 @@ test("endereço que não existe: Bola fora, e a volta limpa o endereço", async 
   expect(new URL(page.url()).pathname).toBe("/");
 });
 
-test("save corrompido: o Início do Craque avisa, com o rascunho intacto", async ({ page }) => {
+test("registro legado corrompido é descartado e o rascunho permanece intacto", async ({ page }) => {
   await abrir(page);
   await page.evaluate(() => {
     window.localStorage.setItem("craque.v2.save", "{quebrado");
@@ -30,7 +30,7 @@ test("save corrompido: o Início do Craque avisa, com o rascunho intacto", async
   // O hub não oferece continuar uma carreira que não abre.
   await expect(page.getByRole("button", { name: "Continuar carreira" })).toHaveCount(0);
   await entrarNoCraque(page);
-  await expect(page.getByText("O save não pôde ser aberto")).toBeVisible();
+  expect(await page.evaluate(() => localStorage.getItem("craque.v2.save"))).toBeNull();
   await page.getByRole("button", { name: "Começar carreira" }).click();
   await expect(page.getByLabel("Sobrenome")).toHaveValue("Guardado");
 });
@@ -50,27 +50,27 @@ test("tela que não baixa: o erro aparece dentro da casca, com recarregar e volt
   await expect(page.getByRole("heading", { name: "Futeiros", level: 1 })).toBeVisible();
 });
 
-test("tela que quebra ao desenhar: aviso na casca, carreira salva, e dá para voltar", async ({ page }) => {
+test("tela que quebra ao desenhar: aviso na casca e dá para voltar", async ({ page }) => {
   await abrirCraque(page);
   await jogoRapido(page);
   await jogarTurno(page);
-  await encerrar(page);
+  await page.getByRole("button", { name: "Menu da carreira" }).click();
+  await page.getByRole("menuitem", { name: "Encerrar carreira" }).click();
   // Um navegador que quebra no observador de rolagem do resumo, a partir de agora.
-  await page.addInitScript(() => {
+  await page.evaluate(() => {
     window.IntersectionObserver = class {
       constructor() {
         throw new Error("observador quebrado de propósito");
       }
     } as unknown as typeof IntersectionObserver;
   });
-  await page.reload();
-  await retomarCraque(page);
+  await page.locator(".dialog-popup").getByRole("button", { name: "Encerrar", exact: true }).click();
   await expect(page.getByRole("heading", { name: "Esta tela não abriu" })).toBeVisible();
-  await expect(page.getByText("sua carreira continua salva")).toBeVisible();
-  await expect(page.getByRole("button", { name: "Limpar dados e recarregar" })).toBeVisible();
+  await expect(page.getByText("O resto do jogo segue de pé")).toBeVisible();
+  await expect(page.getByRole("button", { name: "Limpar dados e recarregar" })).toHaveCount(0);
   await page.getByRole("button", { name: "Voltar ao início" }).click();
   await expect(page.getByRole("heading", { name: "Futeiros", level: 1 })).toBeVisible();
-  expect(await page.evaluate(() => window.localStorage.getItem("craque.v2.save"))).not.toBeNull();
+  expect(await page.evaluate(() => window.localStorage.getItem("craque.v2.save"))).toBeNull();
 });
 
 test("páginas estáticas 404, 403, 500 e 503, no idioma salvo", async ({ page }) => {
@@ -88,7 +88,7 @@ test("páginas estáticas 404, 403, 500 e 503, no idioma salvo", async ({ page }
   }
   // A 500 avisa que a carreira continua salva e oferece tentar de novo.
   await page.goto("/500.html");
-  await expect(page.getByText("Tu carrera sigue guardada")).toBeVisible();
+  await expect(page.getByText("Inténtalo de nuevo en un momento")).toBeVisible();
   await expect(page.getByRole("button", { name: "Intentar de nuevo" })).toBeVisible();
 });
 

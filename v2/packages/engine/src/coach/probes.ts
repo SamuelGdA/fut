@@ -7,6 +7,7 @@ import { ageOf } from "./players";
 import { initialOfferDivision, seasonBudget, wageBillOf } from "./review";
 import { aiFormation, aiPhilosophy, aiRating, bestEleven, expectedGoals, sectorRatings, type SectorRatings, type SideSetup } from "./tactics";
 import type { CoachCareer, CoachPlayer, Philosophy } from "./types";
+import { GENERIC_CHAMPIONS } from "../world/tuning";
 import { DEVELOP, FINANCE, MATCH } from "./tuning";
 import { unit } from "./util";
 import { squadOf } from "./world";
@@ -23,6 +24,8 @@ export const PHILOSOPHIES: readonly Philosophy[] = ["attacking", "defensive", "p
 
 /** Lado de um clube como a IA o escala (melhor time na formação do clube). */
 export function clubRatings(career: CoachCareer, clubId: string): SectorRatings {
+  const generic = GENERIC_CHAMPIONS.find(entry => entry.id === clubId || clubId.startsWith(`${entry.id}:`));
+  if (generic) return flatRatings(generic.strength);
   const formation = aiFormation(unit(`${career.setup.seed}:formation:${clubId}`));
   return sectorRatings(bestEleven(squadOf(career, clubId), formation), aiRating);
 }
@@ -187,7 +190,7 @@ export function clubDuel(career: CoachCareer, a: string, b: string): ClubDuel {
 /** Confederação do clube (para comparar continentes sem que o motor saiba dela). */
 export function confederationOf(career: CoachCareer, clubId: string): string {
   const club = career.clubs[clubId];
-  return club ? (getCountry(club.country)?.confederation ?? "") : "";
+  return club ? (getCountry(club.country)?.confederation ?? "") : clubId.startsWith("generic:") ? clubId.split(":")[1] ?? "" : "";
 }
 
 // ----------------------------------------------------------- Mundial
@@ -202,20 +205,22 @@ export interface ClubWorldCupOdds {
 }
 
 /**
- * Mundial de Clubes jogado muitas vezes com as chances exatas de cada jogo
- * (mesmos classificados, mesma preliminar e o mesmo sorteio aberto das
- * fases seguintes). Mede o "difícil, mas possível" sem depender da sorte de
+ * Sonda do Mundial com as chances de cada jogo, potes e desempate por força
+ * (mesmos classificados, oito grupos de quatro com turno único, dois
+ * classificados e sorteio aberto das fases seguintes). Mede o "difícil, mas possível" sem depender da sorte de
  * uma carreira.
  */
 export function clubWorldCupOdds(career: CoachCareer, runs: number): ClubWorldCupOdds {
-  const strength = (id: string) => career.clubs[id]?.strength ?? 60;
+  const strength = (id: string) => career.clubs[id]?.strength ?? GENERIC_CHAMPIONS.find(entry => entry.id === id || id.startsWith(`${entry.id}:`))?.strength ?? 60;
   const entrants = clubWorldCupEntrants({ seed: career.setup.seed, year: career.year, clubs: career.clubs, memory: career.memory }, strength);
   const advance = new Map<string, number>();
+  const oddsCache = new Map<string, MatchOdds>();
+  const oddsFor = (a: string, b: string) => { const key = `${a}|${b}`; let odds = oddsCache.get(key); if (!odds) { odds = clubDuel(career,a,b).odds; oddsCache.set(key,odds); } return odds; };
   const chance = (a: string, b: string) => {
     const key = `${a}|${b}`;
     let value = advance.get(key);
     if (value === undefined) {
-      value = clubDuel(career, a, b).odds.advance;
+      value = oddsFor(a,b).advance;
       advance.set(key, value);
       advance.set(`${b}|${a}`, 1 - value);
     }
@@ -225,14 +230,18 @@ export function clubWorldCupOdds(career: CoachCareer, runs: number): ClubWorldCu
   const titles = new Map<string, number>();
   const ordered = [...entrants].sort((a, b) => strength(b) - strength(a) || a.localeCompare(b));
   for (let run = 0; run < runs; run += 1) {
-    const extra = Math.max(0, ordered.length - 16);
-    const direct = ordered.slice(0, ordered.length - extra * 2);
-    const prelim = ordered.slice(ordered.length - extra * 2);
-    let alive = [...direct];
-    for (let index = 0; index < prelim.length / 2; index += 1) {
-      const a = prelim[index] as string;
-      const b = prelim[prelim.length - 1 - index] as string;
-      alive.push(rng.next() < chance(a, b) ? a : b);
+    const pots = [0,1,2,3].map(pot => rng.shuffle(ordered.slice(pot * 8, (pot + 1) * 8)));
+    let alive: string[] = [];
+    for (let group = 0; group < 8; group += 1) {
+      const members = pots.map(pot => pot[group]!).filter(Boolean);
+      const points = new Map(members.map(id => [id, 0]));
+      for (let i = 0; i < members.length; i += 1) for (let j = i + 1; j < members.length; j += 1) {
+        const a = members[i]!, b = members[j]!, odds = oddsFor(a,b);
+        const roll = rng.next();
+        if (roll < odds.draw) { points.set(a, points.get(a)! + 1); points.set(b, points.get(b)! + 1); }
+        else { const winner = roll < odds.draw + odds.win ? a : b; points.set(winner, points.get(winner)! + 3); }
+      }
+      alive.push(...members.sort((a,b) => points.get(b)! - points.get(a)! || strength(b)-strength(a) || a.localeCompare(b)).slice(0,2));
     }
     while (alive.length > 1) {
       const shuffled = rng.shuffle(alive);

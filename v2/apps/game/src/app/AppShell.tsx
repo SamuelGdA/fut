@@ -1,10 +1,12 @@
-import type { ReactNode } from "react";
+import { lazy, Suspense, type ReactNode } from "react";
 import { SCREEN_GAME, useNavigation } from "./navigation";
 import { SettingsMenu } from "../features/settings/SettingsMenu";
 import { useT } from "../i18n/useT";
 import { PitchMark } from "../ui/PitchMark";
 import { Toaster } from "../ui/toast/Toaster";
 import { UnlockAnnouncer } from "./UnlockAnnouncer";
+const CoachGuide = lazy(() => import("../screens/tecnico/Guide").then((module) => ({ default: module.Guide })));
+const DebugTools = import.meta.env.DEV ? lazy(() => import("../features/debug/DebugTools").then((module) => ({ default: module.DebugTools }))) : null;
 
 /**
  * Marca (D50): o campo visto de cima e o nome do Futeiros, que leva ao hub.
@@ -36,6 +38,8 @@ function Brand() {
         </button>
       )}
       {game === "craque" || game === "tecnico" ? <span className="brand-game">{t(`brand.games.${game}`)}</span> : null}
+      {game === "tecnico" ? <Suspense fallback={null}><CoachGuide /></Suspense> : null}
+      {DebugTools && (game === "craque" || game === "tecnico") ? <Suspense fallback={null}><DebugTools game={game} /></Suspense> : null}
     </div>
   );
 }

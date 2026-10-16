@@ -1,5 +1,5 @@
-<!-- BEGIN:nextjs-agent-rules -->
-# This is NOT the Next.js you know
+# Instruções para agentes
 
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
-<!-- END:nextjs-agent-rules -->
+O único projeto ativo é `v2/`, em React/Zustand/Vite. Leia e siga
+[v2/AI_RULES.md](v2/AI_RULES.md), [v2/README.md](v2/README.md) e o
+[README do Técnico](v2/README-TECNICO.md). As regras de Next.js da v1 não se aplicam.

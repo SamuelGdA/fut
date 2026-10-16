@@ -1,3 +1,5 @@
+import { cacheGame } from "./modeCache";
+import { SCREEN_GAME, useNavigation } from "./navigation";
 import { useEffect } from "react";
 import { translate } from "../i18n/translate";
 import { readPrefs } from "../store/prefs";
@@ -16,6 +18,14 @@ import { notify } from "../ui/toast/notify";
  * primeira tela.
  */
 export function PwaEffects() {
+  const screen = useNavigation((state) => state.screen);
+  const game = SCREEN_GAME[screen];
+  useEffect(() => {
+    if (!import.meta.env.PROD || (game !== "craque" && game !== "tecnico")) return;
+    let cancelled = false;
+    void cacheGame(game, () => cancelled).catch(() => undefined);
+    return () => { cancelled = true; };
+  }, [game]);
   useEffect(() => {
     if (!import.meta.env.PROD || typeof navigator === "undefined" || !("serviceWorker" in navigator)) return;
     let cancelled = false;

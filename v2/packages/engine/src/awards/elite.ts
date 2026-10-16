@@ -61,6 +61,8 @@ export const FUTURE_GENERATION = {
   retireAge: [34, 37] as const,
   keeperRetireAge: [37, 39] as const,
   europeShare: 0.85,
+  /** Dos candidatos fora da Europa, 80% atuam nas Américas. */
+  americasOutsideEurope: 0.8,
 } as const;
 
 const FUTURE_NATIONS: ReadonlyArray<readonly [CountryCode, number]> = [
@@ -96,6 +98,7 @@ export function futureGeneration(seed: string): readonly Contender[] {
   const cached = futureCache.get(seed);
   if (cached) return cached;
   const rng = stream(seed, "awards", "future");
+  const regionRng = stream(seed, "awards", "future", "region");
   const settings = FUTURE_GENERATION;
   const contenders: Contender[] = [];
   for (let born = settings.firstBorn; born <= settings.lastBorn; born += 1) {
@@ -106,7 +109,7 @@ export function futureGeneration(seed: string): readonly Contender[] {
         : clamp(rng.normal(settings.peakMean, settings.peakDeviation), settings.peakRange[0], settings.peakRange[1]);
       const [ageLow, ageHigh] = keeper ? settings.keeperPeakAge : settings.peakAge;
       const [retireLow, retireHigh] = keeper ? settings.keeperRetireAge : settings.retireAge;
-      contenders.push({
+      const contender = {
         id: `future:${born}:${slot}`,
         name: "",
         born,
@@ -117,7 +120,8 @@ export function futureGeneration(seed: string): readonly Contender[] {
         retireAge: rng.int(retireLow, retireHigh),
         europe: rng.chance(settings.europeShare),
         generated: true,
-      });
+      };
+      contenders.push({ ...contender, americas: !contender.europe && regionRng.chance(settings.americasOutsideEurope) });
     });
   }
   if (futureCache.size > 64) futureCache.clear();

@@ -1,3 +1,7 @@
+import { cupObjectivesFor } from "./objectives";
+import { applyMatchRelations } from "./review";
+import { recordCompetitionStats } from "./awards";
+import { stageInjury } from "./injuries";
 import { areRivals } from "@craque/world";
 import { GENERIC_CHAMPIONS } from "../world/tuning";
 import { advanceCompetitions, applyToTable, type DrawContext, sortTable } from "./competitions";
@@ -5,7 +9,7 @@ import { buildMatchEvent } from "./events";
 import { coachSheet, isAvailable, registered } from "./lineup";
 import { applyMatchChoice, playUntil, quickMatch, startLive, type DetailedInput, type LiveMatch, type QuickSide } from "./match";
 import { formFromRatings, sectorOf } from "./players";
-import { aiFormation, aiPhilosophy, aiRating, bestEleven, sectorRatings, type OnField, type SectorRatings } from "./tactics";
+import { aiFormation, aiPhilosophy, aiRating, bestEleven, FORMATION_SLOTS, sectorRatings, type OnField, type SectorRatings } from "./tactics";
 import type {
   CoachCareer,
   CoachMatchLog,
@@ -63,7 +67,7 @@ function createRun(career: CoachCareer): Run {
     context: {
       seed: career.setup.seed,
       year: career.year,
-      seeder: (club) => career.clubs[club]?.strength ?? GENERIC_CHAMPIONS.find((entry) => entry.id === club)?.strength ?? 60,
+      seeder: (club) => career.clubs[club]?.strength ?? GENERIC_CHAMPIONS.find((entry) => entry.id === club || club.startsWith(`${entry.id}:`))?.strength ?? 60,
       busy: busyDays(career),
     },
     endDay: periodEnd(career),
@@ -85,7 +89,7 @@ function indexFixture(fixture: Fixture, byId: Map<string, Fixture>, byDay: Map<n
 }
 
 function genericSheet(club: string): AiSheet | null {
-  const generic = GENERIC_CHAMPIONS.find((entry) => entry.id === club);
+  const generic = GENERIC_CHAMPIONS.find((entry) => entry.id === club || club.startsWith(`${entry.id}:`));
   if (!generic) return null;
   const value = generic.strength;
   return {
@@ -113,7 +117,7 @@ function aiSheet(run: Run, club: string, dayAbs: number): AiSheet {
 }
 
 function strengthOf(run: Run, club: string): number {
-  return run.career.clubs[club]?.strength ?? GENERIC_CHAMPIONS.find((entry) => entry.id === club)?.strength ?? 60;
+  return run.career.clubs[club]?.strength ?? GENERIC_CHAMPIONS.find((entry) => entry.id === club || club.startsWith(`${entry.id}:`))?.strength ?? 60;
 }
 
 function aggregateBefore(run: Run, fixture: Fixture): readonly [number, number] | null {
@@ -136,7 +140,13 @@ function decideWinner(fixture: Fixture, home: number, away: number, aggregate: r
 
 function recordResult(run: Run, fixture: Fixture, result: MatchResult): void {
   fixture.result = result;
+  const day = absDay(run.career.seasonIndex, fixture.day);
+  recordCompetitionStats(run.career, fixture, result, aiSheet(run, fixture.home, day).eleven.map((entry) => entry.player), aiSheet(run, fixture.away, day).eleven.map((entry) => entry.player));
   const state = run.career.competitions[fixture.competition];
+  if (state && (state.kind === "super" || state.kind === "contsuper") && fixture.decisive && result.winner) {
+    state.champion = result.winner; state.runnerUp = result.winner === fixture.home ? fixture.away : fixture.home;
+    state.reached[result.winner] = "champion"; state.reached[state.runnerUp] = "F"; state.done = true;
+  }
   if (!state) return;
   if (fixture.roundKind === "league" && state.table) applyToTable(state.table, fixture.home, fixture.away, result.home, result.away);
   if (fixture.roundKind === "group" && state.groups) {
@@ -156,7 +166,7 @@ function aiInjuries(run: Run, club: string, dayAbs: number, rng: Rng): void {
     if (!rng.chance(INJURY.per90 * factor)) continue;
     const severity = rng.weighted(INJURY.severity.map((item) => [item, item.weight] as const));
     const days = rng.int(severity.days[0], severity.days[1]);
-    player.injury = { kind: severity.kind, since: dayAbs, until: dayAbs + days };
+    player.injury = stageInjury(run.career, dayAbs, days, severity.kind);
     run.injured.add(player.id);
     changed = true;
   }
@@ -199,13 +209,7 @@ function coachInput(run: Run, fixture: Fixture, dayAbs: number): { input: Detail
   });
   const predictability = coach.predictability.value;
   const training = coach.activeTraining;
-  const priority = career.promises
-    .filter((promise) => promise.status === "active" && promise.player && (promise.kind === "minutes" || promise.kind === "starts"))
-    .map((promise) => promise.player as string);
-  const youthPromise = career.promises.some((promise) => promise.status === "active" && promise.kind === "youth");
-  if (youthPromise) {
-    for (const player of sheet.bench) if (career.year - player.birthYear <= 21 && !priority.includes(player.id)) priority.push(player.id);
-  }
+  const priority: string[] = [];
   const midTraining = trainingBoost(training, "mid") / 2;
   const coachSide = {
     club: coach.club,
@@ -301,6 +305,7 @@ function finishCoachMatch(run: Run, fixture: Fixture, input: DetailedInput, live
     shortHanded: live.sides[coachIndex].shortHanded,
   };
   const result: MatchResult = {
+    participants:{home:live.sides[0].used.map(entry=>({...entry,rating:Math.round((live.ratings[entry.player] ?? 6)*10)/10})),away:live.sides[1].used.map(entry=>({...entry,rating:Math.round((live.ratings[entry.player] ?? 6)*10)/10}))},
     home: live.score[0],
     away: live.score[1],
     extraTime: live.extraTime,
@@ -314,13 +319,14 @@ function finishCoachMatch(run: Run, fixture: Fixture, input: DetailedInput, live
   for (const injury of live.injuries) {
     const player = career.players[injury.player];
     if (!player) continue;
-    player.injury = { kind: injury.kind, since: dayAbs, until: dayAbs + injury.days };
+    player.injury = stageInjury(career, dayAbs, injury.days, injury.kind);
     run.injured.add(player.id);
     if (player.club === coach.club) career.ledger.injuries.push({ player: player.id, days: injury.days, kind: injury.kind });
   }
   // A IA também sente as lesões do jogo.
   run.ai.delete(coachIndex === 0 ? fixture.away : fixture.home);
   applyCoachUsage(run, fixture, log, live, dayAbs, rested, coachIndex);
+  applyMatchRelations(career, live.score[coachIndex], live.score[coachIndex === 0 ? 1 : 0], areRivals(fixture.home, fixture.away));
   updatePredictability(run, log);
   noteMoments(run, fixture, live, coachIndex);
 }
@@ -351,11 +357,15 @@ function applyCoachUsage(run: Run, fixture: Fixture, log: CoachMatchLog, live: L
       stats.minutes += played;
       if (starters.has(player.id)) {
         stats.starts += 1;
+        const position=FORMATION_SLOTS[log.formation][log.lineup.indexOf(player.id)];
+        if(position && position!==player.position && !player.alternates.includes(position) && played>=60) {
+          const row=(player.improvised ??= {})[position] ??= {apps:0,ratingSum:0};row.apps++;row.ratingSum+=live.ratings[player.id] ?? 6;
+        }
         player.consecutiveStarts += 1;
         delta = table.start;
       } else {
         player.consecutiveStarts = 0;
-        delta = table.start * 0.6;
+        delta = player.role === "star" || player.role === "starter" ? table.bench * (1 - Math.min(1,played / 75)) : table.start * Math.min(0.6,played / 60);
       }
       const rating = live.ratings[player.id] ?? 6;
       stats.ratingSum += rating;
@@ -364,7 +374,7 @@ function applyCoachUsage(run: Run, fixture: Fixture, log: CoachMatchLog, live: L
       player.form = formFromRatings(player.recentRatings);
       if (big) stats.bigGames += 1;
       const legacy = career.legacy[player.id];
-      if (legacy) legacy.apps += 1;
+      if (legacy) { legacy.apps += 1; const local = legacy.byClub?.[player.club]; if (local) { local.apps += 1; local.ratingSum += rating; local.rated += 1; } }
     } else {
       player.consecutiveStarts = 0;
       const benched = benchIds.has(player.id);
@@ -386,10 +396,14 @@ function applyCoachUsage(run: Run, fixture: Fixture, log: CoachMatchLog, live: L
     if (big) scorer.season.bigGoals += 1;
     if (goal.setPiece) scorer.season.setPieceGoals += 1;
     const legacy = career.legacy[scorer.id];
-    if (legacy) legacy.goals += 1;
+    if (legacy) { legacy.goals += 1; const local = legacy.byClub?.[scorer.club]; if (local) local.goals += 1; }
     if (goal.assist) {
       const assister = career.players[goal.assist];
-      if (assister) assister.season.assists += 1;
+      if (assister) {
+        assister.season.assists += 1;
+        const legacy = career.legacy[assister.id];
+        if (legacy) { legacy.assists = (legacy.assists ?? 0) + 1; const local = legacy.byClub?.[assister.club]; if (local) local.assists += 1; }
+      }
     }
   }
 }
@@ -414,7 +428,7 @@ function updatePredictability(run: Run, log: CoachMatchLog): void {
     const [low, high] = PREDICTABILITY.lineupChange;
     value *= rng.real(low, high);
   }
-  state.value = Math.min(1, value + PREDICTABILITY.perMatch);
+  state.value = Math.min(1, value + PREDICTABILITY.perMatch * (0.7 + 0.6 * unit(`${run.career.setup.seed}:reading:${coach.club}`)));
   state.lastFormation = log.formation;
   state.lastPhilosophy = log.philosophy;
   state.lastLineup = [...log.lineup];
@@ -438,7 +452,7 @@ function noteMoments(run: Run, fixture: Fixture, live: LiveMatch, coachIndex: 0 
     if ((goal.side === "home") !== (coachIndex === 0) || !goal.scorer) continue;
     goalsBy.set(goal.scorer, (goalsBy.get(goal.scorer) ?? 0) + 1);
   }
-  for (const [player, goals] of goalsBy) if (goals >= 3) moments.push({ kind: "hatTrick", player, fixture: fixture.id });
+  for (const [player, goals] of goalsBy) if (goals >= 3) moments.push({ kind: "hatTrick", player, fixture: fixture.id, opponent });
   career.ledger.moments.push(...moments);
 }
 
@@ -519,13 +533,17 @@ export function simulateDays(career: CoachCareer): SimulationOutcome {
           run.injured.delete(id);
           continue;
         }
-        if (player.injury.until <= dayAbs) {
+        if (!player.injury.turns && player.injury.until <= dayAbs) {
           player.injury = null;
           run.injured.delete(id);
           if (player.club && player.club !== coachClub) run.ai.delete(player.club);
         }
       }
       const fresh = advanceCompetitions(career.competitions, run.byCompetition, touched, run.context, europe);
+      if (career.coach) {
+        const goals = career.coach.cupObjectives ??= [];
+        for (const goal of cupObjectivesFor(career, career.coach.club)) if (!goals.some((known) => known.competition === goal.competition)) goals.push(goal);
+      }
       for (const fixture of fresh) {
         indexFixture(fixture, run.byId, run.byDay, run.byCompetition);
         created.push(fixture);

@@ -72,6 +72,7 @@ export const COACH_ACHIEVEMENTS: readonly CoachAchievement[] = [
   { id: "tecnico:promotion", when: "anytime", check: (career) => career.history.some((entry) => entry.promoted) },
   { id: "tecnico:twoPromotions", when: "anytime", check: (career) => career.history.filter((entry) => entry.promoted).length >= 2 },
   { id: "tecnico:rescue", when: "anytime", check: (career) => career.history.some((entry) => entry.rescue) },
+  { id: "tecnico:invincibles", when:"anytime", check:career=>career.history.some(entry=>!entry.partial && entry.invincible) },
   { id: "tecnico:firstTitle", when: "anytime", check: (career) => titles(career).length >= 1 },
   {
     id: "tecnico:league",

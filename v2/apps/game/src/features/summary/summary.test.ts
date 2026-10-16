@@ -6,7 +6,7 @@ import { posterFileName } from "./poster";
 import { readShareHash } from "./shareHash";
 import { decodeShare, encodeShare, ShareError, shareUrl } from "./shareLink";
 import { SHOWCASE_GAP, showcaseItems, showcaseLayout } from "./showcase";
-import { posterNumbers, summaryNumbers, summaryRecords, timeline } from "./summaryData";
+import { ovrCurve, posterNumbers, summaryNumbers, summaryRecords, timeline } from "./summaryData";
 
 /** O resumo (M6): link compartilhado, pôster, vitrine e os dados que a tela mostra. */
 
@@ -84,6 +84,15 @@ describe("vitrine (GDD 24.5)", () => {
     expect(showcaseLayout(400, 360, 200)).toMatchObject({ fits: false, labels: false });
   });
 
+  it("no resumo móvel, coleções grandes mantêm o nome da competição em vez de escondê-lo", () => {
+    const readable = showcaseLayout(40, 320, 640, 72, true);
+    expect(readable.labels).toBe(true);
+    expect(readable.fits).toBe(false);
+    expect(readable.art).toBeGreaterThanOrEqual(64);
+    expect(readable.columns * readable.cellWidth + (readable.columns - 1) * SHOWCASE_GAP).toBeLessThanOrEqual(320);
+    expect(showcaseLayout(40, 320, 640, 72).labels).toBe(false);
+  });
+
   it("cada competição uma peça, com a contagem e os anos", () => {
     const items = showcaseItems(finished.history);
     const titles = finished.history.reduce((total, record) => total + record.titles.length, 0);
@@ -116,5 +125,20 @@ describe("dados do resumo (GDD 24)", () => {
     const reached = records.filter((result) => result.status !== "short").length;
     records.slice(0, reached).forEach((result) => expect(result.status).not.toBe("short"));
     for (const result of records.slice(reached)) expect(result.value / result.record.value).toBeGreaterThanOrEqual(0.25);
+  });
+});
+
+// A legenda da curva corresponde ao começo real, e prêmios identificam a competição.
+describe("resumo D61", () => {
+  it("inclui o OVR inicial antes dos resultados anuais", () => {
+    const points = ovrCurve(finished.history);
+    expect(points[0]?.ovr).toBe(finished.history[0]?.ovrStart);
+    expect(points.at(-1)?.ovr).toBe(finished.history.at(-1)?.ovrEnd);
+  });
+  it("artilharias e craques não se misturam entre torneios", () => {
+    const items = showcaseItems(finished.history);
+    const crowns = finished.history.flatMap(record=>record.awards.crowns);
+    const keys = [...new Set(crowns.map(crown=>`${crown.award}:${crown.competition}`))];
+    expect(items.filter(item=>item.kind==="award" && item.competition).map(item=>item.kind==="award" ? `${item.id}:${item.competition}` : "").sort()).toEqual(keys.sort());
   });
 });

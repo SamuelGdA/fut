@@ -1,11 +1,10 @@
 import { missionName } from "@craque/content";
 import { getCountry, getCountryKit } from "@craque/world";
-import { ArrowLeft, Pencil, Play, RotateCcw, Timer } from "lucide-react";
+import { ArrowLeft, Pencil, Play, Timer } from "lucide-react";
 import { useEffect, useId, useState } from "react";
 import { useNavigation } from "../../app/navigation";
 import { useAppearanceContext } from "../../features/appearance/context";
 import { isSurnameValid, SURNAME_MAX, useDraft } from "../../features/career/draft";
-import { peekSave, type SavePeek } from "../../features/career/saveRecord";
 import { useChallengeClock } from "../../features/challenge/clock";
 import { challengeCareerSetup, handOf } from "../../features/challenge/start";
 import { type AttemptEntry, challengeStats, dayRanking } from "../../features/hall/model";
@@ -38,7 +37,6 @@ export function ChallengeScreen() {
   const hand = handOf(clock.day);
   const draft = useDraft();
   const attempts = useHall((state) => state.attempts);
-  const [save] = useState<SavePeek>(() => peekSave());
   const [touched, setTouched] = useState(false);
   const [starting, setStarting] = useState(false);
   const [dreamText, setDreamText] = useState(draft.dreamNumber === null ? "" : String(draft.dreamNumber));
@@ -52,8 +50,6 @@ export function ChallengeScreen() {
   const rankedToday = dayRanking(attempts, clock.day).find((attempt) => attempt.ranked) ?? null;
   const surnameOk = isSurnameValid(draft.surname);
   const dreamValid = dreamText.trim() === "" || (/^\d{1,2}$/.test(dreamText.trim()) && Number(dreamText) >= 1);
-  const present = save.kind === "present" ? save : null;
-  const inProgress = present !== null && present.current && present.challengeId === clock.day && present.snapshot.end === null;
   const date = formatChallengeDay(clock.day, locale);
 
   const setDream = (value: string) => {
@@ -91,24 +87,7 @@ export function ChallengeScreen() {
         <ArrowLeft size={18} aria-hidden="true" />
         {t("common.back")}
       </Button>
-      {inProgress ? (
-        <Button
-          size="lg"
-          className="flex-1 sm:flex-none"
-          onClick={() => {
-            feedback("confirm");
-            go("career");
-          }}
-        >
-          <RotateCcw size={18} aria-hidden="true" />
-          {t("challenge.continue")}
-        </Button>
-      ) : (
-        <Button size="lg" className="flex-1 sm:flex-none" loading={starting} onClick={play}>
-          <Play size={18} aria-hidden="true" />
-          {t("challenge.play")}
-        </Button>
-      )}
+      <Button size="lg" className="flex-1 sm:flex-none" loading={starting} onClick={play}><Play size={18} aria-hidden="true" />{t("challenge.play")}</Button>
     </div>
   );
 

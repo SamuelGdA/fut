@@ -18,11 +18,202 @@ import type { CoachMessages } from "./coach.pt";
  */
 export const coachEn: CoachMessages = {
   events: {
+    captainVoice: {
+  "title": "The captain speaks",
+  "body": "{player} wants the veterans to have a voice in the dressing room. The youngsters also want to be heard.",
+  "options": {
+    "listen": {
+      "label": "Hear the veterans",
+      "result": "The veteran feels valued, but the youngsters feel overlooked."
+    },
+    "shared": {
+      "label": "Share the floor",
+      "success": "The discussion brings the squad together.",
+      "failure": "The veteran feels his influence fading."
+    }
+  }
+},
+    benchPlan: {
+  "title": "A place in the plan",
+  "body": "{player} asks when he will get minutes. Giving a date helps, but creates a real commitment.",
+  "options": {
+    "rotate": {
+      "label": "Promise a starting spot in the second half",
+      "result": "He must be in the starting eleven when you begin simulating the second half. You choose the lineup."
+    },
+    "compete": {
+      "label": "Ask him to compete",
+      "success": "He accepts the challenge and his form improves.",
+      "failure": "The answer frustrates the player."
+    }
+  }
+},
+    academyBridge: {
+  "title": "An academy bridge",
+  "body": "{player} asks for more integration between youngsters and starters. Training time is limited.",
+  "options": {
+    "integrate": {
+      "label": "Mix the groups",
+      "result": "The youngsters feel included; the starters lose exclusive attention."
+    },
+    "individual": {
+      "label": "Extra coaching session",
+      "result": "Midfield preparation improves, at a cost to the budget."
+    }
+  }
+},
+    trainingTempo: {
+  "title": "Training tempo",
+  "body": "The staff proposes an intense week for the starters. The squad also wants recovery time.",
+  "options": {
+    "intense": {
+      "label": "Raise the intensity",
+      "success": "The starters respond well to the extra intensity.",
+      "failure": "The workload hurts the starters’ form."
+    },
+    "light": {
+      "label": "Ease the workload",
+      "result": "The squad feels happier, with less intensity on the pitch."
+    }
+  }
+},
+    setPieceLab: {
+  "title": "Set piece laboratory",
+  "body": "There is time for an extra training block. Prioritising one area leaves another with less attention.",
+  "options": {
+    "attack": {
+      "label": "Rehearse attacking plays",
+      "result": "The attack gains preparation; the reserves feel overlooked."
+    },
+    "defend": {
+      "label": "Organise the defence",
+      "result": "Defensive preparation improves, but the extra work weighs on the starters."
+    }
+  }
+},
+    openTraining: {
+  "title": "Open gates",
+  "body": "The fans ask to watch a training session. Opening up brings them closer, but exposes the starters.",
+  "options": {
+    "open": {
+      "label": "Open the session",
+      "success": "The session brings fans and players closer.",
+      "failure": "The exposure brings criticism and unsettles the starters."
+    },
+    "closed": {
+      "label": "Keep the gates closed",
+      "result": "The midfield works in private; the fans feel distant."
+    }
+  }
+},
+    pressStrategy: {
+  "title": "A press conference question",
+  "body": "The press wants a statement about the squad. Your answer can protect the players or raise expectations.",
+  "options": {
+    "shield": {
+      "label": "Take the pressure",
+      "result": "The players feel protected; the board wanted a tougher message."
+    },
+    "challenge": {
+      "label": "Challenge the team publicly",
+      "success": "The starters respond and the fans approve.",
+      "failure": "The public challenge upsets the starters."
+    }
+  }
+},
+    videoRoom: {
+  "title": "The video room",
+  "body": "The staff has selected clips to improve the defence. A collective session takes more time from everyone.",
+  "options": {
+    "collective": {
+      "label": "Review with the squad",
+      "result": "The defence gains preparation; the squad resents the extra time."
+    },
+    "private": {
+      "label": "Individual conversations",
+      "success": "The starters understand the adjustments.",
+      "failure": "The individual messages fail to connect."
+    }
+  }
+},
+    veteranSchedule: {
+  "title": "The veteran’s schedule",
+  "body": "{player} requests a routine adapted to his age. The rest of the squad watches the treatment.",
+  "options": {
+    "adapt": {
+      "label": "Adapt the schedule",
+      "result": "The veteran performs better; others question the privilege."
+    },
+    "equal": {
+      "label": "Keep one schedule",
+      "success": "The squad welcomes equal treatment.",
+      "failure": "The workload hurts the veteran’s form and mood."
+    }
+  }
+},
+    starResponsibility: {
+  "title": "A star’s responsibility",
+  "body": "{player} could take more responsibility in match preparation. A bigger role also brings pressure.",
+  "options": {
+    "lead": {
+      "label": "Give him the lead",
+      "success": "The star thrives and involves the group.",
+      "failure": "The extra responsibility weighs on the player."
+    },
+    "protect": {
+      "label": "Shield him from pressure",
+      "result": "The player feels supported; the fans wanted more leadership."
+    }
+  }
+},
+    squadWorkshop: {
+  "title": "Time for the squad",
+  "body": "An activity off the pitch could bring the squad together. It costs budget and takes a training block.",
+  "options": {
+    "bond": {
+      "label": "Invest in team bonding",
+      "result": "The squad grows closer. The cost comes from the available budget."
+    },
+    "work": {
+      "label": "Use the time to train",
+      "result": "Midfield preparation improves; the players miss the activity."
+    }
+  }
+},
+    rotationPolicy: {
+  "title": "Selection priorities",
+  "body": "Starters and reserves want to understand your plan. Decide who gets extra attention this stage.",
+  "options": {
+    "merit": {
+      "label": "Value the starters",
+      "result": "The starters feel valued; the reserves are unhappy."
+    },
+    "depth": {
+      "label": "Prepare the reserves",
+      "result": "The reserves gain confidence; the starters feel challenged."
+    }
+  }
+},
+    youngPressure: {
+  "title": "Spotlight on a youngster",
+  "body": "{player} caught the press’s attention in training. Exposure could motivate him or become a burden.",
+  "options": {
+    "protect": {
+      "label": "Keep him out of the spotlight",
+      "result": "The youngster feels calmer; the fans wanted to meet him."
+    },
+    "spotlight": {
+      "label": "Give him media time",
+      "success": "The attention motivates him and excites the fans.",
+      "failure": "The exposure hurts the youngster’s form and confidence."
+    }
+  }
+},
     unhappyStar: {
       title: "Unhappy starter",
       body: "{player} asked for a word. He says he is not happy and his head is no longer at the club.",
       options: {
-        promise: { label: "Promise a starting spot", result: "He leaves the room relieved. Now the promise has to be kept." },
+        promise: { label: "Promise a starting spot in the second half", result: "He leaves the room relieved. Now the promise has to be kept." },
         raise: { label: "Offer a pay rise", result: "The rise settles him, and the bill arrives at the end of the month." },
         firm: {
           label: "Stand firm",
@@ -41,14 +232,14 @@ export const coachEn: CoachMessages = {
           success: "He agrees to stay, reluctantly, but without a fuss.",
           failure: "He stays, but the mood in the dressing room turns heavy.",
         },
-        promise: { label: "Promise minutes", result: "He agrees to stay if he plays. The promise goes on the list." },
+        promise: { label: "Promise a starting spot in the second half", result: "He agrees to stay if he plays. The promise goes on the list." },
       },
     },
     youthShines: {
       title: "Academy gem",
       body: "{player} is flying in training. The coaching staff think it is time to give him a chance.",
       options: {
-        chance: { label: "Give him minutes", result: "The fans love seeing academy players. Now he expects to play." },
+        chance: { label: "Promise a starting spot in the second half", result: "The fans love seeing academy players. Now he expects to play." },
         praise: {
           label: "Praise him in public",
           success: "The youngster thrives on the confidence.",
@@ -61,8 +252,8 @@ export const coachEn: CoachMessages = {
       title: "Injury crisis",
       body: "{injured} players are with the medical staff. The sports scientist wants investment to speed up recoveries.",
       options: {
-        medical: { label: "Invest in the medical staff ({cost})", result: "Recoveries get shorter." },
-        rotate: { label: "Rotate the squad", result: "The bench players get a lift and the midfield trains to take the strain." },
+        medical: { label: "Invest in the medical staff ({cost})", result: "Each recovery is shortened by one half-season." },
+        rotate: { label: "Rotate the squad", result: "Reserves gain morale and midfield training, but the starters feel overlooked." },
       },
     },
     derbyWeek: {
@@ -74,7 +265,7 @@ export const coachEn: CoachMessages = {
           success: "The attack comes out switched on and the fans join the fight.",
           failure: "Nerves on edge: the starters play worse.",
         },
-        calm: { label: "Lower the temperature", result: "A week of focus and a well-drilled defence." },
+        calm: { label: "Lower the temperature", result: "A well-drilled defence and a calm squad, but the starters lose intensity." },
       },
     },
     boardBonus: {
@@ -83,14 +274,6 @@ export const coachEn: CoachMessages = {
       options: {
         accept: { label: "Accept the funds", result: "Money in the transfer budget, and the board watching closely." },
         decline: { label: "Decline gracefully", result: "The board appreciates the prudence." },
-      },
-    },
-    sponsor: {
-      title: "Controversial sponsor",
-      body: "A betting company offers {amount} to put its brand on the training kit. The fans turn up their noses.",
-      options: {
-        accept: { label: "Accept", result: "The money comes in; some of the fans complain." },
-        refuse: { label: "Refuse", result: "The fans applaud the decision." },
       },
     },
     fanProtest: {
@@ -121,15 +304,15 @@ export const coachEn: CoachMessages = {
       title: "A veteran wants to help",
       body: "{player} offers to look after the academy youngsters, with extra sessions after hours.",
       options: {
-        accept: { label: "Accept the help", result: "{player} becomes a mentor: the squad's youngsters develop a bit more." },
-        focus: { label: "Ask him to focus on his game", result: "He goes back to thinking only about playing, and his form improves." },
+        accept: { label: "Accept the help", result: "{player} becomes a mentor and lifts the youngsters, but loses some personal form." },
+        focus: { label: "Ask him to focus on his game", result: "His form improves; the youngsters feel neglected." },
       },
     },
     rivalInterest: {
       title: "Bid for a reserve",
       body: "{buyer} offer {price} for {player}, who has barely played.",
       options: {
-        sell: { label: "Sell", result: "Money in the bank. The fans dislike strengthening other clubs." },
+        sell: { label: "Sell", result: "Transfer budget boosted. The fans dislike strengthening other clubs." },
         keep: { label: "Keep him in the squad", result: "He feels valued, and you promise not to sell him before the end of the season." },
       },
     },
@@ -151,18 +334,18 @@ export const coachEn: CoachMessages = {
       options: {
         rush: {
           label: "Rush his return",
-          success: "Just a scare: a few days out.",
-          failure: "Rushing made the injury worse: a month out.",
+          success: "Just a scare: still available, with renewed confidence.",
+          failure: "Rushing made the injury worse: two half-seasons out.",
         },
-        rest: { label: "Give it time", result: "Two and a half weeks on the sidelines, no risk." },
+        rest: { label: "Give it time", result: "One half-season out to recover calmly." },
       },
     },
     austerity: {
-      title: "In the red",
-      body: "The club's cash is negative. The board wants spending cuts and suggests selling {player}, the top earner.",
+      title: "Payroll under pressure",
+      body: "Payroll is close to its limit. The board suggests selling {player}, the top earner, or a squad wage cut.",
       options: {
         list: { label: "Put him on the transfer list", result: "The board approves; he is not pleased to hear it." },
-        cut: { label: "Cut the transfer budget", result: "Less money for signings, lighter books." },
+        cut: { label: "Renegotiate wages", result: "Payroll falls by 5%; the squad is unhappy." },
       },
     },
     dressingRoomFight: {
@@ -194,8 +377,8 @@ export const coachEn: CoachMessages = {
       title: "Good run",
       body: "The team is above expectations and the board wants to seize the moment: {amount} more for signings, if you want it.",
       options: {
-        celebrate: { label: "Celebrate with the squad", result: "A party in the dressing room and in the stands." },
-        invest: { label: "Take the funds", result: "Money to strengthen the squad, and a satisfied board." },
+        celebrate: { label: "Celebrate with the squad", result: "A party in the dressing room and in the stands. It costs 1% of annual revenue." },
+        invest: { label: "Take the funds", result: "Transfer funds and a happy board; the fans miss the celebration." },
       },
     },
     preseasonTour: {
@@ -207,7 +390,7 @@ export const coachEn: CoachMessages = {
           success: "Fee banked and nobody felt it.",
           failure: "Fee banked, but the starters came back tired.",
         },
-        camp: { label: "Stay and train", result: "Pre-season at home, a sharp midfield." },
+        camp: { label: "Stay and train", result: "A sharp midfield. The training camp costs 1% of annual revenue." },
       },
     },
   },
@@ -228,7 +411,7 @@ export const coachEn: CoachMessages = {
       adjust: { label: "Adjust calmly", hint: "A bit more attack, with almost no extra risk.", goal: "Get at least a draw" },
       accept: { label: "Avoid a hammering", hint: "Shuts up shop to concede no more.", goal: "Keep the score from getting worse" },
       push: { label: "Go for it", hint: "More chance of winning, more chance of losing.", goal: "Win" },
-      balance: { label: "Balance it", hint: "A small gain at both ends.", goal: "Don't lose" },
+      balance: { label: "Balance it out", hint: "A little more attack, with some exposure.", goal: "Don't lose" },
       hold: { label: "Hold on to the point", hint: "Fewer goals at both ends.", goal: "Don't lose" },
       close: { label: "Park the bus", hint: "A reinforced defence, almost no attack.", goal: "Keep the win" },
       keepGoing: { label: "Go for more goals", hint: "Kills the game or gives the opponent a chance.", goal: "Keep the win" },
@@ -253,25 +436,25 @@ export const coachEn: CoachMessages = {
     },
     immediate: "Just talking already left him a little better.",
     options: {
-      promiseStarts: { label: "Promise a starting spot", good: "He leaves confident. The promise goes on the list." },
+      promiseStarts: { label: "Promise a starting spot in the second half", good: "He leaves confident. The promise goes on the list." },
       patience: { label: "Ask for patience", good: "He agrees to wait his turn.", bad: "He did not accept the request." },
       honest: { label: "Be frank about his role", good: "The truth hurt, but he accepts the bench.", bad: "He did not like the frankness at all." },
       list: { label: "Put him on the transfer list", good: "He thanks you for listening and waits for offers." },
       convince: { label: "Try to convince him to stay", good: "He decides to stay and fight for his place.", bad: "No luck: he still wants to leave." },
-      promiseMinutes: { label: "Promise minutes", good: "He agrees to wait if he plays. The promise goes on the list." },
+      promiseMinutes: { label: "Promise a starting spot in the second half", good: "He agrees to wait if he plays. The promise goes on the list." },
       reassure: { label: "Assure him you will keep it", good: "He trusts your word." },
       release: { label: "Withdraw the promise", good: "He doesn't like it, but the promise no longer stands." },
       confidence: { label: "Give him confidence", good: "He believes again.", bad: "It didn't help: still no confidence." },
-      rest: { label: "Rest him for a few days", good: "He gets a breather and comes back better." },
+      rest: { label: "Rest him for a few days", good: "He gets a breather and comes back better.", bad: "The break cost him rhythm and he returned frustrated." },
       explain: { label: "Explain his role", good: "He understands and accepts the bench.", bad: "He disagreed with the explanation." },
       family: { label: "Help bring his family over", good: "With his family close, he is smiling again." },
-      praise: { label: "Praise him", good: "He leaves even more motivated." },
+      praise: { label: "Praise him", good: "He leaves even more motivated.", bad: "The praise felt hollow and he left frustrated." },
       challenge: { label: "Challenge him to do more", good: "The challenge fired him up.", bad: "He felt it was too much pressure." },
     },
   },
 
   meeting: {
-    support: { label: "Back the squad", good: "The squad feels supported. Those who were upset improve more." },
+    support: { label: "Back the squad", good: "Squad morale rises; the board loses 2 trust as it expected more pressure." },
     demand: { label: "Demand more from the squad", good: "The demands worked: the team is running again.", bad: "The demands went down badly and the mood soured." },
   },
 
@@ -327,7 +510,8 @@ export const coachEn: CoachMessages = {
     eliminated: "Knocked out: {competition} ({round})",
     promotion: "Promotion won",
     relegation: "Relegated",
-    hatTrick: "Hat-trick for {player}",
+    learnedPosition:"{player} learned to play as {position}.",
+    hatTrick: "Hat-trick for {player} against {opponent}",
     matchEventSuccess: "Spot-on in-match decision",
     matchEventFailure: "The in-match decision didn't work",
     debut: "Debut for {player}, from the academy",
@@ -337,6 +521,7 @@ export const coachEn: CoachMessages = {
 
   evaluation: {
     reasons: {
+      ambition: "What mattered: trophy expectations and the club’s drought.",
       objective: "What counted: the league objective.",
       cups: "What counted: the cups and continental tournaments.",
       finances: "What counted: the club's finances.",
@@ -361,6 +546,7 @@ export const coachEn: CoachMessages = {
   },
 
   achievements: {
+    invincibles: {name:"Invincibles",description:"Win a league without losing a match."},
     firstSeason: { name: "First clipboard", description: "Finish your first season as a coach." },
     fullCareer: { name: "Twenty-four years on the bench", description: "Complete all 24 seasons of the coaching career." },
     promotion: { name: "Promotion", description: "Take a club up to the top division." },

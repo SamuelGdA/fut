@@ -8,6 +8,7 @@ import { Crest } from "../../ui/Media";
 import { Chip } from "../../ui/Signals";
 import type { Tone } from "../../ui/tone";
 import { clubName, objectiveText } from "./text";
+import { competitionName } from "./text";
 
 const DIFFICULTY_TONE: Readonly<Record<number, Tone>> = { 1: "good", 2: "good", 3: "neutral", 4: "bad", 5: "bad" };
 const FINANCE_TONE: Readonly<Record<ClubOffer["finances"], Tone>> = { healthy: "good", balanced: "neutral", tight: "bad" };
@@ -48,6 +49,7 @@ export function OfferCard({ offer, career, onAccept, busy }: { offer: ClubOffer;
         <span className="text-muted">{tt("offers.objective")}: </span>
         <strong>{objectiveText(t, offer)}</strong>
       </p>
+      {offer.internationals?.length ? <p className="mt-2 flex flex-wrap gap-1">{offer.internationals.map((id) => <Chip key={id} tone="info" size="sm">{competitionName(id, locale)}</Chip>)}</p> : null}
       <dl className="tec-offer-facts">
         <div>
           <dt>{tt("offers.budget")}</dt>
@@ -56,10 +58,6 @@ export function OfferCard({ offer, career, onAccept, busy }: { offer: ClubOffer;
         <div>
           <dt>{tt("offers.wages")}</dt>
           <dd>{tt("common.perMonth", { money: money(offer.wageBill) })}</dd>
-        </div>
-        <div>
-          <dt>{tt("offers.revenue")}</dt>
-          <dd>{money(offer.revenue)}</dd>
         </div>
         <div>
           <dt>{tt("offers.finances")}</dt>

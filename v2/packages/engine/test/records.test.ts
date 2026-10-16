@@ -66,6 +66,9 @@ describe("a produção perto do recorde", () => {
     teamStrength: 95,
     clubStrength: 92,
     opposition: 60,
+// Sobrecarga deliberada: testa a pressão do recorde, independente da
+    // calibração da taxa de gols das carreiras normais.
+    scoringScale: 1.5,
     games: 70,
     split: [
       { competition: "league:laliga", kind: "league" as const, games: 38 },

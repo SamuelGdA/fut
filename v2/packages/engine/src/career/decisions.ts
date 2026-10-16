@@ -94,7 +94,8 @@ function noMarket(career: Career): boolean {
   if (interestedClubs(context).length > 0) return false;
   if (!career.contract) return true;
   const strength = career.world.strength[clubIndex(career.contract.club)] ?? 0;
-  return strength > careerMarketLevel(career) + 3;
+  const loyalty=Math.max(0,((career.bonds[career.contract.club]?.fans ?? 50)-70)/30)*3;
+  return strength > careerMarketLevel(career) + 3 + loyalty;
 }
 
 function windowDecision(career: Career, reason: Decision["reason"] = null): Career {
@@ -158,7 +159,11 @@ function shouldRelease(career: Career): boolean {
   const contract = career.contract;
   if (!contract || contract.loan) return false;
   const rule = RELEASE[career.setup.difficulty];
-  return career.age >= rule.age && contract.benchSeasons >= rule.seasons;
+  if(career.age < rule.age || contract.benchSeasons < rule.seasons)return false;
+  const fans=career.bonds[contract.club]?.fans ?? 50;
+  const grace=fans>=95 ? 2 : fans>=80 ? 1 : 0;
+  if(grace && contract.benchSeasons < rule.seasons+grace && stream(career.setup.seed,"market","loyaltyRetention",career.age).chance(0.6+(fans-80)*0.015))return false;
+  return true;
 }
 
 function focusDue(career: Career): boolean {

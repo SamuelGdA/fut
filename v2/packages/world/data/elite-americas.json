@@ -1,0 +1,11 @@
+[
+  {"id":"giorgian-de-arrascaeta","name":"Giorgian de Arrascaeta","born":1994,"nationality":"URU","position":"cam","peakOvr":86,"peakAge":30,"retireAge":37,"europe":false},
+  {"id":"pedro-guilherme","name":"Pedro","born":1997,"nationality":"BRA","position":"st","peakOvr":85,"peakAge":29,"retireAge":36,"europe":false},
+  {"id":"jose-manuel-lopez","name":"José Manuel López","born":2000,"nationality":"ARG","position":"st","peakOvr":83,"peakAge":27,"retireAge":35,"europe":false},
+  {"id":"agustin-rossi","name":"Agustín Rossi","born":1995,"nationality":"ARG","position":"gk","peakOvr":83,"peakAge":30,"retireAge":38,"europe":false},
+  {"id":"marcelino-moreno","name":"Marcelino Moreno","born":1995,"nationality":"ARG","position":"cam","peakOvr":82,"peakAge":28,"retireAge":36,"europe":false},
+  {"id":"lionel-messi","name":"Lionel Messi","born":1987,"nationality":"ARG","position":"rw","peakOvr":94,"peakAge":27,"retireAge":40,"europe":false},
+  {"id":"angel-di-maria","name":"Ángel Di María","born":1988,"nationality":"ARG","position":"rw","peakOvr":87,"peakAge":28,"retireAge":39,"europe":false},
+  {"id":"leandro-paredes","name":"Leandro Paredes","born":1994,"nationality":"ARG","position":"cdm","peakOvr":84,"peakAge":29,"retireAge":37,"europe":false},
+  {"id":"gustavo-gomez","name":"Gustavo Gómez","born":1993,"nationality":"PAR","position":"cb","peakOvr":84,"peakAge":29,"retireAge":37,"europe":false}
+]

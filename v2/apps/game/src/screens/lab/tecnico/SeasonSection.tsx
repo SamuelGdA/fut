@@ -1,4 +1,8 @@
-import { type CoachCareer, coachCommand, sortTable } from "@craque/engine/coach";
+import { d67 } from "../../../i18n/tecnico/d67";
+import { d66 } from "../../../i18n/tecnico/d66";
+import { d64 } from "../../../i18n/tecnico/d64";
+import { revisionText } from "../../../i18n/tecnico/revision";
+import { type CoachCareer, coachCommand, EVALUATION, LIVE_RELATIONS, sortTable } from "@craque/engine/coach";
 import { getClub, getCompetition, getLeague } from "@craque/world";
 import { Play, Square } from "lucide-react";
 import { useRef, useState } from "react";
@@ -7,6 +11,8 @@ import { feedback } from "../../../services/feedback";
 import { Button } from "../../../ui/Button";
 import { Segmented } from "../../../ui/Segmented";
 import { SeasonLine } from "../../tecnico/HistoryView";
+import { CompetitionsView } from "../../tecnico/CompetitionsView";
+import { StatisticsView } from "../../tecnico/StatisticsView";
 import { LabSection } from "../LabSection";
 import { LabTable } from "./LabControls";
 import { breathe, labStarted, type LabPolicy, playSeason } from "./labCareer";
@@ -84,8 +90,13 @@ export function SeasonSection({ index }: { index: number }) {
 
   return (
     <LabSection id="tec-temporada" index={index} title={tt("lab.season.title")}>
-      <p className="mb-3 max-w-3xl text-sm text-muted">{tt("lab.season.lead")}</p>
-      <div className="flex flex-wrap items-end gap-3">
+      <p className="mb-3 max-w-3xl text-sm text-muted">{d66(t.locale,"championsFormat")} {d66(t.locale,"positionRule")} {d66(t.locale,"financeRule")} {d66(t.locale,"tacticalRule")}</p>
+      <p className="mb-3 max-w-3xl text-sm text-muted">{tt("lab.season.lead")}</p><p className="mb-3 max-w-3xl text-sm text-muted">{revisionText(t.locale,"worldRules")} {d64(t.locale,"awardRule")} {d64(t.locale,"promiseRule")}</p><p className="mb-3 max-w-3xl text-sm text-muted">{revisionText(t.locale,"injuryRule")}</p>
+      <p className="mb-3 max-w-3xl text-xs text-muted">{tt("lab.season.liveRules", {
+        annual: EVALUATION.dismissBelow, games: LIVE_RELATIONS.minGames, points: LIVE_RELATIONS.pointsPerGame,
+        gap: Math.round(LIVE_RELATIONS.rankGapShare * 100), confidence: LIVE_RELATIONS.maxConfidence,
+      })}</p>
+      <p className="mb-3 max-w-3xl text-sm text-muted">{d67(t.locale,"ambitionHint")}</p><div className="flex flex-wrap items-end gap-3">
         <label className="tec-select flex flex-col gap-1">
           <span className="eyebrow">{tt("lab.season.seasons")}</span>
           <select value={seasons} disabled={running} onChange={(event) => setSeasons(Number(event.target.value))}>
@@ -154,6 +165,7 @@ export function SeasonSection({ index }: { index: number }) {
           </ol>
         </div>
       ) : null}
+      {career ? <div className="mt-6 grid items-start gap-6 lg:grid-cols-2"><CompetitionsView career={career} all /><StatisticsView career={career} /></div> : null}
     </LabSection>
   );
 }
