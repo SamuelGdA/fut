@@ -2,7 +2,7 @@ import { addUefaGuests } from "./uefaGuests";
 import { CLUBS, type CountryCode, leagueAt, PLAYABLE_COUNTRIES } from "@craque/world";
 import type { SquadPlayer } from "@craque/world/squads";
 import { clamp } from "../math";
-import { baseMarketValue } from "../player/value";
+import { referenceMarketValue as baseMarketValue } from "../player/value";
 import { createWorld } from "../world/season";
 import { ageOf, createPlayer, sectorOf } from "./players";
 import { displayStrength } from "./tactics";

@@ -808,13 +808,20 @@ O potencial nunca aparece como número. O olheiro dá uma leitura que afina com
 ### 9.10 Valor de mercado
 
 ```
-valor = 110.000 € × e^(0,185 × (OVR - 50)) × fator_de_idade × U(0,94; 1,06)
+OVR = limitar(OVR; 1; 99)
+expoente = 0,185 × (min(OVR; 80) - 50) + 0,12 × max(0; OVR - 80)
+base = min(300.000.000 €; 110.000 € × e^expoente × fator_de_idade)
+valor = min(300.000.000 €; arredondar_3_algarismos(base × U(0,94; 1,06)))
 fator_de_idade: ≤21 1,35; 22-24 1,2; 25-27 1,0; 28-29 0,85; 30 0,7;
                 31 0,55; 32 0,42; 33 0,32; 34+ 0,22
 ```
 
 Formatação por idioma: "€180M", "€12,5M" (pt/es) ou "€12.5M" (en), "€850 mil"
 (pt), "€850K" (en, es).
+
+No Craque m14, a curva desacelera acima de OVR 80. OVR 99 aos 20 anos
+alcança €300M; aos 30, a referência antes da oscilação é €193,6M. O Técnico
+preserva sua referência financeira própria, sem esse ajuste de curva.
 
 ---
 
@@ -986,8 +993,10 @@ de mata-mata; Mundial de Clubes 3 a 7.
 
 ```
 oposição = média de força da liga (85%) e da competição continental (15%)
-vantagem(d) = d ≤ 10 ? d : 10 + 0,3 × (d - 10)
-λ_gols = g_pos × e^(0,044 × vantagem(OVR - oposição)) × e^(0,03 × vantagem(efetiva - oposição))
+vantagem(d) = d ≤ 10 ? d : 10 + 0,12 × (d - 10)
+u = limitar((FIN - 80) / 19; 0; 1)
+oportunidades = bônus_pos × u² × (3 - 2u)
+λ_gols = (g_pos + oportunidades) × e^(0,032 × vantagem(OVR - oposição)) × e^(0,03 × vantagem(efetiva - oposição))
          × e^(0,035 × (FIN - OVR)) × fase
 λ_ast  = a_pos × e^(0,045 × vantagem(OVR - oposição)) × e^(0,03 × vantagem(efetiva - oposição))
          × e^(0,035 × (PAS - OVR)) × fase
@@ -995,19 +1004,21 @@ fase = LogNormal(0; 0,12)   (Artista 0,16)
 gols ~ Poisson(λ_gols × jogos);  assistências ~ Poisson(λ_ast × jogos)
 ```
 
-| Pos | g_pos | a_pos |
-|---|---|---|
-| CA | 0,34 | 0,12 |
-| PE / PD | 0,22 | 0,17 |
-| MEI | 0,20 | 0,22 |
-| ME / MD | 0,14 | 0,17 |
-| MC | 0,07 | 0,11 |
-| VOL | 0,035 | 0,06 |
-| LE / LD | 0,035 | 0,09 |
-| ZAG | 0,04 | 0,025 |
-| GOL | 0 | 0,004 |
+| Pos | g_pos | a_pos | bônus_pos |
+|---|---|---|---|
+| CA | 0,385 | 0,12 | 0 |
+| PE / PD | 0,24 | 0,17 | 0,12 |
+| MEI | 0,22 | 0,22 | 0,095 |
+| ME / MD | 0,15 | 0,17 | 0,09 |
+| MC | 0,07 | 0,11 | 0,055 |
+| VOL | 0,035 | 0,06 | 0,012 |
+| LE / LD | 0,035 | 0,09 | 0 |
+| ZAG | 0,04 | 0,025 | 0 |
+| GOL | 0 | 0,004 | 0 |
 
-(Iniciais.) Não há teto nem portão: a raridade vem da distribuição.
+(Craque m14.) FIN até 80 preserva a taxa-base; acima disso a finalização
+abre oportunidades adicionais gradualmente. A sorte e a pressão progressiva
+dos recordes continuam atuando após essas taxas (ver D63 e D68).
 
 **Como ficou na revisão do M8 (D42):** os números saem por competição (os
 jogos repartidos na proporção dos jogos do time), e título de clube só conta
@@ -4258,3 +4269,20 @@ Técnico `1.7.0`; Craque permanece `2.0.0-m13`.
 
 
 **Validação final D67 (16/10/2026).** Tipos, lint, 759 testes unitários, nove cenários isolados dos instaladores, 51 metas Craque e 23 Técnico aprovados (`pnpm verify`, com tipos/lint finais reconferidos). Instalação real executada com sucesso, lockfile preservado. Suíte completa do navegador: 100 cenários, 91 aprovados e nove pulos previstos por dispositivo, sem falhas, incluindo modo offline, acessibilidade, hover/clique/Escape dos troféus e aceitar/recusar propostas. A revisão manual conferiu propostas em 1280 × 720 e 360 × 640, nos dois temas, com página sem rolagem ou vazamento lateral e acesso às ações pela rolagem interna. A correção de rolagem implícita foi confirmada em uso e na posição do painel abaixo do cabeçalho.
+
+
+## Revisão D68: hipotético visível, finalizadores e valor no Craque
+
+Craque `2.0.0-m14`; Técnico permanece `1.7.0`.
+
+**Hipotético.** O capítulo `{sobrenome} hipotético` volta a aparecer também em resumos compartilhados e sessões de teste. A carreira comum desta sessão já tinha o capítulo; o desaparecimento nesses outros contextos vinha do filtro por callback e do bloqueio de `internalTesting`. O compartilhado agora oferece iniciar uma cópia alternativa somente após confirmação. Sessões de teste avisam que o replay parte da semente e escolhas originais, sem reproduzir alterações manuais de OVR, idade ou elenco. O capítulo conserva apenas o prefixo de decisões válidas se uma oferta de debug não existir no replay, em vez de lançar erro. A linha alternativa continua sem liberar conquistas; o Desafio competitivo conserva o bloqueio anterior. Abrir um link sem iniciar uma alternativa continua sem tocar na carreira local.
+
+**Gols por posição e finalização.** As taxas-base anteriores de gols e assistências continuam. Acima de FIN 80, adiciona-se à taxa-base de gols uma parcela `b × u² × (3 − 2u)`, com `u = limitar((FIN − 80)/19; 0; 1)`. `b`: PE/PD 0,12; MEI 0,095; ME/MD 0,09; MC 0,055; VOL 0,012; demais zero. Depois continuam nível, força relativa do time, especialização `exp(0,035 × (FIN − OVR))`, fase, contexto de seleção e pressão de recordes. O CA mantém sua produção anterior. Isso aumenta as oportunidades dos finalizadores excepcionais sem transformar toda posição em CA e sem aumentar quem tem FIN comum. O laboratório compara as taxas reais por função com controles de OVR e FIN.
+
+No contexto fixo OVR 94, time 88 e oposição 80, em 50 jogos e fase neutra: PE com FIN 80 espera 13,1 gols, FIN 94 espera 30,2 e FIN 99 espera 38,1; CA com FIN 99 espera 40,8; MEI 33,4; MC 13,2. São médias antes da pressão de recordes, não garantias; minutos e oportunidades reais continuam dependendo do papel no elenco. Tabela completa em `tools/balance/relatorios/finalizacao.md`.
+
+**Valor no Craque.** Teto absoluto de €300 milhões, inclusive depois do humor ±6% e do arredondamento. Valor-base = `min(300M; 110000 × exp(0,185 × (min(OVR,80) − 50) + 0,12 × max(0,OVR − 80)) × fator de idade)`, OVR limitado a 1–99. O fator etário mantém 1,35 até 21; 1,2 até 24; 1 até 27; 0,85 até 29; 0,7 aos 30; 0,55 aos 31; 0,42 aos 32; 0,32 aos 33; 0,22 depois. Aos 25, OVR 90 vale cerca de €93,9M, 95 €171,2M e 99 €276,6M. OVR 99 aos 20 chega a €300M; aos 30 vale €193,6M e aos 34 €60,9M. O Técnico continua com sua referência financeira anterior, usando função separada, sem alterar salários, transferências ou resultados da versão 1.7.0.
+
+**Animações, somente diagnóstico.** Nenhuma configuração de movimento ou regra de animação foi alterada. Na aba conectada, `data-motion=system` e a consulta `prefers-reduced-motion: reduce` retornou verdadeira. Portanto, o jogo está respeitando o pedido de movimento reduzido enviado pelo navegador/sistema. A configuração de efeitos de animação do Windows e uma eventual emulação no DevTools são os pontos a conferir.
+
+**Validação final D68 (16/10/2026).** `pnpm verify` aprovado: tipos, lint, 766 testes unitários, nove cenários Windows, 51 metas Craque e 23 Técnico, mais build de produção. O lote ampliado de 6.000 carreiras por lote também passou nas 51 metas sem alterar limites. `pnpm balance:recordes`: 2.250 carreiras, 20/21 marcas observadas; gols pela seleção ficaram em 142 para referência 146, com zero ocorrências registrado. Suíte completa do navegador: 95 aprovados e nove pulos previstos por dispositivo, sem falhas. Revisão manual do hipotético próprio com ajustes de teste em PC e 360 × 640, nos dois temas, sem vazamento lateral; criação da linha alternativa confirmada. O laboratório também foi conferido com FIN 99, usando as taxas reais do motor. A preferência de movimento reduzido foi apenas lida, sem mudar animações. Após isolar a receita do Técnico, seis regressões finais dos dois modos foram aprovadas. Uma espera do teste foi corrigida para aguardar a resolução assíncrona antes de auditar a próxima tela.

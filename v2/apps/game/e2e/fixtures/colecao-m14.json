@@ -1,6 +1,6 @@
 {
   "v": 1,
-  "engine": "2.0.0-m13",
+  "engine": "2.0.0-m14",
   "setup": {
     "seed": "lab-fim-ambitious-7",
     "startYear": 2026,
@@ -99,6 +99,5 @@
       "decision": 21,
       "option": "retire"
     }
-  ],
-  "avatar": null
+  ]
 }

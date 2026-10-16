@@ -73,7 +73,7 @@ export {
   type Player,
 } from "./player/player";
 export { SCOUT_GATES, SCOUT_LEVELS, scoutLevel, scoutReading, type ScoutLevel, type ScoutReading } from "./player/scout";
-export { ageValueFactor, baseMarketValue, marketValue } from "./player/value";
+export { ageValueFactor, baseMarketValue, marketValue, MAX_MARKET_VALUE } from "./player/value";
 
 export {
   breakthroughChance,

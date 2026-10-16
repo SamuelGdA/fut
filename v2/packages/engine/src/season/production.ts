@@ -54,6 +54,14 @@ export function softAdvantage(delta: number): number {
   return delta <= ADVANTAGE_KNEE ? delta : ADVANTAGE_KNEE + (delta - ADVANTAGE_KNEE) * ADVANTAGE_TAIL;
 }
 const SKILL = 0.035;
+/** D68: finalizadores excepcionais ganham oportunidades, sem apagar a função da posição. */
+const FINISHING_OPPORTUNITIES: Readonly<Partial<Record<Position, number>>> = {
+  lw: 0.12, rw: 0.12, cam: 0.095, lm: 0.09, rm: 0.09, cm: 0.055, cdm: 0.012,
+};
+export function finishingOpportunities(position: Position, finishing: number): number {
+  const skill = Math.max(0, Math.min(1, (finishing - 80) / 19));
+  return (FINISHING_OPPORTUNITIES[position] ?? 0) * skill * skill * (3 - 2 * skill);
+}
 const CONCEDED_BASE = 1.2;
 const CONCEDED_SLOPE = 0.055;
 const CLEAN_SHEET_SLOPE = 1.05;
@@ -101,7 +109,7 @@ export function productionRates(input: ProductionInput, phase = 1): ProductionRa
   const finishing = input.attributes[FINISHING_SLOT] ?? input.ovr;
   const passing = input.attributes[PASSING_SLOT] ?? input.ovr;
   const goalsPerGame =
-    scoring.goals * Math.exp(LEVEL_GOALS * level) * team * Math.exp(SKILL * (finishing - input.ovr)) * phase * scale;
+    (scoring.goals + finishingOpportunities(input.position, finishing)) * Math.exp(LEVEL_GOALS * level) * team * Math.exp(SKILL * (finishing - input.ovr)) * phase * scale;
   const assistsPerGame =
     scoring.assists * Math.exp(LEVEL_ASSISTS * level) * team * Math.exp(SKILL * (passing - input.ovr)) * phase * scale;
 

@@ -83,8 +83,8 @@ describe("leitura do olheiro (GDD 9.9)", () => {
 });
 
 describe("valor de mercado (GDD 9.10)", () => {
-  it("segue a fórmula: OVR 90 aos 25 vale perto de 180 milhões", () => {
-    expect(baseMarketValue(90, 25) / 1e6).toBeCloseTo(180, 0);
+  it("valoriza mais suavemente o alto nível: OVR 90 aos 25 vale perto de 94 milhões", () => {
+    expect(baseMarketValue(90, 25) / 1e6).toBeCloseTo(94, 0);
     expect(baseMarketValue(50, 25)).toBe(110_000);
   });
 

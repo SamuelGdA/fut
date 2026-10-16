@@ -86,8 +86,8 @@ test("o link da carreira abre o resumo só de leitura, sem tocar no save de quem
 for (const theme of ["light", "dark"] as const) {
   test(`D66: coleção grande cabe na prévia e no PNG, ${theme}`, async ({ page }, info) => {
     // Link público de replay, o mesmo contrato de Copiar link; sem injetar estado na página.
-    // Fixture real: autoplay ambicioso, semente lab-fim-ambitious-7 no motor m13.
-    const replay=await readFile(new URL("./fixtures/colecao-m13.json",import.meta.url));
+    // Fixture real: autoplay ambicioso, semente lab-fim-ambitious-7 no motor m14.
+    const replay=await readFile(new URL("./fixtures/colecao-m14.json",import.meta.url));
     const token=deflateRawSync(replay).toString("base64url");
     await abrir(page,{theme},`/#c=z${token}`);
     await page.getByRole("button",{name:"Pôster",exact:true}).click();
@@ -109,7 +109,7 @@ for (const theme of ["light", "dark"] as const) {
 for (const theme of ["light", "dark"] as const) {
   test(`D67: troféu revela nome sem clique persistente, ${theme}`, async ({ page }, info) => {
     test.skip(info.project.name === "celular", "O comportamento específico de hover é de mouse; o nome continua acessível por rótulo.");
-    const replay = await readFile(new URL("./fixtures/colecao-m13.json", import.meta.url));
+    const replay = await readFile(new URL("./fixtures/colecao-m14.json", import.meta.url));
     const token = deflateRawSync(replay).toString("base64url");
     await abrir(page, { theme }, `/#c=z${token}`);
     await page.getByRole("link", { name: "Caminho", exact: true }).click();
@@ -127,5 +127,22 @@ for (const theme of ["light", "dark"] as const) {
     await expect(page.getByRole("tooltip")).toHaveText(title!);
     await page.keyboard.press("Escape");
     await expect(page.getByRole("tooltip")).toHaveCount(0);
+  });
+}
+
+for (const theme of ["light", "dark"] as const) {
+  test(`D68: hipotético em link compartilhado abre outra linha, ${theme}`, async ({ page }, info) => {
+    if(info.project.name === "celular") await page.setViewportSize({ width: 360, height: 640 });
+    const replay = await readFile(new URL("./fixtures/colecao-m14.json", import.meta.url));
+    await abrir(page, { theme }, `/#c=z${deflateRawSync(replay).toString("base64url")}`);
+    await page.getByRole("link", { name: "Hipotético", exact: true }).click();
+    await expect(page.getByRole("heading", { name: "MOREIRA hipotético", exact: true })).toBeVisible();
+    const point = page.getByRole("button", { name: /^Seguir daqui/ }).first();
+    await point.click();
+    await page.getByRole("button", { name: "Começar linha alternativa", exact: true }).click();
+    await expect(page.locator(".career-header")).toContainText("Linha alternativa");
+    await expect(page.locator(`${OPCOES}[data-original]`)).toHaveCount(1);
+    await expect(page.locator(OPCOES).first()).toBeVisible();
+    await page.screenshot({ path: info.outputPath(`hipotetico-${theme}.png`) });
   });
 }

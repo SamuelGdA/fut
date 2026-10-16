@@ -117,6 +117,9 @@ async function simularAteResultados(page: Page): Promise<void> {
     await decisaoCabe(page);
     await page.screenshot({ style: ".toast-viewport { display: none !important; }", path: test.info().outputPath("decisao-partida.png") });
     await decisao.getByRole("button").first().click();
+    // A resolução é assíncrona. A decisão anterior ainda fica visível durante
+    // o trabalho; esperar sua saída evita auditar a tela que já está saindo.
+    await expect(decisao).toBeHidden({ timeout: 60_000 });
     decidedMatch = true;
   }
   await expect(resultados).toBeVisible({ timeout: 60_000 });

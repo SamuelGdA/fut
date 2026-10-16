@@ -61,7 +61,7 @@ export function SummaryScreen() {
       alternate={alternate !== null}
       onAgain={() => go(challenge ? "challenge" : "identity")}
       onHome={() => go("home")}
-      onBranch={challenge || internalTesting ? undefined : branch}
+      onBranch={challenge ? undefined : branch}
       internalTesting={internalTesting}
     />
   );

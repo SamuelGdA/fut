@@ -1,5 +1,5 @@
 import type { AvatarConfig } from "@craque/art";
-import { type Career, CareerError, ENGINE_VERSION, parseSave, replay } from "@craque/engine";
+import { type Career, CareerError, ENGINE_VERSION, parseSave, replay, saveOf } from "@craque/engine";
 import { Home } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigation } from "../../app/navigation";
@@ -9,6 +9,8 @@ import { feedback } from "../../services/feedback";
 import { Button } from "../../ui/Button";
 import { Loading } from "../../ui/Loading";
 import { SummaryView } from "../summary/SummaryView";
+import { useCareer } from "../../features/career/store";
+import { notify } from "../../ui/toast/notify";
 
 type SharedState =
   | { readonly kind: "loading" }
@@ -32,7 +34,8 @@ async function openShared(token: string | null): Promise<SharedState> {
 
 /**
  * Uma carreira aberta por link (GDD 29.2): refeita por replay e mostrada no
- * resumo em modo leitura. O save de quem abre nunca é tocado. O token é lido
+ * resumo em modo leitura. Só a confirmação do hipotético inicia outra sessão.
+ * Abrir o link não toca na carreira de quem abre. O token é lido
  * uma vez, na criação da tela; ao sair, a navegação tira o fragmento da URL e
  * recarregar abre o jogo normal.
  */
@@ -80,5 +83,10 @@ export function SharedScreen() {
     );
   }
 
-  return <SummaryView career={state.career} avatar={state.avatar} mode="shared" onHome={home} />;
+  const branch = (index: number) => {
+    if (useCareer.getState().branch(saveOf(state.career), state.avatar, index)) {
+      feedback("whistle"); go("career");
+    } else notify({ tone: "bad", title: t("summary.whatIf.failed") });
+  };
+  return <SummaryView career={state.career} avatar={state.avatar} mode="shared" onHome={home} onBranch={typeof state.career.setup.challengeId === "string" ? undefined : branch} />;
 }
