@@ -1378,12 +1378,10 @@
     }
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .anum > span:first-child,
-    .anum-delta,
-    .play-honours-fresh {
-      animation: none;
-    }
+  [data-motion="reduced"] .anum > span:first-child,
+  [data-motion="reduced"] .anum-delta,
+  [data-motion="reduced"] .play-honours-fresh {
+    animation: none;
   }
 
   /* Resultado no fluxo: nunca cobre a decisão ou os números da temporada. */

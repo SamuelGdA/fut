@@ -1,3 +1,4 @@
+import { useReducedMotion } from "../../lib/useReducedMotion";
 import type { AvatarConfig } from "@craque/art";
 import { type Career, careerTotals, isGoalkeeper, saveOf } from "@craque/engine";
 import { getCountry } from "@craque/world";
@@ -17,7 +18,7 @@ import {
   Share2,
   Trophy,
 } from "lucide-react";
-import { m, useReducedMotion } from "motion/react";
+import { m } from "motion/react";
 import { type CSSProperties, type ReactNode, useEffect, useState } from "react";
 import { SectionBoundary } from "../../app/ErrorBoundary";
 import { clubStyle } from "../../features/career/clubColors";

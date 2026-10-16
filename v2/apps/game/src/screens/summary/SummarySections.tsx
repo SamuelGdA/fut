@@ -3,6 +3,7 @@ import { biography, recordText, type RecordResult } from "@craque/content";
 import { type Career, isGoalkeeper, KEEPER_ATTRIBUTES, OUTFIELD_ATTRIBUTES } from "@craque/engine";
 import { getClub, getCountry } from "@craque/world";
 import { m } from "motion/react";
+import { useReducedMotion } from "../../lib/useReducedMotion";
 import {
   ovrCurve,
   peakCard,
@@ -149,6 +150,7 @@ const LEGACY_TONE = { none: "neutral", respected: "info", idol: "good", legend: 
 export function TimelineSection({ career }: { career: Career }) {
   const { t, c, locale } = useT();
   const items = timeline(career);
+  const reduced = useReducedMotion();
   return (
     <ol className="timeline">
       {items.map((item, index) => (
@@ -156,10 +158,10 @@ export function TimelineSection({ career }: { career: Career }) {
           key={item.kind === "stint" ? `${item.stint.club}-${item.stint.fromAge}` : `debut-${item.age}`}
           className="timeline-item"
           data-marker={markerOf(item)}
-          initial={{ opacity: 0, x: -12 }}
+          initial={reduced ? false : { opacity: 0, x: -12 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true, margin: "-40px" }}
-          transition={{ duration: 0.3, delay: Math.min(index, 6) * 0.05 }}
+          transition={{ duration: reduced ? 0 : 0.3, delay: reduced ? 0 : Math.min(index, 6) * 0.05 }}
         >
           {item.kind === "stint" ? (
             <div className="timeline-card">

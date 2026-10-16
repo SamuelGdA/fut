@@ -1,6 +1,7 @@
+import { useReducedMotion } from "../../lib/useReducedMotion";
 import { seasonCovers } from "@craque/content";
 import type { Career } from "@craque/engine";
-import { m, useReducedMotion } from "motion/react";
+import { m } from "motion/react";
 import { Newspaper } from "lucide-react";
 import { useMemo } from "react";
 import { useT } from "../../i18n/useT";

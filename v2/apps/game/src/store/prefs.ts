@@ -5,7 +5,7 @@ import { bool, intInRange, isRecord, oneOf } from "../lib/validate";
 import { STORAGE_KEYS, safeStorage } from "../services/storage";
 
 export const THEMES = ["dark", "light"] as const;
-export const MOTION_MODES = ["system", "reduced"] as const;
+export const MOTION_MODES = ["full", "reduced"] as const;
 export const PACES = ["intense", "normal"] as const;
 export const DIFFICULTIES = ["normal", "hard"] as const;
 
@@ -35,7 +35,7 @@ export const DEFAULT_PREFS: Readonly<PrefsData> = {
   theme: "light",
   volume: 3,
   muted: false,
-  motion: "system",
+  motion: "full",
   haptics: false,
   pace: "intense",
   difficulty: "normal",
@@ -54,7 +54,7 @@ export function sanitizePrefs(input: unknown): PrefsData {
     theme: oneOf(source["theme"], THEMES, DEFAULT_PREFS.theme),
     volume: intInRange(source["volume"], 0, VOLUME_STEPS, DEFAULT_PREFS.volume),
     muted: bool(source["muted"], DEFAULT_PREFS.muted),
-    motion: "system",
+    motion: oneOf(source["motion"], MOTION_MODES, DEFAULT_PREFS.motion),
     haptics: bool(source["haptics"], DEFAULT_PREFS.haptics),
     pace: oneOf(source["pace"], PACES, DEFAULT_PREFS.pace),
     difficulty: oneOf(source["difficulty"], DIFFICULTIES, DEFAULT_PREFS.difficulty),

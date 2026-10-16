@@ -988,12 +988,6 @@
     animation-duration: 2.4s;
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .tec-busy-ball {
-      animation-duration: 2.4s;
-    }
-  }
-
   /* Celular baixo: a etapa afina para caber sem rolar. */
   @media (max-height: 700px) and (max-width: 1023px) {
     .tec-action {
@@ -1884,11 +1878,7 @@
   [data-motion=reduced] .tec-busy-ball {
     animation-duration: 2.4s;
   }
-  @media (prefers-reduced-motion:reduce) {
-    .tec-busy-ball {
-      animation-duration: 2.4s;
-    }
-  }
+
   @media (max-height:700px) and (max-width:1023px) {
     .tec-action {
       min-height: 44px;
@@ -2503,11 +2493,7 @@
       margin-top: 4px;
     }
   }
-  @media (prefers-reduced-motion:reduce) {
-    .tec-action {
-      transition: none;
-    }
-  }
+
   [data-motion=reduced] .tec-action {
     transition: none;
   }
@@ -3504,7 +3490,8 @@
 }
 
 .tec-pitch-player { transition: left .22s ease, top .22s ease; }
-@media (prefers-reduced-motion: reduce) { .tec-pitch-player { transition: none; } }
+
+[data-motion="reduced"] .tec-pitch-player { transition: none; }
 .tec-season-news { display: grid; gap: 6px; padding: 10px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); font-size: 12px; }
 .tec-season-news p { display: flex; flex-direction: column; gap: 3px; }
 .tec-season-news strong { color: var(--club, var(--good)); }
@@ -3573,14 +3560,20 @@
   .tec-summary .tec-trophy-gallery { grid-template-columns: repeat(auto-fill,minmax(112px,1fr)); }
   .tec-summary .tec-trophy-gallery button { border-radius: var(--radius-sm); background: var(--panel); }
   .tec-title-celebration .tec-title-pieces { min-height: 124px; }
-  @media (prefers-reduced-motion:no-preference) {
-    .tec-title-piece { animation: tec-trophy-arrive 600ms cubic-bezier(.2,.75,.3,1) both; }
-    .tec-title-beams { animation: tec-title-rays 22s linear infinite; }
-    .tec-campaign,.tec-season-awards,.tec-result-stats,.play-batch-honours { animation: tec-report-arrive 320ms ease-out both; }
-    .tec-chosen,.tec-sort-head button,.tec-row,.tec-choice { transition: background-color 150ms,color 150ms,border-color 150ms,transform 150ms; }
-    .tec-pitch-player .tec-slot-ovr { transition: background-color 180ms,box-shadow 180ms,transform 180ms; }
-    .tec-pitch-player:hover .tec-slot-ovr { transform: translateY(-2px); }
-  }
+
+[data-motion="full"] .tec-title-piece { animation: tec-trophy-arrive 600ms cubic-bezier(.2,.75,.3,1) both; }
+[data-motion="full"] .tec-title-beams { animation: tec-title-rays 22s linear infinite; }
+[data-motion="full"] .tec-campaign,
+[data-motion="full"] .tec-season-awards,
+[data-motion="full"] .tec-result-stats,
+[data-motion="full"] .play-batch-honours { animation: tec-report-arrive 320ms ease-out both; }
+[data-motion="full"] .tec-chosen,
+[data-motion="full"] .tec-sort-head button,
+[data-motion="full"] .tec-row,
+[data-motion="full"] .tec-choice { transition: background-color 150ms,color 150ms,border-color 150ms,transform 150ms; }
+[data-motion="full"] .tec-pitch-player .tec-slot-ovr { transition: background-color 180ms,box-shadow 180ms,transform 180ms; }
+[data-motion="full"] .tec-pitch-player:hover .tec-slot-ovr { transform: translateY(-2px); }
+
   @media (max-width:767px) { .tec-summary .tec-legacy-player-groups { grid-template-columns: 1fr; } }
 }
 @keyframes tec-trophy-arrive { from { transform: translateY(12px) scale(.8); opacity: 0; } to { transform: translateY(0) scale(1); opacity: 1; } }
@@ -3590,12 +3583,11 @@
 .tec-season-tokens { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 5px; }
 .tec-season-honours { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 10px; }
 .tec-season-honours > li { display: flex; flex-direction: column; align-items: center; gap: 5px; padding: 10px; border: 1px solid var(--line); border-radius: 8px; text-align: center; font-size: 11px; line-height: 1.3; background: var(--panel); }
-@media (prefers-reduced-motion:no-preference) {
-  .tec-season-honours > li { animation: tec-trophy-arrive 650ms cubic-bezier(.2,.75,.3,1) both; }
-  .tec-season-honours > li:nth-child(2) { animation-delay:80ms; }
-  .tec-season-honours > li:nth-child(3) { animation-delay:160ms; }
-  .tec-season-honours > li:nth-child(n+4) { animation-delay:240ms; }
-}
+
+[data-motion="full"] .tec-season-honours > li { animation: tec-trophy-arrive 650ms cubic-bezier(.2,.75,.3,1) both; }
+[data-motion="full"] .tec-season-honours > li:nth-child(2) { animation-delay:80ms; }
+[data-motion="full"] .tec-season-honours > li:nth-child(3) { animation-delay:160ms; }
+[data-motion="full"] .tec-season-honours > li:nth-child(n+4) { animation-delay:240ms; }
 
 .tec-pitch { background: linear-gradient(#d9efdd55,#d9efdd55) center 50% / 100% 1px no-repeat, radial-gradient(circle at 50% 50%,transparent 17%,#d9efdd66 17.4%,transparent 18%), repeating-linear-gradient(0deg,#235b38 0 12.5%,#2b6841 12.5% 25%); color:#f4f8f2; border-color:#a9d1b16b; }
 .tec-pitch .tec-slot-pos { color:#e7f2e9; }

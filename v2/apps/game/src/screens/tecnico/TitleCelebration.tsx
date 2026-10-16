@@ -1,5 +1,6 @@
+import { useReducedMotion } from "../../lib/useReducedMotion";
 import { getCompetition } from "@craque/world";
-import { useReducedMotion } from "motion/react";
+
 import { useTecnicoT } from "../../i18n/tecnico/useTecnicoT";
 import { revisionText } from "../../i18n/tecnico/revision";
 import { Confetti } from "../../ui/Confetti";

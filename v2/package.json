@@ -29,7 +29,7 @@
     "balance:recordes": "pnpm --filter @craque/balance recordes",
     "desafio:calibrar": "pnpm --filter @craque/balance desafio:calibrar",
     "carreira": "pnpm --silent --filter @craque/terminal carreira",
-    "test:windows": "node --test scripts/windows.test.mjs"
+    "test:windows": "node --test scripts/windows.test.mjs scripts/update.test.mjs"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",

@@ -334,32 +334,24 @@
 }
 
 /* ---------------------------------------------------------------------------
-   Movimento reduzido: pedido pelo sistema (data-motion="system") ou forçado
-   nos ajustes (data-motion="reduced"). Avisos ficam fora da regra: são pistas
-   curtas que o jogador quer ver (GDD 33.1).
+   D69: animações ligadas por padrão (full), desligadas nos ajustes (reduced).
+   A escolha salva no jogo independe da preferência do sistema.
    ------------------------------------------------------------------------- */
 
 [data-motion="reduced"] *,
 [data-motion="reduced"] *::before,
 [data-motion="reduced"] *::after {
   animation-duration: 1ms !important;
+  animation-delay: 0ms !important;
   animation-iteration-count: 1 !important;
   transition-duration: 1ms !important;
+  transition-delay: 0ms !important;
   scroll-behavior: auto !important;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  [data-motion="system"] *,
-  [data-motion="system"] *::before,
-  [data-motion="system"] *::after {
-    animation-duration: 1ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 1ms !important;
-    scroll-behavior: auto !important;
-  }
-}
 
-[data-motion] .toast,
-[data-motion] .toast * {
+
+[data-motion="full"] .toast,
+[data-motion="full"] .toast * {
   transition-duration: 280ms !important;
 }

@@ -17,7 +17,7 @@ describe("sanitizePrefs (GDD 34.3)", () => {
       muted: false,
       pace: "intense",
       difficulty: "normal",
-      motion: "system",
+      motion: "full",
     });
   });
 
@@ -33,6 +33,23 @@ describe("sanitizePrefs (GDD 34.3)", () => {
   it("descarta chaves desconhecidas", () => {
     expect(sanitizePrefs({ hacker: true })).not.toHaveProperty("hacker");
   });
+
+  it("animações antigas do sistema passam para ativadas e desativadas explícitas são preservadas", () => {
+    expect(sanitizePrefs({ motion: "system" }).motion).toBe("full");
+    expect(sanitizePrefs({ motion: "invalid" }).motion).toBe("full");
+    expect(sanitizePrefs({ motion: "reduced" }).motion).toBe("reduced");
+  });
+});
+
+it("a escolha de animações permanece depois de reabrir, nos dois estados", async () => {
+  for (const motion of ["reduced", "full"] as const) {
+    usePrefs.getState().setMotion(motion);
+    const stored = safeStorage.getItem(STORAGE_KEYS.prefs)!;
+    usePrefs.setState({ motion: motion === "full" ? "reduced" : "full" });
+    safeStorage.setItem(STORAGE_KEYS.prefs, stored);
+    await usePrefs.persist.rehydrate();
+    expect(usePrefs.getState().motion).toBe(motion);
+  }
 });
 
 describe("volume e mudo", () => {

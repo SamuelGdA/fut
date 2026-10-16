@@ -1,3 +1,4 @@
+import { useReducedMotion } from "../../lib/useReducedMotion";
 import { StatisticsView } from "./StatisticsView";
 import { d66 } from "../../i18n/tecnico/d66";
 import { Tabs as BaseTabs } from "@base-ui/react/tabs";
@@ -13,7 +14,7 @@ import { feedback } from "../../services/feedback";
 import { Loading } from "../../ui/Loading";
 import { ConfirmDialog } from "../../ui/Overlays";
 import { notify } from "../../ui/toast/notify";
-import { m, useReducedMotion } from "motion/react";
+import { m } from "motion/react";
 import { ClubView } from "./ClubView";
 import { CompetitionsView } from "./CompetitionsView";
 import { EventView, MatchEventView } from "./EventViews";

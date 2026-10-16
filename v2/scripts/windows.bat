@@ -7,6 +7,8 @@ echo  FUTEIROS - Preparando o jogo
 echo  ---------------------------
 echo.
 
+if /i "%~1"=="iniciar" call :verificarAtualizacao
+
 call :nodePronto
 if not errorlevel 1 goto dependencias
 echo  O jogo precisa do Node.js 22.12 ou mais novo.
@@ -50,6 +52,16 @@ call node -e "const [a,b]=process.versions.node.split('.').map(Number); process.
 if errorlevel 1 exit /b 1
 where npm >nul 2>nul
 if errorlevel 1 exit /b 1
+exit /b 0
+
+:verificarAtualizacao
+where powershell >nul 2>nul
+if errorlevel 1 (
+  echo  Nao foi possivel verificar atualizacoes: Windows PowerShell indisponivel.
+  exit /b 0
+)
+call powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File "%~dp0update.ps1" -Mode Check -Root "%~dp0..\.."
+if "%errorlevel%"=="10" title Futeiros - Atualizacao disponivel: execute atualizar.bat
 exit /b 0
 
 :ajudaNode

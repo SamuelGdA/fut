@@ -1,4 +1,5 @@
-import { useReducedMotion } from "motion/react";
+import { useReducedMotion } from "../lib/useReducedMotion";
+
 import { type CSSProperties, useMemo } from "react";
 
 interface ConfettiProps {

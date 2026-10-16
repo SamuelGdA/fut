@@ -1,10 +1,11 @@
+import { useReducedMotion } from "../../lib/useReducedMotion";
 import { d67 } from "../../i18n/tecnico/d67";
 import { d66 } from "../../i18n/tecnico/d66";
 import { d64 } from "../../i18n/tecnico/d64";
 import { revisionText } from "../../i18n/tecnico/revision";
 import { COACH_TRAITS } from "@craque/engine/coach";
 import { CircleHelp } from "lucide-react";
-import { m, useReducedMotion } from "motion/react";
+import { m } from "motion/react";
 import { useState } from "react";
 import { useTecnicoT } from "../../i18n/tecnico/useTecnicoT";
 import { IconButton } from "../../ui/Button";

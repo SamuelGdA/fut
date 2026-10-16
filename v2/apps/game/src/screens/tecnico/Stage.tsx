@@ -1,3 +1,4 @@
+import { useReducedMotion } from "../../lib/useReducedMotion";
 import { PlayerPeek } from "./PlayerPeek";
 import { playerRow } from "../../features/tecnico/view";
 import { revisionText } from "../../i18n/tecnico/revision";
@@ -14,7 +15,7 @@ import {
   TrendingUp,
   type LucideIcon,
 } from "lucide-react";
-import { m, useReducedMotion } from "motion/react";
+import { m } from "motion/react";
 import { useState } from "react";
 import { useTecnicoT } from "../../i18n/tecnico/useTecnicoT";
 import { feedback } from "../../services/feedback";
