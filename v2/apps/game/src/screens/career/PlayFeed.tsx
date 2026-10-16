@@ -1,7 +1,8 @@
+import { useReducedMotion } from "../../lib/useReducedMotion";
 import { competitionName, decisionText, describeEffect, effectTone, eventOutcomeText, missionGoal, missionName } from "@craque/content";
 import { type Career, isGoalkeeper, leagueEntry, movementOf, type SeasonRecord } from "@craque/engine";
 import { getClub, getLeague } from "@craque/world";
-import { m, useReducedMotion } from "motion/react";
+import { m } from "motion/react";
 import { ChevronDown, X } from "lucide-react";
 import { type CSSProperties, type ReactNode, useEffect, useRef, useState } from "react";
 import { clubStyle } from "../../features/career/clubColors";

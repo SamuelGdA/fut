@@ -1,8 +1,9 @@
+import { useReducedMotion } from "../../lib/useReducedMotion";
 import { type CareerHeadline, careerHeadlines, type SeasonCover, seasonCovers } from "@craque/content";
 import { type Career, isGoalkeeper, movementOf, type SeasonRecord } from "@craque/engine";
 import { AWARDS, compareHonours, getClub, getCompetition, getLeague } from "@craque/world";
 import { animate } from "motion";
-import { useReducedMotion } from "motion/react";
+
 import { type KeyboardEvent, useCallback, useEffect, useRef, useState } from "react";
 import { useT } from "../../i18n/useT";
 import { Crest } from "../../ui/Media";

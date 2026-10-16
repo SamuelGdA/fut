@@ -1,6 +1,7 @@
+import { useReducedMotion } from "../../lib/useReducedMotion";
 import { Check, ChevronRight } from "lucide-react";
 import { useState, type ReactNode } from "react";
-import { m, useReducedMotion } from "motion/react";
+import { m } from "motion/react";
 import { Button } from "../../ui/Button";
 import { feedback } from "../../services/feedback";
 import { useTecnicoT } from "../../i18n/tecnico/useTecnicoT";

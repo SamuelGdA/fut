@@ -1,6 +1,7 @@
+import { useReducedMotion } from "../../lib/useReducedMotion";
 import type { Career } from "@craque/engine";
 import { Dumbbell, Handshake } from "lucide-react";
-import { m, useReducedMotion } from "motion/react";
+import { m } from "motion/react";
 import type { CSSProperties } from "react";
 import type { PlaySession } from "../../features/career/play";
 import { type ResultView, useResultView } from "../../features/career/resultView";

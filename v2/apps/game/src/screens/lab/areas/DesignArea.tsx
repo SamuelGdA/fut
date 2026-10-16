@@ -39,9 +39,7 @@ function jumpTo(event: MouseEvent<HTMLAnchorElement>, id: string) {
   event.preventDefault();
   const target = document.getElementById(id);
   if (!target) return;
-  const reduced =
-    document.documentElement.dataset["motion"] === "reduced" ||
-    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const reduced = document.documentElement.dataset["motion"] === "reduced";
   target.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
   target.querySelector<HTMLElement>("h2")?.focus({ preventScroll: true });
 }

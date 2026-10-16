@@ -1,6 +1,7 @@
 import { Radio } from "@base-ui/react/radio";
 import { RadioGroup } from "@base-ui/react/radio-group";
 import { m } from "motion/react";
+import { useReducedMotion } from "../lib/useReducedMotion";
 import { type ReactNode, useId } from "react";
 import { cn } from "./cn";
 import type { Tone } from "./tone";
@@ -40,6 +41,7 @@ export function Segmented<T extends string>({
   className,
 }: SegmentedProps<T>) {
   const layoutId = useId();
+  const reduced = useReducedMotion();
 
   const handleChange = (next: unknown) => {
     const match = options.find((option) => option.value === next);
@@ -67,9 +69,9 @@ export function Segmented<T extends string>({
           >
             {checked ? (
               <m.span
-                layoutId={`seg-${layoutId}`}
+                layoutId={reduced ? undefined : `seg-${layoutId}`}
                 className="seg-thumb"
-                transition={{ type: "spring", stiffness: 520, damping: 42 }}
+                transition={reduced ? { duration: 0 } : { type: "spring", stiffness: 520, damping: 42 }}
               />
             ) : null}
             <span className="seg-label">{option.label}</span>

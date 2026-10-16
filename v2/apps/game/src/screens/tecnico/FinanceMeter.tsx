@@ -1,4 +1,5 @@
-import { m, useReducedMotion } from "motion/react";
+import { useReducedMotion } from "../../lib/useReducedMotion";
+import { m } from "motion/react";
 import { InfoTip } from "../../ui/InfoTip";
 import type { TecnicoTranslator } from "../../i18n/tecnico/useTecnicoT";
 

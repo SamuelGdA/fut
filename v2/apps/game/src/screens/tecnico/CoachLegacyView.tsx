@@ -1,3 +1,4 @@
+import { useReducedMotion } from "../../lib/useReducedMotion";
 import { HonourToken } from "../../ui/HonourToken";
 import { compareCoachHonours,coachAwardArt } from "../../features/tecnico/honours";
 import { coachPlayerName } from "@craque/content/coach";
@@ -5,7 +6,7 @@ import { getClub, getCountry } from "@craque/world";
 import type { PlayerLegacy, SeasonHistory, CoachAward } from "@craque/engine/coach";
 import { Hash, History, Home, Image, RotateCcw, Trophy, Users } from "lucide-react";
 import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
-import { m, useReducedMotion } from "motion/react";
+import { m } from "motion/react";
 import { useNavigation } from "../../app/navigation";
 import { clubStyle } from "../../features/career/clubColors";
 import { useTecnico } from "../../features/tecnico/store";

@@ -17,6 +17,17 @@ instalador orienta instalar Node em [nodejs.org](https://nodejs.org) e repetir.
 Não é necessário instalar pnpm globalmente. A primeira instalação precisa de
 internet; mantenha a janela do jogo aberta enquanto estiver jogando.
 
+**Para atualizar os testes:** feche a janela do jogo e execute `atualizar.bat`.
+Ele busca a versão nova deste repositório e prepara as dependências. O
+`iniciar.bat` avisa quando há atualização; uma consulta sem internet não impede
+a abertura. Cópias ZIP não precisam de Git, apenas do Windows PowerShell 5.1+
+normalmente incluído no Windows 10/11. Para receber esse atalho pela primeira
+vez, baixe um ZIP que já o contenha. As ferramentas são temporárias para testes,
+separadas do site web; [uso, backup e remoção](v2/scripts/README-WINDOWS.md).
+
+Em Ajustes, **Animações** começa ativado e pode ser desativado. A escolha fica
+salva neste navegador para os dois jogos e independe da configuração do PC.
+
 **Para desenvolver:** Node.js 22.12+ e pnpm 10.34.5:
 
 ```powershell

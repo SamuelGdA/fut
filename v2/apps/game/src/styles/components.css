@@ -1232,5 +1232,4 @@
   .avatar-panel { scrollbar-gutter: stable; }
   @keyframes controls-enter { from { opacity: 0.75; transform: translateY(3px); } to { opacity: 1; transform: translateY(0); } }
   [data-motion="reduced"] .avatar-columns { animation: none !important; }
-  @media (prefers-reduced-motion: reduce) { .avatar-columns { animation: none !important; } }
 }

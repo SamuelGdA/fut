@@ -32,6 +32,7 @@ export function SettingsPanel() {
   const theme = usePrefs((state) => state.theme);
   const volume = usePrefs((state) => state.volume);
   const muted = usePrefs((state) => state.muted);
+  const motion = usePrefs((state) => state.motion);
   const mobile = useMediaQuery("(pointer: coarse)");
   const haptics = usePrefs((state) => state.haptics);
   const actions = usePrefs.getState();
@@ -128,6 +129,15 @@ export function SettingsPanel() {
           <span className="numeric w-12 text-right text-sm font-semibold text-muted">{volumeLabel}</span>
         </div>
       </SettingRow>
+
+      <div className="border-t border-line pt-2">
+        <Switch
+          label={t("settings.motion")}
+          description={t("settings.motionHint")}
+          checked={motion === "full"}
+          onCheckedChange={(next) => actions.setMotion(next ? "full" : "reduced")}
+        />
+      </div>
 
       {mobile ? <div className="border-t border-line pt-2">
         <Switch

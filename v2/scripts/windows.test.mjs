@@ -13,6 +13,7 @@ const cases = [
   ["no-winget", "instalacao", 1, false], ["new-node", "instalacao", 0, false],
   ["old-node", "instalacao", 0, false], ["winget-fails", "instalacao", 1, false],
   ["node-still-old", "instalacao", 1, false],
+  ["update-available", "iniciar", 0, true],
 ];
 for (const [scenario, entry, exit, starts] of cases) test(`Windows: ${entry}, ${scenario}`, { skip: process.platform !== "win32" }, () => {
   const directory = mkdtempSync(join(tmpdir(), "futeiros-windows-"));
@@ -33,6 +34,7 @@ for (const [scenario, entry, exit, starts] of cases) test(`Windows: ${entry}, ${
     if (scenario === "old-node") batch("node", `if not exist "${marker}" exit /b 1\nexit /b 0`);
     if (scenario !== "no-winget") batch("winget", `echo installed>"${marker}"\ncopy /y "${join(bin, "node-after.cmd")}" "${join(bin, "node.cmd")}" >nul\nexit /b ${scenario === "winget-fails" ? 1 : 0}`);
     batch("npm", `echo %*>>"${log}"\necho %* | find.exe "pnpm install" >nul\nif not errorlevel 1 exit /b ${scenario === "install-fails" ? 1 : 0}\necho %* | find.exe "pnpm start" >nul\nif not errorlevel 1 exit /b ${scenario === "start-fails" ? 1 : 0}\nexit /b 2`);
+    if (scenario === "update-available") batch("powershell", `echo NOVA ATUALIZACAO: execute atualizar.bat\nexit /b 10`);
     // cmd redefine ProgramFiles ao iniciar; o isolamento deve ocorrer dentro dele.
     writeFileSync(join(directory, "run.cmd"), `@echo off\r\nset "ProgramFiles=${join(directory, "Program Files")}"\r\ncall "${join(root, `${entry}.bat`)}" --sem-pausa\r\nexit /b %errorlevel%\r\n`);
     const result = spawnSync(process.env.ComSpec ?? "cmd.exe", ["/d", "/c", "run.cmd"], {
@@ -44,6 +46,7 @@ for (const [scenario, entry, exit, starts] of cases) test(`Windows: ${entry}, ${
     assert.equal(calls.includes("pnpm start"), starts);
     if (exit === 0 || scenario.endsWith("fails") && scenario !== "winget-fails") assert.match(calls, /--package=pnpm@10\.34\.5 -- pnpm install --frozen-lockfile/);
     if (entry === "instalacao" && exit === 0) assert.match(result.stdout, /execute iniciar.bat/);
+    if (scenario === "update-available") assert.match(result.stdout, /execute atualizar.bat/);
     if (scenario === "no-winget" || scenario === "winget-fails" || scenario === "node-still-old") assert.match(result.stdout, /https:\/\/nodejs.org/);
   } finally {
     assert.ok(resolve(directory).startsWith(resolve(tmpdir()) + sep) && directory.includes("futeiros-windows-"));

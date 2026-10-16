@@ -1780,3 +1780,20 @@ A suíte ponta a ponta final executou 92 cenários: 85 aprovados e sete pulos pr
 **Calibragem.** As tabelas de oportunidades e valor estão no relatório finalizacao.md. Gols de temporada acima de 73 em 0,2% e gols de carreira acima da referência em 0,3%; Bola de Ouro média 1,49 com 54% dos Fenômenos de ataque ganhando uma. Os testes cobrem crescimento gradual, diferença entre funções, idade, teto após arredondamento e pontos de replay incompatíveis.
 
 **Validação final D68 (16/10/2026).** `pnpm verify` aprovado: tipos, lint, 766 testes unitários, nove cenários Windows, 51 metas Craque e 23 Técnico, mais build de produção. O lote ampliado de 6.000 carreiras por lote também passou nas 51 metas sem alterar limites. `pnpm balance:recordes`: 2.250 carreiras, 20/21 marcas observadas; gols pela seleção ficaram em 142 para referência 146, com zero ocorrências registrado. Suíte completa do navegador: 95 aprovados e nove pulos previstos por dispositivo, sem falhas. Revisão manual do hipotético próprio com ajustes de teste em PC e 360 × 640, nos dois temas, sem vazamento lateral; criação da linha alternativa confirmada. O laboratório também foi conferido com FIN 99, usando as taxas reais do motor. A preferência de movimento reduzido foi apenas lida, sem mudar animações. Após isolar a receita do Técnico, seis regressões finais dos dois modos foram aprovadas. Uma espera do teste foi corrigida para aguardar a resolução assíncrona antes de auditar a próxima tela.
+
+
+## D69: duas opções de animação, com escolha persistente
+
+**Decisão.** Ativar animações por padrão, com um único interruptor em Ajustes para desativar ou reativar. A preferência salva no jogo prevalece sobre a do sistema. Centralizar a leitura dos componentes React e regras CSS, incluindo comemorações e números, e aplicar o valor salvo antes da primeira pintura. Detalhes de migração e funcionamento na Revisão D69 dos README/GDD.
+
+**Por quê.** O usuário pediu explicitamente duas opções, ativadas por padrão e com persistência, independentemente do PC. Consultas diretas ao sistema em componentes e estilos faziam alguns efeitos ignorarem a escolha do jogo. Um único estado evita essa divergência.
+
+
+## D70: instalador, iniciador e atualizador removíveis para testes
+
+**Decisão.** Oferecer atualizar.bat e consulta de atualização ao iniciar, isolados das funcionalidades web. Usar PowerShell nativo para ZIP, sem exigir Git, com pacote fixado na revisão consultada, validação, backup e restauração se a instalação falhar. Em clones, aceitar apenas avanço direto na main oficial e árvore limpa. Não apagar backups automaticamente, não matar processos e não impedir a abertura quando a consulta estiver indisponível. Guia completo de remoção em scripts/README-WINDOWS.md.
+
+**Por quê.** Amigos sem familiaridade com GitHub precisam instalar, jogar e atualizar sem comandos. O usuário pediu que as ferramentas fossem temporárias e fáceis de retirar na publicação web. A troca integral da v2 evita sobras de código, e o backup permite preservar mudanças locais da cópia ZIP. Os testes exercitam sucesso, offline, pacote incompleto, falhas, restauração, jogo aberto e proteção de trabalho Git em pastas temporárias.
+
+
+**Validação final D69/D70 (16/10/2026).** pnpm verify aprovado: tipos, lint, 768 testes unitários, cenários Windows, 51 metas Craque, 23 Técnico e build. A suíte Windows final passou em 27 cenários, com pastas temporárias: instalação, consulta, ZIP inicial, atualização, rollback, offline, pacote incompleto, jogo aberto, proteção do Git e substituição dos próprios atalhos. Consulta real ao GitHub e download/validação do ZIP oficial aprovados sem atualizar a cópia de trabalho. Navegador: 99 aprovados e nove pulos previstos por dispositivo na suíte completa; dez regressões finais aprovadas após os ajustes da linha do tempo e do seletor. Tipos/lint reconferidos. Revisão manual em PC e 360 × 640, nos dois temas, com preferência do sistema reduzida e animações do jogo ativadas; desativação preservada após recarregar. Nenhuma preferência do Windows foi alterada.

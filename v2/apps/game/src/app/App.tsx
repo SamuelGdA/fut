@@ -20,7 +20,7 @@ export function App() {
       <PrefsEffects />
       <PwaEffects />
       <LazyMotion features={loadMotionFeatures} strict>
-        <MotionConfig reducedMotion={motion === "reduced" ? "always" : "user"}>
+        <MotionConfig reducedMotion={motion === "reduced" ? "always" : "never"}>
           <AppShell>
             <ScreenOutlet />
           </AppShell>

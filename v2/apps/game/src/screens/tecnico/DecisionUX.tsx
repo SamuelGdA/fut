@@ -1,5 +1,6 @@
+import { useReducedMotion } from "../../lib/useReducedMotion";
 import type { EventEffect } from "@craque/engine/coach";
-import { m, useReducedMotion } from "motion/react";
+import { m } from "motion/react";
 import type { ReactNode } from "react";
 import type { TecnicoTranslator } from "../../i18n/tecnico/useTecnicoT";
 import { EffectChips } from "./shared";
