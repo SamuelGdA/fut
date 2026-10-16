@@ -45,16 +45,17 @@ function playTurns(turns: number) {
 describe("estado da carreira", () => {
   beforeEach(resetStore);
 
-  it("começar cria a carreira, grava o save e abre na decisão da base", () => {
+  it("começar cria a carreira em memória e abre na decisão da base", () => {
     useCareer.getState().start(SETUP, DEFAULT_AVATAR);
     const state = useCareer.getState();
     expect(state.status).toBe("ready");
     expect(state.career?.decision?.kind).toBe("base");
     const peek = peekSave();
-    expect(peek.kind === "present" && peek.current && peek.screen === "career").toBe(true);
+    expect(peek.kind).toBe("none");
+    expect(safeStorage.getItem(STORAGE_KEYS.save)).toBeNull();
   });
 
-  it("cada escolha grava o save e monta o lance; recarregar refaz a carreira e mostra só a última temporada, sem comemorar", () => {
+  it("cada escolha monta o lance; recarregar encerra a sessão sem gravar a carreira", () => {
     useCareer.getState().start(SETUP, DEFAULT_AVATAR);
     // Antes da primeira temporada não há lance.
     expect(useCareer.getState().play).toBeNull();
@@ -65,20 +66,13 @@ describe("estado da carreira", () => {
     expect(play?.fresh).toBe(true);
     expect(play?.pages.some((page) => page.kind === "season")).toBe(true);
     playTurns(6);
-    const played = useCareer.getState().career;
-
-    // Recarregar: o estado some, o save fica.
+    expect(useCareer.getState().career?.history.length).toBeGreaterThan(0);
+    expect(safeStorage.getItem(STORAGE_KEYS.save)).toBeNull();
     useCareer.setState({ status: "idle", career: null, play: null, review: null });
     useCareer.getState().hydrate();
-    const again = useCareer.getState();
-    expect(again.status).toBe("ready");
-    expect(JSON.stringify(again.career)).toBe(JSON.stringify(played));
-    expect(again.avatar).toEqual(DEFAULT_AVATAR);
-    // O lance da tela recarregada é a última temporada, sem evento e sem comemoração (invariante 23).
-    expect(again.play?.fresh).toBe(false);
-    expect(again.play?.pages).toHaveLength(1);
-    const page = again.play?.pages[0];
-    expect(page?.kind === "season" && page.index).toBe((played?.history.length ?? 0) - 1);
+    expect(useCareer.getState().status).toBe("empty");
+    expect(useCareer.getState().career).toBeNull();
+    expect(useCareer.getState().play).toBeNull();
   });
 
   it("escolha velha (clique duplo, aba antiga) é recusada sem quebrar nada", () => {
@@ -138,11 +132,11 @@ describe("estado da carreira", () => {
     expect(useCareer.getState().review?.outcome ?? null).toBeNull();
     useCareer.setState({ status: "idle", career: null, play: null, review: null });
     useCareer.getState().hydrate();
-    expect(useCareer.getState().play?.fresh).toBe(false);
+    expect(useCareer.getState().play).toBeNull();
     expect(useCareer.getState().play?.outcome ?? null).toBeNull();
   });
 
-  it("encerrar carreira aposenta na hora e o save abre no resumo", () => {
+  it("encerrar carreira aposenta na hora e o resumo dura apenas nesta sessão", () => {
     useCareer.getState().start(SETUP, null);
     playTurns(3);
     useCareer.getState().retire();
@@ -151,10 +145,10 @@ describe("estado da carreira", () => {
     expect(state.screen).toBe("summary");
     // O jogo abre no hub (D50); o cartão do Craque continua de onde parou.
     expect(startScreen("")).toBe("hub");
-    expect(savedScreen()).toBe("summary");
+    expect(savedScreen()).toBeNull();
     useCareer.setState({ status: "idle", career: null });
     useCareer.getState().hydrate();
-    expect(useCareer.getState().career?.end?.reason).toBe("voluntary");
+    expect(useCareer.getState().career).toBeNull();
   });
 
   it("rever uma temporada já jogada mostra ela no lugar do lance, e fechar volta ao lance", () => {
@@ -176,16 +170,16 @@ describe("estado da carreira", () => {
     expect(useCareer.getState().review).toBeNull();
   });
 
-  it("save com escolha adulterada é descartado e o jogo avisa", () => {
+  it("registro legado adulterado é removido sem restaurar a carreira", () => {
     useCareer.getState().start(SETUP, null);
     playTurns(2);
     const raw = JSON.parse(safeStorage.getItem(STORAGE_KEYS.save) ?? "{}") as { choices: Array<{ option: string }> };
-    const firstChoice = raw.choices[0];
+    const firstChoice = raw.choices?.[0];
     if (firstChoice) firstChoice.option = "club:time-que-nao-existe";
     safeStorage.setItem(STORAGE_KEYS.save, JSON.stringify(raw));
     useCareer.setState({ status: "idle", career: null });
     useCareer.getState().hydrate();
-    expect(useCareer.getState().status).toBe("invalid");
+    expect(useCareer.getState().status).toBe("empty");
     expect(peekSave().kind).toBe("none");
   });
 });
@@ -193,27 +187,27 @@ describe("estado da carreira", () => {
 describe("save (GDD 34)", () => {
   beforeEach(resetStore);
 
-  it("save de outra versão do motor abre em modo leitura, e o jogo abre no Início", () => {
+  it("registro legado de outra versão é removido e o jogo abre no hub", () => {
     useCareer.getState().start(SETUP, null);
     const raw = JSON.parse(safeStorage.getItem(STORAGE_KEYS.save) ?? "{}") as Record<string, unknown>;
     safeStorage.setItem(STORAGE_KEYS.save, JSON.stringify({ ...raw, engine: "2.0.0-m1" }));
     const read = readSave();
-    expect(read.kind).toBe("stale");
+    expect(read.kind).toBe("none");
     expect(startScreen("")).toBe("hub");
     expect(savedScreen()).toBeNull();
     const peek = peekSave();
-    expect(peek.kind === "present" && !peek.current).toBe(true);
+    expect(peek.kind).toBe("none");
   });
 
-  it("JSON quebrado é inválido, sem lançar", () => {
+  it("registro legado quebrado é removido sem lançar", () => {
     safeStorage.setItem(STORAGE_KEYS.save, "{quebrado");
-    expect(readSave().kind).toBe("invalid");
-    expect(peekSave().kind).toBe("invalid");
+    expect(readSave().kind).toBe("none");
+    expect(peekSave().kind).toBe("none");
     expect(startScreen("")).toBe("hub");
     expect(savedScreen()).toBeNull();
   });
 
-  it("o registro guarda o retrato da carreira para o Início não precisar do motor", () => {
+  it("replays para compartilhamento mantêm o retrato sem gravar uma sessão", () => {
     useCareer.getState().start(SETUP, DEFAULT_AVATAR);
     const career = useCareer.getState().career;
     if (!career) throw new Error("sem carreira");
@@ -222,7 +216,8 @@ describe("save (GDD 34)", () => {
     expect(record.snapshot).toMatchObject({ surname: "ROCHA", age: 16, seasons: 0, end: null });
     writeSave(record);
     const peek = peekSave();
-    expect(peek.kind === "present" && peek.snapshot.surname).toBe("ROCHA");
+    expect(peek.kind).toBe("none");
+    expect(safeStorage.getItem(STORAGE_KEYS.save)).toBeNull();
   });
 
   it("#lab só abre o laboratório em desenvolvimento", () => {

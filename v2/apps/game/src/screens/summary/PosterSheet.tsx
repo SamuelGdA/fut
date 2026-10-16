@@ -5,7 +5,6 @@ import { useRef, useState } from "react";
 import {
   canShareImage,
   downloadBlob,
-  POSTER_HEIGHT,
   POSTER_WIDTH,
   posterFileName,
   renderPoster,
@@ -13,6 +12,7 @@ import {
 } from "../../features/summary/poster";
 import { useT } from "../../i18n/useT";
 import { useElementWidth } from "../../lib/useElementWidth";
+import { usePosterHeight } from "../../lib/usePosterHeight";
 import { feedback } from "../../services/feedback";
 import { Button } from "../../ui/Button";
 import { Switch } from "../../ui/Fields";
@@ -40,6 +40,7 @@ export function PosterSheet({ open, onOpenChange, career, avatar }: PosterSheetP
   const [busy, setBusy] = useState<Busy>(null);
   const [frameRef, width] = useElementWidth(320);
   const posterRef = useRef<HTMLDivElement>(null);
+  const posterHeight = usePosterHeight(posterRef, open);
   const scale = width / POSTER_WIDTH;
   const shareable = canShareImage();
   const fileName = posterFileName(career.setup.identity.surname, showSurname);
@@ -90,7 +91,7 @@ export function PosterSheet({ open, onOpenChange, career, avatar }: PosterSheetP
     >
       <div className="flex flex-col gap-4">
         <Switch checked={showSurname} onCheckedChange={setShowSurname} label={t("summary.poster.showSurname")} />
-        <div ref={frameRef} className="poster-frame" style={{ height: POSTER_HEIGHT * scale }}>
+        <div ref={frameRef} className="poster-frame" style={{ height: posterHeight * scale }}>
           <div className="poster-scale" style={{ transform: `scale(${scale})` }}>
             <Poster ref={posterRef} career={career} avatar={avatar} showSurname={showSurname} />
           </div>

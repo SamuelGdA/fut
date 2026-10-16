@@ -1,6 +1,5 @@
 import {
   BIG_FIVE,
-  bestWorldCupStage,
   type Career,
   type ChallengeStatus,
   clubConfederation,
@@ -159,7 +158,6 @@ export const ACHIEVEMENTS: readonly Achievement[] = [
       has(career, (record) => titlesOfKind(record, "league") > 0 && titlesOfKind(record, "cup") > 0 && titlesOfKind(record, "continental1") > 0),
   },
   { id: "continentalKing", group: "titles", when: "anytime", check: ({ career }) => has(career, (record) => titlesOfKind(record, "continental1") > 0) },
-  { id: "worldChampion", group: "titles", when: "anytime", check: ({ career }) => has(career, (record) => titlesOfKind(record, "worldCup") > 0) },
   { id: "twentyTitles", group: "titles", when: "anytime", target: 20, count: ({ career }) => total(career, (record) => record.titles.length) },
   { id: "threeBigFive", group: "titles", when: "anytime", target: 3, count: ({ career }) => leagueCountries(career, BIG_FIVE) },
   { id: "allBigFive", group: "titles", when: "anytime", target: 5, count: ({ career }) => leagueCountries(career, BIG_FIVE) },
@@ -185,8 +183,6 @@ export const ACHIEVEMENTS: readonly Achievement[] = [
   { id: "firstCap", group: "national", when: "anytime", check: ({ career }) => has(career, (record) => record.national.games > 0) },
   { id: "hundredCaps", group: "national", when: "anytime", target: 100, count: ({ career }) => total(career, (record) => record.national.games) },
   { id: "nationsChampion", group: "national", when: "anytime", check: ({ career }) => has(career, (record) => titlesOfKind(record, "nationsCup") > 0) },
-  // Fases da Copa: 7 é a final, 8 é campeão.
-  { id: "worldCupFinal", group: "national", when: "anytime", check: ({ career }) => bestWorldCupStage(career.history) >= 7 },
 
   // Lealdade.
   { id: "oneClubMan", group: "loyalty", when: "end", check: ({ career }) => career.history.length >= 10 && seasonsByClub(career.history).size === 1 },

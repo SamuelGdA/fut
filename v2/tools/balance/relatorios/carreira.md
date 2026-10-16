@@ -1,6 +1,6 @@
 # Relatório da carreira dentro do mundo
 
-Motor 2.0.0-m8.4, semente `balanco-m2`. **8 de 8 metas atendidas.**
+Motor 2.0.0-m13, semente `balanco-m2`. **8 de 8 metas atendidas.**
 
 Gerado por `pnpm balance`. Carreiras inteiras dentro do mundo simulado, com clubes reais, copas, continentais, seleção e
 prêmios contra a elite real e a geração futura. O clube ainda vem de uma política fixa (do nível do jogador, indo para a
@@ -18,16 +18,16 @@ ou menos, e todo mundo aos 38.
 
 | | Meta | Alvo | Medido |
 |---|---|---|---|
-| ✓ | Gols na carreira de centroavante Craque (mediana, clube e seleção) | entre 250 e 380 | 269 (quartis 215 a 345) |
-| ✓ | Gols na carreira de centroavante Fenômeno (mediana, clube e seleção) | entre 500 e 750 (Lewandowski e Suárez; Messi e Cristiano são a cauda) | 705 (quartis 397 a 942) |
-| ✓ | Bolas de Ouro numa carreira de Fenômeno de ataque | média entre 1 e 2,25, e de 40% a 60% ganham ao menos uma | média 2.11; 49% ganham ao menos uma (mediana 0.0) |
+| ✓ | Gols na carreira de centroavante Craque (mediana, clube e seleção) | entre 250 e 380 | 280 (quartis 214 a 392) |
+| ✓ | Gols na carreira de centroavante Fenômeno (mediana, clube e seleção) | entre 500 e 750 (Lewandowski e Suárez; Messi e Cristiano são a cauda) | 745 (quartis 460 a 917) |
+| ✓ | Bolas de Ouro numa carreira de Fenômeno de ataque | média entre 1 e 2,25, e de 40% a 60% ganham ao menos uma | média 1.37; 52% ganham ao menos uma (mediana 1.0) |
 | ✓ | Recorde de Bolas de Ouro (8) batido | raro: no máximo 2% dos Fenômenos de ataque | 0.0% |
-| ✓ | Quatro Bolas de Ouro seguidas | raro: no máximo 2% dos Fenômenos de ataque | 1.5% |
-| ✓ | Recorde de Chuteiras de Ouro (6) batido | raro: no máximo 3% dos centroavantes Fenômenos que jogam na Europa | 0.0% (158 carreiras) |
-| ✓ | Recorde de gols na carreira (979) batido | no máximo 10% dos Fenômenos de ataque | 0.0% (mediana 302 gols) |
-| ✓ | Campeão da primária continental pelo menos uma vez | comum na Europa (50% ou mais); raro para quem fica numa liga menor, como a chilena (25% ou menos) | Europa 61%, Chile 9% |
+| ✓ | Quatro Bolas de Ouro seguidas | raro: no máximo 2% dos Fenômenos de ataque | 0.0% |
+| ✓ | Recorde de Chuteiras de Ouro (6) batido | raro: no máximo 3% dos centroavantes Fenômenos que jogam na Europa | 0.0% (160 carreiras) |
+| ✓ | Recorde de gols na carreira (979) batido | no máximo 10% dos Fenômenos de ataque | 0.3% (mediana 304 gols) |
+| ✓ | Campeão da primária continental pelo menos uma vez | comum na Europa (50% ou mais); raro para quem fica numa liga menor, como a chilena (25% ou menos) | Europa 72%, Chile 23% |
 
-Mediana do pico de OVR dos Fenômenos de ataque: 93. Idade mediana de aposentadoria no relatório: 36.
+Mediana do pico de OVR dos Fenômenos de ataque: 98. Idade mediana de aposentadoria no relatório: 38.
 
 ## Bolas de Ouro por carreira (Fenômenos de ataque)
 
@@ -35,15 +35,14 @@ O recorde real é 8 (Messi).
 
 | Bolas de Ouro | Carreiras | |
 |---:|---:|---|
-| 0 | 205 | ██████████████████████████████ |
-| 1 | 32 | █████ |
-| 2 | 21 | ███ |
-| 3 | 10 | █ |
-| 4 | 30 | ████ |
-| 5 | 28 | ████ |
-| 6 | 43 | ██████ |
-| 7 | 25 | ████ |
-| 8 | 6 | █ |
+| 0 | 193 | ██████████████████████████████ |
+| 1 | 57 | █████████ |
+| 2 | 48 | ███████ |
+| 3 | 38 | ██████ |
+| 4 | 43 | ███████ |
+| 5 | 17 | ███ |
+| 6 | 3 | █ |
+| 7 | 1 | █ |
 
 ## Chuteiras de Ouro por carreira (centroavantes Fenômenos)
 
@@ -51,41 +50,41 @@ O recorde real é 6 (Messi).
 
 | Chuteiras | Carreiras | |
 |---:|---:|---|
-| 0 | 53 | ██████████████████████████████ |
-| 1 | 16 | █████████ |
-| 2 | 16 | █████████ |
-| 3 | 26 | ███████████████ |
-| 4 | 34 | ███████████████████ |
-| 5 | 14 | ████████ |
-| 6 | 1 | █ |
+| 0 | 59 | ██████████████████████████████ |
+| 1 | 44 | ██████████████████████ |
+| 2 | 25 | █████████████ |
+| 3 | 24 | ████████████ |
+| 4 | 7 | ████ |
+| 5 | 1 | █ |
 
 ## Uma carreira típica
 
-Centroavante (França), talento Fenômeno, semente `balanco-m2:fen-ca:2208`. Pico de OVR 94, 701 gols, 1 Bolas de Ouro, 19 títulos.
+Centroavante (Alemanha), talento Fenômeno, semente `balanco-m2:fen-ca:1373`. Pico de OVR 99, 739 gols, 3 Bolas de Ouro, 41 títulos.
 
 | Idade | Clube | Liga | Jogos | Gols | Títulos | Bola de Ouro | Seleção | OVR |
 |---:|---|---|---:|---:|---|---|---:|---:|
-| 16 | Dijon | 12º | 3 | 1 | - | - | 0 j, 0 g | 54 |
-| 17 | Boulogne | 11º | 3 | 0 | - | - | 0 j, 0 g | 58 |
-| 18 | Boulogne | 12º | 10 | 2 | - | - | 0 j, 0 g | 63 |
-| 19 | Boulogne | 18º | 21 | 1 | - | - | 0 j, 0 g | 67 |
-| 20 | Boulogne | 6º | 29 | 13 | - | - | 0 j, 0 g | 72 |
-| 21 | Troyes | 4º | 30 | 15 | - | - | 0 j, 0 g | 77 |
-| 22 | Paris FC | 14º | 43 | 18 | - | - | 0 j, 0 g | 81 |
-| 23 | Real Sociedad | 7º | 31 | 22 | - | - | 0 j, 0 g | 86 |
-| 24 | Bayer Leverkusen | 2º | 36 | 29 | - | - | 3 j, 0 g | 88 |
-| 25 | Bayer Leverkusen | 2º | 43 | 41 | - | - | 6 j, 3 g | 90 |
-| 26 | Bayern München | 1º | 52 | 43 | DFL-Supercup, Bundesliga, DFB-Pokal, UEFA Champions League | 2º (Lamine Yamal) | 16 j, 7 g | 91 |
-| 27 | Bayern München | 1º | 41 | 32 | DFL-Supercup, Supercopa da UEFA, Bundesliga, Copa Intercontinental | 20º (geração futura (2009)) | 10 j, 9 g | 93 |
-| 28 | Bayern München | 1º | 53 | 63 | DFL-Supercup, Bundesliga, DFB-Pokal | 3º (geração futura (2011)) | 17 j, 9 g | 94 |
-| 29 | Barcelona | 2º | 49 | 47 | - | 2º (geração futura (2014)) | 10 j, 11 g | 94 |
-| 30 | Barcelona | 2º | 52 | 53 | - | 6º (geração futura (2014)) | 16 j, 8 g | 93 |
-| 31 | Barcelona | 1º | 62 | 70 | LaLiga, UEFA Champions League, Mundial de Clubes | 🏆 venceu | 9 j, 9 g | 94 |
-| 32 | Barcelona | 1º | 48 | 49 | Supercopa da UEFA, LaLiga | 5º (geração futura (2014)) | 17 j, 10 g | 92 |
-| 33 | Barcelona | 3º | 50 | 44 | Copa del Rey, UEFA Champions League | 4º (geração futura (2014)) | 10 j, 6 g | 89 |
-| 34 | Newcastle | 4º | 41 | 36 | - | - | 10 j, 5 g | 85 |
-| 35 | Newcastle | 9º | 40 | 27 | - | - | 0 j, 0 g | 80 |
-| 36 | Newcastle | 8º | 27 | 11 | - | - | 0 j, 0 g | 75 |
-| 37 | Troyes | 1º | 32 | 7 | Ligue 2 | - | 0 j, 0 g | 71 |
+| 16 | Eintracht Braunschweig | 14º | 3 | 0 | - | - | 0 j, 0 g | 53 |
+| 17 | Energie Cottbus | 17º | 3 | 2 | - | - | 0 j, 0 g | 57 |
+| 18 | Dynamo Dresden | 7º | 3 | 0 | - | - | 0 j, 0 g | 60 |
+| 19 | Darmstadt 98 | 11º | 9 | 4 | - | - | 0 j, 0 g | 63 |
+| 20 | Darmstadt 98 | 18º | 21 | 5 | - | - | 0 j, 0 g | 67 |
+| 21 | Darmstadt 98 | 12º | 32 | 12 | - | - | 0 j, 0 g | 72 |
+| 22 | Hertha | 14º | 31 | 11 | - | - | 0 j, 0 g | 76 |
+| 23 | Osasuna | 6º | 44 | 25 | - | - | 0 j, 0 g | 79 |
+| 24 | Osasuna | 7º | 51 | 19 | - | - | 0 j, 0 g | 81 |
+| 25 | AC Milan | 3º | 35 | 16 | Coppa Italia | - | 0 j, 0 g | 84 |
+| 26 | AC Milan | 4º | 45 | 23 | Supercoppa Italiana | - | 14 j, 10 g | 87 |
+| 27 | AC Milan | 1º | 50 | 45 | Serie A | - | 10 j, 7 g | 90 |
+| 28 | PSG | 1º | 44 | 56 | Trophée des Champions, Ligue 1, Coupe de France | - | 16 j, 11 g | 93 |
+| 29 | PSG | 1º | 51 | 34 | Trophée des Champions, Ligue 1 | 30º (geração futura (2011)) | 9 j, 2 g | 95 |
+| 30 | Barcelona | 2º | 58 | 41 | UEFA Champions League, Copa Intercontinental, Eurocopa | 5º (geração futura (2011)) | 18 j, 9 g | 97 |
+| 31 | PSG | 1º | 47 | 48 | Trophée des Champions, Ligue 1, Coupe de France | 4º (geração futura (2017)) | 11 j, 7 g | 99 |
+| 32 | Real Madrid | 2º | 53 | 43 | Supercopa da UEFA, Copa del Rey | 8º (geração futura (2014)) | 16 j, 3 g | 99 |
+| 33 | PSG | 1º | 55 | 50 | Trophée des Champions, Ligue 1, Coupe de France, UEFA Champions League, Copa Intercontinental | 🏆 venceu | 10 j, 4 g | 98 |
+| 34 | Bayern München | 1º | 45 | 33 | DFL-Supercup, Bundesliga | 7º (geração futura (2017)) | 13 j, 8 g | 97 |
+| 35 | Real Madrid | 1º | 65 | 57 | Supercopa de España, LaLiga, Copa del Rey, Mundial de Clubes | 🏆 venceu | 8 j, 3 g | 97 |
+| 36 | Real Madrid | 1º | 58 | 54 | Supercopa de España, LaLiga, UEFA Champions League, Copa Intercontinental | 3º (geração futura (2017)) | 11 j, 4 g | 96 |
+| 37 | Real Madrid | 1º | 45 | 37 | Supercopa de España, Supercopa da UEFA, LaLiga, Copa del Rey, UEFA Champions League, Copa Intercontinental | 🏆 venceu | 5 j, 2 g | 94 |
+| 38 | Real Madrid | 2º | 49 | 47 | Supercopa da UEFA, Copa del Rey, UEFA Champions League, Eurocopa | 2º (geração futura (2019)) | 12 j, 7 g | 91 |
 
-Quando a Bola de Ouro vai para a geração futura, o relatório mostra o ano de nascimento: esses candidatos são gerados pela semente para a disputa não acabar quando a elite real envelhece (ver D13). 49% dos Fenômenos de ataque ganham ao menos uma.
+Quando a Bola de Ouro vai para a geração futura, o relatório mostra o ano de nascimento: esses candidatos são gerados pela semente para a disputa não acabar quando a elite real envelhece (ver D13). 52% dos Fenômenos de ataque ganham ao menos uma.

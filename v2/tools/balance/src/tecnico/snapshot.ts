@@ -23,6 +23,9 @@ export interface LeagueSnap {
 }
 
 export interface CoachSnap {
+  readonly titlesList?:readonly string[];
+  readonly leagueRecord?:readonly [number,number,number];
+  readonly budget?:number;
   readonly club: string;
   readonly country: string;
   readonly division: number;
@@ -114,7 +117,9 @@ export function snapshot(career: CoachCareer, start: ReadonlyMap<string, number>
     const reports = career.stageReports.filter((report) => report.year === career.year);
     const injuries = reports.flatMap((report) => report.injuries);
     const wages = squadOf(career, state.club).reduce((total, player) => total + player.wage, 0) * 12;
+    const leagueRow=Object.values(career.competitions).find(c=>c.kind==="league" && c.entrants.includes(state.club))?.table?.find(row=>row.club===state.club);
     coach = {
+      titlesList:history.titles,leagueRecord:[leagueRow?.won ?? 0,leagueRow?.drawn ?? 0,leagueRow?.lost ?? 0],budget:state.budget,
       club: state.club,
       country: club?.country ?? "",
       division: history.division,

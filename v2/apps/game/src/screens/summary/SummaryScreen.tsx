@@ -9,7 +9,7 @@ import { notify } from "../../ui/toast/notify";
 import { SummaryView } from "./SummaryView";
 
 /**
- * O resumo da carreira deste navegador (GDD 24). Lê o save; sem carreira
+ * O resumo da carreira nesta sessão (GDD 24). Sem carreira
  * terminada, volta para onde faz sentido (Início ou a carreira em andamento).
  * "Jogar de novo" volta à Identidade, ou ao Desafio do dia se foi desafio.
  */
@@ -19,6 +19,7 @@ export function SummaryScreen() {
   const status = useCareer((state) => state.status);
   const career = useCareer((state) => state.career);
   const avatar = useCareer((state) => state.avatar);
+  const internalTesting = useCareer((state) => state.internalTesting);
   const alternate = useCareer((state) => state.alternate);
 
   // Antes da primeira pintura: o replay é síncrono, e a tela já abre pronta.
@@ -60,7 +61,8 @@ export function SummaryScreen() {
       alternate={alternate !== null}
       onAgain={() => go(challenge ? "challenge" : "identity")}
       onHome={() => go("home")}
-      onBranch={challenge ? undefined : branch}
+      onBranch={challenge || internalTesting ? undefined : branch}
+      internalTesting={internalTesting}
     />
   );
 }

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useT } from "../../../i18n/useT";
+import { d64 } from "../../../i18n/tecnico/d64";
 import { feedback } from "../../../services/feedback";
 import { Panel, SectionRule } from "../../../ui/Panel";
 import { AttributeBar, Meter, OddsBar, StatTile } from "../../../ui/Stats";
@@ -20,10 +21,11 @@ const OUTFIELD_SAMPLE = [
 ] as const;
 
 export function DataSection({ index }: SectionProps) {
-  const { t, number, money, percent } = useT();
+  const { t, number, money, percent, locale } = useT();
 
   return (
     <LabSection id="numeros" index={index} title={t("lab.sections.data")}>
+      <Panel title={d64(locale,"clubProgressTitle")}><p className="text-sm text-muted">{d64(locale,"clubProgress")}</p></Panel>
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
         <StatTile label={t("lab.data.age")} value={number(19)} hint={t("lab.data.ageHint")} />
         <StatTile label={t("lab.data.value")} value={money(12_500_000)} delta={3} hint={t("lab.data.valueHint")} />

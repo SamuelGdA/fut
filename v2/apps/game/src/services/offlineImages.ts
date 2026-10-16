@@ -1,5 +1,5 @@
-import { CLUBS, COMPETITIONS } from "@craque/world";
-import { clubCrestUrl, competitionTrophyUrl } from "../lib/assets";
+import { AWARDS, CLUBS, COMPETITIONS, COUNTRIES, LEAGUES } from "@craque/world";
+import { awardImageUrl, clubCrestUrl, competitionTrophyUrl, flagUrl, leagueLogoUrl } from "../lib/assets";
 import { IMAGE_CACHE, RUNTIME_IMAGE_PATTERN } from "./cacheNames";
 
 /**
@@ -20,7 +20,10 @@ export function runtimeImageUrls(): string[] {
   const urls = new Set<string>();
   for (const club of CLUBS) urls.add(clubCrestUrl(club, "real"));
   for (const competition of COMPETITIONS) urls.add(competitionTrophyUrl(competition, "real"));
-  // Bandeiras, selos de liga e prêmios entram na instalação; aqui só o que entra conforme aparece.
+  // Agora toda imagem entra sob demanda; guardar todas continua sendo opt-in.
+  for (const country of COUNTRIES) urls.add(flagUrl(country.iso2));
+  for (const league of LEAGUES) urls.add(leagueLogoUrl(league, "real"));
+  for (const award of Object.values(AWARDS)) urls.add(awardImageUrl(award, "real"));
   return [...urls].filter((url) => RUNTIME_IMAGE_PATTERN.test(url));
 }
 

@@ -38,7 +38,7 @@ export const SCORING: Readonly<Record<Position, { readonly goals: number; readon
   gk: { goals: 0, assists: 0.004 },
 };
 
-const LEVEL_GOALS = 0.044;
+const LEVEL_GOALS = 0.032;
 const LEVEL_ASSISTS = 0.045;
 const TEAM = 0.03;
 
@@ -48,7 +48,7 @@ const TEAM = 0.03;
  * Fenômeno de 96 num clube grande fazia 60 gols por temporada, todo ano.
  */
 const ADVANTAGE_KNEE = 10;
-const ADVANTAGE_TAIL = 0.3;
+const ADVANTAGE_TAIL = 0.12;
 
 export function softAdvantage(delta: number): number {
   return delta <= ADVANTAGE_KNEE ? delta : ADVANTAGE_KNEE + (delta - ADVANTAGE_KNEE) * ADVANTAGE_TAIL;

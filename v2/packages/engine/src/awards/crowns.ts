@@ -249,7 +249,7 @@ export function decideCrowns(input: CrownInput): Crown[] {
       crowns.push({ award: "topScorer", competition: entry.competition, goals: entry.goals });
     }
     const bar = BEST_PLAYER_BAR[entry.kind];
-    if (bar !== undefined && bestPlayerEligible(entry) && bestPlayerScore(input.position, input.ovr, entry) + bestRoll > bar) {
+    if (entry.kind !== "continental2" && entry.kind !== "continental3" && bar !== undefined && bestPlayerEligible(entry) && bestPlayerScore(input.position, input.ovr, entry) + bestRoll > bar) {
       crowns.push({ award: "bestPlayer", competition: entry.competition, goals: entry.goals });
     }
   }

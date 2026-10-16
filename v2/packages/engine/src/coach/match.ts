@@ -274,6 +274,7 @@ function bestSubstitute(side: LiveSide, slot: Position, lookup: Lookup, priority
   for (const id of side.bench) {
     const player = lookup(id);
     if (player.injury) continue;
+    if (player.position !== slot && !player.alternates.includes(slot)) continue;
     let value = player.level - (player.position === slot ? 0 : player.alternates.includes(slot) ? 1 : sectorOf(player.position) === sectorOf(slot) ? 3 : 8);
     if (slot === "gk" && player.position !== "gk") value -= 30;
     if (slot !== "gk" && player.position === "gk") value -= 30;

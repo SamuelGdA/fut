@@ -1,106 +1,43 @@
-# CRAQUE: Simulador de Carreira
+# Futeiros
 
-Um simulador de carreira de futebol 100% client-side. Você cria um jogador,
-escolhe onde começar e joga temporada a temporada, por decisões narrativas e não
-por partidas simuladas lance a lance, até a aposentadoria. No fim, o jogo
-escreve a biografia da carreira e monta uma carta estilo EA FC com os atributos
-no auge.
+Este repositório contém somente o projeto ativo em **v2/**: os jogos Craque e
+Técnico, em React/Zustand/Vite, com motores puros e dados próprios.
 
-Não depende de backend nem de contas: todo o estado vive no navegador.
+A implementação v1 (Next.js), seus pacotes, documentação e dependências foram
+removidos. O histórico de Git permanece. A raiz guarda apenas os atalhos do
+projeto; não é outro workspace.
 
-**Stack:** Next.js 16 (App Router) · React 19 · TypeScript · Tailwind CSS v4 ·
-Zustand · [`motion`](https://motion.dev) · pnpm workspaces + Turborepo.
+## Rodar
 
-## Documentação
+**Para jogar no Windows:** baixe o ZIP do repositório e extraia todos os arquivos.
+Execute `instalacao.bat` uma vez e depois `iniciar.bat`. O instalador verifica Node
+22.12+, tenta preparar a versão LTS se necessário e instala as dependências.
+Se o Windows pedir autorização para instalar Node, confirme. Sem WinGet, o
+instalador orienta instalar Node em [nodejs.org](https://nodejs.org) e repetir.
+Não é necessário instalar pnpm globalmente. A primeira instalação precisa de
+internet; mantenha a janela do jogo aberta enquanto estiver jogando.
 
-| Documento | O que é |
-|---|---|
-| [docs/REQUISITOS.md](docs/REQUISITOS.md) | A especificação completa do comportamento do jogo, em 55 seções |
-| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Como o repositório é organizado e o que ainda falta mover |
-| [docs/BALANCE.md](docs/BALANCE.md) | Como mexer em número de balanceamento sem quebrar nada |
-| [docs/decisions/](docs/decisions) | ADRs das decisões estruturais |
+**Para desenvolver:** Node.js 22.12+ e pnpm 10.34.5:
 
-## Rodando localmente
-
-Pré-requisito: [Node.js](https://nodejs.org) 20.9+ e [pnpm](https://pnpm.io).
-
-```bash
-pnpm install
+```powershell
+pnpm deps
 pnpm dev
 ```
 
-Abra <http://localhost:3000>. A raiz redireciona para
-`/juegos/simulador-carrera`, onde o jogo vive.
+Abra http://localhost:5173. No Windows, `iniciar.bat` chama o inicializador da v2.
+Os comandos da raiz delegam para a v2: `pnpm build`, `pnpm test`, `pnpm verify`,
+`pnpm e2e`, `pnpm balance` e `pnpm balance:tecnico`, entre outros.
+O lockfile e as dependências ficam exclusivamente em `v2/`.
 
-No Windows, dando duplo-clique em [`iniciar.bat`](iniciar.bat) ele instala o que
-faltar e abre o jogo sozinho.
+## Documentação
 
-| Comando | O que faz |
-|---|---|
-| `pnpm build` | Build de produção |
-| `pnpm verify` | Typecheck, lint e testes em tudo |
-| `pnpm balance` | Confere o jogo contra os baselines de balanceamento |
-| `pnpm balance:capture` | Regrava os baselines. Leia BALANCE.md antes |
+- [README do projeto e do Craque](v2/README.md)
+- [README do Técnico](v2/README-TECNICO.md)
+- [Especificação](v2/docs/GDD.md)
+- [Decisões de produto e arquitetura](v2/docs/DECISOES.md)
+- [Regras para alterações](v2/AI_RULES.md)
 
-## O que o jogo faz
-
-1. **Criação de personagem.** Nome, pé preferido, nacionalidade (211 seleções),
-   posição e um avatar vetorial totalmente customizável (cabelo, barba, olhos,
-   nariz, boca, acessórios, cores), desenhado em SVG puro, sem imagem externa.
-
-2. **Modo e dificuldade**, dois eixos independentes. O **modo** controla o
-   ritmo: decisão a cada temporada ou a cada duas. A **dificuldade** controla o
-   quanto o futebol perdoa: chance de talento raro, velocidade de evolução e
-   declínio, chance de lesão, paciência dos clubes e reputação exigida para
-   receber proposta.
-
-3. **Carreira.** A cada período o motor resolve a temporada inteira: minutos,
-   gols e assistências (ou jogos sem sofrer gol, para goleiros e defensores),
-   evolução dos seis atributos, prêmios, disputa de títulos, acesso e
-   rebaixamento, lesões, e eventualmente uma decisão narrativa entre 40 eventos
-   de carreira.
-
-4. **Talento oculto.** Todo jogador nasce com um teto de potencial sorteado
-   (Promessa, Talento, Craque, Fenômeno, Geracional) que nunca é revelado como
-   número. O veredito de olheiro vai afiando com a idade e os jogos, e é
-   deliberadamente capaz de errar enquanto é só um rumor.
-
-5. **Fim de carreira.** A tela de resumo monta a melhor carta da carreira
-   (atributos no pico, não na aposentadoria), gera uma biografia em prosa
-   condicional a partir do que de fato aconteceu, e mostra a linha do tempo de
-   clubes, a vitrine de troféus, o rival e os recordes reais batidos. Dá para
-   baixar como PNG ou compartilhar direto.
-
-6. **Desafio do dia.** Todo mundo recebe a mesma semente, nacionalidade,
-   posição, três briefings e um édito, sempre no difícil. Contam os dois
-   melhores briefings, e insistir além do próprio auge custa pontos. Ranking
-   local, que zera todo dia.
-
-**O mundo:** 32 ligas em 17 países, 489 clubes, 211 seleções, 15 divisões de
-acesso, e todas as competições continentais, mundiais e de seleção.
-
-## Estrutura
-
-```
-apps/web/          o jogo (Next.js)
-packages/          os pacotes de domínio, em extração
-tools/balance/     captura e verificação dos baselines de balanceamento
-tools/eslint-config/  as regras compartilhadas
-docs/              especificação, arquitetura e ADRs
-```
-
-O repositório está em migração para uma arquitetura de monorepo com o motor de
-simulação como pacote puro. A etapa 1 está concluída: a casca existe, o app foi
-movido sem uma única alteração de conteúdo, e os baselines de balanceamento
-foram capturados do código atual. O mapa completo, com o que falta e em que
-ordem, está em [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
-
-## Origem dos dados
-
-O dataset de clubes, ligas, países e troféus foi originalmente extraído de um
-simulador de carreira público como ponto de partida para ter dados realistas.
-A partir daí o projeto virou outra coisa: o motor de progressão foi reescrito, e
-o sistema de atributos, o avatar vetorial, a identidade visual, os eventos de
-carreira, a biografia gerada, a dificuldade configurável, a arte generativa de
-escudos e troféus e o desafio diário são construções deste repositório, não uma
-porta de outro jogo.
+A abertura carrega a casca, o hub e peças compartilhadas. Código e dados de cada
+jogo só são antecipados depois de escolher o modo. O cache offline também segue
+essa separação: abra o jogo com conexão e aguarde seu carregamento para usá-lo
+sem internet. Detalhes na D62.

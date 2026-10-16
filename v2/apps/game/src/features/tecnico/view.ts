@@ -4,6 +4,7 @@ import {
   type CoachCareer,
   type CoachPlayer,
   type CoachTrait,
+  type CoachAward,
   formLabelOf,
   type FormLabel,
   type Mood,
@@ -42,6 +43,8 @@ export interface PlayerRow {
   readonly traits: readonly CoachTrait[];
   /** Dias até voltar, ou `null` sem lesão. */
   readonly injuryDays: number | null;
+  readonly injuryTurns: number | null;
+  readonly awards: readonly CoachAward[];
   readonly potentialHint: PotentialHint;
   readonly listed: boolean;
   readonly promised: boolean;
@@ -49,6 +52,7 @@ export interface PlayerRow {
   /** Gerado pelo jogo para completar um elenco sem dado real. */
   readonly fictional: boolean;
   readonly youthProduct: boolean;
+  readonly newSigning: boolean;
   readonly registered: boolean;
   readonly club: string;
   readonly joinedYear: number;
@@ -83,12 +87,17 @@ export function playerRow(career: CoachCareer, player: CoachPlayer, registeredId
     wage: player.wage,
     traits: player.traits,
     injuryDays,
+    injuryTurns: player.injury ? (player.injury.turns === 2 && player.injury.until - career.day <= 215 ? 1 : player.injury.turns ?? 1) : null,
+    awards: career.legacy[player.id]?.awards ?? [],
     potentialHint: potentialHint(player, career.year),
     listed: player.listed,
     promised,
     developed: player.developedAt === stage,
     fictional: player.origin === "g",
     youthProduct: player.youthClub !== null && player.youthClub === coachClub,
+    newSigning: player.club === coachClub && player.joinedYear === career.year && (
+      (player.arrival?.year === career.year && player.arrival.kind !== "youth")
+      || [...career.ledger.moments, ...career.stageReports.flatMap((report) => report.moments)].some((moment) => moment.kind === "signing" && moment.player === player.id)),
     registered: registeredIds ? registeredIds.has(player.id) : true,
     club: player.club,
     joinedYear: player.joinedYear,
@@ -138,4 +147,13 @@ export function barTone(word: BarWord): "good" | "neutral" | "bad" {
   if (word === "high") return "good";
   if (word === "mid") return "neutral";
   return "bad";
+}
+
+/** Gasto efetivo em reforços no clube/ano, sem contar o mesmo relatório duas vezes. */
+export function budgetSpent(career: CoachCareer): number {
+  const club = career.coach?.club;
+  const reports = career.stageReports.filter((report) => report.year === career.year && report.club === club);
+  const reported = reports.some((report) => report.half === career.half);
+  const moments = [...reports.flatMap((report) => report.moments), ...(reported ? [] : career.ledger.moments)];
+  return moments.reduce((sum, moment) => sum + (moment.kind === "signing" ? moment.fee : 0), 0);
 }

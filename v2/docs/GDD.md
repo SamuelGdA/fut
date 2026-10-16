@@ -1,6 +1,6 @@
 # Futeiros v2: Game Design Document
 
-> **Futeiros (D50 a D58).** Este documento especifica os dois jogos do hub.
+> **Futeiros (D50 a D60).** Este documento especifica os dois jogos do hub.
 > As seções 0 a 40 são o **Craque** (carreira de jogador, regras inalteradas);
 > a [seção 41](#41-o-hub-do-futeiros) é o hub e a
 > [seção 42](#42-técnico-a-carreira-de-treinador) é o **Técnico** (carreira de
@@ -494,12 +494,15 @@ A força de um clube numa temporada é:
 
 ```
 efetiva = força_atual + impacto_do_jogador (só no clube do jogador)
-impacto = κ × participação × limitar(OVR - força_atual, -3, 15)
-κ = 0,22 (inicial)
+vantagem = limitar(OVR - força_atual, -3, 35)
+impacto = participação × (0,3 × mín(15, vantagem) + 0,06 × máx(0, vantagem - 15))
 participação = fração dos jogos do clube que o jogador disputou
 ```
 
-Um craque 15 pontos acima de um clube que joga tudo vale +3,3 de força.
+Um craque 15 pontos acima de um clube que joga tudo vale +4,5 de força.
+Cada ponto adicional até 35 continua ajudando; participação integral limita
+a soma a +5,7 (D64). Permanência acrescenta investimento de até +0,35 por ano,
+antes da reversão de 30% à força base.
 
 ### 8.3 Tabela da liga
 
@@ -2291,6 +2294,11 @@ em título, longo na aposentadoria.
 
 ## 34. Persistência
 
+**D61:** sessões do Craque não são persistidas. `saveOf`/replay continuam existindo
+para links e caminhos hipotéticos, sem escrever a carreira no localStorage. O
+Técnico guarda somente a última carreira em andamento por setup/comandos; encerrar
+apaga o registro. Esta regra substitui 34.1/34.2/34.4 quando falam em save de sessão.
+
 ### 34.1 Chaves
 
 | Onde | Chave | Conteúdo |
@@ -2400,17 +2408,18 @@ recarregar** (remove só o save). Ela avisa que a carreira continua salva.
   de futebol e o mesmo vocabulário visual. A 500 avisa que a carreira continua
   salva.
 - Barreira de erro de execução na raiz do app (seção 34.4).
-- **PWA**: instalável; a casca e o jogo funcionam offline; escudos e troféus
-  entram em cache conforme aparecem.
+- **PWA**: instalável; o hub e os modos já carregados funcionam offline;
+  as imagens entram em cache conforme aparecem (D62).
 
 **Como ficou no M8 (D36 a D38):**
 
 - **Instalável** pelo `vite-plugin-pwa`: manifesto com nome, ícones (192, 512 e
   maskable), cor do tema e modo de aplicativo; ícone da Apple à parte.
-- **Na instalação** entram o jogo inteiro (código, estilos, fontes latinas),
-  as páginas de erro, bandeiras, selos de liga e prêmios, cerca de 4,4 MB.
-  **Conforme aparecem**, escudos e troféus (cerca de 22 MB), lidos do cache na
-  vez seguinte. Imagem que ainda não foi guardada, sem internet, troca na hora
+- **Na instalação**, desde D62, entram somente casca/hub, estilos, fontes
+  necessárias, ícones e páginas de erro: cerca de 1,2 MiB. O código de cada modo
+  é guardado só depois de escolhê-lo. **Conforme aparecem**, escudos, troféus,
+  federações, bandeiras, selos de liga e prêmios são lidos do cache na vez
+  seguinte. Imagem que ainda não foi guardada, sem internet, troca na hora
   pela arte gerada (invariante 16): nunca aparece quebrada. Nos Ajustes,
   "Imagens sem internet" guarda todas de uma vez para quem não quer nenhuma
   desenhada.
@@ -2656,14 +2665,10 @@ daquele jogo foram liberadas e tem o botão de jogar.
   `short_name` "Futeiros"), tela de abertura ("Abrindo o Futeiros"), aviso sem
   JavaScript e páginas estáticas 404, 403, 500 e 503 dizem "Futeiros".
 - A página não encontrada ("Bola fora") volta ao hub ("Voltar ao jogo").
-- O painel de erro de uma tela usa `SCREEN_GAME`. Numa tela do Técnico, o texto
-  não promete carreira salva: "a carreira do Técnico continua nesta aba [...];
-  recarregar a página encerra a carreira". O botão de limpar dados só aparece
-  nas telas que leem o save do Craque (`career` e `summary`).
-- Pedaço de tela que não baixa por versão nova: no Técnico, o texto avisa que
-  recarregar encerra a carreira, que não é salva.
-- Aviso de versão nova do PWA: "Atualize quando quiser. A carreira do Craque
-  continua salva; a do Técnico acaba ao atualizar."
+- O painel de erro de uma tela usa `SCREEN_GAME`. No Técnico, a carreira em
+  andamento é retomável pelo diário local; o Craque só mantém a sessão atual.
+  Limpar dados e recarregar explicam o efeito para o modo aberto (D61/D62).
+- Avisos de atualização do PWA seguem estas mesmas regras de sessão e retomada.
 
 ### 41.4 Conquistas por jogo
 
@@ -2694,7 +2699,7 @@ resto é simulado partida a partida, no mundo inteiro.
 
 - Motor puro e semeado em `packages/engine/src/coach/` (`@craque/engine/coach`,
   fora do índice do motor do Craque). Todo sorteio passa por
-  `coachRng(semente, rótulo, ...partes)`. Versão `COACH_VERSION = 1.0.0`.
+  `coachRng(semente, rótulo, ...partes)`. Versão `COACH_VERSION = 1.1.0`.
 - Todos os números de equilíbrio estão em `packages/engine/src/coach/tuning.ts`.
 - Toda mudança passa por `coachCommand`, que nunca altera o estado recebido:
   devolve um estado novo ou o mesmo com o código da recusa. Comando fora de
@@ -2818,8 +2823,8 @@ classificação continental segue a seção 8.7.
   divisão; os mais fortes ganham folga até a potência de 2, e na primeira fase
   o cabeça enfrenta o mais fraco que sobrou. As fases seguintes são sorteadas
   livremente. Jogo único em casa do mais forte; em ida e volta, o mais forte
-  decide em casa. Final em jogo único é em campo neutro; na Copa do Brasil, a
-  final também é em ida e volta.
+  decide em casa. Final em jogo único é em campo neutro; a Copa do Brasil
+  também usa final única, pela referência de 2026 (D64).
 - **Continentais**: com 32 ou mais classificados, chave de 32 (preliminar para
   o excedente, 8 grupos de 4, os dois primeiros às oitavas); de 16 a 31, chave
   de 16 (preliminar para o excedente, 4 grupos, quartas); com menos de 16,
@@ -2827,8 +2832,9 @@ classificação continental segue a seção 8.7.
   ida e volta, final única e neutra.
 - **Mundial de Clubes**: os campeões das primárias nas quatro temporadas
   anteriores, completados pelos mais fortes de cada confederação até a cota.
-  São 22 clubes numa chave de 16: os 12 mais fracos jogam a preliminar. Todos
-  os jogos em campo neutro. Começando em 2026, uma carreira de 24 temporadas
+  São 32 clubes em oito grupos de quatro, incluindo nove representantes
+  genéricos e um anfitrião norte-americano; passam dois por grupo às oitavas.
+  Todos os jogos em campo neutro. Começando em 2026, uma carreira de 24 temporadas
   tem 6 edições.
 - **Cada fase de mata-mata é sorteada quando a anterior termina**: o resultado
   do treinador muda quem segue. Jogo de copa marcado num dia em que um dos
@@ -3246,12 +3252,12 @@ dos jogos como titular em 4 disponíveis, ou rotação com menos de um quarto em
 | Quer minutos | prometer vaga (+12, promessa de titular em 60%); pedir paciência (60%; +5 / −4); ser franco (60%; −2 e aceita o banco / −10) |
 | Quer sair | pôr à venda (+6); convencer (45%; +12 / −8); prometer minutos (+8, promessa de 6 jogos) |
 | Promessa | garantir (+3); desfazer (−6; a promessa fica "desfeita": sai da lista e não conta nem como cumprida nem como quebrada) |
-| Fase ruim | dar confiança (65%; fase +1 e +2 / −2); poupar (+2, fase +0,5) |
+| Fase ruim | dar confiança (65%; fase +1 e +2 / −2); poupar (75%; +2, fase +0,5 / −2, fase −0,5) |
 | Papel | explicar (60%; +4 e aceita o banco / −4); prometer minutos (+8, 6 jogos) |
 | Saudade | ajudar com a família (+10, 20 mil do caixa); pedir paciência (60%; +5 / −4) |
-| Tudo bem | elogiar (+4); desafiar (60%; fase +1 / −3) |
+| Tudo bem | elogiar (75%; +4 / −2); desafiar (60%; fase +1 / −3) |
 
-Reunião com o grupo: **apoiar** dá +4 a todos quando torcida ou diretoria está
+Reunião com o grupo: **apoiar** custa 2 de diretoria e dá +4 a todos quando torcida ou diretoria está
 abaixo de 50 (senão +2), e +2 a mais aos insatisfeitos; **cobrar** dá certo em
 55% quando o momento é ruim (senão 35%): fase +0,5 aos titulares e +2 à
 diretoria; dando errado, −4 de satisfação a todos.
@@ -3285,24 +3291,33 @@ sorteio".
 
 | Evento | Tipo | Quando (peso) | Opções |
 |---|---|---|---|
-| Titular insatisfeito | pedido | estrela ou titular insatisfeito (6) | prometer (+14, titular em 70%); aumento de 30% do salário (+10; o caixa paga 12 meses do aumento); firmeza (50%; +3 e grupo +2 / −10 e à venda) |
+| Titular insatisfeito | pedido | estrela ou titular insatisfeito (6) | prometer (+14, titular em 70%); aumento de 30% do salário (+10; a folha mensal incorpora o aumento); firmeza (50%; +3 e grupo +2 / −10 e à venda) |
 | Pedido para sair | pedido | insatisfeito com OVR 60 ou mais (5) | vender (preço `valor × U(0,95; 1,2)`, grupo +1); recusar (40%; +2 / −14 e grupo −2); prometer 6 jogos (+8) |
 | Joia da base | oportunidade | até 20 anos com 5 ou mais de folga (5) | dar chance (+10, 5 jogos, torcida +2); elogiar em público (55%; torcida +3 e fase +1 / fase −1); paciência (−3, titulares +2) |
-| Crise de lesões | crise | 3 lesionados ou mais (6) | departamento médico (2% da receita, recuperações 10 dias mais curtas); rodar o elenco (reservas +4, treino de meio) |
-| Semana de clássico | clube | clássico por jogar (4) | inflamar (60%; treino de ataque e torcida +3 / fase −1 dos titulares); acalmar (treino de defesa, grupo +1) |
+| Crise de lesões | crise | 3 lesionados ou mais (6) | departamento médico (2% da receita, recuperações 10 dias mais curtas); rodar (reservas +4, treino de meio, titulares −3) |
+| Semana de clássico | clube | clássico por jogar (4) | inflamar (60%; treino de ataque e torcida +3 / fase −1 dos titulares); acalmar (treino de defesa, grupo +1, fase dos titulares −0,5) |
 | Diretoria animada | oportunidade | diretoria 55 ou mais (3), senão (1) | aceitar 6% da receita na verba (diretoria −2); recusar (diretoria +3) |
-| Patrocínio polêmico | oportunidade | sempre (3) | aceitar 5% da receita no caixa (torcida −4); recusar (torcida +3) |
 | Protesto da torcida | crise | torcida abaixo de 38 (7) | conversar (55%; torcida +9 / −4); focar no trabalho (diretoria +2, torcida −3, treino de meio) |
 | Vazamento | crise | 2 insatisfeitos ou mais (4) | caçar o culpado (50%; grupo +3 e diretoria +2 / grupo −5); unir (grupo +2, diretoria −2) |
-| Veterano quer ajudar | clube | 31 anos ou mais sem Mentor e um jovem de até 21 (3) | aceitar (ganha Mentor, +6, jovens +3); focar nele (fase +1) |
+| Veterano quer ajudar | clube | 31 anos ou mais sem Mentor e um jovem de até 21 (3) | aceitar (ganha Mentor, +6, jovens +3, fase −0,5); focar nele (fase +1, jovens −3) |
 | Proposta pelo reserva | oportunidade | rotação ou reserva com OVR 55 ou mais; a proposta vem do rival, quando houver (3) | vender (preço `valor × U(1,15; 1,45)`, torcida −5 se for o rival, senão −1); manter (+5 e promessa de não vendê-lo até o fim da temporada) |
-| Pedido de aumento | pedido | fase +1 com 3 participações em gol (4) | aumento de 35% (+12; o caixa paga 12 meses do aumento); recusar (60%; −2 / −12 e fase −1) |
+| Pedido de aumento | pedido | fase +1 com 3 participações em gol (4) | aumento de 35% (+12; a folha mensal incorpora o aumento); recusar (60%; −2 / −12 e fase −1) |
 | Dor no treino | crise | estrela ou titular (2) | arriscar (50%; 6 dias fora / 32 dias); poupar (18 dias, +3) |
-| Caixa no vermelho | crise | caixa negativo (7) | pôr o maior salário à venda (diretoria +4, ele −4); cortar 3% da receita da verba (diretoria +2) |
+| Folha sob pressão | crise | folha ocupa 90% ou mais do limite (7) | listar o maior salário (diretoria +4, ele −4); renegociar −5% dos salários (diretoria +2, grupo −4) |
 | Briga no vestiário | crise | um de 30 anos ou mais e um de até 22 (2) | apoiar o veterano (+6, jovens −6); apoiar os jovens (jovens +5, ele −8, promessa de 8 jogos para os jovens, `PROMISES.youthGames`); multar (60%; diretoria +2 e grupo +1 / grupo −3) |
 | Pressão por resultados | clube | 5 jogos e pelo menos 4 posições abaixo da esperada (6) | blindar o grupo (grupo +3, torcida −2); cobrar (50%; fase +1 do grupo / grupo −3) |
-| Boa fase | oportunidade | 5 jogos e pelo menos 2 posições acima da esperada (5) | comemorar (torcida +4, grupo +2); investir 4% da receita na verba (diretoria +2) |
-| Excursão de pré-temporada | clube | primeira etapa sem jogos (3) | excursão (3% da receita no caixa; 70%, senão também fase −1 dos titulares); concentração (treino de meio) |
+| Boa fase | oportunidade | 5 jogos e pelo menos 2 posições acima da esperada (5) | comemorar (torcida +4, grupo +2, custo 1% da receita); investir 4% da receita na verba (diretoria +2, torcida −2) |
+| Excursão de pré-temporada | clube | primeira etapa sem jogos (3) | excursão (3% da receita na verba; 70%, senão também fase −1 dos titulares); concentração (treino de meio, custo 1% da receita) |
+
+O catálogo D61 acrescenta 13 cenas (total 30, além das decisões em campo):
+voz do capitão, plano para reservas, ponte com a base, ritmo de treino,
+laboratório de bola parada, treino aberto, estratégia na imprensa, sala de vídeo,
+agenda do veterano, responsabilidade da estrela, integração do elenco,
+política de rodízio e pressão sobre o jovem. Pré-condições, participantes e
+contrapontos ficam no catálogo puro `packages/engine/src/coach/events.ts`; os
+textos completos existem nos três idiomas. As três cenas recentes são evitadas
+quando há outra elegível. Patrocínio de apostas foi retirado. Custos de qualquer
+cena usam a verba e o comando é recusado se a opção exceder o saldo disponível.
 
 Números de satisfação sem alvo são do jogador do evento. Treino ganho por
 evento soma ao treino da etapa (42.9).
@@ -3330,17 +3345,18 @@ de diferença (no agregado, se houver); senão, aos 70'.
 | Perdendo | Ajustar sem desespero | × 1,18 | × 1,05 | pelo menos empatar |
 | Perdendo | Evitar o vexame | × 0,85 | × 0,75 | não piorar o placar |
 | Empatando | Ir para cima | × 1,32 | × 1,25 | vencer |
-| Empatando | Equilibrar | × 1,08 | × 0,95 | não perder |
+| Empatando | Equilibrar | × 1,08 | × 1,05 | não perder |
 | Empatando | Segurar o ponto | × 0,78 | × 0,68 | não perder |
 | Ganhando | Fechar a casinha | × 0,75 | × 0,62 | manter a vitória |
 | Ganhando | Buscar mais gols | × 1,22 | × 1,12 | manter a vitória |
 | Ganhando | Administrar | × 0,95 | × 0,9 | manter a vitória |
 
-Cada opção mostra o objetivo, a chance de dar certo e as chances exatas de
-vitória, empate e derrota no fim, calculadas pelo próprio modelo: os gols
+Cada opção mostra o objetivo, pressão ofensiva e exposição defensiva em glifos,
+com uma alternativa em foco e confirmação (D60). As chances exatas ficam no
+motor/laboratório: os gols
 esperados de cada lado no resto do jogo (`λ × mín. restantes / 90`, pelo menos
 5 minutos), com o elenco em campo naquele minuto e o multiplicador da opção,
-numa grade de Poisson de 0 a 8 gols. A chance mostrada fica entre 3% e 97%. A
+numa grade de Poisson de 0 a 8 gols. A estimativa da meta fica entre 3% e 97%. A
 escolha vale até o fim do jogo; o que já aconteceu fica igual, e o resto usa um
 fluxo de sorteio próprio da opção. Dar certo soma 1 à torcida (3 numa final).
 
@@ -3392,7 +3408,7 @@ receita inicial = 0,3 × valor do elenco × (1ª divisão 1; 2ª 0,8)
 caixa inicial = receita × U(−0,08; 0,3), fixo por clube
 por período: caixa += receita × fração − folha × 12 × fração
 teto da folha = 70% da receita, por mês
-verba da temporada = 0,4 × receita + 0,3 × máx(0; caixa − 0,2 × receita) + 0,5 × sobra da verba anterior
+verba da temporada = 0,4 × receita + 0,5 × sobra da verba anterior
 receita seguinte = (0,8 × receita + 0,2 × 0,3 × valor do elenco × divisão)
                    × 1,25 (acesso) × 0,8 (queda) × 1,05 (algum título), no mínimo 500 mil
 ```
@@ -3403,12 +3419,12 @@ supercopa nacional ou Intercontinental 6%; título continental (inclusive a
 supercopa continental) ou Mundial de Clubes 20%; acesso +25%; queda −5%
 (`−20% × 0,25`).
 
-Finanças na tela: **apertada** com caixa negativo ou folha anual de 65% da
-receita ou mais; **saudável** com caixa de 15% da receita ou mais e folha anual
-de até 50%; senão, **equilibrada**. No relatório, 222 de 226 clubes de segunda
-divisão e 259 de 263 de primeira têm 3 alvos do próprio nível ao alcance da
-verba e da folha logo no começo; os que não têm estão com a folha acima do
-teto e precisam vender antes.
+Finanças na tela (D61): somente **Verba para contratações**, **Folha mensal** e
+**Situação**. Saudável até 70% do limite mensal, apertada a partir de 90%; equilibrada
+entre os dois. Compra verifica orçamento e folha, sem carteira paralela de caixa.
+Caixa ainda existe na contabilidade interna da IA, mas não entra na situação,
+na avaliação financeira, no pedido de verba ou no orçamento do treinador.
+Aumento muda a folha real; custos de eventos respeitam o orçamento, sem gerar dívida.
 
 **Promessas.** Nascem de conversas e eventos e aparecem no Clube com o prazo.
 
@@ -3444,7 +3460,9 @@ passiva (nenhuma ação) e gastadora (contrata em toda etapa). A rodada versiona
 usa a semente `tecnico-m1`, 16 carreiras e 384 temporadas (8 equilibradas, 4
 passivas, 4 gastadoras). `pnpm verify` roda a mesma rodada sem gravar
 o arquivo (`balance:tecnico:check`). Metas em
-`tools/balance/src/tecnico/targets.ts`: **23 de 23 atendidas**.
+`tools/balance/src/tecnico/targets.ts`: **23 de 23 atendidas** no motor 1.2.0:
+demissões 12,0%, objetivos 45,3% contra 33,3% da política passiva. O relatório
+versionado registra D60; a tabela abaixo preserva a rodada histórica D58 (motor 1.0.0).
 
 | Meta | Alvo | Medido |
 |---|---|---|
@@ -3516,7 +3534,7 @@ promessas = limitar(0,2 × (cumpridas − quebradas); −0,6; 0,6)
 torcida = (torcida − 50) / 100
 C' = limitar(0,6 × C + 0,4 × s; −1,5; 1,5)      (C começa em 0,5 em cada clube novo)
 confiança = limitar(arredondar(50 + 12 × s + 15 × C'); 0; 100)
-demitido se confiança < 27
+demitido se confiança < 18 e objetivo não cumprido (D60)
 ```
 
 A tela mostra a confiança, explica o termo que mais pesou (objetivo, copas,
@@ -3697,3 +3715,546 @@ avisa: ◆ na escolha do país (42.2), a fração gerada no cartão da proposta
 fictício do eFootball não é jogador real, então não entra. O ajuste da 2ª
 corrige o que o harness mostrou: com Ceará e Sport reais caindo numa Série B
 gerada, o campeão fazia 100 pontos.
+
+
+### 42.16 Central executiva e decisões visuais (D59)
+
+**Como ficou.** A central usa temas, fontes e glifos do Craque com cartões executivos.
+O laço mantém o botão de avanço visível e a etapa cabe de 360 × 640 ao PC; exploração,
+eventos extensos e relatórios usam rolagem interna. Resultados têm placar com contagem
+animada e seções retráteis. Consulta rápida por botão nos titulares/reservas/elenco:
+hover de 300 ms e click no PC, bottom sheet no toque. Consulta e troca são comandos
+separados. A ficha usa somente `PlayerRow`, respeitando 42.8; nada oculto é exposto.
+
+Escolhas separam recompensa, custo e cenário adverso; estimativas vêm do motor. No jogo,
+barra segmentada de vitória/empate/derrota, objetivo e multiplicadores de gols. A
+resolução usa Motion (Framer Motion via `motion/react`) em evento, conversa e reunião;
+fica no layout até avançar, sem temporizador que bloqueie a ação. Resultado de jogo
+mostra escolha e placar real da partida. Teclado, leitor de tela e movimento reduzido.
+
+Finanças mostram barras: azul para compras já pagas no clube/ano e dourado para os alvos, sem duplicar o livro da etapa já relatada; investimento estimado vs verba restante na busca; preço
+negociado vs verba, folha projetada vs teto mensal (70% receita / 12), saída de caixa vs
+capacidade até piso (−25% receita) antes de aceitar. A projeção fica fixa durante a rolagem dos alvos. Excedente vermelho com valor;
+bloqueios por caixa/folha/inscrição/promessa não são confundidos com falta de verba.
+Saldo após venda continua explícito. Laboratório usa os mesmos componentes para
+mostrar excesso de orçamento e os dois resultados possíveis do descanso.
+
+`COACH_VERSION 1.1.0`, constantes em `DECISION_TRADEOFFS`: rodar na crise custa 3 de
+satisfação dos titulares; acalmar custa 0,5 de fase dos titulares; aceitar o mentor
+custa 0,5 de fase do veterano, focar nele custa 3 de satisfação dos jovens. Comemorar e
+concentração custam 1% da receita anual, arredondada como os demais eventos. Investir
+na boa fase custa 2 de torcida; apoiar o grupo custa 2 de diretoria. Descanso e elogio
+nas conversas têm 75% de sucesso; falha do descanso tira 0,5 de fase e 2 de satisfação,
+falha do elogio tira 2 de satisfação. Equilibrar no empate é ×1,08 a favor e ×1,05 contra,
+eliminando a melhoria gratuita de ambos os lados. Benefícios dos cenários favoráveis
+continuam os de 42.9/42.10. Promessas e oportunidade de receita perdida são custos
+válidos. Não há mudanças nas regras do Craque.
+
+A auditoria D59 também corrigiu o contraste do contador ×N da vitrine do Craque:
+texto com o token semântico on-accent, adaptado aos dois temas.
+
+### 42.17 Prancheta e decisões sem rolagem (D60)
+
+**Como ficou.** Dois painéis no PC, foco de tela inteiro para decisões. Cabeçalho
+único: objetivo, liga/posição ordinal, relações e reputação com i. Finanças/promessas
+ficam na aba Clube; dicas distinguem orçamento, saldo, teto salarial e receita.
+Resultados usam campanha gráfica e cards de jogadores consultáveis. Arrasto via
+HTML Drag and Drop e Pointer Events, com destino indicado e confirmação pelo próprio
+soltar, usa setTactics e os mesmos limites de disponibilidade. Toque/teclado preservados.
+
+Decisões mantêm todas as alternativas visíveis e uma prévia em foco, com confirmar.
+Nenhum painel da decisão rola de 360 × 640 ao PC. Narrativa extensa vai para o i.
+Partidas mostram pressão/exposição em glifos, objetivo do plano e contexto real do
+jogo; probabilidades e multiplicadores ficam só no laboratório. Eventos comuns
+agrupam risco em menor (chance >=70%), incerto (>=45%), difícil (<45%); sem sorteio,
+troca explícita. Resolução animada preservada. Avançar numa etapa com evento de jogo
+armado simula diretamente até a decisão, sem a espera vazia anterior. Próximos jogos
+parciais removidos. Catálogo sem sponsor nem conteúdo de apostas nos três idiomas.
+
+**Motor 1.2.0.** Relações por partida: expectativa 0,65 − 0,30 × colocação esperada /
+tamanho da liga. Resultado vale 1/0,4/0 para vitória/empate/derrota; a diferença
+contra expectativa multiplica 1,2 na diretoria e 1,8 na torcida, mais ±0,6 nos
+clássicos para torcida. Limita 0..100 e registra deltas no diário; remove ajuste
+agregado de resultados e clássicos no fim, preserva títulos/acesso/queda.
+Demissão anual: objetivo não cumprido e confiança <18. Meta equilibrada 3..12%.
+No primeiro turno lento: pelo menos 12 jogos, pontos/jogo <=0,65, déficit de posição
+>=max(6, teto(0,35 × tamanho da liga)), diretoria <58. Reputação −4. Histórico parcial,
+propostas na avaliação, resto do mundo termina com IA antes da próxima temporada,
+sem atribuir jogos/títulos posteriores ao treinador dispensado. Valores em
+LIVE_RELATIONS e EVALUATION. Demais regras do Craque preservadas.
+
+### 42.18 Consultas, economia e sessões por modo (D61)
+
+As decisões usam altura natural e todas as alternativas cabem no palco, sem rolagem
+em 360 × 640. A ficha por nome apresenta somente dados públicos. Grupos só são
+consultáveis se os efeitos do evento identificarem integrantes reais; `eventTargets`
+é compartilhada pela interface e resolução. Consultas usam hover 300 ms no desktop,
+folha rápida no toque; grupos listam nome/OVR/idade. Estrela amarela indica característica.
+
+Formações: 3-4-3, 3-5-2, 4-4-2, 4-3-3, 4-2-3-1, 4-1-4-1, 5-3-2, 5-4-1, em duas
+filas de quatro. Laterais ligeiramente adiantados, trios centrais alinhados e extremos
+atrás do centroavante. Titular → reserva e reserva → titular são trocas diretas por
+arrasto. Modal de mercado separa cabeçalho/filtros, lista rolável e rodapé opaco.
+Nome da base disponível antes de promover; a promoção abre o Elenco e a ficha.
+
+Treze novos eventos contextuais; cenas das três etapas anteriores ficam fora do sorteio
+quando há alternativa elegível. Acordos têm meta/progresso/prazo e são acompanhados
+no Clube pela mesma função que os avalia (`promiseProgress`). O guia animado ao lado
+da marca organiza ciclo, todos os traços, dinheiro e compromissos em quatro abas.
+
+Craque: +1 de OVR por reconhecimento, teto conjunto +3 anual, aplicado após evolução
+natural. Cada título conta uma vez; coroas identificam cada competição; globais
+não duplicam as coroas; acesso exige jogos. Sorteio de talento Normal 26/33/23/12/6%;
+Difícil normaliza os antigos pesos e aplica −2/−1/+1/+1/+1 pontos percentuais.
+Empréstimo se mantém até retorno/transferência/compra explícita. Curva inclui o OVR
+inicial e marca primeiro/pico/último. Prêmios identificam torneio e ficam separados
+ dos troféus. Linha do tempo rotula Legado, independente da barra atual da torcida.
+Conquista de final da Copa do Mundo excluída; registro antigo também é descartado.
+
+Sessões: Craque só em memória; Técnico retoma a última não encerrada por replay local.
+Nenhum elenco, calendário ou estado de simulação é serializado. Debug e laboratório
+apenas no build de desenvolvimento; testes não produzem conquistas/retomada normal.
+Animações não têm ajuste no site; respeitam acessibilidade do sistema. Vibração
+opt-in, desligada por padrão, exposta só a ponteiro de toque.
+
+**Calibragem D61 do Craque.** O bônus solicitado permanece integral e limitado a
++3 por temporada. Para conter a bola de neve sem alterar as metas: sensibilidade
+dos gols ao nível 0,044 → 0,035, cauda da vantagem acima de dez pontos 0,30 → 0,12,
+concorrência agregada da elite na Bola de Ouro 3,3 → 7, desconto do mercado por
+ano acima de 32 anos 1,5 → 1,8. O nível ainda melhora a produção monotonamente;
+prêmios continuam sem teto de quantidade. Missões são recalibradas pelo
+percentil 65 fixo, não pela alteração das faixas de aprovação dos testes.
+
+**Auditoria de conquistas D61.** A conquista de disputar final de Copa foi
+removida. A genérica `worldChampion` duplicava `title:world-cup` e também saiu;
+permanece a conquista específica com nome e taça. Marcos progressivos, como
+90/95 OVR ou uma/cinco Bolas de Ouro, têm metas diferentes e permanecem.
+
+
+A revisão final D61 inclui consultas de nomes nos relatórios de evolução, lesões,
+compromissos e momentos; rolagem mais suave durante arrasto por toque. Cenários
+internos preservam o registro normal mesmo ao abandonar o teste. No resumo de
+cenário, replays de compartilhamento e “E se...?” ficam ocultos porque o perfil
+alterado não vem das decisões da semente original; o pôster continua disponível.
+Os imports de laboratório/debug são guardados diretamente por `import.meta.env.DEV`
+para que seus módulos não sejam emitidos na distribuição de produção.
+
+Na vitrine do resumo (D61), títulos/prêmios separados preservam as legendas no
+celular mesmo em coleções grandes: tipo e torneio ocupam linhas distintas, e a
+página pode crescer. O modo compacto de vitrine continua nos painéis do jogo.
+
+
+## 43. Carregamento por modo e retirada da v1 (D62)
+
+Como ficou: substitui o pré-carregamento global da D43 e o cache integral do GDD 37.
+A abertura no hub não importa telas dos modos, elencos nem laboratório. Somente
+peças necessárias à casca/hub e dados pequenos compartilhados são carregados.
+Posições e atributos da carta usam submódulos, sem importar o barrel do motor.
+Entrar em um modo antecipa seus próprios caminhos, sequencialmente; trocar/sair
+cancela os próximos itens. Debug carrega somente o controle escolhido ao abrir.
+
+O precache inicial é calculado pelo grafo estático da casca, hub, Motion e registro
+PWA, com CSS, fontes usadas no hub, ícones e erros. Não inclui grafos dos jogos.
+Após escolher o jogo, seu manifesto de assets é lido e guardado no cache de código
+em lotes de quatro. O SW serve módulos/fontes guardados por CacheFirst; o manifesto
+usa NetworkFirst para não reaproveitar hashes obsoletos. Offline: início e modos
+já carregados funcionam; um modo nunca aberto exige rede. As imagens são guardadas
+conforme aparecem, ou por Guardar todas (escudos, taças, bandeiras, selos e prêmios).
+
+Só v2 permanece como implementação; a raiz é um conjunto de atalhos. Arquivos da
+v1, Next/Turbo e suas dependências saem, preservando o histórico Git e uma cópia
+externa dos fontes locais. O protótipo experimental manager sem uso, exports ou
+dados também sai do engine ativo, com cópia externa. Nenhuma regra/RNG/versão dos
+motores Craque/Técnico muda com esta revisão.
+
+Validação D62: verify completo sem exclusões (679 testes, types, lint, 51 metas
+do Craque, 23 do Técnico e build). Navegador: 75 aprovados e 7 pulados por
+dispositivo; inclui ausência dos arquivos do modo não escolhido e reload offline
+dos dois modos. Hub e controles de teste também conferidos em desenvolvimento.
+
+## 44. Elenco, mercado, reconhecimentos e legado (D63)
+
+Como ficou: Craque `2.0.0-m10`, Técnico `1.4.0`. Substitui as regras históricas
+de lesão, propostas, negociações, prêmios e legado nas seções 42 e D61.
+
+- Escalação sugerida por atribuição ótima: maximiza soma de OVR, uma pessoa por
+  vaga, apenas posições declaradas. Vaga sem candidato fica vazia, sem improviso.
+  Substituições automáticas também usam posições declaradas. Lesão bloqueia
+  titularidade; recuperação ocorre entre etapas. Risco 0,0025 por 90 minutos,
+  modificador etário preservado; 75% um turno, 25% dois turnos. O rápido contém
+  um bloco anual. Meta do harness: 0,3 a 2,5 lesões por temporada.
+- Base: posições vizinhas com chance 42% de uma secundária, mais 18% de uma
+  segunda entre quem já recebeu a primeira. Sem defesa diretamente no ataque,
+  nem goleiro de linha. Traços só quando úteis nas posições; ocultos na seleção.
+- Processos de compra/venda sobrevivem até a troca de etapa. Reabrir consulta
+  as mesmas respostas e condições, sem custo. Busca nova é uma nova ação na
+  confirmação. Condições de dinheiro e elenco são revalidadas no aceite.
+  Ofertas espontâneas: 48% após relatório, um a três alvos, comprador real
+  elegível, preço 95% a 130% do valor. Aceite/recusa sem ação, sem duplicação.
+- Virada: um a três novos jogadores no clube comandado, 65% base/35% reforço
+  encontrado pela diretoria; notificação com nomes. Aposentadorias continuam
+  por idade/nível/longevidade, com registro de auge preservado. Renovação
+  preserva todos que não aposentaram; não gera novamente os titulares.
+- Relações: passo por partida 0,35 diretoria/0,5 torcida. Campanha contra
+  esperado soma variação maior no fim, 22% dela no primeiro turno. Reputação
+  anual até 10, porScore 2,2, título maior 3/menor 1, acesso 2, salvamento 0,5,
+  revelação 0,4; superar expectativa em elenco abaixo de 78 pode acrescentar 2.
+  Propostas externas são três quando mantido: uma do país atual; percentil
+  alvo 0,15 + 0,0088 × reputação, teto 0,98, faixa 0,07. Demissão mantém
+  saída modesta. Objetivos de copas saem da força no conjunto de participantes.
+- Ídolo: quatro temporadas, 120 jogos, três anos desde chegada, auge ao menos
+  força do clube menos dois, nota no auge 6,8; produção mínima por posição.
+- Intercontinental usa seis campeões da temporada, com ramo Ásia/África/Oceania,
+  Américas, Challenger, final europeia. Mundial: 32, oito grupos de quatro,
+  três rodadas, dois avançam, oitavas/final; quatro anos. Nove representantes
+  de CAF/AFC/OFC e vaga do anfitrião completam os 22 das confederações com dados.
+- Estatísticas por competição de todos os clubes alimentam os prêmios anuais.
+  Artilheiro por gols, desempate assistências/id; craque por nota, produção,
+  participação e sucesso. Mundial por nota/produção/títulos/nível, mínimo 15
+  jogos. Treinador da liga por campanha relativa e títulos, continental A pelo
+  título, mundial pelo melhor trabalho no mundo. Só o prêmio ganho pelo jogador
+  gera +1 OVR, até três por temporada; treinador não dá bônus ao elenco inteiro.
+  Não há MVP de continental B/C. Resultados exibem o reconhecimento e OVR real.
+- Legado: números incluem copas, vitrine de troféus/prêmios, nomes completos e
+  retrato do auge preservado após aposentadoria/venda, linha do tempo por ano,
+  exportação de pôster 1080 × 1350 com arte compartilhada e aparência de lousa.
+- Craque: o OVR de cada ano permanece histórico; a carta é da idade atual.
+  A influência imediata máxima sobe de 3,3 para 4,1 pontos; investimento na
+  força persistente 0,006 × participação × diferença até 35, até 0,21/ano,
+  sujeito à reversão já existente. Não garante títulos nem iguala clube/jogador.
+
+D63 validada: verify integral aprovado (tipos, lint, 702 testes unitários, 51 metas do Craque, 23 do Técnico e build). Navegador: 77 aprovados e 7 pulados por dispositivo, sem falhas. Conferência visual de Craque e Técnico em PC/celular e nos dois temas, incluindo legado, abas, nomes, base, conquistas das duas temporadas e pôsteres. Arrasto da carta corrigido retirando a sobreposição fixa das formações; trocas com reservas passaram em mouse/toque. Busca preservada após outra ação e retomada local passaram no navegador.
+
+**Calibragem D63.** A produção usa coeficiente de nível dos gols 0,032 (antes 0,035), para a contribuição extra do clube não inflar o resultado típico. Caudas raras: gols/temporada 63/7; gols/carreira 890/75; seleção 136/22; Chuteiras de Ouro 3/3,5 (começo/escala). O investimento do clube é 0,006 × participação × diferença positiva até 35, no máximo 0,21 por ano antes da reversão. A parcela imediata é 0,22 até 15 de vantagem mais 0,04 por ponto extra até 35, no máximo 4,1 vezes a participação.
+Reforço adulto da diretoria exige elenco abaixo de 30 e folga de pelo menos dois salários projetados; caso contrário chega um jovem. Receita pode crescer mais 0,4% por posição acima da esperada, limitado a 4% na temporada, além dos ajustes existentes por elenco, título, acesso e queda. A política automática considera a projeção do lote inteiro de compras, a folga salarial, os jovens utilizados e o setor mais fraco; em elenco cheio, prefere treinar a subir mais um jovem. Isso testa as decisões financeiras que a interface apresenta.
+
+D63: a força do campo concorrente da Bola de Ouro sobe de 7 para 7,25, preservando a meta de 40% a 60% de Fenômenos de ataque com ao menos um prêmio na carreira.
+
+D63: a comparação do benefício das ações usa pares com a mesma semente, nacionalidade e ritmo. Ambas as políticas usam a escalação automática livre antes de cada etapa; a política equilibrada aproveita os atletas contratados e desenvolvidos. As metas mantêm a exigência de que usar ações cumpra mais objetivos, corrigindo o viés anterior de comparar países e sementes diferentes.
+
+D63: a meta de demissões da política equilibrada passa de 3% a 12% para 1% a 12%. A escalação ótima gratuita agora aproveita reforços e evolução em ambos os grupos, e a comparação usa carreiras pareadas. A rodada registra 1,6% de demissões, 79,2% de objetivos cumpridos com ações contra 67,7% sem ações. Não se aumenta artificialmente a cobrança para demitir treinadores que superam seus objetivos.
+
+D63: a sonda do Mundial usa vitória/empate/derrota nos grupos, sem prorrogação, e chances de avanço apenas no mata-mata. Potes e desempate por força simplificam a amostra; ela estima o torneio, sem reproduzir uma edição inteira. A formação compacta rola com o painel para não cobrir destinos de arrasto.
+
+D63: a entrega de prêmios registra o ano processado mesmo se nenhum veio para o clube comandado. Consultar novamente não aplica outra vez o bônus de OVR dos vencedores de outros clubes.
+
+D63: na amostra ampliada (500 Fenômenos por posição e política), 19 das 21 marcas foram alcançadas. Gols de seleção e seis Chuteiras de Ouro não ocorreram nesta amostra (melhores: 142 gols e cinco prêmios); o relatório registra os zeros. As caudas mantêm probabilidades positivas, sem teto de contagem, cobertas nos testes de pressão. Não se afrouxam as regras apenas para forçar uma ocorrência neste lote. O relatório corrige o nome do ritmo para Intensa, efetivamente usado pela ferramenta.
+
+D63: fichas de titulares e reservas ficam suspensas durante o arrasto controlado por ponteiro. A consulta volta a funcionar ao terminar a troca.
+
+D63: mouse e toque usam o mesmo arrasto controlado por ponteiro. A rolagem nativa do navegador podia deslocar o destino entre mover e soltar; agora a rolagem de borda é controlada pelo jogo nos dois dispositivos. Mouse aceita a carta/linha inteira; toque mantém o gesto no jogador do campo e no puxador do banco.
+
+Reteste D63 do arrasto: cinco repetições por dispositivo (dez cenários executados, dez pulados por dispositivo) aprovadas, incluindo titular/banco em ambos os sentidos e clique normal de consulta antes da troca. Captura de ponteiro conserva o botão original para não consumir esse clique.
+
+
+## 45. Qualidade, classificação e legado compartilhado (D64)
+
+
+Motores: Craque 2.0.0-m11 e Técnico 1.5.0. Estas regras substituem os valores
+e os fluxos de D63. A ajuda do Craque é relativa à força atual do clube:
+0,3 por ponto de vantagem até 15, mais 0,06 por ponto adicional até 35,
+multiplicado pela participação. O máximo é 5,7. A permanência acrescenta
+0,01 vezes participação vezes vantagem positiva até 35 à força do ano
+seguinte (máximo 0,35), antes da reversão existente de 30%. A consulta do OVR
+explica a força do clube e a ajuda potencial com participação integral.
+
+Rei da América existe nos dois modos para quem atua na elite das Américas,
+independentemente da nacionalidade. Exige pelo menos 25 jogos e ótimo rendimento,
+com concorrentes do mesmo ano. Cada reconhecimento mantém +1 OVR, limitado a
++3 por ano e OVR 99. No Técnico, a IA recebe a mesma régua de notas por gols,
+assistências, resultados e jogos sem sofrer gol. Craque de copa exige semifinal
+e participação em pelo menos 60% dos jogos; artilharia continua sendo por gols.
+
+A classificação continental e a proposta de renovação usam a mesma memória da
+temporada concluída. Campeões da Libertadores e Sul-Americana entram na
+Libertadores seguinte; campeões de Champions e Europa entram na Champions,
+e o de Conference entra na Europa se não tiver vaga superior. Vagas nacionais
+e redistribuições são descritas em docs/CLASSIFICACOES.md. Copas e tabelas não
+geram participação duplicada em torneios continentais de níveis diferentes.
+
+Mercado espontâneo só abre no começo do segundo turno ou após renovar.
+Nunca oferece um lote que, aceito inteiro, deixe menos de 18 jogadores ou
+dois goleiros. Vender bloqueia essa seleção antes de gastar ação e explica
+o motivo. Reposição da diretoria pode contratar atletas já existentes no
+estado atual do mundo, preservando suas características, ou promover jovens.
+Chegadas compradas pela diretoria recebem a mesma marca de nova contratação.
+
+Promessas só podem nascer no primeiro turno do lento. São conferidas nos onze
+escolhidos pelo usuário ao iniciar a simulação do segundo turno; lesão dispensa
+a cobrança. A IA não escolhe automaticamente um prometido para cumprir o acordo.
+A escalação ótima maximiza OVR com posições secundárias e desempata por
+característica, juventude, satisfação/fase e ordem estável.
+
+Resultados recentes elevam a ambição do clube. Um campeão da primeira divisão
+passa a buscar a faixa de cima da tabela; repetir o título aproxima a cobrança
+de disputar a taça. Conquistar liga de elite ou continental principal eleva a
+faixa de clubes interessados, com preferência por propostas nacionais fortes.
+
+Legado e pôster do Técnico seguem o desenho do Craque: carta grande de treinador,
+capítulos fixos, passagens por clube, vitrine, seis números no pôster, três clubes
+principais e curva de reputação. Cabeçalhos com setas ordenam posição, OVR, nome,
+idade e valor; filtros ficam na própria coluna. A estrela fica na bolinha do
+OVR. Conquistas identificam a competição, usam animação e sinal sonoro
+respeitando volume, silêncio e movimento reduzido.
+
+D64, calibragem e regulamentos: bônus do campo concorrente da Bola de Ouro
+8,25 (antes 7,25); mantêm-se as metas de raridade e de títulos. A primeira
+calibragem passou as 51 metas sem alterar seus limites. O Craque soma 0,3
+por ponto acima da força do clube até 15 e 0,06 por ponto extra até 35;
+5,7 de ajuda máxima com participação integral. Um jogador 96 num clube
+82 soma 4,2 à força efetiva, em lugar de 3,08 da D63. Investimento anual:
+0,01 vezes participação vezes vantagem positiva até 35, máximo 0,35.
+Rei da América tem OVR mínimo 78 e 25 jogos; no Técnico, nota média mínima
+7. No Craque, produção ofensiva de pelo menos 30 (gols + metade das
+assistências) ou 18 jogos sem sofrer gol para posições defensivas. Os perfis
+regionais diferenciam Américas de Ásia; nove referências americanas
+complementam a elite, e a região futura usa fluxo separado (85% Europa;
+dos demais, 80% Américas). Bônus, idade de auge e aposentadoria são projeções.
+
+A referência de classificação dos 17 países, fontes e simplificações fica em
+CLASSIFICACOES.md. Duas vagas UEFA por desempenho anual médio são calculadas
+no mundo simulado; Chile inclui Copa da Liga da elite e playoff de indicação.
+Mundial do Craque também tem 32 participantes (22 representados, nove genéricos
+e uma indicação de anfitrião norte-americano), como no Técnico. Intercontinental
+usa os campeões da temporada corrente nos dois modos. Copa do Brasil tem final
+única desde a referência 2026. Treinador mundial exige clube da primeira divisão.
+
+A carta do Técnico mantém a moldura e proporções do Craque, com reputação,
+retrato em medalhão e prancheta de giz desenhando a formação registrada no
+auge. Os números da carta têm tamanho adequado para quatro dígitos. O corpo
+da busca de contratação rola inteiro, com verba fixa no alto e confirmação
+fixa no pé: os cabeçalhos nunca comprimem a lista até zero no celular.
+
+D64: os testes do motor usam dois processos simultâneos para não disputar toda a CPU entre as simulações completas. As verificações, amostras e o prazo de cada teste permanecem iguais.
+
+## Evolução gradual de todos os clubes (D65, 14/10/2026)
+
+Craque `2.0.0-m12` e Técnico `1.5.1`. A mesma régua vale para cada clube,
+inclusive os da IA. Títulos somam à evolução anual: liga de elite +0,4;
+segunda divisão +0,2; copa nacional +0,15; copa da liga ou supercopa +0,1;
+continental principal +0,6; secundário +0,25; terceiro nível +0,15;
+Recopa/Supercopa UEFA +0,1; Intercontinental +0,25; Mundial de Clubes +0,6.
+Taças diferentes somam, limitadas a +1,2 na temporada; uma taça duplicada não conta.
+
+O jejum começa zerado no início da carreira e é atualizado só quando o ano
+fecha, sem contar o aquecimento. Qualquer título de clube zera o jejum.
+Os primeiros três anos sem taças não geram penalidade. O quarto tira 0,02;
+o quinto, 0,04; do sexto em diante, no máximo 0,06 por ano. A perda máxima é
+menor que o ganho do menor título. Conquistas de seleções, prêmios individuais,
+acesso e bom resultado sem taça não zeram esse contador.
+
+No Craque, isso participa da força persistente do clube, separadamente da
+ajuda do OVR do jogador. No Técnico, participa da âncora usada pela base e pelo
+mercado da diretoria; a força em campo continua derivada dos jogadores presentes.
+Nos dois modos permanecem retorno de 30% à referência, ruído anual de 0,6,
+limite de ±10 da referência e efeitos de acesso/queda. Esses freios evitam
+crescimento infinito ou decadência automática de clubes modestos.
+
+A consulta do OVR explica o efeito no Craque; a aba Clube do Técnico mostra
+o jejum desta carreira e a influência sobre formação/contratação. O laboratório
+explica a régua nos três idiomas. A nova bateria confere todos os tipos de taça,
+o prazo de tolerância, limites, fim do jejum e aplicação a todos os clubes,
+com as mesmas sementes, sem interferir no sorteio das partidas.
+
+Validação final D64/D65 (14/10/2026): `pnpm verify` aprovado, com 737 testes
+unitários, 51 metas do Craque e 23 do Técnico. A rodada ampliada `pnpm balance`
+(6.000 carreiras por lote e 60 mundos de 25 temporadas) também atende as 51 metas;
+nenhum limite foi afrouxado. `pnpm balance:tecnico --check` registra 384 temporadas
+no motor 1.5.1, com 23/23 metas. `pnpm e2e` executa 77 cenários aprovados e sete
+pulos previstos por dispositivo, sem falhas. PC e celular de 360 × 640 foram
+conferidos visualmente nos dois temas; legado também em português, inglês e espanhol.
+
+`pnpm balance:recordes`, motor 2.0.0-m12, amostra 2.250 carreiras (150 Fenômenos
+por posição em cada uma de três políticas), observa 20 das 21 marcas. O recorde
+de gols pela seleção não ocorreu neste lote, com máximo 142 ante a referência 146;
+o zero permanece no relatório. As probabilidades positivas e a ausência de teto
+artificial continuam verificadas pelos testes de pressão, sem facilitar o prêmio
+para forçar ocorrência. O pôster PNG foi exportado e inspecionado em 1080 × 1350;
+a prancheta não cobre o nome, e uma carreira de temporada única não duplica o
+rótulo da curva. Os relatórios de balanceamento estão em `tools/balance/relatorios/`.
+
+
+## Revisão D66 (16/10/2026)
+
+Craque `2.0.0-m13` e Técnico `1.6.0`. Esta revisão reúne os pedidos de 15/10 e a auditoria dos pedidos anteriores nos dois modos.
+
+- Troféus completos, com nomes por hover/foco/toque, prêmios individuais por competição e ordem editorial de importância compartilhada pelos dois modos e pôsteres. Prêmios de competição ficam abaixo de todas as taças; a contagem não aumenta a importância. O pôster mantém 1080 px de largura e mínimo de 1350 px de altura, crescendo para acomodar a coleção inteira.
+- Detalhes da temporada começam fechados, com preferência persistente. Defensores mostram jogos sem sofrer gol entre os números da temporada.
+- Descoberta tardia: dos 24 aos 30 anos, OVR entre 55 e 74 e pelo menos 12 jogos, chance de 0,15% por temporada elegível de alcançar 78 a 86 OVR. Uma vez por carreira, potencial elevado pelo menos ao novo alvo +3, sorteio independente da evolução normal. Os prodígios de estreia continuam: 14% dos Estrelas e 26% dos Fenômenos, cerca de 3,24% da distribuição Normal. Físico reduz risco de lesão pela regra já existente.
+- Torcida a partir de 80 pode conceder uma temporada adicional de tolerância ao banco (duas com 95), com chance de 60% a 90% em cada ano extra. Apoio popular também amplia em até 3 OVR a tolerância para permanência quando o mercado some. Efetivação do empréstimo não recebe missão Volta para casa.
+- Técnico: buscas e colunas em Desenvolver e Conversar; contratação começa por chance (provável, possível, difícil, quase impossível), com posição e limites OVR vazios; filtro por coluna preserva escolhas durante a etapa. Fichas abrem à esquerda no PC. Campo verde nos dois temas, estrela e aviso de improvisação separados. Debug de atleta individual. Vaga titular vazia impede avançar e simular.
+- Escalação usa atribuição global por rendimento na posição, inclusive alternativas. A IA também usa atribuição global, evitando escolhas locais que desperdiciavam jogadores versáteis.
+- Rival: chance de negociação ×0,45, limitada a 24%, e preço ×1,2. A faixa nunca ultrapassa Difícil. Reputação positiva ×1,1, teto anual +11; perdas mantêm teto -10. Notas ruins retiram até 0,9 de nível por ano antes do ruído e do declínio.
+- Previsibilidade: sobe 0,04 por partida multiplicado por característica fixa do clube entre 0,7 e 1,3. No máximo, gols próprios -16% e rivais +28%; 85% da leitura passa para o ano seguinte. Mudanças mantêm as recuperações sorteadas anteriores.
+- Finanças: verba base 32% da receita; até 30% da sobra, limitada a 20% da receita, retorna. Investimento líquido do ano anterior reduz a parcela base em `min(30%; 0,5 × investimento / receita)`. Verba nunca supera caixa +20% da receita. Operação do clube consome 20% da receita; salários anuais têm teto de 65%. Salários se ajustam 35% por ano em direção ao nível do atleta. Compras da diretoria apenas para vagas descobertas, elenco abaixo de 26 e chance anterior de 35%; chegadas de base continuam de 1 a 3.
+- Uma entrada curta no segundo tempo não satisfaz estrela/titular como uma escalação inicial. Hat-tricks identificam adversário. Invencíveis exige título de liga completo e zero derrotas.
+
+Os relatórios de simulação ficam em `tools/balance/relatorios/`. A prévia e o PNG acompanham a altura real da coleção, inclusive após a montagem do portal; o laboratório usa a mesma medição. O encerramento não cobra uma próxima temporada nem promete conquistas futuras numa carreira encerrada.
+
+
+### Formato e dados da Champions no Técnico
+
+A fase de liga contém 36 participantes, quatro potes de nove por coeficiente
+quinquenal simulado (o campeão anterior lidera o primeiro pote), oito rodadas
+com 18 partidas, dois rivais de cada pote, um em casa e outro fora. São quatro
+mandos por clube, sem repetir adversário. As duas primeiras e as duas últimas
+rodadas têm mandos opostos; nunca há três mandos iguais consecutivos. O sorteio
+procura evitar a mesma associação e limita a dois os adversários de qualquer
+outra associação. Uma exceção doméstica só é habilitada quando a composição
+numérica dos potes exige a flexibilização prevista pela UEFA; ela aparece na
+consulta da competição, em vez de ficar oculta.
+
+1º ao 8º seguem às oitavas. 9º/10º enfrentam 23º/24º, 11º/12º enfrentam
+21º/22º, 13º/14º enfrentam 19º/20º e 15º/16º enfrentam 17º/18º no playoff;
+a volta é na casa dos cabeças. Oitavas distribuem 1º/2º, 3º/4º, 5º/6º e
+7º/8º em metades opostas e contra o grupo correspondente do playoff. A chave
+fica fixa até a final. Os caminhos dos quatro primeiros protegem o mando da
+volta das quartas; os dos dois primeiros protegem a semifinal. Quem elimina
+um cabeça herda seu caminho. A final é única e neutra. São 189 jogos no total.
+Dias de referência: fase de liga 31/52/73/94/115/136/157/169; playoff 183/190,
+oitavas 206/213, quartas 234/241, semifinal 255/262 e final 283. Datas conflitantes
+com ligas/copas são deslocadas pelo calendário comum.
+
+Desempate da liga: pontos, saldo, gols, gols fora, vitórias, vitórias fora,
+pontos/saldo/gols somados dos adversários e coeficiente. Cartões não são
+simulados e por isso o critério disciplinar é neutro para todos. Coeficiente
+usa as últimas cinco temporadas simuladas, com dois pontos por vitória e um
+por empate, bônus de classificação da Champions (12 para o líder, menos 0,25
+por posição até 6,25 no 24º; seis para os demais) e 1,5 por avanço de oitavas
+até final. Os anos anteriores ao início são aproximados pela força inicial;
+Europa League/Conference ainda usam o bônus de fase do modelo simplificado.
+Esses coeficientes são do mundo do jogo, não os números oficiais dos clubes.
+
+As cinco ligas europeias jogáveis fornecem seus classificados pelas regras já
+existentes, incluindo campeões Champions/Europa League. Para completar 36 sem
+inflar suas cotas, o mundo do Técnico contém vinte representantes gerados de
+outras associações UEFA: POR/NED/BEL com dois cada e TUR/GRE/CZE/NOR/DEN/AZE/
+CYP/KAZ/SCO/AUT/SUI/SRB/CRO/SWE com um. Os melhores completam as vagas restantes.
+Eles têm jogadores e resultados simulados, nomes de representantes explícitos,
+força inicial de 68 a 81 e elenco de 24. Não são clubes reais nem propostas de
+emprego, e suas ligas domésticas não são jogáveis. A consulta pode mostrar esses
+atletas porque as estatísticas pertencem ao mesmo mundo simulado.
+
+Fontes de formato: [sorteio UEFA 2025/26](https://www.uefa.com/uefachampionsleague/news/029a-1de997bb1779-486bab913658-1000--uefa-champions-league-league-phase-draw/),
+[sorteio das eliminatórias 2025/26](https://www.uefa.com/uefachampionsleague/news/02a2-1ffe3d954170-60c0b7443c85-1000--uefa-champions-league-round-of-16-quarter-final-and-semi/?gsid=68f92188-a93f-4043-bf1a-90a337907ffe),
+[artigo 19](https://documents.uefa.com/r/Regulations-of-the-UEFA-Champions-League-2026/27/Article-19-Draw-system-knockout-phase-Online)
+e [artigo 18](https://documents.uefa.com/r/Regulations-of-the-UEFA-Champions-League-2026/27/Article-18-Equality-of-points-league-phase-Online).
+A numeração dos artigos 2026/27 confirma a estrutura já descrita pela UEFA para
+2025/26; as datas acima são do calendário abstrato do jogo.
+
+### Estatísticas, posições e expectativas
+
+A aba Estatísticas consulta o elenco ou todos os atletas ativos, com nome/clube,
+posição principal ou secundária, competição e ordenação por coluna. Mostra jogos,
+gols, assistências, jogos sem sofrer gol e nota média; a vista defensiva acrescenta
+titularidades, minutos e gols sofridos. A ficha dedicada soma os totais e detalha
+cada competição: inclui participação em gols. Notas são médias ponderadas pelo
+número de jogos. Não inventa desarmes, defesas ou chutes que não existem no motor.
+Nos jogos detalhados, minutos e gols sofridos respeitam a entrada/saída; clean
+sheet exige pelo menos 60 minutos sem sofrer gol enquanto estava em campo.
+Nos jogos rápidos da IA os onze atuam por 90 minutos no modelo simplificado.
+
+Improvisação mantém a penalidade de posição: alternativa -1, mesmo setor -3,
+outro setor -7 e goleiro -25, com redução pela característica Polivalente.
+Aprendizado de uma posição vizinha exige oito jogos como titular com pelo menos
+60 minutos e nota média 7. A chance por posição elegível é 6% por ano (3% por
+metade); no máximo uma é aprendida em cada atualização. A experiência acumulada
+é reiniciada na virada anual; posições aprendidas permanecem.
+
+A expectativa não depende apenas da ordem de jogadores no setor: OVR pelo menos
+três acima da força do clube exige papel de estrela; adulto de pelo menos 21 anos
+com OVR a partir de força menos um exige titularidade, mesmo com concorrência.
+Entradas breves não substituem essa exigência. Na virada, papéis não são
+rebaixados automaticamente para justificar banco a quem antes tinha titularidade.
+
+A reserva inicial de caixa da segunda divisão varia entre 12% e 30% da receita;
+a primeira conserva a faixa de -8% a 30%. Assim os menores podem negociar sem
+remover o limite de folha de 65% nem a redução de verba pelo investimento passado.
+A base dos clubes da IA tem potencial médio âncora menos 1,5; a do treinador
+conserva âncora menos três. A IA não compra se deixar o vendedor com menos de
+18 jogadores ou dois goleiros. Ambição anual combina 60% da referência do elenco
+e 40% da melhor colocação recente; títulos ainda elevam o piso de cobrança.
+A dispensa anual exige objetivo não cumprido e confiança abaixo de 12, com a
+mesma memória de campanhas anteriores. Crises no meio do ano mantêm sua regra.
+
+### Escopo de validação e carregamento
+
+As 51 metas originais do Craque continuam medindo a curva biológica isolada,
+sem a descoberta tardia. Não se ampliou o limite de salto natural para tornar a
+exceção comum: o novo salto tem uma sonda separada com dez mil temporadas elegíveis,
+faixa 78 a 86, limite de uma descoberta e casos inelegíveis. A integração na
+temporada completa também é verificada. A estreia excepcional já existia e foi
+observada no navegador: atleta de 16 anos com 40 jogos e OVR final 75.
+
+O carregamento do Técnico monta mais de 13 mil atletas e calendários de todo o
+mundo. O modo de desenvolvimento também recompila módulos e carrega o catálogo
+de elencos; isso não representa o tempo da versão compilada. A escalação global
+agora calcula cada custo uma vez e reaproveita índices de elenco, em vez de
+recalcular a pontuação dentro de cada passagem do algoritmo. O sorteio da Champions
+usa cobertura exata com padrões de mando balanceados por pote. A aplicação já
+pré-carrega os módulos do modo e pinta o aviso antes das operações pesadas.
+Recomenda-se avaliar a versão compilada para publicação; mover a simulação a um
+worker é uma alternativa futura caso a medição no dispositivo alvo ainda mostre
+bloqueio perceptível. Essa alternativa não é declarada implementada.
+
+Na IA, a fase anual soma uma oscilação comum do clube de desvio 1,3 à oscilação
+individual de desvio 0,5, sempre limitada entre -2 e +2. Isso permite campanhas
+melhores e piores sem tirar a influência da qualidade. O treinador conserva
+a fase pelas notas efetivamente registradas. Totais de prêmios contam cada
+conquista de competição uma vez e descartam seu selo anual resumido; jornal
+e demais coleções mostram todas as imagens, compactando o espaço quando preciso.
+
+D66, complemento de calibração: na conta dos gols esperados, valores de setor
+acima de 80 entram como `80 + 0,7 × (valor - 80)`, para ambos os lados. A qualidade
+continua ajudando; o ganho marginal diminui no topo, sem limitar o OVR exibido.
+A política equilibrada de laboratório/harness reage à pista de previsibilidade
+a partir de 0,5: alterna ofensiva/posse quando a expectativa é o terço superior
+e defensiva/contra-ataque nos demais. Os controles passivo e treinar+comprar
+continuam com filosofia fixa. Essa mudança de política é explícita; o motor
+não lê a política. As 23 metas e seus limites permanecem inalterados.
+
+A contratação mostra chance na própria coluna e carrega mais 120 resultados por vez, sem descartar os demais alvos. No celular, Estatísticas tem uma aba própria. O laboratório distingue a política passiva (sem ações) da equilibrada (treino, desenvolvimento e adaptação da filosofia); seu resumo de teste fica somente na sessão atual.
+
+### Validação D66
+
+`pnpm verify` aprovado: 754 testes unitários, 51 metas Craque e 23 metas Técnico,
+mais tipos, lint e build. `pnpm balance` ampliado mantém as 51 metas, com
+6.000 carreiras por lote e 60 mundos de 25 temporadas. O relatório completo do
+Técnico cobre 16 carreiras e 384 temporadas, sem comandos válidos recusados.
+
+O cenário específico do Barcelona começa com onze atletas de OVR 92 e usa
+quatro sementes pareadas em três políticas, 12 carreiras de 24 temporadas.
+A Champions foi conquistada entre zero e cinco vezes por carreira; houve
+derrotas na liga em 287 das 288 temporadas. Equipes boas continuam favoritas,
+mas treino e compras repetidos não asseguram taças. O relatório registra todos
+os resultados, inclusive quando a política equilibrada perde para a de controle.
+
+`pnpm balance:recordes`, motor m13: 2.250 carreiras, 150 Fenômenos por posição
+em cada uma de três políticas, 20/21 marcas observadas. Gols pela seleção:
+máximo 142 ante referência 146, sem forçar ocorrência ou esconder o zero.
+Descoberta tardia tem regressão separada em dez mil elegíveis e integração
+na temporada real; os limites das 51 metas biológicas permanecem intactos.
+
+Navegador real: Craque rápido e Técnico até 24 temporadas, PC e 360 × 640,
+claro e escuro, contratação, desenvolvimento, vestiário, gramado, estatísticas,
+Champions, legado, consulta de atletas no auge e pôster. Coleção com 41 tipos
+de conquistas exportada e inspecionada em 1080 × 2261. A regressão verifica
+que a prévia acompanha a imagem e que o PNG inclui toda a altura.
+
+A suíte ponta a ponta final executou 92 cenários: 85 aprovados e sete pulos previstos por dispositivo, sem falhas. Inclui regressões da faixa OVR, posição, estatísticas por competição e coleção grande de pôster nos dois temas e tamanhos. A lista temporária de 86 itens foi conferida integralmente e removida conforme solicitado.
+
+
+## Revisão D67: cobrança por conquistas, propostas e instalação Windows
+
+Técnico `1.7.0`; Craque permanece `2.0.0-m13`.
+
+- Diretoria: clubes da elite com objetivo `title` têm peso 1. Clubes com força ≥80, prestígio ≥4 e posição esperada entre os primeiros `ceil(25% da liga)` têm peso 0,8. Demais clubes mantêm a avaliação anterior. No mandato atual, cada ano sem grande título acumula 1 de jejum; copa nacional ou segundo continental acumulam apenas 0,5. Liga, principal continental ou Mundial de Clubes zeram o contador. Supercopas não encerram o jejum. Histórico parcial, segunda divisão ou passagem por outro clube interrompem a sequência.
+- Penalidade na nota anual: `peso × min(3,5; 0,45 + 0,6 × max(0; jejum − 1))`, ou zero com grande título. Continua a memória de crédito de 60% e confiança `50 + 12 × nota + 15 × crédito`. Nos clubes ambiciosos, confiança abaixo de 28 permite dispensa mesmo cumprindo a colocação; nos demais, permanece abaixo de 12 com objetivo não cumprido. Primeira temporada dá margem, sem proteger campanhas desastrosas. Torcida, finanças e boas copas continuam contando; vice-campeonatos sucessivos não garantem permanência eterna. A regra aparece no objetivo, guia, laboratório e motivo da avaliação.
+- Propostas espontâneas usam a tipografia, cores, filetes, identificação de jogador e botões do laboratório. Cada painel separa jogador, comprador, valor e resposta, com rolagem apenas no conteúdo no celular. Aceitar e recusar mantêm as regras existentes. O palco usa `overflow: clip` para impedir que foco e rolagem implícita movam o painel para trás do cabeçalho; as listas internas continuam roláveis.
+- Ícones compactos de títulos e prêmios têm dica por hover e foco de teclado, encerrada ao sair ou com Escape. Não são botões; o clique não fixa uma janela.
+- Windows: extraia todos os arquivos do ZIP e execute `instalacao.bat`. Ele confere Node ≥22.12 e tenta instalar a versão LTS pelo WinGet oficial se faltar ou estiver antigo; se não conseguir, mostra o endereço oficial e orienta repetir. Usa `npm exec --yes --package=pnpm@10.34.5 -- pnpm install --frozen-lockfile`, sem pnpm global. Ao terminar, informa para executar `iniciar.bat`. Este também confere dependências antes de abrir o jogo, usando a porta disponível a partir de 5173. Internet é necessária na primeira instalação; mantenha a janela aberta enquanto joga. Os atalhos da raiz e de `v2/` usam o mesmo procedimento. Dependências de desenvolvimento também são instaladas, pois o iniciador serve o Vite.
+
+**Validação de balanceamento.** 16 carreiras, 384 temporadas, 23/23 metas aprovadas, sem alterar limites: demissões equilibradas 12,0% (23/192), objetivo cumprido 36,5% contra 15,6% passivo. Regressão de elite: 12 carreiras/288 temporadas, Barcelona inicialmente OVR 92. Antes, todos os mandatos duravam 24 anos. Agora, seis duraram de 9 a 23 anos; as seis campanhas restantes, com conquistas frequentes, chegaram a 24. Nenhum comando inválido. Dados por semente em `tools/balance/relatorios/tecnico-elite.md`; não são garantia de resultado para toda estratégia humana.
+
+
+**Validação final D67 (16/10/2026).** Tipos, lint, 759 testes unitários, nove cenários isolados dos instaladores, 51 metas Craque e 23 Técnico aprovados (`pnpm verify`, com tipos/lint finais reconferidos). Instalação real executada com sucesso, lockfile preservado. Suíte completa do navegador: 100 cenários, 91 aprovados e nove pulos previstos por dispositivo, sem falhas, incluindo modo offline, acessibilidade, hover/clique/Escape dos troféus e aceitar/recusar propostas. A revisão manual conferiu propostas em 1280 × 720 e 360 × 640, nos dois temas, com página sem rolagem ou vazamento lateral e acesso às ações pela rolagem interna. A correção de rolagem implícita foi confirmada em uso e na posição do painel abaixo do cabeçalho.

@@ -1,6 +1,5 @@
 import { type ComponentType, type LazyExoticComponent, lazy, Suspense, useEffect } from "react";
 import { useT } from "../i18n/useT";
-import { IS_DEV } from "../lib/env";
 import { Loading } from "../ui/Loading";
 import { Boundary, ErrorPanel } from "./ErrorBoundary";
 import { SCREEN_GAME, type Screen, useNavigation } from "./navigation";
@@ -25,7 +24,7 @@ const SCREEN_LOADERS: Readonly<Record<Screen, Loader>> = {
   archived: () => import("../screens/home/HomeScreen").then((module) => ({ default: module.HomeScreen })),
   achievements: () => import("../screens/achievements/AchievementsScreen").then((module) => ({ default: module.AchievementsScreen })),
   notFound: () => import("../screens/notFound/NotFoundScreen").then((module) => ({ default: module.NotFoundScreen })),
-  lab: () => import("../screens/lab/LabScreen").then((module) => ({ default: module.LabScreen })),
+  lab: import.meta.env.DEV ? () => import("../screens/lab/LabScreen").then((module) => ({ default: module.LabScreen })) : () => import("../screens/notFound/NotFoundScreen").then((module) => ({ default: module.NotFoundScreen })),
   tecnicoIdentity: () => import("../screens/tecnico/TecnicoIdentityScreen").then((module) => ({ default: module.TecnicoIdentityScreen })),
   tecnicoAppearance: () => import("../screens/tecnico/TecnicoAppearanceScreen").then((module) => ({ default: module.TecnicoAppearanceScreen })),
   tecnico: () => import("../screens/tecnico/TecnicoScreen").then((module) => ({ default: module.TecnicoScreen })),
@@ -36,35 +35,32 @@ const SCREEN_COMPONENTS = Object.fromEntries(
   Object.entries(SCREEN_LOADERS).map(([screen, load]) => [screen, lazy(load)]),
 ) as Readonly<Record<Screen, LazyExoticComponent<ComponentType>>>;
 
-/** As telas que o jogador costuma abrir, na ordem provável, para baixar antes do clique. */
-const PRELOAD: readonly Screen[] = ["home", "tecnicoIdentity", "identity", "career", "challenge", "summary", "appearance", "hall", "achievements"];
+/** A abertura não antecipa jogos. Depois da escolha, só o modo escolhido aquece. */
+const PRELOAD_BY_GAME = {
+  craque: ["identity", "appearance", "career", "challenge", "summary"] as readonly Screen[],
+  tecnico: ["tecnicoAppearance", "tecnico", "tecnicoLegacy"] as readonly Screen[],
+};
 
-/**
- * Baixa as outras telas em segundo plano, quando o navegador está ocioso
- * depois da primeira pintura (D43): tocar num botão abre a tela na hora, sem
- * "Carregando". Sem internet e com o jogo já guardado, vem do aparelho.
- */
-function usePreloadScreens(): void {
+function usePreloadScreens(screen: Screen): void {
+  const game = SCREEN_GAME[screen];
   useEffect(() => {
+    if (game !== "craque" && game !== "tecnico") return;
     let cancelled = false;
-    const run = () => {
-      if (cancelled) return;
-      for (const screen of PRELOAD) void SCREEN_LOADERS[screen]().catch(() => undefined);
-      if (IS_DEV) void SCREEN_LOADERS.lab().catch(() => undefined);
+    const run = async () => {
+      for (const next of PRELOAD_BY_GAME[game]) {
+        if (cancelled) return;
+        await SCREEN_LOADERS[next]().catch(() => undefined);
+      }
     };
-    // Safari ainda não tem requestIdleCallback: lá, um pouco depois da primeira pintura.
     const idle = "requestIdleCallback" in window;
-    const handle = idle ? window.requestIdleCallback(run, { timeout: 2500 }) : window.setTimeout(run, 1200);
+    const handle = idle ? window.requestIdleCallback(() => void run(), { timeout: 2500 }) : window.setTimeout(() => void run(), 1200);
     return () => {
       cancelled = true;
       if (idle) window.cancelIdleCallback(handle);
       else window.clearTimeout(handle);
     };
-  }, []);
+  }, [game]);
 }
-
-/** Telas que leem a carreira salva: o erro delas oferece limpar o save. */
-const READS_SAVE: ReadonlySet<Screen> = new Set(["career", "summary"]);
 
 function ScreenLoading() {
   const { t } = useT();
@@ -80,7 +76,7 @@ export function ScreenOutlet() {
   const screen = useNavigation((state) => state.screen);
   const go = useNavigation((state) => state.go);
   const Current = SCREEN_COMPONENTS[screen];
-  usePreloadScreens();
+  usePreloadScreens(screen);
   return (
     <Boundary
       label={`tela ${screen}`}
@@ -91,7 +87,7 @@ export function ScreenOutlet() {
           layout="screen"
           onRetry={reset}
           onHome={screen === "hub" ? undefined : () => go("hub", { force: true })}
-          offerReset={READS_SAVE.has(screen)}
+          offerReset={false}
           game={SCREEN_GAME[screen] === "tecnico" ? "tecnico" : "craque"}
         />
       )}

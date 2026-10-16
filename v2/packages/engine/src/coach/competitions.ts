@@ -1,3 +1,4 @@
+import { CHAMPIONS_DAYS, CHAMPIONS_KNOCKOUT, championsLeagueDraw, championsPairs, championsTable } from "./champions";
 import {
   CONFEDERATIONS,
   type Confederation,
@@ -9,6 +10,7 @@ import {
   PLAYABLE_COUNTRIES,
 } from "@craque/world";
 import { continentalEntrants } from "../world/season";
+import { performanceSpots } from "../world/qualification";
 import { CALENDAR, CLUB_WORLD_CUP_QUOTA, GENERIC_CHAMPIONS } from "../world/tuning";
 import type { SeasonMemory } from "../world/types";
 import type { CoachClub, CompetitionKind, CompetitionState, Fixture, KnockoutRound, PreviousSeason, TableRow } from "./types";
@@ -238,7 +240,7 @@ export function buildSeason(input: SeasonInput): SeasonBuild {
       if (!getCompetition(id)) continue;
       const entrants = seedOrder(
         Object.values(input.clubs)
-          .filter((club) => club.country === country)
+          .filter((club) => club.country === country && (country !== "CHI" || kind !== "leaguecup" || club.division === 1))
           .map((club) => club.id),
         (club) => seed(club) + (input.clubs[club]?.division === 1 ? 20 : 0),
       );
@@ -259,9 +261,25 @@ export function buildSeason(input: SeasonInput): SeasonBuild {
   }
 
   // Continentais.
-  const entrants = continentalEntrants(toSeasonMemory(input.memory));
+  const entrants = continentalEntrants(toSeasonMemory(input.memory),(id)=>input.clubs[id]?.division===1,input.seed);
   for (const [id, list] of Object.entries(entrants)) {
-    const valid = list.filter((club) => input.clubs[club]);
+    let valid = list.filter((club) => input.clubs[club]);
+    if(id==="cont1:UEFA") {
+      const guests=Object.values(input.clubs).filter(club=>club.continentalGuest).sort((a,b)=>seed(b.id)-seed(a.id)||a.id.localeCompare(b.id));
+      const holders=[input.memory.continental["cont1:UEFA"]?.winner,input.memory.continental["cont2:UEFA"]?.winner].filter((club):club is string=>Boolean(club && input.clubs[club]));
+      valid=[...new Set([...valid,...holders])];
+      for(const guest of guests)if(valid.length<36 && !valid.includes(guest.id))valid.push(guest.id);
+      if(valid.length!==36)throw new Error("coach: faltam representantes UEFA");
+      const coefficients=Object.fromEntries(valid.map(club=>[club,(input.memory.uefaCoefficients?.[club] ?? [(seed(club)-50)*2]).reduce((a,b)=>a+b,0)]));
+      const champion=input.memory.continental[id]?.winner;
+      const state:CompetitionState={...baseState(id,valid,null,[{label:"LP",days:CHAMPIONS_DAYS,drawn:true,roundKind:"league"},...CHAMPIONS_KNOCKOUT.map(stage=>({...stage,drawn:false,roundKind:"knockout" as const}))]),table:valid.map(emptyRow),coefficients};
+      competitions[id]=state;
+      const rounds=championsLeagueDraw(valid,club=>(coefficients[club] ?? 0)+(club===champion?10000:0),club=>input.clubs[club]?.country ?? club,coachRng(input.seed,"championsLeagueDraw",input.year));
+      state.associationException=rounds.flat().some(([home,away])=>input.clubs[home]?.country===input.clubs[away]?.country);
+      rounds.forEach((pairs,round)=>add(pairs.map(([home,away],index)=>({id:`${id}|LP${round+1}|${index}`,competition:id,kind:"cont1",round:`LP${round+1}`,roundKind:"league",day:freeDay(context,home,away,CHAMPIONS_DAYS[round]!),home,away,firstLeg:null,decisive:false,neutral:false,result:null}))));
+      for(const club of valid)state.reached[club]="LP";
+      continue;
+    }
     if (valid.length < 2) continue;
     const offset = id.startsWith("cont1") ? 0 : 1;
     const state = continentalState(id, seedOrder(valid, seed), offset);
@@ -274,7 +292,7 @@ export function buildSeason(input: SeasonInput): SeasonBuild {
   // europeu da temporada anterior, como no Craque.
   const europe = input.memory.continental["cont1:UEFA"]?.winner;
   if (getCompetition("intercontinental") && europe && input.clubs[europe]) {
-    const plan: StagePlan[] = ["QF", "SF", "F", "FF"].map((label, index) => ({
+    const plan: StagePlan[] = ["P1", "QF", "SF", "F"].map((label, index) => ({
       label,
       days: [DAYS.intercontinental[index] ?? 298],
       drawn: false,
@@ -290,8 +308,8 @@ export function buildSeason(input: SeasonInput): SeasonBuild {
       const size = 16;
       const labels = roundLabels(size);
       const plan: StagePlan[] = [
-        { label: "P1", days: [DAYS.clubWorldCup[0]], drawn: false, roundKind: "prelim" },
-        ...labels.map((label, index) => ({ label, days: [DAYS.clubWorldCup[index + 1] ?? 318], drawn: false, roundKind: "knockout" as const })),
+        { label: "G", days: [303, 307, 311], drawn: false, roundKind: "group" },
+        ...labels.map((label, index) => ({ label, days: [316 + index * 5], drawn: false, roundKind: "knockout" as const })),
       ];
       const state = baseState("clubworldcup", seedOrder(list, seed), null, plan);
       competitions.clubworldcup = state;
@@ -305,6 +323,8 @@ export function buildSeason(input: SeasonInput): SeasonBuild {
 }
 
 function isTwoLegged(competition: string, label: string): boolean {
+  // Regulamento de 2026: a decisão brasileira passa a uma partida única.
+  if (competition === "cup:BRA" && label === "F") return false;
   const only = TWO_LEG_ONLY[competition];
   if (only) return only.includes(label);
   const from = TWO_LEG_FROM[competition];
@@ -314,7 +334,7 @@ function isTwoLegged(competition: string, label: string): boolean {
 }
 
 function genericStrength(club: string): number {
-  return GENERIC_CHAMPIONS.find((entry) => entry.id === club)?.strength ?? 60;
+  return GENERIC_CHAMPIONS.find((entry) => entry.id === club || club.startsWith(`${entry.id}:`))?.strength ?? 60;
 }
 
 export function clubWorldCupEntrants(input: SeasonInput, seed: Seeder): string[] {
@@ -336,6 +356,9 @@ export function clubWorldCupEntrants(input: SeasonInput, seed: Seeder): string[]
     }
     entrants.push(...chosen);
   }
+  for (const [confederation, count] of [["AFC", 4], ["CAF", 4], ["OFC", 1]] as const) for (let index = 0; index < count; index += 1) entrants.push(`generic:${confederation}:${index}`);
+  const host = Object.values(input.clubs).filter((club) => club.country === "USA" && !entrants.includes(club.id)).sort((a, b) => seed(b.id) - seed(a.id) || a.id.localeCompare(b.id))[0];
+  if (host) entrants.push(host.id);
   return entrants;
 }
 
@@ -463,11 +486,16 @@ function tieFixtures(state: CompetitionState, stage: KnockoutRound, index: numbe
  * uma copa, os cabeças de chave ganham folga até a potência de 2; nas
  * seguintes, o sorteio é livre (semeado pela temporada e pela fase).
  */
-export function drawKnockout(state: CompetitionState, context: DrawContext, first: boolean): Fixture[] {
+export function drawKnockout(state: CompetitionState, context: DrawContext, first: boolean, previous:readonly Fixture[]=[]): Fixture[] {
   const stageIndex = state.knockoutPlan.findIndex((stage) => !stage.drawn);
   const stage = state.knockoutPlan[stageIndex];
   if (!stage) return [];
   stage.drawn = true;
+  if(state.id==="cont1:UEFA") {
+    const pairs=championsPairs(state,stage,previous,context.seed,context.year);
+    for(const [a,b] of pairs){state.reached[a]=stage.label;state.reached[b]=stage.label;}
+    return pairs.flatMap(([a,b],index)=>tieFixtures(state,stage,index,a,b,context));
+  }
   if (stage.roundKind === "group") return drawGroups(state, stage, context);
   const alive = seedOrder(state.alive, context.seeder);
   let playing: string[];
@@ -548,7 +576,7 @@ function drawGroups(state: CompetitionState, stage: KnockoutRound, context: Draw
   const fixtures: Fixture[] = [];
   for (const group of groups) {
     for (const club of group.clubs) state.reached[club] = "G";
-    GROUP_ROUNDS.forEach((pairs, round) => {
+    (state.kind === "clubworldcup" ? GROUP_ROUNDS.slice(0, 3) : GROUP_ROUNDS).forEach((pairs, round) => {
       const day = stage.days[round] ?? stage.days[stage.days.length - 1] ?? 0;
       pairs.forEach(([a, b], index) => {
         const home = group.clubs[a];
@@ -641,10 +669,10 @@ export function advanceCompetitions(
     }
     const own = byCompetition.get(state.id) ?? [];
     const stageFixtures = own.filter((fixture) =>
-      current.roundKind === "group" ? fixture.roundKind === "group" : fixture.round === current.label,
+      current.roundKind === "league" ? fixture.roundKind === "league" : current.roundKind === "group" ? fixture.roundKind === "group" : fixture.round === current.label,
     );
     if (stageFixtures.length === 0 || stageFixtures.some((fixture) => !fixture.result)) continue;
-    created.push(...closeStage(state, current, stageFixtures, own, context, europeChampion));
+    created.push(...closeStage(state, current, stageFixtures, own, context, competitions["cont1:UEFA"]?.champion ?? europeChampion));
   }
   return created;
 }
@@ -654,14 +682,19 @@ function openIntercontinental(
   competitions: Record<string, CompetitionState>,
   context: DrawContext,
 ): Fixture[] {
-  const sources = ["cont1:CONMEBOL", "cont1:CONCACAF"];
+  const sources = ["cont1:CONMEBOL", "cont1:CONCACAF", "cont1:UEFA"];
   if (sources.some((id) => competitions[id] && !competitions[id]?.done)) return [];
   const champions = sources.map((id) => competitions[id]?.champion).filter((club): club is string => Boolean(club));
   const entrants = [...champions, ...GENERIC_CHAMPIONS.map((entry) => entry.id)];
+  if (champions.length < 3) return [];
   state.alive = entrants;
   for (const club of entrants) state.reached[club] = "entered";
   (state as { entrants: readonly string[] }).entrants = entrants;
-  return drawKnockout(state, context, true);
+  const first = state.knockoutPlan[0]!; first.drawn = true;
+  const opener = context.year % 2 === 0 ? "generic:AFC" : "generic:CAF";
+  const fixtures = [...tieFixtures(state, first, 0, opener, "generic:OFC", context), ...tieFixtures(state, first, 1, champions[0]!, champions[1]!, context)];
+  for (const fixture of fixtures) { state.reached[fixture.home] = "P1"; state.reached[fixture.away] = "P1"; }
+  return fixtures;
 }
 
 function winnerOf(fixture: Fixture): string | null {
@@ -676,6 +709,12 @@ function closeStage(
   context: DrawContext,
   europeChampion: string | null,
 ): Fixture[] {
+  if(state.id==="cont1:UEFA" && stage.roundKind==="league") {
+    const sorted=championsTable(state.table ?? [],stageFixtures,club=>state.coefficients?.[club] ?? 0);
+    state.table?.splice(0,state.table.length,...sorted);
+    state.leagueRanking=sorted.map(row=>row.club);state.alive=state.leagueRanking.slice(0,24);
+    return drawKnockout(state,context,false,stageFixtures);
+  }
   if (stage.roundKind === "group") {
     const qualified: string[] = [];
     for (const group of state.groups ?? []) {
@@ -697,6 +736,17 @@ function closeStage(
     const playedThisStage = new Set(stageFixtures.flatMap((fixture) => [fixture.home, fixture.away]));
     const byes = state.alive.filter((club) => !playedThisStage.has(club));
     state.alive = [...byes, ...winners];
+    if (state.kind === "intercontinental" && stage.label !== "F") {
+      const next = state.knockoutPlan.find((entry) => !entry.drawn);
+      if (!next || !europeChampion) return [];
+      next.drawn = true;
+      const pair = stage.label === "P1" ? [byes.find((club) => club !== europeChampion), winners[0]]
+        : stage.label === "QF" ? [state.alive.find((club) => club !== europeChampion && !winners.includes(club)), winners[0]]
+        : [europeChampion, winners[0]];
+      if (!pair[0] || !pair[1]) return [];
+      state.reached[pair[0]] = next.label; state.reached[pair[1]] = next.label;
+      return tieFixtures(state, next, 0, pair[0], pair[1], context);
+    }
     const isLast = state.knockoutPlan.every((plan) => plan.drawn) && (stage.label === "F" || stage.label === "FF");
     if (state.kind === "intercontinental" && stage.label === "F") {
       // Vencedor do chaveamento enfrenta o campeão europeu na final.
@@ -721,7 +771,7 @@ function closeStage(
     }
   }
   void all;
-  return drawKnockout(state, context, false);
+  return drawKnockout(state, context, false,stageFixtures);
 }
 
 /** Fecha as ligas: tabela final e campeão. */
@@ -744,6 +794,7 @@ export function toSeasonMemory(previous: PreviousSeason): SeasonMemory {
     cups: previous.cups,
     continental: previous.continental,
     primaryChampions: previous.primaryChampions as SeasonMemory["primaryChampions"],
+    performanceSpots: previous.performanceSpots,
   };
 }
 
@@ -752,6 +803,7 @@ export function seasonMemory(
   year: number,
   competitions: Readonly<Record<string, CompetitionState>>,
   previous: PreviousSeason,
+  fixtures:readonly Fixture[]=[],
 ): PreviousSeason {
   const tables: Record<string, string[]> = {};
   const cups: Record<string, { winner: string; runnerUp: string }> = {};
@@ -771,7 +823,24 @@ export function seasonMemory(
     const before = previous.primaryChampions[confederation as Confederation] ?? [];
     primaryChampions[confederation] = winner ? [winner, ...before].slice(0, 4) : [...before].slice(0, 4);
   }
-  return { year, tables, cups, continental, primaryChampions };
+  const stageWeight:Readonly<Record<string,number>>={champion:10,F:8,FF:8,SF:6,QF:4,R16:2};
+  const orders=Object.fromEntries(Object.values(competitions).filter(state=>["cont1","cont2","cont3"].includes(state.kind)).map(state=>[state.id,[...state.entrants].sort((a,b)=>(stageWeight[state.reached[b] ?? ""] ?? 0)-(stageWeight[state.reached[a] ?? ""] ?? 0) || a.localeCompare(b))]));
+  const uefaCoefficients:Record<string,number[]>={};
+  for(const [id,series] of Object.entries(previous.uefaCoefficients ?? {}))uefaCoefficients[id]=[0,...series].slice(0,5);
+  for(const state of Object.values(competitions).filter(state=>state.id.endsWith(":UEFA") && ["cont1","cont2","cont3"].includes(state.kind))) {
+    for(const club of state.entrants) {
+      const rank=state.leagueRanking?.indexOf(club) ?? -1;
+      const stage=state.reached[club] ?? "",advanced=["R16","QF","SF","F","champion"].indexOf(stage);
+      const bonus=state.id==="cont1:UEFA" ? 6+Math.max(0,24-rank)*0.25+Math.max(0,Math.min(4,advanced+1))*1.5 : (stageWeight[stage] ?? 0);
+      const points=fixtures.filter(f=>f.competition===state.id && f.result && (f.home===club || f.away===club)).reduce((sum,f)=>{
+        const own=f.home===club?f.result!.home:f.result!.away,other=f.home===club?f.result!.away:f.result!.home;
+        return sum+(own>other?2:own===other?1:0);
+      },0);
+      const prior=previous.uefaCoefficients?.[club] ?? Array<number>(4).fill((state.coefficients?.[club] ?? 20)/5);
+      uefaCoefficients[club]=[bonus+points,...prior].slice(0,5);
+    }
+  }
+  return {year,tables,cups,continental,primaryChampions,uefaCoefficients,performanceSpots:performanceSpots(orders)};
 }
 
 export const COMPETITION_DAYS = DAYS;

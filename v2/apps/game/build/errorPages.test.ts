@@ -18,10 +18,10 @@ describe("páginas estáticas de erro", () => {
     }
   });
 
-  it("500 e 503 dizem que a carreira continua salva e oferecem tentar de novo", () => {
+  it("500 e 503 oferecem recarregar sem prometer um save do Craque", () => {
     for (const code of ["500", "503"] as const) {
       const html = errorPageHtml(code, "/");
-      expect(html).toContain("Sua carreira continua salva");
+      expect(html).not.toContain("Sua carreira continua salva");
       expect(html).toContain('onclick="location.reload()"');
     }
     // A 404 não tem o que tentar de novo: só a volta para o jogo.

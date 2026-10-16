@@ -89,13 +89,9 @@ export type SavePeek =
   | { readonly kind: "invalid" };
 
 export function readRawSave(): unknown {
-  const raw = safeStorage.getItem(STORAGE_KEYS.save);
-  if (raw === null) return undefined;
-  try {
-    return JSON.parse(raw) as unknown;
-  } catch {
-    return null;
-  }
+  // Craque vive apenas nesta sessão. Remove também saves de versões anteriores.
+  safeStorage.removeItem(STORAGE_KEYS.save);
+  return undefined;
 }
 
 /** Olha o save sem refazer a carreira: existe, de que versão, em que tela, com que retrato. */
@@ -125,8 +121,8 @@ export function savedScreen(): SaveScreen | null {
   return peek.kind === "present" && peek.current ? peek.screen : null;
 }
 
-export function writeSave(record: SaveRecord): void {
-  safeStorage.setItem(STORAGE_KEYS.save, JSON.stringify(record));
+export function writeSave(_record: SaveRecord): void {
+  clearSave();
 }
 
 export function clearSave(): void {

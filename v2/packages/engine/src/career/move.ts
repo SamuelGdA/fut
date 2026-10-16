@@ -63,7 +63,7 @@ export function moveTo(career: Career, offer: ClubOffer, notices: CareerNotice[]
           ownerShirt: previous.loan?.ownerShirt ?? previous.shirt,
           untilAge: career.age + period,
         }
-      : null;
+      : sameClub && previous?.loan && !offer.buyout && !offer.back ? previous.loan : null;
 
   const contract: Contract = {
     club: offer.club,

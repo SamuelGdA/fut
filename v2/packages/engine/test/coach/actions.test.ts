@@ -112,7 +112,7 @@ describe("as sete ações e o limite por etapa (spec 6)", () => {
       expect(sold.clubs[coach.club]?.cash).toBeCloseTo((career.clubs[coach.club]?.cash ?? 0) + pending.price, 6);
     }
     career = must(career, { type: "closeAction" });
-    career = must(career, { type: "openAction", kind: "sell" });
+    career = must(career, { type: "openAction", kind: "sell", fresh: true });
     expect(refused(career, { type: "confirmAction", payload: { kind: "sell", players: [targets[0] ?? ""] } })).toBe("alreadyOffered");
   });
 
@@ -126,9 +126,8 @@ describe("as sete ações e o limite por etapa (spec 6)", () => {
     const target = keepers[0];
     if (!target) throw new Error("sem goleiro");
     career = must(career, { type: "openAction", kind: "sell" });
-    career = must(career, { type: "confirmAction", payload: { kind: "sell", players: [target.id] } });
-    const offer = career.flow?.kind === "sell" ? career.flow.offers[0] : undefined;
-    if (offer?.status === "pending") expect(refused(career, { type: "respond", item: offer.id, decision: "accept" })).toBe("blocked:squad");
+    expect(refused(career,{type:"confirmAction",payload:{kind:"sell",players:[target.id]}})).toBe("blocked:squad");
+    expect(career.actionsUsed).toBe(0);
   });
 
   it("desenvolver marca até 3 jogadores, uma vez por etapa", () => {

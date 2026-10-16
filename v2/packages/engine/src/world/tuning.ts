@@ -6,7 +6,7 @@ import type { Confederation, CountryCode } from "@craque/world";
  */
 
 /** Força efetiva do clube do jogador (GDD 8.2). */
-export const CLUB_IMPACT = { kappa: 0.22, below: -3, above: 15 } as const;
+export const CLUB_IMPACT = { kappa: 0.3, below: -3, above: 15, eliteKappa: 0.06, eliteAbove: 35, investment: 0.01 } as const;
 
 /** Força efetiva da seleção do jogador (GDD 8.12). */
 export const NATIONAL_IMPACT = { kappa: 0.12, below: -3, above: 15 } as const;
@@ -80,10 +80,6 @@ export const CALENDAR = { worldCup: 2, nationsCup: 0, clubWorldCup: 1 } as const
 export const CLUB_DRIFT = {
   reversion: 0.3,
   noise: 0.6,
-  leagueTitle: 0.4,
-  primary: 0.6,
-  secondary: 0.25,
-  cup: 0.15,
   promotion: 0.5,
   relegation: -0.8,
   bottomSurvivor: -0.2,
@@ -101,28 +97,36 @@ export interface QualificationRule {
   readonly secondary: number;
   readonly tertiary: number;
   readonly cup: "primary" | "secondary" | null;
+  readonly cupSlots?: number;
+  readonly cupRunnerSecondary?: boolean;
+  readonly cupRunnerFallback?: boolean;
+  readonly cupEliteOnly?: boolean;
+  readonly leagueCup?: "primary" | "tertiary";
+  readonly leagueCupRunnerFallback?: boolean;
+  readonly cupPlayoff?: boolean;
 }
 
 const EUROPE_BIG: QualificationRule = { primary: 4, secondary: 1, tertiary: 1, cup: "secondary" };
-const SOUTH_SMALL: QualificationRule = { primary: 3, secondary: 3, tertiary: 0, cup: "primary" };
+const SOUTH_SMALL: QualificationRule = { primary: 3, secondary: 4, tertiary: 0, cup: "primary" };
+const SOUTH_TABLE: QualificationRule = { primary: 4, secondary: 4, tertiary: 0, cup: null };
 
 export const QUALIFICATION: Readonly<Record<CountryCode, QualificationRule>> = {
-  ENG: EUROPE_BIG,
+  ENG: { ...EUROPE_BIG, tertiary: 0, leagueCup: "tertiary" },
   ESP: EUROPE_BIG,
   ITA: EUROPE_BIG,
   GER: EUROPE_BIG,
-  FRA: { primary: 3, secondary: 1, tertiary: 1, cup: "secondary" },
-  BRA: { primary: 6, secondary: 6, tertiary: 0, cup: "primary" },
+  FRA: EUROPE_BIG,
+  BRA: { primary: 5, secondary: 6, tertiary: 0, cup: "primary", cupSlots: 2 },
   ARG: { primary: 5, secondary: 6, tertiary: 0, cup: "primary" },
-  BOL: SOUTH_SMALL,
-  CHI: SOUTH_SMALL,
-  COL: SOUTH_SMALL,
-  ECU: SOUTH_SMALL,
+  BOL: { ...SOUTH_SMALL, secondary: 3, cupRunnerSecondary: true },
+  CHI: { ...SOUTH_SMALL, primary: 2, secondary: 3, leagueCup: "primary", leagueCupRunnerFallback: true, cupEliteOnly: true, cupRunnerFallback: true, cupPlayoff: true },
+  COL: { primary: 4, secondary: 3, tertiary: 0, cup: "secondary", cupEliteOnly: true },
+  ECU: { ...SOUTH_SMALL, cupRunnerFallback: true, cupEliteOnly: true },
   PAR: SOUTH_SMALL,
-  PER: SOUTH_SMALL,
-  URU: SOUTH_SMALL,
-  VEN: SOUTH_SMALL,
-  MEX: { primary: 5, secondary: 0, tertiary: 0, cup: null },
+  PER: SOUTH_TABLE,
+  URU: SOUTH_TABLE,
+  VEN: SOUTH_TABLE,
+  MEX: { primary: 6, secondary: 0, tertiary: 0, cup: null },
   USA: { primary: 5, secondary: 0, tertiary: 0, cup: "primary" },
 };
 
@@ -131,3 +135,9 @@ export const PRIMARY_HISTORY = 4;
 
 /** Temporadas simuladas antes da carreira para encher a memória (sem acesso nem mudança de força). */
 export const WARM_UP_SEASONS = 4;
+
+/** A diferença para o nível do clube define o impacto; cada OVR adicional continua ajudando. */
+export function playerClubImpact(strength: number, ovr: number, participation: number): number {
+  const gap = Math.max(CLUB_IMPACT.below, Math.min(CLUB_IMPACT.eliteAbove, ovr - strength));
+  return participation * (CLUB_IMPACT.kappa * Math.min(CLUB_IMPACT.above, gap) + CLUB_IMPACT.eliteKappa * Math.max(0, gap - CLUB_IMPACT.above));
+}

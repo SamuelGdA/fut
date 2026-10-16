@@ -66,16 +66,16 @@ export const REFERENCE_MARKS = {
  * melhor do lote perto da marca, nunca dezenas acima.
  */
 export const PRESSURE = {
-  seasonGoals: { start: 62, scale: 6 },
+  seasonGoals: { start: 63, scale: 7 },
   seasonAssists: { start: 25, scale: 5 },
   seasonCleanSheets: { start: 24, scale: 6 },
-  careerGoals: { start: 860, scale: 55 },
-  nationalGoals: { start: 134, scale: 20 },
+  careerGoals: { start: 890, scale: 75 },
+  nationalGoals: { start: 136, scale: 22 },
   caps: { start: 208, scale: 18 },
   careerGames: { start: 1300, scale: 70 },
   ballonDor: { start: 4, scale: 3 },
   ballonStreak: { start: 2, scale: 2 },
-  goldenShoes: { start: 3, scale: 2.5 },
+  goldenShoes: { start: 3, scale: 3.5 },
   titles: { start: 36, scale: 4 },
   worldCups: { start: 2, scale: 3 },
   continental: { start: 4, scale: 2 },

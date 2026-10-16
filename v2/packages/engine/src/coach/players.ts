@@ -6,6 +6,7 @@ import { baseMarketValue } from "../player/value";
 import type { CoachPlayer, CoachTrait, FormLabel, Mood, Role, SeasonStats, SectorOrGk } from "./types";
 import { EVOLUTION, FINANCE, FORM, MOOD_OUTPUT, OUTPUT_LIMITS, POSITION_FIT, SATISFACTION, TRAIT_EFFECTS } from "./tuning";
 import { coachRng, unit } from "./util";
+import { traitFits } from "./eligibility";
 
 /**
  * O jogador do Técnico (spec 7 e 8). A tela mostra OVR, fase, estado de
@@ -120,7 +121,7 @@ export function createPlayer(seed: string, row: SquadPlayer, year: number): Coac
     longevity: Math.max(rng.normal(0, EVOLUTION.longevitySpread), age - declineStartOf(row.position) - EVOLUTION.veteranOverStart),
     form: 0,
     recentRatings: [],
-    traits: [...row.traits],
+    traits: row.traits.filter((trait) => traitFits(trait, [row.position, ...row.alternates])),
     club: row.club,
     joinedYear: year - (age > 22 ? rng.int(0, 3) : 0),
     wage: wageFor(row.ovr),

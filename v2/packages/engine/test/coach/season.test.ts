@@ -73,11 +73,13 @@ describe("temporada do Técnico (spec 9 a 13)", () => {
     }
   });
 
-  it("escalação respeita as regras: 11 titulares, no máximo 5 trocas", () => {
+  it("escalação tem no máximo 11 atletas distintos e 5 trocas, sem preencher vagas com atletas incompatíveis", () => {
     for (const fixture of coachFixtures(season)) {
       const log = fixture.result?.coach;
       if (!log) continue;
-      expect(log.lineup).toHaveLength(11);
+      expect(log.lineup.length).toBeLessThanOrEqual(11);
+      expect(new Set(log.lineup).size).toBe(log.lineup.length);
+      expect(log.lineup.length).toBeGreaterThanOrEqual(7);
       const subs = log.used.filter((entry) => entry.from > 0).length;
       expect(subs).toBeLessThanOrEqual(5);
     }
@@ -113,7 +115,8 @@ describe("temporada do Técnico (spec 9 a 13)", () => {
   it("depois da avaliação, a temporada seguinte começa com idade, ano e propostas novas", () => {
     const stay = season.offers.find((offer) => offer.stay);
     const choice = stay ? "stay" : { offer: season.offers[0]?.id ?? "" };
-    const next = must(season, { type: "decide", choice });
+    let next = must(season, { type: "decide", choice });
+    if (next.phase === "transferOffers") next = must(next,{type:"continueTransfers"});
     expect(next.year).toBe(season.year + 1);
     expect(next.seasonIndex).toBe(1);
     expect(next.phase).toBe("stage");
@@ -172,10 +175,12 @@ describe("rápido e lento contam o tempo do mesmo jeito (spec 5)", () => {
     slow = playStage(slow);
     expect(slow.lastReport?.final).toBe(false);
     slow = must(slow, { type: "continue" });
+    if (slow.phase === "transferOffers") slow = must(slow, { type: "continueTransfers" });
     expect(slow.phase).toBe("stage");
     expect(slow.half).toBe(1);
     slow = playStage(slow);
     slow = must(slow, { type: "continue" });
+    if (slow.phase === "transferOffers") slow = must(slow, { type: "continueTransfers" });
     expect(slow.phase).toBe("review");
     expect(slow.year).toBe(fast.year);
     const revenue = (career: CoachCareer) => career.stageReports.reduce((total, report) => total + report.finance.revenue, 0);

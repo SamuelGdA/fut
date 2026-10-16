@@ -1,3 +1,6 @@
+import { playerClubImpact } from "./tuning";
+import { performanceSpots } from "./qualification";
+import { clubTrophyProgress } from "./clubProgress";
 import {
   CLUBS,
   CONFEDERATIONS,
@@ -92,7 +95,7 @@ function clubEffective(context: Context, index: number, group?: BoostGroup): num
   const { impact } = context;
   if (index !== context.impactIndex || !impact) return base;
   const boost = group ? (impact.boosts?.[group] ?? 0) : 0;
-  return base + boost + CLUB_IMPACT.kappa * impact.participation * clamp(impact.ovr - base, CLUB_IMPACT.below, CLUB_IMPACT.above);
+  return base + boost + playerClubImpact(base, impact.ovr, impact.participation);
 }
 
 /** O grupo de força extra de cada competição pelo prefixo do id. */
@@ -105,7 +108,7 @@ function boostGroupOf(competition: string): BoostGroup | undefined {
 
 /** Força de quem disputa um torneio de clubes: clube dos dados ou campeão genérico. */
 function entrantEffective(context: Context, id: string, group?: BoostGroup): number {
-  const generic = GENERIC_CHAMPIONS.find((entry) => entry.id === id);
+  const generic = GENERIC_CHAMPIONS.find((entry) => entry.id === id || id.startsWith(`${entry.id}:`));
   if (generic) return generic.strength;
   return clubEffective(context, clubIndex(id), group);
 }
@@ -233,7 +236,8 @@ function simulateCups(context: Context): Record<string, KnockoutResult> {
       cups[`cup:${country}`] = knockout(context, `cup:${country}`, entrants, NOISE.cup, KNOCKOUT);
     }
     if (getCompetition(`leaguecup:${country}`)) {
-      cups[`leaguecup:${country}`] = knockout(context, `leaguecup:${country}`, entrants, NOISE.leagueCup, KNOCKOUT);
+      const leagueEntrants = country === "CHI" ? entrants.filter((id) => context.world.division[clubIndex(id)] === 1) : entrants;
+      cups[`leaguecup:${country}`] = knockout(context, `leaguecup:${country}`, leagueEntrants, NOISE.leagueCup, KNOCKOUT);
     }
   }
   return cups;
@@ -278,11 +282,25 @@ function simulateSuperCups(context: Context): Record<string, MatchResult> {
  * pela copa do ano anterior. Vaga repetida desce para o próximo da tabela; o
  * campeão da primária volta a ela mesmo sem vaga.
  */
-export function continentalEntrants(memory: SeasonMemory): Record<string, string[]> {
+export function continentalEntrants(memory: SeasonMemory, elite?: (club: string) => boolean, seed="qualifications"): Record<string, string[]> {
   const lists: Record<string, string[]> = {};
+  const holders = new Map<string, string>();
+  for (const confederation of CONFEDERATIONS) {
+    if (confederation === "UEFA" || confederation === "CONMEBOL") {
+      for (const tier of ["cont1", "cont2"]) {
+        const winner = memory.continental[`${tier}:${confederation}`]?.winner;
+        if (winner && hasClub(winner)) holders.set(winner, `cont1:${confederation}`);
+      }
+    }
+    if (confederation === "UEFA") {
+      const winner = memory.continental["cont3:UEFA"]?.winner;
+      if (winner && hasClub(winner) && !holders.has(winner)) holders.set(winner, "cont2:UEFA");
+    }
+  }
   const add = (competition: string, id: string) => {
     if (!getCompetition(competition)) return;
-    (lists[competition] ??= []).push(id);
+    const list = lists[competition] ??= [];
+    if (!list.includes(id)) list.push(id);
   };
 
   for (const country of PLAYABLE_COUNTRIES) {
@@ -292,7 +310,11 @@ export function continentalEntrants(memory: SeasonMemory): Record<string, string
     if (!rule || !first || !confederation) continue;
     const table = memory.tables[first.id] ?? [];
     const cupWinner = memory.cups[`cup:${country}`]?.winner;
+    const cupRunner = memory.cups[`cup:${country}`]?.runnerUp;
     const taken = new Set<string>();
+    // Na CONMEBOL os campeões continentais são vagas adicionais; não usam
+    // as indicações nacionais nem podem aparecer também na Sul-Americana.
+    if (confederation === "CONMEBOL") for (const id of holders.keys()) taken.add(id);
     let cursor = 0;
 
     const nextFromTable = (): string | undefined => {
@@ -309,28 +331,49 @@ export function continentalEntrants(memory: SeasonMemory): Record<string, string
         add(competition, id);
       }
     };
-    const takeCup = (competition: string) => {
-      const id = cupWinner && !taken.has(cupWinner) ? cupWinner : nextFromTable();
+    const allowed = (id: string | undefined): id is string => Boolean(id && !taken.has(id) && (!rule.cupEliteOnly || (elite ? elite(id) : table.includes(id))));
+    const takeCup = (competition: string, preferred = cupWinner, fallback?: string) => {
+      const id = allowed(preferred) ? preferred : allowed(fallback) ? fallback : nextFromTable();
       if (!id) return;
       taken.add(id);
       add(competition, id);
     };
 
     take(rule.primary, `cont1:${confederation}`);
-    if (rule.cup === "primary") takeCup(`cont1:${confederation}`);
+    for (const [id, destination] of holders) {
+      if (destination === `cont1:${confederation}`) taken.add(id);
+    }
+    if (confederation === "UEFA" && memory.performanceSpots?.includes(country)) take(1,`cont1:${confederation}`);
+    if (rule.leagueCup === "primary") takeCup(`cont1:${confederation}`,memory.cups[`leaguecup:${country}`]?.winner,rule.leagueCupRunnerFallback?memory.cups[`leaguecup:${country}`]?.runnerUp:undefined);
+    let playoffLoser:string|undefined;
+    if(rule.cupPlayoff) {
+      const leagueCandidate=nextFromTable();
+      if(leagueCandidate)taken.add(leagueCandidate);
+      const cupCandidate=allowed(cupWinner)?cupWinner:allowed(cupRunner)?cupRunner:nextFromTable();
+      if(leagueCandidate&&cupCandidate) {
+        const result=singleMatch(`qualify:${country}`,leagueCandidate,cupCandidate,(id)=>BASE_STRENGTH[clubIndex(id)] ?? 70,stream(seed,"world","qualification",memory.year,country));
+        add(`cont1:${confederation}`,result.winner);taken.add(cupCandidate);
+        playoffLoser=result.winner===leagueCandidate?cupCandidate:leagueCandidate;
+      } else if(leagueCandidate) add(`cont1:${confederation}`,leagueCandidate);
+    } else if (rule.cup === "primary") {
+      takeCup(`cont1:${confederation}`, cupWinner, rule.cupRunnerFallback ? cupRunner : undefined);
+      if (rule.cupSlots === 2) takeCup(`cont1:${confederation}`, cupRunner);
+    }
+    // Conference só promove à Europa quando o campeão não foi para a Champions.
+    for (const [id, destination] of holders) if (destination === `cont2:${confederation}` && !taken.has(id)) taken.add(id);
     take(rule.secondary, `cont2:${confederation}`);
     if (rule.cup === "secondary") takeCup(`cont2:${confederation}`);
+    if (rule.cupRunnerSecondary) takeCup(`cont2:${confederation}`, cupRunner);
+    if(playoffLoser)add(`cont2:${confederation}`,playoffLoser);
     take(rule.tertiary, `cont3:${confederation}`);
+    if (rule.leagueCup === "tertiary") takeCup(`cont3:${confederation}`, memory.cups[`leaguecup:${country}`]?.winner);
   }
 
-  for (const confederation of CONFEDERATIONS) {
-    const holder = memory.continental[`cont1:${confederation}`]?.winner;
-    const primary = lists[`cont1:${confederation}`];
-    if (!holder || !primary || primary.includes(holder) || !hasClub(holder)) continue;
-    primary.push(holder);
-    for (const lower of [`cont2:${confederation}`, `cont3:${confederation}`]) {
-      const list = lists[lower];
-      if (list) lists[lower] = list.filter((id) => id !== holder);
+  for (const [holder, destination] of holders) {
+    if (destination === "cont2:UEFA" && lists["cont1:UEFA"]?.includes(holder)) continue;
+    add(destination, holder);
+    for (const [competition, list] of Object.entries(lists)) {
+      if (competition !== destination) lists[competition] = list.filter((id) => id !== holder);
     }
   }
   return lists;
@@ -341,7 +384,7 @@ const CONTINENTAL_FORMAT = groupsFormat(32);
 
 function simulateContinental(context: Context): Record<string, KnockoutResult> {
   const results: Record<string, KnockoutResult> = {};
-  const entrants = continentalEntrants(context.world.memory);
+  const entrants = continentalEntrants(context.world.memory,(id)=>context.world.division[clubIndex(id)]===1,context.seed);
   for (const [competition, list] of Object.entries(entrants)) {
     if (list.length < 2) continue;
     results[competition] = knockout(context, competition, list, NOISE.continental, CONTINENTAL_FORMAT);
@@ -350,14 +393,14 @@ function simulateContinental(context: Context): Record<string, KnockoutResult> {
 }
 
 /**
- * Copa Intercontinental (GDD 8.10): o campeão europeu do ano anterior contra
+ * Copa Intercontinental (GDD 8.10): o campeão europeu da temporada contra
  * quem vencer o chaveamento dos campeões de fora da Europa deste ano.
  */
 function simulateIntercontinental(
   context: Context,
   continental: Readonly<Record<string, KnockoutResult>>,
 ): IntercontinentalResult | null {
-  const europe = context.world.memory.continental["cont1:UEFA"]?.winner;
+  const europe = continental["cont1:UEFA"]?.order[0];
   if (!europe || !hasClub(europe)) return null;
   const clubs = (["CONMEBOL", "CONCACAF"] as const).flatMap((confederation) => {
     const winner = continental[`cont1:${confederation}`]?.order[0];
@@ -399,7 +442,14 @@ function simulateClubWorldCup(context: Context): KnockoutResult | null {
     }
     entrants.push(...chosen);
   }
-  return knockout(context, "clubworldcup", entrants, NOISE.clubWorldCup, groupsFormat(entrants.length));
+  for (const [confederation,count] of [["AFC",4],["CAF",4],["OFC",1]] as const) {
+    for(let index=0;index<count;index+=1) entrants.push(`generic:${confederation}:${index}`);
+  }
+  // A sede futura é condensada na mesma indicação norte-americana do Técnico.
+  const host=[...(COUNTRY_CLUBS.get("USA") ?? [])].filter(index=>!entrants.includes(idOf(index)))
+    .sort((a,b)=>(context.world.strength[b] ?? 0)-(context.world.strength[a] ?? 0) || a-b)[0];
+  if(host!==undefined)entrants.push(idOf(host));
+  return knockout(context, "clubworldcup", entrants, NOISE.clubWorldCup, groupsFormat(32));
 }
 
 // ---------------------------------------------------------------- seleções
@@ -500,8 +550,12 @@ function evolveStrength(
   context: Context,
   results: Omit<SeasonResults, "promoted" | "relegated">,
   movement: Movement,
-): number[] {
+): { strength: number[]; titleDrought: number[] } {
   const success = new Array<number>(CLUB_COUNT).fill(0);
+  const titles = Array.from({ length: CLUB_COUNT }, () => [] as string[]);
+  const title = (id: string | undefined, competition: string) => {
+    if (id && hasClub(id)) titles[clubIndex(id)]?.push(competition);
+  };
   const bump = (id: string | undefined, amount: number) => {
     if (!id || !hasClub(id)) return;
     const index = clubIndex(id);
@@ -509,29 +563,37 @@ function evolveStrength(
   };
 
   for (const league of Object.values(results.leagues)) {
+    title(league.rows[0]?.club, league.competition);
     if (league.division !== 1) continue;
-    bump(league.rows[0]?.club, CLUB_DRIFT.leagueTitle);
     const relegated = new Set(movement.relegated[league.country] ?? []);
     for (const row of league.rows.slice(-CLUB_DRIFT.bottomPlaces)) {
       if (!relegated.has(row.club)) bump(row.club, CLUB_DRIFT.bottomSurvivor);
     }
   }
   for (const [competition, result] of Object.entries(results.continental)) {
-    if (competition.startsWith("cont1:")) bump(result.order[0], CLUB_DRIFT.primary);
-    if (competition.startsWith("cont2:")) bump(result.order[0], CLUB_DRIFT.secondary);
+    title(result.order[0], competition);
   }
   for (const [competition, result] of Object.entries(results.cups)) {
-    if (competition.startsWith("cup:")) bump(result.order[0], CLUB_DRIFT.cup);
+    title(result.order[0], competition);
   }
+  for (const [competition, result] of Object.entries(results.superCups)) title(result.winner, competition);
+  title(results.intercontinental?.final.winner, "intercontinental");
+  title(results.clubWorldCup?.order[0], "clubworldcup");
   for (const ids of Object.values(movement.promoted)) for (const id of ids) bump(id, CLUB_DRIFT.promotion);
   for (const ids of Object.values(movement.relegated)) for (const id of ids) bump(id, CLUB_DRIFT.relegation);
 
   const rng = rngFor(context, "drift");
-  return context.world.strength.map((current, index) => {
+  const titleDrought: number[] = [];
+  const strength = context.world.strength.map((current, index) => {
+    const progress = clubTrophyProgress(titles[index] ?? [], context.world.titleDrought?.[index]);
+    titleDrought.push(progress.drought);
     const base = BASE_STRENGTH[index] ?? current;
-    const next = current + CLUB_DRIFT.reversion * (base - current) + (success[index] ?? 0) + rng.normal(0, CLUB_DRIFT.noise);
+    const impact = context.impact;
+    const investment = impact && index === context.impactIndex ? CLUB_IMPACT.investment * impact.participation * clamp(impact.ovr - current, 0, CLUB_IMPACT.eliteAbove) : 0;
+    const next = current + CLUB_DRIFT.reversion * (base - current) + (success[index] ?? 0) + progress.growth + progress.penalty + investment + rng.normal(0, CLUB_DRIFT.noise);
     return clamp(next, Math.max(CLUB_DRIFT.min, base - 10), Math.min(CLUB_DRIFT.max, base + 10));
   });
+  return { strength, titleDrought };
 }
 
 function podium(order: readonly string[]): Podium | null {
@@ -558,7 +620,7 @@ function rememberSeason(year: number, previous: SeasonMemory, results: Omit<Seas
     if (!winner) continue;
     primaryChampions[confederation] = [winner, ...(previous.primaryChampions[confederation] ?? [])].slice(0, PRIMARY_HISTORY);
   }
-  return { year, tables, cups, continental, primaryChampions };
+  return { year,tables,cups,continental,primaryChampions,performanceSpots:performanceSpots(Object.fromEntries(Object.entries(results.continental).map(([id,result])=>[id,result.order]))) };
 }
 
 // ------------------------------------------------------------- a temporada
@@ -613,13 +675,14 @@ export function simulateWorldSeason(
   const movement: Movement = settle
     ? applyPromotion(context, leagues)
     : { division: [...world.division], promoted: {}, relegated: {} };
-  const strength = settle ? evolveStrength(context, played, movement) : [...world.strength];
+  const growth = settle ? evolveStrength(context, played, movement) : { strength: [...world.strength], titleDrought: [...(world.titleDrought ?? new Array<number>(CLUB_COUNT).fill(0))] };
 
   return {
     results: { ...played, promoted: movement.promoted, relegated: movement.relegated },
     next: {
       year: world.year + 1,
-      strength,
+      strength: growth.strength,
+      titleDrought: growth.titleDrought,
       division: movement.division,
       memory: rememberSeason(world.year, world.memory, played),
       awards: world.awards,

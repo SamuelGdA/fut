@@ -1,6 +1,6 @@
 import { clamp } from "../math";
 import type { Position } from "../player/positions";
-import { addPromise, applyEffects } from "./events";
+import { addPromise, applyEffects, canAffordEvent } from "./events";
 import { registered, registrationRule, viableSquad } from "./lineup";
 import { askingTerms, demandOf, pickBuyer, purchaseChance, roundPrice, saleOfferChance, transferPlayer } from "./market";
 import { ageOf, moodOf, valueOf, wageFor } from "./players";
@@ -20,9 +20,11 @@ import type {
   TalkResult,
   YouthCandidate,
 } from "./types";
-import { ACTIONS_PER_STAGE, DEVELOP, FINANCE, FUNDS, PROMISES, PURCHASE, SALE, YOUTH } from "./tuning";
+import { ACTIONS_PER_STAGE, DECISION_TRADEOFFS, DEVELOP, FINANCE, FUNDS, PROMISES, PURCHASE, SALE, YOUTH } from "./tuning";
 import { coachRng, stageKey } from "./util";
 import { invalidateSquads, squadOf } from "./world";
+import { traitFits, youthAlternates } from "./eligibility";
+import { isClubIdol } from "./legacy";
 
 /**
  * As sete ações (spec 6). Abrir e escolher alvos é livre; confirmar gasta uma
@@ -51,6 +53,7 @@ function requireStage(career: CoachCareer): void {
 export function canStartAction(career: CoachCareer, kind: ActionKind): { ok: boolean; reason: string | null } {
   if (career.phase !== "stage") return { ok: false, reason: "phase" };
   if (career.flow) return { ok: false, reason: "flowOpen" };
+  if ((kind === "buy" || kind === "sell") && career.savedFlows[kind]) return { ok: true, reason: null };
   if (career.actionsUsed >= ACTIONS_PER_STAGE) return { ok: false, reason: "noActions" };
   if (kind === "youth" && !career.youth.some((candidate) => !candidate.promoted)) return { ok: false, reason: "noCandidates" };
   if (kind === "funds" && (career.coach?.fundsGranted ?? 0) >= FUNDS.maxGrants) return { ok: false, reason: "fundsLimit" };
@@ -59,9 +62,14 @@ export function canStartAction(career: CoachCareer, kind: ActionKind): { ok: boo
 }
 
 /** Abre o processo (sem gastar ação). */
-export function openAction(career: CoachCareer, kind: ActionKind): void {
+export function openAction(career: CoachCareer, kind: ActionKind, fresh = false): void {
+  if (fresh && (kind === "buy" || kind === "sell")) {
+    if (career.actionsUsed >= ACTIONS_PER_STAGE) throw new ActionError("noActions");
+    delete career.savedFlows[kind];
+  }
   const check = canStartAction(career, kind);
   if (!check.ok) throw new ActionError(check.reason ?? "blocked");
+  if ((kind === "buy" || kind === "sell") && career.savedFlows[kind]) { career.flow = career.savedFlows[kind]!; return; }
   const number = career.actionsUsed + 1;
   const flows: Record<ActionKind, ActionFlow> = {
     sell: { kind: "sell", number, step: "select", offers: [] },
@@ -116,6 +124,7 @@ export function confirmAction(career: CoachCareer, payload: ConfirmPayload): voi
         if (!player || player.club !== coach.club) throw new ActionError("notInSquad");
         if (player.offeredAt === key) throw new ActionError("alreadyOffered");
       }
+      if (!viableSquad(squad.filter((player) => !ids.includes(player.id)))) throw new ActionError("blocked:squad");
       consume(career, "sell");
       const offers: SaleOffer[] = ids.map((id) => {
         const player = career.players[id] as CoachPlayer;
@@ -250,7 +259,7 @@ export function purchasePreview(career: CoachCareer, response: PurchaseResponse)
   if (response.status !== "pending") blockers.push("notPending");
   if (!player || player.club !== response.from) blockers.push("gone");
   if (budgetAfter < 0) blockers.push("budget");
-  if (cashAfter < -FINANCE.debtLimit * (club?.revenue ?? 0)) blockers.push("cash");
+
   if (wageBillAfter > wageCap) blockers.push("wages");
   if (player && club) {
     const squad = squadOf(career, coach.club);
@@ -345,15 +354,13 @@ export function respondAction(career: CoachCareer, itemId: string, decision: str
   }
 }
 
-/** Conclui o processo: o que ficou pendente é recusado. */
+/** Negociações ficam guardadas até o fim da etapa, para vender antes de comprar. */
 export function closeAction(career: CoachCareer): void {
   const flow = career.flow;
   if (!flow) return;
   if (flow.step === "select") throw new ActionError("notConfirmed");
-  if (flow.kind === "sell") for (const offer of flow.offers) if (offer.status === "pending") offer.status = "declined";
-  if (flow.kind === "buy") for (const response of flow.responses) if (response.status === "pending") response.status = "declined";
+  if (flow.kind === "buy" || flow.kind === "sell") career.savedFlows[flow.kind] = flow;
   if (flow.kind === "funds" && flow.response.status === "pending") flow.response.status = "declined";
-  if (flow.kind === "locker") for (const talk of flow.talks) if (!talk.chosen) resolveTalk(career, talk, talk.options[0] ?? "", flow.number);
   career.flow = null;
 }
 
@@ -375,8 +382,7 @@ function removeFromTactics(career: CoachCareer, playerId: string): void {
 export function saleReactions(career: CoachCareer, player: CoachPlayer): void {
   const coach = career.coach;
   if (!coach) return;
-  const legacy = career.legacy[player.id];
-  const idol = (legacy?.apps ?? 0) >= 60 || (player.youthClub === coach.club && (legacy?.apps ?? 0) >= 30);
+  const idol = isClubIdol(career, player);
   const push = (bar: "board" | "fans" | "squad", delta: number, reason: string) => {
     if (bar === "board") coach.board = clamp(coach.board + delta, 0, 100);
     if (bar === "fans") coach.fans = clamp(coach.fans + delta, 0, 100);
@@ -449,14 +455,17 @@ export function generateYouth(career: CoachCareer): YouthCandidate[] {
     let level = tiers.indexOf(tier.tier);
     if (rng.chance(YOUTH.descriptionNoise)) level = clamp(level + (rng.chance(0.5) ? 1 : -1), 0, 3);
     const position = rng.weighted(YOUTH_POSITIONS);
+    const alternates = youthAlternates(position, rng);
+    const traits = YOUTH_TRAITS.filter((trait) => traitFits(trait, [position, ...alternates]));
     const foreign = rng.chance(0.08);
     candidates.push({
       id: `y:${career.year}:${career.half}:${coach.club}:${index}`,
       position,
+      alternates,
       birthYear: career.year - age,
       nationality: foreign ? rng.pick(["ARG", "URU", "COL", "POR", "ESP", "FRA", "NGA", "GHA"]) : club.country,
       description: descriptions[level] ?? "steady",
-      trait: tier.tier === "good" || tier.tier === "star" ? (rng.chance(0.3) ? rng.pick(YOUTH_TRAITS) : null) : rng.chance(0.06) ? rng.pick(YOUTH_TRAITS) : null,
+      trait: traits.length && rng.chance(tier.tier === "good" || tier.tier === "star" ? 0.3 : 0.06) ? rng.pick(traits) : null,
       fee: roundPrice(starterValue * YOUTH.signingShare * rng.real(0.6, 1.4)),
       wage: Math.max(1_500, Math.round((wageFor(Math.round(anchor)) * YOUTH.wageShare * rng.real(0.6, 1.2)) / 500) * 500),
       hiddenOvr: clamp(ovr, 40, 85),
@@ -478,7 +487,7 @@ function promoteYouth(career: CoachCareer, candidate: YouthCandidate): void {
     name: "",
     nationality: candidate.nationality,
     position: candidate.position,
-    alternates: [],
+    alternates: candidate.alternates ?? [],
     birthYear: candidate.birthYear,
     origin: "y",
     level: candidate.hiddenOvr + rng.real(-0.4, 0.4),
@@ -567,7 +576,8 @@ function talkWith(career: CoachCareer, player: CoachPlayer, number: number): Tal
   // Às vezes, só de conversar o jogador já melhora.
   const immediate = concern === "content" ? 3 : rng.chance(0.5) ? rng.int(2, 5) : 0;
   player.satisfaction = clamp(player.satisfaction + immediate, 0, 100);
-  return { id: `${player.id}:talk`, player: player.id, concern, immediate, options: TALK_OPTIONS[concern], chosen: null, outcome: null };
+  const options = TALK_OPTIONS[concern].filter((id) => career.setup.mode === "slow" && career.half === 0 || (id !== "promiseStarts" && id !== "promiseMinutes"));
+  return { id: `${player.id}:talk`, player: player.id, concern, immediate, options, chosen: null, outcome: null };
 }
 
 interface TalkEffect {
@@ -588,16 +598,17 @@ export const TALK_EFFECTS: Readonly<Record<string, TalkEffect>> = {
   reassure: { chance: null, success: [{ type: "satisfaction", target: "subject", amount: 3 }], failure: [] },
   release: { chance: null, success: [{ type: "satisfaction", target: "subject", amount: -6 }], failure: [], releasePromise: true },
   confidence: { chance: 0.65, success: [{ type: "form", target: "subject", amount: 1 }, { type: "satisfaction", target: "subject", amount: 2 }], failure: [{ type: "satisfaction", target: "subject", amount: -2 }] },
-  rest: { chance: null, success: [{ type: "satisfaction", target: "subject", amount: 2 }, { type: "form", target: "subject", amount: 0.5 }], failure: [] },
+  rest: { chance: DECISION_TRADEOFFS.restChance, success: [{ type: "satisfaction", target: "subject", amount: 2 }, { type: "form", target: "subject", amount: 0.5 }], failure: [{ type: "form", target: "subject", amount: -0.5 }, { type: "satisfaction", target: "subject", amount: -2 }] },
   explain: { chance: 0.6, success: [{ type: "satisfaction", target: "subject", amount: 4 }], failure: [{ type: "satisfaction", target: "subject", amount: -4 }], acceptBench: true },
-  family: { chance: null, success: [{ type: "satisfaction", target: "subject", amount: 10 }, { type: "cash", amount: -20_000 }], failure: [] },
-  praise: { chance: null, success: [{ type: "satisfaction", target: "subject", amount: 4 }], failure: [] },
+  family: { chance: null, success: [{ type: "satisfaction", target: "subject", amount: 10 }, { type: "budget", amount: -20_000 }], failure: [] },
+  praise: { chance: DECISION_TRADEOFFS.praiseChance, success: [{ type: "satisfaction", target: "subject", amount: 4 }], failure: [{ type: "satisfaction", target: "subject", amount: -2 }] },
   challenge: { chance: 0.6, success: [{ type: "form", target: "subject", amount: 1 }], failure: [{ type: "satisfaction", target: "subject", amount: -3 }] },
 };
 
 function resolveTalk(career: CoachCareer, talk: TalkResult, decision: string, number: number): void {
   const effect = TALK_EFFECTS[decision];
   if (!effect) return;
+  if (!canAffordEvent(career, { id: decision, chance: effect.chance, success: effect.success, failure: effect.failure })) throw new ActionError("budget");
   const rng = coachRng(career.setup.seed, "talkOutcome", stageKey(career.year, career.half), number, talk.player, decision);
   const success = effect.chance === null || rng.next() < effect.chance;
   talk.chosen = decision;
@@ -619,6 +630,7 @@ function meeting(career: CoachCareer, choice: "support" | "demand", number: numb
   const rng = coachRng(career.setup.seed, "meeting", stageKey(career.year, career.half), number);
   const struggling = coach.fans < 50 || coach.board < 50;
   if (choice === "support") {
+    applyEffects(career, [{ type: "board", amount: DECISION_TRADEOFFS.supportBoard }], null, "talk");
     for (const player of squad) {
       const extra = moodOf(player.satisfaction) === "unhappy" ? 2 : 0;
       player.satisfaction = clamp(player.satisfaction + (struggling ? 4 : 2) + extra, 0, 100);
@@ -659,7 +671,8 @@ export function fundsPreview(career: CoachCareer): FundsPreview {
   const club = career.clubs[coach.club];
   const sigmoid = (x: number) => 1 / (1 + Math.exp(-x));
   const trust = sigmoid((coach.board - 55) / 8);
-  const health = sigmoid(((club?.cash ?? 0) / Math.max(1, club?.revenue ?? 1) + 0.05) / 0.08);
+  const wageRoom = 1 - wageBill(career) / Math.max(1, (club?.revenue ?? 0) * FINANCE.wageCap / 12);
+  const health = sigmoid(wageRoom / 0.15);
   const repeat = FUNDS.repeatFactor ** coach.fundsRequests;
   const large = 0.45 * trust * health * repeat;
   const small = Math.min(1 - large, 0.55 * (0.5 + 0.5 * trust) * (0.4 + 0.6 * health) * repeat);

@@ -1,12 +1,12 @@
+import { SeasonHonours } from "./SeasonHonours";
 import { canRetire, type CoachCareer, type SeasonHistory } from "@craque/engine/coach";
-import { Flag as FlagIcon, Trophy } from "lucide-react";
+import { Flag as FlagIcon } from "lucide-react";
 import { useTecnicoT } from "../../i18n/tecnico/useTecnicoT";
 import { feedback } from "../../services/feedback";
 import { Button } from "../../ui/Button";
 import { SectionRule } from "../../ui/Panel";
 import { Chip } from "../../ui/Signals";
 import { ClubTag } from "./shared";
-import { competitionName } from "./text";
 
 export function SeasonLine({ entry }: { entry: SeasonHistory }) {
   const t = useTecnicoT();
@@ -26,16 +26,7 @@ export function SeasonLine({ entry }: { entry: SeasonHistory }) {
           {entry.relegated ? <Chip tone="bad" size="sm">{tt("review.relegated")}</Chip> : null}
           {entry.dismissed ? <Chip tone="bad" size="sm">{tt("history.dismissed")}</Chip> : null}
         </span>
-        {entry.titles.length > 0 ? (
-          <span className="mt-0.5 flex flex-wrap gap-1">
-            {entry.titles.map((title) => (
-              <Chip key={title} tone="glory" size="sm">
-                <Trophy size={11} aria-hidden="true" />
-                {competitionName(title, t.locale)}
-              </Chip>
-            ))}
-          </span>
-        ) : null}
+        <SeasonHonours titles={entry.titles} awards={entry.awards ?? []} year={entry.year} compact />
       </span>
     </li>
   );

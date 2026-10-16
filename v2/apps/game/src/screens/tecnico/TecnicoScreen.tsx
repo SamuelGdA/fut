@@ -1,6 +1,8 @@
+import { StatisticsView } from "./StatisticsView";
+import { d66 } from "../../i18n/tecnico/d66";
 import { Tabs as BaseTabs } from "@base-ui/react/tabs";
 import type { ActionKind, CoachCareer, CoachCommand } from "@craque/engine/coach";
-import { ClipboardList, Landmark, LayoutGrid, MoreHorizontal, Users } from "lucide-react";
+import { BarChart3, ClipboardList, Landmark, LayoutGrid, MoreHorizontal, Users } from "lucide-react";
 import { type CSSProperties, type ReactNode, useEffect, useState } from "react";
 import { type Screen, useNavigation } from "../../app/navigation";
 import { clubStyle } from "../../features/career/clubColors";
@@ -11,6 +13,7 @@ import { feedback } from "../../services/feedback";
 import { Loading } from "../../ui/Loading";
 import { ConfirmDialog } from "../../ui/Overlays";
 import { notify } from "../../ui/toast/notify";
+import { m, useReducedMotion } from "motion/react";
 import { ClubView } from "./ClubView";
 import { CompetitionsView } from "./CompetitionsView";
 import { EventView, MatchEventView } from "./EventViews";
@@ -20,44 +23,54 @@ import { OfferCard } from "./Offers";
 import { ProcessSheet } from "./Process";
 import { ResultsView } from "./Results";
 import { ReviewView } from "./Review";
-import { type FreeView, StageView } from "./Stage";
+import { StageView } from "./Stage";
 import { SquadView } from "./SquadView";
 import { TeamView } from "./TeamView";
+import { IncomingTransfersView } from "./IncomingTransfersView";
 
-const TABS = ["stage", "squad", "team", "club", "more"] as const;
+const TABS = ["stage", "squad", "team", "club", "statistics", "more"] as const;
 type Tab = (typeof TABS)[number];
-const TAB_ICONS = { stage: LayoutGrid, squad: Users, team: ClipboardList, club: Landmark, more: MoreHorizontal } as const;
-const EXPLORE = ["squad", "team", "competitions", "history"] as const;
+const TAB_ICONS = { stage: LayoutGrid, squad: Users, team: ClipboardList, club: Landmark, statistics:BarChart3, more: MoreHorizontal } as const;
+const EXPLORE = ["team", "squad", "club", "competitions", "statistics", "history"] as const;
 type Explore = (typeof EXPLORE)[number];
 
 /**
  * O Técnico (GDD 42): a tela muda pela fase do motor, não pela rota.
  * Propostas, etapa (ações), evento, decisão no jogo, resultados e avaliação.
  * No celular, abas embaixo (Etapa, Elenco, Time, Clube, Mais) e a etapa cabe
- * sem rolar; no PC, o clube à esquerda, a etapa no meio e a exploração à
- * direita. Nada é salvo (D51): sair pede confirmação, e recarregar ou fechar
- * a página avisa que a carreira acaba.
+ * sem rolar; no PC, a prancheta ampla e a consulta à direita. Objetivo e
+ * relações ficam no cabeçalho. Sair pede confirmação; a última carreira em
+ * andamento pode ser retomada pelo hub (D61).
  */
 export function TecnicoScreen() {
-  const { tt } = useTecnicoT();
+  const { tt,locale } = useTecnicoT();
   const go = useNavigation((state) => state.go);
   const setGuard = useNavigation((state) => state.setGuard);
   const career = useTecnico((state) => state.career);
+  const focusPlayer = useTecnico((state) => state.focusPlayer);
+  const [restoring, setRestoring] = useState(career === null);
   const busy = useTecnico((state) => state.busy);
   const desktop = useMediaQuery("(min-width: 1024px)");
-  const [tab, setTab] = useState<Tab>("stage");
-  const [explore, setExplore] = useState<Explore>("squad");
+  const reduced = useReducedMotion() === true;
+  const [tab, setTab] = useState<Tab>(focusPlayer ? "team" : "stage");
+  const [explore, setExplore] = useState<Explore>(focusPlayer ? "team" : "squad");
   const [leaveTarget, setLeaveTarget] = useState<Screen | null>(null);
   const [confirmRetire, setConfirmRetire] = useState(false);
   // A folha do processo fica aberta enquanto houver processo, salvo se o
   // jogador a esconder (as respostas continuam no motor até concluir).
   const [hiddenFlow, setHiddenFlow] = useState<string | null>(null);
+  useEffect(() => useTecnico.subscribe((next, previous) => {
+    if (next.focusPlayer && next.focusPlayer !== previous.focusPlayer) { setTab("team"); setExplore("team"); }
+  }), []);
 
   // Sem carreira em memória (recarregou, ou chegou direto): volta ao hub.
   useEffect(() => {
-    if (!career) go("hub", { replace: true, force: true });
-    else if (career.phase === "ended") go("tecnicoLegacy", { replace: true, force: true });
-  }, [career, go]);
+    void useTecnico.getState().hydrate().finally(() => setRestoring(false));
+  }, []);
+  useEffect(() => {
+    if (!career && !restoring && !busy) go("hub", { replace: true, force: true });
+    else if (career?.phase === "ended") go("tecnicoLegacy", { replace: true, force: true });
+  }, [career, go, restoring, busy]);
 
   // Sair pede confirmação; o legado passa direto.
   useEffect(() => {
@@ -69,15 +82,7 @@ export function TecnicoScreen() {
     return () => setGuard(null);
   }, [setGuard]);
 
-  // Recarregar ou fechar a página encerra a carreira: o navegador avisa.
-  useEffect(() => {
-    const warn = (event: BeforeUnloadEvent) => {
-      event.preventDefault();
-      event.returnValue = "";
-    };
-    window.addEventListener("beforeunload", warn);
-    return () => window.removeEventListener("beforeunload", warn);
-  }, []);
+  // Retomada usa o diário local; não há aviso de encerramento ao recarregar.
 
   const flowKey = career?.flow ? `${career.flow.kind}:${career.flow.number}` : null;
   const sheetOpen = flowKey !== null && hiddenFlow !== flowKey;
@@ -89,7 +94,7 @@ export function TecnicoScreen() {
     const error = useTecnico.getState().run(command);
     if (error) {
       feedback("back");
-      notify({ tone: "bad", title: tt("errors.generic") });
+      notify({ tone: "bad", title: error === "emptyLineup" ? d66(locale,"emptySlot") : tt("errors.generic") });
     }
     return error;
   };
@@ -98,7 +103,7 @@ export function TecnicoScreen() {
       .getState()
       .runHeavy(command)
       .then((error) => {
-        if (error) notify({ tone: "bad", title: error === "busy" ? tt("errors.busy") : tt("errors.generic") });
+        if (error) notify({ tone: "bad", title: error === "busy" ? tt("errors.busy") : error === "emptyLineup" ? d66(locale,"emptySlot") : tt("errors.generic") });
       });
   };
 
@@ -150,19 +155,11 @@ export function TecnicoScreen() {
   const openAction = (kind: ActionKind) => {
     if (!run({ type: "openAction", kind })) setHiddenFlow(null);
   };
-  const openFree = (view: FreeView) => {
-    feedback("select");
-    if (desktop) {
-      if (view === "squad" || view === "team") setExplore(view);
-      return;
-    }
-    setTab(view);
-  };
 
-  const phase: ReactNode = (() => {
+  const phaseContent: ReactNode = (() => {
     switch (career.phase) {
       case "stage":
-        return <StageView career={career} onOpen={openAction} onAdvance={() => run({ type: "advance" })} onFree={openFree} />;
+        return <StageView career={career} onOpen={openAction} onAdvance={() => { if (!run({ type: "advance" })) { const next = useTecnico.getState().career; if (next?.phase === "event" && next.matchEventArmed) runHeavy({ type: "simulate" }); } }} />;
       case "event":
         return (
           <EventView
@@ -176,12 +173,16 @@ export function TecnicoScreen() {
         return <MatchEventView career={career} busy={busy} onChoose={(option) => runHeavy({ type: "chooseMatchEvent", option })} />;
       case "results":
         return <ResultsView career={career} onContinue={() => run({ type: "continue" })} />;
+      case "transferOffers":
+        return <IncomingTransfersView career={career} run={run} />;
       case "review":
         return <ReviewView career={career} busy={busy} onDecide={(choice) => runHeavy({ type: "decide", choice })} />;
       default:
         return null;
     }
   })();
+  // A fase anterior sai imediatamente: nenhum controle antigo continua clicável.
+  const phase = <m.div key={career.phase} className="tec-phase" initial={reduced ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: reduced ? 0 : 0.16 }}>{phaseContent}</m.div>;
 
   const openFlowBanner =
     career.flow && !sheetOpen ? (
@@ -205,13 +206,7 @@ export function TecnicoScreen() {
       />
       {desktop ? (
         <main className="career-body">
-          <div className="tecnico-columns">
-            {/* Rola sozinha: entra no Tab para quem usa teclado (os painéis das abas já entram). */}
-            <aside className="scroll-panel tec-side" aria-label={tt("club.title")} tabIndex={0}>
-              <div className="scroll-panel-inner">
-                <ClubView career={career} />
-              </div>
-            </aside>
+          <div className="tecnico-columns" data-phase={career.phase}>
             <div className="fit-panel loop-panel tec-center">
               {openFlowBanner}
               {phase}
@@ -230,7 +225,7 @@ export function TecnicoScreen() {
               <BaseTabs.List className="explore-tabs" aria-label={tt("tabs.label")}>
                 {EXPLORE.map((value) => (
                   <BaseTabs.Tab key={value} value={value} className="explore-tab">
-                    {tt(`tabs.${value}`)}
+                    {value==="statistics"?d66(locale,"statistics"):tt(`tabs.${value}`)}
                   </BaseTabs.Tab>
                 ))}
               </BaseTabs.List>
@@ -249,6 +244,8 @@ export function TecnicoScreen() {
                   <CompetitionsView career={career} />
                 </div>
               </BaseTabs.Panel>
+              <BaseTabs.Panel value="club" className="scroll-panel"><div className="scroll-panel-inner"><ClubView career={career} /></div></BaseTabs.Panel>
+              <BaseTabs.Panel value="statistics" className="scroll-panel"><div className="scroll-panel-inner"><StatisticsView career={career} /></div></BaseTabs.Panel>
               <BaseTabs.Panel value="history" className="scroll-panel">
                 <div className="scroll-panel-inner">
                   <HistoryView career={career} onRetire={() => setConfirmRetire(true)} />
@@ -294,6 +291,7 @@ export function TecnicoScreen() {
                 <HistoryView career={career} onRetire={() => setConfirmRetire(true)} />
               </div>
             </BaseTabs.Panel>
+            <BaseTabs.Panel value="statistics" className="scroll-panel"><div className="scroll-panel-inner"><StatisticsView career={career} /></div></BaseTabs.Panel>
           </main>
           <BaseTabs.List className="tabbar" data-count={TABS.length} aria-label={tt("tabs.label")}>
             {TABS.map((value) => {
@@ -301,7 +299,7 @@ export function TecnicoScreen() {
               return (
                 <BaseTabs.Tab key={value} value={value} className="tabbar-tab">
                   <Icon size={20} aria-hidden="true" />
-                  <span className="tabbar-label">{tt(`tabs.${value}`)}</span>
+                  <span className="tabbar-label">{value === "statistics" ? d66(locale,"statistics") : tt(`tabs.${value}`)}</span>
                 </BaseTabs.Tab>
               );
             })}

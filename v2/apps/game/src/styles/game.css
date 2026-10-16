@@ -1944,7 +1944,7 @@
     padding: 1px 5px;
     border-radius: 3px;
     background: var(--glory);
-    color: #16130a;
+    color: var(--on-accent);
     font-family: var(--font-display);
     font-size: 14px;
     font-weight: 900;
@@ -2291,3 +2291,34 @@
     .result-layer .result-body, .result-layer .result-chips { display: none; }
   }
 }
+
+@layer components { .showcase-cell { display: flex; min-width: 0; } .showcase-cell > .showcase-item { width: 100%; flex: 1; cursor: pointer; } }
+
+@layer components {
+  .showcase-label[data-competition] { display: block; width: 100%; }
+  .showcase-label[data-competition] > span { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .showcase-competition { color: var(--muted); font-size: 10.5px; }
+}
+
+/* D63: os detalhes longos não comprimem a exploração da carreira. */
+.career-right > .play { flex-shrink: 1; max-height: 46%; overflow-y: auto; }
+.career-right .career-explore { min-height: 32%; }
+.play-season-details { font-size: 11px; color: var(--muted); }
+.play-season-details > summary { cursor: pointer; padding: 4px 0; }
+.play-season-details[open] .play-notes { display: flex; margin-top: 5px; }
+.play-batch-honours { display: grid; gap: 5px; }
+.play-batch-honours > button { display: flex; align-items: center; gap: 7px; font-size: 11px; text-align: left; color: var(--glory); border: 1px solid var(--line); border-radius: 5px; padding: 4px 7px; }
+.play-batch-honours > button > span:first-of-type { display: flex; flex-shrink: 0; }
+.play-batch-honours > button > span:last-child { min-width: 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+/* Coleções completas: a faixa cresce por linhas, sem comprimir o histórico. */
+.play-honours-art { flex-wrap: wrap; gap: 5px; }
+.play-stats { grid-template-columns: repeat(var(--play-cols, 4), minmax(0, 1fr)); }
+.play-stats .eyebrow { overflow-wrap: anywhere; }
+.play-batch-honours > div { display: flex; align-items: center; gap: 7px; border: 1px solid var(--line); border-radius: 5px; padding: 4px 7px; }
+.play-batch-honours > div > button { font-weight: 800; color: var(--glory); }
+.honour-token { display: inline-flex; align-items: center; justify-content: center; padding: 2px; border: 0; border-radius: 4px; background: transparent; flex-shrink: 0; }
+.honour-token:hover, .honour-token:focus-visible { background: var(--panel-2); outline: 1px solid var(--glory); }
+
+.play-honours-art {display:flex;align-items:flex-end;min-width:0;}
+@media(max-width:767px) { .play-batch-honours {display:flex;flex-wrap:wrap;gap:4px;} .play-batch-honours>div {padding:3px 5px;gap:4px;} .play-batch-honours .honour-token img {height:23px;width:auto;} }

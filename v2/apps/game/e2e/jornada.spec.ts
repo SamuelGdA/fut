@@ -1,4 +1,6 @@
 import { expect, test } from "@playwright/test";
+import { deflateRawSync } from "node:zlib";
+import { readFile } from "node:fs/promises";
 import { abrir, abrirCraque, encerrar, entrarNoCraque, esperarQueCaiba, idade, jogarTurno, jogoRapido, OPCOES } from "./apoio";
 
 /**
@@ -80,3 +82,50 @@ test("o link da carreira abre o resumo só de leitura, sem tocar no save de quem
   expect(await reader.evaluate(() => window.localStorage.getItem("craque.v2.save"))).toBeNull();
   await other.close();
 });
+
+for (const theme of ["light", "dark"] as const) {
+  test(`D66: coleção grande cabe na prévia e no PNG, ${theme}`, async ({ page }, info) => {
+    // Link público de replay, o mesmo contrato de Copiar link; sem injetar estado na página.
+    // Fixture real: autoplay ambicioso, semente lab-fim-ambitious-7 no motor m13.
+    const replay=await readFile(new URL("./fixtures/colecao-m13.json",import.meta.url));
+    const token=deflateRawSync(replay).toString("base64url");
+    await abrir(page,{theme},`/#c=z${token}`);
+    await page.getByRole("button",{name:"Pôster",exact:true}).click();
+    expect(await page.locator(".poster-showcase li").count()).toBeGreaterThan(14);
+    expect(await page.locator(".poster").evaluate(node=>node.scrollHeight)).toBeGreaterThan(1350);
+    await expect.poll(()=>page.locator(".poster-frame").evaluate(frame=>Math.abs(frame.getBoundingClientRect().height-frame.querySelector(".poster")!.getBoundingClientRect().height))).toBeLessThanOrEqual(1);
+    if(info.project.name==="desktop" && theme==="light") {
+      const downloading=page.waitForEvent("download");
+      await page.getByRole("button",{name:"Baixar pôster",exact:true}).click();
+      const path=info.outputPath("colecao-completa.png");
+      await (await downloading).saveAs(path);
+      const png=await readFile(path);
+      expect(png.readUInt32BE(16)).toBe(1080);
+      expect(png.readUInt32BE(20)).toBeGreaterThan(1350);
+    }
+  });
+}
+
+for (const theme of ["light", "dark"] as const) {
+  test(`D67: troféu revela nome sem clique persistente, ${theme}`, async ({ page }, info) => {
+    test.skip(info.project.name === "celular", "O comportamento específico de hover é de mouse; o nome continua acessível por rótulo.");
+    const replay = await readFile(new URL("./fixtures/colecao-m13.json", import.meta.url));
+    const token = deflateRawSync(replay).toString("base64url");
+    await abrir(page, { theme }, `/#c=z${token}`);
+    await page.getByRole("link", { name: "Caminho", exact: true }).click();
+    const trophy = page.locator(".honour-token").first();
+    await trophy.scrollIntoViewIfNeeded();
+    await expect(trophy).not.toHaveRole("button");
+    const title = await trophy.getAttribute("aria-label");
+    expect(title).toBeTruthy();
+    await trophy.hover();
+    await expect(page.getByRole("tooltip")).toHaveText(title!);
+    await trophy.click();
+    await page.getByRole("heading", { name: "Linha do tempo", exact: true }).hover();
+    await expect(page.getByRole("tooltip")).toHaveCount(0);
+    await trophy.hover();
+    await expect(page.getByRole("tooltip")).toHaveText(title!);
+    await page.keyboard.press("Escape");
+    await expect(page.getByRole("tooltip")).toHaveCount(0);
+  });
+}

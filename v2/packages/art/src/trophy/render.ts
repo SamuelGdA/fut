@@ -21,7 +21,9 @@ export type TrophyShape =
   | "salver"
   | "shield"
   | "bowl"
-  | "amphora";
+  | "amphora"
+  | "boot"
+  | "football";
 
 export interface TrophySpec {
   shape: TrophyShape;
@@ -131,6 +133,23 @@ function body(id: string, shape: TrophyShape): string {
         `<rect x="52" y="102" width="16" height="32" fill="${d}"/>`,
         `<path d="M36 134h48l6 34H30z" fill="${b}"/>`,
         `<rect x="42" y="18" width="36" height="9" rx="3" fill="${d}"/>`,
+      ].join("");
+    case "boot":
+      return [
+        `<path d="M22 46l31 7 5 41 24 14c17 4 25 15 21 27H17c-2-12 7-22 15-29z" fill="${b}" stroke="${d}" stroke-width="2"/>`,
+        `<path d="M17 135h87v10H16zM28 146h9v8h-9zm24 0h9v8h-9zm28 0h9v8h-9z" fill="${d}"/>`,
+        `<path d="M48 84l16 6m-13 4l18 7m-13 3l20 8" stroke="#fff4d0" stroke-width="3" stroke-linecap="round"/>`,
+        `<path d="M35 52l8 4-3 40-8 8" fill="none" stroke="${d}" stroke-width="4"/>`,
+        `<path d="M50 154h20v14H50z" fill="${d}"/>`,
+      ].join("");
+    case "football":
+      return [
+        `<circle cx="60" cy="68" r="40" fill="${b}" stroke="${d}" stroke-width="2"/>`,
+        `<path d="M60 48l20 15-8 23H48l-8-23z" fill="${d}"/>`,
+        `<path d="M60 48V29m20 34l18-5M72 86l11 17M48 86l-12 16M40 63l-18-5" fill="none" stroke="${d}" stroke-width="3"/>`,
+        `<path d="M27 47l13-13m-18 42l7 17m43-61l16 9" stroke="#fff8da" stroke-width="3" fill="none"/>`,
+        `<path d="M48 106h24l9 49H39z" fill="${b}"/>`,
+        `<rect x="31" y="153" width="58" height="15" rx="4" fill="${d}"/>`,
       ].join("");
   }
 }

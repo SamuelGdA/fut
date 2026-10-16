@@ -1,90 +1,56 @@
 import { describe, expect, it } from "vitest";
-import { type CoachCareer, cloneCareer, squadOf } from "../../src/coach";
-import { addPromise, resolveEventChoice } from "../../src/coach/events";
-import { PROMISES } from "../../src/coach/tuning";
+import { cloneCareer, squadOf, FORMATION_SLOTS } from "../../src/coach";
+import { addPromise } from "../../src/coach/events";
+import { promiseProgress } from "../../src/coach/promises";
 import { must, playStage, started } from "./helpers";
 
-describe("promessas (spec 12): registradas com prazo e cobradas sozinhas", () => {
-  const base = started("teste-promessas");
-  const coach = base.coach;
-  if (!coach) throw new Error("sem clube");
-  // Um reserva saudável de linha recebe promessa de titularidade em metade dos jogos.
-  const reserve = squadOf(base, coach.club).filter((player) => player.position !== "gk" && !player.injury)[16];
-  if (!reserve) throw new Error("sem reserva");
-  const promised: CoachCareer = cloneCareer(base);
-  addPromise(promised, "starts", reserve.id, 0.5, "talk");
-  addPromise(promised, "keep", reserve.id, 1, "talk");
-
-  it("a promessa fica guardada com prazo e números de partida", () => {
-    const starts = promised.promises.find((promise) => promise.kind === "starts");
-    expect(starts?.status).toBe("active");
-    expect(starts?.until).toBeGreaterThan(promised.day);
-    expect(starts?.baseline.starts).toBe(0);
+describe("D64: promessas conferidas na escalação do segundo turno",()=>{
+  const base=started("d64-promises","slow");
+  const reserve=squadOf(base,base.coach!.club).find(player=>!base.coach!.tactics.lineup.includes(player.id)&&FORMATION_SLOTS[base.coach!.tactics.formation].some(slot=>player.position===slot||player.alternates.includes(slot)))!;
+  function promised(){
+    const career=cloneCareer(base);
+    addPromise(career,"starts",reserve.id,1,"talk");
+    return career;
+  }
+  function secondTurn(start:boolean,injured=false){
+    const career=promised();
+    career.half=1;career.day=150;career.phase="event";career.event=null;career.matchEventArmed=false;
+    const slot=FORMATION_SLOTS[career.coach!.tactics.formation].findIndex(position=>position===reserve.position||reserve.alternates.includes(position));
+    career.coach!.tactics.lineup=career.coach!.tactics.lineup.map(id=>id===reserve.id?"":id);
+    if(start)career.coach!.tactics.lineup[slot]=reserve.id;
+    if(injured)career.players[reserve.id]!.injury={kind:"light",since:140,until:300,turns:1};
+    return must(career,{type:"simulate"});
+  }
+  it("tem jogador definido, meta binária e prazo no começo do segundo turno",()=>{
+    const career=promised(),promise=career.promises[0]!;
+    expect(promise).toMatchObject({player:reserve.id,kind:"starts",target:1,until:150,status:"active"});
+    expect(promiseProgress(career,promise).done).toBe(0);
   });
-
-  it("vender quem tem promessa de ficar é bloqueado", () => {
-    let career = must(promised, { type: "openAction", kind: "sell" });
-    career = must(career, { type: "confirmAction", payload: { kind: "sell", players: [reserve.id] } });
-    const offer = career.flow?.kind === "sell" ? career.flow.offers[0] : undefined;
-    if (offer?.status === "pending") {
-      const result = must(career, { type: "closeAction" });
-      expect(result.players[reserve.id]?.club).toBe(coach.club);
-    }
+  it("permanece aberta após o primeiro turno",()=>{
+    const after=playStage(promised());
+    expect(after.promises.find(promise=>promise.player===reserve.id)?.status).toBe("active");
   });
-
-  it("no fim do prazo, a promessa é avaliada sozinha e a escalação automática a respeita", () => {
-    const after = playStage(promised);
-    const starts = after.promises.find((promise) => promise.kind === "starts");
-    const keep = after.promises.find((promise) => promise.kind === "keep");
-    expect(starts?.status).not.toBe("active");
-    expect(keep?.status).toBe("kept");
-    const player = after.players[reserve.id];
-    if (player && player.season.available >= 3) {
-      expect(player.season.starts / player.season.available).toBeGreaterThanOrEqual(0.5);
-      expect(starts?.status).toBe("kept");
-    }
-    expect(after.lastReport?.promises.map((promise) => promise.id)).toContain(starts?.id);
-  }, 60_000);
-
-  it("desfazer a promessa numa conversa não conta como cumprida", () => {
-    const career = cloneCareer(base);
-    addPromise(career, "minutes", reserve.id, 6, "talk");
-    let next = must(career, { type: "openAction", kind: "locker" });
-    next = must(next, { type: "confirmAction", payload: { kind: "locker", mode: "talk", players: [reserve.id] } });
-    const talk = next.flow?.kind === "locker" ? next.flow.talks[0] : undefined;
+  it("é cumprida por estar nos onze escolhidos, mesmo que a IA o substitua depois",()=>{
+    expect(secondTurn(true).promises.find(promise=>promise.player===reserve.id)?.status).toBe("kept");
+  });
+  it("é quebrada quando fica fora dos onze, independentemente dos minutos posteriores",()=>{
+    expect(secondTurn(false).promises.find(promise=>promise.player===reserve.id)?.status).toBe("broken");
+  });
+  it("dispensa cobrança se o atleta está lesionado no prazo",()=>{
+    expect(secondTurn(false,true).promises.find(promise=>promise.player===reserve.id)?.status).toBe("kept");
+  });
+  it("não cria promessa no rápido nem no segundo turno",()=>{
+    const fast=cloneCareer({...base,setup:{...base.setup,mode:"fast"}});
+    addPromise(fast,"starts",reserve.id,1,"talk");expect(fast.promises).toHaveLength(0);
+    const second=cloneCareer(base);second.half=1;
+    addPromise(second,"starts",reserve.id,1,"talk");expect(second.promises).toHaveLength(0);
+  });
+  it("desfazer pela conversa não conta como cumprida",()=>{
+    let career=must(promised(),{type:"openAction",kind:"locker"});
+    career=must(career,{type:"confirmAction",payload:{kind:"locker",mode:"talk",players:[reserve.id]}});
+    const talk=career.flow?.kind==="locker"?career.flow.talks[0]:null;
     expect(talk?.concern).toBe("promise");
-    next = must(next, { type: "respond", item: talk?.id ?? "", decision: "release" });
-    expect(next.promises.find((promise) => promise.kind === "minutes")?.status).toBe("released");
-  });
-
-  it("os eventos criam as promessas de não vender e de jogos para os jovens", () => {
-    const career = cloneCareer(base);
-    career.phase = "event";
-    career.event = {
-      id: "sellReserve",
-      kind: "opportunity",
-      subject: reserve.id,
-      params: {},
-      options: [{ id: "keep", chance: null, success: [{ type: "promise", kind: "keep", target: 1 }], failure: [] }],
-      match: null,
-      chosen: null,
-      outcome: null,
-    } as unknown as CoachCareer["event"];
-    resolveEventChoice(career, "keep");
-    expect(career.promises.some((promise) => promise.kind === "keep" && promise.player === reserve.id && promise.status === "active")).toBe(true);
-    career.event = {
-      id: "veteranYouth",
-      kind: "crisis",
-      subject: reserve.id,
-      params: {},
-      options: [{ id: "youth", chance: null, success: [{ type: "promise", kind: "youth", target: PROMISES.youthGames }], failure: [] }],
-      match: null,
-      chosen: null,
-      outcome: null,
-    } as unknown as CoachCareer["event"];
-    resolveEventChoice(career, "youth");
-    const youth = career.promises.find((promise) => promise.kind === "youth");
-    expect(youth?.player).toBeNull();
-    expect(youth?.target).toBe(PROMISES.youthGames);
+    career=must(career,{type:"respond",item:talk!.id,decision:"release"});
+    expect(career.promises[0]?.status).toBe("released");
   });
 });

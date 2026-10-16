@@ -1,4 +1,5 @@
-import { KEEPER_ATTRIBUTES, OUTFIELD_ATTRIBUTES, type Position } from "@craque/engine";
+import { KEEPER_ATTRIBUTES, OUTFIELD_ATTRIBUTES } from "@craque/engine/attributes";
+import type { Position } from "@craque/engine/positions";
 import type { Translator } from "./useT";
 
 /**

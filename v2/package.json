@@ -16,7 +16,7 @@
     "typecheck": "pnpm -r typecheck",
     "lint": "eslint .",
     "test": "pnpm -r test",
-    "verify": "pnpm typecheck && pnpm lint && pnpm test && pnpm balance:check && pnpm balance:tecnico:check && pnpm build",
+    "verify": "pnpm typecheck && pnpm lint && pnpm test && pnpm test:windows && pnpm balance:check && pnpm balance:tecnico:check && pnpm build",
     "e2e": "pnpm --filter @craque/game e2e",
     "notas:exportar": "node packages/world/scripts/notas.mjs exportar",
     "notas:importar": "node packages/world/scripts/notas.mjs importar",
@@ -28,7 +28,8 @@
     "balance:tecnico:check": "pnpm --filter @craque/balance tecnico --carreiras 16 --temporadas 24 --check --sem-arquivo",
     "balance:recordes": "pnpm --filter @craque/balance recordes",
     "desafio:calibrar": "pnpm --filter @craque/balance desafio:calibrar",
-    "carreira": "pnpm --silent --filter @craque/terminal carreira"
+    "carreira": "pnpm --silent --filter @craque/terminal carreira",
+    "test:windows": "node --test scripts/windows.test.mjs"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",

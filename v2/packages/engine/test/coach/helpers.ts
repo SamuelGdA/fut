@@ -1,6 +1,6 @@
 import type { CountryCode } from "@craque/world";
 import { FREE_PLAYERS, SQUAD_PLAYERS } from "@craque/world/squads";
-import { type CoachCareer, type CoachCommand, type CoachMode, coachCommand, createCoachCareer, type WorldData } from "../../src/coach";
+import { type CoachCareer, type CoachCommand, type CoachMode, canAffordEvent, coachCommand, createCoachCareer, type WorldData } from "../../src/coach";
 
 /** Ajudantes dos testes do Técnico: criar carreira, mandar comando válido, jogar etapas. */
 
@@ -45,7 +45,7 @@ export function started(seed = "teste", mode: CoachMode = "fast", nationality: C
 /** Da etapa até os resultados: evento (primeira opção), simulação e eventos de partida. */
 export function playStage(career: CoachCareer, matchOption = 0): CoachCareer {
   let current = must(career, { type: "advance" });
-  if (current.event && !current.event.chosen) current = must(current, { type: "chooseEvent", option: current.event.options[0]?.id ?? "" });
+  if (current.event && !current.event.chosen) current = must(current, { type: "chooseEvent", option: current.event.options.find(option => canAffordEvent(current, option))?.id ?? "" });
   current = must(current, { type: "simulate" });
   let guard = 0;
   while (current.phase === "matchEvent" && guard < 5) {
@@ -65,6 +65,7 @@ export function playSeason(career: CoachCareer): CoachCareer {
     guard += 1;
     current = playStage(current);
     current = must(current, { type: "continue" });
+    if (current.phase === "transferOffers") current = must(current, { type: "continueTransfers" });
   }
   return current;
 }

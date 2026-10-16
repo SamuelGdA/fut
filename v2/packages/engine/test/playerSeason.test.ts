@@ -59,9 +59,11 @@ describe("jogos por fase (GDD 11.3)", () => {
 });
 
 describe("produção (GDD 11.4 e 11.5)", () => {
-  it("quanto maior o OVR, mais gols por jogo e menos gols sofridos", () => {
-    const low = productionRates({ ...striker, ovr: 75 });
-    const high = productionRates({ ...striker, ovr: 90 });
+  it("com atributos acompanhando o OVR, mais gols por jogo e menos gols sofridos", () => {
+    // Preserve a especialização da carta: manter finalização 88 num OVR 75
+    // testaria um artilheiro excepcional contra uma carta mais equilibrada.
+    const low = productionRates({ ...striker, ovr: 75, attributes: [72, 78, 65, 74, 40, 70] });
+    const high = productionRates({ ...striker, ovr: 90, attributes: [87, 93, 80, 89, 55, 85] });
     expect(high.goalsPerGame).toBeGreaterThan(low.goalsPerGame);
     const keeper = (ovr: number) => productionRates({ ...striker, position: "gk", ovr, clubStrength: 80 }).concededPerGame;
     expect(keeper(88)).toBeLessThan(keeper(74));

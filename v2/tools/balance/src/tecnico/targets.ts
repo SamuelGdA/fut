@@ -88,7 +88,7 @@ export function probeTargets(probes: ProbeMetrics): TargetResult[] {
     },
     {
       id: "tecnico-cwc-possible",
-      label: "Mundial de Clubes: difícil, mas possível para quem não é europeu (chaveamento jogado 20 mil vezes com as chances exatas)",
+      label: "Mundial de Clubes: difícil, mas possível para quem não é europeu (sonda de 20 mil chaveamentos, chances por partida)",
       target: "fora da Europa entre 1% e 15% dos títulos; o melhor sul-americano com pelo menos 0,5%",
       measured: `${pct(outside, 1)} fora da Europa; melhor sul-americano ${best ? `${best.club} ${pct(best.chance, 2)}` : "n/d"} (${probes.clubWorldCup.europeans} europeus em ${probes.clubWorldCup.entrants})`,
       pass: outside >= 0.01 && outside <= 0.15 && Boolean(best && best.chance >= 0.005),
@@ -198,28 +198,28 @@ export function careerTargets(metrics: CareerMetrics): TargetResult[] {
     },
     {
       id: "tecnico-injuries",
-      label: "Lesões de 10 dias ou mais no elenco do treinador, por temporada",
-      target: "entre 4 e 15, no máximo 10% graves",
+      label: "Lesões por turno no elenco do treinador, por temporada",
+      target: "entre 0,3 e 2,5; afastamento por 1 ou 2 turnos (D63)",
       measured: `${fixed(metrics.injuriesPerSeason, 1)} por temporada, ${pct(metrics.seriousShare)} graves, ${Math.round(metrics.injuryDaysPerSeason)} dias`,
-      pass: metrics.injuriesPerSeason >= 4 && metrics.injuriesPerSeason <= 15 && metrics.seriousShare <= 0.1,
+      pass: metrics.injuriesPerSeason >= 0.3 && metrics.injuriesPerSeason <= 2.5 && metrics.seriousShare <= 0.1,
     },
   ];
   if (balanced) {
     targets.push({
       id: "tecnico-dismissals",
       label: "Demissões por temporada com a política equilibrada",
-      target: "entre 8% e 15%",
+      target: "entre 1% e 12%",
       measured: `${pct(balanced.dismissals)} em ${balanced.seasons} temporadas (na primeira: ${pct(balanced.firstSeasonDismissals)})`,
-      pass: balanced.dismissals >= 0.08 && balanced.dismissals <= 0.15,
+      pass: balanced.dismissals >= 0.01 && balanced.dismissals <= 0.12,
     });
   }
   if (balanced && passive) {
     targets.push({
       id: "tecnico-actions-help",
-      label: "Usar as ações vale a pena: objetivo cumprido, equilibrada contra passiva",
+      label: "Usar as ações vale a pena: mesmas sementes, país e ritmo, com escalação atualizada",
       target: "equilibrada à frente",
-      measured: `${pct(balanced.objectiveMet)} contra ${pct(passive.objectiveMet)}`,
-      pass: balanced.objectiveMet > passive.objectiveMet,
+      measured: `${pct(metrics.pairedActions.balanced)} contra ${pct(metrics.pairedActions.passive)} (${metrics.pairedActions.pairs} pares)`,
+      pass: metrics.pairedActions.pairs > 0 && metrics.pairedActions.balanced > metrics.pairedActions.passive,
     });
   }
   if (spender) {

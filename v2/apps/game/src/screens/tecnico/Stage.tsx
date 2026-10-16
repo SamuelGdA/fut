@@ -1,3 +1,7 @@
+import { PlayerPeek } from "./PlayerPeek";
+import { playerRow } from "../../features/tecnico/view";
+import { revisionText } from "../../i18n/tecnico/revision";
+import { coachPlayerName } from "@craque/content/coach";
 import { ACTION_KINDS, type ActionKind, ACTIONS_PER_STAGE, canStartAction, type CoachCareer, predictabilityHint } from "@craque/engine/coach";
 import {
   ArrowRight,
@@ -9,18 +13,17 @@ import {
   Sprout,
   TrendingUp,
   type LucideIcon,
-  ClipboardList,
-  Users,
-  Landmark,
-  Eye,
 } from "lucide-react";
+import { m, useReducedMotion } from "motion/react";
 import { useState } from "react";
 import { useTecnicoT } from "../../i18n/tecnico/useTecnicoT";
 import { feedback } from "../../services/feedback";
 import { Button } from "../../ui/Button";
 import { ConfirmDialog } from "../../ui/Overlays";
 import { notify } from "../../ui/toast/notify";
-import { objectiveText } from "./text";
+import { InfoTip } from "../../ui/InfoTip";
+
+
 
 export const ACTION_ICONS: Readonly<Record<ActionKind, LucideIcon>> = {
   sell: Banknote,
@@ -31,8 +34,6 @@ export const ACTION_ICONS: Readonly<Record<ActionKind, LucideIcon>> = {
   locker: MessagesSquare,
   funds: HandCoins,
 };
-
-export type FreeView = "team" | "squad" | "club";
 
 /** Passos da etapa (spec 5): Planejar, Ações, Evento, Simular, Resultados. */
 export function StageSteps({ career }: { career: CoachCareer }) {
@@ -61,15 +62,14 @@ export function StageView({
   career,
   onOpen,
   onAdvance,
-  onFree,
 }: {
   career: CoachCareer;
   onOpen(kind: ActionKind): void;
   onAdvance(): void;
-  onFree(view: FreeView): void;
 }) {
   const t = useTecnicoT();
   const { tt, ttp } = t;
+  const reduced = useReducedMotion() === true;
   const coach = career.coach;
   const [confirmAdvance, setConfirmAdvance] = useState(false);
   if (!coach) return null;
@@ -93,12 +93,15 @@ export function StageView({
   return (
     <section className="tec-stage" aria-labelledby="tec-stage-title">
       <StageSteps career={career} />
+      {career.half === 0 && (career.news.arrivals.length > 0 || career.news.retired.length > 0) ? <div className="tec-season-news" role="status">{(["arrivals", "retired"] as const).map((kind) => career.news[kind].length ? <p key={kind}><strong>{revisionText(t.locale, kind)}</strong><span>{career.news[kind].map((id) => { const player = career.players[id], legacy = career.legacy[id]; const source = player ?? legacy?.peak; const name = source ? coachPlayerName(career.setup.seed, source) : id; return <span key={id} className="inline-flex mr-2">{source ? <PlayerPeek row={playerRow(player ? career : { ...career, year: legacy?.peakYear ?? career.year }, { ...source, injury: null })} trigger={<button type="button" className="tec-inline-person">{name}</button>} /> : name}</span>; })}</span></p> : null)}</div> : null}
+      <div className="tec-command-hero"><div><p className="eyebrow">{tt("ux.command")}</p><p className="display tec-command-title">{tt("ux.prepare")}</p><p className="text-xs">{tt("ux.lead")}</p></div></div>
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <h2 id="tec-stage-title" className="display text-2xl leading-none font-black uppercase">
           {tt("stage.actionsTitle")}
         </h2>
-        <p className="text-sm font-semibold" data-tone={left > 0 ? "good" : "neutral"}>
+        <p className="flex items-center gap-2 text-sm font-semibold" data-tone={left > 0 ? "good" : "neutral"}>
           <span className="text-tone">{ttp("stage.actionsLeft", left)}</span>
+          {hint ? <InfoTip label={tt("stage.predictability")}>{tt("stage.predictability")}</InfoTip> : null}
         </p>
       </div>
       <div className="tec-slots" aria-hidden="true">
@@ -113,51 +116,23 @@ export function StageView({
           );
         })}
       </div>
-      <p className="text-xs text-faint">{tt("stage.actionsHint")}</p>
+      <div className="tec-stage-help"><span className="eyebrow">{tt("ux.lead")}</span><InfoTip label={tt("stage.actionsTitle")}>{tt("stage.actionsHint")}</InfoTip></div>
       <div className="tec-actions">
         {ACTION_KINDS.map((kind) => {
           const Icon = ACTION_ICONS[kind];
           const check = canStartAction(career, kind);
           return (
-            <button key={kind} type="button" className="tec-action" data-disabled={check.ok ? undefined : true} aria-disabled={!check.ok} onClick={() => open(kind)}>
+            <m.button key={kind} whileHover={reduced ? undefined : { y: -2 }} whileTap={reduced ? undefined : { scale: 0.97 }} type="button" className="tec-action" data-disabled={check.ok ? undefined : true} aria-disabled={!check.ok} onClick={() => open(kind)}>
               <Icon size={20} aria-hidden="true" className="tec-action-icon" />
               <span className="tec-action-name">{tt(`actions.${kind}.name`)}</span>
               <span className="tec-action-hint">{tt(`actions.${kind}.hint`)}</span>
-            </button>
+            </m.button>
           );
         })}
       </div>
 
-      <div className="tec-free">
-        <p className="eyebrow">{tt("stage.freeTitle")}</p>
-        <div className="tec-free-row">
-          <Button variant="secondary" size="sm" onClick={() => onFree("team")}>
-            <ClipboardList size={15} aria-hidden="true" />
-            {tt("stage.freeLineup")}
-          </Button>
-          <Button variant="secondary" size="sm" onClick={() => onFree("squad")}>
-            <Users size={15} aria-hidden="true" />
-            {tt("stage.freeSquad")}
-          </Button>
-          <Button variant="secondary" size="sm" className="lg:hidden" onClick={() => onFree("club")}>
-            <Landmark size={15} aria-hidden="true" />
-            {tt("stage.freeClub")}
-          </Button>
-        </div>
-      </div>
-
-      {hint ? (
-        <p className="flex items-start gap-2 rounded-sm border border-line bg-panel-2 p-2.5 text-xs text-info">
-          <Eye size={14} aria-hidden="true" className="mt-0.5 shrink-0" />
-          {tt("stage.predictability")}
-        </p>
-      ) : null}
-
       <div className="tec-advance">
-        <p className="tec-objective min-w-0 text-xs text-muted">
-          <span className="text-faint">{tt("header.objective")}: </span>
-          {objectiveText(t, coach)}
-        </p>
+        <span />
         <Button
           size="lg"
           onClick={() => {

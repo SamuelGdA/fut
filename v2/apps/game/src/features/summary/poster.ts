@@ -42,15 +42,15 @@ async function settle(node: HTMLElement): Promise<void> {
   );
 }
 
-export async function renderPoster(node: HTMLElement): Promise<Blob> {
+export async function renderPoster(node: HTMLElement, background = POSTER_BACKGROUND): Promise<Blob> {
   await settle(node);
   const { domToBlob } = await import("modern-screenshot");
   return domToBlob(node, {
     width: POSTER_WIDTH,
-    height: POSTER_HEIGHT,
+    height: Math.max(POSTER_HEIGHT, node.scrollHeight),
     scale: 1,
     type: "image/png",
-    backgroundColor: POSTER_BACKGROUND,
+    backgroundColor: background,
     timeout: 15_000,
   });
 }

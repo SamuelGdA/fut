@@ -1,3 +1,4 @@
+import { addUefaGuests } from "./uefaGuests";
 import { CLUBS, type CountryCode, leagueAt, PLAYABLE_COUNTRIES } from "@craque/world";
 import type { SquadPlayer } from "@craque/world/squads";
 import { clamp } from "../math";
@@ -53,11 +54,15 @@ export function createWorldState(
       baseAnchor: strength,
       strength,
       revenue,
-      cash: revenue * (low + (high - low) * unit(`${seed}:cash:${club.id}`)),
+      // Clubes menores começam com uma reserva operacional para conseguir negociar.
+      cash: revenue * ((club.division === 2 ? 0.12 : low) + (high - (club.division === 2 ? 0.12 : low)) * unit(`${seed}:cash:${club.id}`)),
       prestige: club.prestige,
     };
     assignRoles(squad, year, strength);
   }
+  addUefaGuests(seed,year,clubs,players);
+  const guests=squadIndex(players);
+  for(const club of Object.values(clubs))if(club.continentalGuest)assignRoles(guests.get(club.id) ?? [],year,club.strength);
   // A memória da temporada anterior (classificação continental e supercopas)
   // vem do aquecimento do mundo do Craque, com a mesma semente.
   const warm = createWorld(seed, year).memory;
@@ -67,6 +72,7 @@ export function createWorldState(
     cups: warm.cups,
     continental: warm.continental,
     primaryChampions: warm.primaryChampions as PreviousSeason["primaryChampions"],
+    performanceSpots: warm.performanceSpots,
   };
   return { players, clubs, memory };
 }
@@ -119,7 +125,9 @@ export function roleFor(player: CoachPlayer, squad: readonly CoachPlayer[], year
     .sort((a, b) => b.ovr - a.ovr || a.id.localeCompare(b.id));
   const rank = peers.findIndex((other) => other.id === player.id);
   const starters = STARTERS_PER_SECTOR[sector];
-  if (rank < starters) return player.ovr >= strength + 3 ? "star" : "starter";
+  if(player.ovr>=strength+3)return "star";
+  if(ageOf(player,year)>=21 && player.ovr>=strength-1)return "starter";
+  if (rank < starters) return "starter";
   if (ageOf(player, year) <= 20) return "prospect";
   if (rank < starters + (sector === "gk" ? 0 : 2)) return "rotation";
   return "backup";

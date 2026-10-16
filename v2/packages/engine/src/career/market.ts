@@ -10,6 +10,7 @@ import { continentalEntrants } from "../world/season";
 import type { WorldState } from "../world/types";
 import { chooseMission, MISSION_TERMS } from "./mission";
 import type { ClubBond, ClubOffer } from "./types";
+import { playerClubImpact } from "../world/tuning";
 
 /**
  * O mercado (GDD 15). O nível de mercado decide que clubes se interessam; a
@@ -29,11 +30,11 @@ export const MARKET = {
   reputationMax: 3,
   /**
    * Clube nenhum contrata um veterano pelo nível de um jovem. Acima desta
-   * idade, cada ano tira 1,5 do nível: é o que faz a maioria das carreiras
+   * idade, cada ano tira 1,8 do nível: é o que faz a maioria das carreiras
    * acabar entre 33 e 38 (GDD 40.1). Calibrado pelo harness.
    */
   veteranFrom: 32,
-  veteranPerYear: 1.5,
+  veteranPerYear: 1.8,
   /** Passo acima: força pelo menos isto maior que a do clube atual. */
   stepUp: 2,
 } as const;
@@ -214,7 +215,7 @@ export function buildOffer(
     clubStrength: strength,
     clubPrestige: club.prestige,
     currentStrength,
-    homecoming: context.bonds[club.id] !== undefined || context.firstClub === club.id,
+    homecoming: !flags.buyout && (flags.back || context.current !== club.id) && (context.bonds[club.id] !== undefined || context.firstClub === club.id),
     proving: context.proving,
     bottomThird,
     justMoved: lastDivision !== division,
@@ -229,7 +230,7 @@ export function buildOffer(
     division,
     league: league?.id ?? null,
     role,
-    stars: clubStars(club.prestige, club.strength, strength + Math.max(0, 0.22 * squadRole(context.position, context.ovr, strength).participation * Math.min(15, context.ovr - strength))),
+    stars: starsAt(context, club.id),
     competitions,
     mission,
     pressure: terms.pressure,
@@ -348,4 +349,13 @@ export function clubStars(prestige: number, base: number, strength: number): num
   const up = stars === 4 ? 4.5 : 3;
   const down = stars === 5 ? 4.5 : 3;
   return clamp(stars + (delta >= up ? 1 : delta <= -down ? -1 : 0), 1, 5);
+}
+
+/** Estrelas atuais, com a mesma influência moderada do jogador usada nas ofertas. */
+export function starsAt(context: MarketContext, id: string): number {
+  const club = getClub(id);
+  if (!club) return 1;
+  const strength = context.world.strength[clubIndex(id)] ?? club.strength;
+  const impact = Math.max(0, playerClubImpact(strength, context.ovr, squadRole(context.position, context.ovr, strength).participation));
+  return clubStars(club.prestige, club.strength, strength + impact);
 }

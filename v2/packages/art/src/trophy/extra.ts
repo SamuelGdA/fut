@@ -29,8 +29,9 @@ export const EXTRA_TROPHY_ART: Readonly<Record<string, TrophySpec>> = {
   "award:golden-glove": spec("cup", "gold", "#1d3f8f", "GG"),
   "award:golden-shoe": spec("cup", "gold", "#7a1f2b", "GS"),
   "award:young-player": spec("chalice", "silver", "#0b7a3b", "U21"),
-  "award:top-scorer": spec("cup", "bronze", "#8f3b1d", "TOP"),
-  "award:best-player": spec("chalice", "gold", "#4b2a86", "MVP"),
+  "award:top-scorer": spec("boot", "gold", "#8f3b1d", "TOP"),
+  "award:best-player": spec("football", "gold", "#4b2a86", "MVP"),
+  "award:king-of-america": spec("football", "gold", "#13623a", "REY"),
 
   // --- Copas nacionais que tinham foto ---
   "cup:ARG": spec("cup", "silver", "#6cace4", "AR"),

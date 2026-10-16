@@ -35,6 +35,7 @@ interface BaseProps {
   size: number;
   className?: string;
   decorative?: boolean;
+  tooltip?: string;
   /**
    * Ocupa a caixa do pai em vez de `size` px (a carta mede em `em`). `size`
    * continua dando a proporção e a reserva de espaço.
@@ -52,9 +53,11 @@ function Picture({
   decorative,
   fill = false,
   loading = "lazy",
+  tooltip,
 }: {
   src: string;
   loading?: "lazy" | "eager";
+  tooltip?: string;
   /** A arte gerada, se a real falhar. */
   fallback: string;
   alt: string;
@@ -74,6 +77,7 @@ function Picture({
         if (fallback && current !== fallback) setFailed(src);
       }}
       alt={decorative ? "" : alt}
+      title={tooltip}
       aria-hidden={decorative || undefined}
       width={width}
       height={height}
@@ -172,6 +176,7 @@ export function TrophyArt({
   className,
   decorative,
   language,
+  tooltip,
 }: BaseProps & { competition: Competition; language: Language }) {
   const mode = useAssetMode((state) => state.trophyMode);
   return (
@@ -180,6 +185,7 @@ export function TrophyArt({
       src={competitionTrophyUrl(competition, mode)}
       fallback={generatedTrophyUrl(competition)}
       alt={competition.names[language]}
+      tooltip={tooltip ?? competition.names[language]}
       width={Math.round(size * 0.8)}
       height={size}
       className={className}
@@ -194,6 +200,7 @@ export function AwardArt({
   className,
   decorative,
   language,
+  tooltip,
 }: BaseProps & { award: Award; language: Language }) {
   const mode = useAssetMode((state) => state.trophyMode);
   return (
@@ -202,6 +209,7 @@ export function AwardArt({
       src={awardImageUrl(award, mode)}
       fallback={generatedAwardUrl(award)}
       alt={award.names[language]}
+      tooltip={tooltip ?? award.names[language]}
       width={Math.round(size * 0.8)}
       height={size}
       className={className}

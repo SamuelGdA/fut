@@ -34,7 +34,7 @@ describe("dicionário do Técnico nos três idiomas", () => {
 
 /** Opções de cada evento lidas do código do motor: id e se tem sorteio. */
 function catalogOptions(): Map<string, Map<string, boolean>> {
-  const code = readFileSync(new URL("../../engine/src/coach/events.ts", import.meta.url), "utf8");
+  const code = readFileSync(new URL("../../engine/src/coach/events.ts", import.meta.url), "utf8").replace(/\r\n/g, "\n");
   const result = new Map<string, Map<string, boolean>>();
   const blocks = code.split(/\n {2}\{\n {4}id: "/).slice(1);
   for (const block of blocks) {

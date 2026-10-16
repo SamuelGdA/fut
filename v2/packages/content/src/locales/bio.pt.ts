@@ -194,7 +194,7 @@ export const bioPt = {
     bestMany: [
       "Foi eleito o craque da competição {timesText}. A primeira, aos {age} anos: {competition}.",
       "O prêmio de melhor jogador de uma competição foi dele {timesText}.",
-      "Craque da competição {timesText}, o primeiro aos {age}: {competition}.",
+      "Craque {timesText}, o primeiro aos {age}: {competition}.",
       "Terminou {timesText} como o melhor jogador de uma competição.",
     ],
     goldenShoe: [

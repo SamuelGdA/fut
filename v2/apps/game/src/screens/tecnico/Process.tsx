@@ -1,18 +1,31 @@
+import { areRivals } from "@craque/world";
+import { d66 } from "../../i18n/tecnico/d66";
+import { resetProcessDraft, useProcessDraft } from "../../features/tecnico/processDraft";
+import { InfoTip } from "../../ui/InfoTip";
+import { coachPlayerName } from "@craque/content/coach";
+import { useTecnico } from "../../features/tecnico/store";
 import {
   chanceTier,
+  isClubIdol,
   type CoachCareer,
+  canAffordEvent,
+  eventCost,
   type CoachCommand,
   type ConfirmPayload,
   DEVELOP,
+  DECISION_TRADEOFFS,
   demandOf,
   developable,
   fundsPreview,
+  wageBillOf,
   type Preview,
   purchaseChance,
   purchasePreview,
   PURCHASE,
   SALE,
   salePreview,
+  squadOf,
+  viableSquad,
   type Sector,
   SECTORS,
   TALK_EFFECTS,
@@ -21,22 +34,28 @@ import {
 } from "@craque/engine/coach";
 import type { Position } from "@craque/engine";
 import { getClub } from "@craque/world";
-import { Check, Search, X } from "lucide-react";
+import { Check, Info, Search, X } from "lucide-react";
 import { type ReactNode, useMemo, useState } from "react";
-import { playerRow, type PlayerRow, squadRows } from "../../features/tecnico/view";
+import { budgetSpent, playerRow, type PlayerRow, squadRows } from "../../features/tecnico/view";
 import { type TecnicoTranslator, useTecnicoT } from "../../i18n/tecnico/useTecnicoT";
 import { foldText } from "../../i18n/format";
+import { revisionText } from "../../i18n/tecnico/revision";
 import { feedback } from "../../services/feedback";
 import { Button } from "../../ui/Button";
-import { cn } from "../../ui/cn";
+import { PlayerPeek } from "./PlayerPeek";
+import { useMediaQuery } from "../../lib/useMediaQuery";
 import { Sheet } from "../../ui/Overlays";
 import { Chip } from "../../ui/Signals";
 import type { Tone } from "../../ui/tone";
+import { DecisionPicker } from "./DecisionPicker";
+import { RiskPreview, Resolution } from "./DecisionUX";
+import { FinanceMeter } from "./FinanceMeter";
 import { ClubTag, EffectChips, NationFlag, PlayerLine } from "./shared";
+import { SortHeaders } from "./SortHeaders";
+import { comparePlayers, type PlayerSort } from "../../features/tecnico/sorting";
 
 type Run = (command: CoachCommand) => string | null;
 
-const POSITIONS: readonly Position[] = ["gk", "rb", "cb", "lb", "cdm", "cm", "lm", "rm", "cam", "lw", "rw", "st"];
 const TIER_TONE: Readonly<Record<ReturnType<typeof chanceTier>, Tone>> = { veryHard: "bad", hard: "bad", possible: "neutral", likely: "good" };
 const DEMAND_TONE: Readonly<Record<"low" | "medium" | "high", Tone>> = { low: "bad", medium: "neutral", high: "good" };
 
@@ -76,12 +95,12 @@ export function ProcessSheet({ career, open, onOpenChange, run }: { career: Coac
     if (flow.step === "select") {
       feedback("back");
       run({ type: "cancelAction" });
-    }
+    } else run({ type: "closeAction" });
     onOpenChange(false);
   };
 
   return (
-    <Sheet open={open} onOpenChange={close} title={titles[kind]} description={leads[kind]} closeLabel={tt("common.close")}>
+    <Sheet open={open} onOpenChange={close} title={titles[kind]} description={leads[kind]} closeLabel={tt("common.close")} contained>
       {flow.step === "select" ? (
         <SelectStep key={`${kind}:${flow.number}`} career={career} kind={kind} run={run} t={t} />
       ) : (
@@ -95,7 +114,7 @@ export function ProcessSheet({ career, open, onOpenChange, run }: { career: Coac
 
 function SelectStep({ career, kind, run, t }: { career: CoachCareer; kind: NonNullable<CoachCareer["flow"]>["kind"]; run: Run; t: TecnicoTranslator }) {
   const { tt, ttp } = t;
-  const [selected, setSelected] = useState<string[]>([]);
+  const [selected, setSelected] = useProcessDraft<string[]>(career, kind, "selected", []);
   const [sector, setSector] = useState<Sector | null>(null);
   const [candidate, setCandidate] = useState<string | null>(null);
   const [lockerMode, setLockerMode] = useState<"talk" | "meeting">("talk");
@@ -148,14 +167,14 @@ function SelectStep({ career, kind, run, t }: { career: CoachCareer; kind: NonNu
     );
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="tec-process-select">
       {max > 0 && (kind !== "locker" || lockerMode === "talk") ? (
         <p className="flex items-center justify-between gap-2 text-xs text-muted">
           <span>{ttp("process.selectUpTo", max)}</span>
           <span className="numeric font-semibold text-fg">{ttp("process.selected", selected.length)}</span>
         </p>
       ) : null}
-      {body}
+      <div className="tec-process-body" data-buy={kind === "buy" || undefined}>{body}</div>
       <div className="tec-sheet-footer">
         <Chip tone="info">{tt("process.usesAction")}</Chip>
         <Button
@@ -163,7 +182,8 @@ function SelectStep({ career, kind, run, t }: { career: CoachCareer; kind: NonNu
           onClick={() => {
             if (!payload) return;
             feedback("confirm");
-            run({ type: "confirmAction", payload });
+            const error = run({ type: "confirmAction", payload });
+            if (!error && payload.kind === "youth") useTecnico.setState({ focusPlayer: payload.candidate });
           }}
         >
           <Check size={16} aria-hidden="true" />
@@ -174,17 +194,18 @@ function SelectStep({ career, kind, run, t }: { career: CoachCareer; kind: NonNu
   );
 }
 
-function CheckRow({ checked, onToggle, disabled, children }: { checked: boolean; onToggle(): void; disabled?: string | null; children: ReactNode }) {
-  return (
-    <li>
-      <button
+function CheckRow({ checked, onToggle, disabled, children, row }: { checked: boolean; onToggle(): void; disabled?: string | null; children: ReactNode; row?: PlayerRow }) {
+  const hover = useMediaQuery("(hover: hover) and (pointer: fine)");
+  const { tt } = useTecnicoT();
+  const trigger = <button
         type="button"
         role="checkbox"
         aria-checked={checked}
         aria-disabled={disabled ? true : undefined}
         className="tec-pick"
         data-checked={checked || undefined}
-        onClick={() => {
+        onClick={(event) => {
+          event.preventDefault();
           if (disabled) {
             feedback("back");
             return;
@@ -196,7 +217,13 @@ function CheckRow({ checked, onToggle, disabled, children }: { checked: boolean;
           {checked ? <Check size={14} strokeWidth={3} /> : null}
         </span>
         <span className="min-w-0 flex-1">{children}</span>
-      </button>
+      </button>;
+  return (
+    <li>
+      <div className="tec-pick-wrap">
+        {row && hover ? <PlayerPeek row={row} trigger={trigger} /> : trigger}
+        {row && !hover ? <PlayerPeek row={row} trigger={<button type="button" className="tec-pick-inspect" aria-label={tt("ux.inspectPlayer", { name: row.name })}><Info size={15} aria-hidden="true" /></button>} /> : null}
+      </div>
       {disabled ? <p className="px-3 pb-1 text-2xs text-faint">{disabled}</p> : null}
     </li>
   );
@@ -205,18 +232,22 @@ function CheckRow({ checked, onToggle, disabled, children }: { checked: boolean;
 function SellPick({ career, selected, toggle, t }: { career: CoachCareer; selected: string[]; toggle(id: string): void; t: TecnicoTranslator }) {
   const { tt, money } = t;
   const stage = `${career.year}:${career.half}`;
-  const rows = squadRows(career);
+  const [query, setQuery] = useProcessDraft(career, "sell", "query", "");
+  const [position, setPosition] = useProcessDraft<Position | "any">(career, "sell", "position", "any");
+  const [sort, setSort] = useProcessDraft<PlayerSort>(career,"sell","columnSort",{key:"value",descending:true});
+  const rows = squadRows(career).filter((row) => (!query || foldText(row.name).includes(foldText(query))) && (position === "any" || row.position === position || row.alternates.includes(position))).sort((a,b)=>comparePlayers(a,b,sort));
   return (
-    <ul className="tec-pick-list">
+    <div className="tec-sell-search"><input type="search" className="search-input" aria-label={revisionText(t.locale,"search")} placeholder={revisionText(t.locale,"search")} value={query} onChange={(event)=>setQuery(event.target.value)} /><SortHeaders sort={sort} onChange={setSort} position={position} onPosition={setPosition} selection /><ul className="tec-pick-list tec-table-list">
       {rows.map((row) => {
         const player = career.players[row.id];
         if (!player) return null;
         const demand = demandOf(career, player);
         const offered = player.offeredAt === stage;
-        const legacy = career.legacy[row.id];
-        const idol = (legacy?.apps ?? 0) >= 60;
+        const idol = isClubIdol(career, player);
+        const outgoing=new Set([...selected.filter((id)=>id!==row.id),row.id]);
+        const blocked=!viableSquad(squadOf(career,career.coach?.club ?? "").filter((entry)=>!outgoing.has(entry.id)));
         return (
-          <CheckRow key={row.id} checked={selected.includes(row.id)} onToggle={() => toggle(row.id)} disabled={offered ? tt("process.blockers.notPending") : null}>
+          <CheckRow row={row} key={row.id} checked={selected.includes(row.id)} onToggle={()=>toggle(row.id)} disabled={selected.includes(row.id)?null:offered?tt("process.blockers.notPending"):blocked?tt("process.blockers.squad"):null}>
             <PlayerLine
               row={row}
               t={t}
@@ -235,68 +266,72 @@ function SellPick({ career, selected, toggle, t }: { career: CoachCareer; select
           </CheckRow>
         );
       })}
-    </ul>
+    </ul></div>
   );
 }
 
 function DevelopPick({ career, selected, toggle, t }: { career: CoachCareer; selected: string[]; toggle(id: string): void; t: TecnicoTranslator }) {
   const { tt } = t;
   const allowed = new Set(developable(career).map((player) => player.id));
-  const rows = squadRows(career).sort((a, b) => a.age - b.age || b.ovr - a.ovr);
+  const filters = usePickFilters(career, "develop");
+  const rows = filters.rows;
   return (
-    <ul className="tec-pick-list">
+    <div><PickFilters filters={filters} t={t} /><ul className="tec-pick-list tec-table-list">
       {rows.map((row) => (
-        <CheckRow key={row.id} checked={selected.includes(row.id)} onToggle={() => toggle(row.id)} disabled={allowed.has(row.id) ? null : tt("develop.marked")}>
+        <CheckRow row={row} key={row.id} checked={selected.includes(row.id)} onToggle={() => toggle(row.id)} disabled={allowed.has(row.id) ? null : tt("develop.marked")}>
           <PlayerLine row={row} t={t}>
             <span>{tt(`squad.potential.${row.potentialHint}`)}</span>
           </PlayerLine>
         </CheckRow>
       ))}
-    </ul>
+    </ul></div>
   );
 }
 
 function BuySearch({ career, selected, toggle, t }: { career: CoachCareer; selected: string[]; toggle(id: string): void; t: TecnicoTranslator }) {
-  const { tt, money, c } = t;
+  const { tt, money } = t;
   const coach = career.coach;
-  const club = coach ? career.clubs[coach.club] : null;
-  const strength = Math.round(club?.strength ?? 60);
-  const [query, setQuery] = useState("");
-  const [position, setPosition] = useState<Position | "any">("any");
-  const [maxOvr, setMaxOvr] = useState(Math.min(99, strength + 4));
-  const [affordable, setAffordable] = useState(true);
-  const [impossible, setImpossible] = useState(false);
+  const [query, setQuery] = useProcessDraft(career, "buy", "query", "");
+  const [position, setPosition] = useProcessDraft<Position | "any">(career, "buy", "position", "any");
+  const [minOvr, setMinOvr] = useProcessDraft(career, "buy", "minOvr", "");
+  const [maxOvr, setMaxOvr] = useProcessDraft(career, "buy", "maxOvr", "");
+  const [affordable, setAffordable] = useProcessDraft(career, "buy", "affordable", true);
+  const [impossible, setImpossible] = useProcessDraft(career, "buy", "impossible", false);
+  const [sort,setSort]=useProcessDraft<PlayerSort>(career,"buy","columnSort",{key:"chance",descending:true});
+  const [limit,setLimit]=useState(120);
 
   const pool = useMemo(
     () =>
       Object.values(career.players)
-        .filter((player) => player.club !== coach?.club && player.ovr >= strength - 12 && player.ovr <= strength + 20)
+        .filter((player) => player.club !== coach?.club)
         .sort((a, b) => b.ovr - a.ovr || a.id.localeCompare(b.id)),
-    [career.players, coach?.club, strength],
+    [career.players, coach?.club],
   );
   const folded = foldText(query);
   // Por padrão, só alvos possíveis: quem é quase impossível de trazer fica
   // escondido até o jogador pedir para ver (a chance continua na etiqueta).
   const rows: Array<{ row: PlayerRow; tier: ReturnType<typeof chanceTier> }> = [];
   for (const player of pool) {
-    if (rows.length >= 120) break;
-    if (player.ovr > maxOvr) continue;
+    if (maxOvr !== "" && player.ovr > Number(maxOvr)) continue;
+    if (minOvr !== "" && player.ovr < Number(minOvr)) continue;
     if (position !== "any" && player.position !== position && !player.alternates.includes(position)) continue;
     if (affordable && coach && valueOf(player, career.year) > coach.budget) continue;
     if (!coach) break;
-    const tier = chanceTier(purchaseChance(career, player, coach.club).total);
-    if (!impossible && tier === "veryHard") continue;
+    const rawTier = chanceTier(purchaseChance(career, player, coach.club).total);
+    if (!impossible && rawTier === "veryHard") continue;
+    const tier = areRivals(coach.club,player.club) ? "hard" : rawTier;
     const row = playerRow(career, player);
     if (folded && !foldText(row.name).includes(folded) && !foldText(getClub(player.club)?.name ?? "").includes(folded)) continue;
     rows.push({ row, tier });
   }
   // Primeiro quem tem chance de verdade, depois o OVR, depois os mais novos.
-  const TIER_ORDER: Readonly<Record<ReturnType<typeof chanceTier>, number>> = { likely: 0, possible: 1, hard: 2, veryHard: 3 };
-  rows.sort((a, b) => TIER_ORDER[a.tier] - TIER_ORDER[b.tier] || b.row.ovr - a.row.ovr || a.row.age - b.row.age);
+  const tierScore = { likely: 3, possible: 2, hard: 1, veryHard: 0 };
+  rows.sort((a,b)=>sort.key === "chance" ? (sort.descending ? -1 : 1) * (tierScore[a.tier]-tierScore[b.tier]) || b.row.ovr-a.row.ovr || a.row.age-b.row.age : comparePlayers(a.row,b.row,sort));
   const chosen = selected.map((id) => career.players[id]).filter((player) => player !== undefined);
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="tec-buy-search">
+      {coach ? <div className="tec-market-budget"><FinanceMeter label={tt("header.budget")} used={budgetSpent(career)} pending={chosen.reduce((sum, player) => sum + valueOf(player, career.year), 0)} limit={coach.budget + budgetSpent(career)} t={t} /></div> : null}
       <div className="relative">
         <Search size={16} aria-hidden="true" className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-faint" />
         <input
@@ -308,30 +343,7 @@ function BuySearch({ career, selected, toggle, t }: { career: CoachCareer; selec
           onChange={(event) => setQuery(event.target.value)}
         />
       </div>
-      <div className="flex flex-wrap items-center gap-2">
-        <label className="tec-select">
-          <span className="sr-only">{tt("buy.filters.position")}</span>
-          <select value={position} onChange={(event) => setPosition(event.target.value as Position | "any")}>
-            <option value="any">
-              {tt("buy.filters.position")}: {tt("buy.filters.any")}
-            </option>
-            {POSITIONS.map((item) => (
-              <option key={item} value={item}>
-                {c(`positionAbbr.${item}`)}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="tec-select">
-          <span className="sr-only">{tt("buy.filters.maxOvr", { ovr: maxOvr })}</span>
-          <select value={maxOvr} onChange={(event) => setMaxOvr(Number(event.target.value))}>
-            {Array.from({ length: 21 }, (_, index) => strength - 4 + index).map((value) => (
-              <option key={value} value={value}>
-                {tt("buy.filters.maxOvr", { ovr: value })}
-              </option>
-            ))}
-          </select>
-        </label>
+      <div className="tec-buy-filters">
         <button type="button" className="tec-toggle" aria-pressed={affordable} onClick={() => setAffordable((value) => !value)}>
           {affordable ? <Check size={13} aria-hidden="true" /> : null}
           {tt("buy.filters.affordable")}
@@ -342,7 +354,7 @@ function BuySearch({ career, selected, toggle, t }: { career: CoachCareer; selec
         </button>
       </div>
       {chosen.length > 0 ? (
-        <div className="flex flex-wrap gap-1.5">
+        <div className="tec-buy-chosen">
           {chosen.map((player) => (
             <button key={player.id} type="button" className="tec-chosen" onClick={() => toggle(player.id)}>
               {playerRow(career, player).short}
@@ -351,30 +363,26 @@ function BuySearch({ career, selected, toggle, t }: { career: CoachCareer; selec
           ))}
         </div>
       ) : null}
-      <p className="text-2xs text-faint">{tt("buy.tierHint")}</p>
+      <span className="flex items-center gap-2 text-xs text-muted">{tt("buy.chance")}<InfoTip label={tt("buy.chance")}>{tt("buy.tierHint")}</InfoTip></span>
+      <SortHeaders sort={sort} onChange={setSort} position={position} onPosition={setPosition} minOvr={minOvr} onMinOvr={setMinOvr} maxOvr={maxOvr} onMaxOvr={setMaxOvr} chance selection />
       {rows.length === 0 ? (
         <p className="p-3 text-sm text-muted">{tt("process.emptySearch")}</p>
       ) : (
-        <ul className="tec-pick-list">
-          {rows.map(({ row, tier }) => {
+        <ul className="tec-pick-list tec-table-list">
+          {rows.slice(0,limit).map(({ row, tier }) => {
             const player = career.players[row.id];
             if (!player) return null;
             return (
-              <CheckRow key={row.id} checked={selected.includes(row.id)} onToggle={() => toggle(row.id)}>
-                <PlayerLine row={row} t={t}>
+              <CheckRow row={row} key={row.id} checked={selected.includes(row.id)} onToggle={() => toggle(row.id)}>
+                <PlayerLine row={row} t={t} right={<span className="numeric text-2xs font-semibold">{tt("common.estimate",{money:money(row.value)})}</span>} extra={<span className="tec-chance-cell"><Chip tone={TIER_TONE[tier]} size="sm" glyph>{tt(`buy.tiers.${tier}`)}</Chip></span>}>
                   {player.club ? <ClubTag club={player.club} size={14} /> : <span>{tt("buy.free")}</span>}
-                  <span className="flex w-full flex-wrap items-center gap-2">
-                    <Chip tone={TIER_TONE[tier]} size="sm" glyph>
-                      {tt(`buy.tiers.${tier}`)}
-                    </Chip>
-                    <span className="numeric text-2xs font-semibold text-fg">{tt("common.estimate", { money: money(row.value) })}</span>
-                  </span>
                 </PlayerLine>
               </CheckRow>
             );
           })}
         </ul>
       )}
+      {rows.length>limit?<button type="button" className="tec-toggle" onClick={()=>setLimit(limit+120)}>{d66(t.locale,"showMore")}</button>:null}
     </div>
   );
 }
@@ -467,11 +475,11 @@ function YouthPick({ career, value, onChange, t }: { career: CoachCareer; value:
             <span className="min-w-0 flex-1 text-left">
               <span className="flex items-center gap-1.5 font-semibold">
                 <NationFlag code={candidate.nationality} locale={locale} size={14} />
-                {tt(`youth.descriptions.${candidate.description}`)}
+                {coachPlayerName(career.setup.seed, { ...candidate, name: "" })}
               </span>
               <span className="text-2xs text-muted">
                 {tt("common.years", { age })}
-                {candidate.trait ? ` · ${tt(`squad.traits.${candidate.trait}.name`)}` : ""}
+                {` · ${tt(`youth.descriptions.${candidate.description}`)}`}
                 {candidate.promoted ? ` · ${tt("youth.promoted")}` : ""}
               </span>
             </span>
@@ -508,7 +516,8 @@ function LockerPick({
   t: TecnicoTranslator;
 }) {
   const { tt } = t;
-  const rows = squadRows(career).sort((a, b) => ["unhappy", "neutral", "happy"].indexOf(a.mood) - ["unhappy", "neutral", "happy"].indexOf(b.mood));
+  const filters = usePickFilters(career, "locker");
+  const rows = filters.rows;
   return (
     <div className="flex flex-col gap-3">
       <div className="grid grid-cols-2 gap-2" role="radiogroup" aria-label={tt("locker.title")}>
@@ -520,15 +529,15 @@ function LockerPick({
         ))}
       </div>
       {mode === "talk" ? (
-        <ul className="tec-pick-list">
+        <div><PickFilters filters={filters} t={t} /><ul className="tec-pick-list tec-table-list">
           {rows.map((row) => (
-            <CheckRow key={row.id} checked={selected.includes(row.id)} onToggle={() => toggle(row.id)}>
+            <CheckRow row={row} key={row.id} checked={selected.includes(row.id)} onToggle={() => toggle(row.id)}>
               <PlayerLine row={row} t={t} right={<MoodChip mood={row.mood} t={t} />}>
                 <span>{tt(`squad.roles.${row.role}`)}</span>
               </PlayerLine>
             </CheckRow>
           ))}
-        </ul>
+        </ul></div>
       ) : (
         <div className="grid gap-2 sm:grid-cols-2" role="radiogroup" aria-label={tt("locker.meeting")}>
           {(["support", "demand"] as const).map((choice) => (
@@ -546,6 +555,7 @@ function LockerPick({
             >
               <span className="font-semibold">{t.g(`meeting.${choice}.label`)}</span>
               <span className="text-xs text-muted">{t.g(`meeting.${choice}.good`)}</span>
+              {choice === "support" ? <EffectChips effects={[{ type: "board", amount: DECISION_TRADEOFFS.supportBoard }, { type: "satisfaction", target: "squad", amount: career.coach && (career.coach.fans < 50 || career.coach.board < 50) ? 4 : 2 }]} t={t} /> : <RiskPreview chance={career.coach && (career.coach.fans < 50 || career.coach.board < 50) ? 0.55 : 0.35} success={[{ type: "form", target: "starters", amount: 0.5 }, { type: "board", amount: 2 }]} failure={[{ type: "satisfaction", target: "squad", amount: -4 }]} t={t} />}
             </button>
           ))}
         </div>
@@ -565,25 +575,15 @@ export function MoodChip({ mood, t }: { mood: PlayerRow["mood"]; t: TecnicoTrans
 
 // -------------------------------------------------------------- respostas
 
-function Impact({ preview, t }: { preview: Preview; t: TecnicoTranslator }) {
-  const { tt, money } = t;
-  return (
-    <dl className="tec-impact">
-      <div>
-        <dt>{tt("process.impact.budget")}</dt>
-        <dd className={preview.budgetAfter < 0 ? "text-bad" : undefined}>{money(preview.budgetAfter)}</dd>
-      </div>
-      <div>
-        <dt>{tt("process.impact.cash")}</dt>
-        <dd className={preview.cashAfter < 0 ? "text-bad" : undefined}>{money(preview.cashAfter)}</dd>
-      </div>
-      <div>
-        <dt>{tt("process.impact.wages")}</dt>
-        <dd className={preview.wageBillAfter > preview.wageCap ? "text-bad" : undefined}>{tt("common.perMonth", { money: money(preview.wageBillAfter) })}</dd>
-      </div>
-      <p className="col-span-full text-2xs text-faint">{tt("process.impact.cap", { money: money(preview.wageCap) })}</p>
-    </dl>
-  );
+function Impact({ preview, career, t }: { preview: Preview; career: CoachCareer; t: TecnicoTranslator }) {
+  const coach = career.coach;
+  const club = coach ? career.clubs[coach.club] : null;
+  if (!coach || !club) return null;
+  const wages = wageBillOf(career, coach.club);
+  return <div className="tec-impact-bars">
+    <FinanceMeter label={t.tt("header.budget")} used={budgetSpent(career)} pending={Math.max(0, coach.budget - preview.budgetAfter)} limit={coach.budget + budgetSpent(career)} t={t} />
+    <FinanceMeter label={t.tt("club.wages")} used={wages} pending={preview.wageBillAfter - wages} limit={preview.wageCap} t={t} />
+  </div>;
 }
 
 function Blockers({ preview, t }: { preview: Preview; t: TecnicoTranslator }) {
@@ -626,6 +626,7 @@ function Decide({ onAccept, onDecline, disabled, t }: { onAccept(): void; onDecl
 
 function ResponsesStep({ career, run, t, onDone }: { career: CoachCareer; run: Run; t: TecnicoTranslator; onDone(): void }) {
   const { tt, money } = t;
+  const [selectedTalk, setSelectedTalk] = useState("");
   const flow = career.flow;
   if (!flow) return null;
   const respond = (item: string, decision: "accept" | "decline" | string) => {
@@ -634,7 +635,7 @@ function ResponsesStep({ career, run, t, onDone }: { career: CoachCareer; run: R
   };
   const playerName = (id: string) => {
     const player = career.players[id];
-    return player ? playerRow(career, player).name : id;
+    return player ? <PlayerPeek row={playerRow(career, player)} trigger={<button type="button" className="tec-inline-person">{playerRow(career, player).name}</button>} /> : id;
   };
 
   let body: ReactNode = null;
@@ -654,7 +655,7 @@ function ResponsesStep({ career, run, t, onDone }: { career: CoachCareer; run: R
               </p>
               {preview ? (
                 <>
-                  <Impact preview={preview} t={t} />
+                  <Impact preview={preview} career={career} t={t} />
                   <Blockers preview={preview} t={t} />
                   <Decide disabled={!preview.ok} onAccept={() => respond(offer.id, "accept")} onDecline={() => respond(offer.id, "decline")} t={t} />
                 </>
@@ -685,7 +686,7 @@ function ResponsesStep({ career, run, t, onDone }: { career: CoachCareer; run: R
               <p className="text-sm text-muted">{text}</p>
               {preview ? (
                 <>
-                  <Impact preview={preview} t={t} />
+                  <Impact preview={preview} career={career} t={t} />
                   <Blockers preview={preview} t={t} />
                   <Decide disabled={!preview.ok} onAccept={() => respond(response.id, "accept")} onDecline={() => respond(response.id, "decline")} t={t} />
                 </>
@@ -696,49 +697,22 @@ function ResponsesStep({ career, run, t, onDone }: { career: CoachCareer; run: R
       </ul>
     );
   } else if (flow.kind === "locker" && flow.mode === "talk") {
-    body = (
-      <ul className="flex flex-col gap-2">
-        {flow.talks.map((talk) => (
-          <li key={talk.id} className="tec-response">
-            <p className="font-semibold">{playerName(talk.player)}</p>
-            <p className="text-sm">
-              <span className="text-muted">{tt("locker.concern")}: </span>
-              {t.g(`talks.concerns.${talk.concern}`)}
-            </p>
-            {talk.immediate > 0 ? <p className="text-xs text-good">{t.g("talks.immediate")}</p> : null}
-            {talk.chosen ? (
-              <p className={cn("mt-1 text-sm", talk.outcome === "good" ? "text-good" : "text-bad")}>
-                {t.g(`talks.options.${talk.chosen}.${talk.outcome === "good" ? "good" : "bad"}`)}
-              </p>
-            ) : (
-              <div className="mt-2 flex flex-col gap-1.5">
-                <p className="eyebrow">{tt("locker.choose")}</p>
-                {talk.options.map((option) => {
-                  const effect = TALK_EFFECTS[option];
-                  return (
-                    <button key={option} type="button" className="tec-choice tec-choice-row" onClick={() => respond(talk.id, option)}>
-                      <span className="min-w-0 flex-1 text-left">
-                        <span className="block font-semibold">{t.g(`talks.options.${option}.label`)}</span>
-                        {effect ? <EffectChips effects={effect.success} t={t} /> : null}
-                      </span>
-                      <span className="text-2xs text-muted">
-                        {effect?.chance === null || effect?.chance === undefined ? tt("event.noRisk") : tt("event.chance", { percent: t.percent(effect.chance) })}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            )}
-          </li>
-        ))}
-      </ul>
-    );
+    const talk = flow.talks.find(item => item.id === selectedTalk) ?? flow.talks[0];
+    body = talk ? <div className="tec-talk-scene">
+      {flow.talks.length > 1 ? <div className="tec-talk-tabs" role="group" aria-label={tt("locker.title")}>{flow.talks.map((item, index) => <button key={item.id} type="button" aria-pressed={item.id === talk.id} onClick={() => setSelectedTalk(item.id)}><span>{item.chosen ? "✓" : `0${index + 1}`}</span>{career.players[item.player] ? playerRow(career, career.players[item.player]!).short : item.player}</button>)}</div> : null}
+      <div className="tec-talk-context"><p className="font-semibold">{playerName(talk.player)}</p><p className="text-sm text-muted">{t.g(`talks.concerns.${talk.concern}`)}</p>{talk.immediate > 0 ? <p className="text-xs text-good">{t.g("talks.immediate")}</p> : null}</div>
+      {talk.chosen ? <Resolution key={`${talk.id}:${talk.chosen}`} good={talk.outcome === "good"} title={tt("event.outcome")}><p className="text-sm">{t.g(`talks.options.${talk.chosen}.${talk.outcome === "good" ? "good" : "bad"}`)}</p><EffectChips effects={(talk.outcome === "good" ? TALK_EFFECTS[talk.chosen]?.success : TALK_EFFECTS[talk.chosen]?.failure) ?? []} t={t} /></Resolution>
+      : <DecisionPicker key={talk.id} label={tt("locker.choose")} onChoose={(option) => respond(talk.id, option)} options={talk.options.map(option => {
+        const effect = TALK_EFFECTS[option]!;
+        const priced = { id: option, chance: effect.chance, success: effect.success, failure: effect.failure };
+        const affordable = canAffordEvent(career, priced);
+        return { id: option, title: t.g(`talks.options.${option}.label`), canConfirm: affordable, detail: <><RiskPreview chance={effect.chance} success={effect.success} failure={effect.failure} t={t} />{effect.acceptBench || effect.releasePromise ? <p className="mt-1 text-xs text-info">{t.g(`talks.options.${option}.good`)}</p> : null}{!affordable ? <p className="mt-1 text-xs text-bad">{tt("ux.excess", { money: money(eventCost(priced) - (career.coach?.budget ?? 0)) })}</p> : null}</> };
+      })} />}
+    </div> : null;
   } else if (flow.kind === "locker" && flow.meeting) {
     const meeting = flow.meeting;
     body = (
-      <p className={cn("tec-response text-sm", meeting.outcome === "good" ? "text-good" : "text-bad")}>
-        {meeting.choice ? t.g(`meeting.${meeting.choice}.${meeting.outcome === "good" ? "good" : "bad"}`) : null}
-      </p>
+      <Resolution good={meeting.outcome === "good"} title={tt("event.outcome")}><p className="text-sm">{meeting.choice ? t.g(`meeting.${meeting.choice}.${meeting.outcome === "good" ? "good" : "bad"}`) : null}</p></Resolution>
     );
   } else if (flow.kind === "funds") {
     const response = flow.response;
@@ -763,11 +737,12 @@ function ResponsesStep({ career, run, t, onDone }: { career: CoachCareer; run: R
     (flow.kind === "funds" && flow.response.status === "pending");
 
   return (
-    <div className="flex flex-col gap-4">
-      <p className="eyebrow">{tt("process.responses")}</p>
-      {body}
+    <div className="tec-process-responses" data-talk={flow.kind === "locker" || undefined}>
+      {flow.kind !== "locker" ? <p className="eyebrow">{tt("process.responses")}</p> : null}
+      <div className="tec-response-body">{body}</div>
       <div className="tec-sheet-footer">
-        <span className="text-xs text-faint">{pending ? tt("process.concludeHint") : null}</span>
+        <span className="text-xs text-faint">{pending ? flow.kind === "buy" || flow.kind === "sell" ? revisionText(t.locale, "saved") : tt("process.concludeHint") : null}</span>
+        {flow.kind === "buy" || flow.kind === "sell" ? <Button variant="secondary" size="sm" disabled={career.actionsUsed >= 3} onClick={() => { const kind = flow.kind; resetProcessDraft(career,kind); run({ type: "closeAction" }); run({ type: "openAction", kind, fresh: true }); }}>{revisionText(t.locale, flow.kind === "buy" ? "freshBuy" : "freshSell")}</Button> : null}
         <Button
           onClick={() => {
             feedback("confirm");
@@ -779,4 +754,15 @@ function ResponsesStep({ career, run, t, onDone }: { career: CoachCareer; run: R
       </div>
     </div>
   );
+}
+
+function usePickFilters(career: CoachCareer, kind: "develop" | "locker") {
+  const [query,setQuery]=useProcessDraft(career,kind,"query","");
+  const [position,setPosition]=useProcessDraft<Position | "any">(career,kind,"position","any");
+  const [sort,setSort]=useProcessDraft<PlayerSort>(career,kind,"columnSort",{key:"age",descending:false});
+  const rows=squadRows(career).filter(row=>(!query || foldText(row.name).includes(foldText(query))) && (position==="any" || row.position===position || row.alternates.includes(position))).sort((a,b)=>comparePlayers(a,b,sort));
+  return {query,setQuery,position,setPosition,sort,setSort,rows};
+}
+function PickFilters({filters,t}:{filters:ReturnType<typeof usePickFilters>;t:TecnicoTranslator}) {
+  return <><input type="search" className="search-input" value={filters.query} onChange={event=>filters.setQuery(event.target.value)} aria-label={revisionText(t.locale,"search")} placeholder={revisionText(t.locale,"search")} /><SortHeaders sort={filters.sort} onChange={filters.setSort} position={filters.position} onPosition={filters.setPosition} selection /></>;
 }

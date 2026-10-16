@@ -11,9 +11,11 @@ import {
   type ConfirmPayload,
 } from "./actions";
 import { buildSeason, seasonMemory } from "./competitions";
-import { applyEffects, matchEventSuccess, pickStageEvent, resolveEventChoice } from "./events";
+import { applyEffects, canAffordEvent, matchEventSuccess, pickStageEvent, resolveEventChoice } from "./events";
+import { promiseProgress } from "./promises";
 import { evolvePeriod } from "./evolution";
 import { sanitizeTactics, suggestTactics } from "./lineup";
+import { positionPenalty } from "./players";
 import { displayStrength, FORMATION_SLOTS } from "./tactics";
 import { buildReport } from "./report";
 import {
@@ -27,6 +29,7 @@ import {
   seasonBudget,
   seasonOffers,
   seasonPrizes,
+  shouldDismissMidseason,
 } from "./review";
 import { closeLeagues, offseason } from "./rollover";
 import { resumeMatch, simulateDays } from "./season";
@@ -43,8 +46,12 @@ import type {
   Tactics,
 } from "./types";
 import { FORMATIONS } from "./types";
-import { CAREER_SEASONS, COACH_VERSION, EVALUATION, OFFERS, PREDICTABILITY, PROMISES, REPUTATION, SATISFACTION, TRAIT_EFFECTS } from "./tuning";
+import { CAREER_SEASONS, COACH_VERSION, EVALUATION, LIVE_RELATIONS, OFFERS, PREDICTABILITY, PROMISES, REPUTATION, SATISFACTION, TRAIT_EFFECTS } from "./tuning";
 import { absDay, coachRng } from "./util";
+import { incomingTransfers } from "./incomingTransfers";
+import { rememberSquad } from "./legacy";
+import { seasonAwards } from "./awards";
+import { cupObjectivesFor } from "./objectives";
 import { assignRoles, COACH_COUNTRIES, createWorldState, squadOf, type WorldData } from "./world";
 
 /**
@@ -80,8 +87,10 @@ export function createCoachCareer(setup: CoachSetup, data: WorldData): CoachCare
     actionsUsed: 0,
     actions: [],
     flow: null,
+    savedFlows: {}, transferOffers: [], competitionStats: {}, seasonAwards: [], news: { retired: [], arrivals: [] },
     youth: [],
     event: null,
+    eventsSeen: [],
     matchEventArmed: false,
     pendingMatch: null,
     promises: [],
@@ -109,7 +118,7 @@ export function createCoachCareer(setup: CoachSetup, data: WorldData): CoachCare
 export function cloneCareer(career: CoachCareer): CoachCareer {
   const players: Record<string, CoachPlayer> = {};
   for (const [id, player] of Object.entries(career.players)) {
-    players[id] = { ...player, recentRatings: [...player.recentRatings], traits: [...player.traits], season: { ...player.season } };
+    players[id] = { ...player, recentRatings: [...player.recentRatings], traits: [...player.traits], improvised:player.improvised ? JSON.parse(JSON.stringify(player.improvised)) as CoachPlayer["improvised"] : undefined,season: { ...player.season } };
   }
   const clubs: CoachCareer["clubs"] = {};
   for (const [id, club] of Object.entries(career.clubs)) clubs[id] = { ...club };
@@ -123,6 +132,7 @@ export function cloneCareer(career: CoachCareer): CoachCareer {
     coach: career.coach ? deep(career.coach) : null,
     actions: [...career.actions],
     flow: career.flow ? deep(career.flow) : null,
+    savedFlows: deep(career.savedFlows), transferOffers: deep(career.transferOffers), competitionStats: deep(career.competitionStats), seasonAwards: [...career.seasonAwards], news: deep(career.news),
     youth: deep(career.youth),
     event: career.event ? deep(career.event) : null,
     pendingMatch: career.pendingMatch ? deep(career.pendingMatch) : null,
@@ -174,6 +184,7 @@ function setCoachClub(career: CoachCareer, clubId: string): void {
     fundsGranted: 0,
     fundsRequests: 0,
     objective: objectiveFor(career, clubId),
+    cupObjectives: cupObjectivesFor(career, clubId),
     raisedObjective: false,
     credit: EVALUATION.creditStart,
     seasonsAtClub: 0,
@@ -218,7 +229,8 @@ function refreshTactics(career: CoachCareer): void {
       used.add(fill);
       return fill;
     }
-    const other = suggestion.lineup.find((candidate) => candidate && !used.has(candidate)) ?? "";
+    const wanted = FORMATION_SLOTS[clean.formation][index];
+    const other = squad.filter((player) => !player.injury && !used.has(player.id) && (wanted === "gk" ? player.position === "gk" : player.position !== "gk")).sort((a, b) => b.ovr+positionPenalty(b,wanted!)-a.ovr-positionPenalty(a,wanted!) || a.id.localeCompare(b.id))[0]?.id ?? "";
     if (other) used.add(other);
     return other;
   });
@@ -230,17 +242,20 @@ function beginStage(career: CoachCareer): void {
   career.actionsUsed = 0;
   career.actions = [];
   career.flow = null;
+  career.savedFlows = {};
   career.event = null;
   career.matchEventArmed = false;
   career.pendingMatch = null;
   career.ledger = emptyLedger();
   const coach = career.coach;
   if (coach) {
+    for (const player of Object.values(career.players)) if (player.injury && player.injury.until <= career.day) player.injury = null;
     coach.training = { def: 0, mid: 0, att: 0 };
     for (const player of squadOf(career, coach.club)) career.ledger.startOvr[player.id] = player.ovr;
   }
   career.youth = generateYouth(career);
   refreshTactics(career);
+  rememberSquad(career);
 }
 
 // --------------------------------------------------------------- comandos
@@ -249,7 +264,9 @@ export type CoachCommand =
   | { readonly type: "acceptOffer"; readonly offer: string }
   | { readonly type: "setTactics"; readonly formation?: FormationId; readonly philosophy?: Philosophy; readonly lineup?: readonly string[]; readonly bench?: readonly string[] }
   | { readonly type: "autoLineup" }
-  | { readonly type: "openAction"; readonly kind: ActionKind }
+  | { readonly type: "openAction"; readonly kind: ActionKind; readonly fresh?: boolean }
+  | { readonly type: "respondTransfer"; readonly item: string; readonly decision: "accept" | "decline" }
+  | { readonly type: "continueTransfers" }
   | { readonly type: "cancelAction" }
   | { readonly type: "confirmAction"; readonly payload: ConfirmPayload }
   | { readonly type: "respond"; readonly item: string; readonly decision: string }
@@ -281,6 +298,7 @@ function lightCopy(career: CoachCareer): CoachCareer {
     coach: career.coach ? deep(career.coach) : null,
     actions: [...career.actions],
     flow: career.flow ? deep(career.flow) : null,
+    savedFlows: deep(career.savedFlows),
     ledger: deep(career.ledger),
   };
 }
@@ -340,7 +358,7 @@ function apply(career: CoachCareer, command: CoachCommand): void {
       return;
     }
     case "openAction":
-      openAction(career, command.kind);
+      openAction(career, command.kind, command.fresh);
       return;
     case "cancelAction":
       cancelAction(career);
@@ -360,7 +378,7 @@ function apply(career: CoachCareer, command: CoachCommand): void {
         if (career.flow.step === "select") cancelAction(career);
         else closeAction(career);
       }
-      refreshTactics(career);
+      ensure(Boolean(career.coach?.tactics.lineup.length===11 && career.coach.tactics.lineup.every(id=>Boolean(id) && career.players[id]?.club===career.coach?.club)),"emptyLineup");
       const picked = pickStageEvent(career);
       career.matchEventArmed = picked.match;
       career.event = picked.event;
@@ -369,6 +387,8 @@ function apply(career: CoachCareer, command: CoachCommand): void {
     }
     case "chooseEvent": {
       ensure(career.phase === "event" && Boolean(career.event) && !career.event?.chosen, "phase");
+      const selected = career.event?.options.find((option) => option.id === command.option);
+      ensure(Boolean(selected && canAffordEvent(career, selected)), selected ? "budget" : "option");
       resolveEventChoice(career, command.option);
       ensure(Boolean(career.event?.chosen), "option");
       return;
@@ -377,7 +397,8 @@ function apply(career: CoachCareer, command: CoachCommand): void {
       ensure(career.phase === "event" && (!career.event || Boolean(career.event.chosen)), "phase");
       const coach = career.coach as CoachClubState;
       coach.activeTraining = { ...coach.training };
-      refreshTactics(career);
+      ensure(coach.tactics.lineup.length===11 && coach.tactics.lineup.every(Boolean),"emptyLineup");
+      if (career.half === 1) evaluatePromises(career);
       const outcome = simulateDays(career);
       if (!outcome.paused) finishPeriod(career);
       return;
@@ -409,13 +430,22 @@ function apply(career: CoachCareer, command: CoachCommand): void {
     }
     case "continue": {
       ensure(career.phase === "results", "phase");
-      const final = career.setup.mode === "fast" || career.half === 1;
-      if (final) {
-        career.phase = "review";
-        return;
-      }
-      career.half = 1;
-      beginStage(career);
+      continueAfterResults(career);
+      return;
+    }
+    case "respondTransfer": {
+      ensure(career.phase === "transferOffers", "phase");
+      career.phase = "stage";
+      career.flow = { kind: "sell", number: 0, step: "responses", offers: career.transferOffers };
+      respondAction(career, command.item, command.decision);
+      career.flow = null; career.phase = "transferOffers";
+      return;
+    }
+    case "continueTransfers": {
+      ensure(career.phase === "transferOffers", "phase");
+      for (const offer of career.transferOffers) if (offer.status === "pending") offer.status = "declined";
+      career.transferOffers = [];
+      career.phase = "stage";
       return;
     }
     case "decide": {
@@ -450,6 +480,15 @@ function apply(career: CoachCareer, command: CoachCommand): void {
       career.phase = "ended";
       return;
     }
+  }
+}
+
+function continueAfterResults(career: CoachCareer): void {
+  if (career.setup.mode === "fast" || career.half === 1 || career.dismissedThisSeason) career.phase = "review";
+  else {
+    career.half = 1; career.day = absDay(career.seasonIndex, 150); beginStage(career);
+    career.transferOffers = incomingTransfers(career);
+    if (career.transferOffers.length) career.phase = "transferOffers";
   }
 }
 
@@ -497,20 +536,8 @@ function evaluatePromises(career: CoachCareer): void {
   for (const promise of career.promises) {
     if (promise.status !== "active" || promise.until > career.day) continue;
     const player = promise.player ? career.players[promise.player] : null;
-    let kept = true;
-    if (promise.kind === "keep") kept = Boolean(player && player.club === coach.club);
-    else if (promise.kind === "youth") {
-      const apps = Object.values(career.players)
-        .filter((item) => item.club === coach.club && career.year - item.birthYear <= 21)
-        .reduce((total, item) => total + item.season.apps, 0);
-      kept = apps - promise.baseline.apps >= promise.target;
-    } else if (player) {
-      const available = player.season.available - promise.baseline.available;
-      // Lesão suspende a cobrança: sem jogos disponíveis suficientes, não há quebra.
-      if (available < 3) kept = true;
-      else if (promise.kind === "starts") kept = (player.season.starts - promise.baseline.starts) / available >= promise.target;
-      else kept = player.season.apps - promise.baseline.apps >= Math.min(promise.target, Math.ceil(available * 0.5));
-    }
+    const progress = promiseProgress(career, promise);
+    const kept = progress.exempt || progress.done >= progress.target;
     promise.status = kept ? "kept" : "broken";
     const effect = kept ? PROMISES.kept : PROMISES.broken;
     if (player && player.club === coach.club) player.satisfaction = clamp(player.satisfaction + effect.satisfaction, 0, 100);
@@ -543,9 +570,6 @@ function periodRelations(career: CoachCareer, final: boolean, promoted: boolean,
   const coach = career.coach;
   if (!coach) return [];
   const changes: RelationChange[] = [...career.ledger.relations];
-  const position = leaguePosition(career, coach.club);
-  const objective = coach.objective;
-  const results = position === null ? 0 : clamp((objective.expected - position) / Math.max(2, objective.tableSize / 5), -1.5, 1.5);
   const push = (bar: "board" | "fans", delta: number, reason: string) => {
     if (Math.abs(delta) < 0.5) return;
     const rounded = Math.round(delta);
@@ -553,16 +577,18 @@ function periodRelations(career: CoachCareer, final: boolean, promoted: boolean,
     else coach.board = clamp(coach.board + rounded, 0, 100);
     changes.push({ bar, delta: rounded, reason });
   };
-  push("fans", results * (final ? 5 : 3.5), results >= 0 ? "resultsAbove" : "resultsBelow");
-  const derby = career.ledger.moments.reduce((total, moment) => total + (moment.kind === "derbyWin" ? 2 : moment.kind === "derbyLoss" ? -2 : 0), 0);
-  push("fans", derby, derby >= 0 ? "derbyWins" : "derbyLosses");
   if (final) {
     const titles = Object.values(career.competitions).filter((state) => state.champion === coach.club).length;
     push("fans", titles * 6, "titles");
     if (promoted) push("fans", 8, "promotion");
     if (relegated) push("fans", -10, "relegation");
-  } else {
-    push("board", results * 4, results >= 0 ? "resultsAbove" : "resultsBelow");
+  }
+  const position = leaguePosition(career, coach.club);
+  if (position !== null) {
+    const over = clamp((coach.objective.expected - position) / Math.max(2, coach.objective.tableSize / 5), -2, 2);
+    const met = position <= coach.objective.target;
+    push("fans", (over * 7 + (met ? 3 : -2)) * (final ? 1 : 0.22), met ? "resultsAbove" : "resultsBelow");
+    if (!final) push("board", (over * 5 + (met ? 2 : -2)) * 0.22, met ? "resultsAbove" : "resultsBelow");
   }
   return changes;
 }
@@ -571,20 +597,18 @@ function finishPeriod(career: CoachCareer): void {
   const coach = career.coach as CoachClubState;
   const fraction = career.setup.mode === "fast" ? 1 : 0.5;
   const final = career.setup.mode === "fast" || career.half === 1;
-  career.day = absDay(career.seasonIndex, final ? 299 : 149);
+  career.day = absDay(career.seasonIndex, final ? 364 : 149);
   evaluatePromises(career);
   periodSatisfaction(career);
   const changes = evolvePeriod(career, fraction);
   applyPeriodFinances(career, fraction);
-  for (const player of squadOf(career, coach.club)) {
-    const legacy = career.legacy[player.id];
-    if (legacy) legacy.bestOvr = Math.max(legacy.bestOvr, player.ovr);
-  }
   let relations: RelationChange[];
   if (final) {
     const movement = closeLeagues(career);
     career.movement = { promoted: [...movement.promoted], relegated: [...movement.relegated] };
     seasonPrizes(career, movement.promoted, movement.relegated);
+    seasonAwards(career);
+    rememberSquad(career);
     const promoted = movement.promoted.has(coach.club);
     const relegated = movement.relegated.has(coach.club);
     relations = periodRelations(career, true, promoted, relegated);
@@ -603,15 +627,30 @@ function finishPeriod(career: CoachCareer): void {
     career.history.push(historyEntry(career, career.review, false, promoted, relegated, rescue));
     for (const player of squadOf(career, coach.club)) {
       const legacy = career.legacy[player.id];
-      if (legacy && player.season.apps > 0) legacy.seasons += 1;
+      if (legacy && player.season.apps > 0) { legacy.seasons += 1; const local = legacy.byClub?.[player.club]; if (local) local.seasons += 1; }
     }
     career.dismissedThisSeason = review.dismissed;
     if (review.dismissed) career.bans[coach.club] = career.seasonIndex + OFFERS.banSeasons;
     career.offers = career.seasonIndex >= CAREER_SEASONS - 1 ? [] : seasonOffers(career, review.dismissed);
   } else {
     relations = periodRelations(career, false, false, false);
+    if (shouldDismissMidseason(career)) {
+      const measured = evaluateSeason(career, false, false);
+      const before = career.reputation;
+      career.reputation = clamp(before - LIVE_RELATIONS.dismissalReputation, 0, 100);
+      career.review = { ...measured, dismissed: true, confidence: Math.min(measured.confidence, EVALUATION.dismissBelow - 1), reason: "objective", tolerance: "none", reputationAfter: career.reputation };
+      coach.board = career.review.confidence;
+      coach.credit = measured.creditAfter;
+      career.dismissedThisSeason = true;
+      career.bans[coach.club] = career.seasonIndex + OFFERS.banSeasons;
+      career.history.push(historyEntry(career, career.review, true, false, false, false));
+      career.offers = career.seasonIndex >= CAREER_SEASONS - 1 ? [] : seasonOffers(career, true);
+      relations.push({ bar: "reputation", delta: Math.round(career.reputation - before), reason: "seasonBad" });
+    }
   }
-  const report = buildReport(career, changes, relations, final, !final);
+  rememberSquad(career);
+  const finalChanges = squadOf(career, coach.club).map((player) => ({ player: player.id, from: career.ledger.startOvr[player.id] ?? player.ovr, to: player.ovr, developed: changes.some((change) => change.player === player.id && change.developed) })).filter((change) => change.from !== change.to || change.developed);
+  const report = buildReport(career, finalChanges, relations, final, !final);
   career.lastReport = report;
   career.stageReports = [...career.stageReports, report];
   career.moments = [...career.moments, ...career.ledger.moments];
@@ -620,11 +659,29 @@ function finishPeriod(career: CoachCareer): void {
 
 function startNextSeason(career: CoachCareer, target: string): void {
   const coach = career.coach as CoachClubState;
+  // Depois de uma demissão no primeiro turno, o mundo termina sob comando da IA.
+  // Esses jogos não geram estatísticas nem títulos para o treinador dispensado.
+  if (career.dismissedThisSeason && career.lastReport?.partial) {
+    career.coach = null;
+    career.half = 1;
+    career.matchEventArmed = false;
+    simulateDays(career);
+    applyPeriodFinances(career, 0.5);
+    const movement = closeLeagues(career);
+    seasonPrizes(career, movement.promoted, movement.relegated);
+    career.movement = { promoted: [...movement.promoted], relegated: [...movement.relegated] };
+    career.coach = coach;
+  }
   const previousClub = coach.club;
   const leftover = coach.budget;
   const movement = career.movement ?? { promoted: [], relegated: [] };
-  career.memory = seasonMemory(career.year, career.competitions, career.memory);
-  offseason(career, { promoted: new Set(movement.promoted), relegated: new Set(movement.relegated) });
+  career.memory = seasonMemory(career.year, career.competitions, career.memory,career.fixtures);
+  rememberSquad(career);
+  career.coach = { ...coach, club: target };
+  const news = offseason(career, { promoted: new Set(movement.promoted), relegated: new Set(movement.relegated) });
+  career.coach = coach;
+  career.news = { retired: news.retired.filter((id) => Boolean(career.legacy[id])), arrivals: news.added.filter((id) => career.players[id]?.club === target) };
+  career.competitionStats = {}; career.seasonAwards = [];
   career.movement = null;
   if (target !== previousClub) {
     setCoachClub(career, target);
@@ -643,6 +700,7 @@ function startNextSeason(career: CoachCareer, target: string): void {
   career.competitions = season.competitions;
   career.fixtures = season.fixtures;
   career.half = 0;
+  if (career.coach) career.coach.cupObjectives = cupObjectivesFor(career, career.coach.club);
   career.day = absDay(career.seasonIndex, 0);
   career.review = null;
   career.offers = [];
@@ -653,6 +711,8 @@ function startNextSeason(career: CoachCareer, target: string): void {
     for (const player of squadOf(career, career.coach.club)) player.satisfaction += 0.2 * (SATISFACTION.target - player.satisfaction);
   }
   beginStage(career);
+  career.transferOffers = target === previousClub ? incomingTransfers(career) : [];
+  if (career.transferOffers.length) career.phase = "transferOffers";
 }
 
 export { COACH_VERSION };

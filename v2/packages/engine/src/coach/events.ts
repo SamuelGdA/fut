@@ -1,4 +1,5 @@
 import { areRivals } from "@craque/world";
+import { stageInjury } from "./injuries";
 import { clamp } from "../math";
 import type { Rng } from "../rng";
 import { currentLambdas, type DetailedInput, type LiveMatch } from "./match";
@@ -16,7 +17,7 @@ import type {
   MatchContext,
   Sector,
 } from "./types";
-import { PROMISES, STAGE_EVENTS } from "./tuning";
+import { DECISION_TRADEOFFS, FINANCE, PROMISES, STAGE_EVENTS } from "./tuning";
 import { absDay, coachRng, stageKey, unit } from "./util";
 import { squadOf } from "./world";
 
@@ -86,19 +87,161 @@ function buyerFor(context: EventContext, player: CoachPlayer, rng: Rng, rival: b
 
 const CATALOG: readonly EventDefinition[] = [
   {
+    id: "captainVoice", kind: "club",
+    weight: (context) => context.squad.some((p) => ageOf(p, context.year) >= 28) ? 3 : 0,
+    build: (context, rng) => {
+      const player = pickPlayer(context, rng, (item) => ageOf(item, context.year) >= 28);
+      if (!player) return null;
+      return { subject: player.id, params: {}, options: [
+          option("listen", null, [{ type: "satisfaction", target: "subject", amount: 6 }, { type: "satisfaction", target: "youth", amount: -3 }]),
+          option("shared", 0.65, [{ type: "satisfaction", target: "squad", amount: 3 }], [{ type: "satisfaction", target: "subject", amount: -5 }]),
+      ] };
+    },
+  },
+  {
+    id: "benchPlan", kind: "request",
+    weight: (context) => context.squad.some((p) => p.role === "backup") ? 4 : 0,
+    build: (context, rng) => {
+      const player = pickPlayer(context, rng, (item) => item.role === "backup");
+      if (!player) return null;
+      return { subject: player.id, params: {}, options: [
+          option("rotate", null, [{ type: "promise", kind: "minutes", target: 4 }, { type: "satisfaction", target: "subject", amount: 6 }]),
+          option("compete", 0.6, [{ type: "form", target: "subject", amount: 0.5 }], [{ type: "satisfaction", target: "subject", amount: -5 }]),
+      ] };
+    },
+  },
+  {
+    id: "academyBridge", kind: "opportunity",
+    weight: (context) => context.squad.some((p) => ageOf(p, context.year) <= 21) ? 4 : 0,
+    build: (context, rng) => {
+      const player = pickPlayer(context, rng, (item) => ageOf(item, context.year) <= 21);
+      if (!player) return null;
+      return { subject: player.id, params: {}, options: [
+          option("integrate", null, [{ type: "satisfaction", target: "youth", amount: 5 }, { type: "satisfaction", target: "starters", amount: -3 }]),
+          option("individual", null, [{ type: "training", sector: "mid", amount: 1 }, { type: "budget", amount: -roundMoney(revenue(context) * 0.01) }]),
+      ] };
+    },
+  },
+  {
+    id: "trainingTempo", kind: "club",
+    weight: () => 3,
+    build: () => {
+      return { subject: null, params: {}, options: [
+          option("intense", 0.6, [{ type: "form", target: "starters", amount: 0.5 }], [{ type: "form", target: "starters", amount: -0.5 }]),
+          option("light", null, [{ type: "satisfaction", target: "squad", amount: 3 }, { type: "form", target: "starters", amount: -0.25 }]),
+      ] };
+    },
+  },
+  {
+    id: "setPieceLab", kind: "opportunity",
+    weight: () => 3,
+    build: () => {
+      return { subject: null, params: {}, options: [
+          option("attack", null, [{ type: "training", sector: "att", amount: 1 }, { type: "satisfaction", target: "bench", amount: -2 }]),
+          option("defend", null, [{ type: "training", sector: "def", amount: 1 }, { type: "form", target: "starters", amount: -0.25 }]),
+      ] };
+    },
+  },
+  {
+    id: "openTraining", kind: "club",
+    weight: () => 3,
+    build: () => {
+      return { subject: null, params: {}, options: [
+          option("open", 0.65, [{ type: "fans", amount: 5 }, { type: "satisfaction", target: "squad", amount: 2 }], [{ type: "fans", amount: -3 }, { type: "form", target: "starters", amount: -0.5 }]),
+          option("closed", null, [{ type: "training", sector: "mid", amount: 1 }, { type: "fans", amount: -2 }]),
+      ] };
+    },
+  },
+  {
+    id: "pressStrategy", kind: "club",
+    weight: () => 3,
+    build: () => {
+      return { subject: null, params: {}, options: [
+          option("shield", null, [{ type: "satisfaction", target: "squad", amount: 4 }, { type: "board", amount: -2 }]),
+          option("challenge", 0.55, [{ type: "fans", amount: 4 }, { type: "form", target: "starters", amount: 0.5 }], [{ type: "satisfaction", target: "starters", amount: -4 }]),
+      ] };
+    },
+  },
+  {
+    id: "videoRoom", kind: "club",
+    weight: () => 3,
+    build: () => {
+      return { subject: null, params: {}, options: [
+          option("collective", null, [{ type: "training", sector: "def", amount: 1 }, { type: "satisfaction", target: "squad", amount: -2 }]),
+          option("private", 0.7, [{ type: "form", target: "starters", amount: 0.5 }], [{ type: "form", target: "starters", amount: -0.25 }]),
+      ] };
+    },
+  },
+  {
+    id: "veteranSchedule", kind: "request",
+    weight: (context) => context.squad.some((p) => ageOf(p, context.year) >= 32) ? 4 : 0,
+    build: (context, rng) => {
+      const player = pickPlayer(context, rng, (item) => ageOf(item, context.year) >= 32);
+      if (!player) return null;
+      return { subject: player.id, params: {}, options: [
+          option("adapt", null, [{ type: "form", target: "subject", amount: 0.5 }, { type: "satisfaction", target: "squad", amount: -2 }]),
+          option("equal", 0.6, [{ type: "satisfaction", target: "squad", amount: 3 }], [{ type: "form", target: "subject", amount: -0.5 }, { type: "satisfaction", target: "subject", amount: -3 }]),
+      ] };
+    },
+  },
+  {
+    id: "starResponsibility", kind: "request",
+    weight: (context) => context.squad.some((p) => p.role === "star") ? 3 : 0,
+    build: (context, rng) => {
+      const player = pickPlayer(context, rng, (item) => item.role === "star");
+      if (!player) return null;
+      return { subject: player.id, params: {}, options: [
+          option("lead", 0.65, [{ type: "form", target: "subject", amount: 0.5 }, { type: "satisfaction", target: "squad", amount: 2 }], [{ type: "form", target: "subject", amount: -0.5 }]),
+          option("protect", null, [{ type: "satisfaction", target: "subject", amount: 5 }, { type: "fans", amount: -2 }]),
+      ] };
+    },
+  },
+  {
+    id: "squadWorkshop", kind: "opportunity",
+    weight: () => 3,
+    build: (context) => {
+      return { subject: null, params: {}, options: [
+          option("bond", null, [{ type: "satisfaction", target: "squad", amount: 4 }, { type: "budget", amount: -roundMoney(revenue(context) * 0.01) }]),
+          option("work", null, [{ type: "training", sector: "mid", amount: 1 }, { type: "satisfaction", target: "squad", amount: -2 }]),
+      ] };
+    },
+  },
+  {
+    id: "rotationPolicy", kind: "club",
+    weight: () => 3,
+    build: () => {
+      return { subject: null, params: {}, options: [
+          option("merit", null, [{ type: "satisfaction", target: "starters", amount: 4 }, { type: "satisfaction", target: "bench", amount: -4 }]),
+          option("depth", null, [{ type: "satisfaction", target: "bench", amount: 5 }, { type: "satisfaction", target: "starters", amount: -3 }]),
+      ] };
+    },
+  },
+  {
+    id: "youngPressure", kind: "request",
+    weight: (context) => context.squad.some((p) => ageOf(p, context.year) <= 20) ? 3 : 0,
+    build: (context, rng) => {
+      const player = pickPlayer(context, rng, (item) => ageOf(item, context.year) <= 20);
+      if (!player) return null;
+      return { subject: player.id, params: {}, options: [
+          option("protect", null, [{ type: "satisfaction", target: "subject", amount: 5 }, { type: "fans", amount: -2 }]),
+          option("spotlight", 0.55, [{ type: "form", target: "subject", amount: 1 }, { type: "fans", amount: 3 }], [{ type: "form", target: "subject", amount: -1 }, { type: "satisfaction", target: "subject", amount: -3 }]),
+      ] };
+    },
+  },
+  {
     id: "unhappyStar",
     kind: "request",
     weight: (context) => (context.squad.some((player) => (player.role === "star" || player.role === "starter") && moodOf(player.satisfaction) === "unhappy") ? 6 : 0),
     build: (context, rng) => {
       const player = pickPlayer(context, rng, (item) => (item.role === "star" || item.role === "starter") && moodOf(item.satisfaction) === "unhappy");
       if (!player) return null;
-      const raise = roundMoney(player.wage * 0.3);
+      const raise = Math.max(100, Math.round(player.wage * 0.3 / 100) * 100);
       return {
         subject: player.id,
         params: { raise },
         options: [
           option("promise", null, [{ type: "satisfaction", target: "subject", amount: 14 }, { type: "promise", kind: "starts", target: 0.7 }]),
-          option("raise", null, [{ type: "satisfaction", target: "subject", amount: 10 }, { type: "cash", amount: -raise * 12 }]),
+          option("raise", null, [{ type: "satisfaction", target: "subject", amount: 10 }, { type: "wage", amount: raise }]),
           option("firm", 0.5, [{ type: "satisfaction", target: "subject", amount: 3 }, { type: "satisfaction", target: "squad", amount: 2 }], [{ type: "satisfaction", target: "subject", amount: -10 }, { type: "listed" }]),
         ],
       };
@@ -153,8 +296,8 @@ const CATALOG: readonly EventDefinition[] = [
         subject: null,
         params: { cost, injured: context.squad.filter((player) => player.injury).length },
         options: [
-          option("medical", null, [{ type: "cash", amount: -cost }, { type: "injury", days: -10 }]),
-          option("rotate", null, [{ type: "satisfaction", target: "bench", amount: 4 }, { type: "training", sector: "mid", amount: 1 }]),
+          option("medical", null, [{ type: "budget", amount: -cost }, { type: "injury", days: -10 }]),
+          option("rotate", null, [{ type: "satisfaction", target: "bench", amount: 4 }, { type: "training", sector: "mid", amount: 1 }, { type: "satisfaction", target: "starters", amount: DECISION_TRADEOFFS.rotationStarters }]),
         ],
       };
     },
@@ -172,7 +315,7 @@ const CATALOG: readonly EventDefinition[] = [
         params: { rival },
         options: [
           option("fire", 0.6, [{ type: "training", sector: "att", amount: 1 }, { type: "fans", amount: 3 }], [{ type: "form", target: "starters", amount: -1 }]),
-          option("calm", null, [{ type: "training", sector: "def", amount: 1 }, { type: "satisfaction", target: "squad", amount: 1 }]),
+          option("calm", null, [{ type: "training", sector: "def", amount: 1 }, { type: "satisfaction", target: "squad", amount: 1 }, { type: "form", target: "starters", amount: DECISION_TRADEOFFS.calmForm }]),
         ],
       };
     },
@@ -189,22 +332,6 @@ const CATALOG: readonly EventDefinition[] = [
         options: [
           option("accept", null, [{ type: "budget", amount }, { type: "board", amount: -2 }]),
           option("decline", null, [{ type: "board", amount: 3 }]),
-        ],
-      };
-    },
-  },
-  {
-    id: "sponsor",
-    kind: "opportunity",
-    weight: () => 3,
-    build: (context) => {
-      const amount = roundMoney(revenue(context) * 0.05);
-      return {
-        subject: null,
-        params: { amount },
-        options: [
-          option("accept", null, [{ type: "cash", amount }, { type: "fans", amount: -4 }]),
-          option("refuse", null, [{ type: "fans", amount: 3 }]),
         ],
       };
     },
@@ -246,8 +373,8 @@ const CATALOG: readonly EventDefinition[] = [
         subject: player.id,
         params: {},
         options: [
-          option("accept", null, [{ type: "trait", trait: "mentor" }, { type: "satisfaction", target: "subject", amount: 6 }, { type: "satisfaction", target: "youth", amount: 3 }]),
-          option("focus", null, [{ type: "form", target: "subject", amount: 1 }]),
+          option("accept", null, [{ type: "trait", trait: "mentor" }, { type: "satisfaction", target: "subject", amount: 6 }, { type: "satisfaction", target: "youth", amount: 3 }, { type: "form", target: "subject", amount: DECISION_TRADEOFFS.mentorForm }]),
+          option("focus", null, [{ type: "form", target: "subject", amount: 1 }, { type: "satisfaction", target: "youth", amount: DECISION_TRADEOFFS.focusYouth }]),
         ],
       };
     },
@@ -280,12 +407,12 @@ const CATALOG: readonly EventDefinition[] = [
     build: (context, rng) => {
       const player = pickPlayer(context, rng, (item) => item.form >= 1);
       if (!player) return null;
-      const raise = roundMoney(player.wage * 0.35);
+      const raise = Math.max(100, Math.round(player.wage * 0.35 / 100) * 100);
       return {
         subject: player.id,
         params: { raise },
         options: [
-          option("raise", null, [{ type: "satisfaction", target: "subject", amount: 12 }, { type: "cash", amount: -raise * 12 }]),
+          option("raise", null, [{ type: "satisfaction", target: "subject", amount: 12 }, { type: "wage", amount: raise }]),
           option("refuse", 0.6, [{ type: "satisfaction", target: "subject", amount: -2 }], [{ type: "satisfaction", target: "subject", amount: -12 }, { type: "form", target: "subject", amount: -1 }]),
         ],
       };
@@ -302,8 +429,8 @@ const CATALOG: readonly EventDefinition[] = [
         subject: player.id,
         params: {},
         options: [
-          option("rush", 0.5, [{ type: "injury", days: 6 }], [{ type: "injury", days: 32 }]),
-          option("rest", null, [{ type: "injury", days: 18 }, { type: "satisfaction", target: "subject", amount: 3 }]),
+          option("rush", 0.5, [{ type: "form", target: "subject", amount: 0.5 }], [{ type: "injury", days: 365 }]),
+          option("rest", null, [{ type: "injury", days: 150 }, { type: "satisfaction", target: "subject", amount: 3 }]),
         ],
       };
     },
@@ -311,7 +438,7 @@ const CATALOG: readonly EventDefinition[] = [
   {
     id: "austerity",
     kind: "crisis",
-    weight: (context) => ((context.career.clubs[context.club]?.cash ?? 0) < 0 ? 7 : 0),
+    weight: (context) => (context.squad.reduce((sum, player) => sum + player.wage, 0) >= revenue(context) * FINANCE.wageCap / 12 * 0.9 ? 7 : 0),
     build: (context) => {
       const top = [...context.squad].sort((a, b) => b.wage - a.wage)[0];
       if (!top) return null;
@@ -320,7 +447,7 @@ const CATALOG: readonly EventDefinition[] = [
         params: {},
         options: [
           option("list", null, [{ type: "listed" }, { type: "board", amount: 4 }, { type: "satisfaction", target: "subject", amount: -4 }]),
-          option("cut", null, [{ type: "budget", amount: -roundMoney(revenue(context) * 0.03) }, { type: "board", amount: 2 }]),
+          option("cut", null, [{ type: "wage", target: "squad", amount: -0.05, relative: true }, { type: "board", amount: 2 }, { type: "satisfaction", target: "squad", amount: -4 }]),
         ],
       };
     },
@@ -370,8 +497,8 @@ const CATALOG: readonly EventDefinition[] = [
         subject: null,
         params: { amount },
         options: [
-          option("celebrate", null, [{ type: "fans", amount: 4 }, { type: "satisfaction", target: "squad", amount: 2 }]),
-          option("invest", null, [{ type: "budget", amount }, { type: "board", amount: 2 }]),
+          option("celebrate", null, [{ type: "fans", amount: 4 }, { type: "satisfaction", target: "squad", amount: 2 }, { type: "budget", amount: -roundMoney(revenue(context) * DECISION_TRADEOFFS.celebrationCost) }]),
+          option("invest", null, [{ type: "budget", amount }, { type: "board", amount: 2 }, { type: "fans", amount: DECISION_TRADEOFFS.investmentFans }]),
         ],
       };
     },
@@ -386,8 +513,8 @@ const CATALOG: readonly EventDefinition[] = [
         subject: null,
         params: { amount },
         options: [
-          option("tour", 0.7, [{ type: "cash", amount }], [{ type: "cash", amount }, { type: "form", target: "starters", amount: -1 }]),
-          option("camp", null, [{ type: "training", sector: "mid", amount: 1 }]),
+          option("tour", 0.7, [{ type: "budget", amount }], [{ type: "budget", amount }, { type: "form", target: "starters", amount: -1 }]),
+          option("camp", null, [{ type: "training", sector: "mid", amount: 1 }, { type: "budget", amount: -roundMoney(revenue(context) * DECISION_TRADEOFFS.campCost) }]),
         ],
       };
     },
@@ -422,7 +549,10 @@ export function pickStageEvent(career: CoachCareer): { match: boolean; event: Co
   if (!context) return { match: false, event: null };
   const key = stageKey(career.year, career.half);
   const rng = coachRng(career.setup.seed, "event", key);
-  const eligible = CATALOG.map((definition) => [definition, definition.weight(context)] as const).filter(([, weight]) => weight > 0);
+  const recent = new Set(career.eventsSeen.slice(-3));
+  const all = CATALOG.map((definition) => [definition, definition.weight(context)] as const).filter(([, weight]) => weight > 0);
+  const fresh = all.filter(([definition]) => !recent.has(definition.id));
+  const eligible = fresh.length ? fresh : all;
   const matchShare = eligible.length === 0 ? 1 : STAGE_EVENTS.matchShare;
   if (rng.chance(matchShare)) return { match: true, event: null };
   const shuffled = rng.shuffle(eligible);
@@ -430,9 +560,12 @@ export function pickStageEvent(career: CoachCareer): { match: boolean; event: Co
     const definition = rng.weighted(shuffled.map((entry) => [entry[0], entry[1]] as const));
     const built = definition.build(context, coachRng(career.setup.seed, "event", key, definition.id));
     if (built) {
+      const options = built.options.filter((choice) => career.setup.mode === "slow" && career.half === 0
+        || ![...choice.success, ...choice.failure].some((effect) => effect.type === "promise"));
+      if (options.length < 2) { shuffled.splice(shuffled.findIndex((entry) => entry[0] === definition), 1); continue; }
       return {
         match: false,
-        event: { id: definition.id, kind: definition.kind, subject: built.subject, params: built.params, options: built.options, match: null, chosen: null, outcome: null },
+        event: { id: definition.id, kind: definition.kind, subject: built.subject, params: built.params, options, match: null, chosen: null, outcome: null },
       };
     }
     shuffled.splice(shuffled.findIndex((entry) => entry[0] === definition), 1);
@@ -446,11 +579,10 @@ const MATCH_OPTIONS: Readonly<Record<MatchContext["situation"], ReadonlyArray<{ 
   losing: [
     { id: "allIn", forMult: 1.5, againstMult: 1.4 },
     { id: "adjust", forMult: 1.18, againstMult: 1.05 },
-    { id: "accept", forMult: 0.85, againstMult: 0.75 },
   ],
   drawing: [
     { id: "push", forMult: 1.32, againstMult: 1.25 },
-    { id: "balance", forMult: 1.08, againstMult: 0.95 },
+    { id: "balance", forMult: 1.08, againstMult: DECISION_TRADEOFFS.balancedAgainst },
     { id: "hold", forMult: 0.78, againstMult: 0.68 },
   ],
   winning: [
@@ -574,6 +706,18 @@ export function matchEventSuccess(event: CoachEvent, option: string, ownGoals: n
 
 // ------------------------------------------------------------ efeitos
 
+/** Os mesmos integrantes usados pela resolução e pela consulta da interface. */
+export function eventTargets(career: CoachCareer, target: "subject" | "squad" | "starters" | "bench" | "youth", subjectId: string | null): CoachPlayer[] {
+  const coach = career.coach;
+  if (!coach) return [];
+  if (target === "subject") return subjectId && career.players[subjectId] ? [career.players[subjectId]!] : [];
+  const squad = squadOf(career, coach.club);
+  if (target === "starters") return squad.filter((player) => coach.tactics.lineup.includes(player.id));
+  if (target === "bench") return squad.filter((player) => !coach.tactics.lineup.includes(player.id));
+  if (target === "youth") return squad.filter((player) => ageOf(player, career.year) <= 21);
+  return squad;
+}
+
 /** Aplica os efeitos de uma escolha (evento ou conversa). Devolve o texto das mudanças de barra. */
 export function applyEffects(career: CoachCareer, effects: readonly EventEffect[], subjectId: string | null, origin: "talk" | "event"): void {
   const coach = career.coach;
@@ -581,20 +725,7 @@ export function applyEffects(career: CoachCareer, effects: readonly EventEffect[
   const squad = squadOf(career, coach.club);
   const club = career.clubs[coach.club];
   const subject = subjectId ? career.players[subjectId] : null;
-  const targets = (target: "subject" | "squad" | "starters" | "bench" | "youth"): CoachPlayer[] => {
-    switch (target) {
-      case "subject":
-        return subject ? [subject] : [];
-      case "squad":
-        return squad;
-      case "starters":
-        return squad.filter((player) => coach.tactics.lineup.includes(player.id));
-      case "bench":
-        return squad.filter((player) => !coach.tactics.lineup.includes(player.id));
-      case "youth":
-        return squad.filter((player) => career.year - player.birthYear <= 21);
-    }
-  };
+  const targets = (target: "subject" | "squad" | "starters" | "bench" | "youth") => eventTargets(career, target, subjectId);
   for (const effect of effects) {
     switch (effect.type) {
       case "satisfaction":
@@ -611,11 +742,15 @@ export function applyEffects(career: CoachCareer, effects: readonly EventEffect[
         coach.fans = clamp(coach.fans + effect.amount, 0, 100);
         career.ledger.relations.push({ bar: "fans", delta: effect.amount, reason: `${origin}` });
         break;
+      case "wage":
+        for (const player of targets(effect.target ?? "subject")) player.wage = Math.max(0, Math.round((effect.relative ? player.wage * (1 + effect.amount) : player.wage + effect.amount) / 100) * 100);
+        break;
       case "cash":
+        coach.budget += effect.amount;
         if (club) club.cash += effect.amount;
         break;
       case "budget":
-        coach.budget = Math.max(0, coach.budget + effect.amount);
+        coach.budget += effect.amount;
         break;
       case "reputation":
         career.reputation = clamp(career.reputation + effect.amount, 0, 100);
@@ -632,11 +767,15 @@ export function applyEffects(career: CoachCareer, effects: readonly EventEffect[
       case "injury":
         if (effect.days < 0) {
           for (const player of squad) {
-            if (player.injury) player.injury = { ...player.injury, until: Math.max(career.day + 1, player.injury.until + effect.days) };
+            if (player.injury) {
+              if (player.injury.turns === 2) player.injury = stageInjury(career, career.day, 150, "light");
+              else if (player.injury.turns === 1) player.injury = null;
+              else player.injury = { ...player.injury, until: Math.max(career.day + 1, player.injury.until + effect.days) };
+            }
           }
         } else if (subject) {
-          subject.injury = { kind: effect.days > 20 ? "medium" : "light", since: career.day, until: career.day + effect.days };
-          career.ledger.injuries.push({ player: subject.id, days: effect.days, kind: effect.days > 20 ? "medium" : "light" });
+          subject.injury = stageInjury(career, career.day, effect.days, effect.days >= 300 ? "medium" : "light");
+          career.ledger.injuries.push({ player: subject.id, days: effect.days, kind: effect.days >= 300 ? "medium" : "light" });
         }
         break;
       case "sell":
@@ -659,29 +798,36 @@ export function applyEffects(career: CoachCareer, effects: readonly EventEffect[
 
 /** Fim do prazo de uma promessa feita agora: fim da etapa (posse e minutos) ou da temporada (manter). */
 export function promiseDeadline(career: CoachCareer, kind: CoachPromise["kind"]): number {
-  const seasonEnd = absDay(career.seasonIndex, 299);
-  if (kind === "keep") return seasonEnd;
-  if (career.setup.mode === "slow" && career.half === 0) return absDay(career.seasonIndex, 149);
-  return seasonEnd;
+  void kind;
+  return absDay(career.seasonIndex, 150);
 }
 
 export function addPromise(career: CoachCareer, kind: CoachPromise["kind"], player: string | null, target: number, origin: "talk" | "event"): void {
-  const id = `${stageKey(career.year, career.half)}:${kind}:${player ?? "squad"}:${career.promises.length}`;
-  const subject = player ? career.players[player] : null;
-  const coachClub = career.coach?.club ?? "";
-  const youthApps = Object.values(career.players)
-    .filter((item) => item.club === coachClub && career.year - item.birthYear <= 21)
-    .reduce((total, item) => total + item.season.apps, 0);
+  if (career.setup.mode !== "slow" || career.half !== 0) return;
+  void kind; void target;
+  const promisedPlayer = player ?? eventTargets(career,"youth",null).filter((item)=>!item.injury).sort((a,b)=>b.ovr-a.ovr || a.id.localeCompare(b.id))[0]?.id ?? null;
+  if (!promisedPlayer) return;
+  const id = `${stageKey(career.year,career.half)}:starts:${promisedPlayer}:${career.promises.length}`;
+  const subject = career.players[promisedPlayer];
   // A cobrança conta a partir daqui: guarda os números de agora.
   const baseline = subject
     ? { starts: subject.season.starts, available: subject.season.available, apps: subject.season.apps }
-    : { starts: 0, available: 0, apps: youthApps };
-  if (kind === "youth" || !subject || !career.promises.some((item) => item.status === "active" && item.player === player && item.kind === kind)) {
-    career.promises.push({ id, kind, player, until: promiseDeadline(career, kind), madeAt: career.day, target, origin, baseline, status: "active" });
+    : { starts: 0, available: 0, apps: 0 };
+  if (subject && !career.promises.some((item) => item.status === "active" && item.player === promisedPlayer)) {
+    career.promises.push({id,kind:"starts",player:promisedPlayer,until:promiseDeadline(career,"starts"),madeAt:career.day,target:1,origin,baseline,status:"active"});
   }
 }
 
 /** Resolve a escolha de um evento fora de campo. */
+/** Reserva o custo máximo possível; escolhas de evento também respeitam a verba. */
+export function eventCost(option: EventOption): number {
+  const cost = (effects: readonly EventEffect[]) => Math.max(0, -effects.reduce((sum, effect) => sum + ((effect.type === "budget" || effect.type === "cash") ? effect.amount : 0), 0));
+  return Math.max(cost(option.success), cost(option.failure));
+}
+export function canAffordEvent(career: CoachCareer, option: EventOption): boolean {
+  return eventCost(option) <= Math.max(0, career.coach?.budget ?? 0);
+}
+
 export function resolveEventChoice(career: CoachCareer, optionId: string): void {
   const event = career.event;
   if (!event || event.chosen) return;
@@ -689,12 +835,21 @@ export function resolveEventChoice(career: CoachCareer, optionId: string): void 
   if (!chosen) return;
   const roll = coachRng(career.setup.seed, "eventOutcome", stageKey(career.year, career.half), event.id, optionId).next();
   const success = chosen.chance === null || roll < chosen.chance;
+  career.eventsSeen = [...career.eventsSeen, event.id];
   event.chosen = optionId;
   event.outcome = success ? "success" : "failure";
   applyEffects(career, success ? chosen.success : chosen.failure, event.subject, "event");
 }
 
 export const EVENT_IDS = CATALOG.map((definition) => definition.id);
+/** Cena de teste com os mesmos alvos e efeitos do catálogo; não força pré-condições falsas. */
+export function debugEvent(career: CoachCareer, id: string): CoachEvent | null {
+  const context = eventContext(career);
+  const definition = CATALOG.find((entry) => entry.id === id);
+  if (!context || !definition || definition.weight(context) <= 0) return null;
+  const built = definition.build(context, coachRng(career.setup.seed, "debugEvent", id));
+  return built ? { ...built, id, kind: definition.kind, match: null, chosen: null, outcome: null } : null;
+}
 export const MATCH_EVENT_OPTIONS = MATCH_OPTIONS;
 
 /** Para testes e laboratório: o peso de cada evento no contexto atual. */

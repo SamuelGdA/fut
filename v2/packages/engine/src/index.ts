@@ -134,6 +134,8 @@ export {
 } from "./sandbox/development";
 
 export * from "./world/types";
+export { playerClubImpact } from "./world/tuning";
+export { clubTrophyProgress, CLUB_TROPHY_PROGRESS } from "./world/clubProgress";
 export {
   BASE_DIVISION,
   BASE_STRENGTH,
@@ -347,7 +349,7 @@ export {
   offerShirt,
   seasonsAtClub,
 } from "./career/context";
-export { academyOffers, ACADEMY, LOAN, MARKET, marketLevel, type MarketContext, type MarketLevelInput } from "./career/market";
+export { academyOffers, ACADEMY, LOAN, MARKET, marketLevel, clubStars, starsAt, type MarketContext, type MarketLevelInput } from "./career/market";
 export { BUYOUT_CHANCE } from "./career/decisions";
 export { chooseMission, MISSION_TERMS, PRESSURE_MAX, pressureTone, type MissionTerms } from "./career/mission";
 export {

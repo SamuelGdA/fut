@@ -1,6 +1,6 @@
 import { careerRecords, type RecordResult, type Stint, stintsOf } from "@craque/content";
 import { type Career, careerTotals, isDefender, isGoalkeeper, type LegacyLevel, peakSeason, type SeasonRecord } from "@craque/engine";
-import { type AwardKey, getClub } from "@craque/world";
+import { type AwardKey, getClub, compareHonours } from "@craque/world";
 
 /**
  * O que o resumo mostra, tirado da carreira terminada (GDD 24). Funções puras:
@@ -75,12 +75,13 @@ export function posterNumbers(career: Career): SummaryNumber[] {
 
 /** A curva do OVR temporada a temporada, para o gráfico do resumo e do pôster. */
 export function ovrCurve(history: readonly SeasonRecord[]): Array<{ year: number; age: number; ovr: number }> {
-  return history.map((record) => ({ year: record.year, age: record.age, ovr: record.ovrEnd }));
+  const first = history[0];
+  return [ ...(first ? [{ year: first.year, age: first.age, ovr: first.ovrStart }] : []), ...history.map((record) => ({ year: record.year, age: record.age, ovr: record.ovrEnd })) ];
 }
 
 export type TimelineHonour =
   | { readonly kind: "title"; readonly id: string; readonly year: number }
-  | { readonly kind: "award"; readonly id: AwardKey; readonly year: number };
+  | { readonly kind: "award"; readonly id: AwardKey; readonly year: number; readonly competition?: string };
 
 export type TimelineItem =
   | {
@@ -93,9 +94,6 @@ export type TimelineItem =
     }
   | { readonly kind: "debut"; readonly age: number; readonly year: number };
 
-/** Até 8 honras por passagem; o resto vira "+N" (GDD 24.4). */
-export const TIMELINE_HONOURS = 8;
-
 /** Passagens por clube e a estreia na seleção, na ordem da idade (GDD 24.4). */
 export function timeline(career: Career): TimelineItem[] {
   const history = career.history;
@@ -105,14 +103,15 @@ export function timeline(career: Career): TimelineItem[] {
     const seasons = history.filter((record) => record.club === stint.club && record.age >= stint.fromAge && record.age <= stint.toAge);
     const honours: TimelineHonour[] = seasons.flatMap((record) => [
       ...record.titles.map((id): TimelineHonour => ({ kind: "title", id, year: record.year })),
-      ...record.awards.won.map((id): TimelineHonour => ({ kind: "award", id, year: record.year })),
+      ...record.awards.won.filter((id) => id !== "topScorer" && id !== "bestPlayer").map((id): TimelineHonour => ({ kind: "award", id, year: record.year })),
+      ...record.awards.crowns.map((crown): TimelineHonour => ({ kind: "award", id: crown.award, competition: crown.competition, year: record.year })),
     ]);
     return {
       kind: "stint",
       stint,
       legacy: clubLegacy.get(stint.club) ?? "none",
       traitor: career.bonds[stint.club]?.traitor ?? false,
-      honours,
+      honours: honours.sort(compareHonours),
     };
   });
   if (career.firstCapAge !== null) {

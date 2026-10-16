@@ -1,3 +1,4 @@
+import { lateBreakthrough } from "../evolution/breakthrough";
 import { type CountryCode, getClub, getCountry, leagueAt, titleImportance } from "@craque/world";
 import { decideAwards, type AwardsOutcome } from "../awards/awards";
 import type { CrownEntry, Placing } from "../awards/crowns";
@@ -11,7 +12,7 @@ import { stream } from "../rng";
 import type { Difficulty, Six } from "../types";
 import { clubIndex } from "../world/model";
 import { confederationOfClub, currentDivision, currentStrength, simulateWorldSeason } from "../world/season";
-import { CALENDAR, CLUB_IMPACT, NATIONAL_IMPACT } from "../world/tuning";
+import { CALENDAR, CLUB_IMPACT, GENERIC_CHAMPIONS, NATIONAL_IMPACT } from "../world/tuning";
 import type { CompetitionBoosts, LeagueResult, SeasonResults, WorldState } from "../world/types";
 import { drawInjury, type Injury } from "./injury";
 import {
@@ -127,6 +128,7 @@ export interface PlayerSeasonStats {
   readonly titleImportance: number;
   readonly national: NationalSeason;
   readonly awards: AwardsOutcome;
+  readonly breakthrough?: boolean;
   readonly ovrStart: number;
   readonly ovrEnd: number;
   readonly attributes: Six;
@@ -142,6 +144,10 @@ export interface PlayerSeasonResult {
 
 function mean(values: readonly number[]): number {
   return values.length === 0 ? 0 : values.reduce((total, value) => total + value, 0) / values.length;
+}
+
+function genericClubStrength(id: string): number {
+  return GENERIC_CHAMPIONS.find((entry)=>entry.id===id || id.startsWith(`${entry.id}:`))?.strength ?? 60;
 }
 
 /**
@@ -196,7 +202,7 @@ function crownEntries(
 
 /** Oposição média (GDD 11.4): 85% a liga, 15% o continental, se houver. */
 function opposition(world: WorldState, results: SeasonResults, league: LeagueResult | null, entries: readonly CompetitionEntry[]): number {
-  const strengthOf = (id: string) => world.strength[clubIndex(id)] ?? 0;
+  const strengthOf = (id: string) => id.startsWith("generic:") ? genericClubStrength(id) : world.strength[clubIndex(id)] ?? 0;
   const leagueMean = league ? mean(league.rows.map((row) => strengthOf(row.club))) : 70;
   const continental = entries.find((entry) => entry.kind.startsWith("continental") && entry.kind !== "continentalSuper");
   const field = continental ? results.continental[continental.competition] : undefined;
@@ -374,7 +380,7 @@ export function simulatePlayerSeason(input: PlayerSeasonInput): PlayerSeasonResu
     nationTitles.reduce((total, entry) => total + titleImportance(entry.kind), 0);
 
   const won = (kind: string) => titles.some((entry) => entry.kind === kind);
-  const strengthOf = (id: string) => world.strength[clubIndex(id)] ?? 0;
+  const strengthOf = (id: string) => id.startsWith("generic:") ? genericClubStrength(id) : world.strength[clubIndex(id)] ?? 0;
   const clubField = (entry: CompetitionEntry) => {
     const table = Object.values(results.leagues).find((candidate) => candidate.competition === entry.competition);
     if (table) return topField(table.rows.map((row) => strengthOf(row.club)), 3);
@@ -403,6 +409,8 @@ export function simulatePlayerSeason(input: PlayerSeasonInput): PlayerSeasonResu
       cleanSheets: production.cleanSheets,
       crownEntries: [...crownEntries(competitions, production, results, clubField), ...nationCrowns],
       playsInUefa: confederation === "UEFA",
+      playsInAmericas: confederation === "CONMEBOL" || confederation === "CONCACAF",
+      eliteDivision: league?.division === 1,
       success: {
         league: won("league"),
         cup: won("cup"),
@@ -425,6 +433,7 @@ export function simulatePlayerSeason(input: PlayerSeasonInput): PlayerSeasonResu
       fans: input.fans,
       difficulty,
       titleImportance: importance,
+      successBonus: Math.min(3, titles.length + awards.crowns.length + awards.won.filter((award) => award !== "topScorer" && award !== "bestPlayer").length + (country && (results.promoted[country] ?? []).includes(club) && games > 0 ? 1 : 0)),
       focus: input.focus,
       growthScale: modifiers.growthScale ?? 1,
       restoreCapacity: shift,
@@ -433,7 +442,7 @@ export function simulatePlayerSeason(input: PlayerSeasonInput): PlayerSeasonResu
     stream(seed, "growth", year),
   );
   // A capacidade emprestada já foi devolvida antes do bônus final de título.
-  const evolved = evolution.player;
+  const evolved = lateBreakthrough(evolution.player,age,games,stream(seed,"growth","lateBreakthrough",year));
 
   const stats: PlayerSeasonStats = {
     year,
@@ -455,6 +464,7 @@ export function simulatePlayerSeason(input: PlayerSeasonInput): PlayerSeasonResu
     titleImportance: importance,
     national,
     awards,
+    breakthrough: evolved.breakthroughAge === age,
     ovrStart,
     ovrEnd: ovrAt(evolved, age),
     attributes: attributesAt(evolved, age),
@@ -465,6 +475,6 @@ export function simulatePlayerSeason(input: PlayerSeasonInput): PlayerSeasonResu
     results,
     player: evolved,
     stats,
-    evolution: evolution.report,
+    evolution: evolved===evolution.player ? evolution.report : {...evolution.report,breakthroughGain:evolved.capacity-evolution.player.capacity,capacityAfter:evolved.capacity,attributesAfter:attributesAt(evolved,age)},
   };
 }

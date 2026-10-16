@@ -1,19 +1,19 @@
+import { HonourToken } from "../../ui/HonourToken";
 import { biography, recordText, type RecordResult } from "@craque/content";
 import { type Career, isGoalkeeper, KEEPER_ATTRIBUTES, OUTFIELD_ATTRIBUTES } from "@craque/engine";
-import { AWARDS, getClub, getCompetition, getCountry } from "@craque/world";
+import { getClub, getCountry } from "@craque/world";
 import { m } from "motion/react";
 import {
   ovrCurve,
   peakCard,
   summaryNumbers,
   summaryRecords,
-  TIMELINE_HONOURS,
   timeline,
   type TimelineItem,
 } from "../../features/summary/summaryData";
 import { attributeText } from "../../i18n/attributes";
 import { useT } from "../../i18n/useT";
-import { AwardArt, Crest, Flag, TrophyArt } from "../../ui/Media";
+import { Crest, Flag } from "../../ui/Media";
 import { Chip } from "../../ui/Signals";
 import { AttributeBar } from "../../ui/Stats";
 import { OvrCurve } from "./Poster";
@@ -178,7 +178,7 @@ export function TimelineSection({ career }: { career: Career }) {
                   <p className="mt-1.5 flex flex-wrap gap-1">
                     {item.legacy !== "none" ? (
                       <Chip tone={LEGACY_TONE[item.legacy]} glyph size="sm">
-                        {c(`legacy.${item.legacy}`)}
+                        {t("career.player.legacy", { level: c(`legacy.${item.legacy}`) })}
                       </Chip>
                     ) : null}
                     {item.traitor ? (
@@ -190,20 +190,7 @@ export function TimelineSection({ career }: { career: Career }) {
                 ) : null}
                 {item.honours.length > 0 ? (
                   <p className="timeline-honours">
-                    {item.honours.slice(0, TIMELINE_HONOURS).map((honour, honourIndex) => {
-                      const competition = honour.kind === "title" ? getCompetition(honour.id) : null;
-                      const name = honour.kind === "title" ? (competition?.names[locale] ?? honour.id) : AWARDS[honour.id].names[locale];
-                      return (
-                        <span key={`${honour.kind}-${honour.id}-${honour.year}-${honourIndex}`} title={`${name} ${honour.year}`}>
-                          {honour.kind === "award" ? (
-                            <AwardArt award={AWARDS[honour.id]} size={30} language={locale} />
-                          ) : competition ? (
-                            <TrophyArt competition={competition} size={30} language={locale} />
-                          ) : null}
-                        </span>
-                      );
-                    })}
-                    {item.honours.length > TIMELINE_HONOURS ? <span className="timeline-more">+{item.honours.length - TIMELINE_HONOURS}</span> : null}
+                    {item.honours.map((honour, index) => <HonourToken key={`${honour.kind}:${honour.id}:${honour.year}:${index}`} id={honour.kind === "award" ? honour.competition ?? honour.id : honour.id} award={honour.kind === "award" ? honour.id : undefined} year={honour.year} language={locale} />)}
                   </p>
                 ) : null}
               </div>

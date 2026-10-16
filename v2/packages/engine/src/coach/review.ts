@@ -1,6 +1,8 @@
+import { cupObjectiveScore } from "./objectives";
 import { type CountryCode, type Division, getLeague, LEAGUES, leagueAt } from "@craque/world";
 import { clamp } from "../math";
-import { sortTable } from "./competitions";
+import { seasonMemory, sortTable, toSeasonMemory } from "./competitions";
+import { continentalEntrants } from "../world/season";
 import type {
   ClubOffer,
   CoachCareer,
@@ -11,7 +13,7 @@ import type {
   SeasonHistory,
   SeasonReview,
 } from "./types";
-import { EVALUATION, FINANCE, INITIAL_OFFERS, MONTHS_PER_SEASON, OFFERS, REPUTATION } from "./tuning";
+import { EVALUATION, FINANCE, INITIAL_OFFERS, LIVE_RELATIONS, MONTHS_PER_SEASON, OFFERS, REPUTATION } from "./tuning";
 import { coachRng } from "./util";
 import { squadOf } from "./world";
 
@@ -38,14 +40,22 @@ function expectationScore(club: CoachClub): number {
   return club.strength + 1.2 * (club.prestige - 3);
 }
 
-export function objectiveFor(career: Pick<CoachCareer, "clubs">, clubId: string): Objective {
+export function objectiveFor(career: Pick<CoachCareer, "clubs"> & Partial<Pick<CoachCareer, "history" | "year">>, clubId: string): Objective {
   const club = career.clubs[clubId];
   const league = leagueOf(career, clubId);
   if (!club || !league) return { kind: "mid", target: 10, expected: 10, tableSize: 20 };
   const members = Object.values(career.clubs).filter((other) => other.country === club.country && other.division === club.division);
   const n = members.length;
   const ranked = [...members].sort((a, b) => expectationScore(b) - expectationScore(a) || a.id.localeCompare(b.id));
-  const expected = ranked.findIndex((other) => other.id === clubId) + 1;
+  const baseline = ranked.findIndex((other) => other.id === clubId) + 1;
+  const recent = (career.history ?? []).filter((season) => season.club === clubId && !season.partial && season.division === club.division && season.year >= (career.year ?? Infinity) - 3).slice(-3);
+  // Um campeão recém-formado deixou de ser só um candidato à sobrevivência.
+  // O histórico puxa a cobrança aos poucos e perde peso depois de três anos.
+  const best = recent.reduce((position, season) => Math.min(position, season.position ?? n), n);
+  let expected = recent.length ? Math.min(baseline, Math.max(1, Math.round(baseline * 0.6 + best * 0.4))) : baseline;
+  const last = recent.at(-1), leagueTitles = recent.filter((season) => season.titles.some((id) => id.startsWith("league:"))).length;
+  if (last?.titles.some((id) => id.startsWith("league:") || id.startsWith("cont1:"))) expected = Math.min(expected, leagueTitles >= 2 ? 2 : Math.max(4, Math.ceil(n / 4)));
+  else if (last?.titles.some((id) => id.startsWith("cont2:") || id.startsWith("cup:"))) expected = Math.min(expected, Math.ceil(n / 2));
   const slots = league.promotionSlots;
   if (club.division === 2) {
     if (expected <= slots) return { kind: "promotion", target: slots, expected, tableSize: n };
@@ -83,18 +93,19 @@ export function wageBillOf(career: CoachCareer, clubId: string): number {
 }
 
 export function financeLabel(club: CoachClub, wageBill: number): ClubOffer["finances"] {
-  const { tightWages, healthyWages, healthyCash } = FINANCE.label;
-  if (club.cash < 0 || wageBill * 12 >= club.revenue * tightWages) return "tight";
-  if (club.cash >= club.revenue * healthyCash && wageBill * 12 <= club.revenue * healthyWages) return "healthy";
+  const limit = club.revenue * FINANCE.wageCap / 12;
+  if (wageBill >= limit * 0.9) return "tight";
+  if (wageBill <= limit * 0.7) return "healthy";
   return "balanced";
 }
 
 /** Verba de contratações no começo da temporada: parte da receita mais um pouco da sobra de caixa. */
 export function seasonBudget(club: CoachClub, leftover: number): number {
-  return Math.max(
-    0,
-    FINANCE.budgetShare * club.revenue + FINANCE.budgetFromCash * Math.max(0, club.cash - FINANCE.cashFloor * club.revenue) + FINANCE.budgetFromLeftover * leftover,
-  );
+  const base=FINANCE.budgetShare * club.revenue;
+  const recent=Math.max(0,club.previousInvestment ?? 0);
+  const investmentCut=1-Math.min(0.3,recent/Math.max(1,club.revenue)*0.5);
+  const allocated=base*investmentCut+FINANCE.budgetFromLeftover*Math.min(leftover,club.revenue*0.2);
+  return Math.max(0,Math.min(allocated,club.cash+club.revenue*0.2));
 }
 
 /** Receitas e salários de um período, para todos os clubes; o do treinador vai para o diário. */
@@ -107,7 +118,7 @@ export function applyPeriodFinances(career: CoachCareer, fraction: number): void
   for (const club of Object.values(career.clubs)) {
     const revenue = club.revenue * fraction;
     const paid = (wages.get(club.id) ?? 0) * MONTHS_PER_SEASON * fraction;
-    club.cash += revenue - paid;
+    club.cash += revenue * (1-FINANCE.operatingShare) - paid;
     if (club.id === career.coach?.club) {
       career.ledger.revenue += revenue;
       career.ledger.wages += paid;
@@ -177,6 +188,30 @@ export function titlesOf(career: CoachCareer, clubId: string): string[] {
     .map((state) => state.id);
 }
 
+/** Cobrança do mandato atual. Vice e supercopas não substituem grandes conquistas. */
+export function titleAmbition(career: CoachCareer): { weight: number; debt: number; penalty: number } {
+  const coach = career.coach, club = coach && career.clubs[coach.club], rules = EVALUATION.ambition;
+  if (!coach || !club || club.division !== 1) return { weight: 0, debt: 0, penalty: 0 };
+  const titleCandidate = coach.objective.kind === "title";
+  const challenger = club.strength >= rules.strength && club.prestige >= rules.prestige && coach.objective.expected <= Math.ceil(coach.objective.tableSize * rules.topShare);
+  const weight = titleCandidate ? 1 : challenger ? rules.challengerWeight : 0;
+  if (!weight) return { weight, debt: 0, penalty: 0 };
+  const tenure: SeasonHistory[] = [];
+  for (let i = career.history.length - 1; i >= 0; i--) {
+    const season = career.history[i]!;
+    if (season.club !== club.id || season.partial || season.division !== 1) break;
+    if (season.year < career.year) tenure.unshift(season);
+  }
+  let debt = 0;
+  for (const titles of [...tenure.map(season => season.titles), titlesOf(career, club.id)]) {
+    const major = titles.some(id => id.startsWith("league:") || id.startsWith("cont1:") || id === "clubworldcup");
+    const cup = titles.some(id => id.startsWith("cup:") || id.startsWith("cont2:"));
+    debt = major ? 0 : debt + (cup ? 1 - rules.cupRelief : 1);
+  }
+  const penalty = debt ? weight * Math.min(rules.maxPenalty, rules.firstYear + rules.perYear * Math.max(0, debt - rules.grace)) : 0;
+  return { weight, debt, penalty };
+}
+
 /**
  * Avaliação anual (spec 14). Nota da temporada pela posição contra a
  * esperada, copas, finanças, promessas e torcida; o crédito acumulado guarda
@@ -195,13 +230,12 @@ export function evaluateSeason(
   const n = objective.tableSize;
   const met = position !== null && (objective.kind === "promotion" ? promoted : position <= objective.target);
   const objectiveTerm = position === null ? 0 : clamp((objective.expected - position) / Math.max(2, n / 5), -2, 2) + (met ? 0.3 : -0.3) + (promoted ? 0.8 : 0) + (relegated ? -1.2 : 0);
-  const cups = Math.min(1.5, cupScore(career, coach.club)) * EVALUATION.cupWeight;
+  const cups = Math.min(1.5, cupScore(career, coach.club)) * EVALUATION.cupWeight + cupObjectiveScore(career);
   let finances = 0;
   if (club) {
-    if (club.cash < -FINANCE.debtLimit * club.revenue) finances = -1;
-    else if (club.cash < 0) finances = EVALUATION.financePenalty;
-    else if (career.ledger.revenue + career.ledger.prizes + career.ledger.transfersIn - career.ledger.wages - career.ledger.transfersOut > 0) finances = EVALUATION.financeBonus;
-    if (wageBillOf(career, coach.club) * 12 > club.revenue * FINANCE.wageCap) finances -= 0.3;
+    const wages = wageBillOf(career, coach.club);
+    const status = financeLabel(club, wages);
+    finances = status === "healthy" ? EVALUATION.financeBonus : wages * 12 > club.revenue * FINANCE.wageCap ? EVALUATION.financePenalty : 0;
   }
   const seasonPromises = career.promises.filter((promise) => promise.madeAt >= career.seasonIndex * 365);
   const promiseTerm = clamp(
@@ -210,18 +244,20 @@ export function evaluateSeason(
     EVALUATION.promiseCap,
   );
   const fansTerm = (coach.fans - 50) / 100;
-  const score = objectiveTerm + cups + finances + promiseTerm + fansTerm;
+  const ambition = titleAmbition(career);
+  const score = objectiveTerm + cups + finances + promiseTerm + fansTerm - ambition.penalty;
   const creditBefore = coach.credit;
   const [low, high] = EVALUATION.creditRange;
   const creditAfter = clamp(EVALUATION.creditMemory * creditBefore + (1 - EVALUATION.creditMemory) * score, low, high);
   const confidence = clamp(Math.round(EVALUATION.confidenceBase + EVALUATION.seasonWeight * score + EVALUATION.creditWeight * creditAfter), 0, 100);
-  const dismissed = confidence < EVALUATION.dismissBelow;
+  const dismissed = (!met && confidence < EVALUATION.dismissBelow) || (ambition.weight > 0 && confidence < EVALUATION.ambition.dismissBelow);
   const terms: Array<[SeasonReview["reason"], number]> = [
     ["objective", objectiveTerm],
     ["cups", cups],
     ["finances", finances],
     ["promises", promiseTerm],
     ["fans", fansTerm],
+    ["ambition", -ambition.penalty],
     ["history", EVALUATION.creditWeight / EVALUATION.seasonWeight * (creditAfter - score * (1 - EVALUATION.creditMemory))],
   ];
   const reason = terms.sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]))[0]?.[0] ?? "objective";
@@ -240,6 +276,7 @@ export function evaluateSeason(
     reputationBefore: career.reputation,
     reputationAfter: career.reputation,
     objectiveMet: met,
+    ambition,
     position,
   };
 }
@@ -262,7 +299,8 @@ export function reputationChange(career: CoachCareer, review: SeasonReview, titl
   if (rescue) delta += REPUTATION.rescue;
   delta += REPUTATION.revelation * Math.min(3, revelations);
   if (delta > 0) delta *= level;
-  return clamp(delta, -REPUTATION.maxChange, REPUTATION.maxChange);
+  if (review.position !== null && review.position < (coach?.objective.expected ?? 0) && club && club.strength < 78) delta += Math.min(2, ((coach?.objective.expected ?? 0) - review.position) / 5);
+  return clamp(delta > 0 ? delta * 1.1 : delta, -REPUTATION.maxChange, REPUTATION.maxChange * 1.1);
 }
 
 // -------------------------------------------------------------- propostas
@@ -279,6 +317,9 @@ function offerFor(career: CoachCareer, clubId: string, stay: boolean, index: num
   const prestige = club.prestige >= 4 ? 1 : club.prestige >= 3 ? 0.5 : 0;
   const tightTarget = objective.target < objective.expected ? 0.6 : 0;
   const difficulty = clamp(Math.round(1 + pressure[objective.kind] + financePressure + prestige + tightTarget), 1, 5);
+  const nextMemory = career.history.some((season) => season.year === career.year)
+    ? seasonMemory(career.year, career.competitions, career.memory,career.fixtures) : career.memory;
+  const international = continentalEntrants(toSeasonMemory(nextMemory),(id)=>career.clubs[id]?.division===1,career.setup.seed);
   return {
     id: `${career.year}:${index}:${clubId}`,
     club: clubId,
@@ -293,6 +334,7 @@ function offerFor(career: CoachCareer, clubId: string, stay: boolean, index: num
     finances,
     fictionalShare,
     stay,
+    internationals: Object.entries(international).filter(([, entrants]) => entrants.includes(clubId)).map(([id]) => id),
   };
 }
 
@@ -342,21 +384,26 @@ export function seasonOffers(career: CoachCareer, dismissed: boolean): ClubOffer
   // Régua por percentil de força no mundo: a reputação diz em que faixa de
   // clubes o treinador é lembrado; trabalhos anteriores bem feitos puxam para
   // cima, a demissão puxa para baixo (sem garantia de clube melhor).
-  const ranked = Object.values(career.clubs).sort((a, b) => a.strength - b.strength || a.id.localeCompare(b.id));
+  const ranked = Object.values(career.clubs).filter(club=>!club.continentalGuest).sort((a, b) => a.strength - b.strength || a.id.localeCompare(b.id));
   const percentile = new Map(ranked.map((club, index) => [club.id, index / Math.max(1, ranked.length - 1)]));
   const bestWork = career.history.reduce((best, season) => Math.max(best, season.objectiveMet ? (percentile.get(season.club) ?? 0) : 0), 0);
   const current = coach ? (percentile.get(coach.club) ?? 0.3) : 0.3;
+  const last = career.history.at(-1);
+  const firstTitle = Boolean(last && last.division === 1 && last.titles.some((id) => id.startsWith("league:")));
+  const continentalTitle = Boolean(last?.titles.some((id) => id.startsWith("cont1:")));
+  const achievementFloor = firstTitle || continentalTitle ? Math.min(0.96, current + 0.1) : 0;
   const target = clamp(
-    OFFERS.percentileBase + OFFERS.percentilePerReputation * reputation + Math.max(0, bestWork - current) * 0.2 - (dismissed ? OFFERS.dismissedDrop : 0),
+    Math.max(achievementFloor, OFFERS.percentileBase + OFFERS.percentilePerReputation * reputation + Math.max(0, bestWork - current) * 0.2) - (dismissed ? OFFERS.dismissedDrop : 0),
     0.05,
     0.98,
   );
   const [minCount, maxCount] = dismissed ? OFFERS.dismissed : OFFERS.kept;
-  let count = rng.int(minCount, maxCount);
-  if (!dismissed && reputation < 25 && rng.chance(0.4)) count = Math.max(0, count - 1);
+  const count = rng.int(minCount, maxCount);
   const homes = new Set([coach ? career.clubs[coach.club]?.country : undefined, career.setup.identity.nationality].filter(Boolean));
   const banned = (club: string) => (career.bans[club] ?? -1) >= career.seasonIndex;
-  const candidates = Object.values(career.clubs).filter((club) => club.id !== coach?.club && !banned(club.id));
+  const currentCountry = coach ? career.clubs[coach.club]?.country : career.setup.identity.nationality;
+  const candidates = Object.values(career.clubs).filter((club) => !club.continentalGuest && club.id !== coach?.club && !banned(club.id)
+    && (!(firstTitle || continentalTitle) || club.country !== currentCountry || (club.division === 1 && club.strength >= (career.clubs[coach?.club ?? ""]?.strength ?? 0))));
   const weightOf = (club: CoachClub) => {
     const distance = Math.abs((percentile.get(club.id) ?? 0) - target);
     const closeness = Math.max(0, OFFERS.percentileSpread - distance);
@@ -366,6 +413,9 @@ export function seasonOffers(career: CoachCareer, dismissed: boolean): ClubOffer
     return closeness * countryWeight;
   };
   const picked = new Set<string>();
+  const domestic = candidates.filter((club) => club.country === currentCountry && (!(firstTitle || continentalTitle) || (club.division === 1 && club.strength >= (career.clubs[coach?.club ?? ""]?.strength ?? 0))))
+    .sort((a, b) => Math.abs((percentile.get(a.id) ?? 0) - target) - Math.abs((percentile.get(b.id) ?? 0) - target) || a.id.localeCompare(b.id)).slice(0, 3);
+  if (domestic.length) picked.add(rng.pick(domestic).id);
   if (dismissed) {
     // Uma garantia modesta: segunda divisão, de preferência no país de casa.
     const modest = candidates
@@ -411,9 +461,19 @@ export function historyEntry(career: CoachCareer, review: SeasonReview | null, p
   const squad = squadOf(career, coach.club);
   const scorer = [...squad].sort((a, b) => b.season.goals - a.season.goals || b.ovr - a.ovr)[0];
   const best = [...squad].sort((a, b) => b.ovr - a.ovr || a.id.localeCompare(b.id))[0];
+  const record = { won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0 };
+  for (const fixture of career.fixtures) {
+    if (!fixture.result?.coach || (fixture.home !== coach.club && fixture.away !== coach.club)) continue;
+    const own = fixture.home === coach.club ? fixture.result.home : fixture.result.away;
+    const other = fixture.home === coach.club ? fixture.result.away : fixture.result.home;
+    record.goalsFor += own; record.goalsAgainst += other;
+    if (own > other) record.won += 1; else if (own === other) record.drawn += 1; else record.lost += 1;
+  }
   return {
+    invincible: !partial && played?.champion===coach.club && (played.table?.find(row=>row.club===coach.club)?.lost ?? 1)===0,
     year: career.year,
     club: coach.club,
+    formation: coach.tactics.formation,
     league: league?.id ?? "",
     division: league?.division ?? career.clubs[coach.club]?.division ?? 1,
     position: review?.position ?? leaguePosition(career, coach.club),
@@ -430,9 +490,41 @@ export function historyEntry(career: CoachCareer, review: SeasonReview | null, p
     reputationAfter: career.reputation,
     topScorer: scorer && scorer.season.goals > 0 ? { player: scorer.id, goals: scorer.season.goals } : null,
     bestPlayer: best ? { player: best.id, ovr: best.ovr } : null,
+    record,
+    awards: [...career.seasonAwards],
   };
 }
 
 export function leagueName(id: string): string {
   return getLeague(id)?.name ?? id;
+}
+
+/** Cada partida altera as relações em relação à expectativa do clube, sem novo sorteio. */
+export function applyMatchRelations(career: CoachCareer, own: number, other: number, derby: boolean): void {
+  const coach = career.coach;
+  if (!coach) return;
+  const rules = LIVE_RELATIONS;
+  const expectation = rules.expectationBase - rules.expectationRank * coach.objective.expected / Math.max(1, coach.objective.tableSize);
+  const performance = (own > other ? 1 : own === other ? rules.drawScore : 0) - expectation;
+  for (const bar of ["board", "fans"] as const) {
+    const before = coach[bar];
+    const step = bar === "board" ? rules.boardStep : rules.fansStep;
+    const extra = bar === "fans" && derby ? (own > other ? rules.derby : own < other ? -rules.derby : 0) : 0;
+    coach[bar] = clamp(before + performance * step + extra, 0, 100);
+    const delta = Math.round((coach[bar] - before) * 100) / 100;
+    if (delta !== 0) career.ledger.relations.push({ bar, delta, reason: performance >= 0 ? "resultsAbove" : "resultsBelow" });
+  }
+}
+
+/** O primeiro turno só permite demissão com campanha realmente desastrosa. */
+export function shouldDismissMidseason(career: CoachCareer): boolean {
+  const coach = career.coach;
+  if (!coach || career.setup.mode !== "slow" || career.half !== 0) return false;
+  const row = leagueState(career, coach.club)?.table?.find((item) => item.club === coach.club);
+  const position = leaguePosition(career, coach.club);
+  if (!row || position === null) return false;
+  const rules = LIVE_RELATIONS;
+  return row.played >= rules.minGames && row.points / row.played <= rules.pointsPerGame
+    && position - coach.objective.expected >= Math.max(rules.minRankGap, Math.ceil(coach.objective.tableSize * rules.rankGapShare))
+    && coach.board < rules.maxConfidence;
 }

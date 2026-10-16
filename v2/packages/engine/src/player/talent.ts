@@ -29,10 +29,10 @@ export const POTENTIAL_RANGE: Readonly<Record<TalentBand, readonly [number, numb
   phenom: [92, 97],
 };
 
-/** Pesos do sorteio por dificuldade: Normal soma 100; Difícil soma 99. */
+/** Pesos do sorteio por dificuldade: ambas somam 100. O Difícil preserva a proporção anterior, ajustada em pontos percentuais. */
 export const TALENT_ODDS: Readonly<Record<Difficulty, Readonly<Record<TalentBand, number>>>> = {
-  normal: { journeyman: 28, prospect: 34, class: 22, star: 11, phenom: 5 },
-  hard: { journeyman: 45, prospect: 34, class: 15, star: 4, phenom: 1 },
+  normal: { journeyman: 26, prospect: 33, class: 23, star: 12, phenom: 6 },
+  hard: { journeyman: 4500 / 99 - 2, prospect: 3400 / 99 - 1, class: 1500 / 99 + 1, star: 400 / 99 + 1, phenom: 100 / 99 + 1 },
 };
 
 export function drawTalent(rng: Rng, difficulty: Difficulty): TalentBand {

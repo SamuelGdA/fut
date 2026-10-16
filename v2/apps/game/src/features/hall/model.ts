@@ -196,6 +196,7 @@ export function sanitizeAttempt(input: unknown): AttemptEntry | null {
 }
 
 export function sanitizeAchievementRow(input: unknown): AchievementRow | null {
+  if (input && typeof input === "object" && "id" in input && (input.id === "worldCupFinal" || input.id === "worldChampion")) return null;
   if (!isRecord(input)) return null;
   const id = input["id"];
   if (typeof id !== "string" || id.length === 0) return null;

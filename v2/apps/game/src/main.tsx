@@ -3,11 +3,15 @@ import "@fontsource-variable/schibsted-grotesk/wght.css";
 import "@fontsource-variable/newsreader/standard.css";
 import "./styles/index.css";
 
+import { STORAGE_KEYS, safeStorage } from "./services/storage";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { App } from "./app/App";
 import { useNavigation } from "./app/navigation";
 import { startScreen } from "./app/startup";
+
+// Migração do Craque: preferências, rascunho e conquistas permanecem.
+safeStorage.removeItem(STORAGE_KEYS.save);
 
 const container = document.getElementById("root");
 if (!container) throw new Error("CRAQUE: elemento #root não encontrado em index.html");

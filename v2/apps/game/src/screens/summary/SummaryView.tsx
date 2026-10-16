@@ -63,6 +63,8 @@ interface SummaryViewProps {
   mode: "own" | "shared" | "archived";
   /** Linha alternativa de um "E se...?" (GDD 28.3). */
   alternate?: boolean;
+  /** Cenários de debug não são replays da semente original. */
+  internalTesting?: boolean;
   onAgain?(): void;
   onHome(): void;
   /** "E se...?": seguir por outro caminho a partir da escolha de índice `index`. */
@@ -76,14 +78,14 @@ interface SummaryViewProps {
  * Desafio do dia (quando é desafio), Biografia, Números, Linha do tempo,
  * Troféus, Jornal e "E se...?" (carreira comum, deste navegador).
  */
-export function SummaryView({ career, avatar, mode, alternate = false, onAgain, onHome, onBranch }: SummaryViewProps) {
+export function SummaryView({ career, avatar, mode, alternate = false, internalTesting = false, onAgain, onHome, onBranch }: SummaryViewProps) {
   const { t, c, locale } = useT();
   const peak = peakCard(career);
   const challenge = typeof career.setup.challengeId === "string";
   const chapters = CHAPTERS.filter((key) => (key === "challenge" ? challenge : key === "whatIf" ? !challenge && onBranch !== undefined : true));
   const country = getCountry(career.nationality);
   const [posterOpen, setPosterOpen] = useState(false);
-  const canShareLink = typeof navigator !== "undefined" && typeof navigator.share === "function";
+  const canShareLink = !internalTesting && typeof navigator !== "undefined" && typeof navigator.share === "function";
 
   const linkFor = async () => shareUrl(await encodeShare(saveOf(career), avatar));
 
@@ -164,10 +166,10 @@ export function SummaryView({ career, avatar, mode, alternate = false, onAgain, 
                     {t("summary.actions.share")}
                   </Button>
                 ) : null}
-                <Button size="lg" variant="secondary" onClick={() => void copyLink()}>
+                {!internalTesting ? <Button size="lg" variant="secondary" onClick={() => void copyLink()}>
                   <Link2 size={18} aria-hidden="true" />
                   {t("summary.actions.copyLink")}
-                </Button>
+                </Button> : null}
               </div>
               <div className="flex flex-wrap gap-2.5">
                 {mode === "own" && onAgain ? (
@@ -222,7 +224,10 @@ export function SummaryView({ career, avatar, mode, alternate = false, onAgain, 
           <TimelineSection career={career} />
         </Chapter>
         <Chapter id="trophies" title={t("summary.chapters.trophies")}>
-          <Showcase history={career.history} maxHeight={640} maxArt={72} />
+          <h3 className="eyebrow mb-3">{t("summary.newspaper.trophies")}</h3>
+          <Showcase history={career.history} kind="title" maxHeight={640} maxArt={72} />
+          <h3 className="eyebrow mt-8 mb-3">{t("summary.newspaper.awards")}</h3>
+          <Showcase history={career.history} kind="award" maxHeight={640} maxArt={72} />
         </Chapter>
         <Chapter id="newspaper" title={t("summary.chapters.newspaper")}>
           <Newspaper career={career} />

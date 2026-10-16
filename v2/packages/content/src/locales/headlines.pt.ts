@@ -9,7 +9,7 @@ export const headlinesPt = {
   title: "Campeão: {competition}",
   award: "Prêmio: {award}",
   topScorer: "Artilheiro: {competition}, {goals} gols",
-  bestPlayer: "Craque da competição: {competition}",
+  bestPlayer: "Craque: {competition}",
   ballonPodium: "Bola de Ouro: {rank} lugar",
   record: "Recorde superado: {record}",
   firstCap: "Estreia na seleção aos {age}",

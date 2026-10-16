@@ -13,6 +13,8 @@ import {
   type Effect,
   type EventTarget,
   FOCUS_SLOT,
+  marketContext,
+  starsAt,
   pressureTone,
   type SquadRole,
   TRAINING,
@@ -375,6 +377,7 @@ function StayRow({ label, career, checked, shirt }: { label: string; career: Car
         meta={
           <>
             {club ? <span className="truncate">{getClub(club)?.name}</span> : null}
+            {club ? <Stars count={starsAt(marketContext(career), club)} /> : null}
             {role ? (
               <Chip tone={ROLE_TONE[role]} glyph={ROLE_TONE[role] !== "neutral"} size="sm">
                 {c(`roles.${role}`)}
@@ -507,6 +510,7 @@ function EventRow({
               <>
                 <span className="truncate font-semibold text-fg">{getClub(destination.club)?.name ?? destination.club}</span>
                 <LeagueLine league={destination.league} />
+                <Stars count={destination.stars} />
                 <Chip tone={ROLE_TONE[destination.role]} glyph={ROLE_TONE[destination.role] !== "neutral"} size="sm">
                   {c(`roles.${destination.role}`)}
                 </Chip>

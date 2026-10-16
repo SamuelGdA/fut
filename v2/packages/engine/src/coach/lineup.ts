@@ -1,9 +1,10 @@
 import type { CountryCode } from "@craque/world";
 import type { Position } from "../player/positions";
-import { ageOf, output, positionPenalty } from "./players";
-import { bestEleven, FORMATION_SLOTS, type OnField } from "./tactics";
+import { ageOf, output } from "./players";
+import { FORMATION_SLOTS, type OnField } from "./tactics";
 import type { CoachPlayer, CoachPromise, Fixture, Tactics } from "./types";
 import { BENCH_SIZE, REGISTRATION, ROTATION, SQUAD_MINIMUM } from "./tuning";
+import { optimalLineup } from "./assignment";
 
 /**
  * Escalação, inscrição e rotação (spec 10). O usuário escolhe titulares e
@@ -34,7 +35,7 @@ export function registered(squad: readonly CoachPlayer[], country: CountryCode, 
 }
 
 export function isAvailable(player: CoachPlayer, day: number): boolean {
-  return !player.injury || player.injury.until <= day;
+  return !player.injury || (!player.injury.turns && player.injury.until <= day);
 }
 
 /** Elenco viável: goleiros e jogadores mínimos (spec 10, "evite operações que deixem o clube sem escalação"). */
@@ -47,8 +48,7 @@ export function viableSquad(squad: readonly CoachPlayer[]): boolean {
 export function suggestTactics(squad: readonly CoachPlayer[], tactics: Pick<Tactics, "formation" | "philosophy">, country: CountryCode, year: number, day: number): Tactics {
   const allowed = registered(squad, country, year);
   const pool = squad.filter((player) => allowed.has(player.id) && isAvailable(player, day));
-  const eleven = bestEleven(pool, tactics.formation, (player, slot) => player.level - 0 + positionPenalty(player, slot));
-  const lineup = FORMATION_SLOTS[tactics.formation].map((_, index) => eleven[index]?.player.id ?? "");
+  const lineup = optimalLineup(pool, tactics.formation,undefined,true);
   const chosen = new Set(lineup);
   const bench = pool
     .filter((player) => !chosen.has(player.id))
@@ -89,11 +89,11 @@ export function coachSheet(squad: readonly CoachPlayer[], tactics: Tactics, cont
   const used = new Set<string>();
   const rested: string[] = [];
   const replaced: string[] = [];
-  const promised = new Set(context.promises.filter((promise) => promise.status === "active" && promise.player).map((promise) => promise.player as string));
+  const promised = new Set<string>();
 
   const minor = !context.big && context.fixture.kind !== "league" && context.fixture.roundKind !== "group" && context.ownStrength - context.opponentStrength >= ROTATION.strengthGap;
   let rotations = 0;
-  const lineup = honorStartPromises(tactics, slots, byId, usable, context.promises, rested);
+  const lineup = [...tactics.lineup];
 
   const onField: OnField[] = [];
   slots.forEach((slot, index) => {
@@ -142,51 +142,6 @@ export function coachSheet(squad: readonly CoachPlayer[], tactics: Tactics, cont
   return { onField, bench, rested, replaced };
 }
 
-/**
- * Promessa de titularidade (spec 12): enquanto a parte prometida dos jogos
- * não foi cumprida, a rotação automática dá a vaga ao prometido no lugar do
- * titular mais fraco da mesma posição (ou do mesmo setor), nunca de uma
- * estrela. Custa força em campo nesses jogos: é o preço da promessa.
- */
-function honorStartPromises(
-  tactics: Tactics,
-  slots: readonly Position[],
-  byId: ReadonlyMap<string, CoachPlayer>,
-  usable: (player: CoachPlayer | undefined) => player is CoachPlayer,
-  promises: readonly CoachPromise[],
-  rested: string[],
-): string[] {
-  const lineup = [...tactics.lineup];
-  for (const promise of promises) {
-    if (promise.status !== "active" || promise.kind !== "starts" || !promise.player) continue;
-    const player = byId.get(promise.player);
-    if (!usable(player) || lineup.includes(player.id)) continue;
-    const starts = player.season.starts - promise.baseline.starts;
-    const available = player.season.available - promise.baseline.available + 1;
-    if (starts >= promise.target * available) continue;
-    let bestIndex = -1;
-    let bestScore = -Infinity;
-    slots.forEach((slot, index) => {
-      const current = byId.get(lineup[index] ?? "");
-      if (current?.role === "star") return;
-      if ((slot === "gk") !== (player.position === "gk")) return;
-      const fit = positionPenalty(player, slot);
-      if (fit <= -7) return;
-      // Prefere a vaga natural dele e, entre elas, quem rende menos.
-      const score = fit * 10 - (current ? current.level : 0);
-      if (score > bestScore) {
-        bestScore = score;
-        bestIndex = index;
-      }
-    });
-    if (bestIndex < 0) continue;
-    const replaced = lineup[bestIndex];
-    if (replaced) rested.push(replaced);
-    lineup[bestIndex] = player.id;
-  }
-  return lineup;
-}
-
 function pickReplacement(
   squad: readonly CoachPlayer[],
   slot: Position,
@@ -200,6 +155,7 @@ function pickReplacement(
   let bestValue = -Infinity;
   for (const player of squad) {
     if (player.id === excluding || used.has(player.id) || !usable(player)) continue;
+    if (player.position !== slot && !player.alternates.includes(slot)) continue;
     let value = output(player, { slot, big: false, derby: false });
     if (bench.includes(player.id)) value += 1.5;
     if (promised.has(player.id)) value += 4;
@@ -218,7 +174,7 @@ export function sanitizeTactics(tactics: Tactics, squad: readonly CoachPlayer[],
   const seen = new Set<string>();
   const lineup = slots.map((_, index) => {
     const id = tactics.lineup[index] ?? "";
-    if (!ids.has(id) || seen.has(id)) return "";
+    if (!ids.has(id) || seen.has(id) || squad.find((player) => player.id === id)?.injury) return "";
     seen.add(id);
     return id;
   });

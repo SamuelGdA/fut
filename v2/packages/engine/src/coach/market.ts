@@ -1,3 +1,4 @@
+import { areRivals } from "@craque/world";
 import type { Division } from "@craque/world";
 import { clamp } from "../math";
 import type { Rng } from "../rng";
@@ -131,7 +132,7 @@ export function purchaseChance(career: CoachCareer, player: CoachPlayer, buyerId
     if (age >= 31) clubChance *= 1.3;
     clubChance = clamp(clubChance, 0.01, 0.97);
   }
-  return { expectation, gap, levelFactor, stepDown, stepFactor, starFactor, roleFactor, playerChance, clubChance, total: playerChance * clubChance };
+  return { expectation, gap, levelFactor, stepDown, stepFactor, starFactor, roleFactor, playerChance, clubChance, total: areRivals(buyerId,player.club) ? Math.min(0.24,playerChance*clubChance*0.45) : playerChance * clubChance };
 }
 
 export type ChanceTier = "veryHard" | "hard" | "possible" | "likely";
@@ -151,7 +152,7 @@ export function askingTerms(career: CoachCareer, player: CoachPlayer, buyerId: s
   const seller = player.club ? career.clubs[player.club] : null;
   const buyer = career.clubs[buyerId];
   const stepDown = seller && buyer ? Math.max(0, seller.strength - buyer.strength) : 0;
-  const price = seller ? roundPrice(value * rng.real(low, high) * (1 + 0.03 * stepDown)) : 0;
+  const price = seller ? roundPrice(value * rng.real(low, high) * (1 + 0.03 * stepDown) * (areRivals(buyerId,player.club) ? 1.2 : 1)) : 0;
   const [wageLow, wageHigh] = PURCHASE.wageRaise;
   const wage = roundWage(Math.max(player.wage * rng.real(wageLow, wageHigh), wageFor(player.ovr)) * (1 + 0.04 * stepDown));
   return { price, wage };
@@ -218,8 +219,8 @@ export function transferPlayer(career: CoachCareer, playerId: string, toClub: st
   if (from === toClub) return;
   const fromClub = from ? career.clubs[from] : null;
   const destination = toClub ? career.clubs[toClub] : null;
-  if (fromClub) fromClub.cash += fee;
-  if (destination) destination.cash -= fee;
+  if (fromClub) { fromClub.cash += fee; fromClub.investment=(fromClub.investment ?? 0)-fee; }
+  if (destination) { destination.cash -= fee; destination.investment=(destination.investment ?? 0)+fee; }
   const coach = career.coach;
   if (coach && from === coach.club && kind === "sale") {
     coach.budget += fee * FINANCE.saleToBudget;
@@ -234,6 +235,7 @@ export function transferPlayer(career: CoachCareer, playerId: string, toClub: st
   player.club = toClub;
   invalidateSquads(career);
   player.joinedYear = career.year;
+  player.arrival = { year: career.year, kind: "purchase" };
   player.listed = false;
   player.injury = player.injury ?? null;
   player.consecutiveStarts = 0;

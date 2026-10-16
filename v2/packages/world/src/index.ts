@@ -8,6 +8,7 @@
  */
 
 export * from "./types";
+export { competitionPrestige, honourPrestige, compareHonours, type OrderedHonour } from "./honourOrder";
 export { ELITE, getElite, type ElitePosition, type EliteProfile } from "./elite";
 export {
   areRivals,

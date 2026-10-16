@@ -2,10 +2,14 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "craque-dev",
+      "name": "craque-v2",
       "runtimeExecutable": "pnpm",
-      "runtimeArgs": ["dev"],
-      "port": 3000
+      "runtimeArgs": [
+        "--dir",
+        "v2",
+        "dev"
+      ],
+      "port": 5173
     }
   ]
 }
