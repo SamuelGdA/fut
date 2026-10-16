@@ -2,7 +2,7 @@ import type { SquadPlayer } from "@craque/world/squads";
 import { clamp } from "../math";
 import type { Rng } from "../rng";
 import type { Position } from "../player/positions";
-import { baseMarketValue } from "../player/value";
+import { referenceMarketValue as baseMarketValue } from "../player/value";
 import type { CoachPlayer, CoachTrait, FormLabel, Mood, Role, SeasonStats, SectorOrGk } from "./types";
 import { EVOLUTION, FINANCE, FORM, MOOD_OUTPUT, OUTPUT_LIMITS, POSITION_FIT, SATISFACTION, TRAIT_EFFECTS } from "./tuning";
 import { coachRng, unit } from "./util";

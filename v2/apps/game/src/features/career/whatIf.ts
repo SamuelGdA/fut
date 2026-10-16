@@ -23,13 +23,16 @@ export function decisionPoints(save: CareerSave, locale: Locale): DecisionPoint[
     const decision = career.decision;
     if (!decision || decision.id !== choice.decision) break;
     const option = decision.options.find((candidate) => candidate.id === choice.option);
+    // Ajustes de teste podem ter criado ofertas que não existem no replay original.
+    // Conserva os pontos válidos, sem derrubar o capítulo inteiro.
+    if (!option) break;
     points.push({
       index,
       kind: decision.kind,
       age: decision.age,
       year: decision.year,
       title: decisionText(locale, career, decision).title,
-      chose: option ? optionLabel(locale, career, decision, option) : choice.option,
+      chose: optionLabel(locale, career, decision, option),
     });
     career = choose(career, choice).career;
   }

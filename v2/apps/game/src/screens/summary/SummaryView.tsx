@@ -57,7 +57,8 @@ interface SummaryViewProps {
   career: Career;
   avatar: AvatarConfig | null;
   /**
-   * `own`: a carreira deste navegador. `shared`: aberta por link, só leitura.
+   * `own`: a carreira deste navegador. `shared`: aberta por link, só leitura
+   * até o usuário confirmar uma cópia hipotética separada.
    * `archived`: uma carreira do Hall da Fama, só leitura.
    */
   mode: "own" | "shared" | "archived";
@@ -76,7 +77,7 @@ interface SummaryViewProps {
  * é bem-vinda. No topo, a carta do auge (vira para mostrar os totais), o nome,
  * o motivo do fim e as ações; depois, os capítulos com navegação fixa:
  * Desafio do dia (quando é desafio), Biografia, Números, Linha do tempo,
- * Troféus, Jornal e "E se...?" (carreira comum, deste navegador).
+ * Troféus, Jornal e "E se...?" (carreira comum própria ou compartilhada).
  */
 export function SummaryView({ career, avatar, mode, alternate = false, internalTesting = false, onAgain, onHome, onBranch }: SummaryViewProps) {
   const { t, c, locale } = useT();
@@ -234,7 +235,7 @@ export function SummaryView({ career, avatar, mode, alternate = false, internalT
         </Chapter>
         {chapters.includes("whatIf") && onBranch ? (
           <Chapter id="whatIf" title={t("summary.chapters.whatIf", { surname: career.setup.identity.surname })}>
-            <WhatIfChapter career={career} onBranch={onBranch} />
+            <WhatIfChapter career={career} onBranch={onBranch} replayOnly={internalTesting} />
           </Chapter>
         ) : null}
       </div>

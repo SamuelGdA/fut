@@ -6,13 +6,14 @@ import { useT } from "../../i18n/useT";
 import { feedback } from "../../services/feedback";
 import { Button } from "../../ui/Button";
 import { ConfirmDialog } from "../../ui/Overlays";
+import { d68 } from "../../i18n/d68";
 
 /**
  * "E se...?" (GDD 28.3): a linha do tempo de decisões, cada uma com o que foi
  * escolhido e um botão para seguir dali por outro caminho. A original vem das decisões desta sessão;
  * a nova é marcada como linha alternativa (D47).
  */
-export function WhatIfChapter({ career, onBranch }: { career: Career; onBranch(index: number): void }) {
+export function WhatIfChapter({ career, onBranch, replayOnly = false }: { career: Career; onBranch(index: number): void; replayOnly?: boolean }) {
   const { t, locale } = useT();
   const points = decisionPoints(saveOf(career), locale);
   const [pending, setPending] = useState<DecisionPoint | null>(null);
@@ -20,6 +21,8 @@ export function WhatIfChapter({ career, onBranch }: { career: Career; onBranch(i
   return (
     <div className="flex flex-col gap-4">
       <p className="text-muted">{t("summary.whatIf.intro")}</p>
+      {replayOnly ? <p className="text-sm text-glory">{d68(locale, "replayNotice")}</p> : null}
+      {!points.length ? <p className="text-sm text-muted">{d68(locale, "emptyDecisions")}</p> : null}
       <ol className="flex flex-col divide-y divide-line rounded-sm border border-line bg-panel">
         {points.map((point) => (
           <li key={point.index} className="flex items-center gap-3 px-3 py-2.5">

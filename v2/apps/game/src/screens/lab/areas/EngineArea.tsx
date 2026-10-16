@@ -28,6 +28,8 @@ import { Chip, Delta } from "../../../ui/Signals";
 import { AttributeBar, StatTile } from "../../../ui/Stats";
 import { type ChoiceOption, ChoiceStrip } from "../ChoiceStrip";
 import { EvolutionChart } from "../engine/EvolutionChart";
+import { ScoringProbe } from "../engine/ScoringProbe";
+import { d68 } from "../../../i18n/d68";
 import { developPlayer, type EngineSetup, findSeed, populationBand } from "../engine/population";
 
 const FIRST_AGE = 16;
@@ -342,7 +344,7 @@ function SeasonTable({ run, selectedAge, onSelect }: { run: DevelopmentRun; sele
  * as mesmas funções puras que o harness usa.
  */
 export function EngineArea() {
-  const { t } = useT();
+  const { t, locale } = useT();
   const [setup, setSetup] = useState<EngineSetup>(INITIAL_SETUP);
   const [chosenAge, setChosenAge] = useState<number | null>(null);
 
@@ -362,6 +364,8 @@ export function EngineArea() {
   return (
     <div className="flex flex-col gap-8">
       <p className="max-w-2xl text-base text-muted">{t("lab.engine.intro")}</p>
+      <p className="max-w-2xl text-sm text-muted">{d68(locale, "valueHint")}</p>
+      <ScoringProbe />
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:items-start">
         <div className="flex flex-col gap-6">
