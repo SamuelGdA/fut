@@ -17,6 +17,7 @@ import { useT } from "../../i18n/useT";
 import { feedback } from "../../services/feedback";
 import { IconButton } from "../../ui/Button";
 import { cardTier } from "../../ui/cardTier";
+import { Sheet } from "../../ui/Overlays";
 import { cn } from "../../ui/cn";
 import { Confetti } from "../../ui/Confetti";
 import { CountUp } from "../../ui/CountUp";
@@ -44,8 +45,8 @@ interface PlayFeedProps {
  * mudaram e os títulos em miniatura; no desafio, o que mudou nas missões.
  * Quando a decisão jogou duas temporadas, os anos viram abas. No PC fica no
  * alto da coluna da direita; no celular, é uma faixa que abre com um toque. O
- * que não couber numa tela baixa sai pelas regras de altura do CSS, nunca
- * empurra a decisão.
+ * detalhe abre numa folha rolável no celular para mostrar frases completas
+ * sem comprimir as opções da próxima decisão.
  */
 export function PlayFeed({ career, play, reviewing, onCloseReview, compact = false }: PlayFeedProps) {
   const { t, locale } = useT();
@@ -96,15 +97,14 @@ export function PlayFeed({ career, play, reviewing, onCloseReview, compact = fal
     </button>
   ) : null;
 
-  return (
+  const content = (
     <section
-      className={cn("play club-scope", compact && "play-compact")}
+      className="play club-scope"
       style={clubStyle(record.club) as CSSProperties}
       aria-label={t("career.play.label")}
       data-review={reviewing || undefined}
       data-open={open || undefined}
     >
-      {toggle}
       {seasons.length > 1 && honours ? <div className="play-batch-honours" aria-label={craqueRevision(locale, "honours")}>{seasons.map((item) => { const season = career.history[item.index]; if (!season) return null; const collection = showcaseItems([season]); if (!collection.length) return null; return <div key={item.index}><button type="button" className="numeric" onClick={() => setPicked({ session: play.id, index: item.index })}>{season.year}</button><span className="play-honours-art">{collection.map((honour) => <HonourToken key={`${honour.kind}:${honour.id}:${honour.kind === "award" ? honour.competition ?? "" : ""}`} id={honour.kind === "award" ? honour.competition ?? honour.id : honour.id} award={honour.kind === "award" ? honour.id : undefined} year={season.year} size={26} language={locale} />)}</span></div>; })}</div> : null}
       {open && event ? <EventLine page={event} animate={animate} /> : null}
       {open ? <SeasonLine
@@ -157,9 +157,19 @@ export function PlayFeed({ career, play, reviewing, onCloseReview, compact = fal
           </Chip>
         </p>
       ) : null}
-      {animate && honours ? <Confetti burst={play.id} count={46} /> : null}
+      {animate && honours && !compact ? <Confetti burst={play.id} count={46} /> : null}
     </section>
   );
+  if (!compact) return content;
+  return <>
+    <section className="play play-compact club-scope" style={clubStyle(record.club) as CSSProperties} aria-label={t("career.play.label")}>
+      {toggle}
+      {animate && honours ? <Confetti burst={play.id} count={46} /> : null}
+    </section>
+    <Sheet open={open} onOpenChange={next => setOpened(next ? play.id : null)} title={t("career.play.label")} closeLabel={t("common.close")}>
+      {content}
+    </Sheet>
+  </>;
 }
 
 /**

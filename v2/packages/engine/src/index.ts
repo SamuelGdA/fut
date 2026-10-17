@@ -292,6 +292,7 @@ export {
 } from "./career/career";
 export { CareerError, type CareerErrorCode, type Step } from "./career/resolve";
 export { appendLog, LOG_MAX, stepLog } from "./career/log";
+export { nationalLegacy } from "./season/nationalLegacy";
 export { challengeDayId, challengeDayStart, challengeYear, DAY_MS, daysSinceEpoch, isChallengeDayId, nextChallengeAt, shiftChallengeDay } from "./challenge/day";
 export { CHALLENGE_AXES, contradicts, getMission, type ChallengeAxis, type Mission, missionFitsPosition, MISSIONS, missionTarget, UNDERDOG_STRENGTH } from "./challenge/missions";
 export { MISSION_TARGETS } from "./challenge/targets";

@@ -9,7 +9,7 @@ import { usePrefs } from "../../store/prefs";
 import { useHall } from "../hall/store";
 import { useUnlocks } from "../hall/unlocks";
 import { useTecnicoPresence } from "./presence";
-import { clearCoachSave, readCoachSave, writeCoachSave } from "./save";
+import { clearCoachSave, preserveCoachSave, readCoachSave, writeCoachSave } from "./save";
 import { feedback } from "../../services/feedback";
 
 /**
@@ -106,7 +106,7 @@ export const useTecnico = create<TecnicoState>()((set, get) => ({
   async hydrate() {
     if (get().career || get().busy) return;
     const saved = readCoachSave();
-    if (!saved || saved.version !== COACH_VERSION) { clearCoachSave(); publish(null); return; }
+    if (!saved || saved.version !== COACH_VERSION) { if(saved)preserveCoachSave(saved); clearCoachSave(); publish(null); return; }
     set({ busy: true });
     await nextFrame();
     try {

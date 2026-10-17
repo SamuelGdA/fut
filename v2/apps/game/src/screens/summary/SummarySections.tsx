@@ -1,6 +1,8 @@
-import { HonourToken } from "../../ui/HonourToken";
+import { HonourGroups } from "../../ui/HonourGroups";
+import { d71 } from "../../i18n/d71";
+import { InfoTip } from "../../ui/InfoTip";
 import { biography, recordText, type RecordResult } from "@craque/content";
-import { type Career, isGoalkeeper, KEEPER_ATTRIBUTES, OUTFIELD_ATTRIBUTES } from "@craque/engine";
+import { type Career, nationalLegacy, isGoalkeeper, KEEPER_ATTRIBUTES, OUTFIELD_ATTRIBUTES } from "@craque/engine";
 import { getClub, getCountry } from "@craque/world";
 import { m } from "motion/react";
 import { useReducedMotion } from "../../lib/useReducedMotion";
@@ -192,7 +194,7 @@ export function TimelineSection({ career }: { career: Career }) {
                 ) : null}
                 {item.honours.length > 0 ? (
                   <p className="timeline-honours">
-                    {item.honours.map((honour, index) => <HonourToken key={`${honour.kind}:${honour.id}:${honour.year}:${index}`} id={honour.kind === "award" ? honour.competition ?? honour.id : honour.id} award={honour.kind === "award" ? honour.id : undefined} year={honour.year} language={locale} />)}
+                    <HonourGroups language={locale} items={item.honours.map(honour => ({id:honour.kind === "award" ? honour.competition ?? honour.id : honour.id, award:honour.kind === "award" ? honour.id : undefined, year:honour.year}))} />
                   </p>
                 ) : null}
               </div>
@@ -215,14 +217,16 @@ function markerOf(item: TimelineItem): "traitor" | "legend" | "idol" | "debut" |
 }
 
 function DebutCard({ career, age, year }: { career: Career; age: number; year: number }) {
-  const { t, locale } = useT();
+  const { t, c, locale } = useT();
   const country = getCountry(career.nationality);
+  const legacy = nationalLegacy(career.history, career.nationality, country?.strength ?? 75);
   return (
     <div className="timeline-card">
       {country ? <Flag country={country} size={40} language={locale} decorative /> : null}
       <div className="min-w-0 flex-1">
         <p className="display text-xl font-extrabold uppercase">{t("summary.timeline.debut")}</p>
         <p className="text-xs text-muted">{t("summary.timeline.debutAt", { age, year })}</p>
+        <div className="mt-2 flex flex-wrap items-center gap-2"><Chip tone={LEGACY_TONE[legacy.level]} size="sm">{d71(locale,"nationalLegacy")}: {legacy.level === "none" ? d71(locale,"common") : c(`legacy.${legacy.level}`)}</Chip><InfoTip label={d71(locale,"nationalLegacy")}>{d71(locale,"nationalHint")}</InfoTip><span className="numeric text-xs text-muted">{legacy.games} {t("career.header.games")} · {legacy.goals} {t("career.header.goals")}</span></div>
       </div>
     </div>
   );

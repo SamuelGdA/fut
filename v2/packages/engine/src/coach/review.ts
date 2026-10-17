@@ -103,9 +103,16 @@ export function financeLabel(club: CoachClub, wageBill: number): ClubOffer["fina
 export function seasonBudget(club: CoachClub, leftover: number): number {
   const base=FINANCE.budgetShare * club.revenue;
   const recent=Math.max(0,club.previousInvestment ?? 0);
-  const investmentCut=1-Math.min(0.3,recent/Math.max(1,club.revenue)*0.5);
-  const allocated=base*investmentCut+FINANCE.budgetFromLeftover*Math.min(leftover,club.revenue*0.2);
-  return Math.max(0,Math.min(allocated,club.cash+club.revenue*0.2));
+  const rule=FINANCE.investmentCut;
+  // Um clube pequeno precisa renovar o elenco básico. O corte maior é de
+  // quem já dispõe de receita para disputar as contratações mais caras.
+  const wealth=clamp((club.revenue-rule.fromRevenue)/(rule.toRevenue-rule.fromRevenue),0,1);
+  const maxCut=rule.min+(rule.max-rule.min)*wealth;
+  const investmentCut=1-Math.min(maxCut,recent/Math.max(1,base)*rule.scale);
+  const allocated=base*investmentCut+FINANCE.budgetFromLeftover*Math.max(0,leftover);
+  // A sobra já é dinheiro reservado, não uma nova receita. Continua sujeita
+  // ao caixa disponível, para não permitir gastar a mesma economia duas vezes.
+  return Math.max(0,Math.min(allocated,club.cash+club.revenue*0.15));
 }
 
 /** Receitas e salários de um período, para todos os clubes; o do treinador vai para o diário. */
@@ -391,7 +398,8 @@ export function seasonOffers(career: CoachCareer, dismissed: boolean): ClubOffer
   const last = career.history.at(-1);
   const firstTitle = Boolean(last && last.division === 1 && last.titles.some((id) => id.startsWith("league:")));
   const continentalTitle = Boolean(last?.titles.some((id) => id.startsWith("cont1:")));
-  const achievementFloor = firstTitle || continentalTitle ? Math.min(0.96, current + 0.1) : 0;
+  const topFlightBreakthrough = !dismissed && last?.division === 1 && last.position !== null && last.position !== undefined && last.position <= Math.max(2, Math.floor(last.tableSize / 5));
+  const achievementFloor = firstTitle || continentalTitle ? Math.min(0.96, current + 0.1) : topFlightBreakthrough ? Math.max(0.68, current + 0.06) : 0;
   const target = clamp(
     Math.max(achievementFloor, OFFERS.percentileBase + OFFERS.percentilePerReputation * reputation + Math.max(0, bestWork - current) * 0.2) - (dismissed ? OFFERS.dismissedDrop : 0),
     0.05,
@@ -413,7 +421,7 @@ export function seasonOffers(career: CoachCareer, dismissed: boolean): ClubOffer
     return closeness * countryWeight;
   };
   const picked = new Set<string>();
-  const domestic = candidates.filter((club) => club.country === currentCountry && (!(firstTitle || continentalTitle) || (club.division === 1 && club.strength >= (career.clubs[coach?.club ?? ""]?.strength ?? 0))))
+  const domestic = candidates.filter((club) => club.country === currentCountry && (!topFlightBreakthrough || club.division === 1) && (!(firstTitle || continentalTitle) || (club.division === 1 && club.strength >= (career.clubs[coach?.club ?? ""]?.strength ?? 0))))
     .sort((a, b) => Math.abs((percentile.get(a.id) ?? 0) - target) - Math.abs((percentile.get(b.id) ?? 0) - target) || a.id.localeCompare(b.id)).slice(0, 3);
   if (domestic.length) picked.add(rng.pick(domestic).id);
   if (dismissed) {

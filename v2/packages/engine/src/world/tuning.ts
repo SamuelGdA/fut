@@ -40,6 +40,14 @@ export const GENERIC_CHAMPIONS: ReadonlyArray<{ readonly id: string; readonly co
   { id: "generic:OFC", confederation: "OFC", strength: 60 },
 ];
 
+/** Representantes explícitos das ligas ausentes; a mesma força em jogos e sondas. */
+export function genericClubStrength(id: string): number | null {
+  if (id.startsWith("generic:UEFA:")) return 79;
+  if (id.startsWith("generic:CONMEBOL:")) return 75;
+  if (id.startsWith("generic:CONCACAF:")) return 72;
+  return GENERIC_CHAMPIONS.find(entry => entry.id === id || id.startsWith(`${entry.id}:`))?.strength ?? null;
+}
+
 /** Vagas do Mundial de Clubes por confederação (GDD 8.11). */
 export const CLUB_WORLD_CUP_QUOTA: Readonly<Partial<Record<Confederation, number>>> = {
   UEFA: 12,

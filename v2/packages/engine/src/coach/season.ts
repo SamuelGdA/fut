@@ -3,7 +3,7 @@ import { applyMatchRelations } from "./review";
 import { recordCompetitionStats } from "./awards";
 import { stageInjury } from "./injuries";
 import { areRivals } from "@craque/world";
-import { GENERIC_CHAMPIONS } from "../world/tuning";
+import { genericClubStrength } from "../world/tuning";
 import { advanceCompetitions, applyToTable, type DrawContext, sortTable } from "./competitions";
 import { buildMatchEvent } from "./events";
 import { coachSheet, isAvailable, registered } from "./lineup";
@@ -67,7 +67,7 @@ function createRun(career: CoachCareer): Run {
     context: {
       seed: career.setup.seed,
       year: career.year,
-      seeder: (club) => career.clubs[club]?.strength ?? GENERIC_CHAMPIONS.find((entry) => entry.id === club || club.startsWith(`${entry.id}:`))?.strength ?? 60,
+      seeder: (club) => career.clubs[club]?.strength ?? genericClubStrength(club) ?? 60,
       busy: busyDays(career),
     },
     endDay: periodEnd(career),
@@ -89,9 +89,8 @@ function indexFixture(fixture: Fixture, byId: Map<string, Fixture>, byDay: Map<n
 }
 
 function genericSheet(club: string): AiSheet | null {
-  const generic = GENERIC_CHAMPIONS.find((entry) => entry.id === club || club.startsWith(`${entry.id}:`));
-  if (!generic) return null;
-  const value = generic.strength;
+  const value = genericClubStrength(club);
+  if (value === null) return null;
   return {
     eleven: [],
     ratings: { gk: value, def: value, mid: value, att: value, attack: value, defense: value },
@@ -117,7 +116,7 @@ function aiSheet(run: Run, club: string, dayAbs: number): AiSheet {
 }
 
 function strengthOf(run: Run, club: string): number {
-  return run.career.clubs[club]?.strength ?? GENERIC_CHAMPIONS.find((entry) => entry.id === club || club.startsWith(`${entry.id}:`))?.strength ?? 60;
+  return run.career.clubs[club]?.strength ?? genericClubStrength(club) ?? 60;
 }
 
 function aggregateBefore(run: Run, fixture: Fixture): readonly [number, number] | null {

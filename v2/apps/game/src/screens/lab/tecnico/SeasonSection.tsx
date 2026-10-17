@@ -1,3 +1,4 @@
+import { d71 } from "../../../i18n/d71";
 import { d67 } from "../../../i18n/tecnico/d67";
 import { d66 } from "../../../i18n/tecnico/d66";
 import { d64 } from "../../../i18n/tecnico/d64";
@@ -90,7 +91,7 @@ export function SeasonSection({ index }: { index: number }) {
 
   return (
     <LabSection id="tec-temporada" index={index} title={tt("lab.season.title")}>
-      <p className="mb-3 max-w-3xl text-sm text-muted">{d66(t.locale,"championsFormat")} {d66(t.locale,"positionRule")} {d66(t.locale,"financeRule")} {d66(t.locale,"tacticalRule")}</p>
+      <p className="mb-3 max-w-3xl text-sm text-muted">{d66(t.locale,"championsFormat")} {d66(t.locale,"positionRule")} {d71(t.locale,"financeHint")} {d71(t.locale,"outsideHint")} {d66(t.locale,"tacticalRule")}</p>
       <p className="mb-3 max-w-3xl text-sm text-muted">{tt("lab.season.lead")}</p><p className="mb-3 max-w-3xl text-sm text-muted">{revisionText(t.locale,"worldRules")} {d64(t.locale,"awardRule")} {d64(t.locale,"promiseRule")}</p><p className="mb-3 max-w-3xl text-sm text-muted">{revisionText(t.locale,"injuryRule")}</p>
       <p className="mb-3 max-w-3xl text-xs text-muted">{tt("lab.season.liveRules", {
         annual: EVALUATION.dismissBelow, games: LIVE_RELATIONS.minGames, points: LIVE_RELATIONS.pointsPerGame,

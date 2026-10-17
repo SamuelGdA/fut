@@ -473,12 +473,12 @@
   }
 
   .tec-action-hint {
-    overflow: hidden;
     color: var(--muted);
     font-size: 11px;
     line-height: 1.2;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    white-space: normal;
+    overflow-wrap: anywhere;
+
   }
 
   /* A sétima ação ocupa a linha inteira na grade de duas colunas. */
@@ -807,14 +807,14 @@
 
   .tec-slot-name {
     max-width: 100%;
-    overflow: hidden;
     padding: 0 3px;
     border-radius: var(--radius-xs);
     background: color-mix(in srgb, var(--canvas) 80%, transparent);
     font-size: 10.5px;
     font-weight: 700;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    white-space: normal;
+    overflow-wrap: anywhere;
+
   }
 
   .tec-slot-pos {
@@ -1419,11 +1419,11 @@
   }
   .tec-action-hint {
     color: var(--muted);
-    text-overflow: ellipsis;
-    white-space: nowrap;
     font-size: 11px;
     line-height: 1.2;
-    overflow: hidden;
+    white-space: normal;
+    overflow-wrap: anywhere;
+
   }
   .tec-actions>:last-child:nth-child(odd) {
     grid-column: span 2;
@@ -1729,10 +1729,11 @@
     }
   }
   .tec-slot-name {
-    text-overflow: ellipsis;
-    white-space: nowrap;
     font-size: 10.5px;
     font-weight: 700;
+    white-space: normal;
+    overflow-wrap: anywhere;
+
   }
   .tec-slot-pos {
     color: var(--muted);
@@ -2435,10 +2436,10 @@
       width: 100%;
     }
     .tec-command-hero .text-xs {
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      overflow: hidden;
-    }
+    white-space: normal;
+    overflow-wrap: anywhere;
+
+  }
     .tec-command-hero>img,.tec-command-hero>svg {
       width: 36px;
       height: 36px;
@@ -2677,12 +2678,11 @@
   }
   .tec-event-scene {
     font-family: var(--font-body);
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
     margin: 6px 0 12px;
     font-size: 13px;
-    display: -webkit-box;
-    overflow: hidden;
+    white-space: normal;
+    overflow-wrap: anywhere;
+
   }
   .tec-decision-picker {
     flex-direction: column;
@@ -3419,7 +3419,8 @@
   .tec-trophy-gallery { display: grid; grid-template-columns: repeat(auto-fit,minmax(116px,1fr)); gap: 12px; }
   .tec-trophy-gallery button { width: 100%; display: flex; align-items: center; flex-direction: column; gap: 8px; padding: 14px 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel-2); }
   .tec-trophy-gallery button:hover { border-color: var(--glory); }
-  .tec-trophy-gallery strong { font-size: 12px; line-height: 1.35; overflow-wrap: anywhere; text-align: center; }
+  .tec-trophy-gallery strong { font-size: 12px; line-height: 1.35; overflow-wrap: anywhere; text-align: center;
+  }
   .tec-trophy-gallery small { font-size: 10px; color: var(--muted); }
   .tec-trophy-art { position: relative; min-height: 86px; display: grid; place-items: center; }
   .tec-trophy-art .tec-trophy-count { position: absolute; right: -18px; top: 52px; background: var(--glory); color: var(--on-glory); padding: 2px 5px; border-radius: 4px; }
@@ -3436,7 +3437,8 @@
   .tec-legacy-numbers { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 14px; }
   .tec-legacy-player-groups { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 18px; }
   .tec-legacy-person { width: 100%; padding: 12px 0; display: flex; flex-direction: column; gap: 5px; text-align: left; border-bottom: 1px solid var(--line); }
-  .tec-legacy-person strong { font-size: 14px; overflow-wrap: anywhere; }
+  .tec-legacy-person strong { font-size: 14px; overflow-wrap: anywhere;
+  }
   .tec-legacy-person span,.tec-legacy-person small { font-size: 11px; color: var(--muted); }
   .tec-legacy-person:hover strong { color: var(--glory); }
   .tec-legacy-timeline { display: flex; flex-direction: column; gap: 16px; }
@@ -3459,7 +3461,8 @@
   .tec-poster header > span:last-child { margin-left: auto; }
   .tec-poster-hero { display: flex; align-items: center; gap: 30px; }
   .tec-poster-portrait { width: 172px; height: 194px; flex: 0 0 172px; background: #eff1de12; border: 2px solid #eff1de44; border-radius: 12px; overflow: hidden; }
-  .tec-poster-hero h1 { font-family: var(--font-display); font-size: 84px; font-weight: 900; line-height: 1; text-transform: uppercase; overflow-wrap: anywhere; }
+  .tec-poster-hero h1 { font-family: var(--font-display); font-size: 84px; font-weight: 900; line-height: 1; text-transform: uppercase; overflow-wrap: anywhere;
+  }
   .tec-poster-hero p { font-size: 20px; letter-spacing: 2px; margin: 8px 0; }
   .tec-poster-stats { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 16px; }
   .tec-poster-stats > div { border: 1px solid #eff1de55; padding: 15px 20px; border-radius: 8px; background: #0002; }
@@ -3528,7 +3531,8 @@
   .tec-table-list .tec-player > :last-child { text-align: right; }
   .tec-table-list .tec-player > :nth-child(3) > :first-child { font-size: 12px; }
   .tec-table-list .tec-pick { padding-left: 10px; padding-right: 10px; }
-  .tec-table-list .tec-player .truncate { white-space: normal; overflow-wrap: anywhere; }
+  .tec-table-list .tec-player .truncate { white-space: normal; overflow-wrap: anywhere;
+  }
   .tec-sell-search { display: flex; flex-direction: column; min-height: 0; gap: 8px; }
   .tec-sell-search > .search-input { flex-shrink: 0; }
   .tec-buy-search > .tec-sort-head { flex-shrink: 0; }
@@ -3608,12 +3612,27 @@
   .tec-action:not(:last-child) { display:grid; grid-template-columns:26px minmax(0,1fr); grid-template-rows:auto auto; column-gap:8px; row-gap:3px; padding:10px 12px; align-content:center; }
   .tec-action:not(:last-child) .tec-action-icon { grid-column:1; grid-row:1 / 3; width:26px; height:26px; align-self:center; }
   .tec-action:not(:last-child) .tec-action-name { grid-column:2; font-size:20px; line-height:1.1; }
-  .tec-action:not(:last-child) .tec-action-hint { grid-column:2; font-size:11px; line-height:1.2; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; max-height:none; }
+  .tec-action:not(:last-child) .tec-action-hint { grid-column:2; font-size:11px; line-height:1.2;     max-height:none;
+    white-space: normal;
+    overflow-wrap: anywhere;
+
+  }
 }
 @media (max-width:600px) {
   .tec-buy-search { --tec-buy-columns:22px 28px minmax(45px,1fr) 24px 52px 53px; }
   .tec-buy-search .tec-pos { width:22px; }
   .tec-buy-search .tec-player > :nth-child(5) { font-size:9px; }
+  .tec-buy-search .tec-player {
+    grid-template-columns:22px 28px minmax(20px,1fr) 56px 84px;
+    align-items:center;
+    row-gap:7px;
+  }
+  .tec-buy-search .tec-player > :nth-child(1),
+  .tec-buy-search .tec-player > :nth-child(2) { grid-row:1 / 3; }
+  .tec-buy-search .tec-player > :nth-child(3) { grid-column:3 / -1; grid-row:1; }
+  .tec-buy-search .tec-player > :nth-child(4) { grid-column:3; grid-row:2; text-align:left; }
+  .tec-buy-search .tec-player > :nth-child(5) { grid-column:4; grid-row:2; }
+  .tec-buy-search .tec-player > :nth-child(6) { grid-column:5; grid-row:2; }
 }
 .tec-position-warning { position:absolute; left:-5px; top:-5px; width:15px; height:15px; display:grid; place-items:center; color:#312500; background:#f9cb4a; border-radius:50%; font:800 12px/1 sans-serif; }
 
@@ -3651,3 +3670,8 @@
     .tec-incoming-fee .eyebrow { max-width: 100px; }
   }
 }
+/* D71: cada abertura e cada painel novo reinicia a entrada, sem mover os controles. */
+@keyframes tec-panel-enter { from { opacity: 0; transform: translateY(7px); } to { opacity: 1; transform: translateY(0); } }
+[data-motion="full"] .tec-report-block[open] > .tec-report-content,
+[data-motion="full"] .tecnico-columns .career-explore [role="tabpanel"] > .scroll-panel-inner,
+[data-motion="full"] .tecnico .career-tabs [role="tabpanel"] > .scroll-panel-inner { animation: tec-panel-enter 220ms ease-out both; }

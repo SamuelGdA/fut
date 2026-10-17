@@ -1066,6 +1066,9 @@ export const pt = {
       historyCup: "Copa",
       historyContinental: "Continental",
       generic: {
+        UEFA: "Representante europeu",
+        CONMEBOL: "Representante sul-americano",
+        CONCACAF: "Representante da América do Norte e Central",
         AFC: "Campeão da Ásia",
         CAF: "Campeão da África",
         OFC: "Campeão da Oceania",

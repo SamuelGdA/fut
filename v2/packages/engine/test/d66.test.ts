@@ -119,7 +119,8 @@ describe("D66: mudanças verificáveis",()=>{
   it("gastos altos reduzem a próxima verba, sem zerá-la se há recursos",()=>{
     const club={revenue:100_000_000,cash:100_000_000,previousInvestment:0} as Parameters<typeof seasonBudget>[0];
     expect(seasonBudget({...club,previousInvestment:50_000_000},0)).toBeLessThan(seasonBudget(club,0));
-    expect(seasonBudget({...club,previousInvestment:50_000_000},0)).toBeGreaterThan(20_000_000);
+    // D71: neste porte o corte máximo é 31,25%; gigantes podem chegar a 65%.
+    expect(seasonBudget({...club,previousInvestment:50_000_000},0)).toBe(22_000_000);
     expect(seasonBudget({...club,cash:-50_000_000},0)).toBe(0);
   });
   it("vaga vazia é recusada antes de avançar sem completar silenciosamente",()=>{

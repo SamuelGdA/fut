@@ -4,6 +4,7 @@ import { safeStorage } from "../../services/storage";
 import { isRecord } from "../../lib/validate";
 
 export const COACH_SAVE_KEY = "futeiros.tecnico.save";
+export const COACH_BACKUP_PREFIX = "futeiros.tecnico.backup.";
 export interface CoachSave {
   version: string;
   setup: CoachSetup;
@@ -29,7 +30,14 @@ export function readCoachSave(): CoachSave | null {
 }
 export function writeCoachSave(career: CoachCareer, avatar: AvatarConfig | null, commands: CoachCommand[]): void {
   if (career.phase === "ended") { clearCoachSave(); return; }
+  const previous=readCoachSave();
+  if(previous && previous.version!==career.version)preserveCoachSave(previous);
   const record: CoachSave = { version: career.version, setup: career.setup, commands, avatar, club: career.coach?.club ?? null, year: career.year };
   safeStorage.setItem(COACH_SAVE_KEY, JSON.stringify(record));
+}
+/** Mudança de motor não pode apagar silenciosamente o diário da versão anterior. */
+export function preserveCoachSave(saved: CoachSave): void {
+  const key=COACH_BACKUP_PREFIX+encodeURIComponent(saved.version).slice(0,80);
+  if(!safeStorage.getItem(key))safeStorage.setItem(key,JSON.stringify(saved));
 }
 export function clearCoachSave(): void { safeStorage.removeItem(COACH_SAVE_KEY); }

@@ -10,8 +10,8 @@ import {
   PLAYABLE_COUNTRIES,
 } from "@craque/world";
 import { continentalEntrants } from "../world/season";
-import { performanceSpots } from "../world/qualification";
-import { CALENDAR, CLUB_WORLD_CUP_QUOTA, GENERIC_CHAMPIONS } from "../world/tuning";
+import { performanceSpots, rankedWorldCupClubs, rememberContinentalRanking } from "../world/qualification";
+import { CALENDAR, CLUB_WORLD_CUP_QUOTA, GENERIC_CHAMPIONS, genericClubStrength } from "../world/tuning";
 import type { SeasonMemory } from "../world/types";
 import type { CoachClub, CompetitionKind, CompetitionState, Fixture, KnockoutRound, PreviousSeason, TableRow } from "./types";
 import { CALENDAR_DAYS } from "./tuning";
@@ -334,7 +334,7 @@ function isTwoLegged(competition: string, label: string): boolean {
 }
 
 function genericStrength(club: string): number {
-  return GENERIC_CHAMPIONS.find((entry) => entry.id === club || club.startsWith(`${entry.id}:`))?.strength ?? 60;
+  return genericClubStrength(club) ?? 60;
 }
 
 export function clubWorldCupEntrants(input: SeasonInput, seed: Seeder): string[] {
@@ -342,18 +342,9 @@ export function clubWorldCupEntrants(input: SeasonInput, seed: Seeder): string[]
   for (const confederation of CONFEDERATIONS) {
     const quota = CLUB_WORLD_CUP_QUOTA[confederation] ?? 0;
     if (quota === 0) continue;
-    const chosen: string[] = [];
-    for (const id of input.memory.primaryChampions[confederation] ?? []) {
-      if (chosen.length < quota && !chosen.includes(id) && input.clubs[id]) chosen.push(id);
-    }
-    const strongest = Object.values(input.clubs)
-      .filter((club) => getCountry(club.country)?.confederation === confederation)
-      .map((club) => club.id)
-      .sort((a, b) => seed(b) - seed(a) || a.localeCompare(b));
-    for (const id of strongest) {
-      if (chosen.length >= quota) break;
-      if (!chosen.includes(id)) chosen.push(id);
-    }
+    const chosen = rankedWorldCupClubs(input.memory.primaryChampions[confederation] ?? [], input.memory.primaryRanking ?? [], quota,
+      id => { const club = input.clubs[id]; return club && getCountry(club.country)?.confederation === confederation ? club.country : undefined; });
+    for (let index = 0; chosen.length < quota; index++) chosen.push(`generic:${confederation}:${index}`);
     entrants.push(...chosen);
   }
   for (const [confederation, count] of [["AFC", 4], ["CAF", 4], ["OFC", 1]] as const) for (let index = 0; index < count; index += 1) entrants.push(`generic:${confederation}:${index}`);
@@ -795,6 +786,7 @@ export function toSeasonMemory(previous: PreviousSeason): SeasonMemory {
     continental: previous.continental,
     primaryChampions: previous.primaryChampions as SeasonMemory["primaryChampions"],
     performanceSpots: previous.performanceSpots,
+    primaryRanking: previous.primaryRanking,
   };
 }
 
@@ -840,7 +832,15 @@ export function seasonMemory(
       uefaCoefficients[club]=[bonus+points,...prior].slice(0,5);
     }
   }
-  return {year,tables,cups,continental,primaryChampions,uefaCoefficients,performanceSpots:performanceSpots(orders)};
+  const primaryPoints: Record<string, number> = {};
+  for (const state of Object.values(competitions)) if (state.kind === "cont1") for (const club of state.entrants) {
+    const points = fixtures.filter(f => f.competition === state.id && f.result && (f.home === club || f.away === club)).reduce((sum, f) => {
+      const own = f.home === club ? f.result!.home : f.result!.away, other = f.home === club ? f.result!.away : f.result!.home;
+      return sum + (own > other ? 3 : own === other ? 1 : 0);
+    }, 0);
+    primaryPoints[club] = 3 + points + (stageWeight[state.reached[club] ?? ""] ?? 0);
+  }
+  return {year,tables,cups,continental,primaryChampions,uefaCoefficients,primaryRanking:rememberContinentalRanking(previous.primaryRanking,primaryPoints),performanceSpots:performanceSpots(orders)};
 }
 
 export const COMPETITION_DAYS = DAYS;

@@ -2,11 +2,20 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { COACH_VERSION, coachCommand, createCoachCareer, type CoachCommand } from "@craque/engine/coach";
 import { FREE_PLAYERS, SQUAD_PLAYERS } from "@craque/world/squads";
 import { safeStorage } from "../../services/storage";
-import { clearCoachSave, COACH_SAVE_KEY, readCoachSave, writeCoachSave } from "./save";
+import { clearCoachSave, COACH_BACKUP_PREFIX, COACH_SAVE_KEY, preserveCoachSave, readCoachSave, writeCoachSave } from "./save";
 const world={players:SQUAD_PLAYERS,free:FREE_PLAYERS};
 const setup={seed:"save-coach",startYear:2026,mode:"slow" as const,identity:{name:"Teste",nationality:"BRA" as const}};
 beforeEach(clearCoachSave);
 describe("retomada do Técnico (D61)",()=>{
+ it("uma versão antiga mantém uma cópia antes de substituir o diário (D71)",()=>{
+  const old={version:"1.7.0",setup,commands:[{type:"advance"} as CoachCommand],avatar:null,club:"criciuma",year:2030};
+  safeStorage.removeItem(COACH_BACKUP_PREFIX+old.version);
+  safeStorage.setItem(COACH_SAVE_KEY,JSON.stringify(old));
+  preserveCoachSave(readCoachSave()!);
+  preserveCoachSave({...old,year:2026,commands:[]});
+  expect(JSON.parse(safeStorage.getItem(COACH_BACKUP_PREFIX+old.version)!)).toEqual(old);
+  expect(readCoachSave()).toEqual(old);
+ });
  it("o diário refaz a mesma escalação e a seleção ainda aberta",()=>{
   let career=createCoachCareer(setup,world);
   const commands: CoachCommand[]=[{type:"acceptOffer",offer:career.offers[0]!.id},{type:"setTactics",formation:"3-4-3",philosophy:"possession"},{type:"openAction",kind:"youth"}];

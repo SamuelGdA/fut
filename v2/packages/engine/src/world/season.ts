@@ -1,5 +1,5 @@
 import { playerClubImpact } from "./tuning";
-import { performanceSpots } from "./qualification";
+import { performanceSpots, rankedWorldCupClubs, rememberContinentalRanking } from "./qualification";
 import { clubTrophyProgress } from "./clubProgress";
 import {
   CLUBS,
@@ -38,6 +38,7 @@ import {
   CLUB_IMPACT,
   CLUB_WORLD_CUP_QUOTA,
   GENERIC_CHAMPIONS,
+  genericClubStrength,
   LEAGUE,
   NATIONAL_IMPACT,
   NATIONS_CUP_SIZE,
@@ -108,8 +109,8 @@ function boostGroupOf(competition: string): BoostGroup | undefined {
 
 /** Força de quem disputa um torneio de clubes: clube dos dados ou campeão genérico. */
 function entrantEffective(context: Context, id: string, group?: BoostGroup): number {
-  const generic = GENERIC_CHAMPIONS.find((entry) => entry.id === id || id.startsWith(`${entry.id}:`));
-  if (generic) return generic.strength;
+  const generic = genericClubStrength(id);
+  if (generic !== null) return generic;
   return clubEffective(context, clubIndex(id), group);
 }
 
@@ -420,7 +421,7 @@ function simulateIntercontinental(
 
 /**
  * Mundial de Clubes (GDD 8.11): campeões das primárias das quatro temporadas
- * anteriores, completados pelos mais fortes de cada confederação.
+ * anteriores, completados pelo ranking das campanhas nesse mesmo período.
  */
 function simulateClubWorldCup(context: Context): KnockoutResult | null {
   if (context.year % 4 !== CALENDAR.clubWorldCup || !getCompetition("clubworldcup")) return null;
@@ -428,18 +429,11 @@ function simulateClubWorldCup(context: Context): KnockoutResult | null {
   for (const confederation of CONFEDERATIONS) {
     const quota = CLUB_WORLD_CUP_QUOTA[confederation] ?? 0;
     if (quota === 0) continue;
-    const chosen: string[] = [];
-    for (const id of context.world.memory.primaryChampions[confederation] ?? []) {
-      if (chosen.length < quota && !chosen.includes(id) && hasClub(id)) chosen.push(id);
-    }
-    const strongest = [...(CONFEDERATION_CLUBS.get(confederation) ?? [])].sort(
-      (a, b) => (context.world.strength[b] ?? 0) - (context.world.strength[a] ?? 0) || a - b,
-    );
-    for (const index of strongest) {
-      if (chosen.length >= quota) break;
-      const id = idOf(index);
-      if (!chosen.includes(id)) chosen.push(id);
-    }
+    const chosen = rankedWorldCupClubs(context.world.memory.primaryChampions[confederation] ?? [], context.world.memory.primaryRanking ?? [], quota,
+      id => { const index = hasClub(id) ? clubIndex(id) : -1; const club = CLUBS[index]; return club && getCountry(club.country)?.confederation === confederation ? club.country : undefined; });
+    // Países cujas ligas ainda não existem são representados explicitamente,
+    // em vez de entregar suas vagas a clubes nacionais sem campanha continental.
+    for (let index = 0; chosen.length < quota; index++) chosen.push(`generic:${confederation}:${index}`);
     entrants.push(...chosen);
   }
   for (const [confederation,count] of [["AFC",4],["CAF",4],["OFC",1]] as const) {
@@ -620,7 +614,9 @@ function rememberSeason(year: number, previous: SeasonMemory, results: Omit<Seas
     if (!winner) continue;
     primaryChampions[confederation] = [winner, ...(previous.primaryChampions[confederation] ?? [])].slice(0, PRIMARY_HISTORY);
   }
-  return { year,tables,cups,continental,primaryChampions,performanceSpots:performanceSpots(Object.fromEntries(Object.entries(results.continental).map(([id,result])=>[id,result.order]))) };
+  const points: Record<string, number> = {};
+  for (const [id, result] of Object.entries(results.continental)) if (id.startsWith("cont1:")) result.order.forEach((club, rank) => { points[club] = Math.max(1, 18 - 3 * Math.ceil(Math.log2(rank + 1))); });
+  return { year,tables,cups,continental,primaryChampions,primaryRanking:rememberContinentalRanking(previous.primaryRanking,points),performanceSpots:performanceSpots(Object.fromEntries(Object.entries(results.continental).map(([id,result])=>[id,result.order]))) };
 }
 
 // ------------------------------------------------------------- a temporada

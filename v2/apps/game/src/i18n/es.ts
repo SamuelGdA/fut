@@ -1062,6 +1062,9 @@ export const es: Messages = {
       historyCup: "Copa",
       historyContinental: "Continental",
       generic: {
+        UEFA: "Representante europeo",
+        CONMEBOL: "Representante sudamericano",
+        CONCACAF: "Representante de Norteamérica y Centroamérica",
         AFC: "Campeón de Asia",
         CAF: "Campeón de África",
         OFC: "Campeón de Oceanía",

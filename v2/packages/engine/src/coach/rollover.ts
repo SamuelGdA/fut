@@ -1,5 +1,6 @@
 import { leagueAt, PLAYABLE_COUNTRIES } from "@craque/world";
 import { clamp } from "../math";
+import { seasonBudget } from "./review";
 import type { Position } from "../player/positions";
 import { finishLeagues, sortTable } from "./competitions";
 import { viableSquad } from "./lineup";
@@ -235,6 +236,7 @@ function aiMarket(career: CoachCareer): void {
   for (const club of clubs) {
     const squad = index.get(club.id) ?? [];
     if (squad.length === 0) continue;
+    let budget=seasonBudget(club,club.transferReserve ?? 0);
     const rng = coachRng(career.setup.seed, "aiMarket", career.year, club.id);
     for (let buy = 0; buy < AI_MARKET.buysPerClub; buy += 1) {
       const eleven = bestEleven(squad, "4-3-3");
@@ -258,11 +260,12 @@ function aiMarket(career: CoachCareer): void {
       if (candidates.length === 0) break;
       const target = candidates[rng.int(0, candidates.length - 1)] as CoachPlayer;
       const fee = valueOf(target, career.year);
-      if (club.cash < fee - club.revenue * 0.2) break;
+      if (fee > budget || club.cash < fee - club.revenue * 0.15) break;
       const sellerId = target.club;
       const seller = career.clubs[sellerId];
       if (!rng.chance(Math.max(0.15, aiInterest(target, club.anchor, seller?.anchor ?? club.anchor)))) continue;
       moveAi(career, target, club.id, fee);
+      budget-=fee;
       squad.push(target);
       const sellerSquad = index.get(sellerId);
       if (sellerSquad) {
@@ -275,6 +278,7 @@ function aiMarket(career: CoachCareer): void {
         if (at >= 0) list.splice(at, 1);
       }
     }
+    club.transferReserve=budget;
   }
   invalidateSquads(career);
 }
@@ -307,6 +311,9 @@ function updateRevenues(career: CoachCareer, movement: Movement): void {
   for (const club of Object.values(career.clubs)) {
     const target = FINANCE.revenueShare * squadValue(index.get(club.id) ?? [], career.year) * FINANCE.divisionFactor[club.division];
     let next = (1 - FINANCE.nextRevenue.reversion) * club.revenue + FINANCE.nextRevenue.reversion * target;
+    // Contratar um craque não cria patrocinador instantaneamente. O crescimento
+    // comercial tem tempo próprio, antes dos bônus reais de campanha e acesso.
+    next = clamp(next, club.revenue * (1 - FINANCE.nextRevenue.growthCap), club.revenue * (1 + FINANCE.nextRevenue.growthCap));
     if (movement.promoted.has(club.id)) next *= FINANCE.nextRevenue.promotion;
     if (movement.relegated.has(club.id)) next *= FINANCE.nextRevenue.relegation;
     if (Object.values(career.competitions).some((state) => state.champion === club.id)) next *= FINANCE.nextRevenue.titleBonus;

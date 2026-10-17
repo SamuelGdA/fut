@@ -153,14 +153,14 @@
   /* Altura de linha folgada: o corte do texto longo não pode comer o til de "AZARÃO". */
   .mission-name {
     min-width: 0;
-    overflow: hidden;
     font-family: var(--font-display);
     font-size: 1.15rem;
     font-weight: 800;
     line-height: 1.25;
-    text-overflow: ellipsis;
     text-transform: uppercase;
-    white-space: nowrap;
+    white-space: normal;
+    overflow-wrap: anywhere;
+
   }
 
   .mission-compact .mission-name {
@@ -294,14 +294,14 @@
   .edict-name {
     min-width: 0;
     flex: 1;
-    overflow: hidden;
     font-family: var(--font-display);
     font-size: 1.1rem;
     font-weight: 800;
     line-height: 1.25;
-    text-overflow: ellipsis;
     text-transform: uppercase;
-    white-space: nowrap;
+    white-space: normal;
+    overflow-wrap: anywhere;
+
   }
 
   .edict-rule {
@@ -335,7 +335,7 @@
 
   /* Cinco abas no desafio: a mesma barra, um pouco mais justa. `minmax(0, 1fr)`
      deixa a coluna encolher abaixo do rótulo (com `1fr`, "HISTÓRICO" empurra a
-     página para fora da tela); o rótulo corta com reticências no pior caso. */
+     página para fora da tela); o rótulo quebra linha quando necessário. */
   .tabbar[data-count="5"] {
     grid-template-columns: repeat(5, minmax(0, 1fr));
   }
@@ -348,9 +348,9 @@
 
   .tabbar-label {
     max-width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    white-space: normal;
+    overflow-wrap: anywhere;
+
   }
 
   /* --------------------------------------------------- Hall da Fama */

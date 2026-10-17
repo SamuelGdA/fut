@@ -132,13 +132,8 @@ describe("título e força dos clubes (D47)", () => {
 });
 
 describe("escolhas com consequências (D49)", () => {
-  it("estudar protege de lesões e custa evolução; só futebol inverte o compromisso", () => {
-    const career = played();
-    const event = EVENT_CATALOG.find((entry) => entry.id === "diploma")!;
-    const study = applyEffects(career, event.options[0]!.success, null, []).career;
-    const football = applyEffects(career, event.options[1]!.success, null, []).career;
-    expect(study.pending.modifiers).toMatchObject({ growthScale: 0.9, injuryScale: 0.7 });
-    expect(football.pending.modifiers).toMatchObject({ growthScale: 1.1, injuryScale: 1.3 });
+  it("terminar estudos não faz parte das decisões do Craque (D71)", () => {
+    expect(EVENT_CATALOG.some(entry => entry.id === "diploma")).toBe(false);
   });
 
   it("romper limita ofertas só na próxima decisão e não persiste no mercado", () => {

@@ -9,7 +9,7 @@ import type { CountryCode } from "@craque/world";
  * férias).
  */
 
-export const COACH_VERSION = "1.7.0";
+export const COACH_VERSION = "1.8.0";
 
 /** D59: benefícios conservadores têm custo; elogio e descanso podem falhar. */
 export const DECISION_TRADEOFFS = {
@@ -355,10 +355,11 @@ export const FINANCE = {
   divisionFactor: { 1: 1, 2: 0.8 },
   /** Situação mostrada: apertada com caixa negativo ou folha anual acima disto da receita; saudável com caixa e folha folgados. */
   label: { tightWages: 0.65, healthyWages: 0.5, healthyCash: 0.15 },
-  /** Verba da temporada: budgetShare da receita, mais esta parte do caixa acima de cashFloor da receita, mais esta parte da sobra. */
+  /** Aportes e reserva: seasonBudget aplica desconto por investimento e respeita o caixa. */
   budgetFromCash: 0.3,
   cashFloor: 0.2,
-  budgetFromLeftover: 0.3,
+  budgetFromLeftover: 0.85,
+  investmentCut: { min: 0.2, max: 0.65, scale: 0.9, fromRevenue: 50_000_000, toRevenue: 250_000_000 },
   wageCap: 0.65,
   budgetShare: 0.32,
   operatingShare: 0.2,
@@ -373,7 +374,7 @@ export const FINANCE = {
   /** Premiação: título da liga, posição, acesso, rebaixamento (fração da receita). */
   prize: { leagueTitle: 0.12, cupTitle: 0.06, continentalTitle: 0.2, perPositionAbove: 0.006, promotion: 0.25, relegation: -0.2 },
   /** Ajuste da receita da temporada seguinte pela campanha. */
-  nextRevenue: { promotion: 1.25, relegation: 0.8, titleBonus: 1.05, reversion: 0.2 },
+  nextRevenue: { promotion: 1.25, relegation: 0.8, titleBonus: 1.03, reversion: 0.12, growthCap: 0.06 },
 } as const;
 
 /** Vender (spec 6.1). */

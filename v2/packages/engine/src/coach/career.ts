@@ -180,7 +180,7 @@ function setCoachClub(career: CoachCareer, clubId: string): void {
     activeTraining: { def: 0, mid: 0, att: 0 },
     board: 60,
     fans: 50,
-    budget: seasonBudget(club, 0),
+    budget: seasonBudget(club, club.transferReserve ?? 0),
     fundsGranted: 0,
     fundsRequests: 0,
     objective: objectiveFor(career, clubId),
@@ -674,6 +674,7 @@ function startNextSeason(career: CoachCareer, target: string): void {
   }
   const previousClub = coach.club;
   const leftover = coach.budget;
+  if(target!==previousClub && career.clubs[previousClub])career.clubs[previousClub]!.transferReserve=leftover;
   const movement = career.movement ?? { promoted: [], relegated: [] };
   career.memory = seasonMemory(career.year, career.competitions, career.memory,career.fixtures);
   rememberSquad(career);
