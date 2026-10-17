@@ -1,3 +1,4 @@
+import { d71 } from "../../../i18n/d71";
 import {
   AWARD_KEYS,
   AWARDS,
@@ -199,6 +200,7 @@ function Awards() {
   const { t, locale } = useT();
   return (
     <section aria-labelledby="arte-premios" className="flex flex-col gap-5">
+      <p className="text-sm text-muted">{d71(locale,"outsideHint")}</p>
       <SectionRule as="h2">
         <span id="arte-premios">{t("lab.art.awards")}</span>
       </SectionRule>

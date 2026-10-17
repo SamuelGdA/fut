@@ -191,7 +191,6 @@
   }
 
   .pcard-name {
-    overflow: hidden;
     padding: 0.06em 0 0.18em;
     border-bottom: 1px solid var(--rule-ink);
     font-family: var(--font-display);
@@ -200,9 +199,10 @@
     letter-spacing: 0.04em;
     line-height: 1;
     text-align: center;
-    text-overflow: ellipsis;
     text-transform: uppercase;
-    white-space: nowrap;
+    white-space: normal;
+    overflow-wrap: anywhere;
+
   }
 
   /* Os seis atributos numa linha: sigla em cima, número embaixo. */
@@ -761,9 +761,10 @@
     }
 
     .loop-panel .decision-body {
-      -webkit-line-clamp: 2;
-      line-clamp: 2;
-    }
+    white-space: normal;
+    overflow-wrap: anywhere;
+
+  }
 
     .loop-panel {
       gap: 8px;
@@ -786,25 +787,25 @@
     }
   }
 
-  /* O celular mais baixo (640 px): o texto da decisão numa linha só. */
+  /* Em telas baixas, a lista de opções absorve a rolagem necessária. */
   @media (max-height: 650px) and (max-width: 1023px) {
     .loop-panel .decision-body {
-      -webkit-line-clamp: 1;
-      line-clamp: 1;
-    }
+    white-space: normal;
+    overflow-wrap: anywhere;
+
+  }
   }
 
-  /* Celular de altura média ou baixa: a linha de detalhes da oferta fica numa
-     linha só (a liga encurta, as estrelas saem), e as opções cabem sem rolar. */
+  /* A lista de opções pode rolar; os nomes e efeitos mantêm o texto completo. */
   @media (max-height: 760px) and (max-width: 1023px) {
     .decision-options:not([data-layout]) .option-meta {
-      flex-wrap: nowrap;
-      overflow: hidden;
+      flex-wrap: wrap;
+      overflow: visible;
     }
 
     .decision-options:not([data-layout]) .option-meta > * {
       flex-shrink: 0;
-      white-space: nowrap;
+      white-space: normal;
     }
 
     .decision-options:not([data-layout]) .option-meta > .option-league,
@@ -1019,9 +1020,7 @@
 
   /* ------------------------------------------------------------ o lance */
 
-  /* O lance (D43): o que a última escolha produziu, no alto da coluna da
-     decisão. Compacto e sem rolar: numa tela baixa, as linhas de detalhe saem
-     pela altura (regras no fim do bloco). */
+  /* O lance (D71): texto completo; PC rola no painel, celular abre a folha. */
   .loop-panel {
     gap: 10px;
   }
@@ -1188,10 +1187,10 @@
   }
 
   .play-stats .eyebrow {
-    overflow: hidden;
     font-size: 10px;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    white-space: normal;
+    overflow-wrap: anywhere;
+
   }
 
   .play-stats dd {
@@ -1270,13 +1269,11 @@
   }
 
   .play-event-text {
-    display: -webkit-box;
-    overflow: hidden;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
     font-size: 13px;
     line-height: 1.35;
+    white-space: normal;
+    overflow-wrap: anywhere;
+
   }
 
   .play-challenge {
@@ -1286,15 +1283,6 @@
     gap: 6px 10px;
     padding-top: 8px;
     border-top: 1px dashed var(--line);
-  }
-
-  /* Numa tela baixa, o lance encolhe antes da decisão: primeiro as
-     miniaturas, depois o texto do evento, depois os chips. */
-  @media (max-height: 760px) {
-    .play-event-text {
-      -webkit-line-clamp: 1;
-      line-clamp: 1;
-    }
   }
 
   @media (max-height: 700px) {
@@ -1308,7 +1296,6 @@
   }
 
   @media (max-height: 640px) {
-    .play-event-text,
     .play-notes {
       display: none;
     }
@@ -1451,25 +1438,23 @@
   }
 
   .result-title {
-    overflow: hidden;
     font-family: var(--font-display);
     font-size: 1.4rem;
     font-weight: 900;
     line-height: 1.05;
-    text-overflow: ellipsis;
     text-transform: uppercase;
-    white-space: nowrap;
+    white-space: normal;
+    overflow-wrap: anywhere;
+
   }
 
   .result-body {
-    display: -webkit-box;
-    overflow: hidden;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
-    line-clamp: 3;
     color: var(--muted);
     font-size: 0.85rem;
     line-height: 1.35;
+    white-space: normal;
+    overflow-wrap: anywhere;
+
   }
 
   .result-chips {
@@ -1526,16 +1511,18 @@
 
   .news-bar .cover-headline {
     margin-top: 5px;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
     font-size: clamp(1rem, 2.6dvh, 1.45rem);
+    white-space: normal;
+    overflow-wrap: anywhere;
+
   }
 
   .news-bar .cover-support {
     margin-top: 3px;
-    -webkit-line-clamp: 1;
-    line-clamp: 1;
     font-size: 12.5px;
+    white-space: normal;
+    overflow-wrap: anywhere;
+
   }
 
   @media (max-width: 1023px), (max-height: 700px) {
@@ -1547,9 +1534,10 @@
   @media (max-height: 700px) {
 
     .news-bar .cover-headline {
-      -webkit-line-clamp: 1;
-      line-clamp: 1;
-    }
+    white-space: normal;
+    overflow-wrap: anywhere;
+
+  }
   }
 
   /* Títulos e prêmios de uma temporada do histórico, lado a lado (D43). */
@@ -1598,14 +1586,12 @@
   }
 
   .decision-body {
-    display: -webkit-box;
-    overflow: hidden;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
-    line-clamp: 3;
     color: var(--muted);
     font-size: 13.5px;
     line-height: 1.4;
+    white-space: normal;
+    overflow-wrap: anywhere;
+
   }
 
   /* As opções ocupam o que sobra. Se a janela for baixa demais (paisagem no
@@ -1729,25 +1715,23 @@
     min-width: 0;
   }
 
-  /* Linha de 1,14: com reticências, os acentos das maiúsculas precisam de folga. */
+  /* Folga de linha para acentos e quebras em títulos longos. */
   .option-title {
-    overflow: hidden;
     font-family: var(--font-display);
     font-size: 1.25rem;
     font-weight: 800;
     line-height: 1.14;
-    text-overflow: ellipsis;
     text-transform: uppercase;
-    white-space: nowrap;
+    white-space: normal;
+    overflow-wrap: anywhere;
+
   }
 
   /* Opção de evento: o texto da escolha pode precisar de duas linhas. */
   .option-title[data-wrap] {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
     white-space: normal;
+    overflow-wrap: anywhere;
+
   }
 
   .option-meta {
@@ -1950,15 +1934,13 @@
   }
 
   .showcase-label {
-    display: -webkit-box;
-    overflow: hidden;
     height: 2.5em;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
     font-size: 11.5px;
     font-weight: 600;
     line-height: 1.25;
+    white-space: normal;
+    overflow-wrap: anywhere;
+
   }
 
   .shelf-empty {
@@ -2203,8 +2185,7 @@
   }
 
   /* Capa do jornal (GDD 21.2): papel impresso nos dois temas. Compacta: o
-     nome do jornal e a data numa linha, manchete e apoio com limite de linhas,
-     para caber no palco. */
+     manchete e apoio quebram linhas; o painel conserva a área da decisão. */
   .cover {
     --paper: #f2ede1;
     --paper-ink: #1a1815;
@@ -2229,14 +2210,14 @@
   }
 
   .cover-paper {
-    overflow: hidden;
     font-family: var(--font-serif);
     font-size: 17px;
     font-weight: 800;
     letter-spacing: 0.01em;
     line-height: 1.05;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    white-space: normal;
+    overflow-wrap: anywhere;
+
   }
 
   .cover-dateline {
@@ -2247,12 +2228,7 @@
   }
 
   .cover-headline {
-    display: -webkit-box;
     margin-top: 8px;
-    overflow: hidden;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
-    line-clamp: 3;
     padding-top: 0.08em;
     font-family: var(--font-display);
     font-size: clamp(1.3rem, 3.7dvh, 2.1rem);
@@ -2260,6 +2236,9 @@
     line-height: 1;
     text-transform: uppercase;
     text-wrap: balance;
+    white-space: normal;
+    overflow-wrap: anywhere;
+
   }
 
   .cover[data-tone="bad"] .cover-headline {
@@ -2267,15 +2246,13 @@
   }
 
   .cover-support {
-    display: -webkit-box;
     margin-top: 6px;
-    overflow: hidden;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
     font-family: var(--font-serif);
     font-size: 13.5px;
     line-height: 1.35;
+    white-space: normal;
+    overflow-wrap: anywhere;
+
   }
 }
 
@@ -2294,7 +2271,11 @@
 
 @layer components {
   .showcase-label[data-competition] { display: block; width: 100%; }
-  .showcase-label[data-competition] > span { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .showcase-label[data-competition] > span { display: block;
+    white-space: normal;
+    overflow-wrap: anywhere;
+
+  }
   .showcase-competition { color: var(--muted); font-size: 10.5px; }
 }
 
@@ -2307,16 +2288,24 @@
 .play-batch-honours { display: grid; gap: 5px; }
 .play-batch-honours > button { display: flex; align-items: center; gap: 7px; font-size: 11px; text-align: left; color: var(--glory); border: 1px solid var(--line); border-radius: 5px; padding: 4px 7px; }
 .play-batch-honours > button > span:first-of-type { display: flex; flex-shrink: 0; }
-.play-batch-honours > button > span:last-child { min-width: 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.play-batch-honours > button > span:last-child { min-width: 0;
+    white-space: normal;
+    overflow-wrap: anywhere;
+
+  }
 
 /* Coleções completas: a faixa cresce por linhas, sem comprimir o histórico. */
 .play-honours-art { flex-wrap: wrap; gap: 5px; }
 .play-stats { grid-template-columns: repeat(var(--play-cols, 4), minmax(0, 1fr)); }
-.play-stats .eyebrow { overflow-wrap: anywhere; }
+.play-stats .eyebrow { overflow-wrap: anywhere;
+  }
 .play-batch-honours > div { display: flex; align-items: center; gap: 7px; border: 1px solid var(--line); border-radius: 5px; padding: 4px 7px; }
 .play-batch-honours > div > button { font-weight: 800; color: var(--glory); }
 .honour-token { display: inline-flex; align-items: center; justify-content: center; padding: 2px; border: 0; border-radius: 4px; background: transparent; flex-shrink: 0; }
 .honour-token:hover, .honour-token:focus-visible { background: var(--panel-2); outline: 1px solid var(--glory); }
 
 .play-honours-art {display:flex;align-items:flex-end;min-width:0;}
+.play-season-details[open] .play-notes, .play-season-details[open] .play-notes li { display: flex; }
 @media(max-width:767px) { .play-batch-honours {display:flex;flex-wrap:wrap;gap:4px;} .play-batch-honours>div {padding:3px 5px;gap:4px;} .play-batch-honours .honour-token img {height:23px;width:auto;} }
+
+.sheet-content > .play { flex-shrink: 0; max-height: none; overflow: visible; }

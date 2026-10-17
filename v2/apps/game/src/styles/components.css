@@ -1091,10 +1091,10 @@
     font-variation-settings: "opsz" 72;
     letter-spacing: 0.03em;
     text-transform: uppercase;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
     transition: color 140ms ease-out;
+    white-space: normal;
+    overflow-wrap: anywhere;
+
   }
 
   @media (min-width: 640px) {

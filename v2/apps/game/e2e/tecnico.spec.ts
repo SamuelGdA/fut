@@ -368,6 +368,11 @@ for (const theme of ["light", "dark"] as const) {
 
     await acao(page, "Contratar").click();
     await expect(folha(page).getByRole("meter", { name: "Verba para contratações", exact: true })).toBeVisible();
+    if (mobile) {
+      // Nomes longos têm a primeira linha; números e chance vêm abaixo.
+      const rows = folha(page).locator(".tec-player");
+      expect(await rows.evaluateAll(nodes => nodes.every(node => node.scrollWidth <= node.clientWidth + 1 && node.children[2]!.clientWidth >= 150))).toBe(true);
+    }
     // A lista agora ordena em cabeçalhos. Os alvos mais caros testam o
     // excesso real do lote, independentemente de quem lidera por OVR.
     await folha(page).getByRole("button", { name: "Valor", exact: true }).click();
@@ -612,6 +617,14 @@ for (const theme of ["light", "dark"] as const) {
     await expect(folha(page).locator(".tec-pick-list .tec-ovr").first()).toBeVisible();
     const overalls=await folha(page).locator(".tec-pick-list .tec-ovr").allTextContents();
     expect(overalls.every(text=>parseInt(text)>=80 && parseInt(text)<=82)).toBe(true);
+    await folha(page).getByRole("button",{name:"Faixa de idade",exact:true}).click();
+    await expect(page.getByRole("spinbutton",{name:"Idade mínima",exact:true})).toHaveValue("");
+    await expect(page.getByRole("spinbutton",{name:"Idade máxima",exact:true})).toHaveValue("");
+    await page.getByRole("spinbutton",{name:"Idade mínima",exact:true}).fill("25");
+    await page.getByRole("spinbutton",{name:"Idade máxima",exact:true}).fill("29");
+    await page.keyboard.press("Escape");
+    await expect(folha(page).locator(".tec-pick-list .tec-player-age").first()).toBeVisible();
+    expect((await folha(page).locator(".tec-pick-list .tec-player-age").allTextContents()).every(text=>parseInt(text)>=25 && parseInt(text)<=29)).toBe(true);
     await folha(page).locator('.tec-column-filter[aria-label="Posição"]').click();
     await page.getByRole("button",{name:"GOL",exact:true}).click();
     await expect(folha(page).locator(".tec-pick-list .tec-pos").first()).toBeVisible();
@@ -623,7 +636,16 @@ for (const theme of ["light", "dark"] as const) {
     await page.getByRole("button",{name:"Ir para o evento",exact:true}).click();
     await page.getByRole("alertdialog").getByRole("button",{name:"Seguir",exact:true}).click();
     await simularAteResultados(page);
+    const report=page.locator(".tec-report-block").first();
+    await report.locator("summary").click();
+    const openedAt=await report.locator(".tec-report-content").evaluate(node=>node.getAnimations()[0]?.startTime ?? 0);
+    await expect(report.locator(".tec-report-content")).toHaveCSS("animation-name","tec-panel-enter");
+    await report.locator("summary").click();
+    expect(await report.locator(".tec-report-content").evaluate(node=>node.getAnimations().length)).toBe(0);
+    await report.locator("summary").click();
+    await expect.poll(()=>report.locator(".tec-report-content").evaluate(node=>Number(node.getAnimations()[0]?.startTime))).toBeGreaterThan(Number(openedAt));
     await page.getByRole("tab",{name:"Estatísticas",exact:true}).click();
+    await expect(page.locator('[role="tabpanel"]:visible > .scroll-panel-inner')).toHaveCSS("animation-name","tec-panel-enter");
     await expect(page.locator(".tec-stat-table tbody tr").first()).toBeVisible();
     await page.locator(".tec-stat-table thead").getByRole("button",{name:"Jogos",exact:true}).click();
     const apps=await page.locator(".tec-stat-table tbody tr td:first-of-type").allTextContents();

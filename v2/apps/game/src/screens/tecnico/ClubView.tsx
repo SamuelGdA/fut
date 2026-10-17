@@ -1,3 +1,4 @@
+import { d71 } from "../../i18n/d71";
 import { type CoachCareer, financeLabel, promiseProgress, FINANCE, wageBillOf } from "@craque/engine/coach";
 import { playerRow, budgetSpent } from "../../features/tecnico/view";
 import { useTecnicoT } from "../../i18n/tecnico/useTecnicoT";
@@ -37,6 +38,7 @@ export function ClubView({ career }: { career: CoachCareer }) {
 
       <div>
         <p className="eyebrow">{tt("club.finances")}</p>
+        <p className="my-2 text-xs text-muted">{d71(t.locale,"financeHint")}</p>
         <FinanceMeter label={tt("club.budget")} used={budgetSpent(career)} limit={coach.budget + budgetSpent(career)} t={t} />
         <FinanceMeter label={tt("club.wages")} used={wages} limit={club.revenue * FINANCE.wageCap / 12} t={t} />
         <dl className="mt-1">

@@ -157,14 +157,6 @@ export const eventsEn: EventsMessages = {
       keep: { label: "Keep my nationality", result: "You keep your nationality and wait for your national team." },
     },
   },
-  diploma: {
-    title: "The diploma",
-    body: "Your family insists: finish school before thinking only about football.",
-    options: {
-      study: { label: "Finish school", result: "Diploma in hand. Less training cuts growth by 10% and injury risk by 30% for this period." },
-      football: { label: "Football only", result: "You train harder: 10% more growth, but 30% more injury risk for this period." },
-    },
-  },
   dressingRoomRift: {
     title: "Dressing room rift",
     body: "The squad has split into two camps, and both want you on their side.",

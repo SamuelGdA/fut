@@ -7,7 +7,7 @@ import { ageOf } from "./players";
 import { initialOfferDivision, seasonBudget, wageBillOf } from "./review";
 import { aiFormation, aiPhilosophy, aiRating, bestEleven, expectedGoals, sectorRatings, type SectorRatings, type SideSetup } from "./tactics";
 import type { CoachCareer, CoachPlayer, Philosophy } from "./types";
-import { GENERIC_CHAMPIONS } from "../world/tuning";
+import { genericClubStrength } from "../world/tuning";
 import { DEVELOP, FINANCE, MATCH } from "./tuning";
 import { unit } from "./util";
 import { squadOf } from "./world";
@@ -24,8 +24,8 @@ export const PHILOSOPHIES: readonly Philosophy[] = ["attacking", "defensive", "p
 
 /** Lado de um clube como a IA o escala (melhor time na formação do clube). */
 export function clubRatings(career: CoachCareer, clubId: string): SectorRatings {
-  const generic = GENERIC_CHAMPIONS.find(entry => entry.id === clubId || clubId.startsWith(`${entry.id}:`));
-  if (generic) return flatRatings(generic.strength);
+  const generic = genericClubStrength(clubId);
+  if (generic !== null) return flatRatings(generic);
   const formation = aiFormation(unit(`${career.setup.seed}:formation:${clubId}`));
   return sectorRatings(bestEleven(squadOf(career, clubId), formation), aiRating);
 }
@@ -211,7 +211,7 @@ export interface ClubWorldCupOdds {
  * uma carreira.
  */
 export function clubWorldCupOdds(career: CoachCareer, runs: number): ClubWorldCupOdds {
-  const strength = (id: string) => career.clubs[id]?.strength ?? GENERIC_CHAMPIONS.find(entry => entry.id === id || id.startsWith(`${entry.id}:`))?.strength ?? 60;
+  const strength = (id: string) => career.clubs[id]?.strength ?? genericClubStrength(id) ?? 60;
   const entrants = clubWorldCupEntrants({ seed: career.setup.seed, year: career.year, clubs: career.clubs, memory: career.memory }, strength);
   const advance = new Map<string, number>();
   const oddsCache = new Map<string, MatchOdds>();

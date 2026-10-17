@@ -227,6 +227,14 @@
    ------------------------------------------------------------------------- */
 
 @layer utilities {
+  /* D71: informação se lê inteira; o painel, quando necessário, rola por dentro. */
+  .truncate {
+    overflow: visible;
+    text-overflow: clip;
+    white-space: normal;
+    overflow-wrap: anywhere;
+
+  }
   .display {
     font-family: var(--font-display);
     font-optical-sizing: auto;
@@ -236,8 +244,7 @@
     text-wrap: balance;
   }
 
-  /* Placar cortado com reticências: a caixa da linha precisa de folga em cima
-     para os acentos das maiúsculas (Á, Ã, Ç) não serem cortados junto. */
+  /* Altura suficiente para preservar os acentos nos títulos. */
   .display.truncate,
   .home-title.truncate {
     line-height: 1.14;
@@ -348,8 +355,6 @@
   transition-delay: 0ms !important;
   scroll-behavior: auto !important;
 }
-
-
 
 [data-motion="full"] .toast,
 [data-motion="full"] .toast * {

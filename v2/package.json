@@ -25,6 +25,7 @@
     "balance": "pnpm --filter @craque/balance balance",
     "balance:check": "pnpm --filter @craque/balance balance --carreiras 2500 --check --sem-arquivo",
     "balance:tecnico": "pnpm --filter @craque/balance tecnico",
+    "balance:tecnico:economia": "pnpm --filter @craque/balance exec tsx src/tecnico/economy.ts",
     "balance:tecnico:check": "pnpm --filter @craque/balance tecnico --carreiras 16 --temporadas 24 --check --sem-arquivo",
     "balance:recordes": "pnpm --filter @craque/balance recordes",
     "desafio:calibrar": "pnpm --filter @craque/balance desafio:calibrar",

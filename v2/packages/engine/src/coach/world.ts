@@ -73,6 +73,7 @@ export function createWorldState(
     continental: warm.continental,
     primaryChampions: warm.primaryChampions as PreviousSeason["primaryChampions"],
     performanceSpots: warm.performanceSpots,
+    primaryRanking: warm.primaryRanking,
   };
   return { players, clubs, memory };
 }

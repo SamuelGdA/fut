@@ -295,6 +295,8 @@ function BuySearch({ career, selected, toggle, t }: { career: CoachCareer; selec
   const [position, setPosition] = useProcessDraft<Position | "any">(career, "buy", "position", "any");
   const [minOvr, setMinOvr] = useProcessDraft(career, "buy", "minOvr", "");
   const [maxOvr, setMaxOvr] = useProcessDraft(career, "buy", "maxOvr", "");
+  const [minAge, setMinAge] = useProcessDraft(career, "buy", "minAge", "");
+  const [maxAge, setMaxAge] = useProcessDraft(career, "buy", "maxAge", "");
   const [affordable, setAffordable] = useProcessDraft(career, "buy", "affordable", true);
   const [impossible, setImpossible] = useProcessDraft(career, "buy", "impossible", false);
   const [sort,setSort]=useProcessDraft<PlayerSort>(career,"buy","columnSort",{key:"chance",descending:true});
@@ -312,6 +314,9 @@ function BuySearch({ career, selected, toggle, t }: { career: CoachCareer; selec
   // escondido até o jogador pedir para ver (a chance continua na etiqueta).
   const rows: Array<{ row: PlayerRow; tier: ReturnType<typeof chanceTier> }> = [];
   for (const player of pool) {
+    const age = career.year - player.birthYear;
+    if (minAge !== "" && age < Number(minAge)) continue;
+    if (maxAge !== "" && age > Number(maxAge)) continue;
     if (maxOvr !== "" && player.ovr > Number(maxOvr)) continue;
     if (minOvr !== "" && player.ovr < Number(minOvr)) continue;
     if (position !== "any" && player.position !== position && !player.alternates.includes(position)) continue;
@@ -364,7 +369,7 @@ function BuySearch({ career, selected, toggle, t }: { career: CoachCareer; selec
         </div>
       ) : null}
       <span className="flex items-center gap-2 text-xs text-muted">{tt("buy.chance")}<InfoTip label={tt("buy.chance")}>{tt("buy.tierHint")}</InfoTip></span>
-      <SortHeaders sort={sort} onChange={setSort} position={position} onPosition={setPosition} minOvr={minOvr} onMinOvr={setMinOvr} maxOvr={maxOvr} onMaxOvr={setMaxOvr} chance selection />
+      <SortHeaders sort={sort} onChange={setSort} position={position} onPosition={setPosition} minOvr={minOvr} onMinOvr={setMinOvr} maxOvr={maxOvr} onMaxOvr={setMaxOvr} minAge={minAge} onMinAge={setMinAge} maxAge={maxAge} onMaxAge={setMaxAge} chance selection />
       {rows.length === 0 ? (
         <p className="p-3 text-sm text-muted">{tt("process.emptySearch")}</p>
       ) : (

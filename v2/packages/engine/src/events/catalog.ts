@@ -190,16 +190,6 @@ export const EVENT_CATALOG: readonly EventDefinition[] = [
     ],
   },
   {
-    id: "diploma",
-    weight: 30,
-    tags: ["personal"],
-    when: [{ kind: "age", max: 19 }],
-    options: [
-      { id: "study", kind: "choice", success: [{ kind: "growth", scale: 0.9 }, { kind: "injury", scale: 0.7 }, { kind: "story", tag: "diploma" }] },
-      { id: "football", kind: "choice", success: [{ kind: "growth", scale: 1.1 }, { kind: "injury", scale: 1.3 }] },
-    ],
-  },
-  {
     id: "dressingRoomRift",
     weight: 45,
     tags: ["squad"],

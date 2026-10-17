@@ -236,7 +236,7 @@ export function SummaryView({ career, avatar, mode, alternate = false, internalT
         </Chapter>
         {chapters.includes("whatIf") && onBranch ? (
           <Chapter id="whatIf" title={t("summary.chapters.whatIf", { surname: career.setup.identity.surname })}>
-            <WhatIfChapter career={career} onBranch={onBranch} replayOnly={internalTesting} />
+            <WhatIfChapter career={career} onBranch={onBranch} />
           </Chapter>
         ) : null}
       </div>

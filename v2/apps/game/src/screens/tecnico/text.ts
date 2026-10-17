@@ -13,9 +13,9 @@ export function clubName(id: string | null | undefined, locale: "pt" | "es" | "e
   }
   if (id.startsWith("generic:")) {
     const [, confederation, number] = id.split(":");
-    const regions = { pt: { AFC: "Ásia", CAF: "África", OFC: "Oceania" }, en: { AFC: "Asia", CAF: "Africa", OFC: "Oceania" }, es: { AFC: "Asia", CAF: "África", OFC: "Oceanía" } };
-    const region = regions[locale][confederation as "AFC" | "CAF" | "OFC"] ?? confederation;
-    return number ? `${region} · ${locale === "en" ? "representative" : "representante"} ${number}` : `${locale === "en" ? "Champion of" : locale === "es" ? "Campeón de" : "Campeão de"} ${region}`;
+    const regions: Record<string, Record<string,string>> = { pt: { AFC: "Ásia", CAF: "África", OFC: "Oceania", UEFA: "Europa", CONMEBOL: "América do Sul", CONCACAF: "América do Norte e Central" }, en: { AFC: "Asia", CAF: "Africa", OFC: "Oceania", UEFA: "Europe", CONMEBOL: "South America", CONCACAF: "North and Central America" }, es: { AFC: "Asia", CAF: "África", OFC: "Oceanía", UEFA: "Europa", CONMEBOL: "Sudamérica", CONCACAF: "Norteamérica y Centroamérica" } };
+    const region = regions[locale]?.[confederation ?? ""] ?? confederation;
+    return number !== undefined ? `${region} · ${locale === "en" ? "representative" : "representante"} ${Number(number)+1}` : `${locale === "en" ? "Champion of" : locale === "es" ? "Campeón de" : "Campeão de"} ${region}`;
   }
   return getClub(id)?.name ?? id;
 }

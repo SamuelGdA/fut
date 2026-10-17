@@ -165,14 +165,6 @@ export const eventsPt = {
       keep: { label: "Manter minha nacionalidade", result: "Você mantém sua nacionalidade e espera a sua seleção." },
     },
   },
-  diploma: {
-    title: "O diploma",
-    body: "A família insiste: terminar os estudos antes de pensar só na bola.",
-    options: {
-      study: { label: "Terminar os estudos", result: "Diploma na mão. Menos treino reduz a evolução em 10% e o risco de lesão em 30% neste período." },
-      football: { label: "Só futebol", result: "Você treina mais: evolução 10% maior, mas risco de lesão 30% maior neste período." },
-    },
-  },
   dressingRoomRift: {
     title: "Racha no vestiário",
     body: "O elenco rachou em dois grupos, e os dois querem você do lado deles.",

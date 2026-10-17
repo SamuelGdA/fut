@@ -97,7 +97,13 @@ export function seasonAwards(career: CoachCareer): CoachAward[] {
   const bestScore = ([player, row]: [string, typeof global extends Map<string, infer T> ? T : never]) => row.ratingSum / row.apps + 0.009 * row.goals + 0.004 * row.assists + row.honours + (career.players[player]?.ovr ?? 60) * 0.008;
   const eliteClub = (player: string) => getLeague(leagueState(career, career.players[player]?.club ?? "")?.id.replace(/^league:/, "") ?? "")?.division === 1;
   const qualifiedGlobal = [...global].filter(([player, row]) => eliteClub(player) && row.apps >= 25 && row.ratingSum / row.apps >= 7 && (career.players[player]?.ovr ?? 0) >= 78);
-  const best = [...qualifiedGlobal].sort((a, b) => bestScore(b) - bestScore(a) || a[0].localeCompare(b[0]))[0];
+  const europe = (id: string) => getCountry(career.clubs[career.players[id]?.club ?? ""]?.country ?? "")?.confederation === "UEFA";
+  const worldCandidates = qualifiedGlobal.filter(([id,row]) => europe(id) || (
+    (career.players[id]?.ovr ?? 0) >= 92 && row.apps >= 40 && row.ratingSum / row.apps >= 8 && row.honours >= 2
+    && coachRng(career.setup.seed,"worldAwardOutsideEurope",career.year,id).chance(0.025)
+  ));
+  const worldScore = (entry: typeof qualifiedGlobal[number]) => bestScore(entry) - (europe(entry[0]) ? 0 : 2.5);
+  const best = [...worldCandidates].sort((a, b) => worldScore(b) - worldScore(a) || a[0].localeCompare(b[0]))[0];
   if (best) addPlayer("playerWorld", best[0], null);
   const america = qualifiedGlobal.filter(([player]) => {
     const country = career.clubs[career.players[player]?.club ?? ""]?.country;

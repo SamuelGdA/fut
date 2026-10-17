@@ -53,8 +53,9 @@ function competitionName(id: string, language: Language): string {
 /** Um participante de torneio de clubes: clube dos dados ou campeão genérico. */
 function Entrant({ id, t, size = 18 }: { id: string; t: Translator["t"]; size?: number }) {
   if (id.startsWith("generic:")) {
-    const confederation = id.slice(8) as "AFC" | "CAF" | "OFC";
-    return <span className="truncate text-muted">{t(`lab.seasons.generic.${confederation}`)}</span>;
+    const [,region,number] = id.split(":");
+    const confederation = region as "AFC" | "CAF" | "OFC" | "UEFA" | "CONMEBOL" | "CONCACAF";
+    return <span className="text-muted">{t(`lab.seasons.generic.${confederation}`)}{number === undefined ? "" : ` · ${Number(number)+1}`}</span>;
   }
   const club = getClub(id);
   return (

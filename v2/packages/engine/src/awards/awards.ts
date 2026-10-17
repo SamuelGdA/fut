@@ -22,6 +22,8 @@ import { activeElite, type EliteCandidate } from "./elite";
 export const PLAYER = "player";
 
 export const BALLON = {
+  outsideEuropePenalty: 8,
+  outsideEuropeChance: 0.025,
   successWeight: 2.2,
   noise: 1.6,
   minGames: 25,
@@ -311,15 +313,20 @@ export function decideAwards(
     recordOf(history.ballonDor, PLAYER),
     ballonRng,
     true,
-  );
+  ) - (player.playsInUefa ? 0 : BALLON.outsideEuropePenalty);
   if (ballonEligible) ballonEntries.push({ id: PLAYER, score: playerBallon + (player.bonus ?? 0) });
   // Pressão do recorde (D44): a Bola de Ouro ganha na votação fica com ele se a
   // sorte vier; a chance cai a cada uma depois da quarta e a cada uma seguida.
   const recordRng = stream(seed, "awards", year, "record");
   const voted = ballot(ballonEntries, ballonEligible, playerBallon);
+  // Visibilidade internacional exige um ano histórico: domínio continental
+  // ou Copa do Mundo, produção de elite e um voto excepcional em fluxo próprio.
+  const outsideHistoric = player.ovr >= 92 && player.games >= 40 && (player.success.primary || player.success.worldCup)
+    && (isOffensive(player.position) ? player.goals + 0.5 * player.assists >= 55 : player.cleanSheets >= 30);
+  const outsideKeeps = player.playsInUefa || (outsideHistoric && stream(seed,"awards",year,"outsideEurope").chance(BALLON.outsideEuropeChance));
   const keepsBallon =
     voted.winner !== PLAYER ||
-    recordRng.chance(ballonKeepChance(winsOf(history.ballonDor, PLAYER), streakOf(history.ballonDor, PLAYER)));
+    (outsideKeeps && recordRng.chance(ballonKeepChance(winsOf(history.ballonDor, PLAYER), streakOf(history.ballonDor, PLAYER))));
   const ballonDor = keepsBallon ? voted : runnerUpWins(voted);
 
   // Luva de Ouro: eleição entre goleiros.

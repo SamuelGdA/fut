@@ -13,23 +13,22 @@ import { d68 } from "../../i18n/d68";
  * escolhido e um botão para seguir dali por outro caminho. A original vem das decisões desta sessão;
  * a nova é marcada como linha alternativa (D47).
  */
-export function WhatIfChapter({ career, onBranch, replayOnly = false }: { career: Career; onBranch(index: number): void; replayOnly?: boolean }) {
+export function WhatIfChapter({ career, onBranch }: { career: Career; onBranch(index: number): void }) {
   const { t, locale } = useT();
   const points = decisionPoints(saveOf(career), locale);
   const [pending, setPending] = useState<DecisionPoint | null>(null);
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="what-if-chapter flex flex-col gap-4">
       <p className="text-muted">{t("summary.whatIf.intro")}</p>
-      {replayOnly ? <p className="text-sm text-glory">{d68(locale, "replayNotice")}</p> : null}
       {!points.length ? <p className="text-sm text-muted">{d68(locale, "emptyDecisions")}</p> : null}
       <ol className="flex flex-col divide-y divide-line rounded-sm border border-line bg-panel">
         {points.map((point) => (
           <li key={point.index} className="flex items-center gap-3 px-3 py-2.5">
             <span className="numeric w-8 shrink-0 text-center text-sm font-bold text-faint">{point.age}</span>
             <span className="min-w-0 flex-1">
-              <span className="block truncate text-sm font-semibold">{point.title}</span>
-              <span className="block truncate text-xs text-muted">
+              <span className="block text-sm font-semibold">{point.title}</span>
+              <span className="block text-xs text-muted">
                 {t("summary.whatIf.at", { age: point.age, year: point.year })} · {t("summary.whatIf.chose", { option: point.chose })}
               </span>
             </span>

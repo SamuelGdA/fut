@@ -1,3 +1,4 @@
+import type { ContinentalRanking } from "./qualification";
 import type { AwardKey, Confederation, CountryCode, Division } from "@craque/world";
 import type { RecordTally } from "../records/pressure";
 
@@ -15,6 +16,7 @@ export interface Podium {
 
 /** O que sobra de uma temporada e decide a seguinte (classificação, supercopas). */
 export interface SeasonMemory {
+  readonly primaryRanking?: ContinentalRanking;
   readonly performanceSpots?: readonly CountryCode[];
   readonly year: number;
   /** Ids dos clubes na ordem final, por liga. */

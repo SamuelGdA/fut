@@ -1,3 +1,4 @@
+import type { ContinentalRanking } from "../world/qualification";
 import type { CountryCode, Division } from "@craque/world";
 import type { SquadOrigin } from "@craque/world/squads";
 import type { Position } from "../player/positions";
@@ -128,6 +129,8 @@ export interface CoachClub {
   readonly baseAnchor: number;
   investment?: number;
   previousInvestment?: number;
+  /** Verba reservada pela diretoria e ainda não usada pelo treinador da IA. */
+  transferReserve?: number;
   /** Força derivada do elenco (média ponderada do melhor time), atualizada por rodada. */
   strength: number;
   /** Receita anual de referência. */
@@ -679,6 +682,7 @@ export interface CoachCareer {
 }
 
 export interface PreviousSeason {
+  readonly primaryRanking?: ContinentalRanking;
   readonly uefaCoefficients?: Readonly<Record<string,readonly number[]>>;
   readonly performanceSpots?: readonly CountryCode[];
   readonly year: number;
