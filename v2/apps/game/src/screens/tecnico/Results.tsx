@@ -44,6 +44,7 @@ export function ResultsView({ career, onContinue }: { career: CoachCareer; onCon
     const name = playerName(career, id);
     return player ? <PlayerPeek row={playerRow(career, player)} trigger={<button type="button" className="tec-inline-person">{name}</button>} /> : name;
   };
+  const titles = career.history.find(entry => entry.year === report.year && entry.club === report.club)?.titles ?? report.competitions.filter(entry => entry.champion).map(entry => entry.competition);
   const event = career.event;
   const fixture = event?.match ? career.fixtures.find((game) => game.id === event.match?.fixture) : null;
   // O motor registra cada jogo. O relatório reúne motivos iguais para evitar uma parede de linhas.
@@ -62,7 +63,7 @@ export function ResultsView({ career, onContinue }: { career: CoachCareer; onCon
         <h2 id="tec-results-title" className="display text-3xl leading-none font-black uppercase">
           {report.final ? tt("results.titleSeason") : tt("results.titleHalf")}
         </h2>
-        {report.final && (report.awards?.length || report.competitions.some(entry => entry.champion)) ? <div className="tec-season-awards"><p className="eyebrow text-glory">{d66(t.locale,"seasonHonours")}</p><SeasonHonours year={report.year} titles={career.history.find(entry => entry.year === report.year && entry.club === report.club)?.titles ?? report.competitions.filter(entry => entry.champion).map(entry => entry.competition)} awards={report.awards ?? []} mention={mention} /></div> : null}
+        {report.final && (report.awards?.length || titles.length) ? <div className="tec-season-awards"><p className="eyebrow text-glory">{d66(t.locale,"seasonHonours")}</p><SeasonHonours year={report.year} titles={titles} awards={report.awards ?? []} mention={mention} /></div> : null}
 
         {event?.match && event.chosen && fixture?.result ? <Resolution key={fixture.id} good={event.outcome === "success"} title={tt("ux.matchResult")}>
           <p className="text-sm font-semibold">{t.g(`matchEvent.options.${event.chosen}.label`)}</p>
@@ -76,7 +77,7 @@ export function ResultsView({ career, onContinue }: { career: CoachCareer; onCon
         </div>
 
         <div className="tec-campaign" aria-label={tt("results.league")}>
-          <div className="tec-campaign-heading"><Crest club={report.club} size={54} decorative /><div><p className="eyebrow">{competitionName(report.league, t.locale)}</p><p className="display">{report.position !== null ? ordinal(report.position) : "?"}<span> / {report.tableSize}</span></p></div><Chip tone={report.position !== null && report.position <= report.objective.target ? "good" : "bad"} glyph>{t.g(`objectives.${report.objective.kind}.name`)}</Chip></div>
+          <div className="tec-campaign-heading"><Crest club={report.club} size={54} decorative /><div><p className="eyebrow">{competitionName(report.league, t.locale)}</p><p className="display">{report.position !== null ? ordinal(report.position) : "?"}<span> / {report.tableSize}</span></p></div>{report.final && titles.includes(report.league) ? <Chip tone="glory" glyph><Trophy size={12} aria-hidden="true" />{tt("results.champion")}</Chip> : <Chip tone={report.position !== null && report.position <= report.objective.target ? "good" : "bad"} glyph>{t.g(`objectives.${report.objective.kind}.name`)}</Chip>}</div>
           <div className="tec-campaign-bar" aria-hidden="true">{(["won", "drawn", "lost"] as const).map((key) => <span key={key} data-result={key} style={{ flex: report.record[key] || 0.01 }} />)}</div>
           <div className="tec-campaign-goals"><span><strong className="numeric">{report.record.goalsFor}</strong>{tt("ux.scored")}</span><span><strong className="numeric">{report.record.goalsAgainst}</strong>{tt("ux.conceded")}</span></div>
         </div>

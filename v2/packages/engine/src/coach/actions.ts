@@ -2,7 +2,7 @@ import { clamp } from "../math";
 import type { Position } from "../player/positions";
 import { addPromise, applyEffects, canAffordEvent } from "./events";
 import { registered, registrationRule, viableSquad } from "./lineup";
-import { askingTerms, demandOf, pickBuyer, purchaseChance, roundPrice, saleOfferChance, transferPlayer } from "./market";
+import { askingTerms, demandOf, pickBuyer, purchaseChance, roundPrice, roundPlayerPrice, saleOfferChance, transferPlayer } from "./market";
 import { ageOf, moodOf, valueOf, wageFor } from "./players";
 import type {
   ActionFlow,
@@ -133,7 +133,7 @@ export function confirmAction(career: CoachCareer, payload: ConfirmPayload): voi
         const demand = demandOf(career, player);
         if (!rng.chance(saleOfferChance(demand))) return { id: `${id}:sale`, player: id, buyer: null, price: 0, status: "none" };
         const [low, high] = SALE.priceRange;
-        const price = roundPrice(valueOf(player, career.year) * rng.real(low, high) * SALE.demandFactor[demand]);
+        const price = roundPlayerPrice(valueOf(player, career.year) * rng.real(low, high) * SALE.demandFactor[demand], career.year - player.birthYear);
         const buyer = pickBuyer(career, player, price, rng);
         if (!buyer) return { id: `${id}:sale`, player: id, buyer: null, price: 0, status: "none" };
         return { id: `${id}:sale`, player: id, buyer, price, status: "pending" };

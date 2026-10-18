@@ -1,5 +1,6 @@
 import { leagueAt, PLAYABLE_COUNTRIES } from "@craque/world";
 import { clamp } from "../math";
+import { changeCash } from "./finance";
 import { seasonBudget } from "./review";
 import type { Position } from "../player/positions";
 import { finishLeagues, sortTable } from "./competitions";
@@ -168,7 +169,7 @@ function ensureViable(career: CoachCareer): string[] {
 function moveAi(career: CoachCareer, player: CoachPlayer, to: string, fee: number): void {
   const from = player.club ? career.clubs[player.club] : null;
   const destination = career.clubs[to];
-  if (from) { from.cash += fee; from.investment=(from.investment ?? 0)-fee; }
+  if (from) { changeCash(from, fee); from.investment=(from.investment ?? 0)-fee; }
   if (destination) { destination.cash -= fee; destination.investment=(destination.investment ?? 0)+fee; }
   player.club = to;
   player.joinedYear = career.year;

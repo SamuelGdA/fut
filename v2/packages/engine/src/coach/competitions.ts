@@ -264,6 +264,12 @@ export function buildSeason(input: SeasonInput): SeasonBuild {
   const entrants = continentalEntrants(toSeasonMemory(input.memory),(id)=>input.clubs[id]?.division===1,input.seed);
   for (const [id, list] of Object.entries(entrants)) {
     let valid = list.filter((club) => input.clubs[club]);
+    // Campeões que ganharam vaga na Champions não disputam simultaneamente a
+    // Europa/Conference. Tampouco há transferência após a fase de liga.
+    if (id === "cont2:UEFA" || id === "cont3:UEFA") {
+      const higher = [competitions["cont1:UEFA"], ...(id === "cont3:UEFA" ? [competitions["cont2:UEFA"]] : [])];
+      valid = valid.filter(club => !higher.some(state => state?.entrants.includes(club)));
+    }
     if(id==="cont1:UEFA") {
       const guests=Object.values(input.clubs).filter(club=>club.continentalGuest).sort((a,b)=>seed(b.id)-seed(a.id)||a.id.localeCompare(b.id));
       const holders=[input.memory.continental["cont1:UEFA"]?.winner,input.memory.continental["cont2:UEFA"]?.winner].filter((club):club is string=>Boolean(club && input.clubs[club]));

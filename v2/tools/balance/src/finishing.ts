@@ -11,6 +11,6 @@ for (const position of positions) {
 }
 lines.push("", "## Valor em milhões de euros", "", "| OVR | 20 anos | 25 anos | 30 anos | 34 anos |", "|---|---:|---:|---:|---:|");
 for (const ovr of [70, 80, 85, 90, 95, 97, 99]) lines.push(`| ${ovr} | ${[20, 25, 30, 34].map(age => (baseMarketValue(ovr, age) / 1e6).toFixed(1)).join(" | ")} |`);
-lines.push("", "Teto de €300 milhões também aplicado depois do humor de mercado e do arredondamento. O modelo financeiro do Técnico não foi alterado.", "");
+lines.push("", "Teto de €400 milhões também aplicado depois do humor de mercado e do arredondamento. No Técnico, valores e transferências também respeitam o teto etário de até €400 milhões; a referência salarial foi preservada.", "");
 writeFileSync(new URL("../relatorios/finalizacao.md", import.meta.url), lines.join("\n"));
 console.log(lines.join("\n"));

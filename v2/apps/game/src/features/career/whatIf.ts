@@ -1,5 +1,46 @@
 import { decisionText, type Locale, optionLabel } from "@craque/content";
-import { type CareerSave, choose, createCareer, type DecisionKind } from "@craque/engine";
+import { type Career, type CareerSave, type Choice, choose, createCareer, type DecisionKind, saveOf } from "@craque/engine";
+
+// Só memória desta sessão: preserva o estado verdadeiro antes de cada escolha,
+// inclusive intervenções de teste, sem inventar escolhas para um replay divergente.
+const checkpoints = new WeakMap<Career, readonly Career[]>();
+
+function originalCheckpoints(career: Career): readonly Career[] {
+  const known = checkpoints.get(career);
+  if (known) return known;
+  const result: Career[] = [];
+  let current = createCareer(career.setup);
+  for (const choice of career.choices) {
+    if (current.decision?.id !== choice.decision || !current.decision.options.some(option => option.id === choice.option)) break;
+    result.push(current);
+    current = choose(current, choice).career;
+  }
+  if(result.length===career.choices.length) checkpoints.set(career,result);
+  return result;
+}
+
+export function rememberDecision(before: Career, after: Career, choice: Choice): void {
+  if (before.decision?.id !== choice.decision) return;
+  checkpoints.set(after, [...originalCheckpoints(before), before]);
+}
+
+export function carryDecisionMemory(before: Career, after: Career): void {
+  checkpoints.set(after, originalCheckpoints(before));
+}
+
+export function decisionCheckpoint(career: Career, index: number): Career | undefined {
+  return originalCheckpoints(career)[index];
+}
+
+export function actualDecisionPoints(career: Career, locale: Locale): DecisionPoint[] {
+  const states = originalCheckpoints(career);
+  if (states.length !== career.choices.length) return decisionPoints(saveOf(career), locale);
+  return states.flatMap((state, index) => {
+    const decision = state.decision;
+    const option = decision?.options.find(candidate => candidate.id === career.choices[index]?.option);
+    return decision && option ? [{ index, kind: decision.kind, age: decision.age, year: decision.year, title: decisionText(locale,state,decision).title, chose: optionLabel(locale,state,decision,option) }] : [];
+  });
+}
 
 /**
  * Os pontos de virada de uma carreira, para o "E se...?" (GDD 28.3): cada

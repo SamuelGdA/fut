@@ -55,7 +55,7 @@ export function createWorldState(
       strength,
       revenue,
       // Clubes menores começam com uma reserva operacional para conseguir negociar.
-      cash: revenue * ((club.division === 2 ? 0.12 : low) + (high - (club.division === 2 ? 0.12 : low)) * unit(`${seed}:cash:${club.id}`)),
+      cash: Math.min(FINANCE.cashCap, revenue * ((club.division === 2 ? 0.12 : low) + (high - (club.division === 2 ? 0.12 : low)) * unit(`${seed}:cash:${club.id}`))),
       prestige: club.prestige,
     };
     assignRoles(squad, year, strength);

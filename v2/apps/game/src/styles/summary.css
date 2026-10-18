@@ -1162,21 +1162,18 @@
   }
 .poster-count { top: 64px; right: 0; bottom: auto; font-size: 18px; padding: 2px 5px; }
 /* Pilhas de conquistas iguais: duas silhuetas, quantidade exata e expansão no fluxo. */
-.honour-groups { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 0; min-width: 0; max-width: 100%; }
+.honour-groups { position: relative; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 0; min-width: 0; max-width: 100%; }
 /* contents deixa cada cópia quebrar linha sem deslocar o início da pilha,
    evitando o abre/fecha involuntário quando a expansão chega à borda. */
 .honour-stack, .honour-copies { display: contents; }
 .honour-copy { display: inline-flex; align-items: center; width: calc(var(--honour-size) + 4px); flex-shrink: 0; }
-.honour-stack .honour-copy:last-child { margin-inline-end: 12px; }
-.honour-stack[data-multiple] .honour-copy:not(:last-child) { display: none; }
-.honour-stack[data-multiple] .honour-copy:last-child { width: calc(var(--honour-size) + 34px); padding-inline-start: 6px; }
-.honour-stack:is(:hover,:focus-within) .honour-copy:not(:last-child) { display: inline-flex; animation: honour-copy-enter 180ms ease-out both; }
+.honour-stack .honour-copy[data-last] { margin-inline-end: 12px; }
+.honour-stack[data-multiple] .honour-copy[data-last] { width: calc(var(--honour-size) + 34px); padding-inline-start: 6px; }
 .honour-token[data-stacked] { position: relative; }
 .honour-token[data-stacked] > :not(.honour-shadow) { position: relative; }
-.honour-shadow { position: absolute; left: -5px; top: 0; opacity: .5; pointer-events: none; transition: opacity 120ms ease; }
-.honour-stack:is(:hover,:focus-within) .honour-shadow { opacity: 0; }
+.honour-shadow { position: absolute; left: -5px; top: 0; opacity: .5; pointer-events: none; transition: opacity 320ms ease; }
+.honour-stack[data-expanded] .honour-shadow { opacity: 0; }
 .honour-count { margin-left: 4px; font-size: 11px; font-weight: 700; color: var(--glory); border-radius: 3px; padding: 1px 3px; }
-@keyframes honour-copy-enter { from { width: 0; opacity: 0; } to { width: calc(var(--honour-size) + 4px); opacity: 1; } }
 .what-if-chapter { font-family: var(--font-sans); line-height: 1.55; }
 .what-if-chapter > p { max-width: 68ch; font-size: .95rem; }
 .what-if-chapter li { align-items: start; padding: 14px 16px; }

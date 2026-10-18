@@ -187,8 +187,10 @@ export async function auditar(page: Page, onde: string, only?: string): Promise<
       { timeout: 8_000 },
     )
     .catch(() => undefined);
-  const builder = new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]);
-  const result = await (only ? builder.include(only) : builder.exclude(".toast-viewport")).analyze();
+  const builder = new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]).exclude(".toast-viewport");
+  // Avisos também têm role=dialog. Mesmo na auditoria de uma folha, ficam
+  // fora daqui; o teste próprio os verifica parados, sem o fade de saída.
+  const result = await (only ? builder.include(only) : builder).analyze();
   const serious = result.violations.filter((violation) => violation.impact === "serious" || violation.impact === "critical");
   const report = serious.map(
     (violation) => `${violation.id} (${violation.impact}): ${violation.help}\n    ${violation.nodes.slice(0, 4).map((node) => node.target.join(" ")).join("\n    ")}`,

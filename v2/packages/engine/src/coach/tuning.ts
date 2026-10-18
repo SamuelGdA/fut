@@ -9,7 +9,7 @@ import type { CountryCode } from "@craque/world";
  * férias).
  */
 
-export const COACH_VERSION = "1.8.0";
+export const COACH_VERSION = "1.9.0";
 
 /** D59: benefícios conservadores têm custo; elogio e descanso podem falhar. */
 export const DECISION_TRADEOFFS = {
@@ -359,6 +359,7 @@ export const FINANCE = {
   budgetFromCash: 0.3,
   cashFloor: 0.2,
   budgetFromLeftover: 0.85,
+  cashCap: 500_000_000,
   investmentCut: { min: 0.2, max: 0.65, scale: 0.9, fromRevenue: 50_000_000, toRevenue: 250_000_000 },
   wageCap: 0.65,
   budgetShare: 0.32,

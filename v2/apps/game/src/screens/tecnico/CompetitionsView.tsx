@@ -1,4 +1,5 @@
 import { d66 } from "../../i18n/tecnico/d66";
+import { d72 } from "../../i18n/d72";
 import { type CoachCareer, type CompetitionState, type Fixture, sortTable, type TableRow, championsTable } from "@craque/engine/coach";
 import { getLeague, leagueAt } from "@craque/world";
 import { useState } from "react";
@@ -21,8 +22,7 @@ export function CompetitionsView({ career, all=false }: { career: CoachCareer; a
   const coach = career.coach;
   const own = coach
     ? Object.values(career.competitions)
-        .filter((state) => all || state.entrants.includes(coach.club))
-        .sort((a, b) => (a.kind === "league" ? -1 : b.kind === "league" ? 1 : a.id.localeCompare(b.id)))
+        .sort((a, b) => (all ? 0 : Number(b.entrants.includes(coach.club)) - Number(a.entrants.includes(coach.club))) || Number(b.kind === "league") - Number(a.kind === "league") || a.id.localeCompare(b.id))
     : [];
   const [selected, setSelected] = useState<string>(own[0]?.id ?? "calendar");
   const current = own.find((state) => state.id === selected) ?? null;
@@ -32,6 +32,7 @@ export function CompetitionsView({ career, all=false }: { career: CoachCareer; a
       <SectionRule as="h2" aside={<span className="text-2xs text-faint">{tt("competitions.clubOnly")}</span>}>
         <span id="tec-comp-title">{tt("competitions.title")}</span>
       </SectionRule>
+      <p className="text-xs text-muted">{d72(t.locale,"competitions")}</p>
       <label className="tec-select">
         <span className="sr-only">{tt("competitions.title")}</span>
         <select

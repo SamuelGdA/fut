@@ -16,6 +16,7 @@ import {
   saveOf,
 } from "@craque/engine";
 import { create } from "zustand";
+import { carryDecisionMemory, decisionCheckpoint, rememberDecision } from "./whatIf";
 import { archiveId } from "../hall/model";
 import { challengeOf, recordFinished, recordInterrupted, recordStep } from "../hall/session";
 import { useUnlocks } from "../hall/unlocks";
@@ -121,17 +122,20 @@ export const useCareer = create<CareerState>()((set, get) => {
       const choice = source.choices[index];
       if (!choice || setupIsChallenge(source)) return false;
       let career: Career;
+      const current = get().career;
+      const actual = current && archiveId(saveOf(current)) === archiveId(source) ? decisionCheckpoint(current,index) : undefined;
       try {
-        career = replay({ v: source.v, engine: source.engine, setup: source.setup, choices: source.choices.slice(0, index) });
+        career = actual ?? replay({ v: source.v, engine: source.engine, setup: source.setup, choices: source.choices.slice(0, index) });
       } catch (error) {
         if (error instanceof CareerError) return false;
         throw error;
       }
       if (!career.decision || career.decision.id !== choice.decision) return false;
-      const { career: current } = get();
+      const testing = get().internalTesting;
       // A original já está no Hall (terminou); se é a carreira de agora, não há o que interromper.
       if (!current || archiveId(saveOf(current)) !== archiveId(source)) leaveCurrent();
       install(career, avatar, { from: archiveId(source), decision: choice.decision, original: choice.option });
+      if (actual && testing) set({ internalTesting:true });
       return true;
     },
 
@@ -143,6 +147,7 @@ export const useCareer = create<CareerState>()((set, get) => {
       let step;
       try {
         step = choose(career, { decision: decision.id, option: option.id });
+        rememberDecision(career,step.career,{ decision:decision.id,option:option.id });
       } catch (error) {
         if (error instanceof CareerError) return false;
         throw error;
@@ -162,6 +167,7 @@ export const useCareer = create<CareerState>()((set, get) => {
       const { career, avatar, alternate } = get();
       if (!career || !canRetireNow(career)) return;
       const ended = retireNow(career);
+      carryDecisionMemory(career,ended);
       useUnlocks.getState().hold(false);
       set({ career: ended, screen: "summary", review: null });
       if (!get().internalTesting) void recordFinished(ended, avatar, alternate !== null);

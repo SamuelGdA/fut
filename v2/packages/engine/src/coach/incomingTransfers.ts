@@ -1,6 +1,6 @@
 import type { CoachCareer, SaleOffer } from "./types";
 import { coachRng, stageKey } from "./util";
-import { pickBuyer, roundPrice } from "./market";
+import { pickBuyer, roundPlayerPrice } from "./market";
 import { valueOf } from "./players";
 import { squadOf } from "./world";
 import { viableSquad } from "./lineup";
@@ -21,7 +21,7 @@ export function incomingTransfers(career: CoachCareer): SaleOffer[] {
     const outgoing = new Set([...offers.map((offer) => offer.player), player.id]);
     if (!viableSquad(squad.filter((other) => !outgoing.has(other.id)))) continue;
     if (career.promises.some((promise) => promise.status === "active" && promise.kind === "keep" && promise.player === player.id)) continue;
-    const price = roundPrice(valueOf(player, career.year) * rng.real(0.95, 1.3));
+    const price = roundPlayerPrice(valueOf(player, career.year) * rng.real(0.95, 1.3), career.year - player.birthYear);
     const buyer = pickBuyer(career, player, price, rng);
     if (buyer) offers.push({ id: `incoming:${key}:${player.id}`, player: player.id, buyer, price, status: "pending" });
   }

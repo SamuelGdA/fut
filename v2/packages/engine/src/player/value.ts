@@ -8,7 +8,7 @@ import type { Rng } from "../rng";
 
 const BASE_VALUE = 110_000;
 const GROWTH_PER_POINT = 0.185;
-export const MAX_MARKET_VALUE = 300_000_000;
+export const MAX_MARKET_VALUE = 400_000_000;
 
 export function ageValueFactor(age: number): number {
   if (age <= 21) return 1.35;
@@ -22,19 +22,24 @@ export function ageValueFactor(age: number): number {
   return 0.22;
 }
 
-/** Referência histórica do mercado do Técnico, cujo modelo financeiro é independente. */
+/** Teto etário comum aos dois modos; €400M só até 21 anos. */
+export function marketValueCeiling(age: number): number {
+  return Math.floor(MAX_MARKET_VALUE * ageValueFactor(age) / 1.35 / 500_000) * 500_000;
+}
+
+/** Referência histórica dos salários do Técnico, sem aplicar teto de transferência. */
 export function referenceMarketValue(ovr: number, age: number): number {
   return BASE_VALUE * Math.exp(GROWTH_PER_POINT * (ovr - 50)) * ageValueFactor(age);
 }
 
-/** D68: valorização mais suave acima de OVR 80 e teto de €300 milhões no Craque. */
+/** Valorização mais suave acima de OVR 80 e teto etário de até €400 milhões. */
 export function baseMarketValue(ovr: number, age: number): number {
   const level = Math.max(1, Math.min(99, ovr));
   const exponent = GROWTH_PER_POINT * (Math.min(level, 80) - 50) + 0.12 * Math.max(0, level - 80);
-  return Math.min(MAX_MARKET_VALUE, BASE_VALUE * Math.exp(exponent) * ageValueFactor(age));
+  return Math.min(marketValueCeiling(age), BASE_VALUE * Math.exp(exponent) * ageValueFactor(age));
 }
 
 /** Valor com o humor do ano, em três algarismos significativos. */
 export function marketValue(rng: Rng, ovr: number, age: number): number {
-  return Math.min(MAX_MARKET_VALUE, roundSignificant(baseMarketValue(ovr, age) * rng.real(0.94, 1.06), 3));
+  return Math.min(marketValueCeiling(age), roundSignificant(baseMarketValue(ovr, age) * rng.real(0.94, 1.06), 3));
 }

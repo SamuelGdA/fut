@@ -1,6 +1,6 @@
 # Relatório do fluxo da carreira
 
-Motor 2.0.0-m15, semente `balanco-m2`. **9 de 9 metas atendidas.**
+Motor 2.0.0-m16, semente `balanco-m2`. **9 de 9 metas atendidas.**
 
 Gerado por `pnpm balance`. Carreiras jogadas pelo laço de verdade (M4): base, janelas, eventos, focos, empréstimos,
 dispensas e o mercado decidindo quem ainda tem clube. Posições e países se alternam; uma em cada quatro é Difícil.

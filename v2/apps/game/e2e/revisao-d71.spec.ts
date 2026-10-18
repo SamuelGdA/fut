@@ -6,23 +6,33 @@ import { abrir, auditar, esperarQueCaiba, OPCOES } from "./apoio";
 for (const theme of ["light","dark"] as const) {
   test(`D71: pilhas redistribuem troféus e seleção tem legado, ${theme}`,async({page},info)=>{
     if(info.project.name==="celular")await page.setViewportSize({width:360,height:640});
-    const replay=await readFile(new URL("./fixtures/colecao-m15.json",import.meta.url));
+    const replay=await readFile(new URL("./fixtures/colecao-m16.json",import.meta.url));
     await abrir(page,{theme},`/#c=z${deflateRawSync(replay).toString("base64url")}`);
     await page.getByRole("link",{name:"Caminho",exact:true}).click();
     await expect(page.getByText("Legado na seleção: Lenda",{exact:true})).toBeVisible();
     const stack=page.locator('.honour-stack[data-multiple]').first();
     const copies=stack.locator('.honour-copy');
     await copies.last().scrollIntoViewIfNeeded();
-    const count=await copies.count();
+    const count=Number(await stack.getAttribute('data-count'));
     await expect(stack.locator('.honour-count')).toHaveText(`×${count}`);
-    const collapsed=await copies.first().evaluate(node=>node.getBoundingClientRect().width);
+    await expect(copies).toHaveCount(1);
     if(info.project.name==="desktop")await copies.last().hover();
     else await copies.last().locator('.honour-token').tap();
-    await expect.poll(()=>copies.first().evaluate(node=>node.getBoundingClientRect().width)).toBeGreaterThan(collapsed+15);
+    await expect(copies).toHaveCount(count);
     await expect.poll(()=>copies.evaluateAll(nodes=>nodes.every(node=>node.getBoundingClientRect().width>=28))).toBe(true);
-    expect(await page.locator('.timeline-card').evaluateAll(nodes=>nodes.every(node=>node.scrollWidth<=node.clientWidth+1))).toBe(true);
+    await expect.poll(()=>page.locator('.timeline-card').evaluateAll(nodes=>nodes.every(node=>node.scrollWidth<=node.clientWidth+1))).toBe(true);
+    await expect(page.getByRole('button',{name:'Legado na seleção',exact:true})).toHaveCount(0);
     await auditar(page,"Pilhas de títulos e legado nacional");
     await page.screenshot({path:info.outputPath(`pilhas-${theme}.png`)});
+    if(info.project.name==="desktop") {
+      await page.getByRole('heading',{name:'Linha do tempo',exact:true}).hover();
+      await expect.poll(async()=>{
+        const opacities=await copies.evaluateAll(nodes=>nodes.map(node=>Number(getComputedStyle(node).opacity)));
+        return opacities.some(opacity=>opacity>0 && opacity<1);
+      }).toBe(true);
+      await expect(copies).toHaveCount(1);
+      await expect(stack.locator('.honour-count')).toHaveText(`×${count}`);
+    }
     await page.getByRole("link",{name:"Hipotético",exact:true}).click();
     await expect(page.getByText(/Esta sessão tem ajustes de teste/)).toHaveCount(0);
     expect(await page.locator('.what-if-chapter').evaluate(node=>getComputedStyle(node).fontFamily)).toContain("Schibsted");
@@ -31,7 +41,7 @@ for (const theme of ["light","dark"] as const) {
 
   test(`D71: ultimato mostra a frase completa, ${theme}`,async({page},info)=>{
     if(info.project.name==="celular")await page.setViewportSize({width:360,height:640});
-    const replay=await readFile(new URL("./fixtures/narrativa-m15.json",import.meta.url));
+    const replay=await readFile(new URL("./fixtures/narrativa-m16.json",import.meta.url));
     await abrir(page,{theme},`/#c=z${deflateRawSync(replay).toString("base64url")}`);
     await page.getByRole("link",{name:"Hipotético",exact:true}).click();
     await page.getByRole("button",{name:/^Seguir daqui: Ultimato do empresário/}).click();

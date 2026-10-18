@@ -656,6 +656,12 @@ for (const theme of ["light", "dark"] as const) {
     await expect(page.locator(".tec-player-statistics")).not.toContainText("Salário");
     await auditar(page,"Ficha estatística detalhada por competição");
     await page.screenshot({path:info.outputPath(`estatisticas-${theme}.png`)});
+    await page.getByRole("dialog").getByRole("button",{name:"Fechar",exact:true}).click();
+    await page.getByRole("tab",{name:mobile?"Mais":"Competições",exact:true}).click();
+    await page.getByRole("combobox",{name:"Competições",exact:true}).selectOption("cont1:UEFA");
+    await expect(page.locator('[role="tabpanel"]:visible table tbody tr')).toHaveCount(36);
+    await expect(page.getByText("Consulte seu calendário e todos os torneios da temporada, mesmo aqueles em que seu clube não participou.",{exact:true})).toBeVisible();
+    await page.screenshot({path:info.outputPath(`champions-consulta-${theme}.png`)});
   });
 }
 

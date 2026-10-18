@@ -1,6 +1,6 @@
 # Desafio do dia
 
-Motor 2.0.0-m15, semente `balanco-m2`. 3650 dias a partir de 2026-01-01.
+Motor 2.0.0-m16, semente `balanco-m2`. 3650 dias a partir de 2026-01-01.
 
 O alvo de cada missão depende da faixa de talento do jogador do dia e é o percentil 65 de carreiras comuns com as regras do desafio (Difícil, Normal, aposentar a partir dos 27): o jogo comum cumpre cerca de um terço, e quem persegue a missão cumpre bem mais. Recalibrar: `pnpm desafio:calibrar`.
 

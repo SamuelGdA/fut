@@ -1,4 +1,4 @@
-# Finalização e valor, Craque 2.0.0-m14
+# Finalização e valor, Craque 2.0.0-m16
 
 Gols esperados em 50 jogos, OVR 94, time 88 e oposição 80, fase neutra. São médias do motor antes da pressão de recordes; a produção real varia e o número de jogos depende do papel no elenco.
 
@@ -25,6 +25,6 @@ Gols esperados em 50 jogos, OVR 94, time 88 e oposição 80, fase neutra. São m
 | 90 | 126.8 | 93.9 | 65.8 | 20.7 |
 | 95 | 231.1 | 171.2 | 119.8 | 37.7 |
 | 97 | 293.8 | 217.6 | 152.3 | 47.9 |
-| 99 | 300.0 | 276.6 | 193.6 | 60.9 |
+| 99 | 373.5 | 276.6 | 193.6 | 60.9 |
 
-Teto de €300 milhões também aplicado depois do humor de mercado e do arredondamento. O modelo financeiro do Técnico não foi alterado.
+Teto de €400 milhões também aplicado depois do humor de mercado e do arredondamento. No Técnico, valores e transferências também respeitam o teto etário de até €400 milhões; a referência salarial foi preservada.

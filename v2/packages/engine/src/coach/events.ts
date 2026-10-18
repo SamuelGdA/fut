@@ -1,10 +1,11 @@
 import { areRivals } from "@craque/world";
+import { changeCash } from "./finance";
 import { stageInjury } from "./injuries";
 import { clamp } from "../math";
 import type { Rng } from "../rng";
 import { currentLambdas, type DetailedInput, type LiveMatch } from "./match";
 import { ageOf, moodOf, valueOf } from "./players";
-import { transferPlayer } from "./market";
+import { transferPlayer, roundPlayerPrice } from "./market";
 import type {
   CoachCareer,
   CoachEvent,
@@ -256,7 +257,7 @@ const CATALOG: readonly EventDefinition[] = [
       if (!player) return null;
       const buyer = buyerFor(context, player, rng, false);
       if (!buyer) return null;
-      const price = roundMoney(valueOf(player, context.year) * rng.real(0.95, 1.2));
+      const price = roundPlayerPrice(valueOf(player, context.year) * rng.real(0.95, 1.2), ageOf(player, context.year));
       return {
         subject: player.id,
         params: { buyer, price },
@@ -323,7 +324,7 @@ const CATALOG: readonly EventDefinition[] = [
   {
     id: "boardBonus",
     kind: "opportunity",
-    weight: (context) => (context.career.coach && context.career.coach.board >= 55 ? 3 : 1),
+    weight: (context) => context.career.half === 1 ? 0 : (context.career.coach && context.career.coach.board >= 55 ? 3 : 1),
     build: (context) => {
       const amount = roundMoney(revenue(context) * 0.06);
       return {
@@ -389,7 +390,7 @@ const CATALOG: readonly EventDefinition[] = [
       const buyer = buyerFor(context, player, rng, true) ?? buyerFor(context, player, rng, false);
       if (!buyer) return null;
       const rival = areRivals(buyer, context.club);
-      const price = roundMoney(valueOf(player, context.year) * rng.real(1.15, 1.45));
+      const price = roundPlayerPrice(valueOf(player, context.year) * rng.real(1.15, 1.45), ageOf(player, context.year));
       return {
         subject: player.id,
         params: { buyer, price, rival: rival ? 1 : 0 },
@@ -747,7 +748,7 @@ export function applyEffects(career: CoachCareer, effects: readonly EventEffect[
         break;
       case "cash":
         coach.budget += effect.amount;
-        if (club) club.cash += effect.amount;
+        if (club) changeCash(club, effect.amount);
         break;
       case "budget":
         coach.budget += effect.amount;

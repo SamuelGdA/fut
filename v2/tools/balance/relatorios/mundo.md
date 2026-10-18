@@ -1,6 +1,6 @@
 # Relatório do mundo simulado
 
-Motor 2.0.0-m15, semente `balanco-m2`, 20 mundos de 25 temporadas, sem jogador. **12 de 12 metas atendidas.**
+Motor 2.0.0-m16, semente `balanco-m2`, 20 mundos de 25 temporadas, sem jogador. **12 de 12 metas atendidas.**
 
 Gerado por `pnpm balance`. Cada mundo começa com as forças e divisões reais dos dados e roda sozinho: tabelas,
 acesso, copas, supercopas, continentais, Intercontinental, Mundial de Clubes, Copa do Mundo e continentais de seleções.
@@ -20,7 +20,7 @@ acesso, copas, supercopas, continentais, Intercontinental, Mundial de Clubes, Co
 | ✓ | Intercontinental ganha pelo campeão europeu | entre 70% e 95% (clubes europeus ganharam 17 dos últimos 18 mundiais) | 90% |
 | ✓ | Mundial de Clubes ganho por clube europeu | pelo menos 60% | 100% |
 | ✓ | Copa do Mundo ganha por uma das 8 seleções mais fortes | pelo menos 70% das edições; fora de UEFA e CONMEBOL no máximo 10% | 94%; fora 2% |
-| ✓ | Uma temporada do mundo inteiro (todas as ligas, copas e torneios) | no máximo 3 ms | 1.50 ms |
+| ✓ | Uma temporada do mundo inteiro (todas as ligas, copas e torneios) | no máximo 3 ms | 1.98 ms |
 
 ## Ligas
 
@@ -88,4 +88,4 @@ Depois de 25 temporadas, a diferença para a força base fica entre -2.3 e +2.4 
 
 ## Desempenho
 
-Uma temporada do mundo inteiro leva 1.50 ms (média, já aquecido). Uma carreira de 24 temporadas, com o jogador, fica perto de 30 ms.
+Uma temporada do mundo inteiro leva 1.98 ms (média, já aquecido). Uma carreira de 24 temporadas, com o jogador, fica perto de 30 ms.

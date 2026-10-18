@@ -1,4 +1,5 @@
 import { cupObjectiveScore } from "./objectives";
+import { changeCash } from "./finance";
 import { type CountryCode, type Division, getLeague, LEAGUES, leagueAt } from "@craque/world";
 import { clamp } from "../math";
 import { seasonMemory, sortTable, toSeasonMemory } from "./competitions";
@@ -125,7 +126,7 @@ export function applyPeriodFinances(career: CoachCareer, fraction: number): void
   for (const club of Object.values(career.clubs)) {
     const revenue = club.revenue * fraction;
     const paid = (wages.get(club.id) ?? 0) * MONTHS_PER_SEASON * fraction;
-    club.cash += revenue * (1-FINANCE.operatingShare) - paid;
+    changeCash(club, revenue * (1-FINANCE.operatingShare) - paid);
     if (club.id === career.coach?.club) {
       career.ledger.revenue += revenue;
       career.ledger.wages += paid;
@@ -155,7 +156,7 @@ export function seasonPrizes(career: CoachCareer, promoted: ReadonlySet<string>,
         const club = career.clubs[row.club];
         if (!club) return;
         const prize = club.revenue * (FINANCE.prize.perPositionAbove * (n - index - 1) + (index === 0 ? FINANCE.prize.leagueTitle : 0));
-        club.cash += prize;
+        changeCash(club, prize);
         if (club.id === career.coach?.club) career.ledger.prizes += prize;
       });
     } else if (state.champion) {
@@ -163,17 +164,17 @@ export function seasonPrizes(career: CoachCareer, promoted: ReadonlySet<string>,
       if (!club) continue;
       const share = state.kind.startsWith("cont") || state.kind === "clubworldcup" ? FINANCE.prize.continentalTitle : FINANCE.prize.cupTitle;
       const prize = club.revenue * share;
-      club.cash += prize;
+      changeCash(club, prize);
       if (club.id === career.coach?.club) career.ledger.prizes += prize;
     }
   }
   for (const id of promoted) {
     const club = career.clubs[id];
-    if (club) club.cash += club.revenue * FINANCE.prize.promotion;
+    if (club) changeCash(club, club.revenue * FINANCE.prize.promotion);
   }
   for (const id of relegated) {
     const club = career.clubs[id];
-    if (club) club.cash += club.revenue * FINANCE.prize.relegation * 0.25;
+    if (club) changeCash(club, club.revenue * FINANCE.prize.relegation * 0.25);
   }
 }
 

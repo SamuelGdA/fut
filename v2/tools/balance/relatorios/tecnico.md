@@ -1,6 +1,6 @@
 # Relatório do Técnico
 
-Técnico 1.8.0, semente `tecnico-m1`, 16 carreiras automáticas (384 temporadas). **23 de 23 metas atendidas.**
+Técnico 1.9.0, semente `tecnico-m1`, 16 carreiras automáticas (384 temporadas). **23 de 23 metas atendidas.**
 
 Gerado por `pnpm balance:tecnico`. As sondas usam as contas do modelo; o Mundial amostra 20 mil
 chaveamentos, com desempate por força. As carreiras jogam o mundo inteiro com uma política definida
@@ -23,16 +23,16 @@ chaveamentos, com desempate por força. As carreiras jogam o mundo inteiro com u
 | ✓ | Rápido = lento: evolução média numa temporada sem ações | diferença de no máximo 0,15 de nível | rápido 1.02, lento 0.98 |
 | ✓ | Verba de início dá para contratar sem pedir dinheiro (clubes de 2ª divisão) | pelo menos 90% com 3 alvos do nível ao alcance | 95.6% (sem: albacete, ceara, deportes-concepcion, jaguares-de-cordoba, laval, padova, palermo, paysandu, sport-recife, vfl-bochum) |
 | ✓ | Comandos válidos da política nunca são recusados pelo motor | nenhum | nenhum |
-| ✓ | Campeão da primeira divisão é o clube mais forte do começo da temporada | entre 35% e 60% | 57.7% |
-| ✓ | Mundial de Clubes ganho por europeu nas carreiras (só pelo elenco, como os 17 dos últimos 18 da vida real) | pelo menos 85% (a chance exata de quem não é europeu está na sonda) | 95.8% em 96 edições; final com sul-americano em 11.5% |
-| ✓ | Intercontinental ganho pelo campeão europeu | entre 60% e 95% | 89.8% em 383 edições |
-| ✓ | Elencos da IA estáveis: tamanho entre 22 e 34 | pelo menos 95% dos clubes em todas as temporadas | 98.6% (menor 18, maior 48) |
-| ✓ | Jogadores ativos no mundo depois de todas as temporadas | a no máximo 10% do começo | 13099 → 13868 (+5.9%) |
-| ✓ | Força média das primeiras divisões no fim, contra o começo | todas a no máximo 3 pontos | pior: liga-futve -2.6 |
-| ✓ | Lesões por turno no elenco do treinador, por temporada | entre 0,3 e 2,5; afastamento por 1 ou 2 turnos (D63) | 1.1 por temporada, 0.0% graves, 240 dias |
-| ✓ | Demissões por temporada com a política equilibrada | entre 1% e 12% | 5.7% em 192 temporadas (na primeira: 0.0%) |
-| ✓ | Usar as ações vale a pena: mesmas sementes, país e ritmo, com escalação atualizada | equilibrada à frente | 34.4% contra 21.9% (4 pares) |
-| ✓ | Negócio disponível cabe na verba e na folha (contratando em toda etapa, sem pedir verba) | pelo menos 70% das respostas positivas | 100.0% (41 de 41; 113 alvos procurados) |
+| ✓ | Campeão da primeira divisão é o clube mais forte do começo da temporada | entre 35% e 60% | 57.9% |
+| ✓ | Mundial de Clubes ganho por europeu nas carreiras (só pelo elenco, como os 17 dos últimos 18 da vida real) | pelo menos 85% (a chance exata de quem não é europeu está na sonda) | 94.8% em 96 edições; final com sul-americano em 13.5% |
+| ✓ | Intercontinental ganho pelo campeão europeu | entre 60% e 95% | 88.3% em 375 edições |
+| ✓ | Elencos da IA estáveis: tamanho entre 22 e 34 | pelo menos 95% dos clubes em todas as temporadas | 98.6% (menor 18, maior 43) |
+| ✓ | Jogadores ativos no mundo depois de todas as temporadas | a no máximo 10% do começo | 13099 → 13860 (+5.8%) |
+| ✓ | Força média das primeiras divisões no fim, contra o começo | todas a no máximo 3 pontos | pior: liga-futve -2.7 |
+| ✓ | Lesões por turno no elenco do treinador, por temporada | entre 0,3 e 2,5; afastamento por 1 ou 2 turnos (D63) | 1.1 por temporada, 0.0% graves, 244 dias |
+| ✓ | Demissões por temporada com a política equilibrada | entre 1% e 12% | 8.3% em 192 temporadas (na primeira: 0.0%) |
+| ✓ | Usar as ações vale a pena: mesmas sementes, país e ritmo, com escalação atualizada | equilibrada à frente | 29.2% contra 20.8% (4 pares) |
+| ✓ | Negócio disponível cabe na verba e na folha (contratando em toda etapa, sem pedir verba) | pelo menos 70% das respostas positivas | 100.0% (43 de 43; 118 alvos procurados) |
 
 ## Filosofias
 
@@ -124,11 +124,11 @@ Rápido × lento, sem ações, 13089 jogadores: 1.024 contra 0.977 de nível por
 
 | Política | Carreiras | Temporadas | Objetivo cumprido | Demissões | Demitido na 1ª | Acessos | Quedas | Títulos | Grandes títulos | Reputação final | Temporadas com contratação |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| Passiva (nenhuma ação) | 4 | 96 | 21.9% | 6.3% | 0.0% | 3 | 3 | 2 | 2 | 5 | 0.0% |
-| Equilibrada (treina, desenvolve, contrata ou sobe da base e adapta o plano) | 8 | 192 | 42.2% | 5.7% | 0.0% | 22 | 20 | 12 | 11 | 28 | 21.4% |
-| Gastadora (contrata em toda etapa) | 4 | 96 | 27.1% | 9.4% | 0.0% | 10 | 11 | 3 | 3 | 17 | 36.5% |
+| Passiva (nenhuma ação) | 4 | 96 | 20.8% | 6.3% | 0.0% | 3 | 3 | 2 | 2 | 3 | 0.0% |
+| Equilibrada (treina, desenvolve, contrata ou sobe da base e adapta o plano) | 8 | 192 | 38.5% | 8.3% | 0.0% | 21 | 21 | 12 | 12 | 20 | 20.8% |
+| Gastadora (contrata em toda etapa) | 4 | 96 | 27.1% | 9.4% | 0.0% | 10 | 11 | 3 | 3 | 18 | 38.5% |
 
-Tempo médio por temporada (Node, trabalhadores em paralelo): rápido 7074 ms, lento 9534 ms. Criar o mundo: 307 ms.
+Tempo médio por temporada (Node, trabalhadores em paralelo): rápido 7386 ms, lento 8834 ms. Criar o mundo: 699 ms.
 
 ## Ligas
 
@@ -136,35 +136,35 @@ Campeão pelo posto de força no começo da temporada; força média dos clubes 
 
 | Liga | Div. | Temporadas | Campeão foi o mais forte | Entre os 3 mais fortes | Pontos do campeão | Campeões diferentes por carreira | Força no começo | Força no fim |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|
-| 2. Bundesliga | 2ª | 384 | 60% | 83% | 73 | 13.8 | 69.8 | 67.6 |
-| Brasileirão | 1ª | 384 | 44% | 73% | 82 | 7.9 | 77.0 | 76.7 |
-| Brasileirão Série B | 2ª | 384 | 61% | 94% | 88 | 13.7 | 68.9 | 66.6 |
-| Bundesliga | 1ª | 384 | 83% | 96% | 81 | 3.3 | 77.0 | 77.0 |
-| Championship | 2ª | 384 | 59% | 86% | 101 | 13.6 | 71.6 | 70.3 |
-| Copa de Primera | 1ª | 384 | 63% | 99% | 96 | 2.7 | 67.6 | 65.9 |
-| Copa Simón Bolívar | 2ª | 384 | 44% | 85% | 45 | 9.8 | 57.9 | 55.7 |
-| División Intermedia | 2ª | 384 | 39% | 74% | 57 | 10.3 | 61.6 | 59.5 |
-| LaLiga | 1ª | 384 | 59% | 100% | 93 | 2.6 | 78.1 | 78.1 |
-| LaLiga 2 | 2ª | 384 | 53% | 87% | 91 | 14.0 | 70.3 | 68.5 |
-| Liga Bolivia | 1ª | 384 | 56% | 96% | 64 | 3.8 | 64.3 | 62.3 |
-| Liga de Primera | 1ª | 384 | 61% | 95% | 72 | 3.7 | 71.2 | 71.2 |
-| Liga Dimayor | 1ª | 384 | 51% | 86% | 81 | 4.9 | 72.3 | 73.0 |
-| Liga FUTVE | 1ª | 384 | 40% | 79% | 59 | 5.8 | 66.3 | 63.7 |
-| Liga FUTVE 2 | 2ª | 384 | 51% | 83% | 51 | 10.7 | 60.2 | 58.4 |
-| Liga MX | 1ª | 384 | 38% | 67% | 73 | 7.2 | 71.9 | 70.8 |
-| Liga Profesional | 1ª | 384 | 60% | 86% | 69 | 5.5 | 71.5 | 70.1 |
-| Liga Uruguaya | 1ª | 384 | 70% | 99% | 91 | 2.4 | 67.4 | 65.2 |
-| Liga1 | 1ª | 384 | 63% | 95% | 71 | 4.0 | 67.7 | 65.4 |
-| Liga 2 | 2ª | 384 | 76% | 96% | 65 | 7.9 | 57.9 | 56.0 |
-| LigaPro Serie A | 1ª | 384 | 58% | 95% | 68 | 3.9 | 67.1 | 64.9 |
-| LigaPro Serie B | 2ª | 384 | 57% | 85% | 64 | 9.6 | 59.5 | 57.4 |
-| Ligue 1 | 1ª | 384 | 97% | 99% | 88 | 1.5 | 75.9 | 75.4 |
-| Ligue 2 | 2ª | 384 | 55% | 89% | 75 | 12.3 | 67.7 | 65.3 |
-| Premier League | 1ª | 384 | 43% | 78% | 83 | 6.1 | 80.2 | 80.9 |
-| Primera B | 2ª | 384 | 68% | 92% | 63 | 8.6 | 62.3 | 59.4 |
-| Primera Nacional | 2ª | 384 | 51% | 79% | 79 | 15.6 | 60.7 | 58.5 |
-| Segunda División | 2ª | 384 | 43% | 74% | 62 | 12.1 | 61.6 | 59.5 |
-| Serie A | 1ª | 384 | 45% | 76% | 87 | 6.1 | 77.2 | 77.2 |
-| Serie B | 2ª | 384 | 40% | 76% | 81 | 14.4 | 69.5 | 67.5 |
-| Torneo Dimayor | 2ª | 384 | 58% | 94% | 75 | 10.6 | 67.5 | 63.8 |
-| MLS | 1ª | 384 | 48% | 70% | 74 | 8.7 | 71.1 | 69.7 |
+| 2. Bundesliga | 2ª | 384 | 58% | 81% | 73 | 14.0 | 69.8 | 67.6 |
+| Brasileirão | 1ª | 384 | 43% | 71% | 82 | 7.9 | 77.0 | 76.6 |
+| Brasileirão Série B | 2ª | 384 | 61% | 93% | 87 | 14.0 | 68.9 | 66.7 |
+| Bundesliga | 1ª | 384 | 83% | 96% | 82 | 3.2 | 77.0 | 77.2 |
+| Championship | 2ª | 384 | 59% | 88% | 101 | 13.3 | 71.6 | 70.3 |
+| Copa de Primera | 1ª | 384 | 61% | 99% | 96 | 2.7 | 67.6 | 65.8 |
+| Copa Simón Bolívar | 2ª | 384 | 46% | 83% | 44 | 9.6 | 57.9 | 55.6 |
+| División Intermedia | 2ª | 384 | 37% | 75% | 57 | 10.2 | 61.6 | 59.6 |
+| LaLiga | 1ª | 384 | 61% | 100% | 93 | 2.6 | 78.1 | 78.2 |
+| LaLiga 2 | 2ª | 384 | 53% | 88% | 91 | 14.0 | 70.3 | 68.5 |
+| Liga Bolivia | 1ª | 384 | 59% | 95% | 64 | 3.9 | 64.3 | 62.2 |
+| Liga de Primera | 1ª | 384 | 61% | 95% | 72 | 3.8 | 71.2 | 71.1 |
+| Liga Dimayor | 1ª | 384 | 51% | 88% | 81 | 5.0 | 72.3 | 73.0 |
+| Liga FUTVE | 1ª | 384 | 39% | 79% | 59 | 5.8 | 66.3 | 63.7 |
+| Liga FUTVE 2 | 2ª | 384 | 51% | 84% | 51 | 10.3 | 60.2 | 58.4 |
+| Liga MX | 1ª | 384 | 37% | 66% | 73 | 7.4 | 71.9 | 70.9 |
+| Liga Profesional | 1ª | 384 | 60% | 88% | 69 | 5.3 | 71.5 | 70.2 |
+| Liga Uruguaya | 1ª | 384 | 68% | 98% | 91 | 2.5 | 67.4 | 65.2 |
+| Liga1 | 1ª | 384 | 64% | 94% | 70 | 4.2 | 67.7 | 65.5 |
+| Liga 2 | 2ª | 384 | 75% | 96% | 64 | 7.9 | 57.9 | 55.9 |
+| LigaPro Serie A | 1ª | 384 | 59% | 94% | 68 | 3.9 | 67.1 | 64.8 |
+| LigaPro Serie B | 2ª | 384 | 53% | 85% | 64 | 9.7 | 59.5 | 57.4 |
+| Ligue 1 | 1ª | 384 | 97% | 99% | 88 | 1.6 | 75.9 | 75.4 |
+| Ligue 2 | 2ª | 384 | 56% | 89% | 75 | 12.1 | 67.7 | 65.3 |
+| Premier League | 1ª | 384 | 44% | 80% | 83 | 5.6 | 80.2 | 80.9 |
+| Primera B | 2ª | 384 | 66% | 92% | 63 | 8.8 | 62.3 | 59.6 |
+| Primera Nacional | 2ª | 384 | 51% | 78% | 79 | 16.0 | 60.7 | 58.5 |
+| Segunda División | 2ª | 384 | 44% | 77% | 62 | 11.9 | 61.6 | 59.6 |
+| Serie A | 1ª | 384 | 45% | 77% | 87 | 5.9 | 77.2 | 77.1 |
+| Serie B | 2ª | 384 | 43% | 78% | 81 | 13.7 | 69.5 | 67.5 |
+| Torneo Dimayor | 2ª | 384 | 58% | 93% | 75 | 10.7 | 67.5 | 63.9 |
+| MLS | 1ª | 384 | 51% | 70% | 74 | 8.8 | 71.1 | 69.7 |
