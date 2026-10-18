@@ -1,6 +1,6 @@
 # Relatório da carreira dentro do mundo
 
-Motor 2.0.0-m15, semente `balanco-m2`. **8 de 8 metas atendidas.**
+Motor 2.0.0-m16, semente `balanco-m2`. **8 de 8 metas atendidas.**
 
 Gerado por `pnpm balance`. Carreiras inteiras dentro do mundo simulado, com clubes reais, copas, continentais, seleção e
 prêmios contra a elite real e a geração futura. O clube ainda vem de uma política fixa (do nível do jogador, indo para a

@@ -2,7 +2,7 @@ import type { SquadPlayer } from "@craque/world/squads";
 import { clamp } from "../math";
 import type { Rng } from "../rng";
 import type { Position } from "../player/positions";
-import { referenceMarketValue as baseMarketValue } from "../player/value";
+import { referenceMarketValue as baseMarketValue, marketValueCeiling } from "../player/value";
 import type { CoachPlayer, CoachTrait, FormLabel, Mood, Role, SeasonStats, SectorOrGk } from "./types";
 import { EVOLUTION, FINANCE, FORM, MOOD_OUTPUT, OUTPUT_LIMITS, POSITION_FIT, SATISFACTION, TRAIT_EFFECTS } from "./tuning";
 import { coachRng, unit } from "./util";
@@ -79,7 +79,7 @@ export function wageFor(ovr: number): number {
 export function valueOf(player: Pick<CoachPlayer, "ovr" | "birthYear">, year: number): number {
   const raw = baseMarketValue(player.ovr, ageOf(player, year));
   const step = raw >= 10_000_000 ? 500_000 : raw >= 1_000_000 ? 100_000 : 10_000;
-  return Math.max(10_000, Math.round(raw / step) * step);
+  return Math.min(marketValueCeiling(ageOf(player, year)), Math.max(10_000, Math.round(raw / step) * step));
 }
 
 /**

@@ -1,4 +1,6 @@
 import { d71 } from "../../../i18n/d71";
+import { d72 } from "../../../i18n/d72";
+import { HonourGroups } from "../../../ui/HonourGroups";
 import {
   AWARD_KEYS,
   AWARDS,
@@ -201,6 +203,8 @@ function Awards() {
   return (
     <section aria-labelledby="arte-premios" className="flex flex-col gap-5">
       <p className="text-sm text-muted">{d71(locale,"outsideHint")}</p>
+      <p className="text-sm text-muted">{d72(locale,"stacks")}</p>
+      <HonourGroups language={locale} items={[{id:"cont1:UEFA",year:2026},{id:"cont1:UEFA",year:2027},{id:"cont1:UEFA",year:2028},{id:"cup:ESP",year:2026},{id:"cup:ESP",year:2027},{id:"league:laliga",year:2026}]} />
       <SectionRule as="h2">
         <span id="arte-premios">{t("lab.art.awards")}</span>
       </SectionRule>

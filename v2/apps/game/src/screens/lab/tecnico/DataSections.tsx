@@ -1,4 +1,5 @@
 import { d71 } from "../../../i18n/d71";
+import { d72 } from "../../../i18n/d72";
 import { coachPlayerName } from "@craque/content/coach";
 import {
   affordability,
@@ -190,6 +191,7 @@ export function FinanceSection({ index }: { index: number }) {
     <LabSection id="tec-financas" index={index} title={tt("lab.finance.title")}>
       <p className="mb-3 max-w-3xl text-sm text-muted">{tt("lab.finance.lead")}</p>
         <p className="my-2 text-xs text-muted">{d71(t.locale,"financeHint")}</p>
+        <p className="my-2 text-xs text-muted">{d72(t.locale,"cashCap")}</p><p className="my-2 text-xs text-muted">{d72(t.locale,"playerCap")}</p>
       <div className="mb-3 flex flex-wrap items-end gap-3">
         <CountrySelect
           value={country}

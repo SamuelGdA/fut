@@ -32,13 +32,13 @@ describe("D68: oportunidades dos finalizadores e valor", () => {
       expect(rate(position, 81) / rate(position, 80)).toBeLessThan(1.05);
     }
   });
-  it("o valor nunca ultrapassa €300M, nem com humor positivo ou atributos extremos de teste", () => {
+  it("o valor nunca ultrapassa €400M, nem com humor positivo ou atributos extremos de teste", () => {
     const rng = stream("value-d68", "market");
     for (let age = 16; age <= 40; age++) for (let ovr = 40; ovr <= 110; ovr++) {
       expect(baseMarketValue(ovr, age)).toBeLessThanOrEqual(MAX_MARKET_VALUE);
       expect(marketValue(rng, ovr, age)).toBeLessThanOrEqual(MAX_MARKET_VALUE);
     }
-    expect(baseMarketValue(99, 20)).toBe(MAX_MARKET_VALUE);
+    expect(baseMarketValue(99, 20)).toBeGreaterThan(350_000_000);
     expect(baseMarketValue(95, 20)).toBeLessThan(250_000_000);
     expect(baseMarketValue(99, 30)).toBeLessThan(200_000_000);
     expect(baseMarketValue(99, 34)).toBeLessThan(70_000_000);

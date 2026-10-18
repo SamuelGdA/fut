@@ -1,6 +1,5 @@
 import { HonourGroups } from "../../ui/HonourGroups";
 import { d71 } from "../../i18n/d71";
-import { InfoTip } from "../../ui/InfoTip";
 import { biography, recordText, type RecordResult } from "@craque/content";
 import { type Career, nationalLegacy, isGoalkeeper, KEEPER_ATTRIBUTES, OUTFIELD_ATTRIBUTES } from "@craque/engine";
 import { getClub, getCountry } from "@craque/world";
@@ -157,6 +156,7 @@ export function TimelineSection({ career }: { career: Career }) {
     <ol className="timeline">
       {items.map((item, index) => (
         <m.li
+          layout={reduced ? false : "position"}
           key={item.kind === "stint" ? `${item.stint.club}-${item.stint.fromAge}` : `debut-${item.age}`}
           className="timeline-item"
           data-marker={markerOf(item)}
@@ -226,7 +226,7 @@ function DebutCard({ career, age, year }: { career: Career; age: number; year: n
       <div className="min-w-0 flex-1">
         <p className="display text-xl font-extrabold uppercase">{t("summary.timeline.debut")}</p>
         <p className="text-xs text-muted">{t("summary.timeline.debutAt", { age, year })}</p>
-        <div className="mt-2 flex flex-wrap items-center gap-2"><Chip tone={LEGACY_TONE[legacy.level]} size="sm">{d71(locale,"nationalLegacy")}: {legacy.level === "none" ? d71(locale,"common") : c(`legacy.${legacy.level}`)}</Chip><InfoTip label={d71(locale,"nationalLegacy")}>{d71(locale,"nationalHint")}</InfoTip><span className="numeric text-xs text-muted">{legacy.games} {t("career.header.games")} · {legacy.goals} {t("career.header.goals")}</span></div>
+        <div className="mt-2 flex flex-wrap items-center gap-2"><Chip tone={LEGACY_TONE[legacy.level]} size="sm">{d71(locale,"nationalLegacy")}: {legacy.level === "none" ? d71(locale,"common") : c(`legacy.${legacy.level}`)}</Chip><span className="numeric text-xs text-muted">{legacy.games} {t("career.header.games")} · {legacy.goals} {t("career.header.goals")}</span></div>
       </div>
     </div>
   );

@@ -1,6 +1,8 @@
 import { areRivals } from "@craque/world";
+import { changeCash } from "./finance";
 import type { Division } from "@craque/world";
 import { clamp } from "../math";
+import { marketValueCeiling } from "../player/value";
 import type { Rng } from "../rng";
 import { ageOf, valueOf, wageFor } from "./players";
 import type { CoachCareer, CoachClub, CoachPlayer, Demand, Role } from "./types";
@@ -152,7 +154,7 @@ export function askingTerms(career: CoachCareer, player: CoachPlayer, buyerId: s
   const seller = player.club ? career.clubs[player.club] : null;
   const buyer = career.clubs[buyerId];
   const stepDown = seller && buyer ? Math.max(0, seller.strength - buyer.strength) : 0;
-  const price = seller ? roundPrice(value * rng.real(low, high) * (1 + 0.03 * stepDown) * (areRivals(buyerId,player.club) ? 1.2 : 1)) : 0;
+  const price = seller ? roundPlayerPrice(value * rng.real(low, high) * (1 + 0.03 * stepDown) * (areRivals(buyerId,player.club) ? 1.2 : 1), ageOf(player, career.year)) : 0;
   const [wageLow, wageHigh] = PURCHASE.wageRaise;
   const wage = roundWage(Math.max(player.wage * rng.real(wageLow, wageHigh), wageFor(player.ovr)) * (1 + 0.04 * stepDown));
   return { price, wage };
@@ -161,6 +163,11 @@ export function askingTerms(career: CoachCareer, player: CoachPlayer, buyerId: s
 export function roundPrice(value: number): number {
   const step = value >= 10_000_000 ? 500_000 : value >= 1_000_000 ? 50_000 : 10_000;
   return Math.max(0, Math.round(value / step) * step);
+}
+
+/** Aplica o teto depois de todos os acréscimos e do arredondamento. */
+export function roundPlayerPrice(value: number, age: number): number {
+  return Math.min(marketValueCeiling(age), roundPrice(value));
 }
 
 function roundWage(value: number): number {
@@ -212,14 +219,15 @@ export function saleOfferChance(demand: Demand): number {
  * Move um jogador entre clubes uma única vez: dinheiro, folha, elenco e dono
  * mudam juntos. Usado por vendas e compras aceitas, eventos e mercado da IA.
  */
-export function transferPlayer(career: CoachCareer, playerId: string, toClub: string, fee: number, kind: "sale" | "purchase" | "ai" | "free", wage?: number): void {
+export function transferPlayer(career: CoachCareer, playerId: string, toClub: string, proposedFee: number, kind: "sale" | "purchase" | "ai" | "free", wage?: number): void {
   const player = career.players[playerId];
   if (!player) return;
+  const fee = Math.min(marketValueCeiling(ageOf(player, career.year)), Math.max(0, proposedFee));
   const from = player.club;
   if (from === toClub) return;
   const fromClub = from ? career.clubs[from] : null;
   const destination = toClub ? career.clubs[toClub] : null;
-  if (fromClub) { fromClub.cash += fee; fromClub.investment=(fromClub.investment ?? 0)-fee; }
+  if (fromClub) { changeCash(fromClub, fee); fromClub.investment=(fromClub.investment ?? 0)-fee; }
   if (destination) { destination.cash -= fee; destination.investment=(destination.investment ?? 0)+fee; }
   const coach = career.coach;
   if (coach && from === coach.club && kind === "sale") {

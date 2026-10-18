@@ -3,6 +3,7 @@ import { TALENT_BANDS, TRAITS, POSITIONS, createCareer, ovrAt, type TalentBand, 
 import { debugPlayer } from "@craque/engine/debug";
 import { CLUBS } from "@craque/world";
 import { useCareer } from "../career/store";
+import { carryDecisionMemory } from "../career/whatIf";
 import { useDraft } from "../career/draft";
 import { useT } from "../../i18n/useT";
 import { usePrefs } from "../../store/prefs";
@@ -31,7 +32,9 @@ export function PlayerControls({ done }: { done(): void }) {
       const draft = useDraft.getState();
       const prefs = usePrefs.getState();
       const career = current ?? createCareer({ seed: "debug-player", startYear: 2026, pace: prefs.pace, difficulty: prefs.difficulty, identity: { surname: draft.surname || "TESTE", position, nationality: draft.nationality ?? "BRA", foot: draft.foot, dreamNumber: draft.dreamNumber } });
-      useCareer.setState({ career: debugPlayer(career, { talent, age, ovr, position, trait, loanOwner: owner || null }), status: "ready", avatar: useCareer.getState().avatar ?? draft.avatar, internalTesting: true, play: null, review: null });
+      const adjusted = debugPlayer(career, { talent, age, ovr, position, trait, loanOwner: owner || null });
+      carryDecisionMemory(career, adjusted);
+      useCareer.setState({ career: adjusted, status: "ready", avatar: useCareer.getState().avatar ?? draft.avatar, internalTesting: true, play: null, review: null });
       done(); useNavigation.getState().go("career", { force: true });
     }}>{text.apply}</Button>
   </div>;
