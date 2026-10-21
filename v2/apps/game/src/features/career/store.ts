@@ -154,8 +154,14 @@ export const useCareer = create<CareerState>()((set, get) => {
       }
       const before = challengeOf(career);
       const after = before ? challengeOf(step.career) : null;
-      const play = buildPlay(career, decision, option, step, before && after ? { before, after } : undefined);
-      set({ career: step.career, play: play.pages.length > 0 ? play : get().play, review: null });
+      let play = buildPlay(career, decision, option, step, before && after ? { before, after } : undefined);
+      // No período rápido, uma escolha auxiliar não apaga a temporada já revelada.
+      const previous = get().play;
+      if (step.career.drama && !play.pages.some(page => page.kind === "season") && previous) {
+        const completed = previous.pages.filter(page => page.kind === "season" && (step.career.history[page.index]?.age ?? 0) >= step.career.drama!.startAge);
+        if (completed.length) play = { ...play, pages: [...completed, ...play.pages], seasonsFresh: false };
+      }
+      set({ career: step.career, play: play.pages.length > 0 || play.outcome ? play : get().play, review: null });
       if (!get().internalTesting) {
         if (step.career.end) void recordFinished(step.career, avatar, alternate !== null);
         else if (alternate === null) void recordStep(step.career);

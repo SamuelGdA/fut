@@ -1,3 +1,4 @@
+import { matchResultText } from "@craque/content";
 import {
   careerPlural,
   careerText,
@@ -23,6 +24,7 @@ import {
   type Decision,
   type DecisionOption,
   fanBand,
+  getEvent,
   isGoalkeeper,
   ovrAt,
   pressureTone,
@@ -254,7 +256,7 @@ export function decisionBlock(career: Career, locale: Locale, paint: Paint = PLA
   const lines = [paint.dim(RULE), paint.accent(` ${text.title.toUpperCase()}`), ` ${text.body}`, ""];
   decision.options.forEach((option, index) => {
     let label = optionLabel(locale, career, decision, option);
-    if (option.kind === "event" && option.chance !== null) {
+    if (option.kind === "event" && option.chance !== null && !getEvent(decision.event ?? "")?.tags.includes("final")) {
       label += paint.dim(`  [${ui(locale, "chance", { value: Math.round(option.chance * 100) })}]`);
     }
     lines.push(` ${paint.bold(`${index + 1})`)} ${label}`);
@@ -351,6 +353,7 @@ function noticeLines(
   nextSeason: () => number,
 ): string[] {
   switch (notice.kind) {
+    case "matchOutcome": return [matchResultText(locale, notice.result)];
     case "eventOutcome": {
       if (option.kind !== "event" || !decision.event) return [];
       const headline =

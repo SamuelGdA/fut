@@ -1,3 +1,4 @@
+import type { KeyMatchResult } from "../career/dramaTypes";
 import type { CompetitionKind } from "@craque/world";
 import { GROUP_OF, isDefender, isGoalkeeper, type Position } from "../player/positions";
 import { TRAIT_EFFECTS, type Trait } from "../player/traits";
@@ -281,4 +282,26 @@ export function thinProduction(rng: Rng, production: Production, counters: Produ
 export function isOffensive(position: Position): boolean {
   const group = GROUP_OF[position];
   return group === "attacker" || group === "attackingMid";
+}
+
+/** Lances interativos entram na mesma linha de produção, antes de prêmios e totais. */
+export function keyProduction(production: Production, matches: readonly KeyMatchResult[], national: boolean): Production {
+  let goals = 0;
+  let assists = 0;
+  let leagueGoals = 0;
+  let lostCleanSheets = 0;
+  const lines = production.lines.map((line) => {
+    const moments = matches.filter((item) => item.match.national === national && item.match.competition === line.competition && line.games > 0);
+    const extraGoals = moments.reduce((sum, item) => sum + item.goals, 0);
+    const extraAssists = moments.reduce((sum, item) => sum + item.assists, 0);
+    goals += extraGoals;
+    assists += extraAssists;
+    if (isLeagueKind(line.kind)) leagueGoals += extraGoals;
+    const concededMatches = moments.filter((item) => item.score[1] > 0).length;
+    const cleanSheets = Math.min(line.cleanSheets, Math.max(0, line.games - concededMatches));
+    lostCleanSheets += line.cleanSheets - cleanSheets;
+    return { ...line, goals: line.goals + extraGoals, assists: line.assists + extraAssists, cleanSheets };
+  });
+  const knownConceded = matches.filter((item) => item.match.national === national).reduce((sum, item) => sum + item.score[1], 0);
+  return { ...production, lines, goals: production.goals + goals, assists: production.assists + assists, leagueGoals: production.leagueGoals + leagueGoals, cleanSheets: production.cleanSheets - lostCleanSheets, conceded: Math.max(production.conceded, knownConceded) };
 }

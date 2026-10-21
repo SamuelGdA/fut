@@ -1,6 +1,6 @@
 # Relatório do fluxo da carreira
 
-Motor 2.0.0-m16, semente `balanco-m2`. **9 de 9 metas atendidas.**
+Motor 2.0.0-m23, semente `balanco-m2`. **9 de 9 metas atendidas.**
 
 Gerado por `pnpm balance`. Carreiras jogadas pelo laço de verdade (M4): base, janelas, eventos, focos, empréstimos,
 dispensas e o mercado decidindo quem ainda tem clube. Posições e países se alternam; uma em cada quatro é Difícil.
@@ -13,55 +13,56 @@ dispensas e o mercado decidindo quem ainda tem clube. Posições e países se al
 
 | | Meta | Alvo | Medido |
 |---|---|---|---|
-| ✓ | Carreiras que o mercado leva até os 40 (minoria), Intensa / Normal | menos de 50% | 36% / 47% |
-| ✓ | Carreiras que terminam entre 33 e 38 (maioria), Intensa / Normal | 50% ou mais | 52% / 53% |
+| ✓ | Carreiras que o mercado leva até os 40 (minoria), Intensa / Normal | menos de 50% | 27% / 40% |
+| ✓ | Carreiras que terminam entre 33 e 38 (maioria), Intensa / Normal | 50% ou mais | 60% / 60% |
 | ✓ | Carreiras que o mercado encerra antes dos 30 | no máximo 5% | 0.0% / 0.0% |
-| ✓ | Eventos por carreira, ritmo Intensa (agenda de 7 a 8) | 6 a 8 | 6.4 |
-| ✓ | Eventos por carreira, ritmo Normal (agenda de 4 a 5) | 3,5 a 5 | 3.9 |
-| ✓ | Decisões por carreira no ritmo Normal (3 a 5 minutos de interação) | 9 a 15 | 11.2 |
-| ✓ | Janelas com menos de duas ofertas de clube | no máximo 2% | 0.4% |
+| ✓ | Eventos por carreira, ritmo Intensa (agenda de 7 a 8) | 6 a 8 | 6.7 |
+| ✓ | Eventos por carreira, ritmo Normal (agenda de 4 a 5) | 3,5 a 5 | 4.0 |
+| ✓ | Decisões no ritmo Normal: planejamento e total com momentos (D73) | planejamento 9 a 15; total até 65 | 14.0 / 30.5 |
+| ✓ | Janelas com menos de duas ofertas de clube | no máximo 2% | 0.6% |
 | ✓ | Primeira decisão com três bases | 100% | 100.0% |
 | ✓ | Save refaz a carreira inteira (invariante 5, 60 carreiras) | 100% | 100.0% |
 
 ## Os lotes
 
-| Lote | Carreiras | Fim (mediana) | Eventos | Decisões | Empréstimos | Clubes | Traidor |
-|---|---:|---:|---:|---:|---:|---:|---:|
-| Teimosa, Intensa | 100 | 38 | 7.0 | 22.8 | 0.44 | 5.6 | 2.0% |
-| Teimosa, Normal | 100 | 38 | 3.8 | 11.6 | 0.30 | 3.6 | 0.0% |
-| Equilibrada, Intensa | 100 | 35 | 6.4 | 20.3 | 0.49 | 5.6 | 2.0% |
-| Equilibrada, Normal | 100 | 36 | 3.9 | 11.2 | 0.26 | 3.2 | 2.0% |
+| Lote | Carreiras | Fim (mediana) | Eventos | Planejamento | Decisões totais | Empréstimos | Clubes | Traidor |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| Teimosa, Intensa | 300 | 38 | 7.2 | 22.6 | 47.7 | 0.25 | 5.3 | 1.3% |
+| Teimosa, Normal | 300 | 38 | 4.1 | 15.1 | 32.5 | 0.10 | 4.7 | 0.7% |
+| Equilibrada, Intensa | 300 | 35 | 6.7 | 20.2 | 43.1 | 0.24 | 5.1 | 3.3% |
+| Equilibrada, Normal | 300 | 36 | 4.0 | 14.0 | 30.5 | 0.09 | 4.5 | 0.7% |
 
 ## Como as carreiras terminam
 
 | Lote | Idade (40) | Sem mercado | Sem ofertas | Parou depois da dispensa | Escolheu parar |
 |---|---:|---:|---:|---:|---:|
-| Teimosa, Intensa | 36% | 64% | 0% | 0% | 0% |
-| Teimosa, Normal | 47% | 53% | 0% | 0% | 0% |
-| Equilibrada, Intensa | 0% | 7% | 0% | 5% | 88% |
-| Equilibrada, Normal | 0% | 42% | 0% | 13% | 45% |
+| Teimosa, Intensa | 27% | 73% | 0% | 0% | 0% |
+| Teimosa, Normal | 40% | 60% | 0% | 0% | 0% |
+| Equilibrada, Intensa | 0% | 12% | 0% | 6% | 81% |
+| Equilibrada, Normal | 0% | 20% | 0% | 8% | 72% |
 
 ## Decisões por carreira, por tipo
 
-| Lote | Base | Janela | Evento | Foco de treino | Empréstimo | Volta de empréstimo | Dispensa | Aposentadoria forçada |
-|---|---:|---:|---:|---:|---:|---:|---:|---:|
-| Teimosa, Intensa | 1.00 | 10.55 | 6.95 | 2.41 | 0.53 | 0.44 | 0.29 | 0.64 |
-| Teimosa, Normal | 1.00 | 4.00 | 3.83 | 1.37 | 0.32 | 0.30 | 0.27 | 0.53 |
-| Equilibrada, Intensa | 1.00 | 9.35 | 6.41 | 2.34 | 0.55 | 0.49 | 0.05 | 0.07 |
-| Equilibrada, Normal | 1.00 | 3.67 | 3.87 | 1.44 | 0.31 | 0.26 | 0.22 | 0.42 |
+| Lote | Jogo-chave | Promessa | Veterano | Base | Janela | Evento | Foco de treino | Empréstimo | Volta de empréstimo | Dispensa | Aposentadoria forçada |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| Teimosa, Intensa | 23.21 | 1.43 | 0.44 | 1.00 | 10.47 | 7.21 | 2.32 | 0.33 | 0.25 | 0.28 | 0.73 |
+| Teimosa, Normal | 15.78 | 1.24 | 0.41 | 1.00 | 7.72 | 4.10 | 1.18 | 0.13 | 0.10 | 0.25 | 0.60 |
+| Equilibrada, Intensa | 21.32 | 1.39 | 0.23 | 1.00 | 9.51 | 6.67 | 2.26 | 0.31 | 0.24 | 0.08 | 0.12 |
+| Equilibrada, Normal | 15.07 | 1.18 | 0.30 | 1.00 | 7.16 | 4.04 | 1.25 | 0.13 | 0.09 | 0.10 | 0.20 |
 
 ## Idade do fim, política teimosa, ritmo Intensa
 
 | Idade | Carreiras | |
 |---:|---:|---|
-| 33 | 1 | █ |
-| 34 | 5 | ████ |
-| 35 | 4 | ███ |
-| 36 | 6 | █████ |
-| 37 | 18 | ███████████████ |
-| 38 | 18 | ███████████████ |
-| 39 | 12 | ██████████ |
-| 40 | 36 | ██████████████████████████████ |
+| 32 | 1 | █ |
+| 33 | 2 | █ |
+| 34 | 10 | ████ |
+| 35 | 17 | ██████ |
+| 36 | 32 | ████████████ |
+| 37 | 67 | █████████████████████████ |
+| 38 | 52 | ███████████████████ |
+| 39 | 38 | ██████████████ |
+| 40 | 81 | ██████████████████████████████ |
 
 ## Idade do fim, política teimosa, ritmo Normal
 
@@ -69,14 +70,15 @@ No ritmo Normal as decisões caem nas idades pares, então o fim também.
 
 | Idade | Carreiras | |
 |---:|---:|---|
-| 34 | 7 | ████ |
-| 36 | 24 | ███████████████ |
-| 38 | 22 | ██████████████ |
-| 40 | 47 | ██████████████████████████████ |
+| 32 | 1 | █ |
+| 34 | 15 | ████ |
+| 36 | 62 | ████████████████ |
+| 38 | 103 | ██████████████████████████ |
+| 40 | 119 | ██████████████████████████████ |
 
 ## Uma carreira do lote equilibrado, ritmo Intensa
 
-Semente `balanco-m2:fluxo:balanced:intense:0`, gk, BRA. Fim aos 35 (Escolheu parar). Eventos: personalCoach, dressingRoomRift, loadManagement, rowCoach, rivalSigned, bootDeal, muscleInjury.
+Semente `balanco-m2:fluxo:balanced:intense:0`, gk, BRA. Fim aos 35 (Escolheu parar). Eventos: personalCoach, homesick, extraTraining, rowCoach, loadManagement, academyJewel, muscleInjury.
 
 | Ano | Idade | Clube | Papel | Jogos | Gols | OVR | Torcida | Missão | Evento |
 |---:|---:|---|---|---:|---:|---:|---:|---|---|
@@ -84,18 +86,18 @@ Semente `balanco-m2:fluxo:balanced:intense:0`, gk, BRA. Fim aos 35 (Escolheu par
 | 2027 | 17 | Titanes | starter | 27 | 0 | 57 | 57 | reinforcement |  |
 | 2028 | 18 | Titanes | reserve | 3 | 0 | 59 | 53 | reinforcement | personalCoach/hire ✗ |
 | 2029 | 19 | Titanes | starter | 28 | 0 | 65 | 62 | reinforcement |  |
-| 2030 | 20 | Titanes | starter | 28 | 0 | 72 | 69 | reinforcement | dressingRoomRift/neutral |
-| 2031 | 21 | Independiente | starter | 36 | 0 | 77 | 61 | projectPiece |  |
-| 2032 | 22 | Hamburger | starter | 30 | 0 | 81 | 60 | projectPiece |  |
-| 2033 | 23 | Sevilla | starter | 49 | 0 | 84 | 62 | projectPiece |  |
-| 2034 | 24 | Sevilla | starter | 26 | 0 | 86 | 62 | projectPiece | loadManagement/rest |
-| 2035 | 25 | Sevilla | starter | 37 | 0 | 91 | 72 | projectPiece |  |
-| 2036 | 26 | Bayern München | starter | 50 | 0 | 94 | 83 | marqueeSigning |  |
-| 2037 | 27 | Bayern München | starter | 51 | 0 | 97 | 93 | marqueeSigning | rowCoach/apologize |
-| 2038 | 28 | Bayern München | starter | 49 | 0 | 98 | 99 | marqueeSigning |  |
-| 2039 | 29 | Bayern München | starter | 52 | 0 | 98 | 100 | marqueeSigning |  |
-| 2040 | 30 | Bayern München | reserve | 7 | 0 | 98 | 100 | marqueeSigning | rivalSigned/fight ✗ |
-| 2041 | 31 | PSG | starter | 56 | 0 | 98 | 90 | marqueeSigning |  |
-| 2042 | 32 | PSG | starter | 52 | 0 | 98 | 96 | marqueeSigning | bootDeal/discreet |
-| 2043 | 33 | PSG | starter | 51 | 0 | 98 | 100 | marqueeSigning |  |
-| 2044 | 34 | PSG | starter | 49 | 0 | 98 | 100 | marqueeSigning | muscleInjury/rushBack ✓ |
+| 2030 | 20 | Defensor Sporting | starter | 43 | 0 | 72 | 63 | projectPiece |  |
+| 2031 | 21 | Defensor Sporting | starter | 53 | 0 | 78 | 82 | projectPiece | homesick/stay |
+| 2032 | 22 | Brentford | starter | 35 | 0 | 82 | 58 | rescue |  |
+| 2033 | 23 | Brentford | starter | 41 | 0 | 85 | 67 | rescue |  |
+| 2034 | 24 | Brentford | starter | 28 | 0 | 88 | 81 | rescue | extraTraining/push ✗ |
+| 2035 | 25 | Atlético Madrid | starter | 45 | 0 | 89 | 77 | marqueeSigning |  |
+| 2036 | 26 | Bayern München | starter | 50 | 0 | 90 | 68 | marqueeSigning |  |
+| 2037 | 27 | Bayern München | starter | 50 | 0 | 90 | 74 | marqueeSigning | rowCoach/apologize |
+| 2038 | 28 | Bayern München | starter | 47 | 0 | 91 | 88 | marqueeSigning |  |
+| 2039 | 29 | Bayern München | starter | 52 | 0 | 91 | 96 | marqueeSigning |  |
+| 2040 | 30 | Bayern München | starter | 43 | 0 | 91 | 99 | marqueeSigning | loadManagement/rest |
+| 2041 | 31 | Bayern München | starter | 50 | 0 | 91 | 100 | marqueeSigning |  |
+| 2042 | 32 | Bayern München | starter | 37 | 0 | 90 | 100 | marqueeSigning | academyJewel/compete ✗ |
+| 2043 | 33 | Bayern München | starter | 51 | 0 | 90 | 100 | marqueeSigning |  |
+| 2044 | 34 | Bayern München | starter | 42 | 0 | 90 | 100 | marqueeSigning | muscleInjury/fullRecovery |

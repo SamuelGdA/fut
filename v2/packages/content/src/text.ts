@@ -1,3 +1,4 @@
+import { dramaDecision, dramaOption } from "./drama";
 import {
   type Career,
   type Decision,
@@ -114,6 +115,7 @@ export interface DecisionText {
 
 /** Título e texto de uma decisão. */
 export function decisionText(locale: Locale, career: Career, decision: Decision): DecisionText {
+  if (["match", "promise", "veteran"].includes(decision.kind)) return dramaDecision(locale, career, decision);
   if (decision.kind === "event" && decision.event) {
     const entry = eventEntry(locale, decision.event);
     const vars = eventVars(locale, career, decisionTarget(decision));
@@ -130,6 +132,10 @@ export function decisionText(locale: Locale, career: Career, decision: Decision)
       case "window":
       case "event":
         return decision.reason === "suspended" ? "suspended" : "window";
+      case "match":
+      case "promise":
+      case "veteran":
+        return "window";
       default:
         return decision.kind;
     }
@@ -143,6 +149,7 @@ export function decisionText(locale: Locale, career: Career, decision: Decision)
 /** O rótulo de uma opção. */
 export function optionLabel(locale: Locale, career: Career, decision: Decision, option: DecisionOption): string {
   switch (option.kind) {
+    case "drama": return dramaOption(locale, decision, option, career.player.position);
     case "club":
       if (option.offer.back) return careerText(locale, "option.back");
       if (option.offer.buyout) return careerText(locale, "option.buyout");

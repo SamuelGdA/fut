@@ -606,6 +606,7 @@ export const es: Messages = {
       prev: "Página anterior",
       next: "Página siguiente",
       roleDescription: "periódico",
+      blank: "Página en blanco",
       edition: "Edición {current} de {total}",
       at: "{age} años · {year}",
       numbers: "Los números",

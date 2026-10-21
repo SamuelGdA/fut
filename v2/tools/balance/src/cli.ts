@@ -98,13 +98,15 @@ function main() {
     phenoms: runCareers({ seed: `${args.seed}:fen`, careers: 400, band: "phenom", positions: ATTACKING, region: "europe" }),
     phenomStrikers: runCareers({ seed: `${args.seed}:fen-ca`, careers: quick ? 80 : 160, band: "phenom", positions: ["st"], region: "europe" }),
     classStrikers: runCareers({ seed: `${args.seed}:cra-ca`, careers: quick ? 100 : 200, band: "class", positions: ["st"], region: "europe" }),
-    smallLeague: runCareers({ seed: `${args.seed}:chi`, careers: quick ? 50 : 80, band: "star", positions: ATTACKING, region: "home", nationality: "CHI" }),
+    // D81: a mesma amostra completa no verify; o prefixo de 50 oscilou por uma carreira.
+    smallLeague: runCareers({ seed: `${args.seed}:chi`, careers: 80, band: "star", positions: ATTACKING, region: "home", nationality: "CHI" }),
   } as const;
   const careerMetrics = computeCareerMetrics(batches);
   const careerGoals = careerTargets(careerMetrics);
 
   // O fluxo com o mercado de verdade (M4).
-  const flowBatches = runFlowBatches(`${args.seed}:fluxo`, quick ? 100 : 300);
+  // D73: manter o lote completo também no verify evita julgar a cauda etária por 100 carreiras.
+  const flowBatches = runFlowBatches(`${args.seed}:fluxo`, 300);
   const flowMetrics = computeFlowMetrics(flowBatches);
   const flowGoals = flowTargets(flowMetrics);
 

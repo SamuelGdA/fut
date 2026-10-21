@@ -1,3 +1,4 @@
+import { PromiseSummary, SeasonDrama } from "./SeasonDrama";
 import { useReducedMotion } from "../../lib/useReducedMotion";
 import { competitionName, decisionText, describeEffect, effectTone, eventOutcomeText, missionGoal, missionName } from "@craque/content";
 import { type Career, isGoalkeeper, leagueEntry, movementOf, type SeasonRecord } from "@craque/engine";
@@ -58,10 +59,10 @@ export function PlayFeed({ career, play, reviewing, onCloseReview, compact = fal
   const selected = picked && picked.session === play.id ? picked.index : (seasons[seasons.length - 1]?.index ?? null);
   const page = seasons.find((item) => item.index === selected) ?? seasons[seasons.length - 1] ?? null;
   const record = page ? career.history[page.index] : undefined;
-  const animate = play.fresh && reduced !== true;
+  const animate = play.fresh && play.seasonsFresh !== false && reduced !== true;
   const celebrated = useRef<number | null>(null);
   const [opened, setOpened] = useState<number | null>(null);
-  const open = !compact || opened === play.id;
+  const open = opened === play.id;
   const honours = seasons.some((item) => {
     const season = career.history[item.index];
     return season !== undefined && (season.titles.length > 0 || season.awards.won.length > 0);
@@ -69,17 +70,15 @@ export function PlayFeed({ career, play, reviewing, onCloseReview, compact = fal
 
   // Som uma vez por lance: o troféu quando houve título ou prêmio, o apito da revelação nos outros.
   useEffect(() => {
-    if (!play.fresh || celebrated.current === play.id) return;
+    if (!play.fresh || play.seasonsFresh === false || celebrated.current === play.id) return;
     celebrated.current = play.id;
     feedback(honours ? "trophy" : event?.success === false ? "back" : "reveal");
-  }, [play.id, play.fresh, honours, event?.success]);
+  }, [play.id, play.fresh, play.seasonsFresh, honours, event?.success]);
 
   if (!page || !record) {
-    return event ? (
-      <section className="play" aria-label={t("career.play.label")}>
-        <EventLine page={event} animate={animate} />
-      </section>
-    ) : null;
+    if (!event) return null;
+    return <><section className="play play-compact" aria-label={t("career.play.label")}><button type="button" className="play-toggle" aria-expanded={open} onClick={() => setOpened(open ? null : play.id)}><span className="text-sm font-semibold">{decisionText(locale, event.before, event.decision).title}</span><ChevronDown size={18} aria-hidden="true" /></button></section><Sheet open={open} onOpenChange={(next) => setOpened(next ? play.id : null)} title={t("career.play.label")} closeLabel={t("common.close")}><EventLine page={event} animate={false} /></Sheet></>;
+
   }
 
   const toggle = compact ? (
@@ -97,21 +96,23 @@ export function PlayFeed({ career, play, reviewing, onCloseReview, compact = fal
     </button>
   ) : null;
 
-  const content = (
+  const content = (full: boolean) => (
     <section
       className="play club-scope"
+      data-years={seasons.map(item => career.history[item.index]?.year).join(",")}
       style={clubStyle(record.club) as CSSProperties}
       aria-label={t("career.play.label")}
       data-review={reviewing || undefined}
       data-open={open || undefined}
     >
-      {seasons.length > 1 && honours ? <div className="play-batch-honours" aria-label={craqueRevision(locale, "honours")}>{seasons.map((item) => { const season = career.history[item.index]; if (!season) return null; const collection = showcaseItems([season]); if (!collection.length) return null; return <div key={item.index}><button type="button" className="numeric" onClick={() => setPicked({ session: play.id, index: item.index })}>{season.year}</button><span className="play-honours-art">{collection.map((honour) => <HonourToken key={`${honour.kind}:${honour.id}:${honour.kind === "award" ? honour.competition ?? "" : ""}`} id={honour.kind === "award" ? honour.competition ?? honour.id : honour.id} award={honour.kind === "award" ? honour.id : undefined} year={season.year} size={26} language={locale} />)}</span></div>; })}</div> : null}
-      {open && event ? <EventLine page={event} animate={animate} /> : null}
-      {open ? <SeasonLine
+      {full && seasons.length > 1 && honours ? <div className="play-batch-honours" aria-label={craqueRevision(locale, "honours")}>{seasons.map((item) => { const season = career.history[item.index]; if (!season) return null; const collection = showcaseItems([season]); if (!collection.length) return null; return <div key={item.index}><button type="button" className="numeric" onClick={() => setPicked({ session: play.id, index: item.index })}>{season.year}</button><span className="play-honours-art">{collection.map((honour) => <HonourToken key={`${honour.kind}:${honour.id}:${honour.kind === "award" ? honour.competition ?? "" : ""}`} id={honour.kind === "award" ? honour.competition ?? honour.id : honour.id} award={honour.kind === "award" ? honour.id : undefined} year={season.year} size={26} language={locale} />)}</span></div>; })}</div> : null}
+      {full && event ? <EventLine page={event} animate={animate} /> : null}
+      {full || !compact ? <SeasonLine
         key={`${play.id}-${page.index}`}
         page={page}
         record={record}
         animate={animate}
+        onDetails={full ? undefined : () => setOpened(play.id)}
         tabs={
           seasons.length > 1 ? (
             <span className="play-years" role="group" aria-label={t("career.play.seasons")}>
@@ -148,7 +149,8 @@ export function PlayFeed({ career, play, reviewing, onCloseReview, compact = fal
           ) : null
         }
       /> : null}
-      {challenge && (open || !compact) ? <ChallengeLine page={challenge} /> : null}
+      {full ? <SeasonDrama record={record} /> : <PromiseSummary record={record} />}
+      {challenge && full ? <ChallengeLine page={challenge} /> : null}
 
       {challenge && compact && !open ? (
         <p className="play-chips px-0.5">
@@ -160,14 +162,15 @@ export function PlayFeed({ career, play, reviewing, onCloseReview, compact = fal
       {animate && honours && !compact ? <Confetti burst={play.id} count={46} /> : null}
     </section>
   );
-  if (!compact) return content;
+  if (!compact) return <>{content(false)}<Sheet open={open} onOpenChange={next => setOpened(next ? play.id : null)} title={t("career.play.label")} closeLabel={t("common.close")}>{content(true)}</Sheet></>;
   return <>
-    <section className="play play-compact club-scope" style={clubStyle(record.club) as CSSProperties} aria-label={t("career.play.label")}>
+    <section className="play play-compact club-scope" data-years={seasons.map(item => career.history[item.index]?.year).join(",")} style={clubStyle(record.club) as CSSProperties} aria-label={t("career.play.label")}>
       {toggle}
+      <PromiseSummary record={record} />
       {animate && honours ? <Confetti burst={play.id} count={46} /> : null}
     </section>
     <Sheet open={open} onOpenChange={next => setOpened(next ? play.id : null)} title={t("career.play.label")} closeLabel={t("common.close")}>
-      {content}
+      {content(true)}
     </Sheet>
   </>;
 }
@@ -178,6 +181,7 @@ export function PlayFeed({ career, play, reviewing, onCloseReview, compact = fal
  */
 function PlayStrip({ page, record, event, animate }: { page: SeasonPage; record: SeasonRecord; event: EventPage | null; animate: boolean }) {
   const { t, c, cp, ordinal } = useT();
+
   const entry = leagueEntry(record);
   const movement = movementOf(record);
   const keeper = isGoalkeeper(record.position);
@@ -282,10 +286,11 @@ interface SeasonLineProps {
   animate: boolean;
   tabs: ReactNode;
   review: ReactNode;
+  onDetails?: () => void;
 }
 
 /** Uma temporada jogada: quem, onde, como terminou, os números e o que mudou no jogador. */
-function SeasonLine({ page, record, animate, tabs, review }: SeasonLineProps) {
+function SeasonLine({ page, record, animate, tabs, review, onDetails }: SeasonLineProps) {
   const { t, c, locale, ordinal, number } = useT();
   const detailsOpen = usePrefs((state) => state.seasonDetails);
   const club = getClub(record.club);
@@ -404,7 +409,8 @@ function SeasonLine({ page, record, animate, tabs, review }: SeasonLineProps) {
         </div>
       </m.dl>
 
-      {deltas.length > 0 || notes.length > 0 ? (
+      {onDetails ? <button type="button" className="play-details-button" onClick={onDetails}>{craqueRevision(locale, "details")} <ChevronDown size={13} aria-hidden="true" /></button> : null}
+      {!onDetails && (deltas.length > 0 || notes.length > 0) ? (
         <details className="play-season-details" open={detailsOpen} onToggle={(event) => { if (event.currentTarget.open !== detailsOpen) usePrefs.getState().setSeasonDetails(event.currentTarget.open); }}><summary>{craqueRevision(locale, "details")}</summary><m.ul className="play-chips play-notes" aria-label={t("reveal.attributes")} {...enter(0.2)}>
           {deltas.map((item) => (
             <li key={item.key}>
@@ -424,7 +430,7 @@ function SeasonLine({ page, record, animate, tabs, review }: SeasonLineProps) {
         </m.ul></details>
       ) : null}
 
-      {seasonHonours.length > 0 ? (
+      {!onDetails && seasonHonours.length > 0 ? (
         <m.div className={cn("play-honours", animate && "play-honours-fresh")} {...enter(0.3)}>
           <span className="play-honours-art">{seasonHonours.map((item) => <HonourToken key={`${item.kind}:${item.id}:${item.kind === "award" ? item.competition ?? "" : ""}`} id={item.kind === "award" ? item.competition ?? item.id : item.id} award={item.kind === "award" ? item.id : undefined} year={record.year} size={30} language={locale} />)}</span>
         </m.div>

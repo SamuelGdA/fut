@@ -1,5 +1,14 @@
 # Futeiros v2: Game Design Document
 
+> **Estado atual D82 (21/10/2026).** Craque `2.0.0-m23`; Técnico `1.9.0`.
+> Projeto ativo: `v2/`, React/Zustand/Vite. O resumo no início do
+> [README](../README.md) orienta novas pessoas e IAs sobre os subsistemas atuais.
+> Revisões D73 a D82 ao fim deste GDD especificam o calendário de decisões,
+> progressão, probabilidades, produção e apresentação atuais, prevalecendo
+> sobre descrições históricas anteriores do mesmo assunto. São 39 acontecimentos,
+> 53 cenas de partida e nenhum rival pessoal. As contas atuais de D80/D81 são
+> preservadas na D82; somente o custo de respeitar o rival muda no motor.
+
 > **Futeiros (D50 a D60).** Este documento especifica os dois jogos do hub.
 > As seções 0 a 40 são o **Craque** (carreira de jogador, regras inalteradas);
 > a [seção 41](#41-o-hub-do-futeiros) é o hub e a
@@ -349,7 +358,7 @@ Regras:
 colunas. A carreira encerrada não aparece (fica no Hall), e o último jogador
 montado volta pronto na próxima carreira; o jogo rápido não o apaga.
 
-**Como ficou depois (D45):** o Início é para começar. A carreira em andamento
+**Histórico D45, substituído pelas D74/D79 nos eventos de final:** o Início é para começar. A carreira em andamento
 não aparece nele, e começar outra (Começar carreira, Jogo rápido ou o
 Desafio do dia) não pergunta nada: a de antes, com ao menos uma temporada,
 entra no Hall da Fama como interrompida. Abrir o jogo de novo volta para a
@@ -495,13 +504,15 @@ A força de um clube numa temporada é:
 ```
 efetiva = força_atual + impacto_do_jogador (só no clube do jogador)
 vantagem = limitar(OVR - força_atual, -3, 35)
-impacto = participação × (0,3 × mín(15, vantagem) + 0,06 × máx(0, vantagem - 15))
+suporte = limitar((76 - força_atual) / 16, 0, 1)
+impacto = participação × (0,3 × mín(15, vantagem) + 0,06 × máx(0, vantagem - 15)
+          + suporte × limitar((vantagem - 8) × 0,12, 0, 2))
 participação = fração dos jogos do clube que o jogador disputou
 ```
 
-Um craque 15 pontos acima de um clube que joga tudo vale +4,5 de força.
+Um craque 15 pontos acima de um clube que joga tudo vale +4,5 na parcela base.
 Cada ponto adicional até 35 continua ajudando; participação integral limita
-a soma a +5,7 (D64). Permanência acrescenta investimento de até +0,35 por ano,
+a base a +5,7 (D64); D81 acrescenta até +2 em elencos fracos conforme a fórmula acima. Permanência acrescenta investimento de até +0,35 por ano,
 antes da reversão de 30% à força base.
 
 ### 8.3 Tabela da liga
@@ -810,8 +821,10 @@ O potencial nunca aparece como número. O olheiro dá uma leitura que afina com
 ```
 OVR = limitar(OVR; 1; 99)
 expoente = 0,185 × (min(OVR; 80) - 50) + 0,12 × max(0; OVR - 80)
-base = min(300.000.000 €; 110.000 € × e^expoente × fator_de_idade)
-valor = min(300.000.000 €; arredondar_3_algarismos(base × U(0,94; 1,06)))
+fator_liga = 0,55 + 0,55 × limitar((força_média_da_divisão - 50) / 32; 0; 1)
+teto_etário = piso(400.000.000 € × fator_de_idade / 1,35 / 500.000 €) × 500.000 €
+base = min(teto_etário; 110.000 € × e^expoente × fator_de_idade × fator_liga)
+valor = min(teto_etário; arredondar_3_algarismos(base × U(0,94; 1,06)))
 fator_de_idade: ≤21 1,35; 22-24 1,2; 25-27 1,0; 28-29 0,85; 30 0,7;
                 31 0,55; 32 0,42; 33 0,32; 34+ 0,22
 ```
@@ -819,9 +832,11 @@ fator_de_idade: ≤21 1,35; 22-24 1,2; 25-27 1,0; 28-29 0,85; 30 0,7;
 Formatação por idioma: "€180M", "€12,5M" (pt/es) ou "€12.5M" (en), "€850 mil"
 (pt), "€850K" (en, es).
 
-No Craque m14, a curva desacelera acima de OVR 80. OVR 99 aos 20 anos
-alcança €300M; aos 30, a referência antes da oscilação é €193,6M. O Técnico
-preserva sua referência financeira própria, sem esse ajuste de curva.
+No Craque m21, a curva desacelera acima de OVR 80 e considera a liga atual (D80).
+O teto de até €400M cai com a idade (D72); a liga pode reduzir o valor abaixo dele.
+Sem clube, a referência é neutra. Histórico, tela e condições de evento usam a base;
+a função com oscilação continua disponível para simulações. O Técnico preserva
+sua referência financeira própria, sem o multiplicador de liga.
 
 ---
 
@@ -1463,7 +1478,7 @@ Efeito  = capacidade(+x, agora | período | depois)
 - O resultado aparece num aviso no trilho de notificações por 5 segundos:
   ▲ deu certo, ▼ não deu, ● neutro, com os números exatos.
 
-### 18.3 Catálogo (42 eventos)
+### 18.3 Catálogo (39 eventos, D79)
 
 | # | Evento | Peso | Elegível quando | Opções (resumo) |
 |---|---|---|---|---|
@@ -1482,33 +1497,30 @@ Efeito  = capacidade(+x, agora | período | depois)
 | 13 | Tatuagem enorme | 35 | idade ≤ 30 | fazer (torcida + / infecção, perde meia temporada) ou não |
 | 14 | Problema com o fisco | 25 | valor ≥ €20M | acordo (torcida -) ou brigar (absolvição / suspensão de meia temporada) |
 | 15 | Passaporte do avô | 25 | seleção atual fraca ou ainda sem convocação | trocar de seleção (nacionalidade) ou manter |
-| 16 | Diploma | 30 | idade ≤ 19 | estudar (evolução -10%, risco de lesão -30%) ou só futebol (evolução +10%, risco +30%), pelo período (D49) |
-| 17 | Racha no vestiário | 45 | sempre | tomar partido (arriscado) ou ficar neutro |
-| 18 | Volta por cima | 50 | já jogou num clube onde foi Ídolo ou Lenda | voltar como estrela (titular garantido) ou ficar |
-| 19 | Clube ou seleção | 20 | ano de torneio de seleção, jogador convocado | ir ao torneio (risco de lesão) ou ficar no clube (pula o torneio) |
-| 20 | Dor na véspera da final | 20 | clube disputa título grande | jogar no sacrifício (força o título ou lesão séria) ou poupar (perde o título) |
-| 21 | Lesão muscular | 100 | 20+ jogos | voltar antes (risco de recaída) ou recuperação completa (perde jogos) |
-| 22 | Pênalti decisivo | 20 | clube disputa final | bater (ganha ou perde o título) ou deixar para outro |
-| 23 | Treinador novo | 55 | sempre | impressionar (papel sobe / desce) ou pedir para sair (oferta) |
-| 24 | Clássico decisivo | 60 | clube tem rival histórico na liga | provocar (torcida ++ / --) ou jogo limpo |
-| 25 | Despedida do ídolo | 40 | 5+ temporadas no clube | homenagear (torcida +, pressão +) ou discreto |
-| 26 | Ultimato do empresário | 50 | idade 21-30 | forçar saída (clube maior, torcida -12) ou ficar (torcida +4, empresário rompe; ofertas só de clubes 2 pontos mais fracos na próxima decisão, se houver), D49 |
-| 27 | Joia da base | 45 | idade ≥ 28 | apadrinhar (torcida +, evolução -) ou disputar |
-| 28 | Contrato de chuteira | 35 | OVR ≥ 75 | chamativo (torcida +, pressão +) ou discreto |
-| 29 | Podcast polêmico | 50 | idade ≥ 20 | falar tudo (torcida ±) ou recusar |
-| 30 | Troca de empresário | 40 | idade 20-32 | trocar (nível de mercado +2 na próxima janela / ofertas piores) ou manter |
-| 31 | Estádio lotado | 55 | sempre | jogar para a torcida (produção ×1,3 ou ×0,8) ou concentrado |
-| 32 | Expulsão polêmica | 45 | Pavio curto ou 30+ jogos | recorrer (suspensão menor / maior) ou aceitar |
-| 33 | Vaias | 45 | torcida < 35 | ficar e lutar (-L temporário) ou sair (oferta) |
-| 34 | Bate-boca (técnico) | 16 | sempre | variante do técnico: papel desce |
-| 35 | Bate-boca (diretoria) | 12 | sempre | variante da diretoria: vendido |
-| 36 | Bate-boca (torcida) | 10 | torcida < 50 | variante da torcida: bloqueio do clube |
-| 37 | O rival provoca | 50 | há rival | responder (produção ± e torcida) ou ignorar |
-| 38 | O rival assina com o seu clube rival | 45 | há rival e o clube tem clássico na liga | comprar a briga (torcida + e votos / torcida -) ou ignorar |
-| 39 | Duelo com o rival | 40 | há rival | encarar (bônus de prêmio / tropeço) ou evitar |
-| 40 | Camisa de prestígio | 18 | há número de prestígio livre | escolher 1 de 3 números (pressão +) ou manter |
-| 41 | Homenagem: escolha seu número | 12 | legado Ídolo ou Lenda no clube, uma vez por carreira | escolher 1 de até 5 números clássicos da posição (ou o dos sonhos) |
-| 42 | Lesão grave | 26 | idade 20-34 | cirurgia agressiva (volta rápido, potencial -2 a -4) ou conservadora (perde mais tempo, potencial -1 a -2) |
+| 16 | Racha no vestiário | 45 | sempre | tomar partido (arriscado) ou ficar neutro |
+| 17 | Volta por cima | 50 | já jogou num clube onde foi Ídolo ou Lenda | voltar como estrela (titular garantido) ou ficar |
+| 18 | Clube ou seleção | 20 | ano de torneio de seleção, jogador convocado | ir ao torneio (risco de lesão) ou ficar no clube (pula o torneio) |
+| 19 | Lesão muscular | 100 | 20+ jogos | voltar antes (risco de recaída) ou recuperação completa (perde jogos) |
+| 20 | Treinador novo | 55 | sempre | impressionar (papel sobe / desce) ou pedir para sair (oferta) |
+| 21 | Semana de clássico | 60 | rival histórico, rotação ou superior e 12 jogos no ano anterior | provocar (55%: torcida +12; falha -10) ou respeitar o rival (torcida -2, sem sorteio; D82) |
+| 22 | Despedida do ídolo | 40 | 5+ temporadas no clube | homenagear (torcida +, pressão +) ou discreto |
+| 23 | Ultimato do empresário | 50 | idade 21-30 | forçar saída (clube maior, torcida -12) ou ficar (torcida +4, empresário rompe; ofertas só de clubes 2 pontos mais fracos na próxima decisão, se houver), D49 |
+| 24 | Joia da base | 45 | idade ≥ 28 | apadrinhar (torcida +, evolução -) ou disputar |
+| 25 | Contrato de chuteira | 35 | OVR ≥ 75 | chamativo (torcida +, pressão +) ou discreto |
+| 26 | Podcast polêmico | 50 | idade ≥ 20 | falar tudo (torcida ±) ou recusar |
+| 27 | Troca de empresário | 40 | idade 20-32 | trocar (nível de mercado +2 na próxima janela / ofertas piores) ou manter |
+| 28 | Estádio lotado | 55 | sempre | jogar para a torcida (produção ×1,3 ou ×0,8) ou concentrado |
+| 29 | Expulsão polêmica | 45 | Pavio curto ou 30+ jogos | recorrer (suspensão menor / maior) ou aceitar |
+| 30 | Vaias | 45 | torcida < 35 | ficar e lutar (-L temporário) ou sair (oferta) |
+| 31 | Bate-boca (técnico) | 16 | sempre | variante do técnico: papel desce |
+| 32 | Bate-boca (diretoria) | 12 | sempre | variante da diretoria: vendido |
+| 33 | Bate-boca (torcida) | 10 | torcida < 50 | variante da torcida: bloqueio do clube |
+| 34 | Camisa de prestígio | 18 | há número de prestígio livre | escolher 1 de 3 números (pressão +) ou manter |
+| 35 | Homenagem: escolha seu número | 12 | legado Ídolo ou Lenda no clube, uma vez por carreira | escolher 1 de até 5 números clássicos da posição (ou o dos sonhos) |
+| 36 | Lesão grave | 26 | idade 20-34 | cirurgia agressiva (volta rápido, potencial -2 a -4) ou conservadora (perde mais tempo, potencial -1 a -2) |
+| 37 | Uma nova seleção | 70 | cinco temporadas consecutivas no mesmo país estrangeiro, sem estreia por seleção e nível de convocação no país | aceitar (muda a nacionalidade) ou manter |
+| 38 | O caderno do auxiliar | 45 | 12+ jogos anteriores | ensaiar (força +1 em copas, jogos -6%) ou ganhar ritmo (jogos +4%) |
+| 39 | Uma semana sem holofotes | 40 | 23+ anos e espaço no elenco | descansar (risco -20%, torcida -3) ou imprensa (torcida +3, evolução -5%) |
 
 Textos, chances exatas e números de cada efeito ficam em
 `packages/content` e `packages/engine/events`, escritos para o v2.
@@ -2528,7 +2540,7 @@ recarregar** (remove só o save). Ela avisa que a carreira continua salva.
 | OVR aos 16 entre faixas vizinhas | pelo menos 15% da faixa de cima começa abaixo da mediana da de baixo |
 | Difícil | aos 21 anos, pelo menos 1 ponto abaixo do Normal em todas as faixas; pico entre -3 e +2 do potencial |
 | Os dois ritmos | mesmo jogador: pico médio e OVR médio aos 21 a no máximo 0,6 de diferença por faixa |
-| Bolas de Ouro, carreira de Fenômeno de ataque | média de 1 a 2,25, e de 40% a 60% ganham ao menos uma (D47) (era "mediana de 1 a 2"; D44) |
+| Bolas de Ouro, carreira de Fenômeno de ataque | média de 0,4 a 1,25, e de 20% a 45% ganham ao menos uma (D78, potencial relevante e OVRs altos mais raros) |
 | Recorde de Bolas de Ouro (8) batido | raro: no máximo 2% dos Fenômenos de ataque (era 6% a 10%; D44) |
 | Quatro Bolas de Ouro seguidas | raro: no máximo 2% dos Fenômenos de ataque (era 5% a 8%; D44) |
 | Recorde de Chuteiras de Ouro (6) | raro: no máximo 3% dos centroavantes Fenômenos que jogam na Europa (era 12% a 15%; D44) |
@@ -4351,3 +4363,224 @@ Todas as condições de conquistas têm casos positivos controlados, além de re
 Conferência manual em PC e 360 × 640 nos dois temas, incluindo pilhas, seleção sem ícone de informação e consulta dos 36 clubes da Champions a partir do Avaí. No hipotético, após alterar OVR e posição e jogar mais temporadas, as 18 decisões reais continuaram listadas; ramificar a última retomou o estado anterior correto. A alteração de tamanho do navegador foi desfeita, a aba descartável foi fechada e nenhuma configuração do Windows foi alterada.
 
 **Navegador final D72:** suíte completa repetida após a correção da auditoria, com 107 cenários aprovados e nove pulos previstos por dispositivo, sem falhas. Inclui a jornada completa dos dois modos, acessibilidade, avisos, animações ativadas/desativadas, retorno das pilhas, histórico/hipotético, filtros e consulta da Champions nos dois temas e tamanhos. A lista temporária de tarefas foi conferida e removida ao concluir a revisão.
+
+
+## Revisão D73: decisões de jogos-chave e novos capítulos do Craque (18/10/2026)
+
+Craque `2.0.0-m17`. Exclusivo do Modo Craque; Técnico permanece `1.9.0`.
+Esta revisão substitui as regras históricas dos mesmos assuntos.
+
+- **Ritmo:** até cinco decisões por temporada, contando a escolha habitual de clube/evento/treino. A segunda temporada do ritmo Normal também pode ter seus próprios momentos. O período guarda somente contexto reconstruído por replay; a idade e o histórico avançam ao concluir a temporada, nunca por lance. O save continua contendo setup e escolhas. Saves m16 são incompatíveis com m17.
+- **Jogos-chave:** uma a três decisões nas temporadas elegíveis, limitadas pelo espaço das cinco decisões. Exigem pelo menos 12 jogos na temporada anterior, previsão de pelo menos 12 jogos e papel de rotação/titular/craque, sem suspensão de meia temporada ou mais. Selecionam somente competições realmente disputadas e fases alcançadas na projeção sem a escolha: quartas, semifinal ou final; há também jogo decisivo de liga. Sem oportunidades elegíveis, nenhuma partida é inventada. No máximo um momento por competição e três por ano. Oito situações: pênalti, disputa de pênaltis, cara a cara, falta, último ataque, contra-ataque, saída do goleiro e interceptação. Goleiros defendem pênaltis; cobranças de desempate não contam como gols pessoais. Esquerda e direita têm a mesma chance, sorteio exclusivo `drama`.
+- **Risco e recompensa:** arrojada privilegia atributo de finalização/defesa/reflexo (conforme posição), coletiva usa passe e segura usa físico. Chance base: arrojada 48%, pênalti 71%, desempate 71% (goleiro 32%), coletiva 68%, segura 86%; somar 0,4 ponto percentual por atributo acima de 70 e subtrair 0,6 ponto por ano depois de 31, com limite de 15–95% antes da proteção de recordes. O sucesso arrojado rende torcida +3 e legado +2; coletivo +2/+1; falha -2 de torcida. Seguro preserva apoio e reduz o risco de lesão em 5% por escolha, somente naquele ano, sem bônus individual; a equipe vence com 42%, sujeito à pressão do recorde em finais. O placar parte de 1×1 e termina em 2×1 ou 1×2; desempate mantém 1×1 com 5×4 ou 4×5 nos pênaltis. Liga altera dois pontos a favor do vencedor e tira um do perdedor em relação à projeção de empate. Mata-mata muda somente o torneio exibido, para campeão/vice na final, finalista/eliminado na semi e semifinalista/eliminado nas quartas. Os resultados alimentam memória, classificação e força dos clubes. Gols e assistências entram na linha da competição antes da pressão de recordes e da premiação. O motor de mundo continua condensado, sem pretensão de representar uma tabela completa de partidas minuto a minuto.
+- **Atmosfera:** variáveis `--match-bg-gradient`, `--match-accent`, `--match-glow`; Champions azul noturno, competições CONMEBOL âmbar e ouro, seleções com cores do uniforme e ouro no Mundial/prata no continental, liga com identidade do clube. Card de leitura escuro padronizado nos dois temas, placar, adversários, competição, fase e minuto. Escolhas novas resolvidas com um clique; teclado e anúncio do resultado preservados. Animações desligadas eliminam a transição. Resultado permanece até a próxima escolha e é consultável no histórico/resumo.
+- **Promessa:** primeira oportunidade a partir dos 18 anos, garantida para quem continuar até esse ponto. Depois, chance anual 4%, intervalo mínimo cinco anos, máximo três na carreira. Humilde exige `max(5; arredondar(65% dos jogos anteriores))`; recompensa torcida +2 e capacidade +0,1, sem punição. Protagonista exige `max(10; teto(1,2 × gols+assistências anteriores))` no ataque ou `max(8; teto(1,2 × jogos sem sofrer anteriores))` em posições defensivas/GOL: torcida +5, legado +3, capacidade +0,3; falha -3 de torcida. Lenda exige artilharia de uma competição, título continental principal ou Bola de Ouro: torcida +9, legado +8, capacidade +0,5; falha -7 de torcida. Os bônus de capacidade não equivalem necessariamente a um ponto inteiro de OVR, que continua derivado dos atributos. Selos e números exatos no lance e no resumo. A torcida representa a reação pública; não foi criada uma segunda barra de moral.
+- **Nêmesis:** um jogador real persistente quando OVR ≥75 e 12 jogos na temporada anterior. Catálogo compacto derivado da elite e dos clubes da base local, sem carregar o elenco inteiro do Técnico. MC/VOL compartilham grupo, assim como PD/PE/ME/MD; demais posições conservam seus grupos. Candidatos ativos, clube diferente e OVR projetado até 12 pontos de distância; sorteio entre os cinco mais próximos. Nunca substitui o nome escolhido nem mantém aposentados concorrendo. Se o jogador chegar ao clube do rival, este se transfere para outro clube do país na projeção fictícia. O nível e a produção seguem a mesma projeção usada pela votação anual; não são estatísticas reais futuras. Comparativo: gols + 0,5×assistências, ou jogos sem sofrer + 0,5×assistências para defesa/GOL. Superar o rival no comparativo anual rende torcida +2 e legado +2; empate não premia. Um encontro real contra seu clube/seleção destaca o nome no card.
+- **Reinvenção:** escolha única ao entrar na temporada dos 30 anos, com seis caminhos permanentes. Maestro: coletiva +8 pontos percentuais e sem penalidade etária, jogos -5%. Capitão: mata-mata +4 pontos percentuais, força +0,7 nas copas/continentais e queda anual básica de torcida limitada a 3, sem bônus técnico. Letal: ações individuais de linha +10 pontos percentuais, jogos -14%. Para GOL, o caminho se chama Especialista em pênaltis e dá +10 pontos percentuais nas defesas de desempate, com o mesmo custo de jogos. Guardião: defesa/GOL +7 pontos percentuais e chance de lesão ×0,7, produção ×0,92. Motor incansável: arrancadas +8 pontos percentuais, jogos ×1,06, lesões ×1,3. Mentor: legado +2 por ano com 12 jogos, crescimento ×0,8 e produção ×0,96. Os caminhos não removem o declínio natural nem dão bônus sem concessão.
+- **Eventos adicionais:** treino aberto no bairro (torcida +4/crescimento ×0,94 ou torcida -2/crescimento ×1,04); caderno do auxiliar (força +1 em copas e jogos ×0,94 ou jogos ×1,04); semana sem holofotes (torcida -3/lesões ×0,8 ou torcida +3/crescimento ×0,95). Usam o catálogo e a agenda existentes, uma vez por carreira, nos três idiomas.
+- **Gestão de Carga:** retirado somente o chip de aumento de risco no resultado. Prévia da decisão permanece informativa. `playAll` mantém jogos ×1,08, produção ×1,08 e chance de lesão ×1,6 durante o período da escolha, sem acumular em anos posteriores. A lesão efetiva continua aparecendo com tipo e jogos perdidos. Risco +60% é multiplicador relativo, não chance absoluta de 60%; a quantidade perdida continua entre 5% e 22% dos jogos planejados.
+
+Referências de direção visual: [identidade UEFA 2024](https://www.uefa.com/news-media/news/0290-1badd36e73b2-c3e5755b7fae-1000--uefa-unveils-new-uefa-champions-league-brand-identity/), [azul, estrelas e acentos UEFA](https://www.uefa.com/news-media/news/0246-0e98e0d8f237-fe23dece0335-1000--uefa-champions-league-unveils-refreshed-brand-identity/) e [manual CONMEBOL](https://www.conmebol.com/wp-content/uploads/documents/manual-de-marca-conmebol-libertadores-espanol.pdf). Referência de elite por posição: [FIFPRO World 11 de 2025](https://www.fifpro.org/en/articles/2025/11/who-is-in-the-2025-fifpro-men-s-world-11); nomes, clubes e projeções adicionais reaproveitam os dados locais documentados. As cores da seleção vêm dos uniformes do próprio catálogo.
+
+**Calibragem D73 do ritmo:** a meta histórica de 9–15 decisões no ritmo Normal passa a medir as decisões de planejamento (clube, evento e treino), preservando a faixa. O relatório também exibe todas as escolhas, incluindo jogos-chave, promessa e veterano, com média total de até 65. A meta conjunta mantém 51 verificações; os limites individuais de cinco decisões/ano e três partidas/ano são verificados no lote dedicado `pnpm balance:craque:momentos`. A mudança de medição é necessária porque o pedido acrescenta decisões dentro da temporada, sem acrescentar janelas ou treinos burocráticos.
+
+**Amostra do Desafio D73:** os bônus e os resultados das novas decisões exigem recalibrar os alvos de missão, preservando o percentil 65 e os limites de 15–55%, inclusive os alvos fixos de uma lenda/dois ídolos. A taxa estatística de quebra de `noBigFive` passa a considerar somente origens fora dessas ligas: a base obrigatória do próprio país já impõe a quebra às demais, que não medem uma escolha evitável. Os limites de aprovação continuam em 10–75%; não se mudou a regra do édito no jogo.
+
+**Mata-mata D73:** avançar uma fase reposiciona os dois participantes. Quem perde as quartas ou a semifinal não pode reaparecer na final nem como campeão na projeção restante. A regressão cobre inclusive o favorito que antes estava em primeiro no torneio.
+
+**Amostra de término D73:** o `verify` usa as mesmas 300 carreiras por grupo do relatório completo, em vez de 100. Os limites permanecem: menos da metade chega aos 40, pelo menos metade termina entre 33 e 38, até 5% termina antes dos 30. O lote completo mediu, em Intensa/Normal, 38%/48,3% aos 40 e 52%/51,3% entre 33 e 38. A amostra reduzida havia medido 38%/51% e 47%/49%; ampliar a amostra preserva as metas e evita ajustar o mercado por essa oscilação. Nenhuma penalidade etária foi alterada.
+
+**Estatísticas D73:** partidas interativas com gol sofrido reduzem o máximo possível de jogos sem sofrer gol naquela competição; os gols sofridos totais também respeitam o placar conhecido. A regressão impede, por exemplo, quatro jogos sem sofrer em quatro partidas quando uma delas terminou 2×1. Disputas de pênaltis continuam fora dos gols pessoais.
+
+**Comparativo anual D73:** os 12 jogos são requisito para o surgimento do nêmesis, não para vencer um duelo anual. Toda pontuação superior à do rival ativo rende torcida +2 e legado +2, inclusive numa temporada curta. O teste cobre explicitamente esse caso. O texto do Capitão esclarece que o limite de queda de torcida se aplica à reação anual básica; cobranças de promessa e de lances continuam separadas.
+
+**Paleta das seleções D73:** a confederação de uma seleção não ativa a atmosfera de clubes. Copa América e Euro usam o uniforme nacional com prata; Mundial usa o mesmo uniforme com ouro. Azul estrelado fica exclusivo dos clubes europeus. Há regressão unitária para UEFA e CONMEBOL e conferência da distinção nas quatro atmosferas da jornada.
+
+**Validação D73 (18/10/2026).** Verificação geral `pnpm verify` aprovada. As correções finais foram reconferidas com tipos, lint, testes completos e os cenários afetados: 975 testes unitários aprovados (incluindo 165 da interface), 27 cenários Windows, build padrão e suíte completa do navegador com 123 aprovados e nove pulos previstos por dispositivo. A conferência visual cobriu PC e 360 × 640 nos dois temas, seis escolhas inteiras, resultado imediato, superfícies de leitura e quatro atmosferas; axe e teclado passaram. Os novos testes distinguem explicitamente seleção de clube dentro de UEFA/CONMEBOL.
+
+O lote de 6.000 carreiras por amostra passou nas 51 metas do Craque, sem alterar os limites de aprovação. A medição isolada do mundo foi de 1,31 ms por temporada, abaixo dos 3 ms exigidos; a execução concorrente com Chrome e recordes havia medido 4,58 ms. O Técnico manteve motor 1.9.0 e passou nas 23 metas em 384 temporadas. O Desafio foi recalibrado com 3.000 carreiras, preservando o percentil 65. A auditoria adicional de 144 carreiras concluiu 2.929 temporadas, 3.053 jogos-chave, 219 promessas (57 cumpridas), 102 carreiras com nêmesis e 272 anos superando o rival. Todos os seis caminhos de veterano apareceram; teto anual, estatísticas, resultados e amostras de replay passaram.
+
+Os relatórios versionados registram também a limitação da amostra de recordes: nas 2.250 carreiras, 18 das 21 referências foram observadas. Gols pela seleção chegaram a 140/146, Chuteiras de Ouro a 5/6 e Premier League a 12/13; nenhuma dessas três marcas foi forçada para fabricar uma ocorrência. O lote comprova os resultados observados e não garante a ocorrência de todo evento raro. Nenhuma publicação, commit ou envio ao GitHub foi realizado.
+
+
+## Revisão D74: ritmo dentro da temporada e leitura dos resultados (19/10/2026)
+
+Craque `2.0.0-m18`; Técnico continua `1.9.0`. Esta revisão prevalece sobre D73 nos pontos abaixo; replays m17 não retomam no motor m18.
+
+- Até cinco escolhas anuais continuam contando as decisões existentes. O plano de momentos inclui progresso anual, transição lateral e resultado visual na própria decisão, antes da seguinte. O resultado permanece por três segundos, com botão Continuar para antecipar o avanço. As porcentagens dos jogos não aparecem. Seleção fica por último, depois de todos os momentos de clube.
+- Chances usam OVR e atributo do lance. Bases D74: 48% para ação arrojada, 68% para coletiva, 86% para preservar a posição, 71% no pênalti/desempate de um jogador de linha e 32% para defender pênalti. Soma: base + 0,2 ponto percentual por OVR acima de 70 + 0,3 ponto por atributo acima de 70, além dos modificadores de idade e reinvenção já documentados; limites de 15–95%, antes da pressão de recordes em finais. Os 21 contextos de partida distinguem finalização, passe, defesa de goleiro, desarme e proteção. Um desarme não vira gol pessoal; passe decisivo dá assistência.
+- Promessa somente para rotação, titular ou craque no clube atual. Reservas, sem espaço e terceiro goleiro também ficam fora dos eventos de exposição pública (fama, torcida, liderança, homenagem e finais) e da semana de imprensa. Primeira promessa adiada até existir espaço no time. As três metas usam gols+assistências, ou jogos sem sofrer para defesa/GOL: primeira `max(10; piso(60% da produção anterior / 10) × 10)`, depois +10 e +20. São sempre múltiplos de dez. Recompensas e punições de cada nível conservam os valores D73; o resumo não exibe bônus zero.
+- Reinvenção só aparece a partir dos 30 e depois que o OVR derivado já diminui ao avançar um ano de idade mantendo o mesmo jogador. Não é um evento automático de aniversário. Os seis caminhos conservam os efeitos distintos de D73.
+- Não há janela com uma única opção de ficar: o vínculo continua automaticamente. Uma proposta externa deve aparecer em até três temporadas, inclusive no segundo ano do ritmo Normal; a oportunidade tem prioridade sobre evento/treino. A vaga de um acontecimento agendado fica pendente até haver uma decisão livre e um evento elegível, sem ser apagada pela oferta. Os clubes bloqueados e o teto de restrição do empresário continuam respeitados. Aposentadoria por ausência de mercado continua possível. Sem interessados, a margem de renovação do clube é nível de mercado +3 antes dos 38 e +2 a partir dos 38, além do bônus de lealdade de até +3.
+- O foco aplica +2 imediatamente, antes dos lances do mesmo ano, sem reaplicar na simulação. O piso antes+2 é protegido durante o período; evolução natural positiva pode somar. A garantia de foco pode ultrapassar o antigo bônus acumulado de +8 para compensar declínio; o atributo continua limitado a 99. Só se oferece um foco cujo atributo esteja no máximo em 97, para permitir os dois pontos prometidos. Eventos comuns conservam seu limite de treino e não apagam treino já acima dele.
+- Removido o evento Dor antes da final, incluindo suas opções de sacrifício/poupar e textos. Catálogo: 41 eventos.
+- O resumo numérico perde a lista de detalhes por ano. O jornal passa a ter duas folhas por temporada: capa existente e uma folha de bastidores com momentos importantes, promessa, rival e caminho escolhido. O auge empatado usa gols para atacantes, assistências para meias e jogos sem sofrer para defesa/GOL; persistindo empate, gols+assistências.
+- Placar vetorial de pontos luminosos inspirado na referência fornecida, com texto acessível equivalente. Resultado usa o bloco HTML/CSS especificado na D76; movimento reduzido preserva a leitura estática. Troféus e legendas respeitam as células; pilhas grandes têm expansão gradual no fluxo. O laboratório acompanha as peças novas.
+
+Referências de implementação: [movimento reduzido, MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/%40media/prefers-reduced-motion) e [transições de saída, Motion](https://motion.dev/docs/react-animate-presence).
+
+**Políticas de partida D74:** jogadores automáticos não consultam as probabilidades ocultas. Ambicioso assume a jogada; fiel procura o coletivo e, a partir dos 33, preserva o físico; equilibrado divide as escolhas entre assumir e passar (50% cada). Nas cobranças com duas direções, sorteia o lado. A política fiel conserva o clube quando tem ao menos 12 jogos e papel de rotação, titular ou craque; a existência de uma proposta obrigatória não obriga essa política a trocar. Esta mudança corrige a vantagem de informação dos lotes, sem alterar as chances de uma escolha humana.
+
+**Amostra do Desafio D74:** a calibragem e as tentativas passam a incluir os três estilos não aleatórios, equilibrado, ambicioso e fiel, com o mesmo peso. Cada posição é cruzada com os três estilos, sem prender uma posição a uma política; as origens continuam em rodízio. A oferta obrigatória tornou a migração mais frequente, e uma amostra só de dois estilos deixava de representar quem prefere conservar o clube. Nenhuma política consulta missão ou édito. O percentil 65, as faixas de 15–55% das missões e 10–75% de quebra dos éditos permanecem iguais.
+
+**Empréstimos no estilo fiel D74:** ficar enquanto joga não significa recusar minutos quando perdeu espaço. A política automática fiel também considera empréstimos se a última temporada terminou como reserva, sem espaço ou terceiro goleiro; o vínculo com o dono permanece. Com participação regular, continua no clube. Essa correção elimina uma recusa automática incoerente na amostra, preservando as regras e os limites de aprovação do desafio.
+
+**Validação D74 (19/10/2026).** Verificação geral `pnpm verify` aprovada. Após os últimos ajustes nas políticas e a recalibragem, tipos, lint, os 987 testes unitários, os 27 cenários Windows e o build foram reconferidos e aprovados. O lote completo de evolução usou 6.000 carreiras por amostra e o conjunto passou nas 51 metas do Craque, sem relaxar os limites. O mundo foi medido em 0,98 ms por temporada, abaixo dos 3 ms exigidos. Técnico 1.9.0 preservado, com as 23 metas aprovadas em 16 carreiras e 384 temporadas.
+
+O Desafio foi recalibrado com 3.000 carreiras, 600 por faixa, cruzando os três estilos com posições e origens. A conferência separada aprovou a cobertura das 37 missões, as 162 células com amostra suficiente e os dez éditos, com a tolerância estatística já existente. A auditoria adicional de 144 carreiras concluiu 2.856 temporadas, 3.026 jogos-chave, 202 promessas (44 cumpridas), 99 carreiras com nêmesis e 286 anos vencendo o duelo. Os seis caminhos de veterano apareceram. Ofertas em até três anos, ausência de janela sem alternativa, treino imediato, limites anuais, seleção por último, estatísticas e replay passaram.
+
+Os recordes foram conferidos em 3.150 carreiras de Fenômenos: 150 por posição, sete posições e três políticas. Vinte das 21 referências apareceram; gols pela seleção chegaram a 138 contra a referência 146, sem ocorrência neste lote. Cada linha do relatório considera apenas as posições elegíveis para aquela marca. Nenhum resultado raro foi imposto para fabricar uma ocorrência. Os relatórios versionados registram a amostra e os limites da evidência. Alterações mantidas localmente, sem publicação, commit ou envio ao GitHub.
+
+**Navegador final D74:** suíte completa repetida no build final, com 141 cenários aprovados e nove pulos previstos por dispositivo, sem falhas. Inclui PC e 360 × 640 nos dois temas, teclado e acessibilidade, avanço automático na mesma temporada, transições com animações ativadas/desativadas, lances por posição, placar LED, taça contida, duas folhas do jornal, legendas completas e pilha com pelo menos nove troféus, abrindo gradualmente e terminando sem sobreposição. Conferência visual das telas e resultados realizada com as imagens da execução final.
+
+## Revisão D76: resultado de decisão integrado à interface (19/10/2026)
+
+Como ficou: esta revisão substitui integralmente a apresentação de resultado D74/D75. As cenas procedurais, o motor Canvas, seus componentes, arquivos de cena, texturas, estilos, traduções, replay visual, testes e ateliê foram removidos. Placar LED e assets originais de troféus continuam sendo usados. Craque permanece `2.0.0-m18`, Técnico `1.9.0`; sorteios, efeitos e replays de carreira não mudaram.
+
+- A escolha confirmada permanece marcada e bloqueada acima do resultado, com seu nome e um check. As outras opções saem para manter a leitura inteira em 360 × 640, sem rolar o laço ou permitir uma segunda escolha.
+- Resultado em HTML/CSS usando as superfícies, tipografia, bordas e ícones do jogo. Entrada por opacidade e deslocamento vertical de 6 px em 200 ms. Sucesso usa borda esmeralda e brilho interno discreto; título usa ouro. Falha usa vermelho/âmbar e um deslocamento horizontal de apenas 2 px em 150 ms, exclusivamente no bloco, após a entrada.
+- Selos distinguem gol, cobrança convertida, passe, defesa, antecipação, proteção de espaço e falha. O texto continua descrevendo o resultado real do motor; acertar sua ação não significa necessariamente vencer a partida. Nenhuma chance numérica é exposta.
+- O placar do cabeçalho mostra o resultado definitivo. Quando os gols mudam, recebe uma microtransição de opacidade/escala de 200 ms. Pênaltis permanecem separados do placar e dos gols pessoais, explicitados no texto final.
+- Final vencida mostra somente `TrophyArt`, o mesmo asset usado no restante do jogo, com escala de 94% a 100% e opacidade em 200 ms. Não existe desenho procedural de taça, campo, jogador ou bola no resultado.
+- O resultado fica na mesma decisão/ano por 3.400 ms visíveis e avança no fluxo já existente; `Continuar` permite seguir antes. Ocultar a aba pausa a contagem. Há foco acessível no título do resultado e controles por teclado. As micro-interações são desligadas pela redução de movimento dos Ajustes ou do sistema.
+- Textos em PT/EN/ES. O laboratório usa os mesmos componentes, com sucesso/falha, posições e finais para conferir escolha, selos, placar e asset de taça. O servidor de testes exclusivo do antigo ateliê foi retirado; a jornada é validada no build de produção.
+
+**Validação D76 (19/10/2026).** `pnpm verify` aprovado: tipos, lint, 988 testes unitários (167 da interface), 27 cenários Windows, 51 metas do Craque, 23 metas do Técnico e build. Tipos da interface e lint reconferidos após o ajuste final do laboratório. `pnpm e2e` completo aprovado: 157 cenários passaram e nove foram ignorados conforme as condições previstas por dispositivo, sem falhas. Inclui `animacoes.spec.ts`, `aparencia.spec.ts`, `acessibilidade.spec.ts` e `jornada.spec.ts`.
+
+Os 16 cenários D76 cobrem escolha marcada e bloqueada, resultado abaixo da escolha, gol/título, passe, falha, placar definitivo, tempos das micro-interações, asset original de taça contido, teclado, contraste e movimento reduzido pelo jogo/sistema. Conferência visual em PC e 360 × 640 nos dois temas. As regressões D73/D74 continuam verificando posições, atmosferas, continuidade e avanço automático na mesma temporada. Auditoria de fontes e build sem referências ao motor visual removido. Documentação e laboratório atualizados; temporários removidos.
+
+## Revisão D77: ritmo das decisões e jornal aberto (19/10/2026)
+
+Como ficou: esta revisão substitui os tempos, o enquadramento e a navegação de jornal descritos nas D74/D76. Craque permanece `2.0.0-m18` e Técnico `1.9.0`; não há novo sorteio, efeito ou alteração de replay.
+
+- A área de decisão de partida tem respiro interno de 16 px no PC e 12 px no celular compacto, com separação entre cabeçalho, texto e opções. Em janelas baixas, a fase aparece na faixa do minuto, evitando repeti-la em uma linha adicional do cabeçalho. As opções continuam inteiras.
+- O resultado entra em 420 ms por opacidade, deslocamento de 12 px e escala de 98,5% a 100%. Selo, título e descrição entram em sequência com atrasos de 80, 140 e 210 ms, cada um em 360 ms. A falha mantém o tremor discreto de 150 ms depois da entrada. Sem Canvas ou ilustrações procedurais de lance.
+- Após 2.700 ms visíveis, o card atual é puxado para a esquerda e o seguinte entra pela direita, percorrendo uma largura inteira em 560 ms com aceleração/desaceleração suave. As duas superfícies se movem juntas; a que sai fica inerte e oculta para leitores de tela. O título novo recebe o foco que estava no card anterior, preservando foco no histórico ou nos menus. O aviso do canto aparece imediatamente ao resolver a escolha, com o mesmo resultado, e mantém a identidade durante o avanço para não reaparecer atrasado. No celular ele flutua sobre o cabeçalho apenas durante a revelação, sem empurrar o card; no desktop continua na coluna da direita.
+- O placar mantém o LED existente. Apenas os dígitos alterados rolam: o número anterior sobe em 480 ms e o novo entra de baixo em 620 ms. Os dígitos que não mudaram ficam parados. A preferência Animações dos Ajustes governa também o resultado e o LED, em acordo com a D69: desligar mantém tudo estático; ligar anima mesmo se o sistema pedir redução de movimento. Isso substitui a exceção de sistema da D76, para não desligar a apresentação sem o jogador escolher. O botão Continuar usa o componente de botão secundário do Design System, com tipografia e ícone originais.
+- O jornal mostra duas páginas simultâneas da mesma temporada: capa à esquerda e decisões à direita. Cada seta ou arrasto passa uma temporada inteira. A folha gira pela dobra central, com frente e verso; a fila de viradas continua funcionando. Quando não houve partida, promessa ou escolha nova de reinvenção, a segunda página é papel em branco, sem texto, reservado à imagem futura. O caminho de veterano mantido nos anos seguintes e um comparativo anual de rival não criam uma página extra sozinhos.
+- As páginas permanecem lado a lado também no celular, com tipografia e colunas adaptadas à largura. A dobra, os escudos e os conteúdos ficam contidos nas folhas. Controles, teclado, PT/EN/ES e a preferência de movimento reduzido do jogo são preservados. Laboratório usa os componentes atualizados, com altura própria para a prévia do fluxo.
+
+**Validação D77 (19/10/2026).** `pnpm verify` aprovado: tipos, lint, 988 testes unitários, 27 cenários Windows, 51 metas do Craque, 23 metas do Técnico e build. Após os ajustes de foco e encaixe do escudo, os tipos da interface, lint e os 167 testes da interface foram reconferidos e aprovados. A suíte completa final `pnpm e2e` passou com 163 cenários aprovados e nove pulos previstos por dispositivo, sem falhas; inclui animações, aparência, acessibilidade, Desafio e jornadas completas dos dois jogos.
+
+Mais 24 cenários D74/D77 passaram após o acabamento final das superfícies da transição, mantendo o relatório completo. Cobrem PC e 360 × 640, dois temas, respiro e três opções inteiras, resultado e dígitos em movimento medidos quadro a quadro, arrasto automático entre 2 e 3 segundos, aviso imediato sem deslocar o cabeçalho, preferência do jogo prevalecendo sobre o sistema, duas páginas do mesmo ano, folha vazia, dobra com frente/verso, teclado, contraste e escudo contido. Revisão visual das imagens finais realizada.
+
+A revisão identificou e corrigiu cortes nas telas baixas e o foco retido no card anterior. Os testes agora consultam o card ativo durante a saída do anterior, sem enfraquecer as verificações de navegação ou acessibilidade. Nenhuma mudança nova de regra ou sorteio. Temporários removidos; documentação e laboratório atualizados.
+
+
+## Como ficou, D78 (20/10/2026): progressão e períodos rápidos
+
+Craque m19 substitui m18; Técnico permanece 1.9.0. Aplicam-se as regras da revisão D78 do README.
+
+**Seções 10 e 40, evolução.** Reconhecimentos contam até três por ano, mas somam capacidade fracionária: `0,55 × reconhecimentos × clamp((P + 2 − nível total) / 5, 0, 1)`, após evolução natural, declínio, treino/garantia e restituição de capacidade temporária. Retorno máximo de 1,65 de capacidade, menor nos cinco pontos finais até P + 2, zero acima disso. Não há mais garantia de +1 OVR por título nem +3 OVR anuais por reconhecimentos. OVR continua função dos atributos; o foco ainda garante +2 no atributo escolhido. A meta de Bola de Ouro do Fenômeno de ataque passa a média 0,4–1,25 e participação 20–45%, pois as referências anteriores pressupunham muitos anos próximos de 99. As demais 50 metas não mudam. Medir distribuição de picos por faixa e ritmo no laço real, além do simulador de evolução, e conservar a raridade/possibilidade dos recordes.
+
+**Seções 14 e 22, calendário e revelação.** O ritmo Normal tem até uma partida por temporada e duas no período. Intensa conserva até três por ano e cinco decisões totais. Ordenação: outros jogos, finais domésticas, finais continentais, seleções. Sorteio escolhe entre 48 cenas elegíveis por posição/fase, preferindo não reutilizar as dos dois anos anteriores nem da fila atual. As 27 novas cenas cobrem reação e saída de goleiro, cobertura e bola aérea, apoio e circulação, cruzamento e finalização; ações de cobertura continuam defensivas e não rendem assistência. Texto de cada opção corresponde ao lance; não mostrar chance numérica. Resultado permanece 2.100 ms visíveis antes do deslocamento de 560 ms, com pausa fora da aba e avanço manual disponível.
+
+**Promessa e ritmo rápido.** Prazo inclusivo `year` a `throughYear`, número de temporadas restantes do período. Só oferecer a promessa rápida no início dele. Base = `max(10 × temporadas, floor(produção anterior × temporadas × 0,6 / 10) × 10)`; níveis seguintes somam 10 e 20. Métrica é a soma dos gols e assistências de clube, ou jogos sem sofrer para defensores/goleiros. O relatório surge uma única vez no último ano, somando registros anteriores do intervalo e temporada atual. Prêmios/torcida são aplicados somente nessa liquidação. A simulação só completa um ano após terminar sua fila: antes da partida do segundo, o primeiro está integralmente disponível; o segundo permanece ausente do histórico. Se só houver partida no primeiro, revela ambos após ela; se só houver no segundo, o primeiro vem antes; sem partidas, ambos direto. A apresentação retém o card anterior somente durante a leitura e libera a faixa do resultado no celular ao avançar.
+
+**Seções 24 e 28, reinvenção e hipotético.** Reinvenção com ícones e benefício em chip mais custo curto, mantendo mecânicas e descrição acessível. Hipotético com título em fonte de leitura, primeira escolha principal de cada ano, excluindo match/promise/veteran. Conservar os índices reais na lista e todas as escolhas nos checkpoints para ramificar sem deslocamentos.
+
+**Conquistas de entrada D78.** O teste de frequência passa a cruzar dez posições, quatro estilos e doze origens, com 480 carreiras e dificuldade distribuída entre essas combinações. Antes, o rodízio simultâneo prendia o estilo equilibrado ao Difícil e associava origens a estilos. A primeira taça continua incluindo ligas menores e divisões de acesso: uma carreira de OVR modesto também pode ser campeã. A referência dessa conquista de entrada passa de menos de 85% para menos de 90% ao longo da carreira inteira; as demais conservam menos de 75%. Um teste separado exige uma carreira campeã com pico abaixo de 80. Isso preserva recompensa em clubes menores sem inflar a capacidade nem tornar obrigatória uma carreira de elite. Não altera elegibilidade, quantidade de títulos, sorteios ou as 51 metas do motor.
+
+**Acabamento do fluxo D78.** No celular, o cabeçalho das partidas fica compacto quando há um resumo de temporada ou de acontecimento acima, preservando as três opções e o botão do resultado. O resumo anterior permanece durante a revelação, sem antecipar o ano seguinte nem deslocar o placar. A reinvenção usa a área da decisão para os seis cards; o aviso da escolha anterior flutua no cabeçalho e seu resultado continua disponível no histórico. A região de status também anuncia ganhos e consequências de escolhas que ainda não fecharam uma temporada. Descrições antigas da reinvenção foram removidas das traduções; os seis pares de benefício/custo são conferidos nos três idiomas, incluindo a especialização do goleiro em disputas de pênaltis.
+
+
+**Validação D78 (20/10/2026).** `pnpm verify` integral aprovado: tipos, lint, testes unitários, 27 cenários Windows, 51 metas do Craque, 23 do Técnico e build. Após o acabamento final, tipos de todo o workspace, lint e os **170 testes da interface** foram reconferidos e aprovados; o conjunto atual soma 998 testes unitários. `pnpm e2e` completo no build final: **187 cenários aprovados e nove pulos previstos por dispositivo**, sem falhas, 196 no total. Inclui PC e 360 × 640 nos dois temas, teclado, contraste e leitor de tela, animações ligadas/desligadas, avanços, resumo hipotético e jogos dos dois modos. Os testes de uso offline também passaram no celular e no PC.
+
+A revisão das imagens encontrou e corrigiu cortes no goleiro veterano e no resultado de final com texto mais longo. As verificações agora medem se todos os cards e o botão do resultado cabem na janela, além da ausência de rolagem da página. Conferem também que a faixa do primeiro ano permanece durante a resposta da segunda partida e que o cabeçalho não muda de posição. O teste offline fecha o aviso pelo botão real antes de usar o menu, sem forçar clique através dele.
+
+**Balanceamento D78.** Lote completo de 6.000 carreiras por amostra aprovado nas 51 metas; verificação geral mediu o mundo em 1,16 ms por temporada, abaixo de 3 ms. Desafio recalibrado com 3.000 carreiras, 600 por faixa, mantendo percentil 65 e critérios de cobertura. Auditoria do laço real: 144 carreiras, 2.846 temporadas, 2.424 jogos-chave, 173 promessas (42 cumpridas), 91 carreiras com nêmesis e os seis caminhos de veterano. Limites, ordem, prazo agregado e replay passaram.
+
+A distribuição de OVR foi medida em 1.200 carreiras, com comparação nas mesmas 400 sementes do m18: nenhuma Estrela chegou a 99 no lote ampliado; Fenômenos chegaram a 99 em 8,3% no anual e 9,2% no rápido. São frequências amostrais, sem bloqueio artificial por faixa. Relatório e procedimento em `tools/balance/relatorios/progressao-real.md`.
+
+Os recordes foram conferidos em 3.150 carreiras de Fenômenos: **19 das 21 referências observadas**. Gols pela seleção chegaram a 139 para a referência 146; Bolas de Ouro chegaram a sete para a referência oito, sem ocorrência dessas duas marcas neste lote. Ausência amostral não demonstra impossibilidade. Nenhum resultado raro foi imposto para preencher o relatório. Os relatórios versionados registram a amostra e seus limites. Temporários removidos; alterações locais, sem publicação, commit ou envio ao GitHub.
+
+
+## Revisão D79: escolhas de campo e leitura sem ruído (20/10/2026)
+
+Craque `2.0.0-m20`; Técnico permanece `1.9.0`. Substitui as regras anteriores destes assuntos.
+
+- Nêmesis pessoal removida por completo: catálogo, estado, encontros forçados, comparativo anual, bônus de torcida/legado e componentes. Clássicos e rivalidade entre clubes continuam sendo regras diferentes. O acontecimento “Um treino aberto no bairro” saiu do catálogo e dos três idiomas. O catálogo passa de 41 para 39 acontecimentos, pois o pênalti também passou para o calendário de partidas. Pé preferido saiu dos formulários de identidade/Desafio; o campo interno dos replays é preservado, sem efeito esportivo.
+- Há **50 cenas** de partida. As três opções comuns exibem apenas “Mais protagonismo.”, “Bônus individual menor.” e “Sem bônus individual.”. Todas as alternativas conservadoras têm nome próprio ligado ao lance. “Chute com desvio” oferece “Segurar a bola”. Novo escanteio: gol olímpico, cruzar na área ou cobrança curta. O gol olímpico tem teto de **8%**, inclusive com bônus de veterano.
+- Atributos da ação têm 95% do peso e OVR, 5%: qualidade = limitar((0,95 × nota ponderada dos atributos + 0,05 × OVR) / 99; 0; 1). Chance = limitar(teto × qualidade + bônus de veterano − perda etária; piso; teto), antes da pressão histórica de títulos, preservada nas finais. Piso 5%, inclusive para o olímpico. Perda etária = 0,6 ponto percentual por ano depois dos 31; Maestro fica isento no coletivo.
+- Teto individual comum: **70% fixos**. Coletivo: inteiro sorteado de **70% a 80%**. Conservadora: de **70% a 90%**. Sorteio independente por semente/ano/competição/cena/ação, estável no replay e ao reler o card. São limites máximos: notas fracas não recebem essas chances prontas. Nenhum bônus ultrapassa o teto; as probabilidades continuam ocultas na interface. Acertar a ação conservadora preserva a participação, sem contribuição individual; a equipe ainda resolve o resultado com a chance anterior de 42%, sujeita à pressão de título na final.
+- Pesos dos atributos: passe simples 100% PAS; tabela/giro/apoio curto 65% PAS e 35% DRI; passagem/cutback 75% PAS e 25% RIT. Arrancada seguida de chute 40% RIT e 60% FIN; corte/domínio seguido de chute 55% FIN e 45% DRI; cabeceio/voleio/segundo poste 70% FIN e 30% FIS; demais chutes 100% FIN. Interceptação/bola aérea 70% DEF e 30% FIS; recuperação em corrida 45% RIT, 45% DEF e 10% FIS. Conservadora de linha: devolução/circulação/cobrança curta 100% PAS; proteção/domínio 60% DRI e 40% FIS; cobertura e sobra 30% PAS, 35% DEF e 35% FIS. Olímpico 75% PAS e 25% FIN.
+- Goleiro: espera conservadora 50% POS, 20% REF, 15% ELA e 15% MAN, ou 60% REP e 40% POS ao esperar uma saída com a bola nos pés; saída com passe 80% REP e 20% POS; pênalti/desvio 60% REF, 15% ELA, 15% MAN e 10% VEL; saída fora da área 45% VEL, 20% REF, 20% POS e 15% MAN; demais intervenções 35% ELA, 35% MAN, 15% REF e 15% POS. Duas direções de cobrança têm o mesmo teto: cobrador 70%, goleiro 35%. Especialista em pênaltis soma **10 pontos percentuais** à chance de defesa já limitada entre 5% e 35%, com teto 45%, tanto no jogo quanto no desempate. A pressão de finais é aplicada depois e igualmente aos dois lados.
+- “O pênalti decisivo” deixou de ser acontecimento e virou lance de mata-mata realmente alcançado, com o placar e o resultado dos jogos. Mantém assumir ou deixar com o companheiro: assumir usa finalização e teto 70%, torcida +8 ao converter ou -6 ao perder; deixar tem chance 50% de vitória e torcida neutra. Não fabrica uma final de outra competição. O novo lance participa dos mesmos limites e ordenação anual/rápida.
+- Reinvenção não é obrigatória: só aparece a partir dos **33 anos**, com perda de pelo menos **2 OVR em dois anos causada pela idade** sobre o mesmo jogador, e convite em **45% das sementes**, no máximo uma vez. Ganhos verdes e concessões vermelhas com seta seguem o treino. O caminho continua aplicado, mas seu anúncio no quadro da temporada aparece somente no ano da escolha.
+- Promessas usam chips de recompensa e de punição, conservando exatamente os efeitos: humilde +2 torcida e +0,1 capacidade, sem punição; protagonista +5 torcida/+3 legado/+0,3 capacidade ou -3 torcida; histórica +9/+8/+0,5 ou -7 torcida. O prazo agregado do rápido permanece.
+- Jornal aberto mantém as duas folhas do mesmo ano. A segunda conta até **dois lances importantes** com adversário, minuto, ação, contribuição real e consequência na campanha, incluindo desempate. O texto não atribui gol, assistência ou taça inexistente. Tipografia de resultado uniforme na família de títulos, também nos avisos “Deu certo” e “Não deu”.
+- Cards do resultado e da temporada não têm rolagem interna. O quadro principal conserva ano, clube, liga e números; “Detalhes da temporada” abre uma folha de consulta com todos os atributos, promessa, conquistas e lances. A folha é uma vista de exploração; o card fica inteiro e o histórico mantém sua própria rolagem. Números/legendas da linha estatística têm alinhamento consistente. Fim de carreira ocupa a mesma largura das decisões.
+- Hipotético volta à fonte de títulos do jogo, preserva a primeira decisão principal por ano e informa o clube de destino nas transferências. “Saudade de casa” não fixa três anos no texto. Ficar no clube informa os mesmos continentais da projeção de ofertas. Laboratório usa os componentes ativos e inclui olímpico/pênalti convertido, chips de promessa/reinvenção e nenhuma nêmesis.
+
+**Verificação D79:** arquivos de teste do motor e do conteúdo são executados sequencialmente por pacote, sem alterar casos nem limites de tempo, para evitar disputa de CPU/memória ao carregar o mundo.
+
+A suíte do navegador usa o build de produção em 4173 e um servidor local de desenvolvimento em 4174 para conferir o laboratório, que continua exclusivo do desenvolvimento. Os dois são preparados e encerrados pelo Playwright.
+
+**Validação D79 (20/10/2026).** Verificação integral aprovada: tipos, lint, 1.010 testes unitários, 27 cenários Windows, 51 metas do Craque, 23 do Técnico e build. Tipos e lint reconferidos após o ajuste final. Balanceamento completo com 6.000 carreiras por amostra aprovado; mundo em 1,43 ms/temporada. Auditoria do laço: 144 carreiras, 2.855 temporadas, 2.438 jogos-chave, 175 promessas (40 cumpridas), reinvenção em 50 carreiras e os seis caminhos observados, sem falhas nos limites, ordem, prazo ou replay.
+
+Recordes: 3.150 carreiras reais, 19 das 21 referências observadas. Não observados neste lote: gols pela seleção (máximo 138 para referência 146) e Bolas de Ouro (sete para referência oito). Ausência amostral não demonstra impossibilidade. Relatórios em `tools/balance/relatorios/`; nenhum resultado foi forçado. O aviso visual do resultado não captura cliques sobre o menu no celular; a regressão foi conferida nos dois tamanhos de tela.
+**Navegador D79:** suíte completa do build final aprovada, **211 cenários passaram e nove foram pulados por restrições previstas de dispositivo**, 220 no total, sem falhas (8,8 minutos). Inclui celular e computador, ambos os temas, acessibilidade, animações, limites visuais, jornais em português/espanhol/inglês, laboratório e uso offline. Os arquivos temporários de execução foram removidos; relatórios de balanceamento e testes de regressão permanecem no projeto. Alterações locais, sem publicação ou commit.
+
+## D80: lances fora da função, reação no placar e mercado por liga
+
+Craque `2.0.0-m21`; Técnico permanece `1.9.0`. Esta revisão substitui os números anteriores relacionados abaixo.
+
+- O pênalti decisivo mantém os efeitos e as duas escolhas. Subtextos: “Mais protagonismo” e “Sem bônus individual.”, também traduzidos em inglês e espanhol.
+- Valor de mercado do Craque considera a média de força atual dos clubes da mesma divisão e país, usando as divisões após acessos/quedas. Multiplicador = `0,55 + 0,55 × limitar((média - 50) / 32; 0; 1)`, de 0,55 a 1,10. Multiplica a curva de OVR/idade antes do teto etário de até €400M. Aplica-se ao valor exibido, aos registros de temporada e às condições de acontecimento por valor. Sem clube, conserva a referência neutra. A referência financeira do Técnico não muda.
+- As famílias de criação e finalização podem aparecer fora da função. Por oportunidade: atacante ST/LW/RW recebe 8% de lances adicionais de criação; meio CDM/CM/CAM/LM/RM recebe 6% de finalizações adicionais; lateral recebe 3% de lances adicionais de criação/finalização e zagueiro 1,5%. Só entram os contextos compatíveis ausentes da família habitual. O sorteio da família vem antes da filtragem de repetições; esgotar lances habituais não torna os raros comuns.
+- Goleiro tem 0,8% por oportunidade de mata-mata de receber “A última subida”, em qualquer fase realmente alcançada: aos 92–95 minutos, perdendo por um gol. Cabecear, escorar para o companheiro ou ficar no gol. Atributos de goleiro: cabeçada 50% elasticidade, 20% velocidade e 30% posicionamento, teto 18%; escorada 30% elasticidade, 20% manejo e 50% posicionamento, teto 40%; ficar usa reposição/velocidade/posicionamento e não dá bônus individual. Se empatar, o mata-mata termina nos pênaltis, sem atribuir classificação automática ao gol.
+- Voleio já existia e foi preservado. Entram “De costas para o gol”, com bicicleta (70% finalização/30% físico, teto 35%), escorada de cabeça ou domínio; e “Em cima da linha”, com corte, desvio para o companheiro ou cobertura da sobra. Total: 53 contextos. Descrições e opções estão nos três idiomas; o laboratório usa os componentes e a resolução reais.
+- Placar inicial empatado sorteia 0, 1, 2 ou 3 gols para cada lado, com pesos 2:5:2:1. Em 18% das oportunidades de liga, começa um gol atrás. Acertar então empata; errar mantém a derrota ou acrescenta um gol adversário (30%). Nos cenários empatados, a definição acrescenta um gol ao vencedor. Pênaltis não alteram o placar do jogo. A tabela usa a diferença de pontos entre o placar inicial e o final: reagir de derrota para empate dá +1, nunca os +2 de uma vitória saindo de empate. Resultado, LED e crônica reconhecem empate.
+- Impacto do destaque conserva a base anterior e soma ajuda em elencos fracos: `participação × suporte × limitar((vantagem - 8) × 0,08; 0; 1,5)`, sendo `suporte = limitar((76 - força) / 16; 0; 1)` e vantagem limitada de -3 a 35. Não aumenta força se o jogador estiver próximo ou abaixo do elenco; não ajuda clubes de força 76+. Participação reduz tanto a ajuda base quanto a adicional. Exemplo de força 70/OVR 97 com participação integral: +5,7825, antes +5,22. A calibração conserva as metas de raridade dos títulos.
+- Debug de desenvolvimento inclui “Forçar decisão”, com os títulos das nove decisões gerais, 39 acontecimentos e 53 lances. Monta somente a sessão marcada como teste, sem gravar escolha especial em replay, liberar conquistas ou alimentar o ranking. O fluxo normal não consulta a ferramenta; o módulo permanece fora do build de produção. Pré-requisitos podem ser ignorados nesse cenário de teste e alvos ausentes recebem dados reais do catálogo. Não é uma forma de continuar ou compartilhar uma carreira válida.
+
+Na reação de liga começando atrás, as três alternativas seguem a mesma relação entre ação e placar: sucesso empata, falha conserva a derrota ou sofre mais um. A alternativa conservadora conserva bônus individual zero e, somente nesse contexto, não usa o sorteio independente do time. A regressão percorre 50 sementes com cada uma das três ações, cobrindo acerto e erro.
+
+**Auditorias D80 (20/10/2026).** Lote ampliado com 6.000 carreiras por amostra aprovado nas 51 metas; mundo em 2,19 ms/temporada. Auditoria do laço real: 144 carreiras, 2.852 temporadas, 2.452 jogos-chave e 175 promessas (38 cumpridas), com reinvenção em 49 carreiras e todos os seis caminhos observados. Limites, ordem, treino no período correto, prazo e replay aprovados. A auditoria confere o atributo no registro do ano treinado quando a escolha já encerrou a temporada, sem comparar com o declínio da idade seguinte.
+
+Recordes: 3.150 carreiras reais, 19 das 21 referências observadas. As duas ausentes no lote foram gols pela seleção (melhor 141, referência 146) e Bolas de Ouro (sete, referência oito). Ausência amostral não prova impossibilidade; nenhum resultado foi imposto. O relatório versionado registra a amostra e seus limites. Os replays m21 dos testes usam decisões reais, incluindo a coleção `d80-collection-16` (31 grupos, legado de lenda na seleção) e `d80-stacks-2` (pilha de 13 conquistas numa passagem por clube). As 44 regressões das amostras passaram sem reduzir limites nem exigências visuais.
+
+**Verificação D80:** verificação integral aprovada, incluindo 27 cenários Windows, 51 metas do Craque, 23 do Técnico e build. Após o ajuste final da reação no placar, tipos, lint e a suíte completa de **1.020 testes unitários** foram repetidos e aprovados. A regressão cobre também empréstimo forçado fora da idade normal, montagem/resolução de todo o catálogo de teste, limites técnicos, raridade por posição, empate sem crédito indevido e crônicas nos três idiomas. As execuções finais foram separadas das auditorias mais pesadas para evitar falsos estouros de tempo por disputa de recursos; nenhum limite de teste foi aumentado.
+
+**Acabamento visual D80.** Em 360 × 640, a promessa oculta a linha redundante de ano/idade, já disponíveis no cabeçalho e no progresso, e compacta as margens internas dos cards para manter todos os selos visíveis mesmo após um acontecimento. A prévia móvel do laboratório reduz as margens laterais e o espaço entre equipes, evitando quebrar nomes curtos no meio. O teste de avanço no mesmo ano escolhe duas partidas efetivamente consecutivas na amostra atual e verifica o card ativo, em vez de depender do antigo índice da primeira partida europeia ou do card que está saindo.
+
+A abertura do menu nos testes fecha avisos pelos botões reais e repete o clique se o aviso offline chegar nesse intervalo. A repetição verifica se o menu já está aberto para não fechá-lo de novo; nenhum clique forçado, aviso suprimido ou limite global maior foi usado.
+
+**Navegador D80 (21/10/2026).** Suíte completa do build final aprovada: **221 cenários passaram e nove foram pulados por restrições previstas de dispositivo**, 230 no total, sem falhas (7,9 minutos). Inclui celular e computador, ambos os temas, teclado, leitura e contraste, animações completas/reduzidas, jornais, novos lances, laboratório, produção sem controles de teste e uso offline. Antes da rodada integral, os fluxos afetados pelo aviso offline passaram em 43 cenários, com três pulos previstos. Tipos da interface e lint foram reconferidos e aprovados após o ajuste do helper. Relatórios de balanceamento e testes de regressão permanecem; temporários removidos. Alterações locais, sem publicação, commit ou envio ao GitHub.
+## D81: lance raro, contexto da liga e leitura do resultado
+
+Craque `2.0.0-m22`; Técnico permanece `1.9.0`. Estas regras substituem os números anteriores destes assuntos.
+
+- Bicicleta passa por uma autorização de 20% dentro da família de cenas sorteada, antes da preferência por lances ainda não vistos. Quando a autorização não vem, as outras cenas continuam disponíveis mesmo que já tenham aparecido. Não fica obrigatória após esgotar o catálogo. As raridades por posição e a subida do goleiro permanecem.
+- Em liga começando empatada, se a equipe não resolve o lance, há 12% de conservar o empate sem novo gol adversário. Nas demais vezes sofre o gol. O sorteio tem fluxo próprio; mata-mata e reação começando atrás conservam suas regras. Empate preservado não dá gol, assistência ou vitória fictícios.
+- A qualidade técnica da decisão passa a multiplicar pelo contexto da liga: `limitar(1 + (OVR - média atual da divisão) × 0,004; 0,90; 1,10)`. Atributos continuam com peso 95% e OVR 5%. O ajuste vale somente em partidas de clubes; seleção conserva referência neutra. Bônus, perda etária e tetos anteriores continuam; nenhuma chance ultrapassa seu teto. Deixar a cobrança com o companheiro continua 50%, pois não depende da execução do jogador.
+- Ajuda adicional ao elenco fraco passa a `participação × suporte × limitar((vantagem - 8) × 0,12; 0; 2)`, mantendo `suporte = limitar((76 - força) / 16; 0; 1)` e a ajuda base. Exemplos com participação integral: força 60/OVR 85 recebe +7,10; força 70/OVR 97 recebe +5,97. Clubes de força 76+ e jogador sem participação não ganham esse adicional. Não garante títulos.
+- Resultado conta a opção escolhida, o acerto/erro da ação e o resultado da equipe separadamente, em português, inglês e espanhol. Uma ação conservadora bem executada pode acompanhar derrota, e o relato explica isso. Jornal também distingue reação que busca empate de empate mantido após erro.
+- A conclusão da promessa aparece junto aos números da temporada, com cumprida/não cumprida e realizado/meta. A confirmação da promessa troca o antigo subtexto por meta e período ou pelo resultado, se já fechou o prazo. Detalhes completos continuam na folha de consulta.
+- No celular, jornal aberto preserva duas folhas do mesmo ano com proporção de jornal, em vez de esticar duas colunas estreitas até 680px. “Ampliar jornal” abre leitura da capa ou dos bastidores na largura do aparelho. Folhear, teclado, folha em branco e design do computador continuam.
+**Auditorias D81 (21/10/2026).** Balanceamento ampliado, 6.000 carreiras por amostra: 51/51 metas aprovadas, mundo em 0,99 ms/temporada. O adicional maior aos elencos fracos passou sem reduzir as metas de raridade. Auditoria do laço real: 144 carreiras, 2.853 temporadas, 2.446 partidas e 175 promessas, 38 cumpridas; 45 carreiras com reinvenção, cobrindo os seis caminhos. Limites, ordem, treino imediato, ofertas, prazo e replay aprovados.
+
+Recordes: 3.150 carreiras reais, 19 das 21 referências observadas. Gols pela seleção chegaram a 142 para a referência 146, e Bolas de Ouro a sete para a referência oito. A ausência dessas duas ocorrências neste lote não demonstra impossibilidade; nenhum resultado foi imposto. Relatórios versionados em `tools/balance/relatorios/`.
+
+Amostras de navegador foram reconstruídas no m22 por decisões válidas. A coleção tem 32 grupos de conquistas e legado de lenda na seleção; a amostra de pilhas chega a 17 conquistas iguais numa passagem por clube. Os pontos de teste registram os placares reais: a animação não depende mais da suposição fixa de 1×1 para 2×1. O teste do jornal abre também uma edição com crônica para conferir a leitura ampliada, além da folha em branco preservada.
+
+**Amostra de raridade D81.** O teste rápido passa a usar as mesmas 80 carreiras chilenas do lote completo, com as mesmas sementes, política e limite de 25%. O prefixo antigo de 50 teve 13 campeões (26%), enquanto o lote completo teve 19/80 (23,75%). A ampliação inclui integralmente os 50 casos anteriores e evita que uma única carreira no recorte menor reprove uma distribuição aprovada na referência completa. Nenhuma meta, regra do jogo ou resultado foi alterado por essa correção do harness.
+
+**Verificação D81 (21/10/2026).** `pnpm verify` integral aprovado: tipos, lint, **1.027 testes unitários**, 27 cenários Windows, 51 metas do Craque, 23 do Técnico e build. A rodada isolada de interface passou nos 26 cenários de feedback, promessa visível e jornal ampliado, em celular e computador e nos dois temas. A leitura ampliada foi conferida numa edição com crônicas, com texto de 13px, além da folha vazia preservada. O laboratório compartilha o novo relato e mostra a conclusão compacta da promessa pelo mesmo componente da carreira.
+**Navegador D81 (21/10/2026).** Suíte completa do build final aprovada: **231 cenários passaram e nove foram pulados por restrições previstas de dispositivo**, 240 no total, sem falhas (8,2 minutos). Inclui PC e celular nos dois temas, relatos por opção, texto e botão inteiros, promessa visível com realizado/meta, jornal proporcional sem alargar a página, leitura ampliada com crônicas, três idiomas, animações, acessibilidade, uso offline e regressões do Técnico. Tipos da interface e lint foram reconferidos e aprovados após o último ajuste do teste.
+
+O teste do laboratório consulta o aviso da ação escolhida diretamente; o novo resumo de promessa possui seu próprio status acessível e não pode tornar essa consulta ambígua. A rodada final confirmou ambos os avisos e as verificações anteriores, sem suprimir elementos nem forçar cliques. Capturas da promessa e do jornal foram revisadas; relatórios de balanceamento e amostras m22 permanecem. Arquivos temporários removidos; alterações locais, sem publicação, commit ou envio ao GitHub.
+
+## Como ficou, D82: clássico e apresentação estável (21/10/2026)
+
+Craque `2.0.0-m23`; Técnico permanece `1.9.0`. Em `events/catalog.ts`, Semana de clássico (`derby`), respeitar o rival (`fairPlay`) tem efeito determinístico `fans: -2`. Provocar permanece com chance 55%, torcida +12 no sucesso e -10 na falha. As condições continuam: rival, papel de rotação/titular/craque e pelo menos 12 jogos no ano anterior. Resultado e chips exibem o custo real nos três idiomas.
+
+**Jornal (24.6).** `matchStory` pede a voz editorial de `matchOutcomeText`, em terceira pessoa, mantendo ação, execução, placar e consequência reais. Nenhum “você”, “sua finalização” ou equivalente em inglês/espanhol aparece na crônica. Os relatos diretos da partida não mudam de voz. Crônicas usam Schibsted Grotesk a 11px na folha proporcional e 14px/linha 1,6 ampliada; conclusão de promessa usa peso 700, 13px na folha e 16px ampliada. Duas páginas da mesma temporada e folha em branco permanecem.
+
+Na leitura ampliada, anterior/próxima ficam junto de fechar, com rótulos acessíveis, botões desabilitados nos extremos e contador/ano anunciados. Cada seta troca a edição/temporada sem fechar a folha nem mudar Capa/Bastidores. A abertura conclui qualquer virada pendente no destino solicitado. As folhas comuns continuam com virada animada, arrasto e teclado.
+
+**Transição (14/32.5).** O motor continua resolvendo cada escolha uma única vez. A interface segura carreira, revista, tema e progresso de apresentação durante a leitura do resultado (2.100ms) e conserva esse contexto na saída lateral (560ms), liberando-o pelo término real da saída. A próxima decisão existe, mas não aceita cliques durante o deslize. A revista seguinte só ocupa espaço depois, evitando redução de altura/largura do card que sai no celular. Movimento reduzido elimina a animação, preservando a ordem. Regressões medem posição e dimensões quadro a quadro em partida→partida e partida→decisão principal, além de verificar teclado, limites, dois temas e ausência de rolagem no laço.
+
+Se a pessoa trocar de aba durante a resposta, o painel da temporada pode ser desmontado. Uma liberação de segurança após 1.000ms da saída evita depender de um callback de animação que deixou de existir. No fluxo visível, o término real de 560ms libera antes; esse prazo não estende a leitura nem altera o motor. Ao terminar a transição, o título recebe foco depois de sair de `inert`, preservando foco externo em menus/exploração.
+
+**Validação D82.** Verificação integral aprovada: 1.032 testes unitários, 27 cenários Windows, 51 metas do Craque, 23 do Técnico e build. O lote ampliado de 6.000 carreiras passou nas 51 metas; auditoria do laço m23 confirmou 144 carreiras, 2.853 temporadas e 2.444 partidas, com limites, ordem, promessas e replay coerentes. Tipos e lint reconferidos. Suíte final de navegador: 249 aprovados, nove pulos previstos por dispositivo, nenhuma falha; capturas em celular/computador e nos dois temas revisadas. A inspeção da pilha de troféus mede quadros desde antes do toque/hover e preserva as verificações de contagem e ausência de sobreposição; seis repetições isoladas também passaram.

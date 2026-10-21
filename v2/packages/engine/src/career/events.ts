@@ -9,11 +9,13 @@ import { clubIndex } from "../world/model";
 import { grandfatherCountry, residenceCountry, homeClub, legacyClub, marketContext } from "./context";
 import { buildOffer, interestedClubs, marketOffers, offerFrom } from "./market";
 import type { Career, ClubOffer, Decision, DecisionOption, EventTarget } from "./types";
+import { hasPublicRole } from "./drama";
 
 /**
  * Agenda e montagem dos eventos (GDD 18.1). A agenda sorteia quantos eventos a
  * carreira terá e em que idades; na idade marcada, entra um evento elegível
- * sorteado pelo peso. Se nenhum couber, a vaga passa.
+ * sorteado pelo peso. Se nenhum couber ou uma oferta tiver prioridade, a
+ * vaga aguarda a próxima oportunidade (D74).
  */
 
 export const AGENDA = {
@@ -47,6 +49,7 @@ export function planAgenda(seed: string, pace: Pace): number[] {
 /** Os eventos que podem aparecer agora: elegíveis, inéditos e dentro do limite de lesões. */
 export function eligibleEvents(career: Career, context: EventContext): EventDefinition[] {
   return EVENT_CATALOG.filter((event) => {
+    if (!hasPublicRole(career) && (event.tags.some((tag) => ["fame", "fans", "leadership", "legacy", "shirt", "final"].includes(tag)) || event.id === "silentWeek")) return false;
     if (career.eventsSeen.includes(event.id)) return false;
     if (event.tags.includes(INJURY_TAG) && career.injuryEvents >= MAX_INJURY_EVENTS) return false;
     return allHold(event.when, context);

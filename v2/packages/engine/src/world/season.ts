@@ -1,3 +1,4 @@
+import { keyKnockout, keyLeague } from "./keyMatches";
 import { playerClubImpact } from "./tuning";
 import { performanceSpots, rankedWorldCupClubs, rememberContinentalRanking } from "./qualification";
 import { clubTrophyProgress } from "./clubProgress";
@@ -656,16 +657,19 @@ export function simulateWorldSeason(
   const superCups = recordSuperCups(context, simulateSuperCups(context));
   const leagues: Record<string, LeagueResult> = {};
   for (const country of PLAYABLE_COUNTRIES) {
-    for (const league of countryLeagues(country)) leagues[league.id] = recordLeague(context, simulateLeague(context, league));
+    for (const league of countryLeagues(country)) leagues[league.id] = recordLeague(context, keyLeague(simulateLeague(context, league), impact?.keyMatches));
   }
   const cups = recordKnockouts(context, simulateCups(context), context.impact?.club);
   const continental = recordKnockouts(context, simulateContinental(context), context.impact?.club);
   decideFinal(context, cups, continental);
+  for (const [id, result] of Object.entries(cups)) cups[id] = keyKnockout(result, impact?.keyMatches) ?? result;
+  for (const [id, result] of Object.entries(continental)) continental[id] = keyKnockout(result, impact?.keyMatches) ?? result;
   const intercontinental = recordIntercontinental(context, simulateIntercontinental(context, continental));
   const clubWorldCup = recordKnockout(context, simulateClubWorldCup(context), context.impact?.club);
   const nations: Record<string, KnockoutResult> = recordKnockouts(context, simulateNationsCups(context), context.impact?.nationality);
   const worldCup = recordKnockout(context, simulateWorldCup(context), context.impact?.nationality);
   if (worldCup) nations.worldcup = worldCup;
+  for (const [id, result] of Object.entries(nations)) nations[id] = keyKnockout(result, impact?.keyMatches) ?? result;
 
   const played = { year: world.year, leagues, cups, superCups, continental, intercontinental, clubWorldCup, nations };
   const movement: Movement = settle

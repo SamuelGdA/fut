@@ -16,7 +16,7 @@
   },
   "scripts": {
     "typecheck": "tsc -p tsconfig.json && tsc -p tsconfig.test.json",
-    "test": "vitest run --maxWorkers=2"
+    "test": "vitest run --maxWorkers=1"
   },
   "dependencies": {
     "@craque/world": "workspace:*"

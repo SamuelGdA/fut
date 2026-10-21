@@ -1,5 +1,5 @@
 import { clamp } from "../math";
-import { attributesAt, ovrAt, type Player } from "../player/player";
+import { attributesAt, overallLevel, ovrAt, type Player } from "../player/player";
 import type { Rng } from "../rng";
 import type { Six } from "../types";
 import { drawSeasonForm, type SeasonForm } from "./form";
@@ -10,6 +10,7 @@ import {
   type GrowthContext,
   type GrowthFactors,
   growthFactors,
+  titleMorale,
 } from "./growth";
 import { guaranteeFocus, isFocusValid, settleTraining, trainFocus, type TrainingFocus } from "./training";
 import { CAPACITY_RANGE } from "./tuning";
@@ -22,7 +23,7 @@ import { CAPACITY_RANGE } from "./tuning";
 export interface SeasonEvolutionInput extends GrowthContext {
   /** Soma das importâncias dos títulos da temporada (GDD 7.5). */
   readonly titleImportance: number;
-  /** Reconhecimentos da temporada, com teto único de três pontos de OVR. */
+  /** Reconhecimentos da temporada, até três, com retorno decrescente perto do potencial. */
   readonly successBonus?: number;
   /** Foco de treino escolhido para esta temporada (a primeira do período), se houver. */
   readonly focus: TrainingFocus | null;
@@ -40,7 +41,7 @@ export interface SeasonEvolutionReport {
   readonly factors: GrowthFactors;
   /** Ganho esperado antes da forma. */
   readonly expected: number;
-  /** Bônus de título, em OVR, após a evolução natural. */
+  /** Variação de OVR causada pelos reconhecimentos, após a evolução natural. */
   readonly morale: number;
   /** L ganho de fato, já pelo teto suave. */
   readonly gain: number;
@@ -67,7 +68,7 @@ export function evolveSeason(player: Player, input: SeasonEvolutionInput, rng: R
   const form = drawSeasonForm(rng, input.age, input.games);
   const factors = growthFactors(player, input);
   const expected = expectedGrowth(factors) * (input.growthScale ?? 1);
-  const morale = clamp(input.successBonus ?? (input.titleImportance > 0 ? 1 : 0), 0, 3);
+  const recognitions = clamp(input.successBonus ?? (input.titleImportance > 0 ? 1 : 0), 0, 3);
 
   const gain = capSeasonGain(expected * form.multiplier);
   const loss = ageDecline(player, input.age, input.difficulty);
@@ -80,13 +81,12 @@ export function evolveSeason(player: Player, input: SeasonEvolutionInput, rng: R
   let next = focus ? settleTraining(grown, trainFocus(grown.training, focus)) : grown;
   if (input.restoreCapacity) next = { ...next, capacity: next.capacity - input.restoreCapacity };
   if (input.guarantee) next = guaranteeFocus(next, input.guarantee.focus, input.guarantee.start, input.age);
-  if (morale > 0) {
-    const target = Math.min(99, ovrAt(next, input.age) + morale);
-    // OVR sempre deriva dos atributos: achar o primeiro degrau, mesmo perto do 99.
-    for (let step = 0; step < 200 && ovrAt(next, input.age) < target && next.capacity < CAPACITY_RANGE.max; step += 1) {
-      next = { ...next, capacity: Math.min(CAPACITY_RANGE.max, next.capacity + 0.05) };
-    }
-  }
+  // Conquistar ajuda a desenvolver, mas não compra degraus inteiros de OVR.
+  // O teto é suave: outros acontecimentos ainda podem produzir um auge raro.
+  const recognitionGain = titleMorale(recognitions, overallLevel(next), player.potential);
+  const beforeRecognition = ovrAt(next, input.age);
+  next = { ...next, capacity: Math.min(CAPACITY_RANGE.max, next.capacity + recognitionGain) };
+  const morale = ovrAt(next, input.age) - beforeRecognition;
 
   return {
     player: next,

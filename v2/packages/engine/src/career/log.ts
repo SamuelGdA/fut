@@ -63,7 +63,7 @@ export function stepLog(
         entries.push({ kind: "event", event: notice.event, option: notice.option, success: notice.success, ...current });
         break;
       case "transfer":
-        entries.push({ kind: "transfer", from: notice.from, to: notice.to, loan: notice.loan, traitor: notice.traitor, ...current });
+        if (notice.from !== notice.to) entries.push({ kind: "transfer", from: notice.from, to: notice.to, loan: notice.loan, traitor: notice.traitor, ...current });
         break;
       case "shirt":
         entries.push({ kind: "shirt", number: notice.number, ...current });

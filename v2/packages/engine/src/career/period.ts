@@ -1,7 +1,8 @@
+import { promiseReport, veteranModifiers } from "./drama";
 import { getClub } from "@craque/world";
 import { clamp } from "../math";
 import { attributesAt, ovrAt } from "../player/player";
-import { baseMarketValue } from "../player/value";
+import { baseMarketValue, marketLeagueStrength } from "../player/value";
 import { recordTally } from "../records/pressure";
 import type { SquadRole } from "../season/role";
 import { simulatePlayerSeason, type PlayerSeasonStats, type SeasonModifiers } from "../season/playerSeason";
@@ -61,10 +62,11 @@ export function simulatePeriod(
   notices: CareerNotice[],
   event: SeasonRecord["event"],
   traitorMove: boolean,
+  stage?: { length: number; first: boolean; last: boolean; start: Six; startAge: number },
 ): Career {
   if (!career.contract) return career;
-  const length = Math.min(SEASONS_PER_PERIOD[career.setup.pace], LAST_AGE - career.age + 1);
-  const periodStart: Six = attributesAt(career.player, career.age);
+  const length = stage?.length ?? Math.min(SEASONS_PER_PERIOD[career.setup.pace], LAST_AGE - career.age + 1);
+  const periodStart: Six = stage?.start ?? attributesAt(career.player, career.age);
   let next = career;
   let suspension = career.pending.suspension;
 
@@ -74,7 +76,7 @@ export function simulatePeriod(
     const age = next.age;
     const club = contract.club;
     const bond = next.bonds[club] ?? newBond();
-    const plan = seasonPlan(next.pending.modifiers, suspension);
+    const plan = seasonPlan(veteranModifiers(next.veteran, next.pending.modifiers), suspension);
     suspension = plan.remaining;
 
     const result = simulatePlayerSeason({
@@ -87,12 +89,12 @@ export function simulatePeriod(
       difficulty: next.setup.difficulty,
       fans: bond.fans,
       // O foco treina uma vez, na primeira temporada do período que vem depois da escolha.
-      focus: season === 0 && next.focusAge === career.age ? next.focus : null,
-      // A garantia entra antes do bônus de título, para não absorver o +1 OVR.
-      guarantee: season === length - 1 && next.focus !== null && next.focusAge === career.age
+      focus: !stage && season === 0 && next.focusAge === career.age ? next.focus : null,
+      // A garantia entra antes dos reconhecimentos, sem absorver seu ganho adicional.
+      guarantee: next.focus !== null && next.focusAge === (stage?.startAge ?? career.age)
         ? { focus: next.focus, start: periodStart } : undefined,
       suspended: plan.suspended,
-      modifiers: plan.modifiers,
+      modifiers: { ...plan.modifiers, injuryScale: (plan.modifiers.injuryScale ?? 1) * 0.95 ** (next.drama?.results.filter((result) => result.action === "safe").length ?? 0), keyMatches: next.drama?.results },
       tally: recordTally(next.history),
     });
     const { stats, results } = result;
@@ -112,16 +114,20 @@ export function simulatePeriod(
       relegated: relegated(results, club),
       veteranLegend: age >= 33 && bondLegacy(next, club) === "legend",
     });
-    const fans = clamp(bond.fans + delta, 0, 100);
+    const promise = promiseReport(next, stats);
+    const moments = next.drama?.results ?? [];
+    const momentFans = moments.reduce((sum, item) => sum + item.fans, 0);
+    const protectedDelta = next.veteran === "captain" ? Math.max(-3, delta) : delta;
+    const fans = clamp(bond.fans + protectedDelta + momentFans + (promise?.fans ?? 0), 0, 100);
     const updatedBond: ClubBond = {
       ...bond,
       fans,
       peakFans: Math.max(bond.peakFans, fans),
       seasons: bond.seasons + 1,
-      legacyPoints: bond.legacyPoints + legacySeasonPoints(stats, fans, next.player.trait),
+      legacyPoints: bond.legacyPoints + legacySeasonPoints(stats, fans, next.player.trait) + moments.reduce((sum, item) => sum + item.legacy, 0) + (promise?.legacy ?? 0) + (next.veteran === "mentor" && stats.games >= 12 ? 2 : 0),
     };
 
-    const player = result.player;
+    const player = promise?.capacity ? applyLaterCapacity(result.player, promise.capacity) : result.player;
     const ovrEnd = ovrAt(player, age);
 
     // Avisos da temporada: entram depois dela, na ordem em que aconteceram.
@@ -145,6 +151,10 @@ export function simulatePeriod(
 
     const record: SeasonRecord = {
       ...stats,
+      keyMatches: moments,
+      promise,
+      veteran: next.veteran,
+      veteranChosen: next.veteranYear === stats.year,
       ovrEnd,
       attributes: attributesAt(player, age),
       shirt: contract.shirt,
@@ -158,11 +168,13 @@ export function simulatePeriod(
       nationality: next.nationality,
       position: player.position,
       event: season === 0 ? event : null,
-      marketValue: baseMarketValue(ovrEnd, age),
+      marketValue: baseMarketValue(ovrEnd, age, marketLeagueStrength(next.world, club)),
     };
     notices.push({ kind: "season", year: stats.year }, ...seasonNotices);
     next = { ...updated, history: [...updated.history, record] };
   }
+
+  if (stage && !stage.last) return { ...next, pending: { ...next.pending, suspension } };
 
   // Fim do período: capacidade adiada, modificadores zerados, suspensão que sobrou.
   return {

@@ -1,3 +1,7 @@
+import { MatchAtmosphere } from "./MatchAtmosphere";
+import { SeasonDecision } from "./SeasonDecision";
+import { useSeasonFlow } from "../../features/career/useSeasonFlow";
+import { matchTheme } from "../../features/career/matchTheme";
 import { Tabs as BaseTabs } from "@base-ui/react/tabs";
 import type { Career } from "@craque/engine";
 import { CalendarDays, Crosshair, ListOrdered, Trophy, UserRound } from "lucide-react";
@@ -55,16 +59,20 @@ export function CareerScreen() {
   const go = useNavigation((state) => state.go);
   const setGuard = useNavigation((state) => state.setGuard);
   const status = useCareer((state) => state.status);
-  const career = useCareer((state) => state.career);
+  const activeCareer = useCareer((state) => state.career);
+  const { career, presentation, transitioning, settled, result: matchResult, previousPlay, choose: chooseOption, finish: finishMatch } = useSeasonFlow(activeCareer);
   const avatar = useCareer((state) => state.avatar);
-  const latest = useCareer((state) => state.play);
+  const activePlay = useCareer((state) => state.play);
+  const latest = matchResult || transitioning ? previousPlay : activePlay;
+  // O aviso acompanha o clique; só a revista espera a saída do card da partida.
+  const resultPlay = activePlay?.outcome?.kind === "drama" && activePlay.outcome.result ? activePlay : latest;
   const review = useCareer((state) => state.review);
   const alternate = useCareer((state) => state.alternate);
   const desktop = useMediaQuery("(min-width: 1024px)");
   const [tab, setTab] = useState<CareerTab>("season");
   const [leaveTarget, setLeaveTarget] = useState<Screen | null>(null);
   const [confirmRetire, setConfirmRetire] = useState(false);
-  const announcement = usePlayAnnouncement(career, latest);
+  const announcement = usePlayAnnouncement(activeCareer, activePlay);
 
   // Antes da primeira pintura: o replay é síncrono, e a tela já abre pronta.
   useLayoutEffect(() => {
@@ -93,7 +101,7 @@ export function CareerScreen() {
   }
 
   const onChoose = (optionId: string): boolean => {
-    const ok = useCareer.getState().choose(optionId);
+    const ok = chooseOption(optionId);
     if (!ok) notify({ tone: "bad", title: t("career.stale") });
     return ok;
   };
@@ -125,21 +133,24 @@ export function CareerScreen() {
   const tabs: readonly CareerTab[] = challenge ? CHALLENGE_TABS : TABS;
   const original = alternate && career.decision?.id === alternate.decision ? alternate.original : null;
   const shown = review ?? latest;
+  const pendingEvent = latest?.outcome?.kind === "event" && !latest.pages.some((page) => page.kind === "season");
+  const dramatic = ["match", "promise", "veteran"].includes(presentation?.decision?.kind ?? "");
   // O jornal acompanha a última temporada do que está à vista (o lance, ou a revista).
   const newsIndex = shown?.pages.reduce<number | null>((found, page) => (page.kind === "season" ? page.index : found), null) ?? null;
   const decision = career.end ? (
     <EndPanel career={career} onSummary={openSummary} />
   ) : (
-    <DecisionPanel career={career} onChoose={onChoose} original={original} />
+    <DecisionPanel career={career} onChoose={onChoose} original={original} result={matchResult} onContinue={finishMatch} />
   );
   const feed = (compact: boolean) =>
     shown ? (
       <PlayFeed key={shown.id} career={career} play={shown} reviewing={review !== null} onCloseReview={closeReview} compact={compact} />
     ) : null;
-  const news = newsIndex !== null ? <NewsBar career={career} index={newsIndex} fresh={review === null && (latest?.fresh ?? false)} /> : null;
+  const news = !dramatic && newsIndex !== null ? <NewsBar career={career} index={newsIndex} fresh={review === null && (latest?.fresh ?? false)} /> : null;
 
   return (
-    <div className="career club-scope" style={clubStyle(club) as CSSProperties}>
+    <div className="career club-scope" data-match={Boolean(presentation?.decision?.match)} data-veteran={presentation?.decision?.kind === "veteran"} data-promise={presentation?.decision?.kind === "promise"} data-revealing={Boolean(matchResult)} data-transitioning={transitioning || undefined} style={{ ...clubStyle(club), ...matchTheme(presentation ?? career) } as CSSProperties}>
+      <MatchAtmosphere career={presentation ?? career} />
       {/* O lance de cada jogada, numa frase, para o leitor de tela (D43). A região fica sempre lá. */}
       <p role="status" className="sr-only">
         {announcement}
@@ -164,11 +175,11 @@ export function CareerScreen() {
               <PlayerPanel career={career} avatar={avatar} />
             </aside>
             <div className="fit-panel loop-panel">
-              {decision}
+              <SeasonDecision career={career} presentation={presentation ?? career} onSettled={settled} blocked={transitioning}>{decision}</SeasonDecision>
               {news}
             </div>
             <div className="career-right">
-              <ResultMessage career={career} play={review === null ? latest : null} />
+              <ResultMessage career={career} play={review === null && (matchResult || career.decision?.kind !== "veteran") ? resultPlay : null} />
               {feed(false)}
               <ExploreColumn career={career} onReplay={onReplay} challenge={challenge} />
             </div>
@@ -187,9 +198,9 @@ export function CareerScreen() {
         >
           <main className="career-body">
             <BaseTabs.Panel value="season" className="fit-panel loop-panel">
-              <ResultMessage career={career} play={review === null ? latest : null} />
-              {feed(true)}
-              {decision}
+              <ResultMessage career={career} play={review === null && (matchResult || !resultPlay?.outcome || resultPlay.outcome.kind !== "drama" || !resultPlay.outcome.result) ? resultPlay : null} />
+              {presentation?.decision?.kind !== "veteran" && (!dramatic || pendingEvent || latest?.pages.some((page) => page.kind === "season")) ? feed(true) : null}
+              <SeasonDecision career={career} presentation={presentation ?? career} onSettled={settled} blocked={transitioning}>{decision}</SeasonDecision>
               {news}
             </BaseTabs.Panel>
             <BaseTabs.Panel value="player" className="fit-panel">

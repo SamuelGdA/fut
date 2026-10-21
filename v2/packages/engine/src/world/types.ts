@@ -1,3 +1,4 @@
+import type { KeyMatchResult } from "../career/dramaTypes";
 import type { ContinentalRanking } from "./qualification";
 import type { AwardKey, Confederation, CountryCode, Division } from "@craque/world";
 import type { RecordTally } from "../records/pressure";
@@ -117,6 +118,7 @@ export interface SeasonResults {
  * (GDD 8.2 e 8.12). Sem ele, o mundo roda sozinho.
  */
 export interface PlayerImpact {
+  readonly keyMatches?: readonly KeyMatchResult[];
   readonly club: string;
   readonly ovr: number;
   /** Fração dos jogos do clube que ele disputa. */

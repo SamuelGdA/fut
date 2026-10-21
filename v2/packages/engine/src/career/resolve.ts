@@ -1,10 +1,11 @@
 import { getEvent, INJURY_TAG } from "../events/catalog";
 import { stream } from "../rng";
-import { nextDecision } from "./decisions";
 import { applyEffects } from "./effects";
 import { appendLog, stepLog } from "./log";
 import { moveTo } from "./move";
-import { simulatePeriod } from "./period";
+import { resolveDrama, startDrama } from "./drama";
+import { attributesAt } from "../player/player";
+import { applyFocusNow } from "../evolution/training";
 import type { Career, CareerNotice, Choice, Decision, DecisionOption, EndReason, SeasonRecord } from "./types";
 
 /**
@@ -67,7 +68,13 @@ function retireReason(decision: Decision): EndReason {
 export function resolveChoice(career: Career, choice: Choice): Step {
   const { decision, option } = findOption(career, choice);
   const notices: CareerNotice[] = [];
+  const trainingStart = option.kind === "focus" ? attributesAt(career.player, career.age) : undefined;
   let next: Career = { ...career, choices: [...career.choices, choice], decision: null };
+
+  if (option.kind === "drama") {
+    const resolved = resolveDrama({ ...next, decision }, option, notices);
+    return { career: appendLog(resolved, stepLog(career, resolved, decision, option, notices)), notices };
+  }
 
   // 1. Aposentar.
   if (option.kind === "retire") {
@@ -126,14 +133,14 @@ export function resolveChoice(career: Career, choice: Choice): Step {
 
   // 5. Foco de treino.
   if (option.kind === "focus") {
-    next = { ...next, focus: option.focus, focusAge: next.age };
+    next = { ...next, player: applyFocusNow(next.player, option.focus, next.age), focus: option.focus, focusAge: next.age };
     notices.push({ kind: "focus", focus: option.focus });
   }
 
   // 6 e 7. O período.
-  next = simulatePeriod(next, notices, event, traitorMove);
+  next = startDrama(next, notices, event, traitorMove, trainingStart);
 
   // 8. A próxima decisão.
-  const resolved = nextDecision(next);
+  const resolved = next;
   return { career: appendLog(resolved, stepLog(career, resolved, decision, option, notices)), notices };
 }

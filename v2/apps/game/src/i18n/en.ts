@@ -606,6 +606,7 @@ export const en: Messages = {
       prev: "Previous page",
       next: "Next page",
       roleDescription: "newspaper",
+      blank: "Blank page",
       edition: "Edition {current} of {total}",
       at: "Aged {age} · {year}",
       numbers: "The numbers",

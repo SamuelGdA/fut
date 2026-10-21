@@ -3,6 +3,11 @@
 Este repositório contém somente o projeto ativo em **v2/**: os jogos Craque e
 Técnico, em React/Zustand/Vite, com motores puros e dados próprios.
 
+A revisão atual é **D82**: Craque `2.0.0-m23` e Técnico `1.9.0`.
+O [estado atual e a orientação para começar do zero](v2/README.md#estado-atual-e-leitura-inicial-d82-21102026)
+reúnem as regras vigentes, os novos momentos de carreira, as contas do motor,
+o jornal com leitura ampliada e os caminhos da documentação técnica.
+
 A implementação v1 (Next.js), seus pacotes, documentação e dependências foram
 removidos. O histórico de Git permanece. A raiz guarda apenas os atalhos do
 projeto; não é outro workspace.

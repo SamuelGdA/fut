@@ -2,6 +2,7 @@ import {
   attributesAt,
   type Career,
   type CareerNotice,
+  type KeyMatchResult,
   type ChallengeStatus,
   type Decision,
   type DecisionOption,
@@ -88,6 +89,7 @@ export type PlayPage = EventPage | SeasonPage | ChallengePage;
  * camisa nova, se veio. Treino: o foco.
  */
 export type PlayOutcome =
+  | { readonly kind: "drama"; readonly action: string; readonly result?: KeyMatchResult; readonly decision: Decision }
   | { readonly kind: "event"; readonly page: EventPage; readonly club: string | null }
   | {
       readonly kind: "move";
@@ -118,6 +120,8 @@ export interface PlaySession {
   readonly pages: readonly PlayPage[];
   /** Acabou de acontecer (anima e comemora), ou é uma temporada revista do histórico. */
   readonly fresh: boolean;
+  /** Uma escolha auxiliar pode conservar as páginas do ano já revelado, sem celebrá-lo outra vez. */
+  readonly seasonsFresh?: boolean;
   /** O resultado da escolha, para a mensagem; nulo numa temporada revista. */
   readonly outcome?: PlayOutcome | null;
 }
@@ -125,6 +129,7 @@ export interface PlaySession {
 /** O resultado da escolha, lido da opção e dos avisos da jogada. */
 export function playOutcome(before: Career, option: DecisionOption, pages: readonly PlayPage[], transfer: TransferMoment | null): PlayOutcome | null {
   switch (option.kind) {
+    case "drama": return before.decision ? { kind: "drama", action: option.action, decision: before.decision } : null;
     case "event": {
       const page = pages.find((item): item is EventPage => item.kind === "event");
       return page ? { kind: "event", page, club: transfer ? transfer.to : null } : null;
@@ -226,7 +231,9 @@ export function buildPlay(
   const lastOvr = after.history[after.history.length - 1]?.ovrEnd ?? 0;
   const page = challenge && pages.length > 0 ? challengePage(challenge.before, challenge.after, lastOvr) : null;
   if (page) pages.push(page);
-  return { id: sessionId(), pages, fresh: true, outcome: playOutcome(before, option, pages, moved) };
+  const outcome = playOutcome(before, option, pages, moved);
+  const match = step.notices.find((notice) => notice.kind === "matchOutcome");
+  return { id: sessionId(), pages, fresh: true, outcome: outcome?.kind === "drama" && match?.kind === "matchOutcome" ? { ...outcome, result: match.result } : outcome };
 }
 
 /**

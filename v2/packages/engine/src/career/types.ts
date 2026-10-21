@@ -1,3 +1,4 @@
+import type { DramaPeriod, KeyMatch, KeyMatchResult, PromiseReport, SeasonPromise, VeteranPath } from "./dramaTypes";
 import type { CountryCode, Division } from "@craque/world";
 import type { TrainingFocus } from "../evolution/training";
 import type { Effect } from "../events/model";
@@ -81,7 +82,7 @@ export type LegacyLevel = "none" | "respected" | "idol" | "legend";
 
 // --------------------------------------------------------------- decisões
 
-export type DecisionKind = "base" | "window" | "loan" | "return" | "release" | "forced" | "event" | "focus";
+export type DecisionKind = "base" | "window" | "loan" | "return" | "release" | "forced" | "event" | "focus" | "match" | "promise" | "veteran";
 
 export interface ClubOffer {
   readonly club: string;
@@ -114,6 +115,7 @@ export interface EventOptionPreview {
 }
 
 export type DecisionOption =
+  | { readonly id: string; readonly kind: "drama"; readonly action: string; readonly chance: number | null }
   | { readonly id: string; readonly kind: "club"; readonly offer: ClubOffer }
   /** Ficar no clube. `shirt` é o número novo, se o clube der outro (GDD 19.1); `null` mantém o atual. */
   | { readonly id: string; readonly kind: "stay"; readonly shirt: number | null }
@@ -139,6 +141,9 @@ export interface EventTarget {
 }
 
 export interface Decision {
+  readonly progress?: { readonly index: number; readonly total: number };
+  readonly match?: KeyMatch;
+  readonly promises?: readonly SeasonPromise[];
   /** Sequencial na carreira: uma escolha para outra decisão é recusada. */
   readonly id: number;
   readonly kind: DecisionKind;
@@ -164,6 +169,7 @@ export interface Choice {
  * repete nada (invariante 23).
  */
 export type CareerNotice =
+  | { readonly kind: "matchOutcome"; readonly result: KeyMatchResult }
   | { readonly kind: "eventOutcome"; readonly event: string; readonly option: string; readonly success: boolean | null; readonly effects: readonly Effect[] }
   | { readonly kind: "transfer"; readonly from: string | null; readonly to: string; readonly loan: boolean; readonly traitor: boolean }
   | { readonly kind: "season"; readonly year: number }
@@ -212,6 +218,10 @@ export type CareerLogKind = CareerLogEntry["kind"];
 
 /** Uma temporada jogada, com o estado do fim dela (invariante 8). */
 export interface SeasonRecord extends PlayerSeasonStats {
+  readonly veteranChosen?: boolean;
+  readonly keyMatches?: readonly KeyMatchResult[];
+  readonly promise?: PromiseReport;
+  readonly veteran?: VeteranPath;
   readonly shirt: number;
   readonly mission: MissionKey;
   readonly pressure: number;
@@ -238,6 +248,14 @@ export interface PendingEffects {
 }
 
 export interface Career {
+  /** Ano da escolha, para anunciar a reinvenção apenas uma vez no histórico. */
+  readonly veteranYear?: number;
+  /** Última temporada em que outra equipe apresentou uma proposta. */
+  readonly lastOfferYear?: number;
+  readonly drama?: DramaPeriod;
+  readonly promise?: SeasonPromise;
+  readonly promiseYears?: readonly number[];
+  readonly veteran?: VeteranPath;
   readonly setup: CareerSetup;
   readonly world: WorldState;
   readonly player: Player;

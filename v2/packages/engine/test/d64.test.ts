@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it } from "vitest";
 import { leagueAt } from "@craque/world";
 import { continentalEntrants, type SeasonMemory } from "../src";
 import { cloneCareer, FORMATION_SLOTS, squadOf, viableSquad, type CoachPlayer } from "../src/coach";
@@ -101,12 +101,18 @@ describe("D64: reconhecimento justo e Rei da América",()=>{
 });
 
 describe("D64: mercado e ambição",()=>{
-  it("o mercado anual não aparece antes de escolher renovar ou mudar de clube",()=>{
-    const review=playSeason(started("d64-market-timing"));
+  // Uma temporada real prepara os três caminhos; cada transição tem sua própria verificação.
+  let review: ReturnType<typeof playSeason>;
+  beforeAll(()=>{ review=playSeason(started("d64-market-timing")); });
+  it("o mercado anual ainda não aparece na revisão da temporada",()=>{
     expect(review.phase).toBe("review");expect(review.transferOffers).toEqual([]);
+  });
+  it("trocar de clube inicia a etapa sem antecipar o mercado anual",()=>{
     const external=review.offers.find(offer=>!offer.stay)!;
     const moved=must(review,{type:"decide",choice:{offer:external.id}});
     expect(moved.phase).toBe("stage");expect(moved.transferOffers).toEqual([]);
+  });
+  it("renovar libera as ofertas somente quando há uma janela elegível",()=>{
     if(review.offers.some(offer=>offer.stay)){
       const renewed=must(review,{type:"decide",choice:"stay"});
       expect(["stage","transferOffers"]).toContain(renewed.phase);

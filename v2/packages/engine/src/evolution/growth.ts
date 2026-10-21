@@ -41,7 +41,7 @@ export interface GrowthFactors {
   readonly difficulty: number;
 }
 
-/** Ritmo de aprendizado pela idade: perto de 1 aos 16, metade em pico - 3,5. */
+/** Ritmo de aprendizado pela idade: perto de 1 aos 16, metade em pico - 2,5. */
 export function ageRate(age: number, peakAge: number): number {
   return fallingLogistic(age, peakAge - GROWTH.slowdownBeforePeak, GROWTH.slowdownWidth);
 }
@@ -95,13 +95,11 @@ export function expectedGrowth(factors: GrowthFactors): number {
 }
 
 /**
- * Moral de título (GDD 10.4): ganhar empurra um pouco, até P + 1. A soma de
- * importâncias é a da seção 7.5 (liga 1,0; Champions 2,5...). `level` é o
- * nível total, com o treino.
+ * Títulos e prêmios ajudam o desenvolvimento. O retorno cai nos cinco pontos
+ * anteriores a P + 2 e zera ali, sem impedir um auge excepcional por outros meios.
  */
-export function titleMorale(importance: number, level: number, potential: number): number {
-  if (importance <= 0 || level >= potential + MORALE.aboveCeiling) return 0;
-  return Math.min(MORALE.max, MORALE.perImportance * importance);
+export function titleMorale(recognitions: number, level: number, potential: number): number {
+  return clamp(recognitions, 0, MORALE.maxRecognitions) * MORALE.perRecognition * clamp((potential + MORALE.aboveCeiling - level) / MORALE.taperSpan, 0, 1);
 }
 
 /** O teto biológico de uma temporada: tudo que soma em L passa por aqui. */

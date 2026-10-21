@@ -458,3 +458,8 @@ export function decideAwards(
     },
   };
 }
+
+/** A rivalidade usa os mesmos números que a votação anual. */
+export function eliteSeasonFor(seed: string, year: number, id: string) {
+  return eliteSeasons(seed, year, year % 4 === 2).find((season) => season.candidate.profile.id === id) ?? null;
+}

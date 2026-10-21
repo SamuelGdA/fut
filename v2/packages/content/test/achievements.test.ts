@@ -44,11 +44,11 @@ function setup(index: number): CareerSetup {
     seed: `conquista-${index}`,
     startYear: 2026,
     pace: "normal",
-    difficulty: index % 4 === 0 ? "hard" : "normal",
+    difficulty: (Math.floor(index / positions.length) + index % positions.length + Math.floor(index / (positions.length * CAREER_POLICIES.length))) % 4 === 0 ? "hard" : "normal",
     identity: {
       surname: "Teste",
       foot: "right",
-      nationality: nations[index % nations.length] ?? "BRA",
+      nationality: nations[Math.floor(index / (positions.length * CAREER_POLICIES.length)) % nations.length] ?? "BRA",
       position: positions[index % positions.length] ?? "st",
       dreamNumber: 10,
     },
@@ -82,7 +82,9 @@ describe("o catálogo de conquistas", () => {
 });
 
 describe("conquistas numa carreira", () => {
-  const careers = Array.from({ length: 120 }, (_, index) => autoplay(createCareer(setup(index)), CAREER_POLICIES[index % CAREER_POLICIES.length] ?? "balanced"));
+  // Cruza as dez posições com os quatro estilos e as doze origens.
+  // O rodízio simultâneo anterior prendia o equilibrado ao Difícil e certos países a um só estilo.
+  const careers = Array.from({ length: 480 }, (_, index) => autoplay(createCareer(setup(index)), CAREER_POLICIES[Math.floor(index / 10) % CAREER_POLICIES.length] ?? "balanced"));
 
   it("no meio da carreira só caem as que podem cair a qualquer hora; terminada, todas", () => {
     let career = createCareer(setup(7));
@@ -120,10 +122,13 @@ describe("conquistas numa carreira", () => {
       return item ? careers.filter((career) => achievementMet(item, context(career))).length / careers.length : 0;
     };
     expect(rate("firstCareer")).toBe(1);
-    // A primeira taça é a porta de entrada: comum, mas não garantida (D42: título é de quem jogou).
-    const ceiling = (id: string) => (id === "firstTitle" ? 0.85 : 0.75);
+    // D78: a primeira taça inclui ligas menores e divisões de acesso, onde
+    // uma carreira de OVR modesto também merece recompensa. As avançadas mantêm a régua.
+    const ceiling = (id: string) => (id === "firstTitle" ? 0.9 : 0.75);
     for (const item of ACHIEVEMENTS) if (item.id !== "firstCareer") expect(rate(item.id), item.id).toBeLessThan(ceiling(item.id));
     for (const id of ["firstTitle", "legend", "firstCap", "clubThreeHundred", "oneClubMan", "continentalKing"]) expect(rate(id), id).toBeGreaterThan(0.05);
+    const firstTitle = ACHIEVEMENTS.find(item => item.id === "firstTitle")!;
+    expect(careers.some(career => Math.max(...career.history.map(season=>season.ovrEnd)) < 80 && achievementMet(firstTitle,context(career)))).toBe(true);
   });
 
   it("contadores entre carreiras: a décima carreira e a sétima tentativa ranqueada", () => {

@@ -1,5 +1,6 @@
 import {
   autoplay,
+  MAX_DECISIONS,
   type Career,
   type CareerSetup,
   choose,
@@ -14,6 +15,7 @@ import { COUNTRIES, ELITE } from "@craque/world";
 import { describe, expect, it } from "vitest";
 import {
   ACHIEVEMENT_TEXTS,
+  DRAMA_TEXTS,
   CHALLENGE_TEXTS,
   CAREER_TEXTS,
   contenderName,
@@ -64,6 +66,7 @@ function placeholders(text: string): string[] {
 
 const DICTIONARIES = [
   ["carreira", CAREER_TEXTS],
+  ["momentos", DRAMA_TEXTS],
   ["eventos", EVENT_TEXTS],
   ["capa", COVER_TEXTS],
   ["recordes", RECORD_TEXTS],
@@ -277,7 +280,7 @@ describe("uma carreira inteira contada nos três idiomas", () => {
     const seen = new Set<string>();
     for (let index = 0; index < 16; index += 1) {
       let career = createCareer(setup(index));
-      for (let step = 0; step < 80 && career.decision; step += 1) {
+      for (let step = 0; step < MAX_DECISIONS && career.decision; step += 1) {
         for (const locale of LOCALES) {
           for (const line of renderAll(locale, career)) {
             expect(line.length, `${career.decision.kind} ${career.decision.event ?? ""}`).toBeGreaterThan(0);

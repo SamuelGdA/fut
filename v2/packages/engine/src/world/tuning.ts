@@ -147,5 +147,8 @@ export const WARM_UP_SEASONS = 4;
 /** A diferença para o nível do clube define o impacto; cada OVR adicional continua ajudando. */
 export function playerClubImpact(strength: number, ovr: number, participation: number): number {
   const gap = Math.max(CLUB_IMPACT.below, Math.min(CLUB_IMPACT.eliteAbove, ovr - strength));
-  return participation * (CLUB_IMPACT.kappa * Math.min(CLUB_IMPACT.above, gap) + CLUB_IMPACT.eliteKappa * Math.max(0, gap - CLUB_IMPACT.above));
+  const base = CLUB_IMPACT.kappa * Math.min(CLUB_IMPACT.above, gap) + CLUB_IMPACT.eliteKappa * Math.max(0, gap - CLUB_IMPACT.above);
+  // Um destaque carrega mais um elenco frágil, sem dar força extra a quem já está abaixo dele.
+  const support = Math.max(0, Math.min(1, (76 - strength) / 16));
+  return participation * (base + support * Math.max(0, Math.min(2, (gap - 8) * 0.12)));
 }

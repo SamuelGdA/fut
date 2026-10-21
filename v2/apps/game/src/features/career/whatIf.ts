@@ -1,5 +1,6 @@
+import { getClub } from "@craque/world";
 import { decisionText, type Locale, optionLabel } from "@craque/content";
-import { type Career, type CareerSave, type Choice, choose, createCareer, type DecisionKind, saveOf } from "@craque/engine";
+import { type Career, type CareerSave, type Choice, choose, createCareer, type DecisionKind, type Decision, type DecisionOption, saveOf } from "@craque/engine";
 
 // Só memória desta sessão: preserva o estado verdadeiro antes de cada escolha,
 // inclusive intervenções de teste, sem inventar escolhas para um replay divergente.
@@ -38,7 +39,7 @@ export function actualDecisionPoints(career: Career, locale: Locale): DecisionPo
   return states.flatMap((state, index) => {
     const decision = state.decision;
     const option = decision?.options.find(candidate => candidate.id === career.choices[index]?.option);
-    return decision && option ? [{ index, kind: decision.kind, age: decision.age, year: decision.year, title: decisionText(locale,state,decision).title, chose: optionLabel(locale,state,decision,option) }] : [];
+    return decision && option ? [{ index, kind: decision.kind, age: decision.age, year: decision.year, title: decisionText(locale,state,decision).title, chose: choiceDescription(locale,state,decision,option) }] : [];
   });
 }
 
@@ -57,6 +58,16 @@ export interface DecisionPoint {
   readonly chose: string;
 }
 
+/** Uma entrada por ano, conservando o índice real de onde o replay pode divergir. */
+export function principalDecisionPoints(points: readonly DecisionPoint[]): DecisionPoint[] {
+  const seen = new Set<number>();
+  return points.filter((point) => {
+    if (["match", "promise", "veteran"].includes(point.kind) || seen.has(point.year)) return false;
+    seen.add(point.year);
+    return true;
+  });
+}
+
 export function decisionPoints(save: CareerSave, locale: Locale): DecisionPoint[] {
   let career = createCareer(save.setup);
   const points: DecisionPoint[] = [];
@@ -73,9 +84,15 @@ export function decisionPoints(save: CareerSave, locale: Locale): DecisionPoint[
       age: decision.age,
       year: decision.year,
       title: decisionText(locale, career, decision).title,
-      chose: optionLabel(locale, career, decision, option),
+      chose: choiceDescription(locale, career, decision, option),
     });
     career = choose(career, choice).career;
   }
   return points;
+}
+
+function choiceDescription(locale: Locale, career: Career, decision: Decision, option: DecisionOption): string {
+  const label = optionLabel(locale, career, decision, option);
+  const club = option.kind === "club" ? option.offer.club : option.kind === "event" ? option.target?.club?.club : undefined;
+  return club ? `${label}: ${getClub(club)?.name ?? club}` : label;
 }

@@ -6,7 +6,7 @@ import { recordRows, runRecordCareers } from "./records";
  * pnpm balance:recordes [--carreiras N] [--semente texto] [--sem-arquivo]
  *
  * Mede se os recordes reais estão ao alcance (D33 e D42): N Fenômenos por
- * posição em cada lote (ambicioso e fiel), jogados pelas decisões até o fim. Grava
+ * posição em cada lote (ambicioso, fiel e fiel ao gigante), jogados até o fim. Grava
  * tools/balance/relatorios/recordes.md.
  */
 
@@ -37,7 +37,7 @@ function main() {
   const report = [
     "# Recordes ao alcance",
     "",
-    `Motor ${ENGINE_VERSION}, semente \`${args.seed}\`, ${args.careers} Fenômenos por posição em cada lote (ambicioso, fiel e fiel ao gigante), jogados pelas decisões sem aposentar por vontade própria, ritmo Intensa (uma temporada por decisão). ${seconds} s.`,
+    `Motor ${ENGINE_VERSION}, semente \`${args.seed}\`, ${args.careers} Fenômenos por posição em cada lote (ambicioso, fiel e fiel ao gigante), jogados pelas decisões até o fim, ritmo Intensa, com os momentos de partida e sem aposentadoria voluntária. ${seconds} s.`,
     "",
     "Recorde não é para ser comum: a meta (D33, D42 e D44) é que cada marca seja possível para um jogador",
     "extraordinário com muita sorte, e que cada passo além dela seja mais raro que o anterior (colunas +1, +2",

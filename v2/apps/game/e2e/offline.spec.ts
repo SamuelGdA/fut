@@ -1,5 +1,5 @@
 import { expect, type Page, test } from "@playwright/test";
-import { abrir, entrarNoCraque, jogarTurno, jogoRapido } from "./apoio";
+import { abrir, abrirMenuDaCarreira, entrarNoCraque, jogarTurno, jogoRapido } from "./apoio";
 
 /**
  * PWA (GDD 37): instalável, e a casca e o jogo funcionam sem internet. Imagem
@@ -58,7 +58,7 @@ test("sem internet: o jogo abre, joga, e nenhuma imagem quebra", async ({ page, 
   await expect.poll(() => brokenImages(page)).toEqual([]);
 
   // Outras telas inteiras também abrem sem rede.
-  await page.getByRole("button", { name: "Menu da carreira" }).click();
+  await abrirMenuDaCarreira(page);
   await page.getByRole("menuitem", { name: "Voltar ao início" }).click();
   await page.locator(".dialog-popup").getByRole("button", { name: "Sair", exact: true }).click();
   await page.getByRole("button", { name: "Ver o desafio" }).click();

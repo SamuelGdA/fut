@@ -1,7 +1,7 @@
 import { type Career } from "@craque/engine";
 import { GitBranch } from "lucide-react";
 import { useState } from "react";
-import { type DecisionPoint, actualDecisionPoints } from "../../features/career/whatIf";
+import { type DecisionPoint, actualDecisionPoints, principalDecisionPoints } from "../../features/career/whatIf";
 import { useT } from "../../i18n/useT";
 import { feedback } from "../../services/feedback";
 import { Button } from "../../ui/Button";
@@ -15,7 +15,7 @@ import { d68 } from "../../i18n/d68";
  */
 export function WhatIfChapter({ career, onBranch }: { career: Career; onBranch(index: number): void }) {
   const { t, locale } = useT();
-  const points = actualDecisionPoints(career, locale);
+  const points = principalDecisionPoints(actualDecisionPoints(career, locale));
   const [pending, setPending] = useState<DecisionPoint | null>(null);
 
   return (
@@ -24,7 +24,7 @@ export function WhatIfChapter({ career, onBranch }: { career: Career; onBranch(i
       {!points.length ? <p className="text-sm text-muted">{d68(locale, "emptyDecisions")}</p> : null}
       <ol className="flex flex-col divide-y divide-line rounded-sm border border-line bg-panel">
         {points.map((point) => (
-          <li key={point.index} className="flex items-center gap-3 px-3 py-2.5">
+          <li key={point.index} data-choice-index={point.index} className="flex items-center gap-3 px-3 py-2.5">
             <span className="numeric w-8 shrink-0 text-center text-sm font-bold text-faint">{point.age}</span>
             <span className="min-w-0 flex-1">
               <span className="block text-sm font-semibold">{point.title}</span>

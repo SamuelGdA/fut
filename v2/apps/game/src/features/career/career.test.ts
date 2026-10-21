@@ -1,5 +1,5 @@
 import { DEFAULT_AVATAR } from "@craque/art";
-import { type CareerSetup, ENGINE_VERSION, PRESTIGE_NUMBERS } from "@craque/engine";
+import { type CareerSetup, ENGINE_VERSION, policyChoice, PRESTIGE_NUMBERS } from "@craque/engine";
 import { CLUBS } from "@craque/world";
 import { beforeEach, describe, expect, it } from "vitest";
 import { startScreen } from "../../app/startup";
@@ -93,6 +93,28 @@ describe("estado da carreira", () => {
     expect(seasons).toHaveLength(2);
     expect(seasons[0]?.kind === "season" && seasons[0].transfer !== null).toBe(true);
     expect(seasons[1]?.kind === "season" && seasons[1].transfer).toBeNull();
+  });
+
+  it("mantém o ano concluído durante escolhas auxiliares sem repetir sua celebração ou esconder o resultado novo", () => {
+    let carried = 0;
+    for (let seed=0; seed<6 && !carried; seed++) {
+      useCareer.getState().start({ ...SETUP, seed: `d78-store-${seed}`, pace: "normal" }, null);
+      for (let guard=0; guard<180; guard++) {
+        const before=useCareer.getState().career;
+        if (!before?.decision) break;
+        const previous=useCareer.getState().play;
+        useCareer.getState().choose(policyChoice(before,"ambitious")!.option);
+        const after=useCareer.getState();
+        if (after.play?.seasonsFresh === false) {
+          carried++;
+          expect(after.career!.history.length).toBe(before.history.length);
+          expect(after.play.fresh).toBe(true);
+          expect(after.play.outcome).toBeTruthy();
+          expect(after.play.pages.filter(page=>page.kind==="season")).toEqual(previous!.pages.filter(page=>page.kind==="season"));
+        }
+      }
+    }
+    expect(carried).toBeGreaterThan(0);
   });
 
   it("a mensagem do resultado (D45) sabe o que a escolha fez: assinar, ficar, treinar ou o evento", () => {

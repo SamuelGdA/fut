@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { choose, createCareer, createRng, evolveSeason, ovrAt, TALENT_ODDS, type CareerSetup } from "../src";
+import { choose, createCareer, createRng, evolveSeason, TALENT_ODDS, type CareerSetup } from "../src";
 import { moveTo } from "../src/career/move";
 import { debugCoach } from "../src/debug";
 import { FORMATIONS, FORMATION_SLOTS, eventTargets, wageBillOf, coachCommand, eventCost, canAffordEvent } from "../src/coach";
@@ -34,14 +34,16 @@ describe("D61: regras e regressões", () => {
     expect(moveTo(career, offer, [], { loan: false }).career.contract?.loan).toEqual(career.contract.loan);
     expect(moveTo(career, { ...offer, buyout: true }, [], { loan: false }).career.contract?.loan).toBeNull();
   });
-  it("o bônus único de reconhecimentos soma ao crescimento e declínio, limitado a três", () => {
+  it("reconhecimentos somam capacidade depois do crescimento e declínio, até três (D78)", () => {
     const career = borrowed();
     for (const age of [19, 35]) {
       const context = { age, games: 36, clubStrength: 75, fans: 60, difficulty: "normal" as const, titleImportance: 0, focus: null };
       const plain = evolveSeason(career.player, context, createRng("bonus"));
       const awarded = evolveSeason(career.player, { ...context, successBonus: 9 }, createRng("bonus"));
-      expect(awarded.report.morale).toBe(3);
-      expect(ovrAt(awarded.player, age)).toBe(Math.min(99, ovrAt(plain.player, age) + 3));
+      const capped = evolveSeason(career.player, { ...context, successBonus: 3 }, createRng("bonus"));
+      expect(awarded).toEqual(capped);
+      expect(awarded.player.capacity).toBeGreaterThanOrEqual(plain.player.capacity);
+      expect(awarded.player.capacity - plain.player.capacity).toBeLessThanOrEqual(1.65 + 1e-9);
     }
   });
   it("os novos percentuais somam 100 em cada dificuldade", () => {

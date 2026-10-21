@@ -16,6 +16,9 @@ const REASON_NAMES: Readonly<Record<string, string>> = {
 };
 
 const KIND_NAMES: Readonly<Record<string, string>> = {
+  match: "Jogo-chave",
+  promise: "Promessa",
+  veteran: "Veterano",
   base: "Base",
   window: "Janela",
   event: "Evento",
@@ -46,12 +49,12 @@ function endHistogram(ages: readonly number[]): string[] {
 
 function batchTable(rows: ReadonlyArray<readonly [string, BatchFlowMetrics]>): string[] {
   const lines = [
-    "| Lote | Carreiras | Fim (mediana) | Eventos | Decisões | Empréstimos | Clubes | Traidor |",
-    "|---|---:|---:|---:|---:|---:|---:|---:|",
+    "| Lote | Carreiras | Fim (mediana) | Eventos | Planejamento | Decisões totais | Empréstimos | Clubes | Traidor |",
+    "|---|---:|---:|---:|---:|---:|---:|---:|---:|",
   ];
   for (const [name, metrics] of rows) {
     lines.push(
-      `| ${name} | ${metrics.careers} | ${fixed(metrics.endMedian, 0)} | ${fixed(metrics.events)} | ${fixed(metrics.decisions)} | ${fixed(
+      `| ${name} | ${metrics.careers} | ${fixed(metrics.endMedian, 0)} | ${fixed(metrics.events)} | ${fixed(metrics.planningDecisions)} | ${fixed(metrics.decisions)} | ${fixed(
         metrics.loans,
         2,
       )} | ${fixed(metrics.clubs)} | ${pct(metrics.traitorShare, 1)} |`,

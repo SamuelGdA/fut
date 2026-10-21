@@ -21,7 +21,6 @@ import {
   softCeiling,
   titleMorale,
   trainFocus,
-  TRAINING_CAP,
 } from "../src";
 
 function player(overrides: Partial<Player> = {}): Player {
@@ -101,11 +100,12 @@ describe("fatores do crescimento (GDD 10.1)", () => {
     expect(coachFactor(95)).toBe(GROWTH.coachMax);
   });
 
-  it("moral de título tem teto e para acima de P + 1 (GDD 10.4)", () => {
+  it("reconhecimentos têm retorno decrescente e param em P + 2 (D78)", () => {
     expect(titleMorale(0, 70, 90)).toBe(0);
-    expect(titleMorale(1, 70, 90)).toBeCloseTo(0.25);
-    expect(titleMorale(20, 70, 90)).toBe(1.2);
-    expect(titleMorale(3, 91, 90)).toBe(0);
+    expect(titleMorale(1, 70, 90)).toBeCloseTo(0.55);
+    expect(titleMorale(20, 70, 90)).toBeCloseTo(1.65);
+    expect(titleMorale(3, 91, 90)).toBeCloseTo(0.33);
+    expect(titleMorale(3, 92, 90)).toBe(0);
   });
 });
 
@@ -150,13 +150,14 @@ describe("forma da temporada (GDD 10.2)", () => {
 });
 
 describe("treino (GDD 10.5)", () => {
-  it("cada foco treina um atributo só: +2 nele, nada nos outros, e para em +8 (D42)", () => {
+  it("cada foco treina um atributo só: soma dois pontos inclusive depois de +8 (D74)", () => {
     let training = player().training;
     training = trainFocus(training, "finishing");
     expect(training[FOCUS_SLOT.finishing]).toBe(2);
     expect(training.reduce((sum, value) => sum + value, 0)).toBe(2);
     for (let index = 0; index < 10; index += 1) training = trainFocus(training, "finishing");
-    expect(Math.max(...training)).toBe(TRAINING_CAP);
+    expect(training[FOCUS_SLOT.finishing]).toBe(22);
+    expect(training.filter((_, slot) => slot !== FOCUS_SLOT.finishing)).toEqual([0, 0, 0, 0, 0]);
   });
 
   it("os seis focos de cada linha cobrem os seis atributos da carta", () => {
