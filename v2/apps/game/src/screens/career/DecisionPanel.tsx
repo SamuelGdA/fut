@@ -1,3 +1,4 @@
+import { DramaDecisionPanel } from "./DramaDecisionPanel";
 import {
   decisionText,
   describeEffect,
@@ -7,6 +8,7 @@ import {
 } from "@craque/content";
 import {
   type Career,
+  type KeyMatchResult,
   type ClubOffer,
   type Decision,
   type DecisionOption,
@@ -14,10 +16,12 @@ import {
   type EventTarget,
   FOCUS_SLOT,
   marketContext,
+  continentalEntrants,
   starsAt,
   pressureTone,
   type SquadRole,
   TRAINING,
+  getEvent,
   type TrainingFocus,
 } from "@craque/engine";
 import { getClub, getCompetition, getCountry, getLeague } from "@craque/world";
@@ -54,6 +58,8 @@ import { OddsBar } from "../../ui/Stats";
 import { TONE_GLYPH, type Tone } from "../../ui/tone";
 
 interface DecisionPanelProps {
+  result?: KeyMatchResult | null;
+  onContinue?: () => void;
   career: Career;
   /** Devolve falso se a escolha não vale mais. */
   onChoose(optionId: string): boolean;
@@ -91,7 +97,7 @@ const FOCUS_ICON: Readonly<Record<TrainingFocus, LucideIcon>> = {
  * confirma. Duas etapas de propósito: num celular, um toque sem querer não
  * pode mudar uma carreira.
  */
-export function DecisionPanel({ career, onChoose, original = null }: DecisionPanelProps) {
+export function DecisionPanel({ career, onChoose, original = null, result, onContinue }: DecisionPanelProps) {
   const { t, c, locale } = useT();
   const decision = career.decision;
   const [picked, setPicked] = useState<{ decision: number; option: string } | null>(null);
@@ -106,11 +112,15 @@ export function DecisionPanel({ career, onChoose, original = null }: DecisionPan
     if (decisionId === null) return;
     const active = document.activeElement;
     const inside = active !== null && sectionRef.current?.contains(active) === true;
-    if (active && active !== document.body && document.contains(active) && !inside) return;
+    // O card anterior continua montado durante o arrasto. Seu botão não deve
+    // impedir o foco no título novo; menus e exploração continuam protegidos.
+    const previousCard = Boolean(active?.closest(".season-decision-slide"));
+    if (active && active !== document.body && document.contains(active) && !inside && !previousCard) return;
     headingRef.current?.focus({ preventScroll: true });
   }, [decisionId]);
 
   if (!decision) return null;
+  if (["match", "promise", "veteran"].includes(decision.kind)) return <DramaDecisionPanel career={career} onChoose={onChoose} original={original} result={result} onContinue={onContinue} />;
 
   const selected = picked && picked.decision === decision.id ? picked.option : null;
   const text = decisionText(locale, career, decision);
@@ -149,6 +159,7 @@ export function DecisionPanel({ career, onChoose, original = null }: DecisionPan
 
   function optionCaption(option: DecisionOption): string | null {
     switch (option.kind) {
+      case "drama": return null;
       case "club":
         return c(`missions.${option.offer.mission}.hint`);
       case "stay":
@@ -363,8 +374,9 @@ function OfferRow({ label, offer, checked, loanDecision }: { label: string; offe
 }
 
 function StayRow({ label, career, checked, shirt }: { label: string; career: Career; checked: boolean; shirt: number | null }) {
-  const { t, c } = useT();
+  const { t, c, locale } = useT();
   const club = career.contract?.club;
+  const competitions = Object.entries(continentalEntrants(career.world.memory)).filter(([, clubs]) => club && clubs.includes(club)).map(([id]) => getCompetition(id)?.names[locale] ?? id);
   const contract = career.contract;
   const last = lastRecord(career);
   const role = last && last.club === club ? last.role : null;
@@ -404,6 +416,7 @@ function StayRow({ label, career, checked, shirt }: { label: string; career: Car
             </Chip>
             <Chip tone="club">{t("career.player.shirt", { number: shirt ?? contract.shirt })}</Chip>
           </span>
+          {competitions.length ? <span className="text-xs text-faint">{c("offer.competitions", { list: competitions.join(", ") })}</span> : null}
         </span>
       ) : null}
     </>
@@ -488,6 +501,7 @@ function EventRow({
   const moves = [...option.preview.success, ...option.preview.failure].some((effect) => effect.kind === "transfer");
   const destination = moves && target && target.club !== career.contract?.club ? target : null;
   const chance = option.chance;
+  const matchEvent = getEvent(career.decision?.event ?? "")?.tags.includes("final") === true;
   const chanceTone: Tone = chance === null ? "neutral" : chance >= 0.6 ? "good" : chance >= 0.4 ? "neutral" : "bad";
   return (
     <>
@@ -516,7 +530,7 @@ function EventRow({
                 </Chip>
               </>
             ) : null}
-            {chance === null ? (
+            {matchEvent ? null : chance === null ? (
               <Chip tone="neutral" variant="outline" size="sm" className="option-norisk">
                 {t("career.noRisk")}
               </Chip>
@@ -532,7 +546,7 @@ function EventRow({
         <span className="option-detail">
           {chance !== null ? (
             <>
-              <OddsBar success={chance} goodLabel={c("event.ifSuccess")} badLabel={c("event.ifFailure")} formatPercent={percent} />
+              {!matchEvent ? <OddsBar success={chance} goodLabel={c("event.ifSuccess")} badLabel={c("event.ifFailure")} formatPercent={percent} /> : null}
               <span className="grid gap-2 sm:grid-cols-2">
                 <span className="flex flex-col gap-1">
                   <span className="eyebrow text-good">{c("event.ifSuccess")}</span>

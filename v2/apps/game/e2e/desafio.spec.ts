@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { abrirCraque, encerrar, esperarQueCaiba, idade, jogarTurno, OPCOES } from "./apoio";
+import { abrirCraque, abrirMenuDaCarreira, encerrar, esperarQueCaiba, idade, jogarTurno, OPCOES } from "./apoio";
 
 /**
  * O Desafio do dia (GDD 27): a entrada com a mão do dia, a tentativa com o
@@ -30,7 +30,7 @@ test("da entrada do desafio ao resultado ranqueado", async ({ page }, info) => {
   }
 
   // Antes dos 27, encerrar não aparece no menu.
-  await page.getByRole("button", { name: "Menu da carreira" }).click();
+  await abrirMenuDaCarreira(page);
   await expect(page.getByRole("menuitem", { name: "Voltar ao início" })).toBeVisible();
   await expect(page.getByRole("menuitem", { name: "Encerrar carreira" })).toHaveCount(0);
   await page.keyboard.press("Escape");

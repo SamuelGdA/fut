@@ -1,4 +1,3 @@
-import { TRAINING_CAP } from "../player/attributes";
 import { attributesAt, overallLevel, type Player, trainingLevel } from "../player/player";
 import { isGoalkeeper, type Position } from "../player/positions";
 import { stream } from "../rng";
@@ -7,9 +6,10 @@ import { TRAINING } from "./tuning";
 
 /**
  * Foco de treino (GDD 10.5 e D42). Cada foco treina **um** atributo da carta,
- * e a escolha diz qual: "+2 Finalização". O bônus entra uma vez, no período
- * que vem depois da escolha, e é permanente (até +8 por atributo somando os
- * focos da carreira). No fim do período, o atributo treinado termina pelo
+ * e a escolha diz qual: "+2 Finalização". O bônus entra uma vez e é
+ * permanente. D74 aplica o foco imediatamente,
+ * antes de qualquer partida; a compensação pode superar +8 de treino.
+ * No fim do período, o atributo treinado termina pelo
  * menos 2 pontos acima de onde começou: a temporada pode somar mais por conta
  * própria, e uma temporada ruim pode derrubar os outros atributos, nunca o
  * treinado.
@@ -23,6 +23,7 @@ import { TRAINING } from "./tuning";
 export const OUTFIELD_FOCUSES = ["burst", "finishing", "vision", "ballControl", "combat", "power"] as const;
 export const KEEPER_FOCUSES = ["diving", "handling", "distribution", "reflexes", "explosion", "command"] as const;
 export type TrainingFocus = (typeof OUTFIELD_FOCUSES)[number] | (typeof KEEPER_FOCUSES)[number];
+export const FOCUS_TRAINING_CAP = 99;
 
 /** O atributo que cada foco treina, pelo índice da carta. */
 export const FOCUS_SLOT: Readonly<Record<TrainingFocus, Slot>> = {
@@ -64,18 +65,24 @@ export function isFocusValid(position: Position, focus: TrainingFocus): boolean 
 
 function withTraining(training: Six, slot: Slot, amount: number): Six {
   const next = [...training] as [number, number, number, number, number, number];
-  next[slot] = Math.min(TRAINING_CAP, next[slot] + amount);
+  next[slot] = Math.min(FOCUS_TRAINING_CAP, next[slot] + amount);
   return next;
 }
 
-/** O treino de um foco: +2 no atributo dele, limitado a +8. */
+/** O treino do foco soma dois pontos; o atributo visível continua limitado a 99. */
 export function trainFocus(training: Six, focus: TrainingFocus): Six {
   return withTraining(training, FOCUS_SLOT[focus], TRAINING.focus);
 }
 
+/** O treino aparece antes de qualquer outra escolha do mesmo ano. */
+export function applyFocusNow(player: Player, focus: TrainingFocus, age: number): Player {
+  const before = attributesAt(player, age);
+  return guaranteeFocus(settleTraining(player, trainFocus(player.training, focus)), focus, before, age);
+}
+
 /**
  * Grava um treino novo respeitando o potencial. A parte do ganho que passaria
- * de P + 1 no nível total sai da capacidade natural (especialização). Se o
+ * de P no nível total sai da capacidade natural (especialização). Se o
  * nível já estava acima disso, todo o ganho de treino vira especialização.
  */
 export function settleTraining(player: Player, training: Six): Player {
@@ -97,7 +104,7 @@ const GUARANTEE_PASSES = 6;
  * ignorada.
  *
  * Se o declínio comeu o treino, o bônus cobre a diferença, sempre dentro do
- * limite de +8 e do 99. Atributo já no 99, ou com o treino no limite, fica
+ * limite de 99 do atributo. Atributo já no 99 fica
  * como está.
  */
 export function guaranteeFocus(player: Player, focus: TrainingFocus, startAttributes: Six, endAge: number): Player {

@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { abrirCraque, encerrar, entrarNoCraque, jogarTurno, jogoRapido } from "./apoio";
+import { abrirCraque, abrirMenuDaCarreira, encerrar, entrarNoCraque, jogarTurno, jogoRapido } from "./apoio";
 
 // D61: o Craque não persiste a carreira; rascunho e conquistas continuam independentes.
 test("recarregar encerra a sessão do Craque e permite começar novamente", async ({ page }) => {
@@ -21,7 +21,7 @@ test("o resumo do Craque permanece nesta sessão, sem registro de retomada", asy
 });
 test("sair para o início mantém o rascunho e permite um novo jogo sem salvar a carreira", async ({ page }) => {
   await abrirCraque(page); await jogoRapido(page); await jogarTurno(page);
-  await page.getByRole("button", { name: "Menu da carreira" }).click();
+  await abrirMenuDaCarreira(page);
   await page.getByRole("menuitem", { name: "Voltar ao início" }).click();
   await page.locator(".dialog-popup").getByRole("button", { name: "Sair", exact: true }).click();
   await expect(page.getByRole("heading", { name: "CRAQUE", level: 1 })).toBeVisible();

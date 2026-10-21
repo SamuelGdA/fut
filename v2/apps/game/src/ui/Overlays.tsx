@@ -10,6 +10,7 @@ interface SheetProps {
   title: ReactNode;
   description?: ReactNode;
   closeLabel: string;
+  headerActions?: ReactNode;
   children: ReactNode;
   /** Ações fixas no rodapé, fora da área que rola. */
   footer?: ReactNode;
@@ -20,7 +21,7 @@ interface SheetProps {
  * Folha que sobe da borda de baixo. Fecha arrastando para baixo, tocando fora
  * ou com Esc. No desktop, fica centralizada com largura limitada.
  */
-export function Sheet({ open, onOpenChange, title, description, closeLabel, children, footer, contained }: SheetProps) {
+export function Sheet({ open, onOpenChange, title, description, closeLabel, headerActions, children, footer, contained }: SheetProps) {
   return (
     <Drawer.Root open={open} onOpenChange={(next) => onOpenChange(next)} swipeDirection="down">
       <Drawer.Portal>
@@ -29,20 +30,23 @@ export function Sheet({ open, onOpenChange, title, description, closeLabel, chil
           <Drawer.Popup className="sheet-popup">
             <div className="sheet-handle" aria-hidden="true" />
             <Drawer.Content className={contained ? "sheet-content sheet-contained" : "sheet-content"}>
-              <div className="mb-4 flex items-start justify-between gap-4">
+              <div className="mb-4 flex items-start justify-between gap-2">
                 <div className="min-w-0">
                   <Drawer.Title className="display text-3xl font-extrabold uppercase">{title}</Drawer.Title>
                   {description ? (
                     <Drawer.Description className="mt-1.5 text-sm text-muted">{description}</Drawer.Description>
                   ) : null}
                 </div>
-                <Drawer.Close
-                  render={
-                    <IconButton label={closeLabel} size="iconSm">
-                      <X size={18} aria-hidden="true" />
-                    </IconButton>
-                  }
-                />
+                <div className="flex shrink-0 items-center gap-1">
+                  {headerActions}
+                  <Drawer.Close
+                    render={
+                      <IconButton label={closeLabel} size="iconSm">
+                        <X size={18} aria-hidden="true" />
+                      </IconButton>
+                    }
+                  />
+                </div>
               </div>
               {children}
             </Drawer.Content>

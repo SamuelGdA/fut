@@ -1,5 +1,8 @@
 import { roundSignificant } from "../math";
 import type { Rng } from "../rng";
+import { getClub } from "@craque/world";
+import { clubIndex, COUNTRY_CLUBS } from "../world/model";
+import type { WorldState } from "../world/types";
 
 /**
  * Valor de mercado (GDD 9.10), em euros. Cresce de forma exponencial com o
@@ -33,13 +36,26 @@ export function referenceMarketValue(ovr: number, age: number): number {
 }
 
 /** Valorização mais suave acima de OVR 80 e teto etário de até €400 milhões. */
-export function baseMarketValue(ovr: number, age: number): number {
+export function leagueMarketFactor(strength = 82): number {
+  return 0.55 + 0.55 * Math.max(0, Math.min(1, (strength - 50) / 32));
+}
+
+/** Média do elenco de clubes da divisão atual, inclusive após acessos e quedas. */
+export function marketLeagueStrength(world: WorldState, club: string | null): number | undefined {
+  if (!club) return undefined;
+  const country = getClub(club)?.country;
+  const division = world.division[clubIndex(club)];
+  const indices = (COUNTRY_CLUBS.get(country ?? "") ?? []).filter(index => world.division[index] === division);
+  return indices.length ? indices.reduce((sum, index) => sum + (world.strength[index] ?? 50), 0) / indices.length : undefined;
+}
+
+export function baseMarketValue(ovr: number, age: number, leagueStrength?: number): number {
   const level = Math.max(1, Math.min(99, ovr));
   const exponent = GROWTH_PER_POINT * (Math.min(level, 80) - 50) + 0.12 * Math.max(0, level - 80);
-  return Math.min(marketValueCeiling(age), BASE_VALUE * Math.exp(exponent) * ageValueFactor(age));
+  return Math.min(marketValueCeiling(age), BASE_VALUE * Math.exp(exponent) * ageValueFactor(age) * (leagueStrength === undefined ? 1 : leagueMarketFactor(leagueStrength)));
 }
 
 /** Valor com o humor do ano, em três algarismos significativos. */
-export function marketValue(rng: Rng, ovr: number, age: number): number {
-  return Math.min(marketValueCeiling(age), roundSignificant(baseMarketValue(ovr, age) * rng.real(0.94, 1.06), 3));
+export function marketValue(rng: Rng, ovr: number, age: number, leagueStrength?: number): number {
+  return Math.min(marketValueCeiling(age), roundSignificant(baseMarketValue(ovr, age, leagueStrength) * rng.real(0.94, 1.06), 3));
 }

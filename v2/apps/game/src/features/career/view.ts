@@ -1,6 +1,7 @@
 import {
   attributesAt,
   baseMarketValue,
+  marketLeagueStrength,
   type Career,
   fanBand,
   type FanBand,
@@ -33,7 +34,7 @@ export function lastRecord(career: Career): SeasonRecord | null {
 }
 
 export function currentValue(career: Career): number {
-  return baseMarketValue(currentOvr(career), readAge(career));
+  return baseMarketValue(currentOvr(career), readAge(career), marketLeagueStrength(career.world, career.contract?.club ?? null));
 }
 
 export interface FansReading {

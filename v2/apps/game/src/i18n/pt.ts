@@ -610,6 +610,7 @@ export const pt = {
       prev: "Página anterior",
       next: "Próxima página",
       roleDescription: "jornal",
+      blank: "Página em branco",
       edition: "Edição {current} de {total}",
       at: "{age} anos · {year}",
       numbers: "Os números",

@@ -52,7 +52,7 @@ export default defineConfig({
       use: { viewport: { width: 1280, height: 800 } },
     },
   ],
-  webServer: {
+  webServer: [{
     // O build da suíte usa as imagens reais: assim o modo real (cache de
     // escudos, "Guardar todas") continua testado; o padrão é o desenhado (D46).
     command: `pnpm build && pnpm exec vite preview --port ${PORT} --strictPort`,
@@ -62,5 +62,13 @@ export default defineConfig({
     timeout: 300_000,
     stdout: "ignore",
     stderr: "pipe",
-  },
+  }, {
+    // O laboratório é exclusivo do desenvolvimento; os fluxos do jogo continuam no build acima.
+    command: "pnpm exec vite --host 127.0.0.1 --port 4174 --strictPort",
+    url: "http://127.0.0.1:4174",
+    reuseExistingServer: !process.env["CI"],
+    timeout: 120_000,
+    stdout: "ignore",
+    stderr: "pipe",
+  }],
 });

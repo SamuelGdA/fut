@@ -1,5 +1,6 @@
 import { useReducedMotion } from "../../lib/useReducedMotion";
-import { type CareerHeadline, careerHeadlines, type SeasonCover, seasonCovers } from "@craque/content";
+import { dramaAction, dramaText, matchStory, type CareerHeadline, careerHeadlines, type SeasonCover, seasonCovers } from "@craque/content";
+import { d74 } from "../../i18n/d74";
 import { type Career, isGoalkeeper, movementOf, type SeasonRecord } from "@craque/engine";
 import { AWARDS, compareHonours, getClub, getCompetition, getLeague } from "@craque/world";
 import { animate } from "motion";
@@ -8,10 +9,13 @@ import { type KeyboardEvent, useCallback, useEffect, useRef, useState } from "re
 import { useT } from "../../i18n/useT";
 import { Crest } from "../../ui/Media";
 import { HonourToken } from "../../ui/HonourToken";
+import { Sheet } from "../../ui/Overlays";
+import { Expand } from "lucide-react";
+import type { CSSProperties } from "react";
 
 /**
- * O jornal da carreira, portado do v1 (D10, GDD 24.6): uma primeira página por
- * temporada, folheada de verdade. A página de cima levanta pela borda esquerda
+ * O jornal aberto da carreira (D77, GDD 24.6): duas páginas lado a lado por
+ * temporada. A página da direita levanta pela dobra central
  * e gira para mostrar a de baixo; arrastar faz a folha seguir o dedo, e soltar
  * depois de um trecho completa a virada. Botões e setas só mudam o destino:
  * clicar rápido enfileira as viradas, e todas acontecem.
@@ -25,8 +29,8 @@ import { HonourToken } from "../../ui/HonourToken";
  * Papel nos dois temas, de propósito: é a imagem de um jornal.
  */
 
-/** Quanto a folha gira. Menos de 180°, para nunca mostrar o verso chapado. */
-const TURN_DEGREES = 166;
+/** Uma meia-volta completa faz o verso pousar na página da esquerda. */
+const TURN_DEGREES = 180;
 /** Uma virada inteira: dá para ver a folha subir e descer sem arrastar a fila. */
 const TURN_MS = 900;
 /** Fração do arrasto que confirma a virada. */
@@ -50,6 +54,8 @@ interface Honour {
 }
 
 interface Edition {
+  readonly surname: string;
+  readonly veteranChosen: boolean;
   readonly cover: SeasonCover;
   readonly record: SeasonRecord;
   readonly index: number;
@@ -88,8 +94,9 @@ function buildEditions(career: Career, locale: "pt" | "es" | "en"): Edition[] {
       (id): Honour => ({ key: `a-${id}`, name: AWARDS[id].names[locale], award: true, art: { kind: "award", id } }),
     );
     const crowns=record.awards.crowns.map((crown):Honour=>({key:`a-${crown.award}-${crown.competition}`,name:`${AWARDS[crown.award].names[locale]} · ${getCompetition(crown.competition)?.names[locale] ?? crown.competition}`,award:true,art:{kind:"award",id:crown.award,competition:crown.competition}}));
-    return [
-      {
+    const edition = {
+        surname: career.setup.identity.surname,
+        veteranChosen: Boolean(record.veteran && record.veteran !== previous?.veteran),
         cover,
         record,
         index,
@@ -99,8 +106,8 @@ function buildEditions(career: Career, locale: "pt" | "es" | "en"): Edition[] {
         honours: [...titles, ...awards,...crowns].sort((a,b)=>compareHonours(a.art,b.art)),
         items: headlines.filter((headline) => headline.year === record.year && headline.key !== "title" && headline.key !== "award"),
         toDate: { ...running },
-      },
-    ];
+      };
+    return [edition];
   });
 }
 
@@ -108,6 +115,10 @@ export function Newspaper({ career }: { career: Career }) {
   const { t, locale } = useT();
   const editions = buildEditions(career, locale);
   const keeper = isGoalkeeper(career.player.position);
+  const copy = d74(locale);
+  const [reading, setReading] = useState(false);
+  const [leaf, setLeaf] = useState<"cover" | "inside">("cover");
+  const [paperWidth, setPaperWidth] = useState(0);
   // Respeita o sistema e o ajuste "movimento reduzido" do jogo (MotionConfig na raiz).
   const reduced = useReducedMotion() === true;
 
@@ -125,16 +136,24 @@ export function Newspaper({ career }: { career: Career }) {
   const [turn, setTurn] = useState<{ dir: 1 | -1; target: number; mode: "auto" | "drag" | "settling" } | null>(null);
   const sheetRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const stage = stageRef.current;
+    if (!stage) return;
+    const observer = new ResizeObserver(() => setPaperWidth(stage.clientWidth));
+    observer.observe(stage);
+    return () => observer.disconnect();
+  }, []);
   const dragRef = useRef<{ startX: number; width: number; dir: 1 | -1; angle: number } | null>(null);
   // Espelhos do estado para os timers: uma virada termina num setTimeout, bem
   // depois do fechamento que a começou.
   const indexRef = useRef(0);
   const desiredRef = useRef(0);
   const turningRef = useRef(false);
+  const stopTurn = useRef<(() => void) | null>(null);
+  useEffect(() => () => stopTurn.current?.(), []);
 
   // Para a frente, gira a página que sai; para trás, a que entra.
-  const flipIndex = turn ? (turn.dir === 1 ? index : turn.target) : index;
-  const baseIndex = turn ? (turn.dir === 1 ? turn.target : index) : index;
+  const baseIndex = turn?.target ?? index;
 
   /** Põe a próxima folha em movimento, se o leitor ainda não chegou. */
   const beginTurn = useCallback((from: number) => {
@@ -147,6 +166,8 @@ export function Newspaper({ career }: { career: Career }) {
 
   const commit = useCallback(
     (target: number) => {
+      stopTurn.current?.();
+      stopTurn.current = null;
       indexRef.current = target;
       turningRef.current = false;
       dragRef.current = null;
@@ -177,16 +198,17 @@ export function Newspaper({ career }: { career: Career }) {
    */
   const swing = useCallback(
     (from: number, to: number, onDone: () => void, settling = false) => {
+      stopTurn.current?.();
       const proportional = TURN_MS * (Math.abs(to - from) / TURN_DEGREES);
       // Movimento reduzido: a mesma máquina de estados, chegando na hora.
       const ms = reduced ? 0 : settling ? Math.max(SETTLE_MIN_MS, proportional) : proportional;
       const element = sheetRef.current;
-      if (element && ms > 0) {
-        animate(element, { rotateY: [`${from}deg`, `${to}deg`] }, { duration: ms / 1000, ease: settling ? [0.22, 1, 0.36, 1] : [0.36, 0, 0.24, 1] });
-      } else if (element) {
+      const animation = element && ms > 0 ? animate(element, { rotateY: [`${from}deg`, `${to}deg`] }, { duration: ms / 1000, ease: settling ? [0.22, 1, 0.36, 1] : [0.36, 0, 0.24, 1] }) : null;
+      if (element && ms === 0) {
         element.style.transform = `rotateY(${to}deg)`;
       }
-      window.setTimeout(onDone, ms);
+      const timer = window.setTimeout(() => { stopTurn.current = null; onDone(); }, ms);
+      stopTurn.current = () => { window.clearTimeout(timer); animation?.stop(); };
     },
     [reduced],
   );
@@ -295,7 +317,7 @@ export function Newspaper({ career }: { career: Career }) {
 
   if (editions.length === 0) return null;
   const base = editions[baseIndex];
-  const flip = editions[flipIndex];
+  const current = editions[index];
 
   const onKeyDown = (event: KeyboardEvent) => {
     if (event.key === "ArrowRight") {
@@ -312,6 +334,7 @@ export function Newspaper({ career }: { career: Career }) {
     <div className="flex flex-col gap-3">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <p className="text-xs text-muted">{t("summary.newspaper.hint")}</p>
+        <button type="button" className="paper-read-button" onClick={() => { syncDesired(desiredRef.current); setReading(true); }}><Expand size={14} aria-hidden="true" />{copy.readPaper}</button>
         <div className="flex shrink-0 items-center gap-1.5">
           <span className="numeric text-xs text-muted" aria-live="polite">
             {t("summary.newspaper.counter", { current: desired + 1, total: editions.length })}
@@ -324,21 +347,33 @@ export function Newspaper({ career }: { career: Career }) {
       <div
         ref={stageRef}
         className="paper-stage"
+        data-compact={paperWidth > 0 && paperWidth < 640 || undefined}
+        style={{ "--paper-scale": paperWidth > 0 && paperWidth < 640 ? paperWidth / 800 : 1 } as CSSProperties}
         tabIndex={0}
         role="region"
         aria-roledescription={t("summary.newspaper.roleDescription")}
         aria-label={t("summary.chapters.newspaper")}
         onKeyDown={onKeyDown}
       >
-        {/* A folha de baixo: aparece enquanto a de cima gira. */}
-        {base ? <FrontPage edition={base} total={editions.length} keeper={keeper} /> : null}
-        {/* A folha que gira: só existe no meio da virada, presa pela borda esquerda. */}
-        {turn && flip ? (
+        <div className="paper-canvas">
+        {base ? <div className="paper-spread" data-year={base.record.year}><FrontPage edition={base} total={editions.length} keeper={keeper} /><InsidePage edition={base} /></div> : null}
+        {turn && current && base ? <>
+          <div aria-hidden="true" className="paper-static-leaf" data-side={turn.dir === 1 ? "left" : "right"}>{turn.dir === 1 ? <FrontPage edition={current} total={editions.length} keeper={keeper} /> : <InsidePage edition={current} />}</div>
           <div ref={sheetRef} aria-hidden="true" className="paper-sheet" style={{ transform: turn.dir === 1 ? undefined : `rotateY(-${TURN_DEGREES}deg)` }}>
-            <FrontPage edition={flip} total={editions.length} keeper={keeper} />
-          </div>
-        ) : null}
+            <div className="paper-sheet-front"><InsidePage edition={turn.dir === 1 ? current : base} /></div>
+            <div className="paper-sheet-back"><FrontPage edition={turn.dir === 1 ? base : current} total={editions.length} keeper={keeper} /></div>
+          </div></>
+        : null}
+        </div>
       </div>
+      <Sheet open={reading} onOpenChange={setReading} title={copy.readPaper} closeLabel={t("common.close")} headerActions={<>
+        <TurnButton direction="prev" label={t("summary.newspaper.prev")} disabled={index === 0} onClick={() => syncDesired(Math.max(0, indexRef.current - 1))} />
+        <TurnButton direction="next" label={t("summary.newspaper.next")} disabled={index === editions.length - 1} onClick={() => syncDesired(Math.min(editions.length - 1, indexRef.current + 1))} />
+      </>}>
+        <p className="paper-reading-position" aria-live="polite">{t("summary.newspaper.counter", { current: index + 1, total: editions.length })}{current ? ` · ${current.record.year}` : ""}</p>
+        <div className="paper-reading-tabs" role="group" aria-label={copy.readPaper}><button type="button" aria-pressed={leaf === "cover"} onClick={() => setLeaf("cover")}>{copy.paperCover}</button><button type="button" aria-pressed={leaf === "inside"} onClick={() => setLeaf("inside")}>{copy.paperInside}</button></div>
+        <div className="paper-reading paper-stage">{current ? leaf === "cover" ? <FrontPage edition={current} total={editions.length} keeper={keeper} /> : <InsidePage edition={current} /> : null}</div>
+      </Sheet>
     </div>
   );
 }
@@ -361,12 +396,12 @@ function FrontPage({ edition, total, keeper }: { edition: Edition; total: number
   const tags = seasonTags(record).map((tag) => ({ ...tag, text: tagText(tag.kind, record, t, c) }));
 
   return (
-    <article className="paper-page" data-tone={cover.tone}>
+    <article className="paper-page" data-tone={cover.tone} data-leaf="cover" data-year={record.year}>
       <div className="paper-nameplate">
         <h3>{cover.paper}</h3>
       </div>
       <div className="paper-dateline">
-        <span>{t("summary.newspaper.edition", { current: index + 1, total })}</span>
+        <span>{t("summary.newspaper.edition", { current: index + 1, total })} · 1/2</span>
         <span>{t("summary.newspaper.at", { age: record.age, year: record.year })}</span>
       </div>
       <p className="paper-club">
@@ -389,7 +424,7 @@ function FrontPage({ edition, total, keeper }: { edition: Edition; total: number
       <div className="paper-lede">
         <figure>
           <div className="paper-photo">
-            <Crest club={record.club} size={64} decorative plain />
+            <Crest club={record.club} size={64} decorative plain fill />
           </div>
           <figcaption>{edition.clubName}</figcaption>
         </figure>
@@ -457,6 +492,31 @@ function FrontPage({ edition, total, keeper }: { edition: Edition; total: number
   );
 }
 
+
+
+function InsidePage({ edition }: { edition: Edition }) {
+  const { locale, t, c } = useT(); const copy = d74(locale); const drama = dramaText(locale);
+  const record = edition.record;
+  const moments = [...(record.keyMatches ?? [])].sort((a, b) => Number(b.match.stage === "final") - Number(a.match.stage === "final") || Number(b.match.national) - Number(a.match.national)).slice(0, 2);
+  if (!moments.length && !record.promise && !edition.veteranChosen) return <article className="paper-page paper-blank" data-leaf="blank" data-year={record.year} aria-label={t("summary.newspaper.blank")} />;
+  return <article className="paper-page paper-inside" data-leaf="inside" data-year={record.year}>
+    <div className="paper-nameplate"><h3>{edition.cover.paper}</h3></div><div className="paper-dateline"><span>{t("summary.newspaper.at", { age: record.age, year: record.year })}</span><span>2 / 2</span></div>
+    <p className="paper-club">{edition.clubName}</p><h4 className="paper-headline" data-size="small">{copy.backPage}</h4><p className="paper-inside-deck">{copy.backDeck}</p>
+    <div className="paper-inside-body">
+      {moments.length ? <ol className="paper-moments">{moments.map((result) => <li key={result.match.competition} data-won={result.won}>
+        <div className="paper-moment-top"><span>{getCompetition(result.match.competition)?.names[locale]} · {drama.stages[result.match.stage]}</span><strong>{result.score.join(" × ")}</strong></div>
+        <h5>{matchStory(locale, result, record.position, edition.surname).title}</h5>
+        <p className="paper-moment-story">{matchStory(locale, result, record.position, edition.surname).body}</p>
+      </li>)}</ol> : null}
+      <div className="paper-inside-notes">
+        {record.promise ? <section><p className="paper-section-flat">{drama.active}</p><h5>{record.promise.fulfilled ? copy.promiseKept : copy.promiseMiss}</h5><p><b>{record.promise.actual} / {record.promise.target}</b> {drama[record.promise.metric]}</p></section> : null}
+
+        {edition.veteranChosen && record.veteran ? <section><p className="paper-section-flat">{copy.benefit}</p><h5>{dramaAction(locale, record.veteran, record.position)}</h5></section> : null}
+      </div>
+    </div>
+    <div className="paper-todate"><p className="numeric">{record.games} {c("stats.games")} · {record.production.goals} {c("stats.goals")} · {record.production.assists} {c("stats.assists")} · {record.ovrEnd} OVR</p></div><p className="paper-brand">{t("app.name")}</p>
+  </article>;
+}
 
 function Stat({ label, value, delta }: { label: string; value: string; delta?: number | null }) {
   return (

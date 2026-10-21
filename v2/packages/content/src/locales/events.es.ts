@@ -2,6 +2,36 @@ import type { EventsMessages } from "./events.pt";
 
 /** Los textos de los eventos en español. */
 export const eventsEs: EventsMessages = {
+
+  "tacticalNotebook": {
+    "title": "El cuaderno del auxiliar",
+    "body": "El cuerpo técnico encontró una ventaja para las copas. Ensayarla exige renunciar a minutos.",
+    "options": {
+      "study": {
+        "label": "Ensayar la jugada",
+        "result": "Fuerza +1 en copas nacionales y partidos -6% durante el período."
+      },
+      "play": {
+        "label": "Ganar ritmo en el campo",
+        "result": "Partidos previstos +4%, dentro del calendario del club."
+      }
+    }
+  },
+  "silentWeek": {
+    "title": "Una semana sin focos",
+    "body": "La agenda está llena. Elige entre descanso y presencia en la prensa.",
+    "options": {
+      "silence": {
+        "label": "Apagar el teléfono",
+        "result": "Riesgo de lesión -20% durante el período. Afición -3."
+      },
+      "press": {
+        "label": "Hablar con la afición",
+        "result": "Afición +3. Evolución -5% durante el período."
+      }
+    }
+  }
+,
   extraTraining: {
     title: "Entrenamiento extra",
     body: "El preparador físico propone un programa aparte: gimnasio antes del amanecer y definición después de la práctica del equipo.",
@@ -111,7 +141,7 @@ export const eventsEs: EventsMessages = {
   },
   homesick: {
     title: "Nostalgia de casa",
-    body: "Tres años lejos de casa pesan. Un club de tu país te quiere de vuelta.",
+    body: "Tanto tiempo lejos de casa empieza a pesar. Un club de tu país te quiere de vuelta.",
     options: {
       goHome: { label: "Volver a casa", result: "{target} cierra tu regreso. Qué bueno estar cerca de la familia." },
       stay: { label: "Aguantar", result: "Te quedas, pero la cabeza no siempre está en el partido." },
@@ -189,18 +219,6 @@ export const eventsEs: EventsMessages = {
       club: { label: "Quedarse con el club", result: "Renuncias al torneo. La hinchada del club lo reconoce." },
     },
   },
-  painBeforeFinal: {
-    title: "Dolor antes de la final",
-    body: "Aparece un dolor en el muslo la semana de la final. Los médicos dicen que el riesgo es tuyo.",
-    options: {
-      sacrifice: {
-        label: "Jugar infiltrado",
-        success: "Juegas al límite y decides. Título y nombre en la historia.",
-        failure: "El muslo no aguantó. Final perdida y semanas afuera.",
-      },
-      rest: { label: "Cuidar el cuerpo", result: "Miras desde el banco. Sin ti, el equipo pierde la final." },
-    },
-  },
   muscleInjury: {
     title: "Lesión muscular",
     body: "Una lesión en el muslo al final de la pretemporada. El club quiere apuro; los médicos, calma.",
@@ -211,22 +229,6 @@ export const eventsEs: EventsMessages = {
         failure: "Volviste demasiado pronto y la lesión se abrió de nuevo. Más tiempo afuera, y el cuerpo lo sintió.",
       },
       fullRecovery: { label: "Recuperarse con calma", result: "Recuperación completa. Te pierdes más partidos, pero vuelves entero." },
-    },
-  },
-  decisivePenalty: {
-    title: "El penal decisivo",
-    body: "Final, definición por penales, último tiro. El entrenador te mira.",
-    options: {
-      take: {
-        label: "Patearlo",
-        success: "Gol. Tú decides el título.",
-        failure: "Atajado. La copa queda para el rival, y la hinchada no lo olvida.",
-      },
-      leave: {
-        label: "Dejárselo a otro",
-        success: "Patea otro y la mete. El título es del equipo, y lo festejas con todos.",
-        failure: "Patea otro y el arquero ataja. La copa se escapa, pero nadie te señala.",
-      },
     },
   },
   newCoach: {
@@ -250,7 +252,7 @@ export const eventsEs: EventsMessages = {
         success: "Provocaste y decidiste. Eres el héroe de la hinchada.",
         failure: "Provocaste y desapareciste en el partido. La hinchada no perdona.",
       },
-      fairPlay: { label: "Respetar al rival", result: "Hablas de respeto, y la hinchada aprueba el tono." },
+      fairPlay: { label: "Respetar al rival", result: "Evitas la provocación. Parte de la hinchada quería una respuesta más firme: apoyo -2." },
     },
   },
   idolFarewell: {

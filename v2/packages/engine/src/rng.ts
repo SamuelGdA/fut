@@ -184,6 +184,7 @@ export function createRng(seed: string): Rng {
  * por temporada e recebem o ano junto do rótulo.
  */
 export const RNG_SYSTEMS = [
+  "drama",
   "birth",
   "world",
   "titles",

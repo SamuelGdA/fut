@@ -9,7 +9,7 @@ import {
   PACES,
   POSITIONS,
   runDevelopment,
-  TRAINING_CAP,
+  FOCUS_TRAINING_CAP,
   DIFFICULTIES,
   type DevelopmentInput,
 } from "../src";
@@ -68,7 +68,7 @@ describe("invariantes da evolução em carreiras sorteadas", () => {
         for (const season of run.seasons) {
           if (season.capacity < CAPACITY_RANGE.min || season.capacity > CAPACITY_RANGE.max) return false;
         }
-        if (run.final.training.some((value) => value < 0 || value > TRAINING_CAP)) return false;
+        if (run.final.training.some((value) => value < 0 || value > FOCUS_TRAINING_CAP)) return false;
         // D47: cada temporada campeã pode acrescentar um ponto além do teto natural.
         let titleSeasons = 0;
         return run.seasons.every((season) => {
@@ -108,8 +108,7 @@ describe("invariantes da evolução em carreiras sorteadas", () => {
           if (!first?.focus || !last) continue;
           const slot = FOCUS_SLOT[first.focus];
           const begin = first.startAttributes[slot];
-          const capped = last.training[slot] >= TRAINING_CAP;
-          if (!capped && last.attributes[slot] < Math.min(99, begin + 2)) return false;
+          if (last.attributes[slot] < Math.min(99, begin + 2)) return false;
         }
         return true;
       }),

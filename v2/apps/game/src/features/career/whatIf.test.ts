@@ -1,11 +1,22 @@
 import { describe, expect, it } from "vitest";
 import { autoplay, choose, createCareer, policyChoice, retireNow, saveOf } from "@craque/engine";
 import { debugPlayer } from "@craque/engine/debug";
-import { actualDecisionPoints, carryDecisionMemory, decisionCheckpoint, decisionPoints, rememberDecision } from "./whatIf";
+import { actualDecisionPoints, carryDecisionMemory, decisionCheckpoint, decisionPoints, principalDecisionPoints, rememberDecision } from "./whatIf";
 import { useCareer } from "./store";
 
 const career = autoplay(createCareer({ seed: "hypothetical-d68", startYear: 2026, pace: "intense", difficulty: "normal", identity: { surname: "Teste", nationality: "BRA", position: "lw", foot: "right", dreamNumber: 11 } }), "balanced");
 describe("hipotético em sessões com ajustes de teste", () => {
+  it("mostra somente a primeira decisão principal de cada ano e conserva índices para ramificar", () => {
+    const all = actualDecisionPoints(career, "pt");
+    const points = principalDecisionPoints(all);
+    expect(new Set(points.map(point => point.year)).size).toBe(points.length);
+    expect(points.every(point => !["match", "promise", "veteran"].includes(point.kind))).toBe(true);
+    expect(points.length).toBeLessThan(all.length);
+    for (const point of points) {
+      expect(all.find(candidate => candidate.year === point.year && !["match", "promise", "veteran"].includes(candidate.kind))).toBe(point);
+      expect(decisionCheckpoint(career, point.index)?.decision?.kind).toBe(point.kind);
+    }
+  });
   it("registra todas as escolhas reais após mudanças de OVR/idade e retoma exatamente cada estado",()=>{
     let current=createCareer(career.setup);
     const originals=[];

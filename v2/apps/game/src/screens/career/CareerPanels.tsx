@@ -296,7 +296,7 @@ export function EndPanel({ career, onSummary }: { career: Career; onSummary(): v
   const { t, c } = useT();
   if (!career.end) return null;
   return (
-    <section className="end-panel rounded-md border border-line border-t-4 border-t-glory bg-panel p-5" aria-live="polite">
+    <section className="decision end-panel rounded-md border border-line border-t-4 border-t-glory bg-panel p-5" aria-live="polite">
       <p className="eyebrow text-glory">{t("career.ended.eyebrow")}</p>
       <h2 className="display mt-2 text-4xl font-black uppercase">{t("career.ended.title")}</h2>
       <p className="mt-2 text-muted">{c(`end.${career.end.reason}`)}</p>

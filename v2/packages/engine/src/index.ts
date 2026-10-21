@@ -73,7 +73,7 @@ export {
   type Player,
 } from "./player/player";
 export { SCOUT_GATES, SCOUT_LEVELS, scoutLevel, scoutReading, type ScoutLevel, type ScoutReading } from "./player/scout";
-export { ageValueFactor, baseMarketValue, marketValue, MAX_MARKET_VALUE } from "./player/value";
+export { ageValueFactor, baseMarketValue, marketValue, leagueMarketFactor, marketLeagueStrength, MAX_MARKET_VALUE } from "./player/value";
 
 export {
   breakthroughChance,
@@ -104,6 +104,8 @@ export {
 export {
   FOCUS_RULE,
   FOCUS_SLOT,
+  FOCUS_TRAINING_CAP,
+  applyFocusNow,
   focusDueAt,
   focusesFor,
   guaranteeFocus,
@@ -378,3 +380,7 @@ export {
   SHIRT_PROMOTION_CHANCE,
   SHIRT_RANGES,
 } from "./career/shirt";
+
+export * from "./career/dramaTypes";
+export * from "./career/matchMoments";
+export { promiseOptions, veteranModifiers, matchChance, resolveKeyMatch } from "./career/drama";

@@ -3,11 +3,15 @@ import { stream } from "../rng";
 import type { SquadRole } from "../season/role";
 import { CHALLENGE_RETIRE_AGE, RETIREMENT_AGE } from "../types";
 import { clubIndex } from "../world/model";
+import { CLUBS } from "@craque/world";
+import { attributesAt } from "../player/player";
+import { FOCUS_SLOT } from "../evolution/training";
+import { startDrama } from "./drama";
 import { careerMarketLevel, eventContext, marketContext } from "./context";
 import { promotedNumber } from "./shirt";
 import { eventDecision, pickEvent } from "./events";
 import { academyOffers, buildOffer, interestedClubs, LOAN, loanOffers, marketOffers } from "./market";
-import type { Career, ClubOffer, Decision, DecisionKind, DecisionOption } from "./types";
+import type { Career, CareerNotice, ClubOffer, Decision, DecisionKind, DecisionOption } from "./types";
 
 /**
  * A próxima decisão (GDD 14.2). A primeira regra que se aplicar vence:
@@ -95,17 +99,27 @@ function noMarket(career: Career): boolean {
   if (!career.contract) return true;
   const strength = career.world.strength[clubIndex(career.contract.club)] ?? 0;
   const loyalty=Math.max(0,((career.bonds[career.contract.club]?.fans ?? 50)-70)/30)*3;
-  return strength > careerMarketLevel(career) + 3 + loyalty;
+  // Sem interessados, a última renovação exige um pouco mais de utilidade.
+  const renewalRoom = career.age >= 38 ? 2 : 3;
+  return strength > careerMarketLevel(career) + renewalRoom + loyalty;
 }
 
-function windowDecision(career: Career, reason: Decision["reason"] = null): Career {
-  const offers = marketOffers(marketContext(career), 2, rng(career, "window"));
+export function transferOpportunityDue(career: Career): boolean {
+  return Boolean(career.contract) && career.world.year - (career.lastOfferYear ?? career.setup.startYear) >= 3;
+}
+export function windowDecision(career: Career, reason: Decision["reason"] = null, guaranteed = false): Career {
+  const context = marketContext(career);
+  let offers = marketOffers(context, 2, rng(career, "window"));
+  if (guaranteed && offers.length === 0) {
+    const candidates = CLUBS.flatMap((club, index) => club.id !== context.current && !context.excluded.includes(club.id) && (context.world.strength[index] ?? 0) <= (context.maxStrength ?? Infinity) ? [index] : []).sort((a, b) => Math.abs((context.world.strength[a] ?? 0) - context.level) - Math.abs((context.world.strength[b] ?? 0) - context.level));
+    if (candidates[0] !== undefined) offers = [buildOffer(context, candidates[0], rng(career, "opportunity"))];
+  }
   const options: DecisionOption[] = [];
   if (career.contract) options.push(stayOption(career));
   options.push(...clubOptions(offers));
   if (career.age >= retireFrom(career, 33)) options.push({ id: "retire", kind: "retire" });
   if (options.length === 0) return ended(career, "noOffers");
-  return withDecision(career, decision(career, "window", options, { reason }));
+  return withDecision(offers.length ? { ...career, lastOfferYear: career.world.year } : career, decision(career, "window", options, { reason }));
 }
 
 /** Chance de o clube do empréstimo querer comprar o passe, se o dono o quer de volta ou não. */
@@ -116,7 +130,7 @@ export const BUYOUT_CHANCE = { retained: 0.4, released: 0.7 } as const;
  * nome: a volta para o dono (se ele o quer de volta), a compra pelo clube do
  * empréstimo (para continuar onde está) e as ofertas do mercado.
  */
-function returnDecision(career: Career): Career {
+export function returnDecision(career: Career): Career {
   const contract = career.contract;
   const loan = contract?.loan;
   if (!contract || !loan) return windowDecision(career);
@@ -146,7 +160,7 @@ function returnDecision(career: Career): Career {
 }
 
 /** Dispensa (GDD 15.6): três clubes, nunca o que dispensou, e aposentar a partir dos 32. */
-function releaseDecision(career: Career): Career {
+export function releaseDecision(career: Career): Career {
   const context = marketContext(career, { proving: true });
   const offers = marketOffers(context, 3, rng(career, "release"));
   const options: DecisionOption[] = clubOptions(offers);
@@ -195,8 +209,11 @@ function buildNextDecision(career: Career): Career {
   const loan = career.contract?.loan;
   if (loan && career.age >= loan.untilAge) return returnDecision(career);
   if (shouldRelease(career)) return releaseDecision(career);
+  if (transferOpportunityDue(career)) return windowDecision(career, null, true);
 
-  if (career.agenda.includes(career.age) && career.contract) {
+  // A oferta obrigatória tem prioridade, mas não apaga a vaga de um evento.
+  // Vagas vencidas aguardam uma decisão livre e um acontecimento elegível.
+  if (career.agenda.filter((age) => age <= career.age).length > career.eventsSeen.length && career.contract) {
     const context = eventContext(career);
     const event = pickEvent(career, context);
     const built = event ? eventDecision(career, event, context, career.decisionCount + 1) : null;
@@ -204,8 +221,9 @@ function buildNextDecision(career: Career): Career {
   }
 
   if (career.contract && focusDue(career)) {
-    const options: DecisionOption[] = focusesFor(career.player.position).map((focus) => ({ id: `focus:${focus}`, kind: "focus", focus }));
-    return withDecision(career, decision(career, "focus", options));
+    const values = attributesAt(career.player, career.age);
+    const options: DecisionOption[] = focusesFor(career.player.position).filter((focus) => values[FOCUS_SLOT[focus]] <= 97).map((focus) => ({ id: `focus:${focus}`, kind: "focus", focus }));
+    if (options.length) return withDecision(career, decision(career, "focus", options));
   }
 
   if (loanDue(career)) {
@@ -220,7 +238,13 @@ function buildNextDecision(career: Career): Career {
 }
 
 /** O rompimento vale apenas nesta decisão; foco ou evento também consomem a restrição. */
-export function nextDecision(career: Career): Career {
+export function nextDecision(career: Career, notices: CareerNotice[] = []): Career {
   const next = buildNextDecision(career);
-  return career.agentRestriction ? { ...next, agentRestriction: false } : next;
+  const cleared = career.agentRestriction ? { ...next, agentRestriction: false } : next;
+  if (cleared.decision?.kind === "window" && cleared.decision.options.length === 1 && cleared.decision.options[0]?.kind === "stay") {
+    const shirt = cleared.decision.options[0].shirt;
+    return startDrama({ ...cleared, decision: null, decisionCount: career.decisionCount, contract: cleared.contract && shirt !== null ? { ...cleared.contract, shirt } : cleared.contract }, notices, null, false, undefined, 0);
+  }
+  const external = cleared.decision?.options.some((option) => option.kind === "club" && option.offer.club !== cleared.contract?.club || option.kind === "event" && option.target?.club && option.target.club.club !== cleared.contract?.club);
+  return external ? { ...cleared, lastOfferYear: cleared.world.year } : cleared;
 }

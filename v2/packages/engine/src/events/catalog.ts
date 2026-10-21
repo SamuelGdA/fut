@@ -10,6 +10,14 @@ import type { EventDefinition } from "./model";
  * valem depois de qualquer evento.
  */
 export const EVENT_CATALOG: readonly EventDefinition[] = [
+  { id: "tacticalNotebook", weight: 45, tags: ["tactics"], when: [{ kind: "lastGames", min: 12 }], options: [
+    { id: "study", kind: "choice", success: [{ kind: "boost", target: "cup", amount: 1 }, { kind: "games", scale: 0.94 }] },
+    { id: "play", kind: "choice", success: [{ kind: "games", scale: 1.04 }] },
+  ] },
+  { id: "silentWeek", weight: 40, tags: ["fitness"], when: [{ kind: "age", min: 23 }], options: [
+    { id: "silence", kind: "choice", success: [{ kind: "fans", amount: -3 }, { kind: "injury", scale: 0.8 }] },
+    { id: "press", kind: "choice", success: [{ kind: "fans", amount: 3 }, { kind: "growth", scale: 0.95 }] },
+  ] },
   {
     id: "extraTraining",
     weight: 100,
@@ -226,22 +234,6 @@ export const EVENT_CATALOG: readonly EventDefinition[] = [
     ],
   },
   {
-    id: "painBeforeFinal",
-    weight: 20,
-    tags: ["final", "injury-risk"],
-    when: [{ kind: "role", in: ["rotation", "starter", "star"] }, { kind: "lastGames", min: 12 }, { kind: "knockout" }],
-    options: [
-      {
-        id: "sacrifice",
-        kind: "risky",
-        chance: 0.6,
-        success: [{ kind: "final", result: "win" }, { kind: "fans", amount: 6 }],
-        failure: [{ kind: "final", result: "lose" }, { kind: "games", scale: 0.6 }, { kind: "capacity", amount: -1, when: "now" }],
-      },
-      { id: "rest", kind: "safe", success: [{ kind: "final", result: "lose" }] },
-    ],
-  },
-  {
     id: "muscleInjury",
     weight: 100,
     tags: ["injury"],
@@ -255,17 +247,6 @@ export const EVENT_CATALOG: readonly EventDefinition[] = [
         failure: [{ kind: "games", scale: 0.6 }, { kind: "capacity", amount: -1, when: "now" }],
       },
       { id: "fullRecovery", kind: "safe", success: [{ kind: "games", scale: 0.78 }] },
-    ],
-  },
-  {
-    id: "decisivePenalty",
-    weight: 20,
-    tags: ["final"],
-    when: [{ kind: "role", in: ["rotation", "starter", "star"] }, { kind: "lastGames", min: 12 }, { kind: "knockout" }],
-    options: [
-      { id: "take", kind: "risky", chance: 0.7, success: [{ kind: "final", result: "win" }, { kind: "fans", amount: 8 }], failure: [{ kind: "final", result: "lose" }, { kind: "fans", amount: -6 }] },
-      // Quem bate é outro, mas a final existe: metade das vezes ele converte.
-      { id: "leave", kind: "risky", chance: 0.5, success: [{ kind: "final", result: "win" }], failure: [{ kind: "final", result: "lose" }] },
     ],
   },
   {
@@ -285,7 +266,7 @@ export const EVENT_CATALOG: readonly EventDefinition[] = [
     when: [{ kind: "derby" }, { kind: "role", in: ["rotation", "starter", "star"] }, { kind: "lastGames", min: 12 }],
     options: [
       { id: "provoke", kind: "risky", chance: 0.55, success: [{ kind: "fans", amount: 12 }], failure: [{ kind: "fans", amount: -10 }] },
-      { id: "fairPlay", kind: "safe", success: [{ kind: "fans", amount: 2 }] },
+      { id: "fairPlay", kind: "safe", success: [{ kind: "fans", amount: -2 }] },
     ],
   },
   {

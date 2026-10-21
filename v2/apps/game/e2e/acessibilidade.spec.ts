@@ -81,7 +81,7 @@ test("um turno inteiro só com o teclado", async ({ page }, info) => {
   await page.keyboard.press("Enter");
 
   // A decisão nova recebe o foco no título: o leitor de tela lê a pergunta.
-  await expect(page.locator(".decision-title")).toBeFocused();
+  await expect(page.locator(".season-decision-slide[data-active] .decision-title")).toBeFocused();
 
   // Tab entra no grupo de opções; as setas andam e marcam.
   await page.keyboard.press("Tab");
@@ -105,7 +105,7 @@ test("um turno inteiro só com o teclado", async ({ page }, info) => {
 
   // Sem janela para fechar (D43): a próxima decisão chega com o foco no título.
   await expect(page.locator(".play").first()).toBeVisible();
-  await expect(page.locator(".decision-title")).toBeFocused();
+  await expect(page.locator(".season-decision-slide[data-active] .decision-title")).toBeFocused();
 });
 
 test("o leitor de tela ouve o lance numa frase, a cada jogada", async ({ page }, info) => {

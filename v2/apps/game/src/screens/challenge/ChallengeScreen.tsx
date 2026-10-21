@@ -19,7 +19,6 @@ import { cn } from "../../ui/cn";
 import { TextField } from "../../ui/Fields";
 import { Flag } from "../../ui/Media";
 import { Panel, SectionRule } from "../../ui/Panel";
-import { Segmented } from "../../ui/Segmented";
 import { Chip } from "../../ui/Signals";
 import { EdictBand, MissionLine } from "./MissionViews";
 
@@ -165,21 +164,6 @@ export function ChallengeScreen() {
                     <p id={`${dreamId}-note`} className={cn("mt-1.5 text-xs", dreamValid ? "text-faint" : "text-bad")}>
                       {dreamValid ? t("identity.dreamHint") : t("identity.dreamInvalid")}
                     </p>
-                  </div>
-                  <div>
-                    <p className="eyebrow mb-2.5 text-fg">{t("identity.foot")}</p>
-                    <Segmented
-                      label={t("identity.foot")}
-                      value={draft.foot}
-                      onValueChange={(foot) => {
-                        useDraft.getState().update({ foot });
-                        feedback("tick");
-                      }}
-                      options={[
-                        { value: "right", label: t("identity.footRight") },
-                        { value: "left", label: t("identity.footLeft") },
-                      ]}
-                    />
                   </div>
                 </div>
               </div>

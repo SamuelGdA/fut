@@ -16,6 +16,7 @@ import {
   INJURY_TAG,
   LOAN,
   MAX_INJURY_EVENTS,
+  MAX_DECISIONS,
   ovrOf,
   parseSave,
   policyChoice,
@@ -48,7 +49,7 @@ function setupOf(seed: string, overrides: Partial<CareerSetup> = {}, identity: P
 function walk(setup: CareerSetup, policy: CareerPolicy): Career[] {
   const steps = [createCareer(setup)];
   let career = steps[0] as Career;
-  for (let guard = 0; guard < 100 && career.decision; guard += 1) {
+  for (let guard = 0; guard < MAX_DECISIONS && career.decision; guard += 1) {
     const choice = policyChoice(career, policy);
     if (!choice) break;
     career = choose(career, choice).career;
@@ -220,12 +221,12 @@ describe("eventos, empréstimos e clubes bloqueados", () => {
     }
   });
 
-  it("evento só nas idades da agenda, com 2 ou mais opções e chance entre 5% e 95%", () => {
+  it("evento consome uma vaga vencida da agenda, com 2 ou mais opções e chance entre 5% e 95%", () => {
     for (const steps of careers) {
       for (const career of steps) {
         const decision = career.decision;
         if (decision?.kind !== "event") continue;
-        expect(career.agenda).toContain(decision.age);
+        expect(career.agenda.filter((age) => age <= decision.age).length).toBeGreaterThan(career.eventsSeen.length);
         expect(decision.options.length).toBeGreaterThanOrEqual(2);
         for (const option of decision.options) {
           if (option.kind === "event" && option.chance !== null) {

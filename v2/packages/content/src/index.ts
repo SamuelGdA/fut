@@ -110,3 +110,9 @@ export type { CareerMessages } from "./locales/career.pt";
 export type { EventsMessages } from "./locales/events.pt";
 export { contenderName, culturesOf, generatedName, generatedParts, type ContenderNameInput, type NameParts } from "./names/generate";
 export { CONFEDERATION_CULTURES, COUNTRY_CULTURES, FAMOUS_NAMES, NAME_POOLS, type NameCulture, type NamePool } from "./names/pools";
+
+export * from "./drama";
+export { sceneOption } from "./matchScenes";
+
+export { matchStory } from "./matchStory";
+export { matchOutcomeText } from "./matchOutcome";

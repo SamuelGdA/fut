@@ -1,5 +1,6 @@
 import {
   autoplay,
+  BIG_FIVE,
   type CareerPolicy,
   challengeSetup,
   challengeStatus,
@@ -51,14 +52,25 @@ const RARE_SHARE = 0.15;
  * da faixa em vez de virar presente.
  */
 const EASY_SHARE = 0.55;
-/** Políticas que fazem as tentativas: jogadores comuns, que não perseguem missão. */
-const ATTEMPT_POLICIES: readonly CareerPolicy[] = ["balanced", "ambitious"];
+/** Os três estilos comuns, com o mesmo peso e sem perseguir missão ou édito. */
+const ATTEMPT_POLICIES: readonly CareerPolicy[] = ["balanced", "ambitious", "loyal"];
+
+/** Cruzar os estilos com cada posição evita atrelar uma posição a uma só política. */
+export function calibrationProfile(index: number) {
+  return {
+    position: POSITIONS[Math.floor(index / ATTEMPT_POLICIES.length) % POSITIONS.length] ?? "st",
+    nationality: PLAYABLE_COUNTRIES[(index * 7) % PLAYABLE_COUNTRIES.length] ?? "BRA",
+    policy: ATTEMPT_POLICIES[index % ATTEMPT_POLICIES.length] ?? "balanced",
+  };
+}
 
 export interface CalibrationRun {
   readonly band: TalentBand;
   readonly measures: Readonly<Record<string, number>>;
   /** Éditos que o jogo comum quebrou nesta carreira. */
   readonly brokenEdicts: readonly string[];
+  /** Origens que permitem evitar uma liga, sem quebra obrigatória já na base. */
+  readonly nationality?: string;
 }
 
 /** Sementes cujo jogador nasce na faixa pedida, no Difícil do desafio. */
@@ -71,13 +83,12 @@ function seedsForBand(base: string, band: TalentBand, count: number): string[] {
   return seeds;
 }
 
-/** Carreiras de calibragem: posições e países em rodízio, as duas políticas comuns. */
+/** Carreiras de calibragem: posições e países em rodízio, os três estilos comuns. */
 export function runCalibration(base: string, perBand: number): CalibrationRun[] {
   const runs: CalibrationRun[] = [];
   for (const band of TALENT_BANDS) {
     seedsForBand(base, band, perBand).forEach((seed, index) => {
-      const position = POSITIONS[index % POSITIONS.length] ?? "st";
-      const nationality = PLAYABLE_COUNTRIES[(index * 7) % PLAYABLE_COUNTRIES.length] ?? "BRA";
+      const { position, nationality, policy } = calibrationProfile(index);
       const career = autoplay(
         createCareer({
           seed,
@@ -87,12 +98,12 @@ export function runCalibration(base: string, perBand: number): CalibrationRun[] 
           challengeId: "2026-01-01",
           identity: { surname: "CALIBRA", foot: "right", nationality, position, dreamNumber: null },
         }),
-        ATTEMPT_POLICIES[index % ATTEMPT_POLICIES.length] ?? "balanced",
+        policy,
       );
       const measures: Record<string, number> = {};
       for (const item of MISSIONS) if (missionFitsPosition(item, position)) measures[item.id] = item.measure(career);
       const brokenEdicts = EDICTS.filter((edict) => edictState(edict, career) === "broken").map((edict) => edict.id);
-      runs.push({ band, measures, brokenEdicts });
+      runs.push({ band, measures, brokenEdicts, nationality });
     });
   }
   return runs;
@@ -274,7 +285,7 @@ const RATE_BAND = [0.15, 0.55] as const;
 const EDICT_BAND = [0.1, 0.75] as const;
 
 export function edictBreakRates(runs: readonly CalibrationRun[]): Map<string, number> {
-  return new Map(EDICTS.map((edict) => [edict.id, share(runs, (run) => run.brokenEdicts.includes(edict.id))]));
+  return new Map(EDICTS.map((edict) => [edict.id, share(runs.filter((run) => edict.id !== "noBigFive" || !run.nationality || !BIG_FIVE.has(run.nationality)), (run) => run.brokenEdicts.includes(edict.id))]));
 }
 
 export function challengeTargets(metrics: ChallengeMetrics): TargetResult[] {
@@ -347,6 +358,7 @@ export function challengeReport(input: { engineVersion: string; seed: string; fi
   lines.push(`Motor ${input.engineVersion}, semente \`${input.seed}\`. ${metrics.days} dias a partir de ${input.firstDay}.`);
   lines.push("");
   lines.push("O alvo de cada missão depende da faixa de talento do jogador do dia e é o percentil 65 de carreiras comuns com as regras do desafio (Difícil, Normal, aposentar a partir dos 27): o jogo comum cumpre cerca de um terço, e quem persegue a missão cumpre bem mais. Recalibrar: `pnpm desafio:calibrar`.");
+  lines.push("Equilibrada, ambiciosa e fiel têm o mesmo peso na amostra e nas tentativas. Nenhuma consulta a missão ou o édito para escolher.");
   lines.push("");
   lines.push("## Metas");
   lines.push("");

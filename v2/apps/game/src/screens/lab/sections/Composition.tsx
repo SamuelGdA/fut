@@ -1,3 +1,4 @@
+import { MatchLab } from "./MatchLab";
 import { Crosshair, Footprints, type LucideIcon, Zap } from "lucide-react";
 import { type CSSProperties, useState } from "react";
 import { useT } from "../../../i18n/useT";
@@ -153,6 +154,7 @@ export function CompositionSection({ index }: SectionProps) {
           </TabList>
         </TabsRoot>
       </div>
+      <MatchLab />
     </LabSection>
   );
 }

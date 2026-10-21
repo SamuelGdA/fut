@@ -60,12 +60,13 @@ export const DECLINE = {
   max: 4.5,
 } as const;
 
-/** Moral de título (GDD 10.4). */
+/** Reconhecimentos desenvolvem capacidade, sem comprar degraus inteiros de OVR (D78). */
 export const MORALE = {
-  perImportance: 0.25,
-  max: 1.2,
+  perRecognition: 0.55,
+  maxRecognitions: 3,
+  taperSpan: 5,
   /** Acima de P + isto, título não rende mais nada. */
-  aboveCeiling: 1,
+  aboveCeiling: 2,
 } as const;
 
 /** Treino (GDD 10.5 e D42). */

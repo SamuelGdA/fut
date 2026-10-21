@@ -47,7 +47,8 @@ describe("participação e continuidade (D47)", () => {
     const ids = eligibleEvents(career, context).map((event) => event.id);
     for (const id of ["derby", "packedStadium", "painBeforeFinal", "decisivePenalty", "redCard"]) expect(ids).not.toContain(id);
     const regular = { ...context, lastRole: "rotation" as const, lastGames: 20 };
-    expect(eligibleEvents(career, regular).map((event) => event.id)).toContain("derby");
+    const regularCareer = { ...career, player: { ...career.player, capacity: 90 }, history: [{ ...career.history[0]!, role: "rotation" as const, games: 20 }] };
+    expect(eligibleEvents(regularCareer, regular).map((event) => event.id)).toContain("derby");
   });
 
   it("disputar a vaga é 50/50 também para competidor e frágil", () => {
@@ -86,7 +87,8 @@ describe("nova seleção por residência (D47)", () => {
     const event = EVENT_CATALOG.find((entry) => entry.id === "residencePassport")!;
     const decision = eventDecision(career, event, eventContext(career), 100)!;
     expect(decision.options.find((entry) => entry.kind === "event" && entry.option === "switch")?.kind).toBe("event");
-    const accepted = choose({ ...career, decision }, { decision: 100, option: "switch" }).career;
+    let accepted = choose({ ...career, decision }, { decision: 100, option: "switch" }).career;
+    while (accepted.decision?.options[0]?.kind === "drama") accepted = choose(accepted, { decision: accepted.decision.id, option: accepted.decision.options[0].id }).career;
     expect(accepted.nationality).toBe("URU");
     expect(accepted.history.at(-1)?.national.games).toBeGreaterThan(0);
     const refused = choose({ ...career, decision }, { decision: 100, option: "keep" }).career;
@@ -95,19 +97,20 @@ describe("nova seleção por residência (D47)", () => {
 });
 
 describe("título e força dos clubes (D47)", () => {
-  it("título acrescenta exatamente um OVR à evolução natural, também na queda", () => {
+  it("título ajuda a capacidade sem comprar OVR inteiro, também na queda (D78)", () => {
     for (const position of POSITIONS) for (const age of [18, 35]) {
       const player = { ...createPlayer({ seed: `d47-${position}`, position, difficulty: "normal" }), capacity: 75 };
       const input = { age, games: 30, clubStrength: 75, fans: 50, difficulty: "normal" as const, focus: null };
       const ordinary = evolveSeason(player, { ...input, titleImportance: 0 }, createRng("same"));
       const champion = evolveSeason(player, { ...input, titleImportance: 3.5 }, createRng("same"));
       const multiple = evolveSeason(player, { ...input, titleImportance: 10 }, createRng("same"));
-      expect(ovrAt(champion.player, age)).toBe(ovrAt(ordinary.player, age) + 1);
+      expect(champion.player.capacity).toBeGreaterThanOrEqual(ordinary.player.capacity);
+      expect(champion.player.capacity - ordinary.player.capacity).toBeLessThanOrEqual(0.55 + 1e-9);
       expect(ovrAt(multiple.player, age)).toBe(ovrAt(champion.player, age));
     }
   });
 
-  it("o bônus de título continua +1 depois da garantia do atributo treinado", () => {
+  it("o bônus de título respeita a garantia do atributo treinado (D78)", () => {
     for (const position of POSITIONS) for (const age of [24, 31, 35]) {
       const born = createPlayer({ seed: `d47-foco-${position}`, position, difficulty: "normal" });
       const player = { ...born, capacity: born.potential + 1 };
@@ -116,7 +119,8 @@ describe("título e força dos clubes (D47)", () => {
       const input = { age, games: 30, clubStrength: 75, fans: 50, difficulty: "normal" as const, focus, guarantee: { focus, start } };
       const ordinary = evolveSeason(player, { ...input, titleImportance: 0 }, createRng("same")).player;
       const champion = evolveSeason(player, { ...input, titleImportance: 1 }, createRng("same")).player;
-      expect(ovrAt(champion, age), `${position}/${age}`).toBe(Math.min(99, ovrAt(ordinary, age) + 1));
+      expect(ovrAt(champion, age), `${position}/${age}`).toBeGreaterThanOrEqual(ovrAt(ordinary, age));
+      expect(attributesAt(champion, age)[0]).toBeGreaterThanOrEqual(Math.min(99, start[0] + 2));
     }
   });
 

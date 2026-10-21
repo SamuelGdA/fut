@@ -10,6 +10,36 @@ import type { Widen } from "../i18n";
  * de artigo: o gênero muda de um para outro.
  */
 export const eventsPt = {
+
+  "tacticalNotebook": {
+    "title": "O caderno do auxiliar",
+    "body": "A comissão encontrou uma vantagem para as copas. Ensaiar exige abrir mão de minutos.",
+    "options": {
+      "study": {
+        "label": "Ensaiar a jogada",
+        "result": "Força +1 nas copas nacionais e jogos -6% no período."
+      },
+      "play": {
+        "label": "Ganhar ritmo em campo",
+        "result": "Jogos planejados +4%, dentro do calendário do clube."
+      }
+    }
+  },
+  "silentWeek": {
+    "title": "Uma semana sem holofotes",
+    "body": "A agenda está cheia. Você escolhe entre descanso e presença na imprensa.",
+    "options": {
+      "silence": {
+        "label": "Desligar o telefone",
+        "result": "Risco de lesão -20% no período. Torcida -3."
+      },
+      "press": {
+        "label": "Conversar com a torcida",
+        "result": "Torcida +3. Evolução -5% no período."
+      }
+    }
+  }
+,
   extraTraining: {
     title: "Treino extra",
     body: "O preparador físico propõe um programa à parte: academia antes do sol nascer e finalização depois do treino do time.",
@@ -119,7 +149,7 @@ export const eventsPt = {
   },
   homesick: {
     title: "Saudade de casa",
-    body: "Três anos longe de casa pesam. Um clube do seu país quer você de volta.",
+    body: "Tanto tempo longe de casa começa a pesar. Um clube do seu país quer você de volta.",
     options: {
       goHome: { label: "Voltar para casa", result: "{target} acerta a sua volta. É bom estar perto da família." },
       stay: { label: "Aguentar firme", result: "Você fica, mas a cabeça nem sempre está no jogo." },
@@ -197,18 +227,6 @@ export const eventsPt = {
       club: { label: "Ficar com o clube", result: "Você abre mão do torneio. A torcida do clube reconhece." },
     },
   },
-  painBeforeFinal: {
-    title: "Dor antes da final",
-    body: "Uma dor na coxa aparece na semana da final. Os médicos dizem que o risco é seu.",
-    options: {
-      sacrifice: {
-        label: "Jogar no sacrifício",
-        success: "Você joga no limite e decide. Título e nome na história.",
-        failure: "A coxa não aguentou. Final perdida e semanas fora.",
-      },
-      rest: { label: "Poupar o corpo", result: "Você assiste do banco. Sem você, o time perde a final." },
-    },
-  },
   muscleInjury: {
     title: "Lesão muscular",
     body: "Uma lesão na coxa no fim da pré-temporada. O clube quer pressa; os médicos, calma.",
@@ -219,22 +237,6 @@ export const eventsPt = {
         failure: "Voltou cedo demais, e a lesão abriu de novo. Mais tempo fora, e o corpo sentiu.",
       },
       fullRecovery: { label: "Recuperar com calma", result: "Recuperação completa. Você perde mais jogos, mas volta inteiro." },
-    },
-  },
-  decisivePenalty: {
-    title: "O pênalti decisivo",
-    body: "Final, disputa de pênaltis, última cobrança. O treinador olha para você.",
-    options: {
-      take: {
-        label: "Bater",
-        success: "Gol. Você decide o título.",
-        failure: "Defendido. A taça fica com o adversário, e a torcida não esquece.",
-      },
-      leave: {
-        label: "Deixar para outro",
-        success: "Outro bate e converte. O título é do time, e você comemora junto.",
-        failure: "Outro bate e o goleiro defende. A taça escapa, mas ninguém aponta para você.",
-      },
     },
   },
   newCoach: {
@@ -258,7 +260,7 @@ export const eventsPt = {
         success: "Você provocou e decidiu. Virou herói da torcida.",
         failure: "Provocou e sumiu no jogo. A torcida não perdoa.",
       },
-      fairPlay: { label: "Respeitar o rival", result: "Você fala em respeito, e a torcida aprova o tom." },
+      fairPlay: { label: "Respeitar o rival", result: "Você evita a provocação. Parte da torcida queria uma resposta mais firme: torcida -2." },
     },
   },
   idolFarewell: {

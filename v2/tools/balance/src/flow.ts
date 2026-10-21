@@ -116,6 +116,7 @@ export interface BatchFlowMetrics {
   readonly reasons: Readonly<Partial<Record<EndReason, number>>>;
   readonly events: number;
   readonly decisions: number;
+  readonly planningDecisions: number;
   readonly decisionKinds: Readonly<Partial<Record<DecisionKind, number>>>;
   readonly loans: number;
   readonly clubs: number;
@@ -158,6 +159,7 @@ function batchMetrics(runs: readonly FlowRun[]): BatchFlowMetrics {
     reasons,
     events: mean(runs.map((run) => run.career.eventsSeen.length)),
     decisions: mean(runs.map((run) => run.career.choices.length)),
+    planningDecisions: mean(runs.map((run) => Object.entries(run.decisions).reduce((sum, [kind, count]) => sum + (["match", "promise", "veteran"].includes(kind) ? 0 : count), 0))),
     decisionKinds: kinds,
     loans: mean(runs.map((run) => run.career.loans)),
     clubs: mean(runs.map((run) => new Set(run.career.history.map((season) => season.club)).size)),
@@ -229,10 +231,10 @@ export function flowTargets(metrics: FlowMetrics): TargetResult[] {
     },
     {
       id: "flow-decisions-normal",
-      label: "Decisões por carreira no ritmo Normal (3 a 5 minutos de interação)",
-      target: "9 a 15",
-      measured: fixed(bn.decisions),
-      pass: bn.decisions >= 9 && bn.decisions <= 15,
+      label: "Decisões no ritmo Normal: planejamento e total com momentos (D73)",
+      target: "planejamento 9 a 15; total até 65",
+      measured: `${fixed(bn.planningDecisions)} / ${fixed(bn.decisions)}`,
+      pass: bn.planningDecisions >= 9 && bn.planningDecisions <= 15 && bn.decisions <= 65,
     },
     {
       id: "flow-short-windows",

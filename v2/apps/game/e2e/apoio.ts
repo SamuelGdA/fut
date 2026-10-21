@@ -1,5 +1,10 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, type Page } from "@playwright/test";
+import { deflateRawSync } from "node:zlib";
+import { readFileSync } from "node:fs";
+
+export interface FixtureStep { id:number;kind:string;year:number;age:number;option:number;history:number[];match:boolean }
+export const fixturePlans = (JSON.parse(readFileSync(new URL("./fixtures/momentos-m23.json",import.meta.url),"utf8")) as { plans:Record<string,FixtureStep[]> }).plans;
 
 /**
  * O que toda jornada usa: abrir o jogo com preferências conhecidas, jogar um
@@ -11,13 +16,14 @@ import { expect, type Page } from "@playwright/test";
  * As opções da decisão atual. Só `.option` não serve: o painel "Memória" do
  * Início usa o mesmo desenho de linha, e um teste apressado clicaria nele.
  */
-export const OPCOES = ".decision-options .option";
+export const OPCOES = ".season-decision-slide[data-active] .decision-options .option";
 
 export interface Prefs {
   locale?: "pt" | "es" | "en";
   theme?: "dark" | "light";
   pace?: "intense" | "normal";
   difficulty?: "normal" | "hard";
+  motion?: "full" | "reduced";
 }
 
 /**
@@ -32,7 +38,7 @@ export async function abrir(page: Page, prefs: Prefs = {}, path = "/"): Promise<
     theme: prefs.theme ?? "light",
     volume: 0,
     muted: true,
-    motion: "system",
+    motion: prefs.motion ?? "full",
     haptics: false,
     pace: prefs.pace ?? "intense",
     difficulty: prefs.difficulty ?? "normal",
@@ -46,6 +52,34 @@ export async function abrir(page: Page, prefs: Prefs = {}, path = "/"): Promise<
   // Espera a tela de verdade desenhar (o título dela), não só o `load` da página:
   // sob carga, um Início ainda carregando leria o que o teste gravar em seguida.
   await expect(page.locator("#conteudo h1").first()).toBeVisible();
+}
+
+/** Chega ao lance pelo primeiro ponto principal do ano e joga as escolhas intermediárias reais. */
+export async function abrirMomento(page: Page, raw: Buffer, index: number, prefs: Prefs = {}): Promise<void> {
+  const save = JSON.parse(raw.toString()) as {setup:{seed:string}};
+  const plan=fixturePlans[save.setup.seed]!;
+  let anchor = 0;
+  const firstYears = new Set<number>();
+  const path: { option: number; drama: boolean; match: boolean; id: number }[] = [];
+  for (let i=0; i<=index; i++) {
+    const decision = plan[i]!;
+    if (!["match", "promise", "veteran"].includes(decision.kind) && !firstYears.has(decision.year)) { firstYears.add(decision.year); anchor=i; }
+    path.push({ option: decision.option, drama: ["match", "promise", "veteran"].includes(decision.kind), match: decision.kind==="match", id: decision.id });
+  }
+  await abrir(page,prefs,`/#c=z${deflateRawSync(raw).toString("base64url")}`);
+  await page.getByRole("link", {name:"Hipotético",exact:true}).click();
+  await page.locator(`.what-if-chapter li[data-choice-index='${anchor}'] button`).click();
+  await page.getByRole("button", {name:"Começar linha alternativa",exact:true}).click();
+  for (let i=anchor; i<index; i++) {
+    const step=path[i]!;
+    await expect(page.locator(".season-decision-slide")).toHaveCount(1);
+    await page.locator(OPCOES).nth(step.option).click();
+    if(!step.drama)await page.getByRole("button",{name:"Confirmar escolha",exact:true}).click();
+    if(step.match)await page.locator(".season-decision-slide[data-active] .match-continue").click();
+    await expect(page.locator(".season-decision-slide[data-active] .decision")).not.toHaveAttribute("aria-labelledby",`decisao-${step.id}`);
+  }
+  await expect(page.locator(".season-decision-slide")).toHaveCount(1);
+  await fecharAvisos(page);
 }
 
 /** O cartão de um dos dois jogos no hub. */
@@ -93,16 +127,16 @@ export async function idade(page: Page): Promise<number> {
 /** O id da decisão na tela (`decisao-N`), ou `null` sem decisão. */
 async function decisionId(page: Page): Promise<string | null> {
   return page
-    .locator(".decision")
+    .locator(".season-decision-slide[data-active] .decision")
     .first()
     .getAttribute("aria-labelledby", { timeout: 1_000 })
     .catch(() => null);
 }
 
 /**
- * Um turno: marca a primeira opção que não aposenta e confirma. Sem janela de
- * revelação (D43): o lance aparece na própria tela e a próxima decisão já
- * vem. Espera a decisão trocar (ou a carreira acabar). Devolve falso se a
+ * Um turno: marca a primeira opção que não aposenta e confirma. Partidas
+ * revelam o lance na mesma tela (D74); o helper usa Continuar depois da
+ * revelação, sem aguardar o avanço automático. Devolve falso se a
  * carreira já tinha acabado.
  */
 export async function jogarTurno(page: Page): Promise<boolean> {
@@ -122,18 +156,47 @@ export async function jogarTurno(page: Page): Promise<boolean> {
       break;
     }
   }
-  await options.nth(index).click();
+  // Na transição há dois cards no DOM; o que sai está inerte e não decide o fluxo.
+  const immediate = await page.locator(".season-decision-slide[data-active] .drama-decision").count() > 0;
   const before = await decisionId(page);
-  await page.getByRole("button", { name: "Confirmar escolha" }).click();
+  await options.nth(index).click();
+  if (!immediate) await page.getByRole("button", { name: "Confirmar escolha" }).click();
+  const continueMatch = page.locator(".season-decision-slide[data-active] .match-continue");
+  if (immediate && await continueMatch.isVisible()) await continueMatch.click();
   await expect
     .poll(async () => ((await page.locator(".end-panel").count()) > 0 ? "fim" : await decisionId(page)), { timeout: 10_000 })
     .not.toBe(before);
   return true;
 }
 
+/** Fecha os avisos pelos controles reais antes de usar o menu que fica sob eles. */
+async function fecharAvisos(page: Page): Promise<void> {
+  const notices=page.locator(".toast:not([data-ending-style]) .toast-close");
+  // Três é o limite visível, não o tamanho da fila: fechar uma conquista pode revelar outra.
+  await expect(async () => {
+    if (await notices.count()) await notices.first().click({ timeout: 1_000 });
+    await expect(page.locator(".toast:not([data-ending-style])")).toHaveCount(0, { timeout: 100 });
+  }).toPass({ timeout: 15_000, intervals: [100, 250, 500] });
+}
+
+/** O aviso offline pode chegar entre a checagem e o clique; repetir não fecha um menu já aberto. */
+export async function abrirMenuDaCarreira(page: Page): Promise<void> {
+  const menu = page.getByRole("button", { name: "Menu da carreira" });
+  await expect(async () => {
+    if (await menu.getAttribute("aria-expanded") !== "true") {
+      await fecharAvisos(page);
+      await menu.click({ timeout: 1_000 });
+    }
+    await expect(menu).toHaveAttribute("aria-expanded", "true", { timeout: 1_000 });
+  }).toPass({ timeout: 15_000, intervals: [100, 250, 500] });
+}
+
 /** Encerra a carreira pelo menu do placar e espera o resumo. */
 export async function encerrar(page: Page): Promise<void> {
-  await page.getByRole("button", { name: "Menu da carreira" }).click();
+  for (const result of await page.locator(".result-msg").all()) {
+    await expect(result).toHaveCSS("pointer-events", "none");
+  }
+  await abrirMenuDaCarreira(page);
   await page.getByRole("menuitem", { name: "Encerrar carreira" }).click();
   await page.locator(".dialog-popup").getByRole("button", { name: "Encerrar", exact: true }).click();
   await expect(page.locator(".summary")).toBeVisible();
@@ -141,7 +204,7 @@ export async function encerrar(page: Page): Promise<void> {
 
 /** Volta ao Início pelo menu do placar, confirmando a saída. */
 export async function sairDaCarreira(page: Page): Promise<void> {
-  await page.getByRole("button", { name: "Menu da carreira" }).click();
+  await abrirMenuDaCarreira(page);
   await page.getByRole("menuitem", { name: "Voltar ao início" }).click();
   await page.locator(".dialog-popup").getByRole("button", { name: "Sair", exact: true }).click();
   await expect(page.getByRole("heading", { name: "CRAQUE", level: 1 })).toBeVisible();

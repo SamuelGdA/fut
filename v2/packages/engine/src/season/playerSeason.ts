@@ -1,3 +1,5 @@
+import { keyProduction } from "./production";
+import type { KeyMatchResult } from "../career/dramaTypes";
 import { lateBreakthrough } from "../evolution/breakthrough";
 import { type CountryCode, getClub, getCountry, leagueAt, titleImportance } from "@craque/world";
 import { decideAwards, type AwardsOutcome } from "../awards/awards";
@@ -70,6 +72,7 @@ export interface PlayerSeasonInput {
  * temporada é a normal.
  */
 export interface SeasonModifiers {
+  readonly keyMatches?: readonly KeyMatchResult[];
   /** Papel um degrau acima ou abaixo. */
   readonly roleShift?: -1 | 1;
   /** Papel mínimo garantido (piso, não teto). Vale depois do degrau. */
@@ -251,6 +254,7 @@ export function simulatePlayerSeason(input: PlayerSeasonInput): PlayerSeasonResu
     nationalParticipation: nationalShare,
     boosts: modifiers.boosts,
     final: modifiers.final,
+    keyMatches: modifiers.keyMatches,
     records: tally,
   });
   const { results } = season;
@@ -307,7 +311,7 @@ export function simulatePlayerSeason(input: PlayerSeasonInput): PlayerSeasonResu
       });
   // Pressão do recorde (D44): gols da temporada (73) e da carreira (979),
   // assistências e, do goleiro, jogos sem sofrer gol.
-  const production = thinProduction(recordRng, drawn, {
+  const production = thinProduction(recordRng, keyProduction(drawn, modifiers.keyMatches ?? [], false), {
     goals: [
       { tail: PRESSURE.seasonGoals, before: 0 },
       { tail: PRESSURE.careerGoals, before: tally.goals },
@@ -350,7 +354,7 @@ export function simulatePlayerSeason(input: PlayerSeasonInput): PlayerSeasonResu
           scoringScale: NATIONAL_SCORING,
         });
   // Pressão do recorde (D44): gols pela seleção (146) e da carreira (979).
-  const nationalProduction = thinProduction(nationalRecordRng, nationalDrawn, {
+  const nationalProduction = thinProduction(nationalRecordRng, keyProduction(nationalDrawn, modifiers.keyMatches ?? [], true), {
     goals: [
       { tail: PRESSURE.nationalGoals, before: tally.nationalGoals },
       { tail: PRESSURE.careerGoals, before: tally.goals + production.goals },

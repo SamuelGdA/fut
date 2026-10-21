@@ -239,14 +239,14 @@ export function careerTargets(metrics: CareerMetrics): TargetResult[] {
       )})`,
       pass: metrics.phenomStrikerGoals >= 500 && metrics.phenomStrikerGoals <= 750,
     },
-    // A mediana, com metade do lote no zero, pulava entre 0 e 1 de uma amostra
-    // para outra (D44): a meta diz o mesmo pela média e pela fatia que ganha.
+    // D78: o potencial volta a importar. Fenômeno é talento excepcional,
+    // não garantia de ser o melhor do mundo; recordes conservam a régua rara.
     {
       id: "ballon-median",
       label: "Bolas de Ouro numa carreira de Fenômeno de ataque",
-      target: "média entre 1 e 2,25, e de 40% a 60% ganham ao menos uma",
+      target: "média entre 0,4 e 1,25, e de 20% a 45% ganham ao menos uma (D78)",
       measured: `média ${fixed(metrics.ballonMean, 2)}; ${pct(metrics.ballonAny)} ganham ao menos uma (mediana ${fixed(metrics.ballonMedian, 1)})`,
-      pass: metrics.ballonMean >= 1 && metrics.ballonMean <= 2.25 && metrics.ballonAny >= 0.4 && metrics.ballonAny <= 0.6,
+      pass: metrics.ballonMean >= 0.4 && metrics.ballonMean <= 1.25 && metrics.ballonAny >= 0.2 && metrics.ballonAny <= 0.45,
     },
     // Recorde é raríssimo (D44): estes três dizem só que ele não ficou comum;
     // que ele continua possível, quem mede é o `pnpm balance:recordes`.

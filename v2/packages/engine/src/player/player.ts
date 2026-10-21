@@ -53,7 +53,7 @@ export interface Player {
   readonly trait: Trait;
   /** O jeito individual de jogar: desvio por atributo, soma zero no peso da posição. */
   readonly dna: Six;
-  /** Bônus permanentes de treino e eventos, de 0 a +8 por atributo. */
+  /** Bônus permanentes. Eventos até +8; foco/garantia podem superar +8 (D74). */
   readonly training: Six;
 }
 

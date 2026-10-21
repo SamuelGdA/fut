@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { abrir, abrirCraque, entrarNoCraque, jogarTurno, jogoRapido } from "./apoio";
+import { abrir, abrirCraque, abrirMenuDaCarreira, entrarNoCraque, jogarTurno, jogoRapido } from "./apoio";
 
 /**
  * Resiliência (GDD 34.4 e 37): nenhum erro deixa o jogador numa tela branca.
@@ -54,7 +54,7 @@ test("tela que quebra ao desenhar: aviso na casca e dá para voltar", async ({ p
   await abrirCraque(page);
   await jogoRapido(page);
   await jogarTurno(page);
-  await page.getByRole("button", { name: "Menu da carreira" }).click();
+  await abrirMenuDaCarreira(page);
   await page.getByRole("menuitem", { name: "Encerrar carreira" }).click();
   // Um navegador que quebra no observador de rolagem do resumo, a partir de agora.
   await page.evaluate(() => {

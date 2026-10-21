@@ -90,10 +90,12 @@ export function careerTotals(history: readonly SeasonRecord[]): CareerTotals {
   };
 }
 
-/** A temporada de maior OVR (empate: a mais antiga), para a carta do auge (GDD 24.2). */
+/** Auge por OVR; empate favorece a produção da posição (D74). */
 export function peakSeason(history: readonly SeasonRecord[]): SeasonRecord | null {
   let best: SeasonRecord | null = null;
-  for (const record of history) if (best === null || record.ovrEnd > best.ovrEnd) best = record;
+  const position = history.at(-1)?.position ?? "st";
+  const output = (record: SeasonRecord) => position === "gk" || ["cb", "lb", "rb"].includes(position) ? record.production.cleanSheets : ["cdm", "cm", "cam", "lm", "rm"].includes(position) ? record.production.assists : record.production.goals;
+  for (const record of history) if (best === null || record.ovrEnd > best.ovrEnd || record.ovrEnd === best.ovrEnd && (output(record) > output(best) || output(record) === output(best) && record.production.goals + record.production.assists > best.production.goals + best.production.assists)) best = record;
   return best;
 }
 

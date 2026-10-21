@@ -67,7 +67,7 @@ function bonusSlots(player: Player, focus: Career["focus"]): readonly Slot[] {
 /** Bônus permanente de treino, dentro do limite de +8 e do potencial. */
 export function addTraining(player: Player, focus: Career["focus"], amount: number): Player {
   const training = [...player.training] as [number, number, number, number, number, number];
-  for (const slot of bonusSlots(player, focus)) training[slot] = clamp(training[slot] + amount, 0, TRAINING_CAP);
+  for (const slot of bonusSlots(player, focus)) training[slot] = clamp(training[slot] + amount, 0, Math.max(TRAINING_CAP, training[slot]));
   return settleTraining(player, training);
 }
 

@@ -92,6 +92,17 @@ function pickOption(career: Career, decision: Decision, policy: CareerPolicy): D
   const retire = options.find((option) => option.kind === "retire");
   if (retire && (options.length === 1 || wantsToRetire(career, policy))) return retire;
 
+  if (decision.options[0]?.kind === "drama") {
+    const options = decision.options.filter((option) => option.kind === "drama");
+    if (decision.kind === "match") {
+      if (decision.match?.scene === "decisivePenalty") return options.find(option => option.action === (policy === "loyal" ? "leave" : "take")) ?? rng.pick(options);
+      // D74: quem joga não vê probabilidades. O lote escolhe pelo estilo,
+      // sem consultar informação oculta para acertar sempre a melhor chance.
+      const action = policy === "ambitious" ? "bold" : policy === "loyal" ? career.age >= 33 ? "safe" : "team" : rng.chance(0.5) ? "bold" : "team";
+      return options.find((option) => option.action === action) ?? rng.pick(options);
+    }
+    return rng.pick(options);
+  }
   if (decision.kind === "focus") {
     const focus = chooseFocus("best", career.player, () => rng.next());
     return options.find((option) => option.kind === "focus" && option.focus === focus) ?? fallback;
@@ -104,7 +115,14 @@ function pickOption(career: Career, decision: Decision, policy: CareerPolicy): D
     const last = career.history[career.history.length - 1];
     const benched = last ? ROLE_VALUE[last.role] < 1 : false;
     const stay = options.find((option) => option.kind === "stay");
-    if (!benched || policy === "loyal") return stay ?? fallback;
+    // Empréstimo preserva o vínculo: até o fiel procura minutos se estiver no banco.
+    if (!benched) return stay ?? fallback;
+  }
+
+  if (policy === "loyal") {
+    const stay = options.find((option) => option.kind === "stay");
+    const last = career.history.at(-1);
+    if (stay && last && last.club === career.contract?.club && last.games >= 12 && ["rotation", "starter", "star"].includes(last.role)) return stay;
   }
 
   const candidates = options.filter((option) => option.kind === "club" || option.kind === "stay");
@@ -123,7 +141,7 @@ export function policyChoice(career: Career, policy: CareerPolicy): Choice | nul
 }
 
 /** Mais decisões do que isto numa carreira é defeito: 24 temporadas, eventos e focos cabem com folga. */
-export const MAX_DECISIONS = 80;
+export const MAX_DECISIONS = 125;
 
 /** Joga a carreira inteira pela política. `onStep` vê cada passo, para o terminal e os testes. */
 export function autoplay(start: Career, policy: CareerPolicy, onStep?: (step: Step, choice: Choice) => void): Career {

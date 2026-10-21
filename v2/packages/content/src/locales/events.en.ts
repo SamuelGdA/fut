@@ -2,6 +2,36 @@ import type { EventsMessages } from "./events.pt";
 
 /** The career event texts in English. */
 export const eventsEn: EventsMessages = {
+
+  "tacticalNotebook": {
+    "title": "The assistant's notebook",
+    "body": "The staff found an advantage for the cups. Rehearsing means giving up minutes.",
+    "options": {
+      "study": {
+        "label": "Rehearse the move",
+        "result": "Strength +1 in domestic cups, games -6% for the period."
+      },
+      "play": {
+        "label": "Build match rhythm",
+        "result": "Planned games +4%, within the club's schedule."
+      }
+    }
+  },
+  "silentWeek": {
+    "title": "A week away from the spotlight",
+    "body": "Your calendar is full. Choose between rest and a media appearance.",
+    "options": {
+      "silence": {
+        "label": "Switch off your phone",
+        "result": "Injury risk -20% for the period. Support -3."
+      },
+      "press": {
+        "label": "Talk to the fans",
+        "result": "Support +3. Development -5% for the period."
+      }
+    }
+  }
+,
   extraTraining: {
     title: "Extra training",
     body: "The fitness coach suggests a programme of your own: gym before sunrise and finishing drills after team training.",
@@ -111,7 +141,7 @@ export const eventsEn: EventsMessages = {
   },
   homesick: {
     title: "Homesick",
-    body: "Three years away from home are taking their toll. A club from your country wants you back.",
+    body: "Time away from home is taking its toll. A club from your country wants you back.",
     options: {
       goHome: { label: "Go home", result: "{target} bring you home. It is good to be near family." },
       stay: { label: "Tough it out", result: "You stay, but your head is not always in the game." },
@@ -189,18 +219,6 @@ export const eventsEn: EventsMessages = {
       club: { label: "Stay with the club", result: "You give up the tournament. The club's fans appreciate it." },
     },
   },
-  painBeforeFinal: {
-    title: "Pain before the final",
-    body: "A thigh problem flares up in the week of the final. The doctors say the risk is yours to take.",
-    options: {
-      sacrifice: {
-        label: "Play through the pain",
-        success: "You play on the edge and decide it. A trophy and your name in history.",
-        failure: "The thigh gave way. Final lost and weeks on the sidelines.",
-      },
-      rest: { label: "Protect your body", result: "You watch from the bench. Without you, the team loses the final." },
-    },
-  },
   muscleInjury: {
     title: "Muscle injury",
     body: "A thigh injury at the end of pre-season. The club wants speed; the doctors want patience.",
@@ -211,22 +229,6 @@ export const eventsEn: EventsMessages = {
         failure: "You came back too soon and the injury opened up again. More time out, and your body felt it.",
       },
       fullRecovery: { label: "Take your time", result: "Full recovery. You miss more games, but come back whole." },
-    },
-  },
-  decisivePenalty: {
-    title: "The decisive penalty",
-    body: "A final, a shootout, the last kick. The coach looks at you.",
-    options: {
-      take: {
-        label: "Take it",
-        success: "Goal. You win the trophy.",
-        failure: "Saved. The cup goes to the other side, and the fans will not forget.",
-      },
-      leave: {
-        label: "Leave it to someone else",
-        success: "Someone else steps up and scores. The title belongs to the team, and you celebrate with them.",
-        failure: "Someone else steps up and the keeper saves it. The cup slips away, but nobody points at you.",
-      },
     },
   },
   newCoach: {
@@ -250,7 +252,7 @@ export const eventsEn: EventsMessages = {
         success: "You talked the talk and decided the game. A hero to the fans.",
         failure: "You talked the talk and vanished on the pitch. The fans do not forgive.",
       },
-      fairPlay: { label: "Show respect", result: "You talk about respect, and the fans approve of the tone." },
+      fairPlay: { label: "Show respect", result: "You avoid the provocation. Some fans wanted a stronger response: fan support -2." },
     },
   },
   idolFarewell: {

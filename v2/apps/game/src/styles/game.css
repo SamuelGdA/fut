@@ -1176,10 +1176,12 @@
   }
 
   .play-stats > div {
-    display: flex;
-    flex-direction: column-reverse;
-    gap: 2px;
-    padding: 5px 9px;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    align-content: start;
+    gap: 5px;
+    min-width: 0;
+    padding: 7px 6px;
   }
 
   .play-stats > div + div {
@@ -1187,13 +1189,18 @@
   }
 
   .play-stats .eyebrow {
-    font-size: 10px;
+    min-height: 1.3em;
+    line-height: 1.3;
+    font-size: 9px;
     white-space: normal;
-    overflow-wrap: anywhere;
+    overflow-wrap: normal;
 
   }
 
+  .play-stats dt { grid-row: 2; }
+
   .play-stats dd {
+    grid-row: 1;
     display: flex;
     align-items: baseline;
     gap: 6px;
@@ -1375,9 +1382,8 @@
   .result-layer {
     flex: 0 0 auto;
     min-height: 0;
-    max-height: 180px;
-    overflow-y: auto;
-    scrollbar-gutter: stable;
+    max-height: none;
+    overflow: visible;
   }
 
   .result-msg {
@@ -1393,7 +1399,7 @@
     border-left: 4px solid var(--tone);
     border-radius: var(--radius-md);
     background: color-mix(in oklab, var(--tone) 7%, var(--panel));
-    pointer-events: auto;
+    pointer-events: none;
   }
 
   .result-badge {
@@ -2258,7 +2264,7 @@
 
 @layer components {
   @media (max-width: 1023px) {
-    .result-layer { max-height: 54px; overflow: hidden; }
+    .result-layer { max-height: none; overflow: visible; }
     .result-layer .result-msg { padding: 6px 10px; gap: 8px; border-left-width: 3px; }
     .result-layer .result-badge { width: 32px; height: 32px; }
     .result-layer .result-eyebrow { font-size: 0.6rem; }
@@ -2280,8 +2286,8 @@
 }
 
 /* D63: os detalhes longos não comprimem a exploração da carreira. */
-.career-right > .play { flex-shrink: 1; max-height: 46%; overflow-y: auto; }
-.career-right .career-explore { min-height: 32%; }
+.career-right > .play { flex-shrink: 0; max-height: none; overflow: visible; }
+.career-right .career-explore { min-height: 100px; }
 .play-season-details { font-size: 11px; color: var(--muted); }
 .play-season-details > summary { cursor: pointer; padding: 4px 0; }
 .play-season-details[open] .play-notes { display: flex; margin-top: 5px; }
@@ -2304,8 +2310,22 @@
 .honour-token { display: inline-flex; align-items: center; justify-content: center; padding: 2px; border: 0; border-radius: 4px; background: transparent; flex-shrink: 0; }
 .honour-token:hover, .honour-token:focus-visible { background: var(--panel-2); outline: 1px solid var(--glory); }
 
-.play-honours-art {display:flex;align-items:flex-end;min-width:0;}
+.play-honours-art {display:flex;align-items:flex-end;min-width:0;max-width:100%;flex:1 1 0;flex-wrap:wrap;}
+.showcase[data-labels] { grid-auto-rows: minmax(var(--cell-h), auto); }
+.showcase[data-labels] .showcase-item { content-visibility: visible; min-height: var(--cell-h); }
+.showcase[data-labels] .showcase-art { flex: 0 0 auto; }
+.showcase[data-labels] .showcase-label { height: auto; min-height: 4em; flex: 0 0 auto; width: 100%; overflow-wrap: anywhere; }
 .play-season-details[open] .play-notes, .play-season-details[open] .play-notes li { display: flex; }
 @media(max-width:767px) { .play-batch-honours {display:flex;flex-wrap:wrap;gap:4px;} .play-batch-honours>div {padding:3px 5px;gap:4px;} .play-batch-honours .honour-token img {height:23px;width:auto;} }
 
 .sheet-content > .play { flex-shrink: 0; max-height: none; overflow: visible; }
+
+.play-details-button { display: flex; align-items: center; justify-content: space-between; gap: 8px; width: 100%; min-height: 32px; color: var(--muted); font-size: 11px; border-top: 1px solid var(--line); margin-top: 6px; }
+.end-panel { width: 100%; }
+.result-eyebrow { font-family: var(--font-display); font-size: 1rem; font-weight: 800; line-height: 1.15; letter-spacing: .03em; }
+
+.career-right .result-msg { grid-template-columns: 32px minmax(0, 1fr); padding: 10px; gap: 9px; }
+.career-right .result-badge { width: 32px; height: 32px; }
+.career-right .result-icon { width: 20px; height: 20px; }
+.career-right .result-title { font-size: 1.2rem; line-height: 1.12; }
+.career-right .result-body { font-size: 12px; }

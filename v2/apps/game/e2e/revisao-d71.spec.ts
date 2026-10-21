@@ -1,12 +1,14 @@
 import { expect, test } from "@playwright/test";
 import { readFile } from "node:fs/promises";
 import { deflateRawSync } from "node:zlib";
-import { abrir, auditar, esperarQueCaiba, OPCOES } from "./apoio";
+import { abrir, abrirMomento, auditar, esperarQueCaiba, OPCOES } from "./apoio";
+
+const moments = (JSON.parse(await readFile(new URL("./fixtures/momentos-m23.json",import.meta.url),"utf8")) as {moments:Record<string,{file:string;index:number}>}).moments;
 
 for (const theme of ["light","dark"] as const) {
   test(`D71: pilhas redistribuem troféus e seleção tem legado, ${theme}`,async({page},info)=>{
     if(info.project.name==="celular")await page.setViewportSize({width:360,height:640});
-    const replay=await readFile(new URL("./fixtures/colecao-m16.json",import.meta.url));
+    const replay=await readFile(new URL("./fixtures/colecao-m23.json",import.meta.url));
     await abrir(page,{theme},`/#c=z${deflateRawSync(replay).toString("base64url")}`);
     await page.getByRole("link",{name:"Caminho",exact:true}).click();
     await expect(page.getByText("Legado na seleção: Lenda",{exact:true})).toBeVisible();
@@ -41,14 +43,11 @@ for (const theme of ["light","dark"] as const) {
 
   test(`D71: ultimato mostra a frase completa, ${theme}`,async({page},info)=>{
     if(info.project.name==="celular")await page.setViewportSize({width:360,height:640});
-    const replay=await readFile(new URL("./fixtures/narrativa-m16.json",import.meta.url));
-    await abrir(page,{theme},`/#c=z${deflateRawSync(replay).toString("base64url")}`);
-    await page.getByRole("link",{name:"Hipotético",exact:true}).click();
-    await page.getByRole("button",{name:/^Seguir daqui: Ultimato do empresário/}).click();
-    await page.getByRole("button",{name:"Começar linha alternativa",exact:true}).click();
+    const replay=await readFile(new URL(`./fixtures/${moments.ultimatum!.file}`,import.meta.url));
+    await abrirMomento(page,replay,moments.ultimatum!.index,{theme});
     await page.locator(OPCOES).filter({has:page.getByText("Ficar",{exact:true})}).click();
     await page.getByRole("button",{name:"Confirmar escolha",exact:true}).click();
-    if(info.project.name==="celular") await page.getByRole("region",{name:"O último lance",exact:true}).getByRole("button").click();
+    await page.getByRole("region",{name:"O último lance",exact:true}).getByRole("button").click();
     const body=page.locator('.play-event-text').filter({hasText:"o mercado volta ao normal"});
     await expect(body).toBeVisible();
     await expect(body).toContainText("Só a próxima decisão terá propostas de clubes mais fracos, se houver transferência; depois o mercado volta ao normal.");

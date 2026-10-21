@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { calibrateTargets, type CalibrationRun } from "../src/challenge";
+import { calibrationProfile, calibrateTargets, edictBreakRates, type CalibrationRun } from "../src/challenge";
+import { POSITIONS } from "@craque/engine";
+import { PLAYABLE_COUNTRIES } from "@craque/world";
 import { computeMetrics, seasonDeltas } from "../src/metrics";
 import { careerValue, RECORD_BATCHES, RECORD_TARGETS, recordRows, runRecordCareers } from "../src/records";
 import { markdownReport, sparkline } from "../src/report";
@@ -106,6 +108,13 @@ describe("recordes ao alcance (D33 e D42)", () => {
 
 
 describe("missões de legado com objetivo fixo", () => {
+  it("a amostra cruza todos os estilos, posições e países sem vincular posição a política", () => {
+    const size = POSITIONS.length * 3 * PLAYABLE_COUNTRIES.length;
+    const profiles = Array.from({ length: size }, (_, index) => calibrationProfile(index));
+    expect(new Set(profiles.map((profile) => `${profile.position}:${profile.policy}:${profile.nationality}`)).size).toBe(size);
+    for (const policy of ["balanced", "ambitious", "loyal"]) expect(profiles.filter((profile) => profile.policy === policy)).toHaveLength(size / 3);
+  });
+
   it("mantém uma lenda e dois ídolos, omitindo talentos em que o objetivo é raro demais", () => {
     const runs: CalibrationRun[] = Array.from({ length: 100 }, (_, index) => ({
       band: "class", measures: { clubLegend: index < 30 ? 1 : 0, twoClubIdol: index < 10 ? 2 : 0 }, brokenEdicts: [],
@@ -117,4 +126,14 @@ describe("missões de legado com objetivo fixo", () => {
     const viable = runs.map((run, index) => ({ ...run, measures: { ...run.measures, twoClubIdol: index < 40 ? 2 : 0 } }));
     expect(calibrateTargets(viable).twoClubIdol?.class).toBe(2);
   });
+});
+
+
+it("a taxa de evitar as cinco ligas considera apenas origens onde a base não impõe a quebra", () => {
+  const runs: CalibrationRun[] = [
+    { band: "class", nationality: "ENG", measures: {}, brokenEdicts: ["noBigFive"] },
+    { band: "class", nationality: "BRA", measures: {}, brokenEdicts: ["noBigFive"] },
+    { band: "class", nationality: "ARG", measures: {}, brokenEdicts: [] },
+  ];
+  expect(edictBreakRates(runs).get("noBigFive")).toBe(0.5);
 });

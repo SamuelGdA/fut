@@ -3,7 +3,7 @@ import type { EventContext } from "../events/model";
 import { ovrAt } from "../player/player";
 import type { Position } from "../player/positions";
 import type { SquadRole } from "../season/role";
-import { baseMarketValue } from "../player/value";
+import { baseMarketValue, marketLeagueStrength } from "../player/value";
 import { stream } from "../rng";
 import { inTournamentSquad, nationalStatus } from "../season/national";
 import { clubIndex, COUNTRY_CLUBS } from "../world/model";
@@ -239,7 +239,7 @@ export function eventContext(career: Career): EventContext {
     tenFree:
       canWearTen(position) && shirt !== 10 && (last?.role === "star" || last?.role === "starter") && tenRoll < 0.35,
     abroadSeasons: homeClub(career) === null ? 0 : abroadSeasons(career),
-    value: baseMarketValue(ovr, age),
+    value: baseMarketValue(ovr, age, marketLeagueStrength(career.world, club)),
     residenceEligible: residenceCountry(career) !== null,
     nationWeakOrUncapped:
       grandfatherCountry(career) !== null &&

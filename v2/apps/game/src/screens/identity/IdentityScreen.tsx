@@ -14,7 +14,6 @@ import { cn } from "../../ui/cn";
 import { TextField } from "../../ui/Fields";
 import { SectionRule } from "../../ui/Panel";
 import { PlayerCard } from "../../ui/PlayerCard";
-import { Segmented } from "../../ui/Segmented";
 import { NationalityPicker } from "./NationalityPicker";
 import { PositionPitch } from "./PositionPitch";
 
@@ -218,14 +217,14 @@ export function IdentityScreen() {
                 hint={t("identity.surnameHint", { max: SURNAME_MAX })}
                 error={touched && !surnameOk ? t("identity.surnameMissing") : undefined}
               />
-              <div className="grid gap-4 sm:grid-cols-[minmax(0,10rem)_minmax(0,1fr)] lg:grid-cols-1">
+              <div className="grid gap-4">
                 <div>
                   <label htmlFor={dreamId} className="eyebrow mb-1.5 block text-fg">
                     {t("identity.dreamNumber")}
                   </label>
                   <input
                     id={dreamId}
-                    className="field-input"
+                    className="field-input max-w-40"
                     inputMode="numeric"
                     pattern="[0-9]*"
                     value={dreamText}
@@ -234,21 +233,6 @@ export function IdentityScreen() {
                     aria-invalid={!dreamValid || undefined}
                     aria-describedby={`${dreamId}-note`}
                     autoComplete="off"
-                  />
-                </div>
-                <div>
-                  <p className="eyebrow mb-1.5 text-fg">{t("identity.foot")}</p>
-                  <Segmented
-                    label={t("identity.foot")}
-                    value={draft.foot}
-                    onValueChange={(foot) => {
-                      useDraft.getState().update({ foot });
-                      feedback("tick");
-                    }}
-                    options={[
-                      { value: "right", label: t("identity.footRight") },
-                      { value: "left", label: t("identity.footLeft") },
-                    ]}
                   />
                 </div>
               </div>
