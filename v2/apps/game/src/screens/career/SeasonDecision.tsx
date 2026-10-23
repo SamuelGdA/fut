@@ -5,8 +5,8 @@ import { useReducedMotion } from "../../lib/useReducedMotion";
 import { useT } from "../../i18n/useT";
 import { d74 } from "../../i18n/d74";
 
-export function SeasonDecision({ career, presentation = career, onSettled, blocked, children }: { career: Career; presentation?: Career; onSettled?(): void; blocked?: boolean; children: ReactNode }) {
-  const reduced = useReducedMotion(); const { locale } = useT(); const progress = presentation.decision?.progress;
+export function SeasonDecision({ career, onSettled, blocked, children }: { career: Career; presentation?: Career; onSettled?(): void; blocked?: boolean; children: ReactNode }) {
+  const reduced = useReducedMotion(); const { locale } = useT(); const progress = career.decision?.progress;
   const windowRef = useRef<HTMLDivElement>(null);
   const wasBlocked = useRef(false);
   useEffect(() => {
@@ -17,10 +17,10 @@ export function SeasonDecision({ career, presentation = career, onSettled, block
     }
     wasBlocked.current = Boolean(blocked);
   }, [blocked]);
-  const label = progress ? d74(locale).progress.replace("{index}", String(progress.index)).replace("{total}", String(progress.total)).replace("{year}", String(presentation.world.year)) : "";
+  const label = progress ? d74(locale).progress.replace("{index}", String(progress.index)).replace("{total}", String(progress.total)).replace("{year}", String(career.world.year)) : "";
+  // A linha de progresso viaja dentro do card (D85): cada decisão chega com a sua e a janela não muda de altura depois do deslize.
   return <div className="season-decision">
-    <div ref={windowRef} className="season-decision-window" inert={blocked || undefined}><AnimatePresence initial={false} onExitComplete={onSettled}><SeasonSlide key={career.decision?.id ?? "end"} reduced={reduced}>{children}</SeasonSlide></AnimatePresence></div>
-    {progress && progress.total > 1 ? <div className="season-progress" role="img" aria-label={label}><span aria-hidden="true">{Array.from({ length: progress.total }, (_, index) => <i key={index} data-state={index + 1 < progress.index ? "done" : index + 1 === progress.index ? "current" : "next"} />)}</span><small>{label}</small></div> : null}
+    <div ref={windowRef} className="season-decision-window" inert={blocked || undefined}><AnimatePresence initial={false} onExitComplete={onSettled}><SeasonSlide key={career.decision?.id ?? "end"} reduced={reduced}>{children}{progress && progress.total > 1 ? <div className="season-progress" role="img" aria-label={label}><span aria-hidden="true">{Array.from({ length: progress.total }, (_, index) => <i key={index} data-state={index + 1 < progress.index ? "done" : index + 1 === progress.index ? "current" : "next"} />)}</span><small>{label}</small></div> : null}</SeasonSlide></AnimatePresence></div>
   </div>;
 }
 

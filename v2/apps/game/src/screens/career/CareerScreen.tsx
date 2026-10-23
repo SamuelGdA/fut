@@ -133,20 +133,22 @@ export function CareerScreen() {
   const tabs: readonly CareerTab[] = challenge ? CHALLENGE_TABS : TABS;
   const original = alternate && career.decision?.id === alternate.decision ? alternate.original : null;
   const shown = review ?? latest;
-  const pendingEvent = latest?.outcome?.kind === "event" && !latest.pages.some((page) => page.kind === "season");
-  const dramatic = ["match", "promise", "veteran"].includes(presentation?.decision?.kind ?? "");
-  // O jornal acompanha a última temporada do que está à vista (o lance, ou a revista).
-  const newsIndex = shown?.pages.reduce<number | null>((found, page) => (page.kind === "season" ? page.index : found), null) ?? null;
+  // O card que entra (D87) já nasce com o lance e o tipo da decisão dele: o resumo e o jornal vêm prontos no deslize. O card que sai conserva o que tinha (o AnimatePresence guarda o último desenho).
+  const stackPlay = matchResult ? previousPlay : activePlay;
+  const stackShown = review ?? stackPlay;
+  const stackDramatic = ["match", "promise", "veteran"].includes(career.decision?.kind ?? "");
+  const stackPending = stackPlay?.outcome?.kind === "event" && !stackPlay.pages.some((page) => page.kind === "season");
+  const stackNewsIndex = stackShown?.pages.reduce<number | null>((found, page) => (page.kind === "season" ? page.index : found), null) ?? null;
   const decision = career.end ? (
     <EndPanel career={career} onSummary={openSummary} />
   ) : (
     <DecisionPanel career={career} onChoose={onChoose} original={original} result={matchResult} onContinue={finishMatch} />
   );
-  const feed = (compact: boolean) =>
-    shown ? (
-      <PlayFeed key={shown.id} career={career} play={shown} reviewing={review !== null} onCloseReview={closeReview} compact={compact} />
+  const feed = (compact: boolean, play = shown) =>
+    play ? (
+      <PlayFeed key={play.id} career={career} play={play} reviewing={review !== null} onCloseReview={closeReview} compact={compact} />
     ) : null;
-  const news = !dramatic && newsIndex !== null ? <NewsBar career={career} index={newsIndex} fresh={review === null && (latest?.fresh ?? false)} /> : null;
+  const news = !stackDramatic && stackNewsIndex !== null ? <NewsBar career={career} index={stackNewsIndex} fresh={review === null && (stackPlay?.fresh ?? false)} /> : null;
 
   return (
     <div className="career club-scope" data-match={Boolean(presentation?.decision?.match)} data-veteran={presentation?.decision?.kind === "veteran"} data-promise={presentation?.decision?.kind === "promise"} data-revealing={Boolean(matchResult)} data-transitioning={transitioning || undefined} style={{ ...clubStyle(club), ...matchTheme(presentation ?? career) } as CSSProperties}>
@@ -175,8 +177,7 @@ export function CareerScreen() {
               <PlayerPanel career={career} avatar={avatar} />
             </aside>
             <div className="fit-panel loop-panel">
-              <SeasonDecision career={career} presentation={presentation ?? career} onSettled={settled} blocked={transitioning}>{decision}</SeasonDecision>
-              {news}
+              <SeasonDecision career={career} presentation={presentation ?? career} onSettled={settled} blocked={transitioning}><div className="slide-stack">{decision}{news}</div></SeasonDecision>
             </div>
             <div className="career-right">
               <ResultMessage career={career} play={review === null && (matchResult || career.decision?.kind !== "veteran") ? resultPlay : null} />
@@ -199,9 +200,8 @@ export function CareerScreen() {
           <main className="career-body">
             <BaseTabs.Panel value="season" className="fit-panel loop-panel">
               <ResultMessage career={career} play={review === null && (matchResult || !resultPlay?.outcome || resultPlay.outcome.kind !== "drama" || !resultPlay.outcome.result) ? resultPlay : null} />
-              {presentation?.decision?.kind !== "veteran" && (!dramatic || pendingEvent || latest?.pages.some((page) => page.kind === "season")) ? feed(true) : null}
-              <SeasonDecision career={career} presentation={presentation ?? career} onSettled={settled} blocked={transitioning}>{decision}</SeasonDecision>
-              {news}
+              {/* D85: o resumo e o jornal viajam dentro do card que desliza. Cada decisão chega com o próprio arranjo e nada em volta se rearranja depois. */}
+              <SeasonDecision career={career} presentation={presentation ?? career} onSettled={settled} blocked={transitioning}><div className="slide-stack">{career.decision?.kind !== "veteran" && (!stackDramatic || stackPending || stackPlay?.pages.some((page) => page.kind === "season")) ? feed(true, stackShown) : null}{decision}{news}</div></SeasonDecision>
             </BaseTabs.Panel>
             <BaseTabs.Panel value="player" className="fit-panel">
               <PlayerPanel career={career} avatar={avatar} />

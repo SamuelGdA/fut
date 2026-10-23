@@ -2264,12 +2264,21 @@
 
 @layer components {
   @media (max-width: 1023px) {
-    .result-layer { max-height: none; overflow: visible; }
-    .result-layer .result-msg { padding: 6px 10px; gap: 8px; border-left-width: 3px; }
-    .result-layer .result-badge { width: 32px; height: 32px; }
-    .result-layer .result-eyebrow { font-size: 0.6rem; }
-    .result-layer .result-title { font-size: 0.9rem; }
-    .result-layer .result-body, .result-layer .result-chips { display: none; }
+    /* Celular (D86): o resultado é uma faixa sobre a barra do topo, fora do
+       fluxo. Não empurra o card, não cobre o nome nem o OVR, e sai sozinho
+       depois de 4 s (o resumo do lance guarda a leitura completa). */
+    .result-layer {
+      position: fixed;
+      z-index: 45;
+      top: calc(env(safe-area-inset-top) + 4px);
+      left: 8px;
+      right: 8px;
+      height: calc(var(--topbar-row) - 8px);
+      max-height: none;
+      overflow: visible;
+      pointer-events: none;
+    }
+    @keyframes result-away { to { opacity: 0; visibility: hidden; } }
   }
 }
 
@@ -2329,3 +2338,21 @@
 .career-right .result-icon { width: 20px; height: 20px; }
 .career-right .result-title { font-size: 1.2rem; line-height: 1.12; }
 .career-right .result-body { font-size: 12px; }
+
+/* Faixa do resultado no celular (D86), fora da camada: as regras sem camada acima venceriam. */
+@media (max-width: 1023px) {
+    .result-layer .result-msg { height: 100%; align-items: center; padding: 0 10px; gap: 8px; border-left-width: 3px; background: color-mix(in oklab, var(--tone) 10%, var(--panel)); box-shadow: var(--lift); animation: result-away 0.3s ease 4s forwards; }
+    .result-layer .result-badge { width: 28px; height: 28px; }
+    .result-layer .result-icon { width: 16px; height: 16px; margin: 0; }
+    .result-layer .result-text { display: flex; flex-direction: row; align-items: baseline; gap: 6px; min-width: 0; white-space: nowrap; }
+    .result-layer .result-eyebrow { flex: 0 0 auto; font-size: 0.75rem; }
+    .result-layer .result-title { min-width: 0; overflow: hidden; font-size: 0.9rem; text-overflow: ellipsis; }
+    .result-layer .result-body, .result-layer .result-chips { display: none; }
+    /* A carreira cria um contexto de empilhamento (estádio atrás); sobe um degrau para a faixa ficar acima da barra do topo, que ela não ocupa de outra forma. */
+    .career:not(.tecnico) { position: relative; z-index: 41; }
+}
+
+/* As taças da temporada na faixa do lance (D87): miniaturas na linha dos números. */
+.play-strip-honours { display: inline-flex; flex-shrink: 0; align-items: center; gap: 2px; height: 18px; font-size: 10px; font-weight: 700; }
+.play-strip-honours img, .play-strip-honours svg { max-height: 18px; width: auto; }
+.play-strip-club { white-space: nowrap; overflow-wrap: normal; }

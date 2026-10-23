@@ -1,5 +1,6 @@
 import { dramaAction, dramaDecision, dramaHint, dramaOption, dramaText } from "@craque/content";
 import { type Career, type KeyMatchResult, type VeteranPath } from "@craque/engine";
+import { broadcastIdentity, broadcastStyle, kitStyle } from "../../features/career/broadcast";
 import { matchOptionHint, matchOptionText } from "../../features/career/matchPresentation";
 import { getClub, getCompetition, getCountry } from "@craque/world";
 import { ArrowUpRight, Check, Crosshair, Eye, GraduationCap, Megaphone, Shield, Swords, Users, Zap } from "lucide-react";
@@ -7,6 +8,7 @@ import { useEffect, useRef } from "react";
 import { useT } from "../../i18n/useT";
 import { feedback } from "../../services/feedback";
 import { Crest, Flag } from "../../ui/Media";
+import { BroadcastEmblem } from "./BroadcastEmblem";
 import { LedScore } from "./LedScore";
 import { MatchOutcome } from "./MatchOutcome";
 import { d74 } from "../../i18n/d74";
@@ -30,13 +32,16 @@ export function DramaDecisionPanel({ career, onChoose, original, result, onConti
   const scoreChanged = result && match && result.score.some((value, index) => value !== match.score[index]);
   const name = (id: string) => match?.national ? getCountry(id)?.names[locale] ?? id : getClub(id)?.short ?? id;
   const team = (id: string) => match?.national ? <Flag country={getCountry(id)!} language={locale} size={22} decorative /> : <Crest club={id} size={28} decorative />;
-  return <section className="decision drama-decision" data-kind={decision.kind} aria-labelledby={`decisao-${decision.id}`}>
-    {match ? <div className="match-broadcast">
+  // A transmissão fica no próprio card: na troca de lance, o card que sai conserva a sua.
+  const broadcast = match ? broadcastIdentity(match) : null;
+  return <section className={broadcast ? "decision drama-decision bc-stage" : "decision drama-decision"} data-kind={decision.kind} data-broadcast={broadcast?.id} data-motif={broadcast?.motif} style={broadcast ? broadcastStyle(broadcast) : undefined} aria-labelledby={`decisao-${decision.id}`}>
+    {match && broadcast ? <div className="match-broadcast">
       <div className="match-broadcast-top"><span className="match-live"><i aria-hidden="true" />{copy.live}</span><span>{decision.year}</span></div>
-      <p className="match-competition">{getCompetition(match.competition)?.names[locale] ?? match.competition}</p>
+      <p className="match-competition"><BroadcastEmblem emblem={broadcast.emblem} /><span>{getCompetition(match.competition)?.names[locale] ?? match.competition}</span></p>
       <p className="match-stage">{copy.stages[match.stage]}</p>
-      <div className="match-scoreboard"><span>{team(match.team)}<b>{name(match.team)}</b></span><strong data-updated={scoreChanged || undefined}><LedScore score={result?.score ?? match.score} previous={result ? match.score : undefined} /></strong><span>{team(match.opponent)}<b>{name(match.opponent)}</b></span></div>
+      <div className="match-scoreboard"><span data-kit={broadcast.team.kit} style={kitStyle(broadcast.team)}>{team(match.team)}<b>{name(match.team)}</b></span><strong data-updated={scoreChanged || undefined}><LedScore score={result?.score ?? match.score} previous={result ? match.score : undefined} /></strong><span data-kit={broadcast.opponent.kit} style={kitStyle(broadcast.opponent)}>{team(match.opponent)}<b>{name(match.opponent)}</b></span></div>
       <p className="match-minute">{result ? copy.fullTime : `${match.minute}′`} <span>•</span> {match.scene === "shootout" ? copy.penalties : copy.stages[match.stage]}</p>
+      <i className="match-scarf" data-kit={broadcast.team.kit} style={kitStyle(broadcast.team)} aria-hidden="true" />
     </div> : <p className="eyebrow">{decision.year} · {decision.age}{decision.kind === "promise" ? ` · ${copy.active}` : ""}</p>}
     {result ? <><h2 ref={title} tabIndex={-1} id={`decisao-${decision.id}`} className="sr-only">{flow.outcome}</h2>{selected?.kind === "drama" && match ? <div className="match-selected-choice"><span className="eyebrow">{decisionFeedback(locale).selected}</span><button type="button" className="option drama-option" aria-pressed="true" disabled><span className="option-main"><span className="option-title">{matchOptionText(locale, match, selected.action, career.player.position)}</span></span><Check size={18} aria-hidden="true" /></button></div> : null}<MatchOutcome result={result} position={career.player.position} onContinue={onContinue ?? (() => {})} /></> : <><div className="drama-heading"><h2 ref={title} tabIndex={-1} id={`decisao-${decision.id}`} className="decision-title outline-none">{text.title}</h2><p className="decision-body">{text.body}</p></div>
     <div className="decision-options drama-options" data-layout={decision.kind === "veteran" ? "grid" : undefined} role="group" aria-labelledby={`decisao-${decision.id}`}>

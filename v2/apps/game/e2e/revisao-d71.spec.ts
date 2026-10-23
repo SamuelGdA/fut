@@ -47,17 +47,14 @@ for (const theme of ["light","dark"] as const) {
     await abrirMomento(page,replay,moments.ultimatum!.index,{theme});
     await page.locator(OPCOES).filter({has:page.getByText("Ficar",{exact:true})}).click();
     await page.getByRole("button",{name:"Confirmar escolha",exact:true}).click();
-    await page.getByRole("region",{name:"O último lance",exact:true}).getByRole("button").click();
-    const body=page.locator('.play-event-text').filter({hasText:"o mercado volta ao normal"});
+    // D84: no PC a frase inteira fica na mensagem do resultado, sem aba repetida; no celular a aba guarda a leitura completa.
+    if(info.project.name==="celular") await page.getByRole("region",{name:"O último lance",exact:true}).getByRole("button").click();
+    else await expect(page.getByRole("region",{name:"O último lance",exact:true})).toHaveCount(0);
+    const body=page.locator(info.project.name==="celular" ? ".play-event-text" : ".result-body").filter({hasText:"o mercado volta ao normal"});
     await expect(body).toBeVisible();
     await expect(body).toContainText("Só a próxima decisão terá propostas de clubes mais fracos, se houver transferência; depois o mercado volta ao normal.");
     expect(await body.evaluate(node=>node.scrollHeight-node.clientHeight)).toBeLessThanOrEqual(1);
     expect(await body.evaluate(node=>getComputedStyle(node).getPropertyValue("-webkit-line-clamp"))).not.toMatch(/^[1-9]/);
-    if(info.project.name==="desktop") {
-      const message=page.locator('.result-body');
-      await expect(message).toContainText("depois o mercado volta ao normal.");
-      expect(await message.evaluate(node=>node.scrollHeight-node.clientHeight)).toBeLessThanOrEqual(1);
-    }
     await esperarQueCaiba(page);
     await auditar(page,"Resultado do ultimato completo");
     await page.screenshot({path:info.outputPath(`ultimato-${theme}.png`)});

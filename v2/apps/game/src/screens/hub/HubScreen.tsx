@@ -21,16 +21,13 @@ import { PlayerCard } from "../../ui/PlayerCard";
  * empilhados. Nenhum motor é baixado aqui.
  */
 export function HubScreen() {
-  const { t, tp } = useT();
+  const { t } = useT();
   const go = useNavigation((state) => state.go);
-  const unlocked = useHall((state) => state.achievements);
 
   useEffect(() => {
     void useHall.getState().load();
   }, []);
 
-  const craqueCount = unlocked.filter((row) => !row.id.startsWith("tecnico:")).length;
-  const tecnicoCount = unlocked.length - craqueCount;
 
   return (
     <div className="hub pitch-stripes">
@@ -41,8 +38,8 @@ export function HubScreen() {
       </header>
 
       <div className="hub-games">
-        <CraqueCard achievements={craqueCount} />
-        <TecnicoCard achievements={tecnicoCount} />
+        <CraqueCard />
+        <TecnicoCard />
       </div>
 
       <footer className="hub-footer">
@@ -56,7 +53,6 @@ export function HubScreen() {
         >
           <Award size={16} aria-hidden="true" />
           {t("hub.achievements")}
-          <span className="text-muted">· {tp("hub.achievementsCount", unlocked.length)}</span>
         </Button>
         {IS_DEV ? (
           <Button
@@ -76,8 +72,8 @@ export function HubScreen() {
   );
 }
 
-function CraqueCard({ achievements }: { achievements: number }) {
-  const { t, tp } = useT();
+function CraqueCard() {
+  const { t } = useT();
   const go = useNavigation((state) => state.go);
   const draft = useDraft();
 
@@ -109,14 +105,13 @@ function CraqueCard({ achievements }: { achievements: number }) {
           <li>{t("hub.craque.points.third")}</li>
         </ul>
         <div className="hub-actions"><Button onClick={() => { feedback("confirm"); go("home"); }}><Play size={17} aria-hidden="true" />{t("hub.craque.play")}</Button></div>
-        <p className="hub-meta">{tp("hub.achievementsCount", achievements)}</p>
       </div>
     </article>
   );
 }
 
-function TecnicoCard({ achievements }: { achievements: number }) {
-  const { t, tp, number } = useT();
+function TecnicoCard() {
+  const { t, number } = useT();
   const go = useNavigation((state) => state.go);
   const draft = useCoachDraft();
   const presence = useTecnicoPresence();
@@ -187,7 +182,6 @@ function TecnicoCard({ achievements }: { achievements: number }) {
             </Button>
           )}
         </div>
-        <p className="hub-meta">{tp("hub.achievementsCount", achievements)}</p>
       </div>
     </article>
   );

@@ -320,7 +320,6 @@ export const en: Messages = {
     surnameMissing: "Type a surname.",
     dreamNumber: "Dream number",
     dreamPlaceholder: "Any",
-    dreamHint: "Optional, 1 to 99. Empty, the club picks. A number from another position (a keeper's 10) is very rare.",
     dreamInvalid: "Use a number from 1 to 99.",
     foot: "Preferred foot",
     footRight: "Right",
@@ -333,7 +332,6 @@ export const en: Messages = {
     position: "Position",
     positionHint: "Tap the position you play in.",
     appearance: "Look",
-    appearanceHint: "Optional. Without customising, the player takes the field as a silhouette.",
     appearanceEdit: "Edit look",
     appearanceRandom: "Randomise",
     next: "Next",
@@ -583,7 +581,6 @@ export const en: Messages = {
     },
     poster: {
       title: "Career poster",
-      description: "A 1080-pixel-wide image, with height adjusted to your collection.",
       showSurname: "Show surname",
       download: "Download poster",
       share: "Share image",
@@ -1083,6 +1080,7 @@ export const en: Messages = {
       overlays: "Overlays and notices",
       feedback: "Sound and vibration",
       composition: "Composition",
+      broadcast: "Broadcasts",
     },
 
     type: {
@@ -1246,9 +1244,19 @@ export const en: Messages = {
         reveal: "Reveal",
         whistle: "Whistle",
         unlock: "Achievement",
+        hit: "Play worked",
+        miss: "Play missed",
       },
       vibrate: "Test vibration",
       vibrateUnsupported: "No vibration on this device",
+    },
+
+    broadcast: {
+      intro: "Every competition has its own broadcast package: colours, background pattern, emblem, signature rule and scoreboard. The team of whoever is playing joins in through the side glow, the play's accent rule, the scoreboard bars and the header strip (the club scarf or the national flag). The sample clubs are the most prestigious of each league or confederation; for national team competitions, pick the nation.",
+      nation: "National team",
+      competition: "Competition",
+      sceneCompetition: "The scene's own",
+      sampleNation: "Each tournament's sample",
     },
 
     composition: {

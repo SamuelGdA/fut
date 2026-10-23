@@ -174,7 +174,6 @@ export function IdentityScreen() {
                 <Avatar config={draft.avatar} kit={kit} className="h-full w-full" />
               </div>
               <div className="flex min-w-0 flex-1 flex-col gap-3">
-                <p className="text-sm text-muted">{t("identity.appearanceHint")}</p>
                 <div className="flex flex-wrap gap-2">
                   <Button
                     variant="secondary"
@@ -237,7 +236,7 @@ export function IdentityScreen() {
                 </div>
               </div>
               <p id={`${dreamId}-note`} className={cn("-mt-2 text-xs", dreamValid ? "text-faint" : "text-bad")}>
-                {dreamValid ? t("identity.dreamHint") : t("identity.dreamInvalid")}
+                {dreamValid ? null : t("identity.dreamInvalid")}
               </p>
             </div>
           </StepSection>

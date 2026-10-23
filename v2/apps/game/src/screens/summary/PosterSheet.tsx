@@ -72,7 +72,6 @@ export function PosterSheet({ open, onOpenChange, career, avatar }: PosterSheetP
       open={open}
       onOpenChange={onOpenChange}
       title={t("summary.poster.title")}
-      description={t("summary.poster.description")}
       closeLabel={t("common.close")}
       footer={
         <div className="flex flex-col gap-2 sm:flex-row">

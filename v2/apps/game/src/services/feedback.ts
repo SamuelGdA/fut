@@ -9,6 +9,7 @@ const HAPTIC_FOR: Readonly<Partial<Record<Cue, Haptic>>> = {
   trophy: "trophy",
   whistle: "success",
   unlock: "success",
+  hit: "success",
 };
 
 /**
