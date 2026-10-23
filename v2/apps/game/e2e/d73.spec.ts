@@ -51,6 +51,8 @@ for (const theme of ["light", "dark"] as const) for (const kind of ["match", "pr
 
 for (const theme of ["light", "dark"] as const) {
   test(`D73: quatro atmosferas da carreira, ${theme}`, async ({ page }, info) => {
+    // Cada família tem o seu pacote de transmissão (D83): competição, padrão e a faixa do time.
+    const packages: Record<string, readonly [string, string]> = { europe: ["ucl", "stars"], america: ["libertadores", "rays"], world: ["worldcup", "globe"], nation: ["copaamerica", "aguayo"] };
     for (const family of ["europe", "america", "world", "nation"]) {
       const target = await page.context().newPage();
       await target.setViewportSize(info.project.name === "celular" ? { width: 360, height: 640 } : { width: 1280, height: 720 });
@@ -60,9 +62,17 @@ for (const theme of ["light", "dark"] as const) {
       expect(JSON.parse(raw.toString()).engine).toBe(metadata.engine);
       await abrirMomento(target, raw, moment!.index, { theme });
       await expect(target.locator(".match-scoreboard")).toBeVisible();
+      const [broadcast, motif] = packages[family]!;
+      const stage = target.locator(".season-decision-slide[data-active] .drama-decision.bc-stage");
+      await expect(stage).toHaveAttribute("data-broadcast", broadcast);
+      await expect(stage).toHaveAttribute("data-motif", motif);
+      await expect(stage.locator(".match-scarf[data-kit]")).toHaveCount(1);
+      await expect(stage.locator(".match-scoreboard > span[data-kit]")).toHaveCount(2);
+      await expect(stage.locator(".match-competition .bc-emblem")).toHaveCount(1);
       if (family === "nation" || family === "world") {
         expect(await target.locator(".career").evaluate((node) => getComputedStyle(node).getPropertyValue("--match-bg-gradient"))).toContain("color-mix");
-        await expect(target.locator(".match-atmosphere[data-stars]")).toHaveCount(0);
+        await expect(stage.locator(".match-scarf")).toHaveAttribute("data-kit", "flag");
+        await expect(target.locator("[data-motif='stars']")).toHaveCount(0);
       }
       await auditar(target, `Atmosfera ${family}, ${theme}`);
       await target.screenshot({ path: info.outputPath(`atmosfera-${family}-${theme}.png`), style: ".toast-viewport { visibility: hidden !important; }" });

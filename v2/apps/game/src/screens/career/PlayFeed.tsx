@@ -77,6 +77,8 @@ export function PlayFeed({ career, play, reviewing, onCloseReview, compact = fal
 
   if (!page || !record) {
     if (!event) return null;
+    // No PC, a mensagem do resultado já mostra o evento inteiro: a aba só repetiria o texto. No celular a mensagem é compacta e a aba guarda a leitura completa.
+    if (!compact) return null;
     return <><section className="play play-compact" aria-label={t("career.play.label")}><button type="button" className="play-toggle" aria-expanded={open} onClick={() => setOpened(open ? null : play.id)}><span className="text-sm font-semibold">{decisionText(locale, event.before, event.decision).title}</span><ChevronDown size={18} aria-hidden="true" /></button></section><Sheet open={open} onOpenChange={(next) => setOpened(next ? play.id : null)} title={t("career.play.label")} closeLabel={t("common.close")}><EventLine page={event} animate={false} /></Sheet></>;
 
   }
@@ -180,7 +182,9 @@ export function PlayFeed({ career, play, reviewing, onCloseReview, compact = fal
  * na liga, acesso, queda ou título, e o OVR contando; embaixo, os números.
  */
 function PlayStrip({ page, record, event, animate }: { page: SeasonPage; record: SeasonRecord; event: EventPage | null; animate: boolean }) {
-  const { t, c, cp, ordinal } = useT();
+  const { t, c, cp, ordinal, locale } = useT();
+  // As taças da temporada na própria faixa (D87), no lugar da contagem: a mesma altura, sem precisar abrir outra aba.
+  const strip = showcaseItems([record]);
 
   const entry = leagueEntry(record);
   const movement = movementOf(record);
@@ -209,9 +213,10 @@ function PlayStrip({ page, record, event, animate }: { page: SeasonPage; record:
         ) : null}
         <span className="display numeric shrink-0 text-lg leading-none font-black">{record.year}</span>
         <Crest club={record.club} size={20} decorative />
-        <span className="min-w-0 truncate text-sm font-semibold">{getClub(record.club)?.name ?? record.club}</span>
+        <span className="play-strip-club min-w-0 truncate text-sm font-semibold">{getClub(record.club)?.short ?? record.club}</span>
         {entry?.position ? <span className="numeric shrink-0 text-xs text-muted">{ordinal(entry.position)}</span> : null}
-        {entry?.champion ? <StripSeal tone="glory" label={t("reveal.champion")} /> : null}
+        {strip.length > 0 ? <span className="play-strip-honours" aria-label={t("reveal.champion")} onClick={(event) => event.stopPropagation()}>{strip.slice(0, 2).map((item) => <HonourToken key={`${item.kind}:${item.id}:${item.kind === "award" ? item.competition ?? "" : ""}`} id={item.kind === "award" ? item.competition ?? item.id : item.id} award={item.kind === "award" ? item.id : undefined} year={record.year} size={18} language={locale} />)}{strip.length > 2 ? <span className="text-glory">+{strip.length - 2}</span> : null}</span> : null}
+        {entry?.champion && strip.length === 0 ? <StripSeal tone="glory" label={t("reveal.champion")} /> : null}
         {movement === "promoted" ? <StripSeal tone="good" label={t("reveal.promoted")} /> : null}
         {movement === "relegated" ? <StripSeal tone="bad" label={t("reveal.relegated")} /> : null}
         <span className="ml-auto flex shrink-0 items-baseline gap-1">
@@ -223,7 +228,6 @@ function PlayStrip({ page, record, event, animate }: { page: SeasonPage; record:
       </span>
       <span className="play-strip-row text-xs text-muted">
         <span className="min-w-0 truncate">{numbers.join(" · ")}</span>
-        {record.titles.length > 0 ? <span className="shrink-0 text-glory">★ {record.titles.length}</span> : null}
         {up > 0 ? <span className="text-good shrink-0">▲ {up} {c("stats.attributesShort")}</span> : null}
         {down > 0 ? <span className="text-bad shrink-0">▼ {down}</span> : null}
       </span>
@@ -409,6 +413,13 @@ function SeasonLine({ page, record, animate, tabs, review, onDetails }: SeasonLi
         </div>
       </m.dl>
 
+      {/* As taças da temporada logo depois dos números, antes dos detalhes (D87). */}
+      {seasonHonours.length > 0 ? (
+        <m.div className={cn("play-honours", animate && "play-honours-fresh")} {...enter(0.3)}>
+          <span className="play-honours-art">{seasonHonours.map((item) => <HonourToken key={`${item.kind}:${item.id}:${item.kind === "award" ? item.competition ?? "" : ""}`} id={item.kind === "award" ? item.competition ?? item.id : item.id} award={item.kind === "award" ? item.id : undefined} year={record.year} size={30} language={locale} />)}</span>
+        </m.div>
+      ) : null}
+
       {onDetails ? <button type="button" className="play-details-button" onClick={onDetails}>{craqueRevision(locale, "details")} <ChevronDown size={13} aria-hidden="true" /></button> : null}
       {!onDetails && (deltas.length > 0 || notes.length > 0) ? (
         <details className="play-season-details" open={detailsOpen} onToggle={(event) => { if (event.currentTarget.open !== detailsOpen) usePrefs.getState().setSeasonDetails(event.currentTarget.open); }}><summary>{craqueRevision(locale, "details")}</summary><m.ul className="play-chips play-notes" aria-label={t("reveal.attributes")} {...enter(0.2)}>
@@ -430,11 +441,6 @@ function SeasonLine({ page, record, animate, tabs, review, onDetails }: SeasonLi
         </m.ul></details>
       ) : null}
 
-      {!onDetails && seasonHonours.length > 0 ? (
-        <m.div className={cn("play-honours", animate && "play-honours-fresh")} {...enter(0.3)}>
-          <span className="play-honours-art">{seasonHonours.map((item) => <HonourToken key={`${item.kind}:${item.id}:${item.kind === "award" ? item.competition ?? "" : ""}`} id={item.kind === "award" ? item.competition ?? item.id : item.id} award={item.kind === "award" ? item.id : undefined} year={record.year} size={30} language={locale} />)}</span>
-        </m.div>
-      ) : null}
     </div>
   );
 }

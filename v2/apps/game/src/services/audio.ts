@@ -16,6 +16,8 @@ export const CUES = [
   "reveal",
   "whistle",
   "unlock",
+  "hit",
+  "miss",
 ] as const;
 
 export type Cue = (typeof CUES)[number];
@@ -186,6 +188,21 @@ function render(ac: AudioContext, cue: Cue, master: number) {
         tone(ac, master, { wave: "sine", from: frequency, at: index * 0.07, duration: 0.42, peak: 0.04 });
         tone(ac, master, { wave: "triangle", from: frequency * 2, at: index * 0.07, duration: 0.18, peak: 0.012 });
       });
+      return;
+
+    case "hit":
+      // Lance que deu certo (D87): arpejo maior subindo e um rugido curto de arquibancada.
+      [392, 493.88, 587.33, 783.99].forEach((frequency, index) => {
+        tone(ac, master, { wave: "triangle", from: frequency, at: index * 0.06, duration: 0.3, peak: 0.045 });
+      });
+      noise(ac, master, { at: 0.12, duration: 0.7, peak: 0.032, band: 900, q: 0.5 });
+      return;
+
+    case "miss":
+      // Lance que não deu (D87): duas notas descendo, graves, e o lamento abafado da torcida.
+      tone(ac, master, { wave: "triangle", from: 392, to: 370, duration: 0.22, peak: 0.045 });
+      tone(ac, master, { wave: "triangle", from: 311.13, to: 277.18, at: 0.18, duration: 0.42, peak: 0.045 });
+      noise(ac, master, { at: 0.05, duration: 0.55, peak: 0.022, band: 420, q: 0.7 });
       return;
 
     case "whistle":

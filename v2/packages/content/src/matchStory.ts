@@ -31,11 +31,19 @@ export function matchStory(locale: Locale, result: KeyMatchResult, position: Pos
     en: match.stage === "final" ? won ? "The team lifted the trophy after a final to remember." : "The opposition lifted the trophy." : match.stage === "league" ? won ? "Three points to remember." : "That moment lingered after the defeat." : won ? "The team went through." : "The campaign ended there.",
     es: match.stage === "final" ? won ? "El equipo levantó la copa tras una final para recordar." : "El rival levantó la copa." : match.stage === "league" ? won ? "Tres puntos para recordar." : "La derrota dejó esa jugada pendiente." : won ? "El equipo siguió adelante." : "La campaña terminó allí.",
   };
-  const title = {
-    pt: safe ? "A decisão ficou com o time" : !success ? "O lance que ficou por um detalhe" : result.goals ? "Coragem para decidir" : result.assists ? "O passe que mudou a noite" : kind === "save" ? "As mãos que mantiveram o sonho" : kind === "tackle" ? "O corte que valeu a reação" : "Confiança na hora decisiva",
-    en: safe ? "The team had the final say" : !success ? "The moment that slipped away" : result.goals ? "The courage to settle it" : result.assists ? "The pass that changed the night" : kind === "save" ? "The hands that kept hope alive" : kind === "tackle" ? "The challenge that sparked a response" : "Trust at the decisive moment",
-    es: safe ? "El equipo tuvo la última palabra" : !success ? "El lance que se escapó por un detalle" : result.goals ? "Valentía para decidir" : result.assists ? "El pase que cambió la noche" : kind === "save" ? "Las manos que sostuvieron el sueño" : kind === "tackle" ? "El corte que inició la reacción" : "Confianza en la hora decisiva",
+  // A manchete nasce do que o lance fez e da fase (D88): dois lances do mesmo ano não repetem título.
+  const stage = {
+    pt: { final: "a final", semi: "a semifinal", quarter: "as quartas", league: "a rodada" },
+    en: { final: "the final", semi: "the semi-final", quarter: "the quarter-final", league: "the matchday" },
+    es: { final: "la final", semi: "la semifinal", quarter: "los cuartos", league: "la jornada" },
+  }[locale][match.stage];
+  const plural = match.stage === "quarter";
+  const raw = {
+    pt: safe ? `o time decidiu ${stage}` : !success ? `${stage} ${plural ? "escaparam" : "escapou"} por um detalhe` : result.goals ? `o gol que marcou ${stage}` : result.assists ? `o passe que mudou ${stage}` : kind === "save" ? `as mãos que seguraram ${stage}` : kind === "tackle" ? `o corte que salvou ${stage}` : `confiança em ${stage}`,
+    en: safe ? `the team settled ${stage}` : !success ? `${stage} slipped away` : result.goals ? `the goal that defined ${stage}` : result.assists ? `the pass that changed ${stage}` : kind === "save" ? `the hands that held ${stage}` : kind === "tackle" ? `the challenge that saved ${stage}` : `trust in ${stage}`,
+    es: safe ? `el equipo decidió ${stage}` : !success ? `${stage} ${plural ? "se escaparon" : "se escapó"} por un detalle` : result.goals ? `el gol que marcó ${stage}` : result.assists ? `el pase que cambió ${stage}` : kind === "save" ? `las manos que sostuvieron ${stage}` : kind === "tackle" ? `el corte que salvó ${stage}` : `confianza en ${stage}`,
   }[locale];
+  const title = raw.charAt(0).toLocaleUpperCase(locale) + raw.slice(1);
   const stakes = { pt: match.stage === "final" ? "Com a taça em jogo" : match.stage === "league" ? "Com o placar empatado" : "Com a vaga em jogo", en: match.stage === "final" ? "With the trophy at stake" : match.stage === "league" ? "With the scores level" : "With qualification at stake", es: match.stage === "final" ? "Con la copa en juego" : match.stage === "league" ? "Con el marcador empatado" : "Con el pase en juego" }[locale];
   const context = match.score[0] < match.score[1] ? { pt: `Perdendo por ${match.score.join(" × ")}`, en: `Trailing ${match.score.join(" × ")}`, es: `Perdiendo por ${match.score.join(" × ")}` }[locale] : stakes;
   const opening = { pt: `${context}, aos ${match.minute} minutos contra ${opponent}, ${name} decidiu ${action}.`, en: `${context}, in minute ${match.minute} against ${opponent}, ${name} chose to ${action}.`, es: `${context}, en el minuto ${match.minute} ante ${opponent}, ${name} eligió ${action}.` }[locale];

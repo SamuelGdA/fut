@@ -320,7 +320,6 @@ export const es: Messages = {
     surnameMissing: "Escribe el apellido.",
     dreamNumber: "Número soñado",
     dreamPlaceholder: "Libre",
-    dreamHint: "Opcional, del 1 al 99. Vacío, el club elige. Un número que no es del puesto (el 10 de un arquero) es muy raro.",
     dreamInvalid: "Usa un número del 1 al 99.",
     foot: "Pie hábil",
     footRight: "Derecho",
@@ -333,7 +332,6 @@ export const es: Messages = {
     position: "Posición",
     positionHint: "Toca la posición en la que juegas.",
     appearance: "Apariencia",
-    appearanceHint: "Opcional. Sin personalizar, el jugador entra a la cancha como silueta.",
     appearanceEdit: "Editar apariencia",
     appearanceRandom: "Sortear",
     next: "Siguiente",
@@ -583,7 +581,6 @@ export const es: Messages = {
     },
     poster: {
       title: "Póster de la carrera",
-      description: "Una imagen de 1080 píxeles de ancho, con altura adaptada a tu colección.",
       showSurname: "Mostrar apellido",
       download: "Descargar póster",
       share: "Compartir imagen",
@@ -1083,6 +1080,7 @@ export const es: Messages = {
       overlays: "Ventanas y avisos",
       feedback: "Sonido y vibración",
       composition: "Composición",
+      broadcast: "Transmisiones",
     },
 
     type: {
@@ -1246,9 +1244,19 @@ export const es: Messages = {
         reveal: "Revelación",
         whistle: "Silbato",
         unlock: "Logro",
+        hit: "Jugada acertada",
+        miss: "Jugada fallida",
       },
       vibrate: "Probar vibración",
       vibrateUnsupported: "Sin vibración en este dispositivo",
+    },
+
+    broadcast: {
+      intro: "Cada competición tiene su paquete de transmisión: colores, patrón de fondo, sello, filete y marcador. El equipo de quien juega entra en el brillo lateral, en el filete de la jugada, en las barras del marcador y en la franja del encabezado (la bufanda del club o la bandera de la selección). Los clubes de ejemplo son los de mayor prestigio de cada liga o confederación; en las competiciones de selecciones, elige la selección.",
+      nation: "Selección",
+      competition: "Competición",
+      sceneCompetition: "La de la escena",
+      sampleNation: "La de ejemplo de cada torneo",
     },
 
     composition: {

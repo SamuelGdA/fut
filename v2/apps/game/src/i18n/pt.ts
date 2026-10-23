@@ -324,7 +324,6 @@ export const pt = {
     surnameMissing: "Escreva o sobrenome.",
     dreamNumber: "Número dos sonhos",
     dreamPlaceholder: "Livre",
-    dreamHint: "Opcional, de 1 a 99. Vazio, o clube escolhe. Número que não é da posição (a 10 de um goleiro) é muito raro.",
     dreamInvalid: "Use um número de 1 a 99.",
     foot: "Pé preferido",
     footRight: "Direito",
@@ -337,7 +336,6 @@ export const pt = {
     position: "Posição",
     positionHint: "Toque na posição em que você joga.",
     appearance: "Aparência",
-    appearanceHint: "Opcional. Sem personalizar, o jogador entra em campo como silhueta.",
     appearanceEdit: "Editar aparência",
     appearanceRandom: "Sortear",
     next: "Avançar",
@@ -587,7 +585,6 @@ export const pt = {
     },
     poster: {
       title: "Pôster da carreira",
-      description: "Uma imagem de 1080 pixels de largura, com altura ajustada à sua coleção.",
       showSurname: "Mostrar sobrenome",
       download: "Baixar pôster",
       share: "Compartilhar imagem",
@@ -1087,6 +1084,7 @@ export const pt = {
       overlays: "Janelas e avisos",
       feedback: "Som e vibração",
       composition: "Composição",
+      broadcast: "Transmissões",
     },
 
     type: {
@@ -1250,9 +1248,19 @@ export const pt = {
         reveal: "Revelação",
         whistle: "Apito",
         unlock: "Conquista",
+        hit: "Lance certo",
+        miss: "Lance errado",
       },
       vibrate: "Testar vibração",
       vibrateUnsupported: "Sem vibração neste aparelho",
+    },
+
+    broadcast: {
+      intro: "Cada competição tem o seu pacote de transmissão: cores, padrão de fundo, selo, filete e placar. O time de quem joga entra no brilho lateral, no filete do lance, nas barras do placar e na faixa do cabeçalho (o cachecol do clube ou a bandeira da seleção). Os clubes de exemplo são os de maior prestígio de cada liga ou confederação; nas competições de seleções, escolha a seleção.",
+      nation: "Seleção",
+      competition: "Competição",
+      sceneCompetition: "A da cena",
+      sampleNation: "A de exemplo de cada torneio",
     },
 
     composition: {

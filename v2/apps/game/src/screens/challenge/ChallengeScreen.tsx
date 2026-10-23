@@ -162,7 +162,7 @@ export function ChallengeScreen() {
                       autoComplete="off"
                     />
                     <p id={`${dreamId}-note`} className={cn("mt-1.5 text-xs", dreamValid ? "text-faint" : "text-bad")}>
-                      {dreamValid ? t("identity.dreamHint") : t("identity.dreamInvalid")}
+                      {dreamValid ? null : t("identity.dreamInvalid")}
                     </p>
                   </div>
                 </div>
