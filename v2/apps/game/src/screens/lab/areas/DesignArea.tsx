@@ -1,5 +1,6 @@
 import type { ComponentType, MouseEvent } from "react";
 import { useT } from "../../../i18n/useT";
+import { AccountSection } from "../sections/Account";
 import { BroadcastSection } from "../sections/Broadcasts";
 import { CompositionSection } from "../sections/Composition";
 import { ButtonsSection, ControlsSection, TonesSection } from "../sections/Controls";
@@ -18,7 +19,8 @@ type SectionKey =
   | "overlays"
   | "feedback"
   | "composition"
-  | "broadcast";
+  | "broadcast"
+  | "account";
 
 const SECTIONS: ReadonlyArray<{ key: SectionKey; id: string; Component: ComponentType<{ index: number }> }> = [
   { key: "type", id: "tipografia", Component: TypeSection },
@@ -32,6 +34,7 @@ const SECTIONS: ReadonlyArray<{ key: SectionKey; id: string; Component: Componen
   { key: "feedback", id: "som", Component: FeedbackSection },
   { key: "composition", id: "composicao", Component: CompositionSection },
   { key: "broadcast", id: "transmissoes", Component: BroadcastSection },
+  { key: "account", id: "conta", Component: AccountSection },
 ];
 
 /**

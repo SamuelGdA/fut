@@ -37,7 +37,7 @@ export function gameLoading() {
   return {
     plugin,
     initialAsset(url: string) {
-      return shell.has(url) || /\.html$/.test(url) || /\.css$/.test(url) || /^icons\//.test(url) || /^favicon\./.test(url) || /(?:big-shoulders|schibsted-grotesk)-latin-(?:standard-normal|wght-normal).*\.woff2$/.test(url);
+      return shell.has(url) || /\.html$/.test(url) || /\.css$/.test(url) || /^icons\//.test(url) || /^boot\//.test(url) || /^favicon\./.test(url) || /(?:big-shoulders|schibsted-grotesk)-latin-(?:standard-normal|wght-normal).*\.woff2$/.test(url);
     },
   };
 }

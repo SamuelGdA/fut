@@ -143,6 +143,23 @@ export const COACH_ACHIEVEMENTS: readonly CoachAchievement[] = [
 
 export const TECNICO_ACHIEVEMENT_IDS: readonly string[] = COACH_ACHIEVEMENTS.map((achievement) => achievement.id);
 
+/**
+ * Raridade das conquistas do Técnico (D112), na mesma escala do Craque (D94):
+ * muda só a moldura do troféu no perfil e na tela de conquistas.
+ */
+const COACH_RARITY: Readonly<Record<string, "common" | "rare" | "epic" | "legendary">> = {
+  "tecnico:firstSeason": "common", "tecnico:firstTitle": "common", "tecnico:promotion": "common", "tecnico:abroad": "common",
+  "tecnico:fullCareer": "rare", "tecnico:twoPromotions": "rare", "tecnico:rescue": "rare", "tecnico:league": "rare",
+  "tecnico:loyal": "rare", "tecnico:threeCountries": "rare", "tecnico:revelations": "rare", "tecnico:comeback": "rare",
+  "tecnico:invincibles": "epic", "tecnico:continental": "epic", "tecnico:clubWorldCup": "epic", "tecnico:tenTitles": "epic",
+  "tecnico:fromBottom": "epic", "tecnico:reputation": "epic",
+  "tecnico:underdogWorld": "legendary", "tecnico:treble": "legendary",
+};
+
+export function coachAchievementRarity(id: string): "common" | "rare" | "epic" | "legendary" {
+  return COACH_RARITY[id] ?? "common";
+}
+
 /** Conquistas cumpridas agora (as `end` só com a carreira terminada). */
 export function coachAchievementsMet(career: CoachCareer): string[] {
   return COACH_ACHIEVEMENTS.filter((achievement) => (achievement.when === "anytime" || career.ended) && achievement.check(career)).map(

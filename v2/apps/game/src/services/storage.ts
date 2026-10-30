@@ -91,4 +91,8 @@ export const STORAGE_KEYS = {
   save: "craque.v2.save",
   /** Rascunho da identidade do treinador (D51): preferência, nunca a carreira. */
   tecnicoDraft: "craque.v2.tecnico.draft",
+  /** A escolha de cookies, com a versão do aviso (D113). */
+  consent: "craque.v2.consent",
+  /** A sessão do Supabase (D112); o cliente também grava `-code-verifier` durante um login, e o jogo `.volta` (para onde voltar). */
+  auth: "craque.v2.auth",
 } as const;

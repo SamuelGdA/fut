@@ -23,6 +23,10 @@ export const SCREENS = [
   "tecnicoAppearance",
   "tecnico",
   "tecnicoLegacy",
+  "login",
+  "profile",
+  "terms",
+  "privacy",
 ] as const;
 
 export type Screen = (typeof SCREENS)[number];
@@ -51,7 +55,32 @@ export const SCREEN_GAME: Readonly<Record<Screen, Game>> = {
   tecnicoAppearance: "tecnico",
   tecnico: "tecnico",
   tecnicoLegacy: "tecnico",
+  login: "hub",
+  profile: "hub",
+  terms: "hub",
+  privacy: "hub",
 };
+
+/**
+ * Telas com endereço próprio (D112): o login (volta do Google e dos e-mails),
+ * o perfil e as páginas legais, que o Google e o AdSense exigem num endereço
+ * público. O build grava uma cópia do `index.html` em cada pasta, então
+ * qualquer hospedagem estática abre esses endereços sem regra de reescrita.
+ * As outras telas continuam sem mudar a URL.
+ */
+export const SCREEN_PATHS: Readonly<Partial<Record<Screen, string>>> = {
+  login: "login",
+  profile: "perfil",
+  terms: "termos",
+  privacy: "privacidade",
+};
+
+/** O endereço de uma tela com caminho próprio, dentro da base do build. */
+export function screenUrl(screen: Screen, base: string = import.meta.env.BASE_URL): string | undefined {
+  const path = SCREEN_PATHS[screen];
+  if (!path) return undefined;
+  return `${base.endsWith("/") ? base : `${base}/`}${path}`;
+}
 
 export function isScreen(value: unknown): value is Screen {
   return typeof value === "string" && (SCREENS as readonly string[]).includes(value);
@@ -86,6 +115,8 @@ export type LeaveGuard = (to: Screen) => boolean;
 
 interface NavigationState {
   screen: Screen;
+  /** A tela de antes, para o "Voltar" das páginas abertas de vários lugares (as legais). */
+  previous: Screen | null;
   guard: LeaveGuard | null;
   go(to: Screen, options?: { replace?: boolean; force?: boolean }): void;
   back(): void;
@@ -101,17 +132,22 @@ function canUseHistory(): boolean {
 /**
  * Ao sair da tela do link compartilhado, o `#c=` sai da barra de endereço; ao
  * sair da página não encontrada, o endereço desconhecido vira a raiz do jogo:
- * recarregar depois abre o jogo normal. Fora delas, a URL fica como está.
+ * recarregar depois abre o jogo normal. Telas com endereço próprio (D112)
+ * põem o caminho delas; sair delas volta para a raiz. Fora isso, a URL fica
+ * como está.
  */
 function urlLeaving(from: Screen, to: Screen): string | undefined {
   if (from === to) return undefined;
+  const own = screenUrl(to);
+  if (own) return own;
   if (from === "shared") return `${window.location.pathname}${window.location.search}`;
-  if (from === "notFound") return import.meta.env.BASE_URL;
+  if (from === "notFound" || SCREEN_PATHS[from]) return import.meta.env.BASE_URL;
   return undefined;
 }
 
 export const useNavigation = create<NavigationState>()((set, get) => ({
   screen: INITIAL_SCREEN,
+  previous: null,
   guard: null,
 
   go(to, options = {}) {
@@ -124,7 +160,7 @@ export const useNavigation = create<NavigationState>()((set, get) => ({
       if (options.replace) window.history.replaceState(entry, "", url);
       else window.history.pushState(entry, "", url);
     }
-    set({ screen: to });
+    set({ screen: to, previous: screen });
   },
 
   back() {
@@ -144,7 +180,7 @@ export const useNavigation = create<NavigationState>()((set, get) => ({
       if (canUseHistory()) window.history.pushState(toHistoryEntry(screen), "");
       return;
     }
-    set({ screen: target });
+    set({ screen: target, previous: screen });
   },
 }));
 

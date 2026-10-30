@@ -923,6 +923,72 @@ export const pt = {
     by: "{surname}, {date}",
     locked: "Bloqueada",
     progress: "{value} de {target}",
+    quantity: { one: "Conquistada em {count} carreira", other: "Conquistada em {count} carreiras" },
+    trophyUnlocked: "{name}: conquistada",
+    trophyLocked: "{name}: bloqueada",
+    firstTime: "Primeira vez em {date}",
+    syncing: "Atualizando com a sua conta",
+  },
+
+  account: {
+    signIn: "Entrar",
+    signInLong: "Entrar ou criar conta",
+    openProfile: "Abrir o perfil de @{name}",
+    profileFallback: "Seu perfil",
+    checking: "Conferindo sua conta",
+    guestNotice: "Você está jogando como visitante. Faça login para registrar no Ranking e desbloquear conquistas!",
+    gate: {
+      eyebrow: "Conquistas",
+      title: "Sua coleção começa aqui",
+      body: "Faça login para começar a colecionar conquistas e registrar suas estatísticas.",
+      points: {
+        trophies: "Cada troféu com a quantidade de vezes que você ganhou",
+        ranking: "Seu @ no ranking mundial do Desafio do dia",
+        stats: "Gols, títulos e Bolas de Ouro somados entre as carreiras",
+      },
+      action: "Entrar ou criar conta",
+      back: "Voltar ao início",
+    },
+    imported: { one: "{count} conquista deste aparelho entrou na sua conta", other: "{count} conquistas deste aparelho entraram na sua conta" },
+    welcome: "Tudo pronto, @{name}",
+    signedOut: "Você saiu da conta. Pode continuar jogando como visitante.",
+    deleted: "Conta apagada. Seus dados saíram do servidor.",
+    legalNotice: {
+      eyebrow: "Aviso legal",
+      body: "Todos os nomes, escudos e marcas de clubes presentes neste simulador são de propriedade de seus respectivos titulares e utilizados unicamente para fins de identificação, imersão e realismo. Este projeto é independente e não possui caráter comercial, vínculo, patrocínio ou endosso oficial por parte das entidades esportivas retratadas.",
+    },
+    ranking: {
+      title: "Ranking mundial do dia",
+      local: "Suas tentativas de hoje",
+      empty: "Ninguém terminou o desafio de hoje ainda. Seja o primeiro.",
+      loading: "Buscando o ranking",
+      offline: "Sem conexão: o ranking mundial volta quando a internet voltar.",
+      unavailable: "O ranking mundial não respondeu agora. Tente de novo mais tarde.",
+      place: "{place}º de {total}",
+      you: "Você",
+      visitor: "Entre para colocar seu @ aqui.",
+    },
+  },
+
+  consent: {
+    title: "Cookies no Futeiros",
+    body: "Usamos cookies essenciais para o jogo e a conta funcionarem. Com sua permissão, também usamos o Google Analytics (como o jogo é usado) e o Google AdSense (anúncios que pagam o servidor).",
+    acceptAll: "Aceitar todos",
+    essentialOnly: "Somente essenciais",
+    policy: "Política de Privacidade",
+    settings: "Preferências de cookies",
+    current: { all: "Agora: todos os cookies", essential: "Agora: somente essenciais" },
+  },
+
+  ads: {
+    label: "Publicidade",
+    placeholder: "Espaço de anúncio genérico: aparece só em desenvolvimento, até a monetização ser ligada (D113).",
+  },
+
+  legal: {
+    terms: "Termos de Serviço",
+    privacy: "Política de Privacidade",
+    title: "Privacidade e termos",
   },
 
   lab: {
@@ -1159,6 +1225,18 @@ export const pt = {
       feedback: "Som e vibração",
       composition: "Composição",
       broadcast: "Transmissões",
+      account: "Conta e privacidade",
+    },
+    account: {
+      lead: "As peças da conta (D112 e D113). O troféu fica em cinza e meio apagado até cair; liberado, ganha a cor da raridade, brilho no hover e o selo com a quantidade de carreiras. Esqueletos seguram o lugar enquanto o banco responde.",
+      locked: "Bloqueada",
+      unlocked: "Liberada",
+      counted: "Liberada em 3 carreiras",
+      skeleton: "Esqueleto de carregamento",
+      guest: "Faixa do visitante",
+      cookies: "Aviso de cookies (prévia, não grava escolha)",
+      ads: "Espaço de anúncio genérico",
+      legal: "Aviso legal ao começar a jogar",
     },
 
     type: {

@@ -41,6 +41,13 @@ export default defineConfig({
     screenshot: "only-on-failure",
     // A suíte toca o jogo inteiro; som e vibração ficam desligados nas preferências.
     permissions: ["clipboard-read", "clipboard-write"],
+    // D113: o build da suíte tem um Analytics falso, então o aviso de cookies
+    // existe; a escolha "Somente essenciais" já vem feita para ele não cobrir
+    // os botões. O teste do aviso (conta.spec.ts) começa sem ela.
+    storageState: {
+      cookies: [],
+      origins: [{ origin: `http://localhost:${PORT}`, localStorage: [{ name: "craque.v2.consent", value: JSON.stringify({ v: 1, choice: "essential", at: 0 }) }] }],
+    },
   },
   projects: [
     {
@@ -54,8 +61,11 @@ export default defineConfig({
   ],
   webServer: [{
     // O build da suíte usa as imagens reais: assim o modo real (cache de
-    // escudos, "Guardar todas") continua testado; o padrão é o desenhado (D46).
-    command: `pnpm build && pnpm exec vite preview --port ${PORT} --strictPort`,
+    // escudos, "Guardar todas") continua testado. `--mode e2e` lê o
+    // `.env.e2e` (D112): um Supabase que não existe (a suíte responde por
+    // ele, e2e/conta.ts) e um Analytics falso; o .env.local de quem roda não
+    // entra. O preview serve com a CSP de verdade (D114).
+    command: `pnpm exec vite build --mode e2e && pnpm exec vite preview --port ${PORT} --strictPort`,
     env: { VITE_ASSETS: "real" },
     url: `http://localhost:${PORT}`,
     reuseExistingServer: !process.env["CI"],

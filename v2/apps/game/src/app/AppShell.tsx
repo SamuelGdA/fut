@@ -1,5 +1,7 @@
 import { lazy, Suspense, type ReactNode } from "react";
 import { SCREEN_GAME, useNavigation } from "./navigation";
+import { AccountButton } from "../features/account/AccountButton";
+import { CookieBanner } from "../features/consent/CookieBanner";
 import { SettingsMenu } from "../features/settings/SettingsMenu";
 import { useT } from "../i18n/useT";
 import { PitchMark } from "../ui/PitchMark";
@@ -50,6 +52,7 @@ function TopBar() {
       <div className="topbar-inner mx-auto flex max-w-6xl items-center justify-between gap-3 px-4">
         <Brand />
         <div className="flex items-center gap-1">
+          <AccountButton />
           <SettingsMenu />
         </div>
       </div>
@@ -60,7 +63,8 @@ function TopBar() {
 /**
  * Casca fixa: pular para o conteúdo, barra superior, tela e avisos. A barra
  * fica em todas as telas, a Carreira inclusive (D43): o placar do jogador vem
- * logo abaixo dela.
+ * logo abaixo dela. A conta (D112) entra ao lado dos ajustes; o aviso de
+ * cookies (D113), no pé, só quando há o que consentir.
  */
 export function AppShell({ children }: { children: ReactNode }) {
   const { t } = useT();
@@ -75,6 +79,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       </main>
       <Toaster closeLabel={t("common.close")} />
       <UnlockAnnouncer />
+      <CookieBanner />
     </>
   );
 }

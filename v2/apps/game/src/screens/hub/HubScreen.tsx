@@ -1,7 +1,7 @@
 import { getClub, getCountryKit } from "@craque/world";
 import { ArrowRight, Award, BookOpen, FlaskConical, Play, RotateCcw } from "lucide-react";
 import { useEffect } from "react";
-import { useNavigation } from "../../app/navigation";
+import { screenUrl, useNavigation } from "../../app/navigation";
 import { useDraft } from "../../features/career/draft";
 import { useHall } from "../../features/hall/store";
 import { useCoachDraft } from "../../features/tecnico/draft";
@@ -67,6 +67,11 @@ export function HubScreen() {
             {t("home.lab")}
           </Button>
         ) : null}
+        <nav className="hub-legal" aria-label={t("legal.title")}>
+          <a href={screenUrl("terms")} onClick={(event) => { event.preventDefault(); go("terms"); }}>{t("legal.terms")}</a>
+          <span aria-hidden="true">·</span>
+          <a href={screenUrl("privacy")} onClick={(event) => { event.preventDefault(); go("privacy"); }}>{t("legal.privacy")}</a>
+        </nav>
       </footer>
     </div>
   );

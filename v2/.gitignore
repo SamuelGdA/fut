@@ -6,6 +6,7 @@ coverage/
 *.local
 .env*
 !.env.example
+!.env.e2e
 .vite/
 .DS_Store
 npm-debug.log*
@@ -18,3 +19,7 @@ e2e-resultados/
 
 # Cache bruto da coleta de elencos do eFootball (pnpm elencos:coletar).
 packages/world/scripts/elencos/.cache/
+
+# Supabase CLI: estado local do link com o projeto (não versionar).
+supabase/.temp/
+supabase/.branches/

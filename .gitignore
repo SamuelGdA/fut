@@ -6,6 +6,7 @@ coverage/
 *.tsbuildinfo
 .env*
 !.env.example
+!.env.e2e
 *.pem
 .DS_Store
 *-debug.log*

@@ -397,7 +397,7 @@
 
   .achievement {
     display: grid;
-    grid-template-columns: 40px minmax(0, 1fr);
+    grid-template-columns: 48px minmax(0, 1fr);
     gap: 12px;
     align-items: start;
     padding: 12px;
@@ -406,21 +406,7 @@
     background: var(--panel);
   }
 
-  .achievement-mark {
-    display: grid;
-    place-items: center;
-    width: 40px;
-    height: 40px;
-    border: 1.5px dashed var(--rule);
-    border-radius: 50%;
-    color: var(--faint);
-  }
-
-  .achievement[data-unlocked] .achievement-mark {
-    border: 0;
-    background: var(--glory);
-    color: var(--canvas);
-  }
+  /* D112: a marca virou o troféu (account.css, .trophy-icon): cinza bloqueado, cor liberado. */
 
   /* D94: cada conquista com a cor da raridade; a lendária liberada brilha. */
   .achievement[data-rarity] {
@@ -431,12 +417,6 @@
     border-color: color-mix(in oklab, var(--rarity) 45%, var(--line));
     border-left-color: var(--rarity);
     background: linear-gradient(135deg, color-mix(in oklab, var(--rarity) 12%, var(--panel)), var(--panel) 60%);
-  }
-  .achievement[data-unlocked][data-rarity] .achievement-mark {
-    background: var(--rarity);
-  }
-  .achievement[data-unlocked][data-rarity="common"] .achievement-mark {
-    background: var(--fg);
   }
   .achievement[data-unlocked][data-rarity="legendary"] {
     box-shadow: 0 0 0 1px color-mix(in oklab, var(--glory) 40%, transparent), 0 10px 26px -14px color-mix(in oklab, var(--glory) 70%, transparent);

@@ -3,6 +3,8 @@ import { getCountry, getCountryKit } from "@craque/world";
 import { ArrowLeft, Pencil, Play, Timer } from "lucide-react";
 import { useEffect, useId, useState } from "react";
 import { useNavigation } from "../../app/navigation";
+import { GuestNotice } from "../../features/account/GuestNotice";
+import { useAccount } from "../../features/account/store";
 import { useAppearanceContext } from "../../features/appearance/context";
 import { isSurnameValid, SURNAME_MAX, useDraft } from "../../features/career/draft";
 import { useChallengeClock } from "../../features/challenge/clock";
@@ -21,13 +23,17 @@ import { Flag } from "../../ui/Media";
 import { Panel, SectionRule } from "../../ui/Panel";
 import { Chip } from "../../ui/Signals";
 import { EdictBand, RecordTarget, MissionLine } from "./MissionViews";
+import { WorldRanking } from "./WorldRanking";
+import { LegalFinePrint } from "../../features/account/LegalFinePrint";
 
 /**
  * A entrada do Desafio do dia (GDD 27.6): a mão do dia (bandeira, nação,
  * posição e as regras fixas em selos curtos), as missões, o recorde do dia
  * quando houver, o édito, o jogador (nome, número, aparência), o botão Jogar e
  * o ranking do dia ao lado. Vira sozinha à meia-noite UTC. Desde a D96 tem
- * menos texto: nada de avisos repetidos nem notas de rodapé.
+ * menos texto: nada de avisos repetidos nem notas de rodapé. Com contas
+ * (D112), o ranking mundial do dia fica no topo da lateral, as tentativas do
+ * aparelho logo abaixo, e o visitante vê uma faixa fina convidando a entrar.
  */
 export function ChallengeScreen() {
   const { t, c, locale } = useT();
@@ -37,6 +43,7 @@ export function ChallengeScreen() {
   const hand = handOf(clock.day);
   const draft = useDraft();
   const attempts = useHall((state) => state.attempts);
+  const cloud = useAccount((state) => state.status) !== "off";
   const [touched, setTouched] = useState(false);
   const [starting, setStarting] = useState(false);
   const [dreamText, setDreamText] = useState(draft.dreamNumber === null ? "" : String(draft.dreamNumber));
@@ -95,6 +102,7 @@ export function ChallengeScreen() {
           {t("challenge.nextIn", { time: formatCountdown(clock.msLeft) })}
         </p>
       </div>
+      <GuestNotice className="mb-4" />
 
       <div className="ch-grid">
         <div className="flex min-w-0 flex-col gap-5 lg:contents">
@@ -188,10 +196,12 @@ export function ChallengeScreen() {
         </div>
 
         <aside className="ch-side">
-          <DayRanking attempts={attempts} day={clock.day} />
+          {cloud ? <WorldRanking day={clock.day} /> : null}
+          <DayRanking attempts={attempts} day={clock.day} title={cloud ? t("account.ranking.local") : undefined} />
           <StatsPanel attempts={attempts} />
         </aside>
       </div>
+      <LegalFinePrint className="mt-6" />
     </div>
   );
 }
@@ -199,14 +209,16 @@ export function ChallengeScreen() {
 interface RankingProps {
   attempts: readonly AttemptEntry[];
   day: string;
+  /** Com o ranking mundial em cima, este vira "Suas tentativas de hoje". */
+  title?: string;
 }
 
 /** O ranking do dia (GDD 27.7): todas as tentativas terminadas no dia, da maior para a menor. */
-function DayRanking({ attempts, day }: RankingProps) {
+function DayRanking({ attempts, day, title }: RankingProps) {
   const { t, locale } = useT();
   const list = dayRanking(attempts, day);
   return (
-    <Panel title={t("challenge.ranking")}>
+    <Panel title={title ?? t("challenge.ranking")}>
       {list.length === 0 ? (
         <p className="text-sm text-muted">{t("challenge.rankingEmpty")}</p>
       ) : (

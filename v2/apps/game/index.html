@@ -42,10 +42,13 @@
         display: none;
         max-width: 22rem;
       }
-      .boot-error button {
+      .boot-error a {
+        display: inline-flex;
+        align-items: center;
         margin-top: 14px;
         min-height: 44px;
         padding: 0 20px;
+        text-decoration: none;
         border: 0;
         border-radius: 4px;
         background: #e3b341;
@@ -62,28 +65,8 @@
         display: block;
       }
     </style>
-    <script>
-      // Aplica tema e idioma salvos antes da primeira pintura, para a página
-      // nunca piscar no tema errado. Qualquer falha cai no padrão (claro, pt).
-      (function () {
-        try {
-          var raw = window.localStorage.getItem("craque.v2.prefs");
-          if (!raw) return;
-          var state = (JSON.parse(raw) || {}).state || {};
-          var root = document.documentElement;
-          if (state.theme === "dark") {
-            root.setAttribute("data-theme", "dark");
-            var meta = document.querySelector('meta[name="theme-color"]');
-            if (meta) meta.setAttribute("content", "#0d1110");
-          }
-          if (state.motion === "reduced") root.setAttribute("data-motion", "reduced");
-          if (state.locale === "es") root.setAttribute("lang", "es");
-          if (state.locale === "en") root.setAttribute("lang", "en");
-        } catch (error) {
-          /* armazenamento bloqueado ou corrompido: fica o padrão */
-        }
-      })();
-    </script>
+    <!-- Tema, idioma e proteção contra iframe antes da primeira pintura (D114: arquivo, não script embutido). -->
+    <script src="/boot/tema.js"></script>
   </head>
   <body>
     <div id="root">
@@ -97,7 +80,7 @@
           <p class="boot-loading" data-boot="loading">Abrindo o Futeiros</p>
           <div class="boot-error">
             <p data-boot="failed">Não deu para abrir o jogo. Sua carreira continua salva; recarregue para tentar de novo.</p>
-            <button type="button" data-boot="reload" onclick="location.reload()">Recarregar</button>
+            <a href="" data-boot="reload">Recarregar</a>
           </div>
         </div>
       </div>
@@ -105,36 +88,7 @@
     <noscript>
       <p style="padding: 24px; font-family: system-ui, sans-serif">O Futeiros precisa de JavaScript ligado para jogar.</p>
     </noscript>
-    <script>
-      // Nunca uma tela branca: se o jogo não desenhar em 12 segundos (o pacote
-      // não baixou), a abertura vira a mensagem de erro com o botão de recarregar.
-      (function () {
-        var texts = {
-          es: {
-            loading: "Abriendo Futeiros",
-            failed: "No se pudo abrir el juego. Tu carrera sigue guardada; recarga para intentarlo de nuevo.",
-            reload: "Recargar",
-          },
-          en: {
-            loading: "Opening Futeiros",
-            failed: "The game could not open. Your career is still saved; reload to try again.",
-            reload: "Reload",
-          },
-        };
-        var lang = document.documentElement.getAttribute("lang");
-        var dict = texts[lang];
-        if (dict) {
-          [].forEach.call(document.querySelectorAll("[data-boot]"), function (element) {
-            element.textContent = dict[element.getAttribute("data-boot")];
-          });
-        }
-        window.setTimeout(function () {
-          if (window.__craqueMounted) return;
-          var boot = document.querySelector(".boot");
-          if (boot) boot.setAttribute("data-failed", "");
-        }, 12000);
-      })();
-    </script>
+    <script src="/boot/abertura.js"></script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

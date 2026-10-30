@@ -7,6 +7,7 @@ import { feedback } from "../../services/feedback";
 import { Loading } from "../../ui/Loading";
 import { notify } from "../../ui/toast/notify";
 import { SummaryView } from "./SummaryView";
+import { AdSlot } from "../../features/consent/AdSlot";
 
 /**
  * O resumo da carreira nesta sessão (GDD 24). Sem carreira
@@ -54,15 +55,19 @@ export function SummaryScreen() {
   };
 
   return (
-    <SummaryView
-      career={career}
-      avatar={avatar}
-      mode="own"
-      alternate={alternate !== null}
-      onAgain={() => go(challenge ? "challenge" : "identity")}
-      onHome={() => go("home")}
-      onBranch={challenge ? undefined : branch}
-      internalTesting={internalTesting}
-    />
+    <>
+      <SummaryView
+        career={career}
+        avatar={avatar}
+        mode="own"
+        alternate={alternate !== null}
+        onAgain={() => go(challenge ? "challenge" : "identity")}
+        onHome={() => go("home")}
+        onBranch={challenge ? undefined : branch}
+        internalTesting={internalTesting}
+      />
+      {/* D113: o espaço de anúncio do resumo, fora do laço; vazio até a monetização ser ligada. */}
+      <AdSlot placement="resumo" className="mx-4 mb-10 max-w-6xl sm:mx-auto" />
+    </>
   );
 }

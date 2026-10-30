@@ -50,6 +50,15 @@ export default defineConfig([
   },
 
   {
+    // Scripts clássicos da abertura (D114): rodam no navegador antes do jogo.
+    files: ["apps/game/public/**/*.js"],
+    languageOptions: {
+      globals: globals.browser,
+      sourceType: "script",
+    },
+  },
+
+  {
     // Scripts de linha de comando (notas dos clubes): Node, e falam pelo console.
     files: ["**/scripts/**/*.{js,mjs}"],
     languageOptions: {
@@ -63,7 +72,7 @@ export default defineConfig([
   {
     // Ferramentas de linha de comando (harness de balanceamento): o relatório
     // sai pelo terminal.
-    files: ["tools/**/*.ts"],
+    files: ["tools/**/*.ts", "supabase/src/**/*.ts", "supabase/test/**/*.ts"],
     languageOptions: {
       globals: globals.node,
     },

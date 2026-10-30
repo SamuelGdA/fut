@@ -1109,6 +1109,8 @@ A suíte ponta a ponta final executou 92 cenários: 85 aprovados e sete pulos pr
 
 ## Revisão D67: cobrança por conquistas, propostas e instalação Windows
 
+**Histórico.** Os atalhos de Windows e o atualizador descritos aqui saíram na D115 (30/10/2026); para jogar localmente, `pnpm deps` e `pnpm dev`.
+
 Técnico `1.7.0`; Craque permanece `2.0.0-m13`.
 
 - Diretoria: clubes da elite com objetivo `title` têm peso 1. Clubes com força ≥80, prestígio ≥4 e posição esperada entre os primeiros `ceil(25% da liga)` têm peso 0,8. Demais clubes mantêm a avaliação anterior. No mandato atual, cada ano sem grande título acumula 1 de jejum; copa nacional ou segundo continental acumulam apenas 0,5. Liga, principal continental ou Mundial de Clubes zeram o contador. Supercopas não encerram o jejum. Histórico parcial, segunda divisão ou passagem por outro clube interrompem a sequência.
@@ -1148,6 +1150,8 @@ A preferência é aplicada antes da primeira pintura e reidratada pelo mesmo arm
 
 
 ## Revisão D70: atualização temporária para testes locais
+
+**Histórico.** Os atalhos de Windows e o atualizador descritos aqui saíram na D115 (30/10/2026); para jogar localmente, `pnpm deps` e `pnpm dev`.
 
 Os atalhos Windows agora incluem atualizar.bat na raiz e em v2/. O iniciar.bat consulta o GitHub ao abrir e avisa quando houver versão nova, sem bloquear o jogo se a consulta falhar ou não houver internet. O título da janela também indica uma atualização disponível. A fonte é exclusivamente SamuelGdA/fut, branch main.
 
@@ -1280,3 +1284,18 @@ Amostras de navegador foram reconstruídas no m22 por decisões válidas. A cole
 **Navegador D81 (21/10/2026).** Suíte completa do build final aprovada: **231 cenários passaram e nove foram pulados por restrições previstas de dispositivo**, 240 no total, sem falhas (8,2 minutos). Inclui PC e celular nos dois temas, relatos por opção, texto e botão inteiros, promessa visível com realizado/meta, jornal proporcional sem alargar a página, leitura ampliada com crônicas, três idiomas, animações, acessibilidade, uso offline e regressões do Técnico. Tipos da interface e lint foram reconferidos e aprovados após o último ajuste do teste.
 
 O teste do laboratório consulta o aviso da ação escolhida diretamente; o novo resumo de promessa possui seu próprio status acessível e não pode tornar essa consulta ambígua. A rodada final confirmou ambos os avisos e as verificações anteriores, sem suprimir elementos nem forçar cliques. Capturas da promessa e do jornal foram revisadas; relatórios de balanceamento e amostras m22 permanecem. Arquivos temporários removidos; alterações locais, sem publicação, commit ou envio ao GitHub.
+
+## D112: conquistas do Técnico na conta (30/10/2026)
+
+O motor do Técnico não muda (`1.10.0`). Com contas no build (Supabase, D112):
+
+- As 20 conquistas do Técnico ganharam raridade, na mesma escala do Craque
+  (D94): comum, rara, épica e lendária (`coachAchievementRarity` em
+  `@craque/content/coach`). A tela de Conquistas as ordena da comum à lendária.
+- Logado, cada conquista vai para a conta quando cai, e conta uma vez por
+  carreira (a quantidade do troféu). A carreira terminada soma ao perfil as
+  temporadas completas e os títulos (`features/account/tecnicoPayload.ts`).
+- Visitante não recebe aviso de conquista; o aparelho guarda e entrega à conta
+  no primeiro login.
+- O aviso legal sobre nomes e escudos fica em letra miúda no pé da tela de
+  identidade do Técnico (e nas telas de começo do Craque).

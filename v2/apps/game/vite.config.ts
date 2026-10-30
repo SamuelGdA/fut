@@ -8,6 +8,8 @@ import { VitePWA } from "vite-plugin-pwa";
 import { defineConfig } from "vitest/config";
 import { errorPages } from "./build/errorPages.ts";
 import { gameLoading } from "./build/gameLoading.ts";
+import { routeCopies } from "./build/routes.ts";
+import { devSecurityHeaders, securityHeaders, securityPlugin } from "./build/security.ts";
 import { CODE_CACHE, IMAGE_CACHE, RUNTIME_IMAGE_DIRS, RUNTIME_IMAGE_PATTERN } from "./src/services/cacheNames.ts";
 
 const PUBLIC_ASSETS = fileURLToPath(new URL("./public/assets/", import.meta.url));
@@ -40,6 +42,10 @@ export default defineConfig({
     tailwindcss(),
     // Páginas estáticas 404, 403, 500 e 503 (GDD 37).
     errorPages(),
+    // D114: build recusado com segredo em variável pública, e o `_headers` com a CSP.
+    securityPlugin(),
+    // D112: /login, /perfil, /termos e /privacidade abrem em qualquer hospedagem estática.
+    routeCopies(),
     loading.plugin,
     // PWA (GDD 37): instalável, e a casca e o jogo funcionam sem internet.
     VitePWA({
@@ -106,9 +112,12 @@ export default defineConfig({
     watch: { ignored: ["**/e2e-relatorio/**", "**/e2e-resultados/**"] },
     port: 5173,
     strictPort: false,
+    headers: devSecurityHeaders(),
   },
   preview: {
     port: 4173,
+    // Os mesmos cabeçalhos do site publicado: a suíte ponta a ponta joga sob a CSP de verdade.
+    headers: securityHeaders(),
   },
   build: {
     target: "es2022",
@@ -116,6 +125,13 @@ export default defineConfig({
   },
   test: {
     environment: "node",
-    include: ["src/**/*.test.ts", "build/**/*.test.ts"],
+    // Os testes não dependem do .env.local de quem roda: nuvem, Analytics e anúncios desligados.
+    env: {
+      VITE_SUPABASE_URL: "desligado-nos-testes",
+      VITE_SUPABASE_PUBLISHABLE_KEY: "desligado-nos-testes",
+      VITE_GA_MEASUREMENT_ID: "desligado-nos-testes",
+      VITE_ADSENSE_CLIENT: "desligado-nos-testes",
+    },
+    include: ["src/**/*.test.ts", "build/**/*.test.ts", "scripts/**/*.test.ts"],
   },
 });

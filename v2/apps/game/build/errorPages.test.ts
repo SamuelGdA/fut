@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { errorPageHtml } from "./errorPages";
 
@@ -22,17 +23,26 @@ describe("páginas estáticas de erro", () => {
     for (const code of ["500", "503"] as const) {
       const html = errorPageHtml(code, "/");
       expect(html).not.toContain("Sua carreira continua salva");
-      expect(html).toContain('onclick="location.reload()"');
+      expect(html).toContain('<a class="button" href="" data-t="retry">');
     }
     // A 404 não tem o que tentar de novo: só a volta para o jogo.
-    expect(errorPageHtml("404", "/")).not.toContain('onclick="location.reload()"');
+    expect(errorPageHtml("404", "/")).not.toContain('data-t="retry"');
+  });
+
+  it("nenhum script embutido nem evento no HTML (D114: a CSP não libera unsafe-inline)", () => {
+    for (const code of codes) {
+      const html = errorPageHtml(code, "/");
+      expect(html).not.toMatch(/<script>|<script type="(?!application\/json)|\son[a-z]+=/);
+      expect(html).toContain('<script src="/boot/erro.js"></script>');
+      expect(() => JSON.parse(/<script type="application\/json" id="futeiros-textos">([\s\S]*?)<\/script>/.exec(html)?.[1] ?? "")).not.toThrow();
+    }
   });
 
   it("os três idiomas vão juntos, e a página escolhe pelas preferências", () => {
     const html = errorPageHtml("404", "/");
     expect(html).toContain("Balón afuera");
     expect(html).toContain("Out of play");
-    expect(html).toContain("craque.v2.prefs");
+    expect(readFileSync(new URL("../public/boot/erro.js", import.meta.url), "utf8")).toContain("craque.v2.prefs");
   });
 
   it("nada de fora: sem fonte, imagem ou script externos, e a base respeitada", () => {
@@ -40,6 +50,7 @@ describe("páginas estáticas de erro", () => {
       const html = errorPageHtml(code, "/craque/");
       // Nenhum recurso carregado de fora (o `xmlns` do SVG é nome, não endereço).
       expect(html).not.toMatch(/(?:src|href)="https?:|url\(|@import|<link rel="stylesheet"/);
+      expect(html).toContain('<script src="/craque/boot/erro.js"></script>');
       expect(html).toContain('href="/craque/"');
       expect(html).toContain('href="/craque/favicon.svg"');
     }

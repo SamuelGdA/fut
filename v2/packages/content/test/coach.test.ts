@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { EVENT_IDS, MATCH_EVENT_OPTIONS, TALK_EFFECTS } from "@craque/engine/coach";
 import { describe, expect, it } from "vitest";
-import { COACH_ACHIEVEMENTS, COACH_TEXTS, coachPlayerName, TECNICO_ACHIEVEMENT_IDS } from "../src/coach";
+import { COACH_ACHIEVEMENTS, COACH_TEXTS, coachAchievementRarity, coachPlayerName, TECNICO_ACHIEVEMENT_IDS } from "../src/coach";
 import { LOCALES, walkMessages } from "../src";
 
 /** Textos do Técnico (GDD 42): três idiomas iguais em forma, e casados com o catálogo do motor. */
@@ -106,5 +106,13 @@ describe("nomes dos jogadores gerados", () => {
     expect(coachPlayerName("a", youth)).toBe(coachPlayerName("a", youth));
     const real = { id: "fc:1", name: "Kylian Mbappé", nationality: "FRA" as const };
     expect(coachPlayerName("x", real)).toBe("Kylian Mbappé");
+  });
+});
+
+describe("raridade das conquistas do Técnico (D112)", () => {
+  it("cada conquista tem uma raridade escolhida, com as quatro faixas em uso", () => {
+    const source = readFileSync(new URL("../src/coach.ts", import.meta.url), "utf8");
+    for (const achievement of COACH_ACHIEVEMENTS) expect(source, achievement.id).toContain(`"${achievement.id}": "`);
+    expect(new Set(COACH_ACHIEVEMENTS.map((achievement) => coachAchievementRarity(achievement.id)))).toEqual(new Set(["common", "rare", "epic", "legendary"]));
   });
 });

@@ -2,6 +2,8 @@ import type { AvatarConfig } from "@craque/art";
 import { achievementText, newAchievements, careerAchievementCounts } from "@craque/content";
 import { type Career, challengeStatus, type ChallengeStatus, isChallengeDayId, saveOf } from "@craque/engine";
 import { readPrefs } from "../../store/prefs";
+import { craqueKey, craquePayload } from "../account/payload";
+import { announcesUnlocks, cloudCareers, cloudUnlockedIds, memberId, sendCareer, sendUnlocks } from "../account/sync";
 import { handOf } from "../challenge/start";
 import { attemptOf } from "./build";
 import { type AchievementRow, archiveId, hasRankedAttempt, rankedDays } from "./model";
@@ -12,6 +14,8 @@ import { useUnlocks } from "./unlocks";
  * Persiste conquistas, contagens e ranking, sem arquivar carreiras (D47).
  * Hashes tornam o fim idempotente: recarregar o resumo não conta de novo.
  * Linhas alternativas não liberam conquistas nem avançam os contadores.
+ * Com conta (D112), as conquistas e o fim da carreira também vão para a
+ * nuvem; o visitante guarda no aparelho sem aviso na tela.
  */
 
 /** O resultado do desafio de uma carreira de desafio, ou `null`. */
@@ -28,14 +32,18 @@ export function challengeOf(career: Career): ChallengeStatus | null {
 /** Avisa e grava as conquistas novas. `career` é quem liberou. */
 async function grant(ids: readonly string[], career: Career, now: number): Promise<void> {
   if (ids.length === 0) return;
-  const rows: AchievementRow[] = ids.map((id) => ({ id, at: now, by: career.setup.identity.surname }));
+  const account = memberId();
+  const rows: AchievementRow[] = ids.map((id) => ({ id, at: now, by: career.setup.identity.surname, ...(account ? { account } : {}) }));
   await useHall.getState().unlock(rows);
+  sendUnlocks("craque", craqueKey(career), ids);
+  if (!announcesUnlocks()) return;
   const locale = readPrefs().locale;
   useUnlocks.getState().push(ids.map((id) => ({ id, ...achievementText(locale, id) })));
 }
 
+/** As que o jogador já tem: as do aparelho e, com conta, as da nuvem. */
 function unlockedSet(): Set<string> {
-  return new Set(useHall.getState().achievements.map((row) => row.id));
+  return new Set([...useHall.getState().achievements.map((row) => row.id), ...cloudUnlockedIds()]);
 }
 
 /** Depois de cada escolha no meio da carreira: só as conquistas que podem cair a qualquer hora. */
@@ -66,9 +74,12 @@ export async function recordFinished(career: Career, _avatar: AvatarConfig | nul
 
   hall.recordProgress(careerAchievementCounts(career, status), id);
   const state = useHall.getState();
-  const finishedBefore = Math.max(0, state.finished - 1);
-  const ids = newAchievements({ career, challenge: status, finishedBefore, rankedDays: rankedDays(state.attempts) }, unlockedSet());
+  // Com conta, "Dez carreiras" conta as carreiras de todos os aparelhos.
+  const finishedBefore = Math.max(0, state.finished - 1, cloudCareers());
+  const days = rankedDays(state.attempts);
+  const ids = newAchievements({ career, challenge: status, finishedBefore, rankedDays: days }, unlockedSet());
   await grant(ids, career, now);
+  sendCareer("craque", craqueKey(career), craquePayload(career, status, finishedBefore, days));
 }
 
 /** O Hall está desativado: substituir um save não arquiva a carreira. */

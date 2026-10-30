@@ -1,7 +1,10 @@
 import { expect, test } from "@playwright/test";
 import { abrir, auditar } from "./apoio";
+import { comConta } from "./conta";
 
 test("D94: conquistas com raridade e a coleção de recordes", async ({ page }, info) => {
+  // D112: colecionar é de quem tem conta; o visitante vê o convite.
+  await comConta(page);
   await abrir(page, { motion: "reduced" });
   await page.getByRole("button", { name: "Conquistas" }).first().click();
   await expect(page.getByRole("heading", { name: "Conquistas", level: 1 })).toBeVisible();

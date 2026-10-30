@@ -221,7 +221,7 @@ test("do hub ao legado: propostas, três ações, evento, simulação, avaliaç�
   const stored = await page.evaluate(() =>
     [window.localStorage, window.sessionStorage].flatMap((area) => Object.keys(area).map((key) => ({ key, value: area.getItem(key) ?? "" }))),
   );
-  const allowed = /^(craque\.v2\.(prefs|draft|tecnico\.draft|hall|unlocks|progress|challenge|achievements)[\w.]*|craque-e2e|futeiros\.e2e\.seed)$/;
+  const allowed = /^(craque\.v2\.(prefs|draft|tecnico\.draft|hall|unlocks|progress|challenge|achievements|consent|auth)[\w.-]*|craque-e2e|craque-e2e-conta|futeiros\.e2e\.seed)$/;
   expect(stored.map((row) => row.key).filter((key) => !allowed.test(key))).toEqual([]);
   for (const row of stored) {
     expect(row.value, row.key).not.toContain('"fixtures"');

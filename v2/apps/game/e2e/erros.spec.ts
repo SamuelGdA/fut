@@ -88,7 +88,8 @@ test("páginas estáticas 404, 403, 500 e 503, no idioma salvo", async ({ page }
   // A 500 avisa que a carreira continua salva e oferece tentar de novo.
   await page.goto("/500.html");
   await expect(page.getByText("Inténtalo de nuevo en un momento")).toBeVisible();
-  await expect(page.getByRole("button", { name: "Intentar de nuevo" })).toBeVisible();
+  // D114: recarregar é um link para o próprio endereço (funciona sem JavaScript; a CSP não aceita evento embutido).
+  await expect(page.getByRole("link", { name: "Intentar de nuevo" })).toHaveAttribute("href", "");
 });
 
 test("o jogo que não baixa nem começa: a abertura vira erro com recarregar", async ({ page }) => {
@@ -96,5 +97,5 @@ test("o jogo que não baixa nem começa: a abertura vira erro com recarregar", a
   await page.goto("/");
   await expect(page.getByText("Abrindo o Futeiros")).toBeVisible();
   await expect(page.getByText("Não deu para abrir o jogo.", { exact: false })).toBeVisible({ timeout: 20_000 });
-  await expect(page.getByRole("button", { name: "Recarregar" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Recarregar" })).toHaveAttribute("href", "");
 });

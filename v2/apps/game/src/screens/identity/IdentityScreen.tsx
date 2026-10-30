@@ -19,6 +19,7 @@ import { SectionRule } from "../../ui/Panel";
 import { PlayerCard } from "../../ui/PlayerCard";
 import { NationalityPicker } from "./NationalityPicker";
 import { PositionPitch } from "./PositionPitch";
+import { LegalFinePrint } from "../../features/account/LegalFinePrint";
 
 const STEPS = ["name", "nation", "position", "review"] as const;
 type Step = (typeof STEPS)[number];
@@ -271,6 +272,7 @@ export function IdentityScreen() {
       </div>
 
       <CraqueExtras quick={quick} />
+      <LegalFinePrint className="id-legal" />
 
       <nav className="id-step-nav fixed inset-x-0 bottom-0 z-40 border-t border-line bg-canvas px-4 pt-3 pb-[calc(12px+env(safe-area-inset-bottom))]">
         <div className="mx-auto flex max-w-xl items-center justify-between gap-3">

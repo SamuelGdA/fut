@@ -1,4 +1,7 @@
-import { Moon, Sun, Volume2, VolumeX } from "lucide-react";
+import { Cookie, FileText, Moon, ShieldCheck, Sun, Volume2, VolumeX } from "lucide-react";
+import { useNavigation } from "../../app/navigation";
+import { TRACKERS_ENABLED } from "../consent/config";
+import { useConsent } from "../consent/store";
 import type { ReactNode } from "react";
 import { useT } from "../../i18n/useT";
 import { useAssetMode } from "../../lib/assets";
@@ -7,7 +10,7 @@ import { feedback } from "../../services/feedback";
 import { useMediaQuery } from "../../lib/useMediaQuery";
 import { canVibrate } from "../../services/haptics";
 import { type Theme, usePrefs, VOLUME_STEPS } from "../../store/prefs";
-import { IconButton } from "../../ui/Button";
+import { Button, IconButton } from "../../ui/Button";
 import { StepSlider, Switch } from "../../ui/Fields";
 import { Segmented } from "../../ui/Segmented";
 import { OfflineImagesRow } from "./OfflineImagesRow";
@@ -163,6 +166,8 @@ export function SettingsPanel() {
         />
       </div> : null}
 
+      <PrivacyRow />
+
       {/* No modo desenhado (o padrão, D46) não há imagem real para guardar. */}
       {assetMode === "real" ? (
         <SettingRow label={t("settings.offlineTitle")}>
@@ -170,5 +175,36 @@ export function SettingsPanel() {
         </SettingRow>
       ) : null}
     </div>
+  );
+}
+
+/**
+ * Privacidade (D113): os Termos e a Política sempre à mão e, quando o build
+ * tem Analytics ou AdSense, o botão que reabre o aviso de cookies para mudar
+ * a escolha.
+ */
+function PrivacyRow() {
+  const { t } = useT();
+  const go = useNavigation((state) => state.go);
+  const choice = useConsent((state) => state.choice);
+  return (
+    <SettingRow label={t("legal.title")} note={TRACKERS_ENABLED && choice ? t(choice === "all" ? "consent.current.all" : "consent.current.essential") : undefined}>
+      <div className="flex flex-wrap gap-2">
+        <Button variant="secondary" size="sm" onClick={() => go("terms")}>
+          <FileText size={15} aria-hidden="true" />
+          {t("legal.terms")}
+        </Button>
+        <Button variant="secondary" size="sm" onClick={() => go("privacy")}>
+          <ShieldCheck size={15} aria-hidden="true" />
+          {t("legal.privacy")}
+        </Button>
+        {TRACKERS_ENABLED ? (
+          <Button variant="secondary" size="sm" onClick={() => useConsent.getState().reopen()}>
+            <Cookie size={15} aria-hidden="true" />
+            {t("consent.settings")}
+          </Button>
+        ) : null}
+      </div>
+    </SettingRow>
   );
 }

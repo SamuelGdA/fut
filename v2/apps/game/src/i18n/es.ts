@@ -919,6 +919,72 @@ export const es: Messages = {
     by: "{surname}, {date}",
     locked: "Bloqueado",
     progress: "{value} de {target}",
+    quantity: { one: "Conseguido en {count} carrera", other: "Conseguido en {count} carreras" },
+    trophyUnlocked: "{name}: conseguido",
+    trophyLocked: "{name}: bloqueado",
+    firstTime: "Primera vez el {date}",
+    syncing: "Actualizando con tu cuenta",
+  },
+
+  account: {
+    signIn: "Entrar",
+    signInLong: "Entrar o crear cuenta",
+    openProfile: "Abrir el perfil de @{name}",
+    profileFallback: "Tu perfil",
+    checking: "Comprobando tu cuenta",
+    guestNotice: "Estás jugando como visitante. ¡Inicia sesión para entrar en el Ranking y desbloquear logros!",
+    gate: {
+      eyebrow: "Logros",
+      title: "Tu colección empieza aquí",
+      body: "Inicia sesión para empezar a coleccionar logros y registrar tus estadísticas.",
+      points: {
+        trophies: "Cada trofeo con las veces que lo ganaste",
+        ranking: "Tu @ en el ranking mundial del Desafío del día",
+        stats: "Goles, títulos y Balones de Oro sumados entre carreras",
+      },
+      action: "Entrar o crear cuenta",
+      back: "Volver al inicio",
+    },
+    imported: { one: "{count} logro de este dispositivo entró en tu cuenta", other: "{count} logros de este dispositivo entraron en tu cuenta" },
+    welcome: "Todo listo, @{name}",
+    signedOut: "Cerraste la sesión. Puedes seguir jugando como visitante.",
+    deleted: "Cuenta eliminada. Tus datos salieron del servidor.",
+    legalNotice: {
+      eyebrow: "Aviso legal",
+      body: "Todos los nombres, escudos y marcas de clubes presentes en este simulador son propiedad de sus respectivos titulares y se utilizan únicamente con fines de identificación, inmersión y realismo. Este proyecto es independiente y no tiene carácter comercial, vínculo, patrocinio ni respaldo oficial de las entidades deportivas representadas.",
+    },
+    ranking: {
+      title: "Ranking mundial del día",
+      local: "Tus intentos de hoy",
+      empty: "Nadie terminó el desafío de hoy todavía. Sé el primero.",
+      loading: "Buscando el ranking",
+      offline: "Sin conexión: el ranking mundial vuelve cuando vuelva internet.",
+      unavailable: "El ranking mundial no respondió ahora. Inténtalo más tarde.",
+      place: "{place}º de {total}",
+      you: "Tú",
+      visitor: "Entra para poner tu @ aquí.",
+    },
+  },
+
+  consent: {
+    title: "Cookies en Futeiros",
+    body: "Usamos cookies esenciales para que el juego y la cuenta funcionen. Con tu permiso, también usamos Google Analytics (cómo se usa el juego) y Google AdSense (anuncios que pagan el servidor).",
+    acceptAll: "Aceptar todas",
+    essentialOnly: "Solo esenciales",
+    policy: "Política de Privacidad",
+    settings: "Preferencias de cookies",
+    current: { all: "Ahora: todas las cookies", essential: "Ahora: solo esenciales" },
+  },
+
+  ads: {
+    label: "Publicidad",
+    placeholder: "Espacio de anuncio genérico: solo aparece en desarrollo, hasta activar la monetización (D113).",
+  },
+
+  legal: {
+    terms: "Términos de Servicio",
+    privacy: "Política de Privacidad",
+    title: "Privacidad y términos",
   },
 
   lab: {
@@ -1155,6 +1221,18 @@ export const es: Messages = {
       feedback: "Sonido y vibración",
       composition: "Composición",
       broadcast: "Transmisiones",
+      account: "Cuenta y privacidad",
+    },
+    account: {
+      lead: "Las piezas de la cuenta (D112 y D113). El trofeo queda gris y medio apagado hasta caer; conseguido, toma el color de la rareza, brillo al pasar el ratón y el sello con las carreras. Los esqueletos ocupan el lugar mientras responde la base de datos.",
+      locked: "Bloqueado",
+      unlocked: "Conseguido",
+      counted: "Conseguido en 3 carreras",
+      skeleton: "Esqueleto de carga",
+      guest: "Franja del visitante",
+      cookies: "Aviso de cookies (vista previa, no guarda la elección)",
+      ads: "Espacio de anuncio genérico",
+      legal: "Aviso legal al empezar a jugar",
     },
 
     type: {

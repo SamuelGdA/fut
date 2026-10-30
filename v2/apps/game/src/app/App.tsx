@@ -1,6 +1,7 @@
 import { LazyMotion, MotionConfig } from "motion/react";
 import { useEffect } from "react";
 import { usePrefs } from "../store/prefs";
+import { AccountEffects } from "./AccountEffects";
 import { AppShell } from "./AppShell";
 import { ErrorBoundary } from "./ErrorBoundary";
 import { connectHistory } from "./navigation";
@@ -19,6 +20,7 @@ export function App() {
     <ErrorBoundary>
       <PrefsEffects />
       <PwaEffects />
+      <AccountEffects />
       <LazyMotion features={loadMotionFeatures} strict>
         <MotionConfig reducedMotion={motion === "reduced" ? "always" : "never"}>
           <AppShell>

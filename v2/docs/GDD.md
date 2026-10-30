@@ -2076,6 +2076,8 @@ nenhuma temporada apagada).
 
 ---
 
+**Como ficou (D112).** Com contas no build, o ranking do dia ganha a versão mundial (servidor decide a ranqueada, só posição, `@` e pontos) acima das tentativas do aparelho; o visitante vê uma faixa convidando a entrar. Detalhes na revisão D112 a D115.
+
 ## 28. Hall da Fama, conquistas e "E se...?"
 
 ### 28.1 Hall suspenso (D47)
@@ -2113,6 +2115,8 @@ mostra "Linha alternativa" e a opção que a original escolheu ganha a etiqueta
 "Escolha da original". O save guarda de onde a linha saiu.
 
 ---
+
+**Como ficou (D112).** Com contas, colecionar é de quem está logado: o visitante vê o convite na tela de Conquistas e não recebe aviso; as conquistas viram troféus (cinza bloqueado, colorido com brilho liberado) com a quantidade de carreiras em que caíram; as do Técnico ganham raridade. São 156 do Craque (49 específicas, 22 de recordes e 85 de competições) e 20 do Técnico. Detalhes na revisão D112 a D115.
 
 ## 29. Compartilhamento
 
@@ -2390,6 +2394,8 @@ recarregar** (remove só o save). Ela avisa que a carreira continua salva.
 
 ---
 
+**Como ficou (D112 e D113).** Novas chaves do aparelho: `craque.v2.consent` (escolha de cookies) e `craque.v2.auth` (sessão do Supabase, com `-code-verifier` durante um login e `.volta` para o retorno). Perfil, troféus e carreiras logadas também ficam no Supabase. Detalhes na revisão D112 a D115.
+
 ## 35. Idiomas e texto
 
 - Português (padrão), espanhol e inglês. Troca imediata, sem recarregar.
@@ -2479,6 +2485,8 @@ recarregar** (remove só o save). Ela avisa que a carreira continua salva.
   desenhos do jogo, nos três idiomas, sem nada carregado de fora.
 
 ---
+
+**Como ficou (D114).** As páginas de erro e a abertura não têm mais script embutido: carregam `boot/erro.js`, `boot/tema.js` e `boot/abertura.js`, e o "Recarregar" é um link para o próprio endereço. O envio de carreira que falha sem internet espera numa fila (D113). Detalhes na revisão D112 a D115.
 
 ## 38. Ferramentas de desenvolvimento
 
@@ -4285,6 +4293,8 @@ A suíte ponta a ponta final executou 92 cenários: 85 aprovados e sete pulos pr
 
 ## Revisão D67: cobrança por conquistas, propostas e instalação Windows
 
+**Histórico.** Os atalhos de Windows e o atualizador descritos aqui saíram na D115 (30/10/2026); para jogar localmente, `pnpm deps` e `pnpm dev`.
+
 Técnico `1.7.0`; Craque permanece `2.0.0-m13`.
 
 - Diretoria: clubes da elite com objetivo `title` têm peso 1. Clubes com força ≥80, prestígio ≥4 e posição esperada entre os primeiros `ceil(25% da liga)` têm peso 0,8. Demais clubes mantêm a avaliação anterior. No mandato atual, cada ano sem grande título acumula 1 de jejum; copa nacional ou segundo continental acumulam apenas 0,5. Liga, principal continental ou Mundial de Clubes zeram o contador. Supercopas não encerram o jejum. Histórico parcial, segunda divisão ou passagem por outro clube interrompem a sequência.
@@ -4324,6 +4334,8 @@ A preferência é aplicada antes da primeira pintura e reidratada pelo mesmo arm
 
 
 ## Revisão D70: atualização temporária para testes locais
+
+**Histórico.** Os atalhos de Windows e o atualizador descritos aqui saíram na D115 (30/10/2026); para jogar localmente, `pnpm deps` e `pnpm dev`.
 
 Os atalhos Windows agora incluem atualizar.bat na raiz e em v2/. O iniciar.bat consulta o GitHub ao abrir e avisa quando houver versão nova, sem bloquear o jogo se a consulta falhar ou não houver internet. O título da janela também indica uma atualização disponível. A fonte é exclusivamente SamuelGdA/fut, branch main.
 
@@ -5037,3 +5049,44 @@ Motor do Craque `2.0.0-m41`. Detalhes na revisão D110 do GDD e na decisão D110
 - **Escudos e selos reais por padrão.** O build usa `VITE_ASSETS=real` quando nada é dito (`apps/game/src/lib/env.ts`); `gerado` continua disponível para comparar. Onde não há imagem real, entra a arte desenhada.
 - **Escudos que faltavam.** Vieram da Wikipédia (o campo de imagem da página de cada clube): os 36 clubes de Portugal, Vaca Díez, San Juan, Patriotas Boyacá e os selos da Primeira Liga e da Liga Portugal 2. Ficam com o escudo desenhado, sem imagem achada: Real Oruro, Santo Domingo, Torreense, União de Leiria, Atlético El Vigía, Real Frontera e Marítimo de La Guaira; e os selos da LigaPro Serie B, da Liga 2 peruana e da Liga FUTVE 2. Agora são 518 de 525 escudos e 31 de 34 selos reais.
 - **Imagens trocadas pelo usuário (30/10/2026):** o escudo do Vasco da Gama (`clubs/vasco-da-gama.png`) e o selo do Brasileirão Série B (`leagues/brasileirao-serie-b.png`) passaram a ser as versões PNG enviadas pelo usuário, recortadas e com 512 px de altura; os dados (`clubs/bra.json`, `leagues.json`) registram a extensão `png`.
+
+## Revisão D112 a D115: contas, privacidade e segurança (30/10/2026)
+
+O motor não muda (Craque `2.0.0-m41`, Técnico `1.10.0`): nenhuma carreira dá outro resultado. Decisões D112 a D115.
+
+### Conta (D112)
+
+- **Opcional.** Sem conta, o jogo inteiro funciona. Sem Supabase configurado no build (`VITE_SUPABASE_URL` e `VITE_SUPABASE_PUBLISHABLE_KEY`), o jogo roda como antes, só no aparelho, com as conquistas locais (modo `local`).
+- **Entrar.** Google primeiro; e-mail e senha logo abaixo (senha com 8 ou mais caracteres, letras e números). Criar conta por e-mail exige confirmar o e-mail pelo link; "Esqueci a senha" manda um link que abre o `/login` pedindo a senha nova. Contas com o mesmo e-mail confirmado são a mesma conta (vinculação automática do Supabase). O fluxo é PKCE: o código volta na URL do `/login`, vira sessão e some da barra de endereço. Link de confirmação aberto em outro navegador confirma o e-mail e pede para entrar com a senha.
+- **O `@`.** Obrigatório antes de jogar logado: 3 a 20 caracteres, `a-z`, `0-9` e `_`, sem os reservados (admin, suporte, futeiros, craque, tecnico e outros). Único. Quem cria conta por e-mail escolhe no cadastro, com a disponibilidade conferida enquanto digita; quem entra pelo Google escolhe no primeiro acesso, e nenhuma tela do jogo abre antes disso. Dá para trocar no perfil.
+- **Endereços próprios.** `/login`, `/perfil`, `/termos` e `/privacidade` (com e sem barra no fim). O build grava uma cópia do `index.html` em cada pasta, então funcionam em qualquer hospedagem estática. Entrar nessas telas põe o caminho na URL; sair volta para a raiz. As outras telas continuam sem mudar a URL (GDD 5).
+- **Topo.** O visitante vê "Entrar" (só o ícone no celular); logado, a inicial e o `@`, que abrem o perfil. Some nas telas do laço (Carreira e Técnico), para a carreira em memória não correr risco, e no próprio login.
+- **Perfil.** O `@`, a data de entrada e os jeitos de entrar; os totais somados de todas as carreiras terminadas: Craque (carreiras, jogos, gols, assistências, títulos, Bolas de Ouro, melhor OVR, prêmios, jogos sem sofrer gol, com clube e seleção somados como no resumo, D97), Desafio do dia (ranqueadas e melhor nota) e Técnico (carreiras, temporadas, títulos); a vitrine com até 12 troféus, do mais raro para o mais comum; trocar o `@`, sair e apagar a conta. Enquanto o banco responde, esqueletos no lugar de cada bloco.
+- **Troféus.** Cada conquista vira um troféu numa medalha com a cor da raridade (D94): a taça real nos títulos, o prêmio real na Bola de Ouro, Chuteira, Luva, Kopa, artilharia e melhor da competição, e um ícone por grupo no resto. Bloqueado: `grayscale(100%) opacity(50%)`. Liberado: colorido, com brilho que atravessa a medalha e um leve aumento no hover. A **quantidade** (em quantas carreiras a conquista caiu) fica num selo no canto inferior direito ("×3"). O nome acessível diz nome, estado e quantidade.
+- **Quantidade.** Uma conquista conta uma vez por carreira. As do meio da carreira vão na hora; no fim, a carreira manda todas as que cumpriu. Carreira abandonada conta só as que caíram pela primeira vez no aparelho. As que o aparelho guardou como visitante entram na conta no primeiro login, com quantidade 1, sem somar a quem já tem. Linha alternativa do hipotético não conta (GDD 28.3).
+- **Visitante.** Joga tudo. Não vê aviso de conquista; a tela de Conquistas vira um convite ("Faça login para começar a colecionar conquistas e registrar suas estatísticas."); no Desafio do dia, uma faixa fina diz "Você está jogando como visitante. Faça login para registrar no Ranking e desbloquear conquistas!". O aparelho guarda as conquistas em silêncio para o primeiro login.
+- **Ranking mundial do Desafio.** Na lateral do Desafio, acima das tentativas do aparelho: os dez melhores do dia e a linha de quem está logado, mesmo fora do topo, com posição, `@` e pontos. A ranqueada é decidida no servidor: a primeira tentativa terminada do dia, por conta. Sem internet, um aviso; com o servidor fora, outro.
+- **Técnico.** As 20 conquistas ganham raridade (comum, rara, épica, lendária); a carreira terminada soma temporadas completas e títulos ao perfil.
+
+### Privacidade e monetização (D113)
+
+- **Aviso de cookies.** Faixa no pé da tela, com "Somente essenciais" e "Aceitar todos" do mesmo tamanho e o link da Política. Não bloqueia o jogo nem pega o foco. Aparece só quando o build tem `VITE_GA_MEASUREMENT_ID` ou `VITE_ADSENSE_CLIENT`. A escolha fica em `craque.v2.consent`, com a versão do aviso (`CONSENT_VERSION`); mudar o texto do aviso faz todo mundo escolher de novo. Ajustes > Privacidade e termos > Preferências de cookies reabre o aviso.
+- **Google Analytics e AdSense.** Só depois de "Aceitar todos", com o Consent Mode v2 (padrão negado). Voltar para "Somente essenciais" nega o consentimento na hora e apaga os cookies `_ga` do site. O Analytics mede a tela aberta como página virtual e nunca recebe e-mail, `@` ou id da conta.
+- **Anúncios genéricos.** Três espaços: perfil, resumo e conquistas. Nenhum no laço (D23). Sem as variáveis do AdSense, em produção nada aparece; em desenvolvimento, uma moldura tracejada com o nome do espaço.
+- **Páginas legais.** Termos de Serviço e Política de Privacidade, com índice, seções numeradas e a data da versão, nos três idiomas; o contato vem de `VITE_CONTACT_EMAIL`. Links no hub, nos Ajustes, no login e no perfil.
+- **Aviso legal.** "Todos os nomes, escudos e marcas de clubes presentes neste simulador são de propriedade de seus respectivos titulares..." em letra miúda (11 px, cor apagada) no pé das telas onde a carreira começa: quem é você (Craque), identidade do Técnico e Desafio do dia. Fica no fluxo da página, nunca por cima do laço; o texto inteiro também nos Termos.
+- **Sem fila offline (D116).** Conquistas e fim da carreira saem direto para o banco, um envio por vez. Sem internet no momento, o envio se perde (nada fica guardado no aparelho para depois); reenviar a mesma carreira nunca soma duas vezes.
+
+### Segurança (D114)
+
+- **Banco.** RLS em tudo; leitura só das próprias linhas; catálogo público. `UPDATE` só na coluna `username` do próprio perfil. Números só pelas funções `registrar_conquistas` (ids fora do catálogo ativo daquele jogo são ignorados) e `registrar_carreira`, que recusam campo fora da lista, número quebrado, negativo ou acima de: 40 temporadas no Craque (60 no Técnico) e, por temporada, 100 jogos, 120 gols, 80 assistências, 100 jogos sem sofrer gol, 15 títulos, 20 prêmios e uma Bola de Ouro; melhor OVR até 99; Desafio de hoje ou de ontem (UTC), nota até 1000. No máximo 20 carreiras novas por conta a cada 10 minutos. Reenviar a mesma carreira não soma de novo. `excluir_conta` apaga conta, perfil, troféus e carreiras.
+- **Navegador.** O Zod repete os limites com objetos estritos; o perfil lê só as colunas da tela; o Zod e o cliente do Supabase só baixam com a primeira ação de conta (a abertura continua leve, D62).
+- **Cabeçalhos.** CSP sem script embutido (a abertura e as páginas de erro carregam `public/boot/`), liberando só o site, o Supabase e o Google Analytics e o AdSense; `frame-ancestors 'none'`, `X-Frame-Options: DENY`, `nosniff`, `Referrer-Policy`, `Permissions-Policy`, `COOP` e `HSTS`. A suíte ponta a ponta joga sob a mesma CSP.
+- **Segredos.** Só em `.env.local`. O build recusa chave secreta, JWT de `service_role` ou senha de banco numa variável `VITE_`.
+
+### Ferramentas (D115)
+
+- Os atalhos `.bat` e o atualizador de Windows saíram; as revisões D67 e D70 ficam como histórico.
+- `pnpm imagens:importar` importa escudos, selos, troféus e prêmios gerados de `Downloads/geradas` (organização em `clubes/<Liga>/`, `ligas/`, `trofeus/`, `premios/`).
+
+**Como ficou (D112 a D115).** Conta em `apps/game/src/features/account` (`store.ts`, `sync.ts`, `schemas.ts`), consentimento e anúncios em `features/consent`, telas em `screens/account` e `screens/legal`, troféu em `screens/achievements/TrophyIcon.tsx`, ranking em `screens/challenge/WorldRanking.tsx`. Banco em `v2/supabase` (migrações, catálogo gerado por `pnpm supabase:catalogo`, testes em Postgres embutido). Cabeçalhos em `apps/game/build/security.ts`, rotas em `build/routes.ts`. Laboratório > Design > Conta e privacidade mostra o troféu nos três estados, os esqueletos, a faixa do visitante, o aviso de cookies, o espaço de anúncio e o aviso legal.

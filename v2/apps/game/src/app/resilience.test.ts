@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { ERROR_ART_KINDS, errorArt } from "./errorArt";
 import { errorKind, errorMessage } from "./errorKinds";
-import { fromHistoryEntry, isScreen, toHistoryEntry } from "./navigation";
-import { isGamePath, startScreen } from "./startup";
+import { fromHistoryEntry, isScreen, screenUrl, toHistoryEntry } from "./navigation";
+import { isGamePath, screenOfPath, startScreen } from "./startup";
 
 /** Resiliência (GDD 34.4 e 37): que erro é qual, que endereço é do jogo, e os desenhos. */
 
@@ -38,6 +38,21 @@ describe("endereço do jogo e página não encontrada", () => {
     expect(isGamePath("/craque/", "/craque/")).toBe(true);
     expect(isGamePath("/craque", "/craque/")).toBe(true);
     expect(isGamePath("/craque/outra", "/craque/")).toBe(false);
+  });
+
+  it("login, perfil, termos e privacidade têm endereço próprio, com e sem barra (D112)", () => {
+    expect(screenOfPath("/login", "/")).toBe("login");
+    expect(screenOfPath("/login/", "/")).toBe("login");
+    expect(screenOfPath("/login/index.html", "/")).toBe("login");
+    expect(screenOfPath("/perfil", "/")).toBe("profile");
+    expect(screenOfPath("/termos", "/")).toBe("terms");
+    expect(screenOfPath("/privacidade/", "/")).toBe("privacy");
+    expect(screenOfPath("/craque/login", "/craque/")).toBe("login");
+    expect(screenOfPath("/login/outra", "/")).toBeNull();
+    expect(startScreen("", "/perfil")).toBe("profile");
+    expect(startScreen("?code=abc", "/login")).toBe("login");
+    expect(screenUrl("privacy", "/")).toBe("/privacidade");
+    expect(screenUrl("career", "/")).toBeUndefined();
   });
 
   it("caminho desconhecido abre a página não encontrada, antes de qualquer save", () => {

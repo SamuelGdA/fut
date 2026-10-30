@@ -919,6 +919,72 @@ export const en: Messages = {
     by: "{surname}, {date}",
     locked: "Locked",
     progress: "{value} of {target}",
+    quantity: { one: "Earned in {count} career", other: "Earned in {count} careers" },
+    trophyUnlocked: "{name}: earned",
+    trophyLocked: "{name}: locked",
+    firstTime: "First earned on {date}",
+    syncing: "Syncing with your account",
+  },
+
+  account: {
+    signIn: "Sign in",
+    signInLong: "Sign in or create an account",
+    openProfile: "Open @{name}'s profile",
+    profileFallback: "Your profile",
+    checking: "Checking your account",
+    guestNotice: "You are playing as a guest. Sign in to join the Ranking and unlock achievements!",
+    gate: {
+      eyebrow: "Achievements",
+      title: "Your collection starts here",
+      body: "Sign in to start collecting achievements and recording your stats.",
+      points: {
+        trophies: "Every trophy with the number of times you won it",
+        ranking: "Your @ on the worldwide Daily Challenge ranking",
+        stats: "Goals, titles and Ballon d'Or wins added up across careers",
+      },
+      action: "Sign in or create an account",
+      back: "Back to start",
+    },
+    imported: { one: "{count} achievement from this device joined your account", other: "{count} achievements from this device joined your account" },
+    welcome: "All set, @{name}",
+    signedOut: "You signed out. You can keep playing as a guest.",
+    deleted: "Account deleted. Your data left the server.",
+    legalNotice: {
+      eyebrow: "Legal notice",
+      body: "All club names, crests and trademarks in this simulator belong to their respective owners and are used solely for identification, immersion and realism. This is an independent, non-commercial project with no affiliation, sponsorship or official endorsement from the sports organisations depicted.",
+    },
+    ranking: {
+      title: "Today's world ranking",
+      local: "Your attempts today",
+      empty: "Nobody has finished today's challenge yet. Be the first.",
+      loading: "Fetching the ranking",
+      offline: "Offline: the world ranking returns when the connection does.",
+      unavailable: "The world ranking did not respond. Try again later.",
+      place: "{place} of {total}",
+      you: "You",
+      visitor: "Sign in to put your @ here.",
+    },
+  },
+
+  consent: {
+    title: "Cookies on Futeiros",
+    body: "We use essential cookies so the game and your account work. With your permission, we also use Google Analytics (how the game is used) and Google AdSense (ads that pay for the server).",
+    acceptAll: "Accept all",
+    essentialOnly: "Essential only",
+    policy: "Privacy Policy",
+    settings: "Cookie preferences",
+    current: { all: "Now: all cookies", essential: "Now: essential only" },
+  },
+
+  ads: {
+    label: "Advertisement",
+    placeholder: "Generic ad space: shown only in development until monetisation is switched on (D113).",
+  },
+
+  legal: {
+    terms: "Terms of Service",
+    privacy: "Privacy Policy",
+    title: "Privacy and terms",
   },
 
   lab: {
@@ -1155,6 +1221,18 @@ export const en: Messages = {
       feedback: "Sound and vibration",
       composition: "Composition",
       broadcast: "Broadcasts",
+      account: "Account and privacy",
+    },
+    account: {
+      lead: "The account pieces (D112 and D113). A trophy stays grey and faded until it is earned; once earned, it takes the rarity colour, a hover shine and the badge with the number of careers. Skeletons hold the place while the database answers.",
+      locked: "Locked",
+      unlocked: "Earned",
+      counted: "Earned in 3 careers",
+      skeleton: "Loading skeleton",
+      guest: "Guest strip",
+      cookies: "Cookie notice (preview, does not save a choice)",
+      ads: "Generic ad space",
+      legal: "Legal notice when play starts",
     },
 
     type: {

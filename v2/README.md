@@ -1,12 +1,12 @@
 # Futeiros v2: Craque e Técnico
 
-## Estado atual e leitura inicial (D111, 30/10/2026)
+## Estado atual e leitura inicial (D116, 30/10/2026)
 
 O projeto ativo é exclusivamente esta pasta `v2/`: React, Zustand e Vite.
 Craque usa **`ENGINE_VERSION 2.0.0-m41`**; Técnico usa **`COACH_VERSION 1.10.0`**.
 Para começar do zero, leia `AI_RULES.md`, este resumo, a arquitetura e os comandos
 abaixo, o [GDD](docs/GDD.md) e o [README do Técnico](README-TECNICO.md).
-As revisões D73 a D111 ao fim dos documentos detalham o estado atual e prevalecem
+As revisões D73 a D116 ao fim dos documentos detalham o estado atual e prevalecem
 sobre descrições históricas do mesmo assunto. [DECISOES.md](docs/DECISOES.md)
 registra o motivo das escolhas; os relatórios em `tools/balance/relatorios/`
 registram resultados observados, sem garantir ocorrências raras.
@@ -88,6 +88,23 @@ registram resultados observados, sem garantir ocorrências raras.
 - **D110:** sem o Início do Craque (tudo na tela de quem é você); hipotético
   com sorteio refeito; briga com a diretoria sem sorteio; o batedor do time.
   Motor m41. Seção D110 ao fim.
+- **D112:** contas na nuvem (Supabase), opcionais: Google primeiro, e-mail e
+  senha com confirmação por e-mail, o mesmo e-mail é a mesma conta; `@`
+  obrigatório; `/login`, `/perfil`, `/termos` e `/privacidade` com endereço
+  próprio; perfil com os totais de todas as carreiras e a vitrine; troféus em
+  cinza (bloqueado) ou coloridos com a quantidade de carreiras; ranking mundial
+  do Desafio; o visitante joga tudo e vê o convite para entrar. Seção D112 a D115 ao fim.
+- **D113:** aviso de cookies (só com Analytics ou AdSense no build), Google
+  Analytics e AdSense só com "Aceitar todos", espaços de anúncio genéricos fora
+  do laço, Termos e Privacidade, aviso legal em letra miúda no pé das telas
+  onde a carreira começa. A fila offline dos envios saiu na D116.
+- **D114:** RLS em tudo, `UPDATE` só no `@`, números só pelas funções do banco
+  com limites por temporada, Zod no navegador, CSP sem script embutido e
+  proteção contra iframe; o build recusa segredo em variável pública.
+- **D116:** sem fila offline: os envios para a conta saem direto para o banco.
+- **D115:** saem os atalhos `.bat`; entra `pnpm imagens:importar` (escudos,
+  selos, troféus e prêmios gerados em `Downloads/geradas`). O motor não muda
+  em D112 a D115.
 - O Craque tem **38 acontecimentos (D96) e 55 cenas de partida** (D91: duas disputas de pênaltis raras). Partidas, promessas
   e reinvenção são etapas do mesmo ano, organizadas em `career/drama.ts` e
   `career/matchMoments.ts`. Finais continentais vêm após outros jogos de clubes
@@ -686,7 +703,9 @@ Cada torneio sorteia no próprio fluxo.
       bônus de pico = 100 × limitar((OVR de pico − 72) / 27, 0, 1)^1,4
 
   A primeira tentativa terminada no dia é a **ranqueada**; as outras são
-  amistosas.
+  amistosas. Com contas (D112), o servidor decide a ranqueada e a lateral do
+  Desafio mostra o **ranking mundial do dia** (posição, `@` e pontos), acima
+  das tentativas do aparelho.
 
 ### 4.2 Conquistas e persistência
 
@@ -695,10 +714,20 @@ IndexedDB `craque-v2` preserva conquistas e ranking; `craque.v2.progress` guarda
 somente melhores contagens por conquista e hashes das carreiras concluídas,
 sem replay ou retratos. Falha do banco mantém a sessão funcionando em memória.
 
-São 148 conquistas em dez categorias: 51 específicas, 18 geradas do catálogo
-de recordes e 79 das competições. A aba Secretas tem quatro objetivos naturais,
-com nome e pista ocultos até desbloquear. Aposentar no clube da estreia em campo
-é uma conquista de Lealdade. Cada competição nova gera sua conquista de título.
+São 156 conquistas do Craque em dez categorias: 49 específicas, 22 geradas do
+catálogo de recordes e 85 das competições; o Técnico tem mais 20. A aba Secretas
+tem quatro objetivos naturais, com nome e pista ocultos até desbloquear.
+Aposentar no clube da estreia em campo é uma conquista de Lealdade. Cada
+competição nova gera sua conquista de título (e pede uma migração nova do
+catálogo do banco: `pnpm supabase:catalogo`).
+
+**Com contas (D112).** Colecionar é de quem está logado. O visitante joga tudo,
+não vê aviso de conquista e encontra um convite na tela de Conquistas; o
+aparelho guarda em silêncio e entrega à conta no primeiro login. Logado, cada
+conquista vira um troféu: cinza e meio apagado enquanto bloqueado, colorido com
+brilho no hover quando liberado, com a quantidade de carreiras em que caiu no
+canto inferior direito ("×3"). As conquistas do Técnico ganharam raridade.
+Sem Supabase no build, tudo continua só no aparelho, como antes.
 
 ### 4.3 Caminho hipotético
 
@@ -735,6 +764,8 @@ v2/
 ├─ apps/game/         o jogo: Vite + React 19; depende de todos acima
 ├─ tools/balance/     harness de balanceamento: metas do GDD 40 (Craque), do GDD 42.12 (Técnico) e relatórios
 ├─ tools/terminal/    uma carreira inteira no terminal (pnpm carreira)
+├─ supabase/          o banco das contas (D112): migrações SQL com RLS, catálogo de conquistas gerado
+│                     do conteúdo (pnpm supabase:catalogo) e testes num Postgres embutido
 └─ docs/              GDD.md (especificação) e DECISOES.md (D1 em diante)
 ```
 
@@ -756,8 +787,8 @@ v2/
 |---|---|
 | Pilha | Vite 8, React 19 com React Compiler, TypeScript 6, Tailwind 4.3, Base UI, Motion 13, Zustand 5 |
 | `src/app/` | Casca (barra do topo sempre visível), navegação por `history.state` (a URL não muda entre telas, nenhum host precisa de regra de reescrita), barreiras de erro em três níveis, telas carregadas sob demanda e antecipadas apenas dentro do modo escolhido (D62) |
-| `src/screens/` | Hub do Futeiros; do Craque: Início, Identidade, Aparência, Carreira (decisão, lance, jornal, mensagem do resultado), Resumo, link compartilhado, Desafio; do Técnico (`screens/tecnico`): identidade, aparência, a carreira (propostas, etapa, processos, evento, decisão no jogo, resultados, avaliação) e o legado; Conquistas (Craque e Técnico), 404 e o laboratório |
-| `src/features/` | Estado da carreira (`career/store.ts`, Zustand), save, rascunho do jogador, lance (`play.ts`) e mensagem (`resultView.ts`), transmissões das decisões de partida (`career/broadcast.ts`, `broadcastPackages.ts`, `broadcastMotifs.ts`, `teamColors.ts`; D83), "E se...?", resumo (pôster, link, vitrine), desafio (relógio), persistência (pasta `hall`: banco, ranking, conquistas), aparência, ajustes; o Técnico em `features/tecnico` (carreira só em memória, presença para o hub, rascunho, `view.ts` que esconde o rendimento) |
+| `src/screens/` | Hub do Futeiros; do Craque: Início, Identidade, Aparência, Carreira (decisão, lance, jornal, mensagem do resultado), Resumo, link compartilhado, Desafio; do Técnico (`screens/tecnico`): identidade, aparência, a carreira (propostas, etapa, processos, evento, decisão no jogo, resultados, avaliação) e o legado; Conquistas (Craque e Técnico, com o convite do visitante e o troféu `TrophyIcon`), o login, o perfil (`screens/account`), Termos e Privacidade (`screens/legal`), 404 e o laboratório |
+| `src/features/` | Estado da carreira (`career/store.ts`, Zustand), save, rascunho do jogador, lance (`play.ts`) e mensagem (`resultView.ts`), transmissões das decisões de partida (`career/broadcast.ts`, `broadcastPackages.ts`, `broadcastMotifs.ts`, `teamColors.ts`; D83), "E se...?", resumo (pôster, link, vitrine), desafio (relógio), persistência (pasta `hall`: banco, ranking, conquistas), aparência, ajustes; o Técnico em `features/tecnico` (carreira só em memória, presença para o hub, rascunho, `view.ts` que esconde o rendimento); a conta em `features/account` (sessão do Supabase, esquemas Zod, envio direto das carreiras, D112 a D114) e o consentimento, o Analytics e os anúncios genéricos em `features/consent` (D113) |
 | `src/services/` | Som, vibração, `localStorage` seguro, IndexedDB com espelho em memória, imagens offline |
 | `src/ui/` | Sistema de design: botões, carta do jogador, números que contam, sinais e pílulas, painéis, janelas, avisos |
 | `src/i18n/` | Português (fonte), espanhol, inglês; o Técnico em `i18n/tecnico`, carregado só pelas telas dele |
@@ -768,7 +799,8 @@ tema, volume, movimento, vibração, ritmo, dificuldade). Cada escolha grava
 na hora; recarregar abre o hub, e o cartão do Craque volta para a mesma tela
 (D50). Save corrompido é descartado com aviso no Início do Craque, e o
 rascunho fica. O Técnico não tem save (D51): guarda só o rascunho da
-identidade (`craque.v2.tecnico.draft`) e as conquistas.
+identidade (`craque.v2.tecnico.draft`) e as conquistas. Desde a D112 e a D113:
+`craque.v2.consent` (escolha de cookies) e `craque.v2.auth` (sessão do Supabase).
 
 **Acessibilidade.** Laço inteiro por teclado (Tab, Enter, Espaço), o foco
 volta ao título da decisão nova, o lance é anunciado numa frase para o leitor
@@ -820,12 +852,8 @@ clubes), movimento reduzido respeitado (do sistema ou dos ajustes).
 
 Pré-requisitos: Node.js 22.12 ou mais novo e pnpm 10. Tudo dentro de `v2/`.
 
-**Jeito fácil (Windows):** extraia o ZIP inteiro, execute `instalacao.bat` e depois
-`iniciar.bat`. Para versões novas, feche o jogo e execute `atualizar.bat`; o
-iniciador avisa quando houver atualização. São ferramentas temporárias para testes
-([guia e remoção](scripts/README-WINDOWS.md)). O instalador prepara Node LTS se necessário e dependências com
-pnpm 10.34.5, sem instalação global deste. O iniciador também confere as
-dependências e abre o jogo em http://localhost:5173 (ou a próxima porta livre). `carreira.bat` joga uma carreira no terminal.
+Os atalhos `.bat` de Windows saíram na D115: use os comandos abaixo. Contas,
+anúncios e imagens geradas: seção D112 a D115 ao fim.
 
 ```bash
 pnpm install
@@ -856,6 +884,9 @@ pnpm start
 | `pnpm desafio:calibrar` | Recalibra os alvos das missões do Desafio do dia |
 | `pnpm carreira` | Uma carreira inteira no terminal, com o motor e os textos de verdade |
 | `pnpm notas:exportar` / `pnpm notas:importar` | Planilha de força e prestígio dos clubes, ida e volta |
+| `pnpm imagens:importar` | Importa escudos, selos, troféus e prêmios gerados de `Downloads/geradas` (`--simular` só mostra o plano; D115) |
+| `pnpm supabase:catalogo` | Gera a migração do catálogo de conquistas quando o jogo ganha ou perde uma (D112) |
+| `pnpm supabase:testar` | Testa as migrações do banco num Postgres embutido: RLS, limites, ranking (D114) |
 | `pnpm --filter @craque/game icones` | Redesenha os ícones do PWA a partir da marca |
 
 ### 6.1 Laboratório
@@ -875,7 +906,10 @@ pé do hub). Áreas:
   Desafio.
 - **Design**: as peças da interface, avisos e a mensagem do resultado em todas
   as variantes; as decisões de partida com o seletor de competição e a vitrine
-  Transmissões, com as 80 competições e qualquer seleção (D83).
+  Transmissões, com as 80 competições e qualquer seleção (D83); Conta e
+  privacidade (D112 e D113): o troféu bloqueado, liberado e com quantidade, os
+  esqueletos, a faixa do visitante, o aviso de cookies, o espaço de anúncio e o
+  aviso legal.
 - **Mundo**: clubes por país e divisão, com as notas, e as 211 seleções.
 - **Arte**: escudos, selos, troféus e prêmios, reais e gerados.
 - **Avatar**: o criador de personagem e uma galeria.
@@ -890,8 +924,11 @@ pé do hub). Áreas:
 pnpm e2e
 ```
 
-Gera o build, sobe o `vite preview` em http://localhost:4173 (feche qualquer
-outro servidor nessa porta antes) e joga no Chrome do sistema. Sem Google
+Gera o build (`--mode e2e`, com o `apps/game/.env.e2e`: um Supabase que não
+existe, respondido pela própria suíte em `e2e/conta.ts`, e um Analytics falso),
+sobe o `vite preview` em http://localhost:4173 com os mesmos cabeçalhos de
+segurança do site (feche qualquer outro servidor nessa porta antes) e joga no
+Chrome do sistema. Sem Google
 Chrome, aponte `PW_CHROMIUM_PATH` para um Chromium instalado. O relatório
 fica em `apps/game/e2e-relatorio/`; falhas deixam foto e rastro em
 `apps/game/e2e-resultados/`. Uma parte só:
@@ -1437,6 +1474,8 @@ A suíte ponta a ponta final executou 92 cenários: 85 aprovados e sete pulos pr
 
 ## Revisão D67: cobrança por conquistas, propostas e instalação Windows
 
+**Histórico.** Os atalhos de Windows e o atualizador descritos aqui saíram na D115 (30/10/2026); para jogar localmente, `pnpm deps` e `pnpm dev`.
+
 Técnico `1.7.0`; Craque permanece `2.0.0-m13`.
 
 - Diretoria: clubes da elite com objetivo `title` têm peso 1. Clubes com força ≥80, prestígio ≥4 e posição esperada entre os primeiros `ceil(25% da liga)` têm peso 0,8. Demais clubes mantêm a avaliação anterior. No mandato atual, cada ano sem grande título acumula 1 de jejum; copa nacional ou segundo continental acumulam apenas 0,5. Liga, principal continental ou Mundial de Clubes zeram o contador. Supercopas não encerram o jejum. Histórico parcial, segunda divisão ou passagem por outro clube interrompem a sequência.
@@ -1476,6 +1515,8 @@ A preferência é aplicada antes da primeira pintura e reidratada pelo mesmo arm
 
 
 ## Revisão D70: atualização temporária para testes locais
+
+**Histórico.** Os atalhos de Windows e o atualizador descritos aqui saíram na D115 (30/10/2026); para jogar localmente, `pnpm deps` e `pnpm dev`.
 
 Os atalhos Windows agora incluem atualizar.bat na raiz e em v2/. O iniciar.bat consulta o GitHub ao abrir e avisa quando houver versão nova, sem bloquear o jogo se a consulta falhar ou não houver internet. O título da janela também indica uma atualização disponível. A fonte é exclusivamente SamuelGdA/fut, branch main.
 
@@ -2092,3 +2133,102 @@ Só interface e dados de imagem; o motor não muda.
 - **Escudos e selos reais por padrão.** O build usa `VITE_ASSETS=real` quando nada é dito (`apps/game/src/lib/env.ts`); `gerado` continua disponível para comparar. Onde não há imagem real, entra a arte desenhada.
 - **Escudos que faltavam.** Vieram da Wikipédia (o campo de imagem da página de cada clube): os 36 clubes de Portugal, Vaca Díez, San Juan, Patriotas Boyacá e os selos da Primeira Liga e da Liga Portugal 2. Ficam com o escudo desenhado, sem imagem achada: Real Oruro, Santo Domingo, Torreense, União de Leiria, Atlético El Vigía, Real Frontera e Marítimo de La Guaira; e os selos da LigaPro Serie B, da Liga 2 peruana e da Liga FUTVE 2. Agora são 518 de 525 escudos e 31 de 34 selos reais.
 - **Imagens trocadas pelo usuário (30/10/2026):** o escudo do Vasco da Gama (`clubs/vasco-da-gama.png`) e o selo do Brasileirão Série B (`leagues/brasileirao-serie-b.png`) passaram a ser as versões PNG enviadas pelo usuário, recortadas e com 512 px de altura; os dados (`clubs/bra.json`, `leagues.json`) registram a extensão `png`.
+
+## D112 a D115: contas na nuvem, privacidade, segurança e ferramentas (30/10/2026)
+
+O motor não muda (Craque `2.0.0-m41`, Técnico `1.10.0`). Regras completas na
+revisão D112 a D115 do GDD; o porquê em D112 a D115 de `docs/DECISOES.md`.
+
+### Contas na nuvem (Supabase), passo a passo
+
+1. **Variáveis.** Em `apps/game/.env.local` (nunca vai para o Git; modelo em
+   `apps/game/.env.example`): `VITE_SUPABASE_URL` e
+   `VITE_SUPABASE_PUBLISHABLE_KEY` (a chave **publicável**, `sb_publishable_...`,
+   feita para o navegador). A chave secreta e a senha do banco nunca entram em
+   arquivo do jogo; o build recusa se entrarem numa variável `VITE_`.
+2. **Banco.** Com a CLI do Supabase (sem instalar nada global):
+
+   ```bash
+   npx supabase@2.121.0 login
+   npx supabase@2.121.0 link --project-ref <id do projeto>
+   npx supabase@2.121.0 db push
+   ```
+
+   O `db push` aplica `supabase/migrations` (tabelas, RLS, funções e o catálogo
+   de conquistas). Rode os comandos dentro de `v2/` (é onde fica a pasta
+   `supabase/`). As duas migrações atuais já foram aplicadas no projeto em
+   30/10/2026; daqui em diante, só migrações novas sobem.
+3. **Painel do Supabase > Authentication.**
+   - *URL Configuration:* Site URL = o endereço publicado; Redirect URLs =
+     `https://<seu domínio>/**` e `http://localhost:5173/**`.
+   - *Providers > Email:* "Confirm email" ligado; senha mínima 8 com letras e números.
+   - *Providers > Google:* ligado, com o Client ID e o Client Secret do Google
+     Cloud (OAuth, tipo "Aplicativo da Web", URI de redirecionamento
+     `https://<id do projeto>.supabase.co/auth/v1/callback`). Na tela de
+     consentimento do Google, use os endereços `/privacidade` e `/termos`.
+   - *Emails > SMTP:* o e-mail de teste do Supabase manda poucos e-mails por
+     hora; para o público, configure um SMTP próprio (Resend, Brevo e afins).
+   - A vinculação automática junta Google e senha do mesmo e-mail confirmado.
+4. **Testar o banco sem servidor:** `pnpm supabase:testar` roda as migrações num
+   Postgres embutido (PGlite) e prova RLS, privilégio por coluna, limites,
+   idempotência, ranking e exclusão da conta. Entra no `pnpm test` e no `verify`.
+
+### Anúncios e Analytics (GENÉRICOS até você ligar)
+
+Sem `VITE_GA_MEASUREMENT_ID` e `VITE_ADSENSE_CLIENT`, nada do Google é baixado,
+o aviso de cookies não aparece e os espaços de anúncio só aparecem no
+desenvolvimento, como moldura tracejada ("Publicidade · perfil"). Para ligar:
+preencha o ID de medição do GA4, o ID de editor do AdSense e um bloco por espaço
+(`VITE_ADSENSE_SLOT_PERFIL`, `_RESUMO`, `_CONQUISTAS`), e `VITE_CONTACT_EMAIL`
+para as páginas legais. Para tráfego da Europa, o AdSense exige uma plataforma de
+consentimento certificada pelo Google (a de "Privacidade e mensagens" do próprio
+AdSense serve); o aviso do jogo cobre a LGPD.
+
+### Hospedagem e cabeçalhos
+
+O build grava `_headers` (Netlify e Cloudflare Pages leem) e o `vercel.json` na
+raiz do v2 traz os mesmos cabeçalhos: CSP sem script embutido, liberando só o
+site, o Supabase, o Google Analytics e o AdSense; `frame-ancestors 'none'`,
+`X-Frame-Options`, `nosniff`, `Referrer-Policy`, `Permissions-Policy`, `COOP` e
+`HSTS`. `/login`, `/perfil`, `/termos` e `/privacidade` funcionam em qualquer
+hospedagem estática (o build grava uma página em cada pasta).
+
+### Imagens geradas
+
+```bash
+pnpm imagens:importar --simular
+```
+
+```bash
+pnpm imagens:importar
+```
+
+Lê `Downloads/geradas` do usuário (no Windows, `C:\Users\<usuário>\Downloads\geradas`;
+`--origem <pasta>` ou `FUTEIROS_GERADAS` trocam). Organização: `clubes/<Liga>/<Clube>.png`
+(ou solto em `clubes/` quando o nome é único), `ligas/<Liga>.svg`,
+`trofeus/<arquivo atual ou nome da liga>.png`, `premios/<arquivo atual>.png`. SVG é
+conferido e copiado; PNG, JPG e WebP perdem o fundo branco da borda, são
+recortados e redimensionados no Chrome do sistema. A origem nunca é alterada.
+Depois, `pnpm verify` e `pnpm e2e` (a suíte decodifica todas as imagens).
+
+### Atalhos de Windows removidos (D115)
+
+`instalacao.bat`, `iniciar.bat`, `atualizar.bat`, `carreira.bat` e o
+atualizador saíram. Para jogar localmente: `pnpm deps` e `pnpm dev`. A carreira
+no terminal continua em `pnpm carreira`.
+
+### Histórico do Git
+
+Conferido em 30/10/2026: nenhuma chave do Supabase, JWT ou `.env` real foi
+versionado em nenhum ramo, então não há o que limpar. Se um dia um segredo
+entrar num commit, troque a chave no painel primeiro (apagar do histórico não
+desfaz quem já copiou) e depois reescreva o histórico com o `git filter-repo`,
+num clone novo: um arquivo `segredos.txt` com uma linha `<valor vazado>==>REMOVIDO`
+por segredo, e então
+
+```bash
+git filter-repo --replace-text segredos.txt
+```
+
+seguido de `git push --force --all` e `git push --force --tags`. Quem tiver
+clones antigos precisa clonar de novo.

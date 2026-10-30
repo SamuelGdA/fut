@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { abrir, abrirCraque, auditar, encerrar, entrarNoCraque, jogarTurno, jogoRapido } from "./apoio";
+import { simularNuvem } from "./conta";
 
 /**
  * Acessibilidade (GDD 36): o axe audita cada tela nos dois temas (WCAG 2.1 A e
@@ -9,6 +10,7 @@ import { abrir, abrirCraque, auditar, encerrar, entrarNoCraque, jogarTurno, jogo
 
 for (const theme of ["dark", "light"] as const) {
   test(`axe nas telas do jogo, tema ${theme === "dark" ? "escuro" : "claro"}`, async ({ page }) => {
+    await simularNuvem(page, { ranking: [{ posicao: 1, username: "lider_do_dia", pontos: 931, total: 2, voce: false }, { posicao: 2, username: "segundo", pontos: 702, total: 2, voce: false }] });
     await abrir(page, { theme });
     await auditar(page, "Hub");
     await entrarNoCraque(page);
@@ -35,8 +37,9 @@ for (const theme of ["dark", "light"] as const) {
 
     await page.getByRole("button", { name: "Início", exact: true }).click();
     await page.getByRole("button", { name: /Conquistas/ }).click();
-    await expect(page.locator(".achievement").first()).toBeVisible();
-    await auditar(page, "Conquistas");
+    // D112: o visitante vê o convite para entrar no lugar da coleção.
+    await expect(page.getByRole("heading", { name: "Sua coleção começa aqui", level: 1 })).toBeVisible();
+    await auditar(page, "Conquistas, visitante");
 
     await page.goto("/nao-existe");
     await expect(page.getByRole("heading", { name: "Bola fora" })).toBeVisible();

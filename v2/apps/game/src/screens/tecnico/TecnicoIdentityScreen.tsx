@@ -24,6 +24,7 @@ import { Flag } from "../../ui/Media";
 import { ConfirmDialog } from "../../ui/Overlays";
 import { Panel } from "../../ui/Panel";
 import { Segmented } from "../../ui/Segmented";
+import { LegalFinePrint } from "../../features/account/LegalFinePrint";
 
 type Step = "who" | "how";
 
@@ -246,6 +247,7 @@ export function TecnicoIdentityScreen() {
         cancelLabel={tt("common.cancel")}
         onConfirm={() => void begin()}
       />
+      <LegalFinePrint className="mt-8" />
     </div>
   );
 }

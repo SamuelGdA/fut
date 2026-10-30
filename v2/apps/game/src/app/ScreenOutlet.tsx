@@ -30,6 +30,10 @@ const SCREEN_LOADERS: Readonly<Record<Screen, Loader>> = {
   tecnicoAppearance: () => import("../screens/tecnico/TecnicoAppearanceScreen").then((module) => ({ default: module.TecnicoAppearanceScreen })),
   tecnico: () => import("../screens/tecnico/TecnicoScreen").then((module) => ({ default: module.TecnicoScreen })),
   tecnicoLegacy: () => import("../screens/tecnico/TecnicoLegacyScreen").then((module) => ({ default: module.TecnicoLegacyScreen })),
+  login: () => import("../screens/account/LoginScreen").then((module) => ({ default: module.LoginScreen })),
+  profile: () => import("../screens/account/ProfileScreen").then((module) => ({ default: module.ProfileScreen })),
+  terms: () => import("../screens/legal/LegalScreen").then((module) => ({ default: module.TermsScreen })),
+  privacy: () => import("../screens/legal/LegalScreen").then((module) => ({ default: module.PrivacyScreen })),
 };
 
 const SCREEN_COMPONENTS = Object.fromEntries(

@@ -1,0 +1,23 @@
+{
+  "name": "@craque/supabase",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Banco do Futeiros no Supabase: migrações SQL, catálogo de conquistas gerado do conteúdo e testes de RLS num Postgres embutido",
+  "scripts": {
+    "catalogo": "tsx src/gerarCatalogo.ts",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@craque/content": "workspace:*",
+    "@craque/world": "workspace:*"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "0.5.10",
+    "@types/node": "24.19.0",
+    "tsx": "4.23.15",
+    "typescript": "6.0.3",
+    "vitest": "5.0.2"
+  }
+}

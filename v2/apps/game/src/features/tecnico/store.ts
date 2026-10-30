@@ -6,6 +6,8 @@ import { FREE_PLAYERS, SQUAD_PLAYERS } from "@craque/world/squads";
 import { create } from "zustand";
 import { sanitizeAvatar } from "../appearance/avatarSchema";
 import { usePrefs } from "../../store/prefs";
+import { announcesUnlocks, cloudUnlockedIds, memberId, sendCareer, sendUnlocks } from "../account/sync";
+import { tecnicoKey, tecnicoPayload } from "../account/tecnicoPayload";
 import { useHall } from "../hall/store";
 import { useUnlocks } from "../hall/unlocks";
 import { useTecnicoPresence } from "./presence";
@@ -79,17 +81,25 @@ function publish(career: CoachCareer | null): void {
   });
 }
 
-/** Conquistas do Técnico que caíram com este estado (D54). */
+/**
+ * Conquistas do Técnico que caíram com este estado (D54). Com conta (D112),
+ * vão também para a nuvem, e o fim da carreira soma ao perfil; o visitante
+ * guarda no aparelho sem aviso.
+ */
 function unlockAchievements(career: CoachCareer): void {
+  const key = tecnicoKey(career, COACH_VERSION);
+  if (career.phase === "ended") sendCareer("tecnico", key, tecnicoPayload(career));
   const ids = coachAchievementsMet(career);
   if (ids.length === 0) return;
-  const known = new Set(useHall.getState().achievements.map((row) => row.id));
+  const known = new Set([...useHall.getState().achievements.map((row) => row.id), ...cloudUnlockedIds()]);
   const fresh = ids.filter((id) => !known.has(id));
   if (fresh.length === 0) return;
   const locale = usePrefs.getState().locale;
   const by = career.setup.identity.name.slice(0, 16);
-  void useHall.getState().unlock(fresh.map((id) => ({ id, at: Date.now(), by })));
-  useUnlocks.getState().push(fresh.map((id) => ({ id, ...coachAchievementText(locale, id) })));
+  const account = memberId();
+  void useHall.getState().unlock(fresh.map((id) => ({ id, at: Date.now(), by, ...(account ? { account } : {}) })));
+  sendUnlocks("tecnico", key, fresh);
+  if (announcesUnlocks()) useUnlocks.getState().push(fresh.map((id) => ({ id, ...coachAchievementText(locale, id) })));
 }
 
 const nextFrame = () => new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));

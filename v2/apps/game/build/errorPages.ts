@@ -11,7 +11,9 @@ import { pt } from "../src/i18n/pt.ts";
  * de erro do jogo, então nunca divergem. Cada página é um HTML só, sem
  * JavaScript do jogo, sem fonte externa e sem imagem: abre mesmo com o
  * servidor mal das pernas. O idioma e o tema vêm das preferências salvas,
- * como no `index.html`.
+ * pelo `boot/erro.js` (D114: nenhum script embutido, a CSP não libera
+ * `unsafe-inline`); os textos dos três idiomas vão num bloco de dados. Sem
+ * esse arquivo, a página fica em português escuro, com os links.
  */
 
 type PageCode = "403" | "404" | "500" | "503";
@@ -66,9 +68,10 @@ export function errorPageHtml(code: PageCode, base: string): string {
   if (!page) throw new Error(`página de erro desconhecida: ${code}`);
   const texts = textsFor(code);
   const pt = texts.pt;
-  // O script troca idioma e tema antes de pintar; sem JavaScript, fica o português escuro.
-  const script = `(function(){var t=${JSON.stringify(texts)};try{var raw=localStorage.getItem("craque.v2.prefs");var s=raw?(JSON.parse(raw)||{}).state||{}:{};var r=document.documentElement;if(s.theme==="light"){r.setAttribute("data-theme","light");var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute("content","#f3f0e8");}var l=t[s.locale]?s.locale:null;if(!l){var n=(navigator.language||"").slice(0,2);l=t[n]?n:"pt";}if(l!=="pt"){var x=t[l];r.setAttribute("lang",l==="es"?"es":"en");document.title=x.title+": Futeiros";[].forEach.call(document.querySelectorAll("[data-t]"),function(e){e.textContent=x[e.getAttribute("data-t")];});}}catch(e){}})();`;
-  const retry = page.retry ? `<button class="button" type="button" data-t="retry" onclick="location.reload()">${escape(pt.retry)}</button>` : "";
+  // Bloco de dados (não executa): o `boot/erro.js` escolhe o idioma por ele.
+  const data = JSON.stringify(texts).replace(/</g, "\\u003c");
+  // Recarregar é um link para o próprio endereço: funciona sem JavaScript.
+  const retry = page.retry ? `<a class="button" href="" data-t="retry">${escape(pt.retry)}</a>` : "";
   return `<!doctype html>
 <html lang="pt-BR" data-theme="dark">
 <head>
@@ -89,7 +92,8 @@ export function errorPageHtml(code: PageCode, base: string): string {
 <p class="body" data-t="body">${escape(pt.body)}</p>
 <div class="actions">${retry}<a class="button${page.retry ? " secondary" : ""}" href="${base}" data-t="home">${escape(pt.home)}</a></div>
 </main>
-<script>${script}</script>
+<script type="application/json" id="futeiros-textos">${data}</script>
+<script src="${base}boot/erro.js"></script>
 </body>
 </html>
 `;

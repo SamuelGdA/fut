@@ -90,6 +90,11 @@ export interface AchievementRow {
   readonly at: number;
   /** O sobrenome da carreira que liberou. */
   readonly by: string;
+  /**
+   * A conta logada quando caiu (D112). Sem conta, a conquista é do aparelho
+   * (visitante) e entra na conta no próximo login; com conta, já foi para ela.
+   */
+  readonly account?: string;
 }
 
 // ------------------------------------------------------------------- leitura
@@ -200,7 +205,8 @@ export function sanitizeAchievementRow(input: unknown): AchievementRow | null {
   if (!isRecord(input)) return null;
   const id = input["id"];
   if (typeof id !== "string" || id.length === 0) return null;
-  return { id, at: instant(input["at"]), by: text(input["by"], 16, "") };
+  const account = input["account"];
+  return { id, at: instant(input["at"]), by: text(input["by"], 16, ""), ...(typeof account === "string" && /^[0-9a-f-]{36}$/.test(account) ? { account } : {}) };
 }
 
 // ----------------------------------------------------------------------- id
