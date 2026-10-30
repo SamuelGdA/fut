@@ -2,7 +2,7 @@
 
 Gerado por `pnpm elencos:montar`. Fontes, ordem das camadas e regras na D52 (docs/DECISOES.md).
 
-- FC 27: 17849 jogadores masculinos lidos; 8425 em clubes do jogo.
+- FC 27: 17849 jogadores masculinos lidos; 8909 em clubes do jogo.
 - eFootball: coleta de 2026-10-08 (build 9YQqj4WVHnB2zaXyahhhx); OVR = carta base + 4; usado em clubes com menos de 20 jogadores do FC 27.
 - Times do eFootball descartados por terem jogadores fictícios: Bari BR (bari), Pescara BA (pescara), La Spezia B (spezia), Goiás V (goias), Recife Aflitos VB (nautico), Minas Gerais VP (america-mg), Florianópolis AB (avai), Criciúma ABP (criciuma), Ponte Preta BP (ponte-preta), Vila Nova VB (vila-nova), Maceió VB (crb), Reggio Emilia G (reggiana), Ribeirão Preto BVP (botafogo-sp), Cuiabá VA (cuiaba), Clube do Remo (remo), Ponta Grossa PB (operario-pr), Novo Horizonte AP (novorizontino), São João del-Rei PB (athletic-mg).
 - Calibração: em 80 jogadores presentes nas duas fontes, FC 27 menos (base + 4) tem mediana -4.5 e média -4.8.
@@ -39,6 +39,8 @@ Gerado por `pnpm elencos:montar`. Fontes, ordem das camadas e regras na D52 (doc
 | PAR | 2 | 8 | 176 | 0 | 0 | 0 | 176 | 0% | sem medida | +2.4 |
 | PER | 1 | 8 | 185 | 104 | 0 | 24 | 57 | 69% | 3.2 (4 clubes) | - |
 | PER | 2 | 8 | 176 | 0 | 0 | 0 | 176 | 0% | sem medida | +0.5 |
+| POR | 1 | 18 | 491 | 484 | 0 | 0 | 7 | 99% | 0.2 (17 clubes) | - |
+| POR | 2 | 18 | 396 | 0 | 0 | 0 | 396 | 0% | sem medida | +0 |
 | URU | 1 | 9 | 214 | 116 | 0 | 0 | 98 | 54% | 3.6 (4 clubes) | - |
 | URU | 2 | 9 | 198 | 0 | 0 | 0 | 198 | 0% | sem medida | +3.5 |
 | USA | 1 | 30 | 806 | 806 | 0 | 0 | 0 | 100% | 1.5 (30 clubes) | - |
@@ -474,6 +476,42 @@ Gerado por `pnpm elencos:montar`. Fontes, ordem das camadas e regras na D52 (doc
 | Academia Cantolao | PER | 2 | 55 | 58.2 | 57.6 | 0 | 0 | 0 | 22 |
 | Deportivo Llacuabamba | PER | 2 | 54 | 57.2 | 56.6 | 0 | 0 | 0 | 22 |
 | Pirata FC | PER | 2 | 54 | 57.2 | 55.9 | 0 | 0 | 0 | 22 |
+| FC Porto | POR | 1 | 80 | 80.2 | 79.4 | 29 | 0 | 0 | 0 |
+| Sporting CP | POR | 1 | 79 | 79.2 | 78.9 | 29 | 0 | 0 | 0 |
+| SL Benfica | POR | 1 | 79 | 79.2 | 78.9 | 30 | 0 | 0 | 0 |
+| SC Braga | POR | 1 | 76 | 76.2 | 75.5 | 29 | 0 | 0 | 0 |
+| Vitória SC | POR | 1 | 71 | 71.2 | 69.8 | 30 | 0 | 0 | 0 |
+| FC Famalicão | POR | 1 | 71 | 71.2 | 71.4 | 27 | 0 | 0 | 0 |
+| FC Arouca | POR | 1 | 70 | 70.2 | 70.8 | 25 | 0 | 0 | 0 |
+| Estoril Praia | POR | 1 | 70 | 70.2 | 70.6 | 25 | 0 | 0 | 0 |
+| Casa Pia AC | POR | 1 | 69 | 69.2 | 69.4 | 28 | 0 | 0 | 0 |
+| Gil Vicente | POR | 1 | 69 | 69.2 | 69.3 | 27 | 0 | 0 | 0 |
+| Rio Ave FC | POR | 1 | 69 | 69.2 | 69.2 | 25 | 0 | 0 | 0 |
+| Estrela da Amadora | POR | 1 | 69 | 69.2 | 69 | 27 | 0 | 0 | 0 |
+| CD Santa Clara | POR | 1 | 68 | 68.2 | 68.6 | 27 | 0 | 0 | 0 |
+| FC Alverca | POR | 1 | 68 | 68.2 | 68.4 | 30 | 0 | 0 | 0 |
+| CD Nacional | POR | 1 | 68 | 68.2 | 68.2 | 29 | 0 | 0 | 0 |
+| Moreirense FC | POR | 1 | 68 | 68.2 | 68.1 | 15 | 0 | 0 | 7 |
+| CS Marítimo | POR | 1 | 67 | 67.2 | 67.2 | 26 | 0 | 0 | 0 |
+| Académico de Viseu | POR | 1 | 66 | 66.2 | 65.7 | 26 | 0 | 0 | 0 |
+| AVS Futebol | POR | 2 | 66 | 66.2 | 65.1 | 0 | 0 | 0 | 22 |
+| CD Tondela | POR | 2 | 66 | 66.2 | 64.6 | 0 | 0 | 0 | 22 |
+| GD Chaves | POR | 2 | 65 | 65.2 | 63.3 | 0 | 0 | 0 | 22 |
+| FC Vizela | POR | 2 | 65 | 65.2 | 63.7 | 0 | 0 | 0 | 22 |
+| Portimonense SC | POR | 2 | 65 | 65.2 | 63.5 | 0 | 0 | 0 | 22 |
+| FC Paços de Ferreira | POR | 2 | 65 | 65.2 | 64.1 | 0 | 0 | 0 | 22 |
+| SC Farense | POR | 2 | 64 | 64.2 | 62.2 | 0 | 0 | 0 | 22 |
+| SCU Torreense | POR | 2 | 64 | 64.2 | 63.1 | 0 | 0 | 0 | 22 |
+| Leixões SC | POR | 2 | 63 | 63.2 | 62.7 | 0 | 0 | 0 | 22 |
+| CD Feirense | POR | 2 | 63 | 63.2 | 61.9 | 0 | 0 | 0 | 22 |
+| União de Leiria | POR | 2 | 63 | 63.2 | 62.1 | 0 | 0 | 0 | 22 |
+| FC Penafiel | POR | 2 | 62 | 62.2 | 60.6 | 0 | 0 | 0 | 22 |
+| UD Oliveirense | POR | 2 | 62 | 62.2 | 61.5 | 0 | 0 | 0 | 22 |
+| CF Os Belenenses | POR | 2 | 62 | 62.2 | 60.7 | 0 | 0 | 0 | 22 |
+| Académica de Coimbra | POR | 2 | 62 | 62.2 | 61.2 | 0 | 0 | 0 | 22 |
+| FC Felgueiras | POR | 2 | 61 | 61.2 | 60.3 | 0 | 0 | 0 | 22 |
+| Lusitânia Lourosa | POR | 2 | 61 | 61.2 | 60.2 | 0 | 0 | 0 | 22 |
+| Varzim SC | POR | 2 | 61 | 61.2 | 59.3 | 0 | 0 | 0 | 22 |
 | Nacional | URU | 1 | 68 | 71.6 | 71 | 27 | 0 | 0 | 0 |
 | Peñarol | URU | 1 | 68 | 71.6 | 71.6 | 28 | 0 | 0 | 0 |
 | Defensor Sporting | URU | 1 | 64 | 67.6 | 65.9 | 0 | 0 | 0 | 22 |
@@ -543,13 +581,13 @@ Gerado por `pnpm elencos:montar`. Fontes, ordem das camadas e regras na D52 (doc
 
 | Característica | Jogadores | Fatia |
 |---|---|---|
-| aerial | 161 | 1% |
-| clutch | 186 | 1% |
-| fast | 263 | 2% |
-| leader | 137 | 1% |
-| setPiece | 197 | 2% |
-| tireless | 82 | 1% |
-| versatile | 344 | 3% |
+| aerial | 167 | 1% |
+| clutch | 199 | 1% |
+| fast | 274 | 2% |
+| leader | 140 | 1% |
+| setPiece | 205 | 2% |
+| tireless | 84 | 1% |
+| versatile | 372 | 3% |
 
 ## Identidades casadas com o FC 27 (fora do clube da outra fonte)
 
@@ -565,7 +603,7 @@ Gerado por `pnpm elencos:montar`. Fontes, ordem das camadas e regras na D52 (doc
 - Joaquín García (ef:132818, velez-sarsfield) = Joaquín García (fc:256524, velez-sarsfield)
 - Facundo Sanguinetti (ef:141386, velez-sarsfield) = Facundo Sanguinetti (fc:262865, velez-sarsfield)
 - Alix Vinicius (ef:144024, rb-bragantino) = Abner Vinícius (fc:263815, olympique-lyonnais)
-- Vitinho (ef:146560, atletico-mg) = Vitinho (fc:87071, fora do jogo)
+- Vitinho (ef:146560, atletico-mg) = Vitinho (fc:87071, santa-clara)
 - Dewar Victoria (ef:147414, internacional-de-bogota) = Dewar Victoria (fc:272378, millonarios)
 - Cleiton (ef:148165, flamengo) = Cleiton (fc:82663, vfl-wolfsburg)
 - Juan Mosquera (ef:151220, bucaramanga) = Juan David Mosquera (fc:255894, portland-timbers)

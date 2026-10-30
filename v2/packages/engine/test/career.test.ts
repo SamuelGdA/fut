@@ -26,7 +26,7 @@ describe("carreiras inteiras dentro do mundo", () => {
     fc.assert(
       fc.property(input, (career) => {
         const run = runCareerSandbox(career);
-        if (run.seasons.length !== 24) return false;
+        if (run.seasons.length !== 25) return false;
         for (const season of run.seasons) {
           if (season.ovrEnd !== ovrOf(career.position, season.attributes)) return false;
           if (season.games > season.clubGames || season.games < 0) return false;
@@ -36,7 +36,7 @@ describe("carreiras inteiras dentro do mundo", () => {
           const leagues = season.competitions.filter((entry) => entry.kind === "league" || entry.kind === "second");
           if (leagues.length !== 1) return false;
         }
-        return run.world.year === (career.startYear ?? 2026) + 24;
+        return run.world.year === (career.startYear ?? 2026) + 25;
       }),
       settings,
     );

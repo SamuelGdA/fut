@@ -18,6 +18,7 @@ import {
 import { create } from "zustand";
 import { carryDecisionMemory, decisionCheckpoint, rememberDecision } from "./whatIf";
 import { archiveId } from "../hall/model";
+import { newSeed } from "./newCareer";
 import { challengeOf, recordFinished, recordInterrupted, recordStep } from "../hall/session";
 import { useUnlocks } from "../hall/unlocks";
 import { buildPlay, type PlaySession, seasonPlay } from "./play";
@@ -134,6 +135,14 @@ export const useCareer = create<CareerState>()((set, get) => {
       const testing = get().internalTesting;
       // A original já está no Hall (terminou); se é a carreira de agora, não há o que interromper.
       if (!current || archiveId(saveOf(current)) !== archiveId(source)) leaveCurrent();
+      // D110: na linha alternativa, a escolha refeita tem a chance sorteada de novo.
+      // Os testes de navegador fixam o sal (vazio: sem sorteio novo) para a
+      // linha alternativa reproduzir as amostras; o jogo nunca define isso.
+      const fixed = (globalThis as { __CRAQUE_REROLL_SALT__?: string }).__CRAQUE_REROLL_SALT__;
+      if (fixed !== "") {
+        const rerolls = [...(career.setup.rerolls ?? []), { from: choice.decision, salt: fixed ?? newSeed() }];
+        career = { ...career, setup: { ...career.setup, rerolls } };
+      }
       install(career, avatar, { from: archiveId(source), decision: choice.decision, original: choice.option });
       if (actual && testing) set({ internalTesting:true });
       return true;

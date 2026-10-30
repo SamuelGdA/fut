@@ -12,12 +12,9 @@ for (const theme of ["dark", "light"] as const) {
     await abrir(page, { theme });
     await auditar(page, "Hub");
     await entrarNoCraque(page);
-    await auditar(page, "Início");
-
-    await page.getByRole("button", { name: "Começar carreira" }).click();
-    await expect(page.getByLabel("Sobrenome")).toBeVisible();
+    // D110: o Início do Craque é a tela de quem é você.
+    await expect(page.getByRole("textbox", { name: "Nome", exact: true })).toBeVisible();
     await auditar(page, "Identidade");
-    await page.goBack();
 
     await page.getByRole("button", { name: "Ver o desafio" }).click();
     await expect(page.getByText("Missão surpresa")).toBeVisible();
@@ -117,7 +114,13 @@ test("o leitor de tela ouve o lance numa frase, a cada jogada", async ({ page },
   await jogarTurno(page);
   await expect(live).toContainText("OVR");
   const first = await live.textContent();
-  await jogarTurno(page);
+  // A jogada seguinte pode ser uma escolha sem temporada (treino, evento): o
+  // anúncio dela não traz OVR. Joga até a próxima temporada anunciada.
+  for (let turn = 0; turn < 4; turn++) {
+    await jogarTurno(page);
+    const text = (await live.textContent()) ?? "";
+    if (text.includes("OVR") && text !== first) break;
+  }
   await expect(live).toContainText("OVR");
   expect(await live.textContent()).not.toBe(first);
 });

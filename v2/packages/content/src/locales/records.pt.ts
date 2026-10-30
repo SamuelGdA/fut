@@ -37,6 +37,10 @@ export const recordsPt = {
     ballonStreak: { name: "Bolas de Ouro seguidas", holder: "Lionel Messi", detail: "De 2009 a 2012" },
     leagueStreak: { name: "Ligas seguidas nas cinco grandes da Europa", holder: "Thomas Müller e Manuel Neuer", detail: "Bayern de Munique, de 2013 a 2023" },
     primaryStreak: { name: "Títulos continentais seguidos", holder: "Francisco Gento e Alfredo Di Stéfano", detail: "Real Madrid, Copa dos Campeões de 1956 a 1960" },
+    seasonAssists: { name: "Assistências numa temporada", holder: "Lionel Messi", detail: "Barcelona, 2011-12, todas as competições" },
+    seasonCleanSheets: { name: "Jogos sem sofrer gol numa temporada de liga", holder: "Marc-André ter Stegen e Francisco Liaño", detail: "Barcelona 2022-23 e Deportivo 1993-94, só a liga" },
+    leagueFrance: { name: "Títulos da liga francesa", holder: "Marquinhos", detail: "Paris Saint-Germain, ainda em atividade" },
+    championsGames: { name: "Jogos de Champions League", holder: "Cristiano Ronaldo", detail: "Manchester United, Real Madrid e Juventus, de 2003 a 2022" },
   },
 } as const;
 

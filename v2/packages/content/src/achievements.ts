@@ -16,7 +16,7 @@ import { interpolate, type Locale } from "./i18n";
 import { achievementsEn } from "./locales/achievements.en";
 import { achievementsEs } from "./locales/achievements.es";
 import { type AchievementsMessages, achievementsPt } from "./locales/achievements.pt";
-import { careerRecords, REAL_RECORDS, compareRecord, recordText } from "./records";
+import { careerRecords, REAL_RECORDS, compareRecord, type RecordTier, recordText } from "./records";
 import { COMPETITIONS, getCompetition } from "@craque/world";
 
 /**
@@ -29,6 +29,42 @@ import { COMPETITIONS, getCompetition } from "@craque/world";
 
 export const ACHIEVEMENT_GROUPS = ["career", "titles", "awards", "national", "loyalty", "road", "challenge", "curious", "records", "secret"] as const;
 export type AchievementGroup = (typeof ACHIEVEMENT_GROUPS)[number];
+
+/** Raridade da conquista (D94): muda só a aparência do cartão. */
+export type AchievementRarity = "common" | "rare" | "epic" | "legendary";
+export const ACHIEVEMENT_RARITIES: readonly AchievementRarity[] = ["common", "rare", "epic", "legendary"];
+
+/** Recorde da faixa de entrada já é raro como conquista; o épico e o lendário são lendários. */
+const RECORD_RARITY: Readonly<Record<RecordTier, AchievementRarity>> = { entry: "rare", rare: "epic", epic: "legendary", legendary: "legendary" };
+
+/** As conquistas que não são recorde nem título, pela dificuldade de cair numa carreira. */
+const ITEM_RARITY: Readonly<Record<string, AchievementRarity>> = {
+  firstCareer: "common", firstTitle: "common", firstCap: "common", fullDistance: "common", challengeFirst: "common", newPassport: "rare",
+  tenCareers: "rare", twentyTitles: "rare", threeBigFive: "rare", continentalKing: "rare", promotedToGlory: "rare", goldenShoe: "rare",
+  goldenGlove: "rare", youngPlayer: "rare", scoringTitle: "rare", bestOfCompetition: "rare", hundredCaps: "rare", nationsChampion: "rare",
+  oneClubMan: "rare", legend: "rare", homecoming: "rare", titlesThreeCountries: "rare", eightClubs: "rare", fiftyGoals: "rare",
+  anyRecord: "rare", assistSeason: "rare", challengeWeek: "rare", challenge700: "rare", challengeClean: "rare", ovr90: "rare",
+  clubThreeHundred: "rare", lateBloomer: "rare", retireAtDebut: "rare", turncoat: "rare", comeback: "rare", fiveCountries: "rare",
+  ballonDor: "epic", allBigFive: "epic", promotedToContinent: "epic", threeLegends: "epic", tenClubs: "epic", challengeAllThree: "epic",
+  challenge900: "epic", ovr95: "epic", perfectSeason: "epic", threeContinents: "epic", ballonAbroad: "epic",
+  fiveBallons: "legendary", seventyThree: "legendary",
+};
+
+/** Título de competição: a raridade segue o peso do troféu. */
+function titleRarity(kind: string | undefined): AchievementRarity {
+  if (kind === "worldCup" || kind === "continental1") return "epic";
+  if (kind === "continental2" || kind === "nationsCup" || kind === "nationsLeague" || kind === "clubWorldCup" || kind === "intercontinental") return "rare";
+  return "common";
+}
+
+export function achievementRarity(id: string): AchievementRarity {
+  if (id.startsWith("record:")) {
+    const record = REAL_RECORDS.find((item) => `record:${item.id}` === id);
+    return record ? RECORD_RARITY[record.tier] : "rare";
+  }
+  if (id.startsWith("title:")) return titleRarity(getCompetition(id.slice(6))?.kind);
+  return ITEM_RARITY[id] ?? "common";
+}
 
 export interface AchievementContext {
   readonly career: Career;

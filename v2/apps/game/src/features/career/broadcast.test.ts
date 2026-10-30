@@ -7,7 +7,7 @@ import { BROADCAST_EMBLEMS, BROADCAST_MOTIFS, LEAGUE_DNA } from "./broadcastPack
 import { contrastRatio, relativeLuminance } from "./clubColors";
 import { SILVER_GLOW } from "./teamColors";
 
-const NATIONAL = new Set(["worldCup", "nationsCup"]);
+const NATIONAL = new Set(["worldCup", "nationsCup", "nationsLeague"]);
 const club = (competition: string, team = "flamengo", opponent = "palmeiras") => broadcastIdentity({ competition, team, opponent, national: false });
 const nation = (competition: string, team = "BRA", opponent = "ARG") => broadcastIdentity({ competition, team, opponent, national: true });
 const of = (competition: (typeof COMPETITIONS)[number]) => (NATIONAL.has(competition.kind) ? nation(competition.id) : club(competition.id));

@@ -13,7 +13,8 @@ type Loader = () => Promise<{ default: ComponentType }>;
 
 const SCREEN_LOADERS: Readonly<Record<Screen, Loader>> = {
   hub: () => import("../screens/hub/HubScreen").then((module) => ({ default: module.HubScreen })),
-  home: () => import("../screens/home/HomeScreen").then((module) => ({ default: module.HomeScreen })),
+  // D110: o Início do Craque é a tela de quem é você.
+  home: () => import("../screens/identity/IdentityScreen").then((module) => ({ default: module.IdentityScreen })),
   identity: () => import("../screens/identity/IdentityScreen").then((module) => ({ default: module.IdentityScreen })),
   appearance: () => import("../screens/appearance/AppearanceScreen").then((module) => ({ default: module.AppearanceScreen })),
   career: () => import("../screens/career/CareerScreen").then((module) => ({ default: module.CareerScreen })),
@@ -21,7 +22,7 @@ const SCREEN_LOADERS: Readonly<Record<Screen, Loader>> = {
   shared: () => import("../screens/shared/SharedScreen").then((module) => ({ default: module.SharedScreen })),
   challenge: () => import("../screens/challenge/ChallengeScreen").then((module) => ({ default: module.ChallengeScreen })),
   hall: () => import("../screens/achievements/AchievementsScreen").then((module) => ({ default: module.AchievementsScreen })),
-  archived: () => import("../screens/home/HomeScreen").then((module) => ({ default: module.HomeScreen })),
+  archived: () => import("../screens/identity/IdentityScreen").then((module) => ({ default: module.IdentityScreen })),
   achievements: () => import("../screens/achievements/AchievementsScreen").then((module) => ({ default: module.AchievementsScreen })),
   notFound: () => import("../screens/notFound/NotFoundScreen").then((module) => ({ default: module.NotFoundScreen })),
   lab: import.meta.env.DEV ? () => import("../screens/lab/LabScreen").then((module) => ({ default: module.LabScreen })) : () => import("../screens/notFound/NotFoundScreen").then((module) => ({ default: module.NotFoundScreen })),

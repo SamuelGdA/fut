@@ -34,5 +34,9 @@ export const recordsEn: RecordsMessages = {
     ballonStreak: { name: "Ballon d'Ors in a row", holder: "Lionel Messi", detail: "2009 to 2012" },
     leagueStreak: { name: "League titles in a row in Europe's big five", holder: "Thomas Müller and Manuel Neuer", detail: "Bayern Munich, 2013 to 2023" },
     primaryStreak: { name: "Continental titles in a row", holder: "Francisco Gento and Alfredo Di Stéfano", detail: "Real Madrid, European Cup 1956 to 1960" },
+    seasonAssists: { name: "Assists in a season", holder: "Lionel Messi", detail: "Barcelona, 2011-12, all competitions" },
+    seasonCleanSheets: { name: "Clean sheets in a league season", holder: "Marc-André ter Stegen and Francisco Liaño", detail: "Barcelona 2022-23 and Deportivo 1993-94, league only" },
+    leagueFrance: { name: "French league titles", holder: "Marquinhos", detail: "Paris Saint-Germain, still playing" },
+    championsGames: { name: "Champions League appearances", holder: "Cristiano Ronaldo", detail: "Manchester United, Real Madrid and Juventus, 2003 to 2022" },
   },
 };

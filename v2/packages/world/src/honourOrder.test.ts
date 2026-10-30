@@ -12,4 +12,11 @@ describe("importância na vitrine",()=>{
     const items=[{kind:"title",id:"super:ENG"},{kind:"title",id:"cont1:UEFA"},{kind:"award",id:"ballonDor"}] as const;
     expect([...items].sort(compareHonours).map(item=>item.id)).toEqual(["ballonDor","cont1:UEFA","super:ENG"]);
   });
+  it("D101: Bola de Ouro e Chuteira de Ouro antes de qualquer taça; os outros prêmios depois da menor taça",()=>{
+    const titles=Object.values(COMPETITIONS).map(competition=>honourPrestige({kind:"title",id:competition.id}));
+    for(const id of ["ballonDor","goldenShoe"]) expect(honourPrestige({kind:"award",id})).toBeGreaterThan(Math.max(...titles));
+    for(const id of ["goldenGlove","kingOfAmerica","youngPlayer"]) expect(honourPrestige({kind:"award",id})).toBeLessThan(Math.min(...titles));
+    const items=[{kind:"award",id:"goldenGlove"},{kind:"title",id:"super:ENG"},{kind:"award",id:"goldenShoe"},{kind:"title",id:"worldcup"},{kind:"award",id:"ballonDor"}] as const;
+    expect([...items].sort(compareHonours).map(item=>item.id)).toEqual(["ballonDor","goldenShoe","worldcup","super:ENG","goldenGlove"]);
+  });
 });

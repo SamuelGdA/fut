@@ -13,7 +13,7 @@ import type { PlaySession } from "./play";
  * em pílulas. Sai do lance que acabou de acontecer; temporada revista não tem
  * mensagem.
  */
-export type ResultMark = "success" | "failure" | "done" | "move" | "stay" | "focus";
+export type ResultMark = "success" | "failure" | "draw" | "short" | "done" | "move" | "stay" | "focus";
 
 export interface ResultChip {
   readonly key: string;
@@ -45,7 +45,8 @@ export function useResultView(career: Career | null, play: PlaySession | null): 
     case "drama": {
       const copy = dramaText(locale);
       const result = outcome.result;
-      const mark: ResultMark = result ? result.success ? "success" : "failure" : "done";
+      // Lance certo que não venceu (D91): na liga, segurou o empate (amarelo); no mata-mata, caiu nos pênaltis (laranja).
+      const mark: ResultMark = !result ? "done" : !result.success ? "failure" : result.won ? "success" : result.match.stage === "league" ? "draw" : "short";
       const action = dramaAction(locale, outcome.action, career.player.position);
       const report = outcome.decision.kind === "promise" ? career.history.toReversed().find(record => record.promise?.year === outcome.decision.year)?.promise : undefined;
       const accepted = outcome.decision.promises?.find(promise => promise.level === outcome.action);
@@ -60,10 +61,12 @@ export function useResultView(career: Career | null, play: PlaySession | null): 
         tone: result.fans < 0 ? "bad" : result.fans > 0 ? "good" : "neutral",
       }] : [];
       if (result?.legacy) chips.push({ key: "legacy", text: `${copy.legacy} +${result.legacy}`, tone: "glory" });
+      // O lance jogado que decidiu a vitória vira reconhecimento na evolução (D89).
+      if (result?.recognition) chips.push({ key: "standout", text: copy.standout, tone: "glory" });
       return {
         id: play.id, mark,
-        tone: result ? result.success ? "good" : "bad" : "neutral",
-        eyebrow: result ? result.success ? copy.success : copy.failure
+        tone: mark === "success" ? "good" : mark === "failure" ? "bad" : mark === "draw" ? "draw" : mark === "short" ? "short" : "neutral",
+        eyebrow: result ? mark === "success" ? copy.success : mark === "draw" ? copy.heldDraw : mark === "short" ? copy.shortfall : copy.failure
           : outcome.decision.kind === "promise" ? copy.promiseAccepted : copy.veteranChosen,
         title: result ? `${copy.fullTime}: ${result.score.join(" × ")}${result.penalties ? ` (${copy.penalties} ${result.penalties.join(" × ")})` : ""}${ending ? ` · ${ending}` : ""}` : action,
         body: result ? `${getCompetition(result.match.competition)?.names[locale] ?? result.match.competition}: ${detail}` : detail,

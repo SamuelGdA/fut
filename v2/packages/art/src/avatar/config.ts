@@ -4,24 +4,33 @@
  */
 
 export type HairStyle =
-  | "bald" | "short" | "sidePart" | "wavy"
-  | "curly" | "afro" | "bun" | "long";
+  | "bald" | "short" | "sidePart" | "curtains" | "slickBack"
+  | "spiky" | "quiff" | "mohawk" | "wavy" | "curly" | "cornrows" | "afro"
+  | "bun" | "long";
 
 export type BeardStyle =
-  | "none" | "moustache" | "soulPatch"
-  | "chinstrap" | "full";
+  | "none" | "moustache" | "soulPatch" | "goatee"
+  | "vandyke" | "chinstrap" | "full" | "long";
 
-export type EyebrowStyle = "straight" | "arched" | "thick" | "thin" | "angled";
+export type EyebrowStyle = "none" | "straight" | "arched" | "thick" | "thin" | "angled";
 
 export type MoleSpot = "none" | "leftCheek" | "rightCheek" | "chin" | "aboveLip";
 
 export type EyeShape = "round" | "almond" | "sleepy" | "closed";
 
-export type NoseShape = "small" | "straight" | "button" | "wide";
+export type NoseShape = "none" | "small" | "straight" | "button" | "wide";
 
-export type MouthStyle = "smile" | "grin" | "smirk" | "neutral" | "small";
+export type MouthStyle = "none" | "smile" | "grin" | "smirk" | "neutral" | "small";
 
-export type AccessoryStyle = "none" | "headband" | "glasses" | "beret";
+export type AccessoryStyle =
+  | "none" | "headband" | "glasses" | "noseStrip"
+  | "cap" | "beanie" | "beret";
+
+export type ScarSpot = "none" | "brow" | "cheek" | "chin";
+
+export type EarringSide = "none" | "left" | "right" | "both";
+
+export type EarringStyle = "stud" | "hoop" | "diamond" | "cross" | "drop";
 
 /** Mii-style min/max range for the eye and nose size sliders. */
 export const FEATURE_SIZE_MIN = 0;
@@ -67,6 +76,11 @@ export interface AvatarConfig {
   mole: MoleSpot;
   accessory: AccessoryStyle;
   accessoryColor: number;
+  /** Optional so older saves and hand-written configs keep working; missing means none. */
+  scar?: ScarSpot;
+  earring?: EarringSide;
+  earringStyle?: EarringStyle;
+  earringColor?: number;
 }
 
 /** Skin tones, light to deep. */
@@ -97,28 +111,42 @@ export const EYE_COLORS = [
 
 /** Roughly shortest to longest, so the picker reads as a scale. */
 export const HAIR_STYLES: HairStyle[] = [
-  "bald", "short", "sidePart", "wavy", "curly", "afro", "bun", "long",
+  "bald", "short", "sidePart", "curtains", "slickBack",
+  "spiky", "quiff", "mohawk", "wavy", "curly", "cornrows", "afro",
+  "bun", "long",
 ];
 
 export const BEARD_STYLES: BeardStyle[] = [
-  "none", "moustache", "soulPatch",
-  "chinstrap", "full",
+  "none", "moustache", "soulPatch", "goatee",
+  "vandyke", "chinstrap", "full", "long",
 ];
 
-export const EYEBROW_STYLES: EyebrowStyle[] = ["straight", "arched", "thick", "thin", "angled"];
+export const EYEBROW_STYLES: EyebrowStyle[] = ["none", "straight", "arched", "thick", "thin", "angled"];
 
 export const MOLE_SPOTS: MoleSpot[] = ["none", "leftCheek", "rightCheek", "chin", "aboveLip"];
 
 export const EYE_SHAPES: EyeShape[] = ["round", "almond", "sleepy", "closed"];
 
-export const NOSE_SHAPES: NoseShape[] = ["small", "straight", "button", "wide"];
+export const NOSE_SHAPES: NoseShape[] = ["none", "small", "straight", "button", "wide"];
 
-export const MOUTH_STYLES: MouthStyle[] = ["smile", "grin", "smirk", "neutral", "small"];
+export const MOUTH_STYLES: MouthStyle[] = ["none", "smile", "grin", "smirk", "neutral", "small"];
 
-export const ACCESSORY_STYLES: AccessoryStyle[] = ["none", "headband", "glasses", "beret"];
+export const ACCESSORY_STYLES: AccessoryStyle[] = [
+  "none", "headband", "glasses", "noseStrip",
+  "cap", "beanie", "beret",
+];
 
-/** Accessories that cover the scalp entirely, so hair is skipped underneath them. */
-export const HAIR_HIDING_ACCESSORIES: ReadonlySet<AccessoryStyle> = new Set(["beret"]);
+export const SCAR_SPOTS: ScarSpot[] = ["none", "brow", "cheek", "chin"];
+
+export const EARRING_SIDES: EarringSide[] = ["none", "left", "right", "both"];
+
+export const EARRING_STYLES: EarringStyle[] = ["stud", "hoop", "diamond", "cross", "drop"];
+
+/** Gold, silver, rose gold, black, white and blue. */
+export const EARRING_COLORS = ["#E8C35A", "#C9CED6", "#E3A48A", "#1E1F24", "#F4F4F4", "#3F6FB5"];
+
+/** Headwear that covers the scalp entirely, so hair is skipped underneath it (the v1 beret, and the cap and beanie alike). */
+export const HAIR_HIDING_ACCESSORIES: ReadonlySet<AccessoryStyle> = new Set(["beret", "cap", "beanie"]);
 
 /** Sensible starting point once the player opens the customiser. */
 export const DEFAULT_AVATAR: AvatarConfig = {
@@ -142,6 +170,10 @@ export const DEFAULT_AVATAR: AvatarConfig = {
   mole: "none",
   accessory: "none",
   accessoryColor: 1,
+  scar: "none",
+  earring: "none",
+  earringStyle: "stud",
+  earringColor: 0,
 };
 
 /** Deterministic-ish shuffle for the "surprise me" button. */
@@ -153,16 +185,16 @@ export function randomAvatar(): AvatarConfig {
     skin: Math.floor(Math.random() * SKIN_TONES.length),
     hair: pick(HAIR_STYLES),
     hairColor,
-    eyebrows: pick(EYEBROW_STYLES),
+    eyebrows: pick(EYEBROW_STYLES.slice(1)),
     eyebrowOffset: Math.floor(Math.random() * (EYEBROW_OFFSET_MAX - EYEBROW_OFFSET_MIN + 1)) + EYEBROW_OFFSET_MIN,
     eyes: Math.floor(Math.random() * EYE_COLORS.length),
     eyeShape: pick(EYE_SHAPES),
     eyeSize: Math.floor(Math.random() * (FEATURE_SIZE_MAX + 1)),
     eyeOffset: Math.floor(Math.random() * (EYE_OFFSET_MAX - EYE_OFFSET_MIN + 1)) + EYE_OFFSET_MIN,
-    nose: pick(NOSE_SHAPES),
+    nose: pick(NOSE_SHAPES.slice(1)),
     noseSize: Math.floor(Math.random() * (FEATURE_SIZE_MAX + 1)),
     noseOffset: Math.floor(Math.random() * (NOSE_OFFSET_MAX - NOSE_OFFSET_MIN + 1)) + NOSE_OFFSET_MIN,
-    mouth: pick(MOUTH_STYLES),
+    mouth: pick(MOUTH_STYLES.slice(1)),
     mouthOffset: Math.floor(Math.random() * (MOUTH_OFFSET_MAX - MOUTH_OFFSET_MIN + 1)) + MOUTH_OFFSET_MIN,
     beard: pick(BEARD_STYLES),
     beardColor: hairColor,
@@ -170,5 +202,9 @@ export function randomAvatar(): AvatarConfig {
     mole: Math.random() < 0.35 ? pick(MOLE_SPOTS.slice(1)) : "none",
     accessory: Math.random() < 0.3 ? pick(ACCESSORY_STYLES.slice(1)) : "none",
     accessoryColor: Math.floor(Math.random() * HAIR_COLORS.length),
+    scar: Math.random() < 0.15 ? pick(SCAR_SPOTS.slice(1)) : "none",
+    earring: Math.random() < 0.2 ? pick(EARRING_SIDES.slice(1)) : "none",
+    earringStyle: pick(EARRING_STYLES),
+    earringColor: Math.floor(Math.random() * EARRING_COLORS.length),
   };
 }

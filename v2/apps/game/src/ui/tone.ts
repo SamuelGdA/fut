@@ -2,7 +2,7 @@
  * Tons semânticos. Todo tom bom ou ruim tem glifo próprio: cor nunca é o único
  * sinal (GDD 36).
  */
-export const TONES = ["good", "bad", "neutral", "glory", "info"] as const;
+export const TONES = ["good", "bad", "neutral", "glory", "info", "draw", "short"] as const;
 
 export type Tone = (typeof TONES)[number];
 
@@ -12,6 +12,8 @@ export const TONE_GLYPH: Readonly<Record<Tone, string>> = {
   neutral: "●",
   glory: "★",
   info: "◆",
+  draw: "=",
+  short: "◐",
 };
 
 export function isTone(value: unknown): value is Tone {

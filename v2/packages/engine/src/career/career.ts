@@ -46,7 +46,7 @@ export function validateSetup(setup: CareerSetup): void {
 
 export function createCareer(setup: CareerSetup): Career {
   validateSetup(setup);
-  const player = createPlayer({ seed: setup.seed, position: setup.identity.position, difficulty: setup.difficulty });
+  const player = createPlayer({ seed: setup.seed, position: setup.identity.position, difficulty: setup.difficulty, talent: setup.talent });
   const career: Career = {
     setup,
     world: createWorld(setup.seed, setup.startYear),

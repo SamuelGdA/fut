@@ -9,6 +9,7 @@ import {
   policyChoice,
   type Position,
   type SeasonRecord,
+  type TalentBand,
 } from "@craque/engine";
 import { type CountryCode, getCompetition } from "@craque/world";
 
@@ -20,8 +21,23 @@ import { type CountryCode, getCompetition } from "@craque/world";
  * extraordinários, nunca que seja comum.
  */
 
+/**
+ * Faixas de raridade (D94): a chance de uma carreira de Fenômeno (simulada pelas
+ * políticas automáticas) igualar ou passar a marca. Clássico ensina que o sistema
+ * existe; lendário quase ninguém vê. Superar tem de ser possível em todas.
+ */
+export const RECORD_BANDS = {
+  entry: [0.06, 0.15],
+  rare: [0.02, 0.05],
+  epic: [0.005, 0.015],
+  legendary: [0.0008, 0.004],
+} as const;
+export type RecordTier = keyof typeof RECORD_BANDS;
+
 export interface RecordTarget {
   readonly id: string;
+  /** A faixa de raridade que a marca tem de cair (D94). */
+  readonly tier: RecordTier;
   readonly label: string;
   /** A marca real. */
   readonly value: number;
@@ -39,62 +55,41 @@ const titlesWhere = (record: SeasonRecord, test: (id: string) => boolean) => rec
 const leagueIn = (country: string) => (record: SeasonRecord) =>
   titlesWhere(record, (id) => kindOf(id) === "league" && countryOf(id) === country);
 const BIG_FIVE = new Set(["ENG", "ESP", "ITA", "GER", "FRA"]);
-/** Os países com recorde de liga na lista do GDD 26. */
-const LISTED_LEAGUES = new Set(["ENG", "ESP", "ITA", "GER"]);
 
-/** Mais títulos numa liga só, entre os países sem recorde na lista. */
-function otherLeagueBest(history: readonly SeasonRecord[]): number {
-  const counts = new Map<string, number>();
-  for (const record of history) {
-    for (const id of record.titles) {
-      const country = countryOf(id);
-      if (kindOf(id) !== "league" || !country || LISTED_LEAGUES.has(country)) continue;
-      counts.set(id, (counts.get(id) ?? 0) + 1);
-    }
-  }
-  return Math.max(0, ...counts.values());
-}
 
 const ATTACK: readonly Position[] = ["st", "lw", "rw", "cam"];
 const ANY: readonly Position[] = ["st", "cam", "cm", "cb", "gk"];
 
 export const RECORD_TARGETS: readonly RecordTarget[] = [
-  { id: "seasonGoals", label: "Gols numa temporada pelo clube (Messi, 73)", value: 73, measure: "best", season: (r) => r.production.goals, positions: ATTACK },
-  { id: "careerGoals", label: "Gols na carreira (Cristiano Ronaldo, 979)", value: 979, measure: "sum", season: (r) => r.production.goals + r.national.goals, positions: ATTACK },
-  { id: "internationalGoals", label: "Gols pela seleção (Cristiano Ronaldo, 146)", value: 146, measure: "sum", season: (r) => r.national.goals, positions: ATTACK },
-  { id: "seasonAssists", label: "Assistências numa temporada (referência: 35)", value: 35, measure: "best", season: (r) => r.production.assists, positions: ATTACK },
-  { id: "caps", label: "Jogos pela seleção (Cristiano Ronaldo, 234)", value: 234, measure: "sum", season: (r) => r.national.games, positions: ANY },
-  { id: "careerGames", label: "Jogos na carreira (Peter Shilton, 1390)", value: 1390, measure: "sum", season: (r) => r.games + r.national.games, positions: ANY },
-  { id: "keeperCleanSheets", label: "Jogos sem sofrer gol numa temporada, goleiro (referência: 34)", value: 34, measure: "best", season: (r) => r.production.cleanSheets, positions: ["gk"] },
-  { id: "ballonDor", label: "Bolas de Ouro (Messi, 8)", value: 8, measure: "sum", season: (r) => (r.awards.won.includes("ballonDor") ? 1 : 0), positions: ATTACK },
-  { id: "ballonStreak", label: "Bolas de Ouro seguidas (Messi, 4)", value: 4, measure: "streak", season: (r) => (r.awards.won.includes("ballonDor") ? 1 : 0), positions: ATTACK },
-  { id: "goldenShoes", label: "Chuteiras de Ouro (Messi, 6)", value: 6, measure: "sum", season: (r) => (r.awards.won.includes("goldenShoe") ? 1 : 0), positions: ATTACK },
-  { id: "careerTitles", label: "Títulos na carreira (46)", value: 46, measure: "sum", season: (r) => r.titles.length, positions: ANY },
-  { id: "worldCups", label: "Copas do Mundo (Pelé, 3)", value: 3, measure: "sum", season: (r) => titlesWhere(r, (id) => kindOf(id) === "worldCup"), positions: ANY },
-  { id: "championsLeague", label: "Champions League (Gento, 6)", value: 6, measure: "sum", season: (r) => titlesWhere(r, (id) => id === "cont1:UEFA"), positions: ANY },
-  { id: "libertadores", label: "Libertadores (Francisco Sá, 6)", value: 6, measure: "sum", season: (r) => titlesWhere(r, (id) => id === "cont1:CONMEBOL"), positions: ANY },
-  { id: "leagueEngland", label: "Premier League (Giggs, 13)", value: 13, measure: "sum", season: leagueIn("ENG"), positions: ANY },
-  { id: "leagueSpain", label: "LaLiga (Gento, 12)", value: 12, measure: "sum", season: leagueIn("ESP"), positions: ANY },
-  { id: "leagueItaly", label: "Serie A (Buffon, 10)", value: 10, measure: "sum", season: leagueIn("ITA"), positions: ANY },
-  { id: "leagueGermany", label: "Bundesliga (Müller, 13)", value: 13, measure: "sum", season: leagueIn("GER"), positions: ANY },
+  { id: "seasonGoals", tier: "rare", label: "Gols numa temporada pelo clube (Messi, 73)", value: 73, measure: "best", season: (r) => r.production.goals, positions: ATTACK },
+  { id: "careerGoals", tier: "epic", label: "Gols na carreira (Cristiano Ronaldo, 979)", value: 979, measure: "sum", season: (r) => r.production.goals + r.national.goals, positions: ATTACK },
+  { id: "internationalGoals", tier: "legendary", label: "Gols pela seleção (Cristiano Ronaldo, 146)", value: 146, measure: "sum", season: (r) => r.national.goals, positions: ATTACK },
+  { id: "seasonAssists", tier: "rare", label: "Assistências numa temporada (Messi, 32)", value: 32, measure: "best", season: (r) => r.production.assists, positions: ATTACK },
+  { id: "caps", tier: "entry", label: "Jogos pela seleção (Cristiano Ronaldo, 234)", value: 234, measure: "sum", season: (r) => r.national.games, positions: ANY },
+  { id: "careerGames", tier: "rare", label: "Jogos na carreira (Peter Shilton, 1390)", value: 1390, measure: "sum", season: (r) => r.games + r.national.games, positions: ANY },
+  { id: "keeperCleanSheets", tier: "entry", label: "Jogos sem sofrer gol numa temporada de liga (ter Stegen e Liaño, 26)", value: 26, measure: "best", season: (r) => r.production.lines.filter((line) => line.kind === "league").reduce((sum, line) => sum + line.cleanSheets, 0), positions: ["gk"] },
+  { id: "ballonDor", tier: "legendary", label: "Bolas de Ouro (Messi, 8)", value: 8, measure: "sum", season: (r) => (r.awards.won.includes("ballonDor") ? 1 : 0), positions: ATTACK },
+  { id: "ballonStreak", tier: "legendary", label: "Bolas de Ouro seguidas (Messi, 4)", value: 4, measure: "streak", season: (r) => (r.awards.won.includes("ballonDor") ? 1 : 0), positions: ATTACK },
+  { id: "goldenShoes", tier: "legendary", label: "Chuteiras de Ouro (Messi, 6)", value: 6, measure: "sum", season: (r) => (r.awards.won.includes("goldenShoe") ? 1 : 0), positions: ATTACK },
+  { id: "careerTitles", tier: "entry", label: "Títulos na carreira (46)", value: 46, measure: "sum", season: (r) => r.titles.length, positions: ANY },
+  { id: "worldCups", tier: "epic", label: "Copas do Mundo (Pelé, 3)", value: 3, measure: "sum", season: (r) => titlesWhere(r, (id) => kindOf(id) === "worldCup"), positions: ANY },
+  { id: "championsLeague", tier: "rare", label: "Champions League (Gento, 6)", value: 6, measure: "sum", season: (r) => titlesWhere(r, (id) => id === "cont1:UEFA"), positions: ANY },
+  { id: "libertadores", tier: "legendary", label: "Libertadores (Francisco Sá, 6)", value: 6, measure: "sum", season: (r) => titlesWhere(r, (id) => id === "cont1:CONMEBOL"), positions: ANY },
+  { id: "leagueEngland", tier: "legendary", label: "Premier League (Giggs, 13)", value: 13, measure: "sum", season: leagueIn("ENG"), positions: ANY },
+  { id: "leagueSpain", tier: "epic", label: "LaLiga (Gento, 12)", value: 12, measure: "sum", season: leagueIn("ESP"), positions: ANY },
+  { id: "leagueItaly", tier: "epic", label: "Serie A (Buffon, 10)", value: 10, measure: "sum", season: leagueIn("ITA"), positions: ANY },
+  { id: "leagueGermany", tier: "epic", label: "Bundesliga (Müller, 13)", value: 13, measure: "sum", season: leagueIn("GER"), positions: ANY },
   {
-    id: "leagueStreak",
+    id: "leagueStreak", tier: "rare",
     label: "Ligas grandes seguidas (11)",
     value: 11,
     measure: "streak",
     season: (r) => (r.titles.some((id) => kindOf(id) === "league" && BIG_FIVE.has(countryOf(id) ?? "")) ? 1 : 0),
     positions: ANY,
   },
-  { id: "primaryStreak", label: "Continentais seguidos (Real Madrid, 5)", value: 5, measure: "streak", season: (r) => (r.titles.some((id) => kindOf(id) === "continental1") ? 1 : 0), positions: ANY },
-  {
-    id: "otherLeague",
-    label: "Liga de outro país, uma só (referência: 12)",
-    value: 12,
-    measure: "career",
-    season: () => 0,
-    career: otherLeagueBest,
-    positions: ANY,
-  },
+  { id: "primaryStreak", tier: "epic", label: "Continentais seguidos (Real Madrid, 5)", value: 5, measure: "streak", season: (r) => (r.titles.some((id) => kindOf(id) === "continental1") ? 1 : 0), positions: ANY },
+  { id: "leagueFrance", tier: "rare", label: "Ligue 1 (Marquinhos, 11)", value: 11, measure: "sum", season: leagueIn("FRA"), positions: ANY },
+  { id: "championsGames", tier: "entry", label: "Jogos de Champions League (Cristiano Ronaldo, 183)", value: 183, measure: "sum", season: (r) => r.production.lines.filter((line) => line.competition === "cont1:UEFA").reduce((sum, line) => sum + line.games, 0), positions: ANY },
 ];
 
 export function careerValue(target: RecordTarget, history: readonly SeasonRecord[]): number {
@@ -124,6 +119,8 @@ export interface RecordRow {
   readonly reached: number;
   /** Carreiras que passaram a marca por 1, 2 e 3: cada passo a mais tem de ser mais raro (D44). */
   readonly beyond: readonly [number, number, number];
+  /** A fração que alcançou está dentro da faixa e alguém passou da marca. */
+  readonly inBand: boolean;
 }
 
 /** Força a partir da qual o fiel ao gigante para de trocar de clube. */
@@ -217,8 +214,9 @@ export const RECORD_BATCHES: readonly RecordBatch[] = [
 ];
 
 /** Fenômenos por posição e por lote, jogados pelas decisões até o fim. */
-export function runRecordCareers(seed: string, perPosition: number): Map<Position, Career[]> {
-  const positions = [...new Set(RECORD_TARGETS.flatMap((target) => target.positions))];
+export function runRecordCareers(seed: string, perPosition: number, only?: readonly Position[], talent: TalentBand = "phenom"): Map<Position, Career[]> {
+  // `only` mede só algumas posições (para calibrar uma delas sem jogar todas).
+  const positions = only ?? [...new Set(RECORD_TARGETS.flatMap((target) => target.positions))];
   const byPosition = new Map<Position, Career[]>();
   for (const batch of RECORD_BATCHES) {
     const nationRng = createRng(`${seed}:${batch.name}:nacoes`);
@@ -229,7 +227,8 @@ export function runRecordCareers(seed: string, perPosition: number): Map<Positio
       while (played < perPosition) {
         const careerSeed = `${seed}:${batch.name}:${position}:${attempt}`;
         attempt += 1;
-        if (createPlayer({ seed: careerSeed, position, difficulty: "normal" }).talent !== "phenom") continue;
+        // `talent` mede outras faixas (D105: Craque e Estrela também precisam ver recorde, mais raro).
+        if (createPlayer({ seed: careerSeed, position, difficulty: "normal" }).talent !== talent) continue;
         const nationality = nationRng.weighted(batch.nations);
         const start = createCareer({
           seed: careerSeed,
@@ -260,6 +259,11 @@ export function recordRows(byPosition: ReadonlyMap<Position, readonly Career[]>)
       median: values[Math.floor(values.length / 2)] ?? 0,
       reached: values.filter((value) => value >= target.value).length,
       beyond: [1, 2, 3].map((extra) => values.filter((value) => value >= target.value + extra).length) as unknown as readonly [number, number, number],
+      inBand: (() => {
+        const share = values.filter((value) => value >= target.value).length / Math.max(1, values.length);
+        const [low, high] = RECORD_BANDS[target.tier];
+        return share >= low && share <= high && values.some((value) => value > target.value);
+      })(),
     };
   });
 }

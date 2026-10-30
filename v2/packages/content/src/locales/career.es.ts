@@ -140,6 +140,8 @@ export const careerEs: CareerMessages = {
   decision: {
     base: { title: "El primer club", body: "Tres clubes te quieren en sus inferiores. A los {age} años, la primera elección es dónde aprender." },
     window: { title: "Mercado de pases", body: "Fin de temporada en {club}. ¿Te quedas o cambias de aire?" },
+    agentUp: { title: "El representante cumplió", body: "Los contactos del nuevo representante trajeron ofertas mejores de lo normal. ¿Te quedas en {club} o das el salto?" },
+    agentDown: { title: "El representante falló", body: "El nuevo representante solo consiguió ofertas peores de lo normal. ¿Te quedas en {club} o aceptas una de ellas?" },
     suspended: { title: "Suspendido", body: "La sanción sigue, pero el mercado no se detiene. ¿La cumples donde estás o empiezas de nuevo en otro lugar?" },
     loan: { title: "Oferta de préstamo", body: "Falta espacio en el plantel. Algunos clubes ofrecen minutos garantizados a préstamo." },
     returnRetained: { title: "Fin del préstamo", body: "{owner} quiere que vuelvas. ¿Cuál es el próximo paso?" },
@@ -215,8 +217,8 @@ export const careerEs: CareerMessages = {
     shirtTen: "Viste la camiseta 10",
     shirt: "Viste la camiseta {number}",
     block: "El club cierra las puertas para siempre",
-    marketUp: "Más clubes interesados en el próximo mercado",
-    marketDown: "Menos clubes interesados en el próximo mercado",
+    marketUp: "Próxima decisión: mercado con mejores ofertas",
+    marketDown: "Próxima decisión: mercado con peores ofertas",
     clubStrength: "Fuerza del club {value}",
     awardUp: "Más votos en los premios",
     awardDown: "Menos votos en los premios",
@@ -233,7 +235,7 @@ export const careerEs: CareerMessages = {
   },
 
   end: {
-    age: "A los 40 años, el cuerpo puso fin a la carrera.",
+    age: "A los 41 años, el cuerpo puso fin a la carrera.",
     noRoom: "Sin clubes interesados, la carrera llegó a su fin.",
     noOffers: "Ningún club hizo una oferta. La carrera llegó a su fin.",
     release: "Después de quedar libre, decidiste parar.",
@@ -263,5 +265,6 @@ export const careerEs: CareerMessages = {
     goalsCount: { zero: "{count} goles", one: "{count} gol", other: "{count} goles" },
     assistsCount: { zero: "{count} asistencias", one: "{count} asistencia", other: "{count} asistencias" },
     cleanSheetsCount: { zero: "{count} vallas invictas", one: "{count} valla invicta", other: "{count} vallas invictas" },
+    titlesCount: { zero: "ningún título", one: "{count} título", other: "{count} títulos" },
   },
 };

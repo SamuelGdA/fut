@@ -122,6 +122,8 @@ interface TextFieldProps {
   /** Contador à direita do rótulo, já formatado ("7/16"). */
   counter?: string;
   autoFocus?: boolean;
+  /** Rótulo só para leitor de tela, quando o título da seção já nomeia o campo. */
+  hideLabel?: boolean;
 }
 
 /** Campo de texto de uma linha, com dica e erro ligados ao campo. */
@@ -135,6 +137,7 @@ export function TextField({
   error,
   counter,
   autoFocus,
+  hideLabel,
 }: TextFieldProps) {
   const id = useId();
   const noteId = `${id}-note`;
@@ -142,8 +145,8 @@ export function TextField({
 
   return (
     <div>
-      <div className="mb-1.5 flex items-baseline justify-between gap-3">
-        <label htmlFor={id} className="eyebrow text-fg">
+      <div className={hideLabel ? "mb-1.5 flex items-baseline justify-end gap-3" : "mb-1.5 flex items-baseline justify-between gap-3"}>
+        <label htmlFor={id} className={hideLabel ? "sr-only" : "eyebrow text-fg"}>
           {label}
         </label>
         {counter ? <span className="numeric text-xs text-faint">{counter}</span> : null}

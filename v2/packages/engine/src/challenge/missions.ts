@@ -125,7 +125,13 @@ export const MISSIONS: readonly Mission[] = [
   mission("scoringAwards", "awards", FORWARDS, (c) =>
     sum(c.history, (r) => (r.awards.won.includes("goldenShoe") ? 1 : 0) + r.awards.crowns.filter((crown) => crown.award === "topScorer").length),
   ),
-  mission("goldenGloves", "awards", ["goalkeeper"], (c) => sum(c.history, (r) => (r.awards.won.includes("goldenGlove") ? 1 : 0))),
+  // D90: com o Troféu Yashin bem mais difícil, o Paredão conta as temporadas entre os dez melhores goleiros da eleição.
+  mission("goldenGloves", "awards", ["goalkeeper"], (c) =>
+    c.history.filter((r) => {
+      const rank = r.awards.goldenGlove.playerRank;
+      return rank !== null && rank <= 10;
+    }).length,
+  ),
 ];
 
 const BY_ID = new Map(MISSIONS.map((item) => [item.id, item]));

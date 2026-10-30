@@ -3,37 +3,40 @@ import { readFile } from "node:fs/promises";
 import { deflateRawSync } from "node:zlib";
 import { abrir, abrirMomento, auditar, esperarQueCaiba, OPCOES } from "./apoio";
 
-const moments = (JSON.parse(await readFile(new URL("./fixtures/momentos-m23.json",import.meta.url),"utf8")) as {moments:Record<string,{file:string;index:number}>}).moments;
+const moments = (JSON.parse(await readFile(new URL("./fixtures/momentos-m41.json",import.meta.url),"utf8")) as {moments:Record<string,{file:string;index:number}>}).moments;
 
 for (const theme of ["light","dark"] as const) {
   test(`D71: pilhas redistribuem troféus e seleção tem legado, ${theme}`,async({page},info)=>{
     if(info.project.name==="celular")await page.setViewportSize({width:360,height:640});
-    const replay=await readFile(new URL("./fixtures/colecao-m23.json",import.meta.url));
+    // D108: a amostra da América é o centroavante do Brasil, ídolo sem a Copa do Mundo.
+    const replay=await readFile(new URL("./fixtures/america-m41.json",import.meta.url));
     await abrir(page,{theme},`/#c=z${deflateRawSync(replay).toString("base64url")}`);
     await page.getByRole("link",{name:"Caminho",exact:true}).click();
-    await expect(page.getByText("Legado na seleção: Lenda",{exact:true})).toBeVisible();
+    // D106: centroavante do Brasil sem Copa do Mundo. Os números davam lenda; o país cobra a Copa, e a tela diz por quê.
+    await expect(page.getByText("Legado na seleção: Ídolo",{exact:true})).toBeVisible();
+    await expect(page.getByText("Números de lenda, mas sem a Copa do Mundo o país guarda você como ídolo.",{exact:true})).toBeVisible();
     const stack=page.locator('.honour-stack[data-multiple]').first();
-    const copies=stack.locator('.honour-copy');
-    await copies.last().scrollIntoViewIfNeeded();
+    await stack.scrollIntoViewIfNeeded();
     const count=Number(await stack.getAttribute('data-count'));
     await expect(stack.locator('.honour-count')).toHaveText(`×${count}`);
-    await expect(copies).toHaveCount(1);
-    if(info.project.name==="desktop")await copies.last().hover();
-    else await copies.last().locator('.honour-token').tap();
-    await expect(copies).toHaveCount(count);
-    await expect.poll(()=>copies.evaluateAll(nodes=>nodes.every(node=>node.getBoundingClientRect().width>=28))).toBe(true);
+    await expect(stack.locator('.honour-copy')).toHaveCount(1);
+    // D90: as cópias abrem num painel flutuante, com o ano de cada uma.
+    if(info.project.name==="desktop")await stack.hover();
+    else await stack.tap();
+    const items=page.locator('.honour-pile .honour-pile-item');
+    await expect(items).toHaveCount(count);
+    await expect.poll(()=>items.evaluateAll(nodes=>nodes.every(node=>node.getBoundingClientRect().width>=28 && /\d{4}/.test(node.textContent ?? "")))).toBe(true);
     await expect.poll(()=>page.locator('.timeline-card').evaluateAll(nodes=>nodes.every(node=>node.scrollWidth<=node.clientWidth+1))).toBe(true);
     await expect(page.getByRole('button',{name:'Legado na seleção',exact:true})).toHaveCount(0);
     await auditar(page,"Pilhas de títulos e legado nacional");
     await page.screenshot({path:info.outputPath(`pilhas-${theme}.png`)});
     if(info.project.name==="desktop") {
       await page.getByRole('heading',{name:'Linha do tempo',exact:true}).hover();
-      await expect.poll(async()=>{
-        const opacities=await copies.evaluateAll(nodes=>nodes.map(node=>Number(getComputedStyle(node).opacity)));
-        return opacities.some(opacity=>opacity>0 && opacity<1);
-      }).toBe(true);
-      await expect(copies).toHaveCount(1);
+      await expect(page.locator('.honour-pile')).toHaveCount(0);
       await expect(stack.locator('.honour-count')).toHaveText(`×${count}`);
+    } else {
+      await page.keyboard.press("Escape");
+      await expect(page.locator('.honour-pile')).toHaveCount(0);
     }
     await page.getByRole("link",{name:"Hipotético",exact:true}).click();
     await expect(page.getByText(/Esta sessão tem ajustes de teste/)).toHaveCount(0);

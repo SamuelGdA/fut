@@ -3,7 +3,7 @@ import type { PointerEvent } from "react";
 import type { PopulationBand } from "./population";
 
 /**
- * Curva de OVR dos 16 aos 39 anos contra a faixa de jogadores parecidos.
+ * Curva de OVR dos 16 aos 40 anos contra a faixa de jogadores parecidos.
  *
  * As linhas são um SVG esticado (cada unidade é 1% da área), com traço que
  * não escala; rótulos, marcas e o ponto escolhido são HTML por cima. Assim o

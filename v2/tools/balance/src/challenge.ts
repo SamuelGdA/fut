@@ -59,7 +59,9 @@ const ATTEMPT_POLICIES: readonly CareerPolicy[] = ["balanced", "ambitious", "loy
 export function calibrationProfile(index: number) {
   return {
     position: POSITIONS[Math.floor(index / ATTEMPT_POLICIES.length) % POSITIONS.length] ?? "st",
-    nationality: PLAYABLE_COUNTRIES[(index * 7) % PLAYABLE_COUNTRIES.length] ?? "BRA",
+    // D108: com 18 países, "índice × 7" repetia combinações; a volta completa de
+    // posições e estilos avança o país, e o passo de 7 continua espalhando as origens.
+    nationality: PLAYABLE_COUNTRIES[(Math.floor(index / (ATTEMPT_POLICIES.length * POSITIONS.length)) + Math.floor(index / ATTEMPT_POLICIES.length) * 7) % PLAYABLE_COUNTRIES.length] ?? "BRA",
     policy: ATTEMPT_POLICIES[index % ATTEMPT_POLICIES.length] ?? "balanced",
   };
 }

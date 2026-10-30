@@ -41,15 +41,22 @@ export {
   type CoverPick,
   type CoverTone,
   type SeasonCover,
+  type CoverRecord,
 } from "./cover";
 export {
   careerRecords,
   compareRecord,
   REAL_RECORDS,
+  RECORD_TIERS,
+  recordChases,
+  liveRecordChases,
+  type RecordChase,
+  type RecordTier,
   RECORD_IDS,
   RECORD_TEXTS,
   RECORDS_CHECKED,
   recordsBeatenIn,
+  recordsReachedIn,
   recordText,
   type RealRecord,
   type RecordGroup,
@@ -70,6 +77,9 @@ export {
 } from "./headlines";
 export {
   ACHIEVEMENT_GROUPS,
+  ACHIEVEMENT_RARITIES,
+  achievementRarity,
+  type AchievementRarity,
   ACHIEVEMENT_IDS,
   ACHIEVEMENT_TEXTS,
   achievementGroupName,
@@ -97,12 +107,9 @@ export {
   missionName,
   missionValue,
 } from "./challenge";
-export { BIO_TEXTS, biography, type BioChapter, type Biography } from "./biography/generate";
-export { bioFacts, stintsOf, type BioFacts, type Stint } from "./biography/facts";
-export { CHAPTER_CAPS, CHAPTERS, THEME_IDS, THEMES, type ChapterId, type ThemeId } from "./biography/themes";
+export { stintsOf, type Stint } from "./stints";
 export type { CoverMessages } from "./locales/cover.pt";
 export type { HeadlinesMessages } from "./locales/headlines.pt";
-export type { BioMessages } from "./locales/bio.pt";
 export type { RecordsMessages } from "./locales/records.pt";
 export type { AchievementsMessages } from "./locales/achievements.pt";
 export type { ChallengeMessages } from "./locales/challenge.pt";

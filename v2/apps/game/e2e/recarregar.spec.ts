@@ -24,7 +24,7 @@ test("sair para o início mantém o rascunho e permite um novo jogo sem salvar a
   await abrirMenuDaCarreira(page);
   await page.getByRole("menuitem", { name: "Voltar ao início" }).click();
   await page.locator(".dialog-popup").getByRole("button", { name: "Sair", exact: true }).click();
-  await expect(page.getByRole("heading", { name: "CRAQUE", level: 1 })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /Quem é você/i, level: 1 })).toBeVisible();
   await page.getByRole("button", { name: "Jogo rápido" }).click();
   await expect(page.getByRole("alertdialog")).toHaveCount(0);
   await expect(page.locator(".decision-options .option").first()).toBeVisible();

@@ -6,17 +6,17 @@ import { clubIndex } from "../world/model";
 import { CLUBS } from "@craque/world";
 import { attributesAt } from "../player/player";
 import { FOCUS_SLOT } from "../evolution/training";
-import { startDrama } from "./drama";
-import { careerMarketLevel, eventContext, marketContext } from "./context";
+import { promiseDecision, promiseDue, startDrama, veteranDecision, veteranDue } from "./drama";
+import { bondLegacy, careerMarketLevel, eventContext, marketContext } from "./context";
 import { promotedNumber } from "./shirt";
 import { eventDecision, pickEvent } from "./events";
-import { academyOffers, buildOffer, interestedClubs, LOAN, loanOffers, marketOffers } from "./market";
+import { academyOffers, buildOffer, interestedClubs, LOAN, loanOffers, MARKET, marketOffers } from "./market";
 import type { Career, CareerNotice, ClubOffer, Decision, DecisionKind, DecisionOption } from "./types";
 
 /**
  * A próxima decisão (GDD 14.2). A primeira regra que se aplicar vence:
  * idade 40, sem mercado, suspenso, volta de empréstimo, dispensa, evento,
- * foco de treino, empréstimo e, por fim, a janela de transferências.
+ * foco de treino, empréstimo, promessa (D89) e, por fim, a janela de transferências.
  */
 
 /** Dispensa (GDD 15.6): a partir de que idade e depois de quantas temporadas sem espaço. */
@@ -24,6 +24,14 @@ export const RELEASE = {
   normal: { age: 25, seasons: 2 },
   hard: { age: 23, seasons: 1 },
 } as const;
+
+/**
+ * D108: teto da paciência do clube com quem não joga. O jovem no banco fica
+ * no máximo até os 22; a partir dos 23, o reserva fica no máximo cinco anos
+ * desde que chegou, mais dois se for ídolo do clube e mais quatro se for lenda.
+ * Vale junto com a regra de cima, que pode dispensar antes.
+ */
+export const BENCH_LIMIT = { youthUpTo: 22, years: 5, idol: 2, legend: 4 } as const;
 
 export { FOCUS_RULE } from "../evolution/training";
 
@@ -80,7 +88,10 @@ function decision(
 }
 
 function withDecision(career: Career, next: Decision): Career {
-  return { ...career, decision: next, decisionCount: next.id };
+  // As propostas desta decisão entram na memória que varia as próximas (D89).
+  const offered = next.options.flatMap((option) => option.kind === "club" ? [option.offer.club] : []);
+  const recentOffers = offered.length ? [...offered, ...(career.recentOffers ?? []).filter((id) => !offered.includes(id))].slice(0, MARKET.recentMemory) : career.recentOffers;
+  return { ...career, decision: next, decisionCount: next.id, recentOffers };
 }
 
 function ended(career: Career, reason: NonNullable<Career["end"]>["reason"]): Career {
@@ -104,12 +115,20 @@ function noMarket(career: Career): boolean {
   return strength > careerMarketLevel(career) + renewalRoom + loyalty;
 }
 
+/** A promessa da temporada ainda não foi julgada (D107). */
+export function promisePending(career: Career): boolean {
+  return Boolean(career.promise) && (career.promise?.throughYear ?? career.promise?.year ?? 0) >= career.world.year;
+}
+
 export function transferOpportunityDue(career: Career): boolean {
   return Boolean(career.contract) && career.world.year - (career.lastOfferYear ?? career.setup.startYear) >= 3;
 }
 export function windowDecision(career: Career, reason: Decision["reason"] = null, guaranteed = false): Career {
   const context = marketContext(career);
   let offers = marketOffers(context, 2, rng(career, "window"));
+  // A oferta é garantida a cada três temporadas (D91): no prazo vencido, sem
+  // interessados, chega ao menos a do clube mais perto do nível. Fora do prazo,
+  // a janela vazia vira outra decisão principal (nextDecision).
   if (guaranteed && offers.length === 0) {
     const candidates = CLUBS.flatMap((club, index) => club.id !== context.current && !context.excluded.includes(club.id) && (context.world.strength[index] ?? 0) <= (context.maxStrength ?? Infinity) ? [index] : []).sort((a, b) => Math.abs((context.world.strength[a] ?? 0) - context.level) - Math.abs((context.world.strength[b] ?? 0) - context.level));
     if (candidates[0] !== undefined) offers = [buildOffer(context, candidates[0], rng(career, "opportunity"))];
@@ -117,7 +136,11 @@ export function windowDecision(career: Career, reason: Decision["reason"] = null
   const options: DecisionOption[] = [];
   if (career.contract) options.push(stayOption(career));
   options.push(...clubOptions(offers));
-  if (career.age >= retireFrom(career, 33)) options.push({ id: "retire", kind: "retire" });
+  // D107: a janela não aposenta quem tem promessa em andamento; antes, a
+  // promessa sumia sem ser julgada. D108: a janela do meio do período (ritmo
+  // Rápida) nunca aposenta: aposentar é decisão principal, e o período não
+  // pode terminar pela metade, sem a temporada e sem o resultado na tela.
+  if (career.age >= retireFrom(career, 33) && !career.drama && !promisePending(career)) options.push({ id: "retire", kind: "retire" });
   if (options.length === 0) return ended(career, "noOffers");
   return withDecision(offers.length ? { ...career, lastOfferYear: career.world.year } : career, decision(career, "window", options, { reason }));
 }
@@ -169,9 +192,22 @@ export function releaseDecision(career: Career): Career {
   return withDecision({ ...career, proving: true }, decision(career, "release", options, { reason: "released" }));
 }
 
+/** D108: o reserva passou do teto: jovem depois dos 22, ou anos demais no clube. */
+export function benchLimitReached(career: Career): boolean {
+  const contract = career.contract;
+  if (!contract || career.age <= BENCH_LIMIT.youthUpTo) return false;
+  const level = bondLegacy(career, contract.club);
+  const years = BENCH_LIMIT.years + (level === "legend" ? BENCH_LIMIT.legend : level === "idol" ? BENCH_LIMIT.idol : 0);
+  // O banco que começou aos 22 ou antes já esgotou a paciência com o jovem;
+  // depois disso, conta os anos de casa desde a chegada.
+  const benchedSinceYouth = contract.benchSeasons >= career.age - BENCH_LIMIT.youthUpTo;
+  return benchedSinceYouth || career.world.year - contract.since >= years;
+}
+
 function shouldRelease(career: Career): boolean {
   const contract = career.contract;
   if (!contract || contract.loan) return false;
+  if (contract.benchSeasons >= 1 && benchLimitReached(career)) return true;
   const rule = RELEASE[career.setup.difficulty];
   if(career.age < rule.age || contract.benchSeasons < rule.seasons)return false;
   const fans=career.bonds[contract.club]?.fans ?? 50;
@@ -199,6 +235,11 @@ export function baseDecision(career: Career): Career {
   return withDecision(career, decision(career, "base", clubOptions(offers)));
 }
 
+function focusOptions(career: Career): DecisionOption[] {
+  const values = attributesAt(career.player, career.age);
+  return focusesFor(career.player.position).filter((focus) => values[FOCUS_SLOT[focus]] <= 97).map((focus) => ({ id: `focus:${focus}`, kind: "focus", focus }));
+}
+
 function buildNextDecision(career: Career): Career {
   if (career.end) return career;
   if (career.age >= RETIREMENT_AGE) return ended(career, "age");
@@ -209,6 +250,10 @@ function buildNextDecision(career: Career): Career {
   const loan = career.contract?.loan;
   if (loan && career.age >= loan.untilAge) return returnDecision(career);
   if (shouldRelease(career)) return releaseDecision(career);
+  // D106: quem trocou de empresário vê o efeito já na decisão seguinte. A
+  // janela abre com proposta garantida (clubes maiores se a troca deu certo,
+  // menores se deu errado), e ficar no clube continua sendo uma opção.
+  if (career.marketBonus !== 0 && career.contract && !career.contract.loan) return windowDecision(career, career.marketBonus > 0 ? "agentUp" : "agentDown", true);
   if (transferOpportunityDue(career)) return windowDecision(career, null, true);
 
   // A oferta obrigatória tem prioridade, mas não apaga a vaga de um evento.
@@ -221,8 +266,7 @@ function buildNextDecision(career: Career): Career {
   }
 
   if (career.contract && focusDue(career)) {
-    const values = attributesAt(career.player, career.age);
-    const options: DecisionOption[] = focusesFor(career.player.position).filter((focus) => values[FOCUS_SLOT[focus]] <= 97).map((focus) => ({ id: `focus:${focus}`, kind: "focus", focus }));
+    const options = focusOptions(career);
     if (options.length) return withDecision(career, decision(career, "focus", options));
   }
 
@@ -234,6 +278,11 @@ function buildNextDecision(career: Career): Career {
     }
   }
 
+  // A reinvenção e a promessa disputam a vaga da janela comum (D89).
+  if (career.contract && veteranDue(career)) return veteranDecision(career);
+  // A promessa disputa a vaga da janela comum (D89): se não sair agora, não sai.
+  if (career.contract && promiseDue(career)) return promiseDecision(career);
+
   return windowDecision(career);
 }
 
@@ -242,6 +291,15 @@ export function nextDecision(career: Career, notices: CareerNotice[] = []): Care
   const next = buildNextDecision(career);
   const cleared = career.agentRestriction ? { ...next, agentRestriction: false } : next;
   if (cleared.decision?.kind === "window" && cleared.decision.options.length === 1 && cleared.decision.options[0]?.kind === "stay") {
+    // Janela sem proposta antes do prazo de três anos (D91): o ano abre com um
+    // treino escolhido, nunca direto numa partida.
+    const training = career.contract ? focusOptions(career) : [];
+    if (training.length) return withDecision({ ...career, agentRestriction: false }, decision(career, "focus", training));
+    const opportunity = windowDecision(career, null, true);
+    if (opportunity.decision && opportunity.decision.options.length > 1) return { ...opportunity, lastOfferYear: opportunity.world.year };
+    // D106: sem treino possível (atributos no teto) e sem proposta nem garantida, o
+    // ano ainda abre com uma decisão principal: a promessa da temporada.
+    if (career.contract) return { ...promiseDecision({ ...career, agentRestriction: false }), lastOfferYear: career.lastOfferYear };
     const shirt = cleared.decision.options[0].shirt;
     return startDrama({ ...cleared, decision: null, decisionCount: career.decisionCount, contract: cleared.contract && shirt !== null ? { ...cleared.contract, shirt } : cleared.contract }, notices, null, false, undefined, 0);
   }

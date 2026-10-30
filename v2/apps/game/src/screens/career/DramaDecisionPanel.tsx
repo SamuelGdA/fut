@@ -1,5 +1,5 @@
-import { dramaAction, dramaDecision, dramaHint, dramaOption, dramaText } from "@craque/content";
-import { type Career, type KeyMatchResult, type VeteranPath } from "@craque/engine";
+import { dramaAction, dramaDecision, dramaHint, dramaOption, dramaText, REAL_RECORDS, recordText } from "@craque/content";
+import { isShootout, recordStake, type Career, type KeyMatchResult, type VeteranPath } from "@craque/engine";
 import { broadcastIdentity, broadcastStyle, kitStyle } from "../../features/career/broadcast";
 import { matchOptionHint, matchOptionText } from "../../features/career/matchPresentation";
 import { getClub, getCompetition, getCountry } from "@craque/world";
@@ -11,6 +11,7 @@ import { Crest, Flag } from "../../ui/Media";
 import { BroadcastEmblem } from "./BroadcastEmblem";
 import { LedScore } from "./LedScore";
 import { MatchOutcome } from "./MatchOutcome";
+import { LeagueLive } from "./LeagueLive";
 import { d74 } from "../../i18n/d74";
 import { decisionFeedback } from "../../i18n/decisionFeedback";
 import { promiseChips, veteranChips } from "../../i18n/d78";
@@ -18,7 +19,7 @@ import { Chip } from "../../ui/Signals";
 
 const PATH_ICONS = { maestro: Eye, captain: Megaphone, poacher: Crosshair, guardian: Shield, athlete: Zap, mentor: GraduationCap };
 
-export function DramaDecisionPanel({ career, onChoose, original, result, onContinue }: { career: Career; onChoose(id: string): boolean; original: string | null; result?: KeyMatchResult | null; onContinue?: () => void }) {
+export function DramaDecisionPanel({ career, onChoose, original, originalLabel, result, onContinue }: { career: Career; onChoose(id: string): boolean; original: string | null; originalLabel?: string; result?: KeyMatchResult | null; onContinue?: () => void }) {
   const { locale, t } = useT();
   const title = useRef<HTMLHeadingElement>(null);
   const decision = career.decision;
@@ -34,16 +35,21 @@ export function DramaDecisionPanel({ career, onChoose, original, result, onConti
   const team = (id: string) => match?.national ? <Flag country={getCountry(id)!} language={locale} size={22} decorative /> : <Crest club={id} size={28} decorative />;
   // A transmissão fica no próprio card: na troca de lance, o card que sai conserva a sua.
   const broadcast = match ? broadcastIdentity(match) : null;
+  // A final que vale recorde ganha a faixa dourada (D94); a chance não muda.
+  const stake = match && !result ? recordStake(career.history, match) : null;
+  const stakeRecord = stake ? REAL_RECORDS.find((item) => item.id === stake.record) : undefined;
+  const stakeText = stake && stakeRecord ? recordText(locale, stakeRecord) : null;
   return <section className={broadcast ? "decision drama-decision bc-stage" : "decision drama-decision"} data-kind={decision.kind} data-broadcast={broadcast?.id} data-motif={broadcast?.motif} style={broadcast ? broadcastStyle(broadcast) : undefined} aria-labelledby={`decisao-${decision.id}`}>
     {match && broadcast ? <div className="match-broadcast">
       <div className="match-broadcast-top"><span className="match-live"><i aria-hidden="true" />{copy.live}</span><span>{decision.year}</span></div>
       <p className="match-competition"><BroadcastEmblem emblem={broadcast.emblem} /><span>{getCompetition(match.competition)?.names[locale] ?? match.competition}</span></p>
       <p className="match-stage">{copy.stages[match.stage]}</p>
       <div className="match-scoreboard"><span data-kit={broadcast.team.kit} style={kitStyle(broadcast.team)}>{team(match.team)}<b>{name(match.team)}</b></span><strong data-updated={scoreChanged || undefined}><LedScore score={result?.score ?? match.score} previous={result ? match.score : undefined} /></strong><span data-kit={broadcast.opponent.kit} style={kitStyle(broadcast.opponent)}>{team(match.opponent)}<b>{name(match.opponent)}</b></span></div>
-      <p className="match-minute">{result ? copy.fullTime : `${match.minute}′`} <span>•</span> {match.scene === "shootout" ? copy.penalties : copy.stages[match.stage]}</p>
+      <p className="match-minute">{result ? copy.fullTime : `${match.minute}′`} <span>•</span> {isShootout(match.scene) ? match.kick ? `${copy.penalties} · ${{ pt: `${match.kick}ª cobrança`, en: `kick ${match.kick}`, es: `${match.kick}º lanzamiento` }[locale]}` : copy.penalties : copy.stages[match.stage]}</p>
       <i className="match-scarf" data-kit={broadcast.team.kit} style={kitStyle(broadcast.team)} aria-hidden="true" />
+      {stake && stakeText ? <p className="match-stake" data-goal={stake.goal}><span className="match-stake-label">{t("career.play.stakeLabel")}</span><span>{t(stake.goal === "beat" ? "career.play.stakeBeat" : "career.play.stakeMatch", { holder: stakeText.holder, name: stakeText.name, mark: stake.mark, after: stake.after })}</span></p> : null}
     </div> : <p className="eyebrow">{decision.year} · {decision.age}{decision.kind === "promise" ? ` · ${copy.active}` : ""}</p>}
-    {result ? <><h2 ref={title} tabIndex={-1} id={`decisao-${decision.id}`} className="sr-only">{flow.outcome}</h2>{selected?.kind === "drama" && match ? <div className="match-selected-choice"><span className="eyebrow">{decisionFeedback(locale).selected}</span><button type="button" className="option drama-option" aria-pressed="true" disabled><span className="option-main"><span className="option-title">{matchOptionText(locale, match, selected.action, career.player.position)}</span></span><Check size={18} aria-hidden="true" /></button></div> : null}<MatchOutcome result={result} position={career.player.position} onContinue={onContinue ?? (() => {})} /></> : <><div className="drama-heading"><h2 ref={title} tabIndex={-1} id={`decisao-${decision.id}`} className="decision-title outline-none">{text.title}</h2><p className="decision-body">{text.body}</p></div>
+    {result ? <><h2 ref={title} tabIndex={-1} id={`decisao-${decision.id}`} className="sr-only">{flow.outcome}</h2>{selected?.kind === "drama" && match ? <div className="match-selected-choice"><span className="eyebrow">{decisionFeedback(locale).selected}</span><button type="button" className="option drama-option" aria-pressed="true" disabled><span className="option-main"><span className="option-title">{matchOptionText(locale, match, selected.action, career.player.position)}</span></span><Check size={18} aria-hidden="true" /></button></div> : null}<MatchOutcome result={result} position={career.player.position} onContinue={onContinue ?? (() => {})} /></> : <><div className="drama-heading">{text.kicker ? <p className="drama-kicker">{text.kicker}</p> : null}<h2 ref={title} tabIndex={-1} id={`decisao-${decision.id}`} className="decision-title outline-none">{text.title}</h2><p className="decision-body">{text.body}</p></div>
     <div className="decision-options drama-options" data-layout={decision.kind === "veteran" ? "grid" : undefined} role="group" aria-labelledby={`decisao-${decision.id}`}>
       {decision.options.map((option) => {
         if (option.kind !== "drama") return null;
@@ -52,11 +58,13 @@ export function DramaDecisionPanel({ career, onChoose, original, result, onConti
         const chips = path ? veteranChips(locale, option.action as VeteranPath, career.player.position === "gk") : null;
         const promise = decision.promises?.find(item => item.level === option.action);
         const matchLabel = match ? matchOptionText(locale, match, option.action, career.player.position) : null;
-        return <button type="button" className="option drama-option" data-path={path ? option.action : undefined} key={option.id} data-original={original === option.id ? t("career.originalChoice") : undefined} title={path ? dramaHint(locale, option.action, career.player.position) : undefined} onClick={() => { feedback("confirm"); onChoose(option.id); }}>
+        return <button type="button" className="option drama-option" data-path={path ? option.action : undefined} key={option.id} data-original={original === option.id ? originalLabel ?? t("career.originalChoice") : undefined} title={path ? dramaHint(locale, option.action, career.player.position) : undefined} onClick={() => { feedback("confirm"); onChoose(option.id); }}>
           <span className="option-icon"><Icon size={18} aria-hidden="true" /></span><span className="option-main"><span className="option-title">{promise ? dramaAction(locale, option.action) : matchLabel ?? dramaOption(locale, decision, option, career.player.position)}</span>{promise ? <span className="promise-option-target">{promise.target}+ {copy[promise.metric]}</span> : null}{chips ? <span className="veteran-effects"><Chip tone="good" glyph size="sm">{chips[0]}</Chip><Chip tone="bad" glyph size="sm">{chips[1]}</Chip><span className="sr-only">{dramaHint(locale, option.action, career.player.position)}</span></span> : promise ? <span className="promise-option-effects">{promiseChips(locale, promise.level).map((chip) => <Chip key={chip.text} tone={chip.tone} glyph={chip.tone !== "neutral"} size="sm">{chip.text}</Chip>)}</span> : <span className="drama-hint">{match ? matchOptionHint(locale, match, option.action, career.player.position) : dramaHint(locale, option.action, career.player.position)}</span>}</span>{!path ? <ArrowUpRight size={16} aria-hidden="true" /> : null}
         </button>;
       })}
     </div>
     </>}
+    {/* Jogo de liga (D96): a tabela da rodada. Uma peça só do lance ao resultado, presa ao pé do card (D98). */}
+    {match?.stage === "league" ? <LeagueLive career={career} match={match} decision={decision.id} score={result?.score ?? null} /> : null}
   </section>;
 }

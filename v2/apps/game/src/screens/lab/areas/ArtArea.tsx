@@ -33,7 +33,7 @@ const TROPHY_GROUPS: ReadonlyArray<{ key: TrophyGroup; kinds: readonly Competiti
   { key: "cups", kinds: ["cup", "leagueCup", "superCup"] },
   { key: "continental", kinds: ["continental1", "continental2", "continental3", "continentalSuper"] },
   { key: "world", kinds: ["intercontinental", "clubWorldCup"] },
-  { key: "nations", kinds: ["nationsCup", "worldCup"] },
+  { key: "nations", kinds: ["nationsCup", "nationsLeague", "worldCup"] },
 ];
 
 const BADGE_LADDER = [10, 14, 28, 96] as const;

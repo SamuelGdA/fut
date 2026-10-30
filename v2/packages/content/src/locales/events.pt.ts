@@ -25,21 +25,6 @@ export const eventsPt = {
       }
     }
   },
-  "silentWeek": {
-    "title": "Uma semana sem holofotes",
-    "body": "A agenda está cheia. Você escolhe entre descanso e presença na imprensa.",
-    "options": {
-      "silence": {
-        "label": "Desligar o telefone",
-        "result": "Risco de lesão -20% no período. Torcida -3."
-      },
-      "press": {
-        "label": "Conversar com a torcida",
-        "result": "Torcida +3. Evolução -5% no período."
-      }
-    }
-  }
-,
   extraTraining: {
     title: "Treino extra",
     body: "O preparador físico propõe um programa à parte: academia antes do sol nascer e finalização depois do treino do time.",
@@ -273,7 +258,7 @@ export const eventsPt = {
   },
   agentUltimatum: {
     title: "Ultimato do empresário",
-    body: "O seu empresário tem a proposta de um clube maior e ameaça romper se você não forçar a saída.",
+    body: "O seu empresário tem a proposta de um clube melhor e ameaça romper se você não forçar a saída.",
     options: {
       force: {
         label: "Forçar a saída",
@@ -316,8 +301,8 @@ export const eventsPt = {
     options: {
       change: {
         label: "Trocar de empresário",
-        success: "Os contatos dele aquecem o mercado. Mais clubes perguntam por você.",
-        failure: "Muita promessa, pouco resultado. O mercado esfria.",
+        success: "Os contatos dele aquecem o mercado. Na próxima decisão, a janela abre com propostas melhores que o normal.",
+        failure: "Muita promessa, pouco resultado. Na próxima decisão, a janela abre com propostas piores que o normal.",
       },
       keep: { label: "Manter o atual", result: "Você fica com quem está ao seu lado desde o começo." },
     },
@@ -373,12 +358,8 @@ export const eventsPt = {
     title: "Briga com a diretoria",
     body: "Você criticou a diretoria em público, e o presidente exige retratação.",
     options: {
-      standGround: {
-        label: "Não recuar",
-        success: "A torcida apoia você, e a diretoria recua.",
-        failure: "A diretoria não perdoa. Você é vendido, e o clube fecha as portas para sempre.",
-      },
-      apologize: { label: "Retratar-se", result: "Você recua. Fica um arranhão na imagem." },
+      standGround: { label: "Não recuar", result: "Você não recua. A diretoria vende você, e o clube fecha as portas para sempre." },
+      apologize: { label: "Retratar-se", result: "Você recua em público, e a torcida não perdoa a fraqueza." },
     },
   },
   rowFans: {
@@ -406,6 +387,7 @@ export const eventsPt = {
     body: "O clube quer eternizar a sua história e deixa você escolher o número da camisa.",
     options: {
       number: { label: "Vestir a {number}", result: "A {number} agora conta a sua história no clube." },
+      keep: { label: "Manter o número", result: "Você segue com o número de sempre, sem cobrança nova, e a torcida aplaude a fidelidade." },
     },
   },
   seriousInjury: {

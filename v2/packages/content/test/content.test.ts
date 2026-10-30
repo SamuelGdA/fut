@@ -25,17 +25,10 @@ import {
   effectTone,
   seasonCovers,
   COUNTRY_CULTURES,
-  BIO_TEXTS,
-  bioFacts,
-  biography,
-  CHAPTER_CAPS,
   careerHeadlines,
-  displayName,
   HEADLINE_KEYS,
   HEADLINE_TEXTS,
   HEADLINES_MAX,
-  THEME_IDS,
-  THEMES,
   careerRecords,
   compareRecord,
   decisionText,
@@ -54,6 +47,13 @@ import {
   NAME_POOLS,
   optionLabel,
   walkMessages,
+  ACHIEVEMENT_RARITIES,
+  achievementRarity,
+  RECORD_TIERS,
+  recordChases,
+  liveRecordChases,
+  recordsReachedIn,
+  ACHIEVEMENTS,
 } from "../src";
 
 function entries(tree: unknown): Map<string, string> {
@@ -71,7 +71,6 @@ const DICTIONARIES = [
   ["capa", COVER_TEXTS],
   ["recordes", RECORD_TEXTS],
   ["manchetes", HEADLINE_TEXTS],
-  ["biografia", BIO_TEXTS],
   ["conquistas", ACHIEVEMENT_TEXTS],
   ["desafio", CHALLENGE_TEXTS],
 ] as const;
@@ -173,7 +172,8 @@ describe("textos dos eventos contra o catálogo", () => {
       for (const option of event.options) {
         for (const effect of [...option.success, ...(option.failure ?? [])]) {
           const text = describeEffect(locale, effect, target);
-          if (effect.kind === "story") {
+          // A mídia do contrato de chuteira fica fora da mensagem por pedido do usuário (D90).
+          if (effect.kind === "fame") {
             expect(text).toBeNull();
           } else {
             expect(text, `${event.id}.${option.id}.${effect.kind}`).toBeTruthy();
@@ -325,6 +325,9 @@ describe("capa do jornal", () => {
     "goalsText",
     "assistsText",
     "cleanSheetsText",
+    "careerGamesText",
+    "careerTitlesText",
+    "careerProductionText",
     "productionText",
     "record",
     "holder",
@@ -492,56 +495,114 @@ describe("manchetes da carreira (GDD 21.1)", () => {
   });
 });
 
-describe("biografia (GDD 25)", () => {
-  it("cada tema tem quatro redações em cada idioma, e não sobra texto de tema que não existe", () => {
+describe("D91: o contrato de chuteira do goleiro é de luva", () => {
+  it("título, corpo e resultado falam de luva para o goleiro e de chuteira para os outros", () => {
+    const keeper = createCareer(setup(3));
+    const striker = createCareer(setup(0));
+    expect(keeper.player.position).toBe("gk");
+    const decision = { id: 1, kind: "event" as const, age: 20, year: 2030, options: [], event: "bootDeal", reason: null };
+    const words = { pt: ["luva", "chuteira"], en: ["glove", "boot"], es: ["guante", "botin"] } as const;
+    for (const locale of ["pt", "en", "es"] as const) {
+      const own = decisionText(locale, keeper, decision);
+      expect(`${own.title} ${own.body}`.toLowerCase().normalize("NFD").replace(/\p{M}/gu, "")).toContain(words[locale][0]);
+      const other = decisionText(locale, striker, decision);
+      expect(`${other.title} ${other.body}`.toLowerCase().normalize("NFD").replace(/\p{M}/gu, "")).toContain(words[locale][1]);
+    }
+  });
+});
+
+describe("D94: raridade, recordes à vista e capa de recorde", () => {
+  it("toda conquista tem raridade e todo recorde tem faixa", () => {
+    for (const item of ACHIEVEMENTS) expect(ACHIEVEMENT_RARITIES).toContain(achievementRarity(item.id));
+    for (const record of REAL_RECORDS) expect(RECORD_TIERS).toContain(record.tier);
+    expect(achievementRarity("record:ballonDor")).toBe("legendary");
+    expect(achievementRarity("title:worldcup")).toBe("epic");
+  });
+
+  it("recordes à vista: a partir de 80% para igualar, e 1 para superar depois de igualar", () => {
+    const career = autoplay(createCareer(setup(0)), "ambitious");
+    const season = career.history.at(-1)!;
+    const goals = (value: number) => [...career.history.slice(0, -1), { ...season, production: { ...season.production, goals: value } }];
+    const near = recordChases(goals(70)).find((chase) => chase.result.record.id === "seasonGoals");
+    expect(near).toMatchObject({ goal: "match", missing: 3 });
+    expect(recordChases(goals(73)).find((chase) => chase.result.record.id === "seasonGoals")).toMatchObject({ goal: "beat", missing: 1 });
+    expect(recordChases(goals(74)).find((chase) => chase.result.record.id === "seasonGoals")).toBeUndefined();
+  });
+
+  it("igualar ou superar um recorde abre o jornal antes de qualquer taça, com o selo", () => {
+    const career = autoplay(createCareer(setup(0)), "ambitious");
+    const last = career.history.length - 1;
+    const season = { ...career.history[last]!, titles: ["worldcup"], production: { ...career.history[last]!.production, goals: 73 } };
+    const history = [...career.history.slice(0, last).map((record) => ({ ...record, production: { ...record.production, goals: Math.min(record.production.goals, 40) } })), season];
+    // Carreira em andamento: na encerrada a última capa é a despedida (D95).
+    const covers = seasonCovers("pt", { ...career, history, end: null });
+    expect(covers.at(-1)?.angle).toBe("recordMatch");
+    expect(covers.at(-1)?.record).toMatchObject({ beaten: false, mark: 73, value: 73 });
+    expect(recordsReachedIn(history, last).map((result) => result.record.id)).toContain("seasonGoals");
+  });
+
+  it("D101: com dois ou mais recordes no ano, o jornal abre com o superado de mais valor", () => {
+    const career = autoplay(createCareer(setup(0)), "ambitious");
+    const last = career.history.length - 1;
+    // Uma temporada de 1.000 gols passa o recorde da temporada (raro) e o da carreira (épico) no mesmo ano.
+    const history = [...career.history.slice(0, last).map((record) => ({ ...record, production: { ...record.production, goals: 0 }, national: { ...record.national, goals: 0 } })), { ...career.history[last]!, production: { ...career.history[last]!.production, goals: 1000 } }];
+    const reached = recordsReachedIn(history, last);
+    const ids = reached.map((result) => result.record.id);
+    expect(ids).toEqual(expect.arrayContaining(["seasonGoals", "careerGoals"]));
+    expect(reached[0]?.record.id).toBe("careerGoals");
+    expect(reached[0]?.beatenYear).toBe(history[last]!.year);
+    const tiers = reached.filter((result) => result.beatenYear === history[last]!.year).map((result) => RECORD_TIERS.indexOf(result.record.tier));
+    expect(tiers).toEqual([...tiers].sort((a, b) => b - a));
+    const covers = seasonCovers("pt", { ...career, history, end: null });
+    expect(covers.at(-1)?.record).toMatchObject({ beaten: true, mark: 979, more: reached.length - 1 });
+  });
+});
+
+describe("D95: despedida no jornal e recordes da posição", () => {
+  it("a última capa de uma carreira encerrada é sempre a despedida, e o selo de recorde fica", () => {
+    const career = autoplay(createCareer(setup(0)), "ambitious");
+    expect(career.end).not.toBeNull();
     for (const locale of LOCALES) {
-      const themes = BIO_TEXTS[locale].themes;
-      expect(Object.keys(themes).sort()).toEqual([...THEME_IDS].sort());
-      for (const id of THEME_IDS) expect(themes[id], `${locale} ${id}`).toHaveLength(4);
+      const covers = seasonCovers(locale, career);
+      expect(covers.at(-1)?.angle).toBe("farewell");
+      expect(covers.slice(0, -1).some((cover) => cover.angle === "farewell")).toBe(false);
+      expect(covers.at(-1)?.support).not.toMatch(/[{}]/);
     }
+    const last = career.history.length - 1;
+    const season = { ...career.history[last]!, production: { ...career.history[last]!.production, goals: 73 } };
+    const history = [...career.history.slice(0, last).map((record) => ({ ...record, production: { ...record.production, goals: Math.min(record.production.goals, 40) } })), season];
+    const cover = seasonCovers("pt", { ...career, history }).at(-1);
+    expect(cover?.angle).toBe("farewell");
+    expect(cover?.record).toMatchObject({ mark: 73, value: 73 });
+    expect(seasonCovers("pt", { ...career, end: null }).some((item) => item.angle === "farewell")).toBe(false);
   });
 
-  it("carreiras inteiras nos três idiomas: capítulos no limite, sem marcador sobrando, um tema por grupo, nenhuma frase repetida", () => {
-    const lengths: number[] = [];
-    for (let index = 0; index < 30; index += 1) {
-      const career = autoplay(createCareer(setup(400 + index)), (["ambitious", "balanced", "loyal", "random"] as const)[index % 4] ?? "balanced");
-      for (const locale of LOCALES) {
-        const bio = biography(locale, career);
-        expect(bio.chapters.length, `${career.setup.seed} ${locale}`).toBeGreaterThanOrEqual(3);
-        const lines = bio.chapters.flatMap((chapter) => chapter.lines);
-        for (const chapter of bio.chapters) {
-          expect(chapter.lines.length).toBeLessThanOrEqual(CHAPTER_CAPS[chapter.id]);
-          expect(chapter.title.length).toBeGreaterThan(2);
-        }
-        for (const line of lines) {
-          expect(line, `${locale}: ${line}`).not.toMatch(/[{}]/);
-          expect(line, `${locale}: ${line}`).not.toMatch(/[–—]/);
-          expect(line.charAt(0), line).toBe(line.charAt(0).toLocaleUpperCase(locale));
-        }
-        expect(new Set(lines).size).toBe(lines.length);
-        const groups = bio.themes.map((id) => THEMES[id].group);
-        expect(new Set(groups).size).toBe(groups.length);
-        // O primeiro clube abre a história.
-        expect(bio.themes[0]).toBe("firstClub");
-        // "Os últimos capítulos" só para a passagem curta que fecha a carreira depois do auge.
-        if (bio.themes.includes("lastClub")) {
-          const facts = bioFacts(career);
-          const last = facts.stints[facts.stints.length - 1];
-          expect(last && facts.peak && last.fromAge > facts.peak.age && last.seasons * 2 < facts.totals.seasons).toBe(true);
-        }
-        lengths.push(lines.length);
-      }
-    }
-    // Carreiras de verdade rendem um artigo, não um parágrafo.
-    expect(Math.min(...lengths)).toBeGreaterThanOrEqual(7);
+  it("jogos sem sofrer gol é recorde de goleiro: o atacante nunca o vê à vista nem o alcança", () => {
+    const career = autoplay(createCareer(setup(0)), "ambitious");
+    const walls = career.history.map((record) => ({ ...record, production: { ...record.production, lines: [{ competition: "league:laliga", kind: "league" as const, games: 38, goals: 0, assists: 0, cleanSheets: 24 }] } }));
+    const striker = walls.map((record) => ({ ...record, position: "st" as const }));
+    const keeper = walls.map((record) => ({ ...record, position: "gk" as const }));
+    expect(recordChases(striker).some((chase) => chase.result.record.id === "seasonCleanSheets")).toBe(false);
+    expect(recordChases(keeper).find((chase) => chase.result.record.id === "seasonCleanSheets")).toMatchObject({ goal: "match", missing: 2 });
   });
+});
 
-  it("a mesma carreira conta a mesma história; o sobrenome sai em caixa de nome", () => {
-    const career = autoplay(createCareer({ ...setup(450), identity: { ...setup(450).identity, surname: "DA SILVA-ÁVILA" } }), "ambitious");
-    expect(biography("pt", career)).toEqual(biography("pt", career));
-    expect(displayName("DA SILVA-ÁVILA", "pt")).toBe("Da Silva-Ávila");
-    expect(displayName("O'NEILL", "en")).toBe("O'Neill");
-    const text = biography("pt", career).chapters.flatMap((chapter) => chapter.lines).join(" ");
-    expect(text).not.toContain("DA SILVA-ÁVILA");
+describe("D96: recordes à vista só enquanto a próxima temporada pode mudar", () => {
+  it("marca de uma temporada sai da vista, a soma da carreira fica; o resumo continua vendo tudo", () => {
+    const career = autoplay(createCareer(setup(0)), "ambitious");
+    const season = career.history.at(-1)!;
+    const history = [...career.history.slice(0, -1), { ...season, production: { ...season.production, goals: 70 } }];
+    expect(recordChases(history).some((chase) => chase.result.record.id === "seasonGoals")).toBe(true);
+    expect(liveRecordChases(history).some((chase) => chase.result.record.id === "seasonGoals")).toBe(false);
+    for (const chase of liveRecordChases(history)) expect(chase.result.record.measure).not.toBe("best");
+  });
+  it("sequência quebrada não está à vista; a que corre conta o tamanho atual", () => {
+    const career = autoplay(createCareer(setup(0)), "ambitious");
+    const base = career.history.slice(0, 6).map((record) => ({ ...record, titles: [] as string[] }));
+    const ucl = (on: boolean) => (on ? ["cont1:UEFA"] : []);
+    const broken = base.map((record, index) => ({ ...record, titles: ucl(index < 4) }));
+    const running = base.map((record, index) => ({ ...record, titles: ucl(index >= 2) }));
+    expect(liveRecordChases(broken).some((chase) => chase.result.record.id === "primaryStreak")).toBe(false);
+    expect(liveRecordChases(running).find((chase) => chase.result.record.id === "primaryStreak")).toMatchObject({ goal: "match", missing: 1 });
   });
 });

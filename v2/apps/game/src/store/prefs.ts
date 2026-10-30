@@ -28,6 +28,10 @@ export interface PrefsData {
   pace: Pace;
   difficulty: Difficulty;
   seasonDetails: boolean;
+  /** D99: o resultado do lance segue sozinho para a próxima decisão. Desligado, só com Continuar. */
+  autoAdvance: boolean;
+  /** D108: já começou uma carreira do Craque neste aparelho (a primeira nasce com talento de Promissor para cima). */
+  startedCareer: boolean;
 }
 
 export const DEFAULT_PREFS: Readonly<PrefsData> = {
@@ -40,6 +44,8 @@ export const DEFAULT_PREFS: Readonly<PrefsData> = {
   pace: "intense",
   difficulty: "normal",
   seasonDetails: false,
+  autoAdvance: true,
+  startedCareer: false,
 };
 
 /**
@@ -59,6 +65,8 @@ export function sanitizePrefs(input: unknown): PrefsData {
     pace: oneOf(source["pace"], PACES, DEFAULT_PREFS.pace),
     difficulty: oneOf(source["difficulty"], DIFFICULTIES, DEFAULT_PREFS.difficulty),
     seasonDetails: bool(source["seasonDetails"], DEFAULT_PREFS.seasonDetails),
+    autoAdvance: bool(source["autoAdvance"], DEFAULT_PREFS.autoAdvance),
+    startedCareer: bool(source["startedCareer"], DEFAULT_PREFS.startedCareer),
   };
 }
 
@@ -73,6 +81,8 @@ export interface PrefsActions {
   setPace(pace: Pace): void;
   setDifficulty(difficulty: Difficulty): void;
   setSeasonDetails(open: boolean): void;
+  setAutoAdvance(on: boolean): void;
+  markCareerStarted(): void;
 }
 
 export type PrefsState = PrefsData & PrefsActions;
@@ -88,6 +98,8 @@ function pickData(state: PrefsState): PrefsData {
     pace: state.pace,
     difficulty: state.difficulty,
     seasonDetails: state.seasonDetails,
+    autoAdvance: state.autoAdvance,
+    startedCareer: state.startedCareer,
   };
 }
 
@@ -107,6 +119,8 @@ export const usePrefs = create<PrefsState>()(
       setPace: (pace) => set({ pace }),
       setDifficulty: (difficulty) => set({ difficulty }),
       setSeasonDetails: (seasonDetails) => set({ seasonDetails }),
+      setAutoAdvance: (autoAdvance) => set({ autoAdvance }),
+      markCareerStarted: () => set({ startedCareer: true }),
     }),
     {
       name: STORAGE_KEYS.prefs,

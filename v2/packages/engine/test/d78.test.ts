@@ -60,8 +60,8 @@ describe("D78: calendário e modo rápido", () => {
     expect(total).toBeGreaterThan(10); expect(secondYear).toBeGreaterThan(2);
   });
 
-  it("53 contextos cobrem todas as posições e não transformam cobertura defensiva em assistência", () => {
-    expect(new Set(POSITIONS.flatMap(p => matchScenes(p, true))).size).toBe(53);
+  it("55 contextos cobrem todas as posições e não transformam cobertura defensiva em assistência", () => {
+    expect(new Set(POSITIONS.flatMap(p => matchScenes(p, true))).size).toBe(55);
     for (const position of POSITIONS) expect(matchScenes(position, false).length).toBeGreaterThanOrEqual(8);
     expect(matchActionKind("cb", { ...match, scene: "defensiveHeader" }, "team")).toBe("tackle");
     expect(matchActionKind("gk", { ...match, scene: "lowCross" }, "bold")).toBe("save");

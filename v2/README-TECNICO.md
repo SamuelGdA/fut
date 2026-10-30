@@ -1,5 +1,5 @@
 # Técnico: a carreira de treinador do Futeiros
-> **Versão atual D83.** Técnico `1.9.0`; Craque `2.0.0-m23`. As decisões de partida (com as transmissões por competição e time da D83), promessa, reinvenção e feedback de resultado pertencem somente ao Craque; o sistema de rival pessoal foi removido. O Craque preserva o espaço do card durante a saída no celular e oferece setas no cabeçalho do jornal ampliado. `Sheet` aceita ações opcionais no cabeçalho, sem alterar regras do Técnico. Para orientação inicial e fórmulas atuais do Craque, consulte o resumo no início do README principal. As revisões ao fim deste documento prevalecem sobre as notas históricas de animações e ferramentas Windows.
+> **Versão atual D108.** Técnico `1.10.0` (D108: Portugal entra no mundo do treinador); Craque `2.0.0-m39`. As decisões de partida (com as transmissões por competição e time da D83), promessa, reinvenção e feedback de resultado pertencem somente ao Craque; o sistema de rival pessoal foi removido. O Craque preserva o espaço do card durante a saída no celular e oferece setas no cabeçalho do jornal ampliado. `Sheet` aceita ações opcionais no cabeçalho, sem alterar regras do Técnico. Para orientação inicial e fórmulas atuais do Craque, consulte o resumo no início do README principal. As revisões ao fim deste documento prevalecem sobre as notas históricas de animações e ferramentas Windows.
 >
 > **Revisão D63 (12/10/2026).** Craque `2.0.0-m10`; Técnico `1.4.0`.
 > A última carreira do Técnico em andamento é retomável neste aparelho por replay de
@@ -63,11 +63,11 @@ identidade ──► 3 propostas ──► etapa (até 3 ações + tática) ─�
 ```
 
 1. **Identidade.** Nome (até 16 letras), país de origem, ritmo e aparência de
-   terno. Só os 15 países com segunda divisão no jogo entram (ARG, BOL, BRA,
-   CHI, COL, ECU, ENG, ESP, FRA, GER, ITA, PAR, PER, URU e VEN); México e
-   Estados Unidos ficam de fora porque não têm segunda divisão (D53). Os dez
-   países cuja segunda divisão foi completada com jogadores gerados levam a
-   marca ◆.
+   terno. Só os 16 países com segunda divisão no jogo entram (ARG, BOL, BRA,
+   CHI, COL, ECU, ENG, ESP, FRA, GER, ITA, PAR, PER, POR, URU e VEN; Portugal desde a D108); México e
+   Estados Unidos ficam de fora porque não têm segunda divisão (D53). Os onze
+   países cuja segunda divisão foi completada com jogadores gerados (Portugal
+   entre eles, D108) levam a marca ◆.
 2. **Propostas iniciais.** Três sorteios independentes: cada um tira 95%
    segunda divisão e 5% primeira, entre os clubes do seu país, sem repetir
    clube. Em média, 14,3% das carreiras recebem pelo menos uma proposta de
@@ -502,9 +502,9 @@ e determinística, por camadas, nesta ordem (D52):
 - **Teto inicial**: 30 jogadores acima de 21 anos por clube; os cortados vão
   para os livres.
 
-Resultado (`packages/world/data/squads/relatorio.md`): **12.609 jogadores em 489
-clubes**, 8.415 do FC 27, 818 do eFootball, 133 do conhecimento e 3.243
-gerados.
+Resultado (`packages/world/data/squads/relatorio.md`): **13.496 jogadores em 525
+clubes**, 8.899 do FC 27, 818 do eFootball, 133 do conhecimento e 3.646
+gerados (D108: com Portugal).
 
 | Grupo | Jogadores reais |
 |---|---|
@@ -874,7 +874,7 @@ regionais diferenciam Américas de Ásia; nove referências americanas
 complementam a elite, e a região futura usa fluxo separado (85% Europa;
 dos demais, 80% Américas). Bônus, idade de auge e aposentadoria são projeções.
 
-A referência de classificação dos 17 países, fontes e simplificações fica em
+A referência de classificação dos 18 países, fontes e simplificações fica em
 CLASSIFICACOES.md. Duas vagas UEFA por desempenho anual médio são calculadas
 no mundo simulado; Chile inclui Copa da Liga da elite e playoff de indicação.
 Mundial do Craque também tem 32 participantes (22 representados, nove genéricos

@@ -20,10 +20,10 @@ export type CoachModeChoice = (typeof COACH_MODES)[number];
  * Países com segunda divisão no jogo (a mesma lista do motor, D53). Repetida
  * aqui para a tela leve não carregar o motor do Técnico; um teste confere.
  */
-export const COACH_NATIONS: readonly CountryCode[] = ["ARG", "BOL", "BRA", "CHI", "COL", "ECU", "ENG", "ESP", "FRA", "GER", "ITA", "PAR", "PER", "URU", "VEN"];
+export const COACH_NATIONS: readonly CountryCode[] = ["ARG", "BOL", "BRA", "CHI", "COL", "ECU", "ENG", "ESP", "FRA", "GER", "ITA", "PAR", "PER", "POR", "URU", "VEN"];
 
 /** Países cuja segunda divisão tem poucos jogadores reais (completada com gerados). */
-export const COMPLETED_SECOND_DIVISIONS: ReadonlySet<CountryCode> = new Set(["ARG", "BOL", "BRA", "CHI", "COL", "ECU", "PAR", "PER", "URU", "VEN"]);
+export const COMPLETED_SECOND_DIVISIONS: ReadonlySet<CountryCode> = new Set(["ARG", "BOL", "BRA", "CHI", "COL", "ECU", "PAR", "PER", "POR", "URU", "VEN"]);
 
 export interface CoachDraft {
   name: string;

@@ -1,8 +1,8 @@
 import { PromiseSummary, SeasonDrama } from "./SeasonDrama";
 import { useReducedMotion } from "../../lib/useReducedMotion";
-import { competitionName, decisionText, describeEffect, effectTone, eventOutcomeText, missionGoal, missionName } from "@craque/content";
+import { competitionName, decisionText, describeEffect, effectTone, eventOutcomeText, liveRecordChases, missionGoal, missionName, recordText } from "@craque/content";
 import { type Career, isGoalkeeper, leagueEntry, movementOf, type SeasonRecord } from "@craque/engine";
-import { getClub, getLeague } from "@craque/world";
+import { AWARDS, getClub, getCompetition, getCountry, getLeague, titleImportance } from "@craque/world";
 import { m } from "motion/react";
 import { ChevronDown, X } from "lucide-react";
 import { type CSSProperties, type ReactNode, useEffect, useRef, useState } from "react";
@@ -22,7 +22,7 @@ import { Sheet } from "../../ui/Overlays";
 import { cn } from "../../ui/cn";
 import { Confetti } from "../../ui/Confetti";
 import { CountUp } from "../../ui/CountUp";
-import { Crest, LeagueBadge } from "../../ui/Media";
+import { AwardArt, Crest, Flag, LeagueBadge, TrophyArt } from "../../ui/Media";
 import { Chip, Delta, Glyph } from "../../ui/Signals";
 import { TONE_GLYPH, type Tone } from "../../ui/tone";
 
@@ -113,6 +113,7 @@ export function PlayFeed({ career, play, reviewing, onCloseReview, compact = fal
         key={`${play.id}-${page.index}`}
         page={page}
         record={record}
+        history={career.history.slice(0, page.index + 1)}
         animate={animate}
         onDetails={full ? undefined : () => setOpened(play.id)}
         tabs={
@@ -287,6 +288,8 @@ function EventLine({ page, animate }: { page: EventPage; animate: boolean }) {
 interface SeasonLineProps {
   page: SeasonPage;
   record: SeasonRecord;
+  /** O histórico até esta temporada, para os recordes à vista (D94). */
+  history: readonly SeasonRecord[];
   animate: boolean;
   tabs: ReactNode;
   review: ReactNode;
@@ -294,7 +297,7 @@ interface SeasonLineProps {
 }
 
 /** Uma temporada jogada: quem, onde, como terminou, os números e o que mudou no jogador. */
-function SeasonLine({ page, record, animate, tabs, review, onDetails }: SeasonLineProps) {
+function SeasonLine({ page, record, history, animate, tabs, review, onDetails }: SeasonLineProps) {
   const { t, c, locale, ordinal, number } = useT();
   const detailsOpen = usePrefs((state) => state.seasonDetails);
   const club = getClub(record.club);
@@ -340,6 +343,7 @@ function SeasonLine({ page, record, animate, tabs, review, onDetails }: SeasonLi
       text: crown.award === "topScorer" ? t("career.play.topScorer", { competition: name }) : t("career.play.bestPlayer", { competition: name }),
     });
   }
+  if(record.breakout)notes.push({key:"breakout",tone:"glory",text:craqueRevision(locale,"breakout")});
   if(record.breakthrough)notes.push({key:"breakthrough",tone:"glory",text:craqueRevision(locale,"lateBloom")});
   if (record.injury) notes.push({ key: "injury", tone: "bad", text: `${c("stats.injury", { injury: c(`injuries.${record.injury.type}`) })} · −${record.injury.lostGames} ${c("stats.games")}` });
   if (!keeper && record.national.games > 0) {
@@ -421,6 +425,8 @@ function SeasonLine({ page, record, animate, tabs, review, onDetails }: SeasonLi
       ) : null}
 
       {onDetails ? <button type="button" className="play-details-button" onClick={onDetails}>{craqueRevision(locale, "details")} <ChevronDown size={13} aria-hidden="true" /></button> : null}
+      {!onDetails ? <SeasonCompetitions record={record} /> : null}
+      {!onDetails ? <RecordWatch history={history} /> : null}
       {!onDetails && (deltas.length > 0 || notes.length > 0) ? (
         <details className="play-season-details" open={detailsOpen} onToggle={(event) => { if (event.currentTarget.open !== detailsOpen) usePrefs.getState().setSeasonDetails(event.currentTarget.open); }}><summary>{craqueRevision(locale, "details")}</summary><m.ul className="play-chips play-notes" aria-label={t("reveal.attributes")} {...enter(0.2)}>
           {deltas.map((item) => (
@@ -443,6 +449,72 @@ function SeasonLine({ page, record, animate, tabs, review, onDetails }: SeasonLi
 
     </div>
   );
+}
+
+/**
+ * Onde o clube e a seleção terminaram cada competição do ano (D90). Só aparece
+ * nos detalhes da temporada: a liga pela posição, os mata-matas pela fase.
+ */
+/** D107: até que colocação a Bola de Ouro aparece nas competições da temporada. */
+const BALLON_SHOWN = 10;
+
+function SeasonCompetitions({ record }: { record: SeasonRecord }) {
+  const { t, ordinal, locale } = useT();
+  const weight = (kind: Parameters<typeof titleImportance>[0]) => kind === "league" || kind === "second" ? 10 : titleImportance(kind);
+  const sorted = (entries: SeasonRecord["competitions"]) => [...entries].sort((a, b) => weight(b.kind) - weight(a.kind));
+  const club = sorted(record.competitions);
+  // Torneio de seleção só aparece se ele jogou por ela no ano (D95): sem convocação, a Copa não é dele.
+  const national = record.national.games > 0 ? sorted(record.national.competitions) : [];
+  // D107: entre os dez da Bola de Ouro, a colocação aparece como mais uma linha da temporada.
+  const ballonRank = record.awards.ballonDor.playerRank;
+  const ballon = ballonRank !== null && ballonRank <= BALLON_SHOWN ? ballonRank : null;
+  if (!club.length && !national.length && ballon === null) return null;
+  const nation = getCountry(record.nationality);
+  const row = (entry: SeasonRecord["competitions"][number]) => {
+    const competition = getCompetition(entry.competition);
+    const place = entry.position !== null ? t("reveal.position", { position: ordinal(entry.position) }) : t(`career.nation.stage.${entry.champion ? "champion" : (entry.stage ?? "groups")}`);
+    return <li key={entry.competition} className="season-competition" data-champion={entry.champion || undefined}>
+      <span className="season-competition-art" aria-hidden="true">{competition ? <TrophyArt competition={competition} size={26} language={locale} decorative /> : null}</span>
+      <span className="season-competition-name">{competitionName(entry.competition, locale)}</span>
+      <span className="season-competition-place">{place}</span>
+    </li>;
+  };
+  return <section className="season-competitions" aria-label={t("career.play.competitions")}>
+    <h3 className="eyebrow">{t("career.play.competitions")}</h3>
+    {club.length ? <div className="season-competition-group"><p className="season-competition-owner"><Crest club={record.club} size={16} decorative />{t("career.play.clubCompetitions")}</p><ul>{club.map(row)}</ul></div> : null}
+    {national.length && nation ? <div className="season-competition-group"><p className="season-competition-owner"><Flag country={nation} language={locale} size={16} decorative />{t("career.play.nationalCompetitions")}</p><ul>{national.map(row)}</ul></div> : null}
+    {ballon !== null ? <div className="season-competition-group"><p className="season-competition-owner">{t("career.play.awardCompetitions")}</p><ul>
+      <li className="season-competition" data-champion={ballon === 1 || undefined} data-award="ballonDor">
+        <span className="season-competition-art" aria-hidden="true"><AwardArt award={AWARDS.ballonDor} size={26} language={locale} decorative /></span>
+        <span className="season-competition-name">{AWARDS.ballonDor.names[locale]}</span>
+        <span className="season-competition-place">{ballon === 1 ? t("career.play.awardWinner") : t("reveal.position", { position: ordinal(ballon) })}</span>
+      </li>
+    </ul></div> : null}
+  </section>;
+}
+
+/**
+ * Recordes à vista (D94): o que falta para igualar uma marca real (a partir de
+ * 80% dela) e, igualada, o 1 que falta para superar. Só nos detalhes, e só o
+ * que a próxima temporada ainda pode mudar (D96).
+ */
+function RecordWatch({ history }: { history: readonly SeasonRecord[] }) {
+  const { t, number, locale } = useT();
+  const chases = liveRecordChases(history).slice(0, 4);
+  if (!chases.length) return null;
+  return <section className="record-watch" aria-label={t("career.play.recordWatch")}>
+    <h3 className="eyebrow">{t("career.play.recordWatch")}</h3>
+    <ul>
+      {chases.map(({ result, missing, goal }) => {
+        const text = recordText(locale, result.record);
+        return <li key={result.record.id} data-goal={goal} data-tier={result.record.tier}>
+          <span className="record-watch-name">{text.name}</span>
+          <span className="record-watch-gap">{goal === "beat" ? t("career.play.recordBeat", { holder: text.holder, missing: number(missing) }) : t("career.play.recordMatch", { holder: text.holder, missing: number(missing), value: number(result.record.value) })}</span>
+          <span className="record-watch-bar" aria-hidden="true"><span style={{ transform: `scaleX(${Math.min(1, result.value / result.record.value)})` }} /></span>
+        </li>;
+      })}
+    </ul>
+  </section>;
 }
 
 /** O desafio no lance: missão surpresa à vista, missão cumprida, édito quebrado, temporada apagada. */

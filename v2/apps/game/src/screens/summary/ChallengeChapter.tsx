@@ -6,7 +6,7 @@ import { useHall } from "../../features/hall/store";
 import { formatChallengeDay } from "../../i18n/format";
 import { useT } from "../../i18n/useT";
 import { Chip } from "../../ui/Signals";
-import { EdictBand, MissionLine } from "../challenge/MissionViews";
+import { EdictBand, RecordTarget, MissionLine } from "../challenge/MissionViews";
 
 /**
  * O resultado do desafio no resumo (GDD 27.6): a pontuação sobre 1000, as três
@@ -62,6 +62,7 @@ export function ChallengeChapter({ career, shared }: { career: Career; shared: b
         ))}
       </div>
 
+      {status.record ? <RecordTarget id={status.record.id} mark={status.record.mark} value={status.record.value} points={status.record.points} /> : null}
       <EdictBand id={status.edict.id} state={status.edict.state} value={status.edict.value} />
 
       <dl className="grid gap-2 rounded-sm border border-line bg-panel p-4 text-sm">
@@ -73,6 +74,12 @@ export function ChallengeChapter({ career, shared }: { career: Career; shared: b
           <dt className="text-muted">{t("challenge.summary.peakBonus", { ovr: status.peakOvr })}</dt>
           <dd className="numeric font-bold">+{number(Math.round(status.peak))}</dd>
         </div>
+        {status.record ? (
+          <div className="flex justify-between gap-3" data-tone="glory">
+            <dt className="text-tone">{t("challenge.summary.recordLine")}</dt>
+            <dd className="numeric font-bold">×{number(0.75)} +{number(Math.round(status.record.points))}</dd>
+          </div>
+        ) : null}
         <div className="flex justify-between gap-3" data-tone={kept ? "good" : "bad"}>
           <dt className="text-tone">{kept ? t("challenge.summary.edictKept") : t("challenge.summary.edictBroken")}</dt>
           <dd className="numeric font-bold">×{number(kept ? 1 : 0.5)}</dd>

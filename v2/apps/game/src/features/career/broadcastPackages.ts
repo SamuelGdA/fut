@@ -81,6 +81,8 @@ export const NATION_TOURNAMENTS: Readonly<Record<string, NamedPackage & { readon
   "nations:CONCACAF": { id: "goldcup", deep: "#070604", mid: "#17120a", light: "#ffd98a", light2: "#fff3d1", floor: "#d9a521", accent: "#f2cf7a", metal: "#e9c46a", rule: ["#8a6a1c", "#f7e2a4", "#8a6a1c"], led: "#ffd36b", motif: "sweep", emblem: "cup", fusion: 0.2 },
   "nations:CAF": { id: "afcon", deep: "#050803", mid: "#101c0b", light: "#ffd23f", light2: "#3fd06a", floor: "#e0a100", accent: "#f2cf5a", metal: "#e9c46a", rule: ["#009a44", "#ffd23f", "#e03c31"], led: "#ffd23f", motif: "kente", emblem: "star", fusion: 0.2 },
   "nations:AFC": { id: "asiancup", deep: "#030a14", mid: "#0b1f3a", light: "#8fd8ff", light2: "#ffcf7a", floor: "#00a3a3", accent: "#a9dcff", metal: "#e9c46a", rule: ["#00a3a3", "#e9c46a", "#8d1b3d"], led: "#8fd8ff", motif: "lattice", emblem: "cup", fusion: 0.2 },
+  // D108: Liga das Nações, a noite europeia de seleções em azul-cobalto e prata, com faixas de liga.
+  "nationsleague:UEFA": { id: "nationsleague", deep: "#030817", mid: "#0b1a3d", light: "#a9d4ff", light2: "#eef3fb", floor: "#2b6cff", accent: "#c3defc", metal: "#e8edf7", rule: ["#2b6cff", "#eef3fb", "#2b6cff"], led: "#d5ebff", motif: "pinstripes", emblem: "starshield", fusion: 0.16 },
   "nations:OFC": { id: "ofc", deep: "#021019", mid: "#06304a", light: "#7fe3ff", light2: "#e8fbff", floor: "#00a6d6", accent: "#9be7ff", metal: "#dfe6ee", rule: ["#00a6d6", "#ffffff", "#00a6d6"], led: "#9be7ff", motif: "waves", emblem: "cup", fusion: 0.18 },
 };
 
@@ -120,6 +122,8 @@ export const LEAGUE_DNA: Readonly<Record<CountryCode, BroadcastPackage>> = {
   MEX: { deep: "#03130c", mid: "#0b3a24", light: "#ff7a7a", light2: "#ffffff", floor: "#006847", accent: "#7fe3a8", metal: "#e9edf3", rule: ["#006847", "#ffffff", "#ce1126"], led: "#5df59a", motif: "pennants", emblem: "pennant" },
   // Azul-marinho, branco e vermelho, linhas modernas.
   USA: { deep: "#050a18", mid: "#13254a", light: "#e6eeff", light2: "#ff6b7a", floor: "#0a3161", accent: "#a9c8ff", metal: "#e9edf3", rule: ["#0a3161", "#ffffff", "#b31942"], led: "#e8eeff", motif: "sweep", emblem: "starshield" },
+  // D108: Portugal, verde e vermelho sobre a noite, e a grade do azulejo.
+  POR: { deep: "#04110a", mid: "#0c2f1b", light: "#ff8a7a", light2: "#ffd36b", floor: "#c8102e", accent: "#ffb3a6", metal: "#f2d48a", rule: ["#006600", "#ffd36b", "#c8102e"], led: "#ffd36b", motif: "lattice", emblem: "shield" },
 };
 
 /**

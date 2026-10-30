@@ -128,7 +128,8 @@ describe("a mão do dia (GDD 27.2)", () => {
   it("o talento da mão é o do jogador que o desafio cria", () => {
     for (const day of days.slice(0, 40)) {
       const hand = dailyHand(day);
-      expect(createPlayer({ seed: hand.seed, position: hand.position, difficulty: "hard" }).talent).toBe(hand.talent);
+      // Dia de recorde (D94): o talento vem fixo no setup; nos outros, do sorteio do nascimento.
+      expect(createPlayer({ seed: hand.seed, position: hand.position, difficulty: "hard", talent: hand.record ? hand.talent : undefined }).talent).toBe(hand.talent);
     }
   });
 
@@ -194,7 +195,8 @@ describe("o setup e a tentativa", () => {
     expect(status.missions.filter((item) => item.counted)).toHaveLength(2);
     expect(status.missions.every((item) => !item.hidden)).toBe(true);
     const factor = status.edict.state === "intact" || status.edict.state === "met" ? 1 : 0.5;
-    expect(status.total).toBe(Math.round((status.raw + status.peak) * factor * 0.97 ** status.erased));
+    const base = status.record ? (status.raw + status.peak) * 0.75 + status.record.points : status.raw + status.peak;
+    expect(status.total).toBe(Math.round(base * factor * 0.97 ** status.erased));
     expect(status.total).toBeLessThanOrEqual(1000);
 
     // No começo, a escondida ainda não abriu.

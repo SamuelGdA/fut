@@ -5,8 +5,8 @@
 > [README](../README.md) orienta novas pessoas e IAs sobre os subsistemas atuais.
 > Revisões D73 a D82 ao fim deste GDD especificam o calendário de decisões,
 > progressão, probabilidades, produção e apresentação atuais, prevalecendo
-> sobre descrições históricas anteriores do mesmo assunto. São 39 acontecimentos,
-> 53 cenas de partida e nenhum rival pessoal. As contas atuais de D80/D81 são
+> sobre descrições históricas anteriores do mesmo assunto. São 38 acontecimentos (D96),
+> 55 cenas de partida (D91) e nenhum rival pessoal. As contas atuais de D80/D81 são
 > preservadas na D82; somente o custo de respeitar o rival muda no motor.
 
 > **Futeiros (D50 a D60).** Este documento especifica os dois jogos do hub.
@@ -61,7 +61,7 @@
 >   de metade da pontuação. Catálogo com 37 missões. Missão de temporadas como ídolo substituída por virar
 >   lenda de um clube (alvo 1); nova missão de ídolo ou lenda de dois clubes
 >   (alvo 2). Ambos são alvos fixos do produto, os demais seguem calibrados.
-> - 148 conquistas com abas por categoria: 18 recordes gerados do catálogo e um título
+> - 151 conquistas com abas por categoria: 22 recordes reais (D93, D105) gerados do catálogo e um título
 >   por competição, automaticamente. Aba secreta com quatro conquistas naturais,
 >   escondendo nome e requisito até desbloquear. Nova conquista de terminar no
 >   clube da estreia em campo. Contagens persistem sem precisar guardar carreiras.
@@ -271,7 +271,7 @@ setup = {
 
 - A temporada `i` (começando em 0) acontece no ano `startYear + i`, com o
   jogador na idade `16 + i`.
-- A última temporada jogável é a dos 39 anos. Aos 40 a carreira termina.
+- A última temporada jogável é a dos 40 anos (D109: a carreira de 2026 chega a 2050). Aos 41 a carreira termina.
 - O ano é o rótulo de tudo que o jogador vê ("Temporada 2031", "Copa do Mundo
   2034").
 
@@ -417,9 +417,9 @@ Ver seção 27.
 | Conjunto | Quantidade |
 |---|---|
 | Países (nacionalidades) | 211 |
-| Países com liga jogável | 17 |
-| Ligas | 32 (17 primeiras divisões, 15 segundas) |
-| Clubes | 489 |
+| Países com liga jogável | 18 |
+| Ligas | 34 (18 primeiras divisões, 16 segundas) |
+| Clubes | 525 |
 | Confederações | UEFA, CONMEBOL, CONCACAF, CAF, AFC, OFC |
 
 México e Estados Unidos têm só a primeira divisão, e por isso lá não há acesso
@@ -1022,8 +1022,8 @@ gols ~ Poisson(λ_gols × jogos);  assistências ~ Poisson(λ_ast × jogos)
 | Pos | g_pos | a_pos | bônus_pos |
 |---|---|---|---|
 | CA | 0,385 | 0,12 | 0 |
-| PE / PD | 0,24 | 0,17 | 0,12 |
-| MEI | 0,22 | 0,22 | 0,095 |
+| PE / PD | 0,285 | 0,19 | 0,12 |
+| MEI | 0,275 | 0,15 | 0,095 |
 | ME / MD | 0,15 | 0,17 | 0,09 |
 | MC | 0,07 | 0,11 | 0,055 |
 | VOL | 0,035 | 0,06 | 0,012 |
@@ -1157,14 +1157,25 @@ fama: 0,8 por ano abaixo dos 22
 
 A maior nota vence. O jogador vê a própria colocação ("3º lugar") até o 30º.
 
+**Como ficou, D90.** Goleiro perde 11 na nota da Bola de Ouro, ou 6 numa temporada
+histórica (OVR 93+, 24+ jogos sem sofrer gol, continental principal ou Copa do
+Mundo); se ganhar, leva o Troféu Yashin junto.
+
+**Como ficou, D91.** Além do ajuste de posição da tabela, só a nota do jogador
+perde `BALLON_POSITION`: MC 1,2, VOL 2, laterais 2,6, zagueiro 3,4
+(atacante, ponta, meia e ME/MD 0; ver D92).
+
+**Como ficou, D89.** A nota do jogador ganha um alívio a partir de 90 de OVR:
+`+0,5 + 0,1 × (OVR - 90)`, até +1 (OVR 95). Só o jogador recebe.
+
 ### 13.3 Os demais prêmios
 
 | Prêmio | Quem disputa | Regra |
 |---|---|---|
-| Luva de Ouro | goleiros | eleição entre os goleiros da elite, com nota por OVR, sucesso e jogos sem sofrer |
+| Troféu Yashin (antiga Luva de Ouro, D90) | goleiros | eleição entre os goleiros da elite, com nota por OVR, sucesso e jogos sem sofrer; cada goleiro da elite +8 (D90) |
 | Chuteira de Ouro | só clubes da UEFA | gols de liga acima de um patamar sorteado N(30; 3,5), mínimo 24 |
 | Artilheiro do campeonato | qualquer liga | gols de liga acima de N(0,55 × jogos_da_liga; 3), mínimo 8 |
-| Prêmio Revelação | até 21 anos | eleição entre a elite de até 21 anos |
+| Troféu Kopa (era o Prêmio Revelação, D108) | até 21 anos | eleição contra a elite de até 21 anos do mundo, com a nota da Bola de Ouro (ver D108) |
 
 A Chuteira de Ouro tem amortecedor próprio de 1,2 gol por título seguido. Quando
 o jogador não bate o patamar, o prêmio vai para um atacante da elite que joga na
@@ -1296,6 +1307,9 @@ certa (D15): sem ele, quem nunca aceita aposentar joga até os 40.
 - **Faixa que se alarga** (D15): se a faixa tem menos clubes do que ofertas, ela
   cresce em passos. Até os 21 anos, para cima (`-8 a +7`, depois `-10 a +12`);
   depois, para baixo (`-10 a +3`, depois `-14 a +4`).
+- **Como ficou, D89.** Com nível 88 ou mais, a faixa desce até `nível - 9`
+  (cada passo de alargamento também ganha 2 para baixo). Os seis clubes das
+  últimas propostas pesam 0,3 contra 1 no sorteio dentro da região.
 
 ### 15.3 O que o cartão de oferta mostra
 
@@ -1409,6 +1423,8 @@ primeira temporada a torcida só pode subir.
 
 ### 17.4 Legado por clube
 
+**Como ficou, D90:** Lenda exige `50 + 11p` pontos, 5 temporadas e 140 jogos; Ídolo `25 + 6p`, 2 temporadas e 70 jogos.
+
 **Como ficou na D47:** vale a fórmula de participação real no início deste GDD; zero jogos dá zero pontos. Ídolo exige 60 jogos e lenda 120, além dos pontos e temporadas. Lenda de 33+ anos não perde torcida por poucos minutos; rebaixamento ainda tira até 2. As fórmulas abaixo registram a regra anterior.
 
 
@@ -1478,7 +1494,7 @@ Efeito  = capacidade(+x, agora | período | depois)
 - O resultado aparece num aviso no trilho de notificações por 5 segundos:
   ▲ deu certo, ▼ não deu, ● neutro, com os números exatos.
 
-### 18.3 Catálogo (39 eventos, D79)
+### 18.3 Catálogo (38 eventos desde a D96; eram 39 na D79)
 
 | # | Evento | Peso | Elegível quando | Opções (resumo) |
 |---|---|---|---|---|
@@ -1520,7 +1536,7 @@ Efeito  = capacidade(+x, agora | período | depois)
 | 36 | Lesão grave | 26 | idade 20-34 | cirurgia agressiva (volta rápido, potencial -2 a -4) ou conservadora (perde mais tempo, potencial -1 a -2) |
 | 37 | Uma nova seleção | 70 | cinco temporadas consecutivas no mesmo país estrangeiro, sem estreia por seleção e nível de convocação no país | aceitar (muda a nacionalidade) ou manter |
 | 38 | O caderno do auxiliar | 45 | 12+ jogos anteriores | ensaiar (força +1 em copas, jogos -6%) ou ganhar ritmo (jogos +4%) |
-| 39 | Uma semana sem holofotes | 40 | 23+ anos e espaço no elenco | descansar (risco -20%, torcida -3) ou imprensa (torcida +3, evolução -5%) |
+| 39 | ~~Uma semana sem holofotes~~ | 0 | removido na D96 | |
 
 Textos, chances exatas e números de cada efeito ficam em
 `packages/content` e `packages/engine/events`, escritos para o v2.
@@ -2071,9 +2087,9 @@ Somente o save atual pode abrir o resumo e o caminho hipotético.
 
 ### 28.2 Conquistas (D47)
 
-148 conquistas em dez grupos: Carreira, Títulos, Prêmios, Seleção, Lealdade,
+151 conquistas (D105) em dez grupos: Carreira, Títulos, Prêmios, Seleção, Lealdade,
 Estrada, Desafio, Curiosas, Recordes e Secretas. São 51 objetivos específicos,
-18 recordes e 79 competições. Recordes e títulos são gerados dos catálogos:
+22 recordes (D92, D105) e 79 competições. Recordes e títulos são gerados dos catálogos:
 igualar ou superar a marca, ou vencer a competição, respectivamente.
 Secretas tem quatro objetivos naturais; nome e pista só aparecem após desbloquear.
 Lealdade inclui terminar no clube da estreia em campo.
@@ -2175,8 +2191,8 @@ desenvolvimento, o `/lab` permite alternar o modo sem rebuild para comparar.
 
 **Como ficou (D46):** o padrão passou a ser `gerado` (só a arte desenhada);
 `real` é escolha de build. No modo desenhado, a linha "Imagens sem internet"
-dos ajustes some. Há escudo real para 481 dos 489 clubes e selo real para 29
-das 32 ligas.
+dos ajustes some. **D111:** o padrão volta a ser `real`; há escudo real para 518 dos 525
+clubes e selo real para 31 das 34 ligas.
 
 **Como ficou (D49):** o padrão mistura escudos e selos gerados com fotos reais
 das competições e dos prêmios. Cada foto ausente ou que falha ao carregar usa
@@ -2684,7 +2700,7 @@ daquele jogo foram liberadas e tem o botão de jogar.
 
 ### 41.3 Marca, PWA e erros
 
-- Título da página, manifesto (`name` "Futeiros: dois jogos de futebol",
+- Título da página, manifesto (`name` "Futeiros: futebol de escolhas",
   `short_name` "Futeiros"), tela de abertura ("Abrindo o Futeiros"), aviso sem
   JavaScript e páginas estáticas 404, 403, 500 e 503 dizem "Futeiros".
 - A página não encontrada ("Bola fora") volta ao hub ("Voltar ao jogo").
@@ -2764,12 +2780,12 @@ nota média abaixo de 6,3), promessas resolvidas e características novas.
 ### 42.2 Identidade do treinador
 
 - **Nome**: até 16 caracteres.
-- **Nacionalidade**: só os 15 países com segunda divisão no jogo
+- **Nacionalidade**: só os 16 países com segunda divisão no jogo
   (`COACH_COUNTRIES`): ARG, BOL, BRA, CHI, COL, ECU, ENG, ESP, FRA, GER, ITA,
-  PAR, PER, URU e VEN. México e Estados Unidos ficam de fora, porque não têm
-  segunda divisão. Os dez países com segunda divisão completada por jogadores
-  gerados (ARG, BOL, BRA, CHI, COL, ECU, PAR, PER, URU e VEN) levam a marca ◆
-  na escolha.
+  PAR, PER, POR, URU e VEN (Portugal desde a D108). México e Estados Unidos
+  ficam de fora, porque não têm segunda divisão. Os onze países com segunda
+  divisão completada por jogadores gerados (ARG, BOL, BRA, CHI, COL, ECU, PAR,
+  PER, POR, URU e VEN) levam a marca ◆ na escolha.
 - **Ritmo**: rápido ou lento (42.1).
 - **Aparência**: o editor do Craque, com o avatar de terno (`outfit="coach"`) e
   o uniforme do país; botão de sortear.
@@ -3711,9 +3727,9 @@ offline e determinística (`pnpm elencos:montar`,
   Gerados começam sem nenhuma; os do conhecimento, no máximo Versátil, pelas
   posições alternativas.
 
-Resultado (`packages/world/data/squads/relatorio.md`): **12.609 jogadores em
-489 clubes**: 8.415 do FC 27, 818 do eFootball, 133 do conhecimento e 3.243
-gerados.
+Resultado (`packages/world/data/squads/relatorio.md`): **13.496 jogadores em
+525 clubes**: 8.899 do FC 27, 818 do eFootball, 133 do conhecimento e 3.646
+gerados (D108: com Portugal).
 
 | Grupo | Jogadores reais |
 |---|---|
@@ -4034,7 +4050,7 @@ regionais diferenciam Américas de Ásia; nove referências americanas
 complementam a elite, e a região futura usa fluxo separado (85% Europa;
 dos demais, 80% Américas). Bônus, idade de auge e aposentadoria são projeções.
 
-A referência de classificação dos 17 países, fontes e simplificações fica em
+A referência de classificação dos 18 países, fontes e simplificações fica em
 CLASSIFICACOES.md. Duas vagas UEFA por desempenho anual médio são calculadas
 no mundo simulado; Chile inclui Copa da Liga da elite e playoff de indicação.
 Mundial do Craque também tem 32 participantes (22 representados, nove genéricos
@@ -4532,7 +4548,7 @@ Craque `2.0.0-m21`; Técnico permanece `1.9.0`. Esta revisão substitui os núme
 - Voleio já existia e foi preservado. Entram “De costas para o gol”, com bicicleta (70% finalização/30% físico, teto 35%), escorada de cabeça ou domínio; e “Em cima da linha”, com corte, desvio para o companheiro ou cobertura da sobra. Total: 53 contextos. Descrições e opções estão nos três idiomas; o laboratório usa os componentes e a resolução reais.
 - Placar inicial empatado sorteia 0, 1, 2 ou 3 gols para cada lado, com pesos 2:5:2:1. Em 18% das oportunidades de liga, começa um gol atrás. Acertar então empata; errar mantém a derrota ou acrescenta um gol adversário (30%). Nos cenários empatados, a definição acrescenta um gol ao vencedor. Pênaltis não alteram o placar do jogo. A tabela usa a diferença de pontos entre o placar inicial e o final: reagir de derrota para empate dá +1, nunca os +2 de uma vitória saindo de empate. Resultado, LED e crônica reconhecem empate.
 - Impacto do destaque conserva a base anterior e soma ajuda em elencos fracos: `participação × suporte × limitar((vantagem - 8) × 0,08; 0; 1,5)`, sendo `suporte = limitar((76 - força) / 16; 0; 1)` e vantagem limitada de -3 a 35. Não aumenta força se o jogador estiver próximo ou abaixo do elenco; não ajuda clubes de força 76+. Participação reduz tanto a ajuda base quanto a adicional. Exemplo de força 70/OVR 97 com participação integral: +5,7825, antes +5,22. A calibração conserva as metas de raridade dos títulos.
-- Debug de desenvolvimento inclui “Forçar decisão”, com os títulos das nove decisões gerais, 39 acontecimentos e 53 lances. Monta somente a sessão marcada como teste, sem gravar escolha especial em replay, liberar conquistas ou alimentar o ranking. O fluxo normal não consulta a ferramenta; o módulo permanece fora do build de produção. Pré-requisitos podem ser ignorados nesse cenário de teste e alvos ausentes recebem dados reais do catálogo. Não é uma forma de continuar ou compartilhar uma carreira válida.
+- Debug de desenvolvimento inclui “Forçar decisão”, com os títulos das nove decisões gerais, 39 acontecimentos e 53 lances (55 desde a D91). Monta somente a sessão marcada como teste, sem gravar escolha especial em replay, liberar conquistas ou alimentar o ranking. O fluxo normal não consulta a ferramenta; o módulo permanece fora do build de produção. Pré-requisitos podem ser ignorados nesse cenário de teste e alvos ausentes recebem dados reais do catálogo. Não é uma forma de continuar ou compartilhar uma carreira válida.
 
 Na reação de liga começando atrás, as três alternativas seguem a mesma relação entre ação e placar: sucesso empata, falha conserva a derrota ou sofre mais um. A alternativa conservadora conserva bônus individual zero e, somente nesse contexto, não usa o sorteio independente do time. A regressão percorre 50 sementes com cada uma das três ações, cobrindo acerto e erro.
 
@@ -4678,3 +4694,346 @@ Até 1023 px de largura, `.result-layer` é fixa (`top: env(safe-area-inset-top)
 ## Revisão D88: toque nas taças e manchetes (22/10/2026)
 
 `HonourToken` controla a dica: `onPointerDown` de toque abre por 2 s (fechamentos do componente são ignorados nesse intervalo); na faixa do lance, o grupo de taças segura o clique para não abrir o resumo, e nas pilhas de troféus o toque continua abrindo a pilha. Mouse e teclado seguem como antes. `matchStory` monta o título com a ação do lance e a fase (gol "o gol que marcou", assistência "o passe que mudou", defesa "as mãos que seguraram", desarme "o corte que salvou", segura "o time decidiu", falha "escapou por um detalhe"), sem o rótulo da escolha, com a primeira letra maiúscula, nos três idiomas.
+
+## Revisão D89: resultado honesto, lance que vale mais e promessa como decisão principal (24/10/2026)
+
+Motor `2.0.0-m24`. Esta revisão substitui, onde conflitar, as regras de resultado de lance, promessa, Bola de Ouro e propostas das revisões D73 a D88.
+
+- **Lance que não deu certo nunca vence.** Com erro, no mata-mata o adversário marca e elimina (sem pênaltis); na liga o placar fica no máximo empatado: saindo empatado, 12% de o adversário também não marcar, senão ele vence; saindo atrás, a derrota continua. Vale para arrojada, coletiva, segura, cobrança, canto e o companheiro que desperdiça o pênalti decisivo.
+- **Segura que deu certo** mantém o placar e depende do time: 42% de o time marcar (vezes a pressão do recorde na final). Se não marca, a liga fica no empate e o mata-mata vai para os pênaltis (50%). Vencer assim vale o resultado do time (título, classificação, pontos), sem bônus individual: torcida 0, legado 0.
+- **O lance jogado que decide vale mais.** Arrojada, coletiva, cobrança ou canto que deram certo e terminaram em vitória somam à torcida base (+3 arrojada, +2 coletiva, +8 pênalti decisivo) +1 nas quartas e na semifinal e +2 na final; o legado base (+2/+1) ganha +1 na final; e o lance conta como **um reconhecimento** na evolução do ano (o mesmo dos títulos: até +0,55 de capacidade, teto de três por ano, diminuindo até zero perto do potencial). O resultado mostra o selo "Destaque do jogo: + evolução".
+- **Campanha contínua.** Num ano com vaga para dois ou mais jogos (ritmo anual), quando a copa sorteada chegou à semifinal ou à final, há 50% de a fase anterior da mesma copa vir antes (antes da final: semifinal 60%, quartas 40%), contra um adversário que caiu naquela fase no mundo. Os jogos ficam em ordem de fase. Eliminado numa fase, as fases seguintes da mesma copa não são puladas: cada uma vira outro jogo do mesmo ano que ainda está vivo (liga, copa nacional, outro continental ou seleção), escolhido entre os jogos que o mundo projetou e que vêm depois na ordem do ano. Só quando não sobra jogo assim o ano fica com menos decisões. Vencer uma fase anterior nunca rebaixa a colocação que o mundo já deu ao time.
+- **Promessa é decisão principal.** Ela disputa a vaga da janela comum do ano, depois de evento, treino e empréstimo, e nunca chega depois de outra decisão principal. Condições: 18 anos ou mais, papel público (rotação, titular ou craque), nenhuma promessa em curso, no máximo três na carreira e cinco anos desde a última. Chance: 60% para a primeira, 12% para as seguintes; se não sair naquele ano, não sai. Metas, prazo e recompensas não mudaram. Depois dela vêm só as partidas do ano.
+- **Reinvenção também é decisão principal.** Com as mesmas condições de antes (33 anos ou mais, perda de pelo menos 2 de OVR em dois anos, convite de 45% sorteado uma vez), ela ocupa a vaga da janela comum, antes da promessa, e nunca chega depois de outra decisão principal.
+- **Bola de Ouro um pouco mais acessível no topo.** A partir de 90 de OVR, a nota do jogador ganha +0,5, mais 0,1 por ponto acima de 90, até +1 (OVR 95). Fenômenos de ataque: média de 0,52 para 0,73 Bolas por carreira, 30% para 35% ganham ao menos uma (meta 20% a 45%).
+- **Propostas mais variadas.** A carreira lembra os seis clubes das últimas propostas; no sorteio dentro da região, cada um pesa 0,3 contra 1 dos demais. Com nível de mercado 88 ou mais, a faixa de interessados desce até `nível - 9` (em vez de `- 7`). Medido em 200 carreiras com OVR 86+: repetição de clube entre janelas seguidas de 19% para 13%, cinco clubes mais frequentes de 50% para 44% das propostas.
+- **Hipotético.** Promessa e reinvenção, agora decisões principais, entram na lista do Hipotético como ponto do ano; só as partidas ficam fora.
+- **Amostras de navegador** reconstruídas no m24: replays das escolhas antigas quando a decisão equivalente existe, e carreiras novas e reais (sementes `d89-*`) para os lances que a divergência apagou: Libertadores, escanteio, pênalti decisivo, permanência em clube continental e ultimato.
+
+**Como ficou (D89).** `resolveKeyMatch` (`career/drama.ts`) resolve sucesso, depois `resolved = sucesso e (não segura ou correndo atrás ou time marca)`; o placar de quem segurou fica como estava, o de quem errou ganha um gol do adversário (na liga, salvo os 12% do empate mantido); o empate no mata-mata só existe com sucesso e vai a pênaltis. `MATCH_REWARD` guarda torcida por fase, legado da final, reconhecimento, 42% e 12%. `KeyMatchResult.recognition` entra em `successBonus` de `simulatePlayerSeason`. `planMatches` monta a cadeia com `MATCH_CHAIN` e `resolveDrama`, na eliminação, troca as fases canceladas por jogos de `DramaPeriod.reserve` (sobras do sorteio do ano, de outras competições, com `matchOrder` igual ou maior que o do jogo atual); `keyKnockout` coloca o vencedor em `min(posição atual, teto da fase)`. Os sorteios do lance, do placar e do teto passam a incluir a fase, para dois jogos da mesma copa no mesmo ano não repetirem o resultado. A reinvenção principal sai de `veteranDue`/`veteranDecision` e a promessa de `promiseDue`/`promiseDecision`, ambas chamada em `buildNextDecision` antes da janela comum; ela não tem linha de progresso, como as outras decisões principais. `BALLON.eliteFrom/eliteBase/elitePerPoint/eliteMax` e `ballonEliteBonus` (`awards/awards.ts`). `MARKET.recentWeight/recentMemory/eliteFrom/eliteBelow` e `Career.recentOffers` (refeito pelo replay, nunca salvo). Um aposentado no meio do prazo de uma promessa a deixa sem balanço.
+
+**Validação D89.** 51/51 metas; recordes auditados (Bola de Ouro: 1 de 1.800 Fenômenos chegou às oito; antes, o melhor do lote parava em sete). Auditoria do laço real (`pnpm balance:craque:momentos`): 144 carreiras, 140 promessas (antes 175), 49 fases seguidas da mesma copa no ano, nenhum lance errado vencendo, nenhuma fase depois de eliminação, nenhuma promessa ou reinvenção depois de outra decisão principal. `pnpm verify` e `pnpm e2e` aprovados.
+
+## Revisão D90: decisão principal todo ano, erro que pesa e Troféu Yashin (26/10/2026)
+
+Motor `2.0.0-m25`. Substitui, onde conflitar, as revisões anteriores sobre limite de partidas por ano, torcida no erro, legado, mercado de elite, Luva de Ouro e pilhas de troféus.
+
+- **Toda temporada tem uma decisão principal.** No ritmo anual, nenhum ano começa direto numa partida. Antes, uma janela sem nenhuma proposta e ainda sem a opção de aposentar (menos de 33 anos) era pulada; agora chega ao menos a proposta do clube mais perto do nível. No ritmo rápido continua uma decisão principal por período de dois anos.
+- **Até cinco decisões por ano.** No ritmo anual, o ano sorteia de 1 a 4 partidas (pesos 30/30/25/15), sempre dentro do limite de cinco decisões com a principal. No rápido, uma partida por ano.
+- **Erro custa torcida pela competição e pela fase.** Todo lance jogado que não deu certo (arrojada, coletiva, segura, cobrança ou canto) tira `arredondar(2 × importância do título + fase)` de torcida, de 1 a 10, com fase 0 na liga e nas quartas, +1 na semifinal e +3 na final. Exemplos: liga da segunda divisão -1, liga da primeira -2, final de copa nacional -4, final da Champions ou da Libertadores -8, final da Copa do Mundo -10. Na D90 o custo aparecia em cada opção ("Erro: torcida -N"); a D91 tirou o texto da opção. O pênalti deixado para o companheiro não cobra. Lenda do clube perde metade a partir de -2, arredondando para cima.
+- **Lenda e ídolo um pouco mais difíceis.** Lenda: `50 + 11 × prestígio` pontos, 5 temporadas e 140 jogos no clube (antes 45 + 10p, 4 e 120). Ídolo: `25 + 6 × prestígio` pontos, 2 temporadas e 70 jogos (antes 22 + 5p, 2 e 60). As missões do Desafio foram recalibradas.
+- **Contrato de chuteira dá mídia.** Topar a campanha soma, além de torcida +6 e pressão, **+8% no valor de mercado** pelo resto da carreira, dentro do teto da idade. A pedido, o efeito não aparece na mensagem do evento.
+- **Propostas no topo.** Para o craque de elite (nível de mercado 88+), a faixa de interessados sempre alcança os clubes até 7 pontos do mais forte do mundo; os nove últimos clubes que fizeram proposta pesam 0,15 no sorteio. Antes, acima do clube mais forte a faixa achava só dois ou três gigantes (e às vezes nenhum, o que pulava a decisão principal). Medido com OVR 92+: sete gigantes revezando perto de 9% cada, repetição entre janelas seguidas de 10%.
+- **Goleiro na Bola de Ouro: possível, mas raríssimo.** A nota do goleiro perde 11 pontos; numa temporada histórica (OVR 93+, 24+ jogos sem sofrer gol e o continental principal ou a Copa do Mundo), perde 6. Goleiro que ganha a Bola de Ouro leva o Troféu Yashin junto. Antes, 31% dos goleiros Fenômeno ganhavam ao menos uma Bola de Ouro; agora 1 em 300.
+- **Troféu Yashin (antiga Luva de Ouro), bem mais difícil.** O nome muda nos três idiomas (Yashin Trophy, Trofeo Yashin). Cada goleiro da elite ganha +8 na nota da eleição. Goleiro Fenômeno: de 13,7 para 6,5 por carreira; Estrela: de 7,1 para 1,3.
+- **Missão "Paredão" do Desafio.** Com o Troféu Yashin bem mais difícil, a missão passa a contar as temporadas entre os dez primeiros da eleição do Yashin (antes, Luvas ganhas). Sem isso, só goleiro Estrela ou Fenômeno poderia recebê-la e ela sumia das mãos do dia.
+- **Detalhes da temporada mostram as colocações.** Uma seção "Competições da temporada" lista onde o clube terminou cada competição do ano (liga pela posição, mata-matas pela fase, campeão em dourado) e, quando houve, as da seleção. Só aparece nos detalhes.
+- **Pilha de troféus abre num painel flutuante.** Hover, foco ou toque na pilha mostra todas as cópias com o ano de cada uma, num painel que fica dentro da tela e não mexe no resto da linha do tempo. Antes, as cópias se espalhavam no fluxo, sobrepunham e empurravam a linha para baixo.
+- **Nomes de taças.** A placa da taça da Série B foi redesenhada para o texto caber, e nomes de troféu com palavra longa ("Copa Intercontinental") usam fonte menor em vez de quebrar a palavra no meio.
+- **A opção segura ("segurar e recomeçar", "manter deste lado" e afins), em detalhe.** A chance de acertar tem teto sorteado de 70% a 90% e depende dos atributos da ação. Acertou: o placar não muda por culpa sua, sem gol, assistência, torcida, legado ou reconhecimento; correndo atrás na liga, o time empata; empatado, o time ainda marca sozinho com 42% (vezes a pressão do recorde na final) e vence; se não marcar, a liga fica empatada e o mata-mata vai aos pênaltis (50%). Errou: no mata-mata o adversário marca e elimina; na liga, empatado, 12% de o empate continuar e 88% de derrota; atrás, a derrota continua. Errar custa torcida pela tabela acima. Cada segura escolhida reduz em 5% o risco de lesão leve naquele ano.
+
+**Como ficou (D90).** `windowDecision` (`career/decisions.ts`) cria a proposta do clube mais perto do nível quando a janela vem vazia e o jogador tem contrato e ainda não pode se aposentar. `widenedClubs` (`career/market.ts`) usa `MARKET.eliteSpan` e `recentWeight/recentMemory`. `planMatches` sorteia com `MATCH_COUNT`. `matchFanLoss` e `MATCH_FAN_LOSS` (`career/drama.ts`) calculam o custo; `resolveKeyMatch` o aplica a toda falha que não seja `leave`; `matchOptionHint` o mostra. `LEGACY_BAR` (`career/fans.ts`). Efeito novo `fame` (`events/model.ts`), `Career.fame`, `famedMarketValue` (`player/value.ts`), sem texto em `describeEffect`. `keeperBallonPenalty`, `BALLON.keeper*`, `GOLDEN_GLOVE.fieldBonus` e o Yashin forçado ao goleiro que ganha a Bola de Ouro (`awards/awards.ts`). A chave interna do prêmio continua `goldenGlove`, e a arte continua a da luva. Interface: `SeasonCompetitions` (`screens/career/PlayFeed.tsx`), `HonourGroups` com `Popover` do Base UI (`ui/HonourGroups.tsx`), `HonourArt`/`honourName` (`ui/HonourToken.tsx`), `data-long` em `Showcase.tsx`.
+
+**Validação D90.** 51/51 metas; Bola de Ouro dos Fenômenos de ataque igual (média 0,73, 35%). Desafio recalibrado com 3.000 carreiras. Recordes auditados: a Bola de Ouro (8) não foi alcançada neste lote (melhor 6); nas rodadas D89 o melhor foi 7 e depois 8, e a regra do atacante não mudou, então é variação da amostra. Auditoria do laço real: 144 carreiras, 2.888 temporadas, 2.570 partidas, máximo de 5 decisões num ano, nenhum ano do ritmo anual sem decisão principal, 138 promessas e 56 fases seguidas da mesma copa.
+
+## Revisão D91: pênaltis raros, Bola de Ouro por posição e resultado em cores (26/10/2026)
+
+Motor `2.0.0-m26`. Substitui, onde conflitar, a D90 sobre a janela sem proposta e o custo do erro mostrado na opção, e as regras anteriores de defesa de pênalti (35%, 45% com especialista).
+
+- **Janela sem proposta vira outra decisão principal.** A proposta de clube é garantida a cada três temporadas (`transferOpportunityDue`): vencido o prazo sem interessados, chega a do clube mais perto do nível. Antes do prazo, uma janela que só teria "ficar" não inventa proposta (isso a D90 fazia): o ano abre com um **treino escolhido** (as opções de foco da posição). Só se nenhum atributo puder subir (todos acima de 97) o jogo usa a proposta do clube mais perto. Nenhum ano do ritmo anual começa direto numa partida.
+- **Bola de Ouro mais difícil quanto mais atrás.** Além do ajuste de posição que já valia para todos, a nota do jogador perde `BALLON_POSITION`: atacante, ponta, meia e ala de meio (ME/MD) 0; MC 1,2; VOL 2; laterais 2,6; zagueiro 3,4; o goleiro segue com a regra própria (-11, ou -6 numa temporada histórica). Medido com 300 Fenômenos por posição na Europa, carreiras com ao menos uma Bola de Ouro: CA 50%, MEI 33%, MC 45% para 33%, VOL 34% para 18%, LE 28% para 12%, ZAG 38% para 9%, GOL 1%. Média por carreira: CA 1,18, MC 0,58, VOL 0,24, LE 0,15, ZAG 0,10, GOL 0,01.
+- **Pênalti contra o goleiro é adivinhar o canto.** O cobrador escolhe o canto antes, 50/50 (`penaltySide`, sorteio próprio e estável no replay). Acertou o lado, defendeu; errou, não. A chance mostrada é 50% (na final, vezes a pressão do recorde). O especialista em pênaltis (reinvenção do goleiro) ainda alcança 20% das bolas no canto errado: 60% no total. Vale para o pênalti no jogo e para a defesa na disputa.
+- **Duas disputas de pênaltis raras.** Só no mata-mata, antes da escolha normal da cena: "Nas alternadas" chega a zagueiros, laterais e volantes (4% dos jogos de mata-mata deles), com a 7ª a 10ª cobrança; "Só falta você" chega ao goleiro (1,2%), na 11ª cobrança, quando os dez de linha já bateram. As duas têm só os dois cantos. Teto de chance: defensor 80% (finalização 80%, físico 20%), goleiro 75% (reposição 70%, posicionamento 30%). Acertou, o time vence a disputa (pênaltis `cobrança × cobrança - 1`); errou, perde. O placar do jogo mostra a cobrança ("Pênaltis · 8ª cobrança").
+- **Goleiro que não defende o pênalti perde um a menos de torcida.** No pênalti contra e na defesa da disputa, o custo do erro é o da tabela da D90 menos 1 (`MATCH_FAN_LOSS.keeperSave`), antes da metade da lenda. O goleiro que bate ("Só falta você") não tem o alívio.
+- **O custo do erro saiu das opções.** A regra de torcida da D90 continua igual, mas a dica da opção não mostra mais "Erro: torcida -N".
+- **Contrato de luva.** Para goleiro, o "Contrato de chuteira" vira "Contrato de luva" nos três idiomas (título, texto e resultado), com os mesmos efeitos.
+- **Resultado do lance em quatro cores.** Verde, "Deu certo!": o lance deu certo e o time venceu. Amarelo, "Segurou o empate!": deu certo na liga e terminou empatado (o time empatou correndo atrás, ou segurou o empate). Laranja, "Caiu nos pênaltis!": deu certo no mata-mata, o empate seguiu e o time perdeu a disputa. Vermelho: o lance não deu certo. O aviso e o placar do lance usam a mesma cor. No mata-mata o texto agora diz como terminou: "O empate seguiu até o apito final e o jogo foi para os pênaltis. O time venceu a disputa." (ou perdeu), "Depois, a equipe marcou o gol da vitória." ou "O adversário marcou e decidiu o confronto."
+- **Vitrine organizada.** Troféus primeiro, prêmios depois, cada grupo pela importância (aba Troféus, resumo e pôster).
+- **Pilha de troféus.** No botão da pilha, a taça não ganha mais o quadrado próprio no hover; fica só o contorno do botão inteiro.
+- **Debug.** Os controles de teste ganharam "Resetar todas as conquistas", com confirmação: apaga as conquistas liberadas, os contadores e as carreiras terminadas daquele navegador.
+- **Textos.** Criação: o campo do nome mostra só "Nome" (sem "Sobrenome" e sem "Até 16 letras"); o rótulo interno do campo e do Desafio passou a "Nome". Hub: "Futebol de escolhas" (também no título da página e no manifesto) e novas frases dos dois cartões. Início do Craque: frase de abertura nova, dica do ritmo rápido com até 72 caracteres, sem as frases das dificuldades. Ajustes: sem a frase das animações. Aparência: sem "Tudo opcional".
+
+**Como ficou (D91).** `nextDecision` (`career/decisions.ts`) troca a janela que só teria "ficar" por uma decisão `focus` (`focusOptions`); `windowDecision` só cria a proposta do clube mais perto quando `guaranteed`. `BALLON_POSITION` e `ballonPositionPenalty` (`awards/awards.ts`, antes `keeperBallonPenalty`). `SHOOTOUT_SCENES`, `RARE_SHOOTOUT`, `isShootout`, `isCornerChoice` e `isKeeperSave` (`career/matchMoments.ts`); cenas `suddenDeath` e `keeperShootout`, `KeyMatch.kick`. `KEEPER_SAVE`, `penaltySide` e `MATCH_FAN_LOSS.keeperSave` (`career/drama.ts`). Conteúdo: textos das cenas novas (`matchScenes.ts`), finais de mata-mata em `matchOutcome.ts`, `heldDraw` e `shortfall` em `drama.ts`, `KEEPER_EVENTS` em `text.ts`. Interface: tons `draw` e `short` (`ui/tone.ts`, `--draw` e `--short`), marcas de resultado `draw` e `short` (`resultView.ts`, `ResultMessage.tsx`, `MatchOutcome.tsx` com `data-level`), ordem da vitrine (`features/summary/showcase.ts`), `resetAchievements` (`features/hall/store.ts`) no debug, `hideLabel` no `TextField`. O laboratório mostra os tons novos e os dois resultados parciais.
+
+## Revisão D92: recordes possíveis e três marcas novas (26/10/2026)
+
+Motor `2.0.0-m27`.
+
+- **Ala de meio sem desconto na Bola de Ouro.** ME e MD já ganhavam bem menos que o MC por natureza (Fenômeno: 18% a 19% com ao menos uma, contra 33% do MC); o desconto deles caiu de 0,6 para 0. Pontas e MEI seguem sem desconto: PE 33%, PD 36%, MEI 33%.
+- **Os dois recordes que ninguém batia ficaram possíveis.** Bolas de Ouro: a cauda da pressão do recorde começa na 5ª Bola em vez da 4ª (`PRESSURE.ballonDor.start` 4 para 5). Gols pela seleção: a cauda começa em 141 em vez de 136, e os gols da seleção deixam de passar também pela cauda dos gols da carreira (979), que prendia o artilheiro perto dos dois recordes. Com 400 Fenômenos por posição em cada lote: 8 Bolas de Ouro em 1 de 4.800 carreiras (melhor antes: 7), 146 gols pela seleção em 1 de 4.800 (melhor 148; antes 140), gols na carreira de 6 para 14 de 4.800. As 21 marcas do relatório são alcançáveis e raras.
+- **Três recordes novos no jogo**, como marcas de referência (sem detentor de consenso, e o texto diz isso): assistências numa temporada (35), jogos sem sofrer gol numa temporada (34) e títulos de uma mesma liga fora de Inglaterra, Espanha, Itália e Alemanha (12). Entram na tela de recordes, no resumo e cada um ganha a conquista de recorde automática. São 21 recordes no jogo.
+
+**Como ficou (D92).** `BALLON_POSITION` com ME/MD 0 (`awards/awards.ts`); `PRESSURE.ballonDor` e `PRESSURE.nationalGoals` (`records/pressure.ts`); a produção da seleção em `season/playerSeason.ts` usa só a cauda dos gols pela seleção. Recordes `seasonAssists`, `seasonCleanSheets` e `otherLeague` em `packages/content/src/records.ts`, com a medida nova `career` (conta do histórico até a temporada), e textos nos três idiomas.
+
+## Revisão D93: recordes reais e todos superáveis (26/10/2026)
+
+Motor `2.0.0-m28`. Substitui a D92 sobre as três marcas de referência.
+
+- **As três marcas da D92 ganharam número e detentor reais.** Assistências numa temporada: **32, Lionel Messi** (Barcelona, 2011-12, todas as competições; as fontes divergem entre 29 e 34, o jogo usa 32). Jogos sem sofrer gol numa temporada: **26, Marc-André ter Stegen e Francisco Liaño** (Barcelona 2022-23 e Deportivo 1993-94, recorde das cinco grandes ligas, só liga); o jogo conta só os jogos de liga de primeira divisão. Liga fora das quatro: virou **Títulos da liga francesa, 11, Marquinhos** (Paris Saint-Germain, Guinness, 2026). Não há recorde de consenso para "todas as competições" em jogos sem sofrer gol, nem um detentor firme de "liga fora das quatro grandes".
+- **Todo recorde dá para bater e superar.** As caudas da pressão do recorde foram afrouxadas onde ninguém passava da marca: Bola de Ouro começa a frear depois da 8ª (escala 4), Bolas seguidas a partir da 3ª com escala 3, Chuteiras de Ouro a partir da 4ª, títulos continentais a partir do 5º e a sequência continental a partir do 5º (escala 2,5). Assistências por temporada passaram a frear a partir de 22 (o recorde caiu de 35 para 32). O prestígio do votante na Bola de Ouro sobe até 5,5 (antes 4): só quem já tem 7 ou mais Bolas sente a diferença. Fenômenos de ataque: Bola de Ouro média 0,77, 36% com ao menos uma (meta 0,4 a 1,25 e 20% a 45%).
+
+**Como ficou (D93).** `seasonAssists` (32), `seasonCleanSheets` (26, só linhas `kind: "league"`) e `leagueFrance` (11) em `packages/content/src/records.ts`; `PRESSURE` em `records/pressure.ts`; `BALLON.prestigeMax` em `awards/awards.ts`. O relatório `tools/balance/relatorios/recordes.md` mede as três com as marcas reais.
+
+## Revisão D94: recordes em faixas, quase, coleção, jornal e desafio de recorde (27/10/2026)
+
+Motor `2.0.0-m29`.
+
+- **Faixas de raridade dos recordes.** Cada recorde tem uma faixa, medida como a chance de uma carreira de Fenômeno (simulada pelas políticas automáticas) igualar ou superar a marca:
+  - **Clássico (6% a 15%, chamada de Entrada até a D95):** assistências numa temporada (32), jogos pela seleção (234), jogos sem sofrer gol numa temporada de liga (26), títulos na carreira (46).
+  - **Raro (2% a 5%):** jogos na carreira (1.390), Champions (6), ligas grandes seguidas (11), Ligue 1 (11).
+  - **Épico (0,5% a 1,5%):** gols numa temporada (73), gols na carreira (979), Copas do Mundo (3), LaLiga (12), Serie A (10), Bundesliga (13), continentais seguidos (5).
+  - **Lendário (0,1% a 0,4%):** Bolas de Ouro (8), Bolas seguidas (4), Chuteiras de Ouro (6), gols pela seleção (146), Libertadores (6), Premier League (13).
+
+  `pnpm balance:recordes` mostra a faixa de cada marca e se ela está dentro (coluna "Na faixa", que também exige alguém passando da marca). As caudas da pressão (`records/pressure.ts`) foram recalibradas para isso, e o fator de gols em jogo de seleção subiu de 0,6 para 0,64. Antes, o recorde mais comum caía em 2,9% das carreiras e vários em 1 de 4.800.
+- **Mostrar o quase.** Nos detalhes da temporada, "Recordes à vista" lista até quatro marcas a partir de 80% delas ("Faltam 3 para igualar Messi (73)") e, depois de igualar, "Falta 1 para superar". No resumo, os recordes alcançados vêm com a faixa e a coleção da carreira ("3 de 21 recordes nesta carreira"), e os que ficaram perto aparecem com "Faltaram N".
+- **Coleção com raridade.** Toda conquista tem raridade (comum, rara, épica, lendária), que muda só a aparência do cartão: borda e fundo da cor da raridade, selo com o nome, e brilho na épica e na lendária liberadas. Recordes seguem a faixa (clássico rara, raro épico, épico e lendário lendários); títulos seguem o peso do troféu; as outras têm a raridade definida em `ITEM_RARITY`. A conquista secreta só mostra a raridade depois de cair. Igualar o recorde já libera a conquista. A aba Recordes diz "Coleção de recordes: N de 21".
+- **Jornal de recorde.** Igualar ou superar um recorde abre a capa do ano antes de qualquer taça (ângulo "recorde" ou o novo "recorde igualado", com manchetes próprias nos três idiomas). O jornalzinho do lance ganha borda dourada e o carimbo "Recorde" no lugar da data; a capa do jornal completo ganha um selo inclinado com o nome do recorde e o placar "detentor: marca · Você: valor", dourado ao superar e da cor da faixa ao igualar (desde a D95, medalha no lugar do escudo; ver D95).
+- **Final valendo recorde.** Quando vencer uma final iguala (ou supera por um) uma marca real (Copa do Mundo, Champions, Libertadores, continentais seguidos ou títulos na carreira), a decisão de partida ganha a faixa dourada "Vale recorde" sob o placar ("Se vencer, iguala Gento: Títulos da Champions League, 6"), e essa final entra primeiro na fila do ano. Só acontece se o clube chegou à final de verdade; a chance do lance não muda.
+- **Desafio do dia com recorde-alvo.** Em 25% dos dias, a mão traz um recorde real da posição (gols numa temporada, gols na carreira, gols pela seleção, Bolas de Ouro, assistências, jogos sem sofrer gol, títulos, Champions, Copas, jogos pela seleção ou jogos na carreira) e todo mundo joga com um Fenômeno. O recorde vale até 250 pontos: `150 × (marca / recorde)^1,5`, mais 60 ao igualar e mais 40 ao superar; missões e pico passam a valer 75%. A nota continua de 0 a 1000.
+
+**Como ficou (D94).** Faixas: `RecordTier` e `tier` em `packages/content/src/records.ts`, `RECORD_BANDS` e `inBand` em `tools/balance/src/records.ts`. Quase: `recordChases` (conteúdo), `RecordWatch` em `screens/career/PlayFeed.tsx`, `nearRecords` no resumo. Raridade: `achievementRarity` e `ACHIEVEMENT_RARITIES` (conteúdo), `data-rarity` e `--rarity` (estilos), tom `--epic`. Jornal: `recordsReachedIn`, ângulo `recordMatch`, `SeasonCover.record` (`CoverRecord`), `RecordSeal`. Final valendo recorde: `recordStake` em `career/drama.ts` (prioridade em `planMatches`), `.match-stake`. Desafio: `challenge/records.ts` (`CHALLENGE_RECORDS`, `recordPoints`, `RECORD_SHARE`), `ChallengeHand.record`, `CareerSetup.talent` e `NewPlayerInput.talent` (o sorteio do talento continua saindo, para os outros fluxos do nascimento não mudarem), `ChallengeStatus.record`, `RecordTarget` em `MissionViews.tsx`. O laboratório mostra a final da Libertadores valendo recorde (cinco títulos antes) e, na área do Desafio, o recorde-alvo dos dias de recorde.
+
+## Revisão D95: despedida no jornal, selo novo e recordes da posição (27/10/2026)
+
+- **Faixa "Clássico".** A faixa de entrada dos recordes passou a se chamar **Clássico** (Classic, Clásico); o id interno continua `entry`. As outras seguem Raro, Épico e Lendário.
+- **Recordes da posição.** O recorde de jogos sem sofrer gol numa temporada de liga só conta temporadas como goleiro. Um atacante não o vê em "Recordes à vista", não o alcança no resumo e não libera a conquista; no motor, o Desafio do dia já o reservava ao goleiro. Os outros recordes valem para qualquer posição (gols, assistências, títulos, jogos e prêmios).
+- **Seleção nos detalhes da temporada.** As competições de seleção só aparecem em "Competições da temporada" quando o jogador entrou em campo por ela no ano. Sem convocação, a Copa do Mundo da seleção não aparece como se fosse dele.
+- **Folha mais alta.** A folha que abre "O último lance" (e as outras folhas) cresce até `min(94dvh, 1100px)` antes de rolar; antes parava em `min(88dvh, 780px)`. No PC os detalhes da temporada cabem inteiros na maior parte dos anos.
+- **Início sem "Editar jogador".** O botão debaixo da carta saiu do Início; o jogador é montado em "Começar carreira".
+- **Selo de recorde do jornal.** O selo virou uma medalha: estrelas da faixa (uma no Clássico, quatro no Lendário) com o nome da faixa, uma fita com "Recorde quebrado" ou "Recorde igualado", o nome do recorde e o duelo em dois números (detentor e você). Superado é dourado com um brilho que passa uma vez; igualado tem a cor da faixa. O selo fica no lugar da foto do escudo, no fluxo da página, e não cobre mais a manchete. Correção: ao virar a página, o selo da edição seguinte aparecia antes do papel, fixo por cima da folha que ainda girava. A página agora isola o empilhamento (`isolation: isolate`), as cópias que giram não carimbam, e a batida do carimbo só toca quando a página assenta.
+- **Última página é a despedida.** Numa carreira encerrada, a última edição do jornal sempre abre com o ângulo novo `farewell` ("Obrigado, {nome}", "Aos 35, {nome} diz adeus", "O último apito para {nome}"...), com uma linha de apoio que resume a carreira (jogos, gols ou jogos sem sofrer gol, e títulos, os mesmos números do rodapé "Até aqui na carreira"). Um recorde alcançado no último ano continua no selo. Carreira em andamento não tem despedida.
+
+**Como ficou (D95).** `leagueCleanSheets` em `packages/content/src/records.ts` devolve 0 fora do gol. `SeasonCompetitions` em `screens/career/PlayFeed.tsx` só lista torneios de seleção com `national.games > 0`. `.sheet-popup` em `styles/components.css`. `RecordSeal` (`stamp`, `TIER_STARS`) e `FrontPage` (`stamp`) em `screens/summary/Newspaper.tsx`; estilos `.paper-record-*` em `styles/summary.css`. Ângulo `farewell` em `COVER_ANGLES`, `CoverFacts.final`, textos em `locales/cover.*.ts` e o plural `stats.titlesCount`. O laboratório (Design, partida) mostra o selo lendário superado e o clássico igualado com o nome de detentor mais longo.
+
+## Revisão D96: tabela da liga, recordes que ainda podem mudar, jornal sem transbordo e desafio mais limpo (27/10/2026)
+
+Motor `2.0.0-m30`.
+
+- **Tabela da liga no jogo decisivo de liga.** Embaixo das opções (e, no resultado, embaixo do placar final) aparece a tabela da liga na rodada do jogo, rolável por dentro, com o clube do jogador em destaque e o adversário marcado. Ela abre centrada no clube; se ele já aparece com a lista no topo, fica no topo, do primeiro para baixo. Quando o lance termina, a rodada inteira fecha: o clube e o adversário somam pelo placar final, os outros somam 3, 1 ou 0, a tabela se reordena com animação e mostra quem subiu ou caiu e quantos pontos cada um somou. Como funciona: o mundo condensado só tem a tabela final do ano; `leagueSnapshot` (`career/leagueTable.ts`) usa a prévia do ano que o motor já monta para planejar os jogos (`seasonPreview`, a mesma de antes), sorteia a rodada entre 70% e 95% do campeonato (fluxo `drama/leagueRound`) e dá a cada clube os pontos no ritmo que o levou ao lugar final; `leagueAfter` fecha a rodada. A foto é tirada uma vez por lance, para não mudar entre o lance e o resultado. Só mostra: nenhuma carreira muda por causa dela. Em celular baixo (até 700 px de altura), a tabela some para o laço caber na tela (substituído na D98: tamanho medido e fixo, com a faixa em tela baixa).
+- **Selo do resultado da terceira opção.** Segurar o jogo deixou de mostrar sempre "Decisão certeira". O selo diz o que aconteceu: "Vitória segurada" e "Empate segurado" na liga, "Vaga garantida" e "Taça garantida" no mata-mata, e "Não foi o suficiente" quando o lance deu certo mas o time perdeu (nos pênaltis, por exemplo). Lance que não deu certo continua "Jogada adversária".
+- **Recordes à vista só enquanto podem mudar.** Nos detalhes da temporada, a lista mostra só o que a próxima temporada ainda pode mudar: somas da carreira (gols, títulos, jogos, Champions...) e sequências que ainda correm, contadas pelo tamanho atual. Recordes de uma temporada só (gols, assistências e jogos sem sofrer gol numa temporada) recomeçam todo ano e saem da vista; sequência quebrada também. O resumo da carreira continua mostrando tudo o que ficou perto (`recordChases`); a carreira usa `liveRecordChases`.
+- **"Uma semana sem holofotes" saiu do jogo.** O catálogo passa de 39 para 38 acontecimentos. Muda o sorteio de eventos de carreira: motor `2.0.0-m30`, amostras de navegador reconstruídas.
+- **Jornal sem texto fora da página.** Os lances da página de dentro usavam a competição como chave do item; dois lances da mesma competição no ano (dois jogos de liga, por exemplo) davam chaves repetidas, e ao virar a página o React deixava itens de outra edição para trás: quatro lances empilhados e texto descendo para fora do jornal, inclusive ao só segurar a folha. A chave agora é única (o mesmo conserto no resumo dos lances da temporada). A folha também corta o que passar da altura dela e cada história tem no máximo cinco linhas; a leitura ampliada continua sem corte.
+- **Nome do jogador no selo.** O selo de recorde do jornal mostra o nome do jogador no lugar de "Você".
+- **Números de cada clube na linha do tempo.** Como a estreia na seleção já mostrava, cada passagem por clube mostra jogos, gols e assistências ali; com temporadas no gol ou na defesa, também os jogos sem sofrer gol; o goleiro puro mostra jogos e jogos sem sofrer gol.
+- **Desafio do dia mais limpo.** A entrada do desafio tem a data como título, o relógio em selo, a bandeira grande com a posição, as regras fixas em quatro selos curtos (Difícil, 1 decisão a cada 2 anos, Fim a partir dos 27, Valem as 2 melhores missões), as missões, o recorde do dia quando houver e o édito, que já diz o que acontece se for descumprido. "Seu jogador" tem a aparência, o nome e o número. À direita, o botão Jogar em destaque, uma linha sobre a ranqueada, Voltar, o ranking do dia e as suas ranqueadas. Saíram as notas repetidas: a regra da meia-noite UTC, a frase sobre o que é livre, o aviso do édito repetido, a nota do ranking e a explicação de "Limpas" (agora na dica do rótulo).
+
+**Como ficou (D96).** `career/leagueTable.ts` (`leagueSnapshot`, `leagueAfter`, `LEAGUE_ROUND`) e `seasonPreview` em `career/drama.ts`; `LeagueLive` em `screens/career/LeagueLive.tsx`, estilos `.league-live*` em `styles/drama.css`. Selo da terceira opção em `MatchOutcome.tsx` com as chaves `hold*` de `i18n/decisionFeedback.ts`. `liveRecordChases` em `packages/content/src/records.ts`. `silentWeek` removido de `events/catalog.ts` e dos textos. Chave dos lances em `Newspaper.tsx` e `SeasonDrama.tsx`; corte da folha no fim de `styles/summary.css`. `StintNumbers` em `SummarySections.tsx`. Entrada do desafio em `screens/challenge/ChallengeScreen.tsx` e `styles/challenge.css`.
+
+## Revisão D97: números de clube e seleção juntos, tabela que se ajeita e capa do jornal sem sobreposição (27/10/2026)
+
+Motor `2.0.0-m30`, sem mudança de carreira.
+
+- **Números da carreira somam clube e seleção.** `careerTotals` passa a contar em `games`, `goals`, `assists` e `cleanSheets` os jogos de clube e os da seleção; a parte da seleção continua em `nationalGames`, `nationalGoals` e os novos `nationalAssists` e `nationalCleanSheets`. Vale para o painel da carreira, o resumo, o Hall, a biografia, a despedida e o rodapé "Até aqui na carreira" do jornal. Os recordes já somavam clube e seleção desde a D92 (gols, jogos), então nenhum recorde, missão ou meta muda; os números de uma temporada (a caixa "Os números" do jornal, recordes de temporada) seguem sendo do clube. Só apresentação: o motor das carreiras não muda.
+- **Assistências pela seleção.** O motor já contava as assistências da seleção (e o peso delas no legado nacional); agora `nationalLegacy` as devolve, com os jogos sem sofrer gol, e a estreia na seleção da linha do tempo mostra jogos · gols · assistências pela mesma regra dos clubes (goleiro puro: jogos e jogos sem sofrer gol; quem jogou atrás também vê os jogos sem sofrer gol).
+- **A tabela da liga se ajeita à vista.** No resultado, a tabela abre como estava e, meio segundo depois, a rodada fecha: as linhas deslizam para o lugar novo em 0,8 s, as setas de quem subiu ou caiu aparecem e a linha do clube acende. Com movimento reduzido, fecha direto.
+- **Mais tempo no resultado do lance.** O resultado do jogo decisivo segue sozinho para a próxima decisão depois de 3 s (eram 2,1 s); o botão Continuar segue na hora.
+- **Capa do jornal sem caixa por cima de caixa.** A caixa de conquistas mantinha a altura mínima e deixava a lista vazar por cima dos selos da temporada (Acesso, lesão). Agora ela não encolhe, cada nome fica numa linha só (o nome inteiro na dica), "Também nesta temporada" continua a parte que cede e a coluna corta o que sobrar. Conferido página a página em todas as amostras de navegador, no PC e no celular.
+
+**Como ficou (D97).** `careerTotals` em `career/history.ts` e `nationalLegacy` em `season/nationalLegacy.ts`; `NumbersLine` em `screens/summary/SummarySections.tsx`; rodapé do jornal em `Newspaper.tsx` e totais da despedida em `packages/content/src/cover.ts`. `SETTLE_DELAY_MS` e `SETTLE_MS` em `LeagueLive.tsx`, animações `league-move` e `league-me` em `styles/drama.css`. `RESULT_READING_MS` em `features/career/useSeasonFlow.ts`. Bloco D97 no fim de `styles/summary.css`.
+
+## Revisão D98: tabela da liga fixa e animada, 2,5 s no resultado e aba Seleção completa (27/10/2026)
+
+Motor `2.0.0-m30`, sem mudança de carreira.
+
+- **Tabela da liga de tamanho fixo, presa ao pé do card.** É uma peça só do lance ao resultado (antes eram duas, uma sob as opções e outra sob o resultado, e por isso mudava de lugar e de tamanho). O tamanho é medido uma vez, com as opções na tela, que é o estado mais alto do card, e fica o mesmo até seguir: nunca cresce, encolhe nem se mexe. Com espaço, a tabela tem 150 px (cinco linhas à vista, o resto rola por dentro); com menos, fica com o que sobra, desde que caibam três linhas (112 px); com menos ainda, vira a **faixa**: uma linha de 46 px com os clubes em volta do jogador (posição, escudo e pontos; o nome na dica e no leitor de tela), que reordena do mesmo jeito; sem espaço nem para a faixa, não aparece nesse jogo. Nos jogos de liga as opções ficam um pouco mais baixas para caber. Medido em 1440 × 900, 1920 × 1080, 768 × 1024 e 412 × 915 (tabela), 360 × 740 (tabela de três linhas), 1366 × 768 e 390 × 800 (faixa): mesma posição e altura antes e depois do lance, sem rolar o card.
+- **Tabela mais animada.** As linhas entram em cascata; um ponto pulsa "ao vivo" até o resultado; no resultado, a tabela respira, a rodada fecha, as linhas trocam de lugar em 0,9 s, os pontos sobem contando, as posições de quem subiu ficam verdes e as de quem caiu vermelhas, quem venceu ganha um fundo verde, a posição do clube do jogador pulsa e um brilho atravessa a tabela. Com movimento reduzido, nada disso: fecha direto.
+- **Resultado do lance em 2,5 s.** O resultado do jogo decisivo segue sozinho depois de 2,5 s (eram 3 s na D97).
+- **Aba Seleção completa.** Jogos, gols, assistências, jogos sem sofrer gol (para quem jogou atrás), títulos e estreia; goleiro puro vê jogos sem sofrer gol no lugar de gols e assistências, como na linha do tempo. Os títulos contam só os torneios que ele disputou, como a lista de torneios.
+- **O resultado do jogo de liga muda a tabela final.** Já era assim desde a D89 (`keyLeague`, `world/keyMatches.ts`): a diferença de pontos entre o placar na hora do lance e o placar final vai para o clube do jogador e para o adversário na tabela do ano, que se reordena. Virar uma derrota em vitória vale 3 pontos e pode dar o título ou tirar do rebaixamento.
+
+**Como ficou (D98).** `LeagueLive.tsx` (`FULL_HEIGHT`, `MIN_HEIGHT`, `STRIP_HEIGHT`, `SETTLE_DELAY_MS`, `SETTLE_MS`, `CountUp`), renderizada uma vez no fim de `DramaDecisionPanel.tsx`; estilos D98 no fim de `styles/drama.css`. `RESULT_READING_MS = 2500` em `features/career/useSeasonFlow.ts`. `NationPanel` em `screens/career/CareerPanels.tsx`, chaves `career.nation.assists`, `cleanSheets` e `titles`.
+
+## Revisão D99: pular resultado nos Ajustes, segurar para ler, resumo sem biografia (27/10/2026)
+
+Motor `2.0.0-m30`, sem mudança de carreira. A seção 25 (biografia) e as menções à biografia nas seções anteriores ficam como registro; não valem mais.
+
+- **Pular resultado automaticamente (Ajustes).** Preferência nova, ligada por padrão: o resultado do lance segue sozinho para a próxima decisão depois de 2,5 s. Desligada, o resultado espera o botão Continuar. Fica em Ajustes (logo depois de Animações) e no laboratório, em Controles. Preferência `autoAdvance` em `store/prefs.ts`.
+- **Segurar o clique segura o resultado.** Com o avanço automático ligado, segurar o clique (ou o dedo) em qualquer ponto do card da decisão para o relógio; ao soltar, ele retoma de onde parou. Sem nenhum desenho novo: só a lógica, como já acontecia com a aba escondida.
+- **Resumo reorganizado.** Os capítulos ficam na ordem Números, Troféus, Linha do tempo, Jornal e Hipotético (o capítulo do Desafio, quando há, continua em primeiro).
+- **A biografia saiu do jogo.** Saem o capítulo do resumo, a prévia no laboratório (Fim de carreira mostra só o pôster), o gerador (`biography`, `bioFacts`, temas e capítulos), os textos nos três idiomas (`locales/bio.*`), os estilos e os testes dela, e o efeito `story` dos acontecimentos, que não fazia nada no jogo e só servia de marca para a biografia (sete marcas no catálogo). As passagens por clube, que a linha do tempo e o pôster usam, ficam em `packages/content/src/stints.ts` (`stintsOf`). Nenhuma carreira muda: o efeito `story` era ignorado pelo motor.
+- **Teste de recordes por posição (só medição, nada mudou).** 900 Fenômenos por posição, jogados até o fim pelos três lotes da ferramenta de recordes. Gols numa temporada (73): PE e PD igualaram em 0,11% (1 carreira cada; melhor 78 e 79), CA em 2,78% (melhor 80), MEI em 0,11% (melhor 76). Assistências numa temporada (32): PE 2,11% (melhor 36), PD 2,44% (melhor 35), CA 3,33% (melhor 38), MEI 48,89% (melhor 41, mediana 31), MC 6,56%. Todos conseguem; o MEI consegue o de assistências em quase metade das carreiras de Fenômeno.
+
+**Como ficou (D99).** `autoAdvance` em `store/prefs.ts`, chaves `settings.autoAdvance` e `settings.autoAdvanceHint`, interruptor em `SettingsPanel.tsx` e em `lab/sections/Controls.tsx`. Relógio com pausa por aba escondida e por clique segurado dentro de `.season-decision-window` em `features/career/useSeasonFlow.ts`. `CHAPTERS` em `screens/summary/SummaryView.tsx`. `stintsOf` em `packages/content/src/stints.ts`; `packages/content/src/biography/` e `locales/bio.*` apagados. Teste ponta a ponta em `e2e/d99.spec.ts`.
+
+## Revisão D100: pontas e meias perto dos recordes, MEI menos certeiro nas assistências (27/10/2026)
+
+Motor `2.0.0-m31`. A tabela de `SCORING` da seção da produção e as caudas da D63 e da D92 ficam como registro; os números abaixo prevalecem.
+
+- **Metas por posição (pedido do usuário), em Fenômenos jogados até o fim.** Gols numa temporada (73): pontas perto de 2%, MEI perto de 1% e abaixo. Assistências numa temporada (32): pontas perto de 4%, MEI de 5% para cima (era 49%).
+- **Produção (`SCORING`).** Pontas: gols 0,24 para **0,285**, assistências 0,17 para **0,19**. MEI: gols 0,22 para **0,28**, assistências 0,22 para **0,15**. As outras posições não mudam.
+- **Peso do nível por posição (`LEVEL_BY_POSITION`, novo).** O coeficiente de nível dos gols, 0,032 para todos, passa a **0,05** para pontas e MEI: quem sobra em campo transforma a sobra em gols, o que abre a temporada recorde para o Fenômeno sem mexer tanto na temporada comum, que joga perto do nível da oposição. As assistências seguem 0,045 para todos.
+- **Teto em relação ao centroavante (`STRIKER_CEILING`, novo).** Com a finalização comum, o centroavante segue finalizando mais que todos, na ordem CA, ponta, MEI, meia aberto, MC. O finalizador de elite da ponta pode passar o centroavante com os mesmos números, que é o que abre a temporada recorde para ele, mas no máximo **130%** dele (MEI **125%**). Medido: um teto em 97% (ninguém passa o centroavante) derrubava as pontas para 0,15% no recorde de gols, e em 115%, para 0,75%; a meta de 2% exige o finalizador de elite acima do centroavante.
+- **Regra da D68 revista.** A D68 pedia o ponta excepcional de finalização comum abaixo de 65% do centroavante e a ordem das funções com finalização 99. Agora: abaixo de 92% com finalização comum, a ordem das funções com finalização comum (CA, ponta, MEI, meia aberto, MC) e com finalização 99 entre as outras posições, e o ponta de elite com no máximo 55 gols esperados em 50 jogos (eram 50). Testes em `test/d68.test.ts`.
+- **Caudas de recorde (`PRESSURE`).** Com pontas e meias fazendo mais gols, três marcas saíram da faixa de raridade e voltaram: gols numa temporada começa a afinar em **72** (era 73; o 73º gol já passa por sorteio), gols na carreira em **880** (era 930) e gols pela seleção em **132** (era 146). Bolas de Ouro seguidas, que já estava acima da faixa lendária antes da D100, passa a afinar a partir da **terceira** seguida, escala **1,5** (era quarta, escala 3).
+- **Assistências numa temporada vira Raro.** Era Clássico (6% a 15% das carreiras de Fenômeno de ataque); com o MEI na casa dos 7%, as pontas perto de 4% e o centroavante abaixo de 1%, o lote de ataque dá cerca de 4%, a faixa Rara (2% a 5%). O selo da conquista muda junto.
+- **Medido (1.800 Fenômenos por posição, duas sementes).** Gols numa temporada: PE 1,5%, PD 2,2% (pontas 1,9%), MEI 0,7%, CA 2,4%. Assistências numa temporada: PE 3,4%, PD 3,7%, MEI 7,2%, CA 0,7%. Medianas da melhor temporada: pontas 38 gols e 22 assistências; MEI 35 gols e 23 assistências; CA 48 gols.
+- **Relatório de recordes (`pnpm balance:recordes`, semente padrão).** Gols numa temporada 1,44%, gols na carreira 0,61%, gols pela seleção 0,33%, assistências numa temporada 4,06% (Raro), Bolas de Ouro seguidas 0,39%: todas na faixa. Três marcas lendárias ficam marcadas porque alguém as alcança mas ninguém as supera no lote: Bolas de Ouro (8), Bolas de Ouro seguidas (4) e Premier League (13, já assim antes da D100). Em outra semente, Premier League foi superada; com alcance de 0,2% a 0,3%, superar no lote de 1.800 é questão de amostra.
+- **Muda o resultado das carreiras.** Motor `2.0.0-m31`, amostras de navegador reconstruídas em m31, as 51 metas do GDD 40 atendidas.
+
+**Como ficou (D100).** `SCORING`, `LEVEL_BY_POSITION`, `STRIKER_CEILING` e `STRIKER_CEILING_BY_POSITION` em `packages/engine/src/season/production.ts`; `PRESSURE` em `records/pressure.ts`; faixa de `seasonAssists` em `packages/content/src/records.ts` e `tools/balance/src/records.ts`; `runRecordCareers` aceita medir só algumas posições.
+
+## Revisão D101: centroavante perto do recorde, vitrine com Bola e Chuteira primeiro, jornal com o recorde de mais valor (28/10/2026)
+
+Motor `2.0.0-m32`.
+
+- **Centroavante Fenômeno bate o recorde de gols numa temporada em 5% ou mais.** O peso do nível nos gols do centroavante passa de 0,032 para **0,039** (`LEVEL_BY_POSITION.st`): o centroavante que sobra em campo faz mais gols. O teto das outras posições (D100) continua medido contra o centroavante de peso 0,032, para pontas e MEI não mudarem. MEI: gols 0,28 para **0,275**, para seguir perto e abaixo de 1%.
+- **Medido (1.800 Fenômenos por posição, duas sementes).** Recorde de gols numa temporada: CA 5,8%, PE e PD cerca de 2%, MEI perto de 0,8%. Assistências: pontas cerca de 3,6%, MEI 7,5%, CA cerca de 1%. Mediana da melhor temporada do CA: 53 gols (eram 48).
+- **Gols numa temporada vira Raro.** Era Épico (0,5% a 1,5%); com o centroavante em 5% ou mais, o lote de ataque dá 2,6%, faixa Rara (2% a 5%). O selo da conquista muda junto.
+- **Caudas (`PRESSURE`).** Com o centroavante marcando mais, voltaram para a faixa: gols na carreira começa a afinar em **870** (era 880), gols pela seleção em **126** (era 132) e Chuteiras de Ouro passa a afinar a partir da **sexta**, escala **1,2** (era sétima, escala 3,5). Relatório na semente padrão: gols numa temporada 2,61% (Raro), gols na carreira 1,11%, gols pela seleção 0,22%, assistências 3,94%, Chuteiras de Ouro 0,33%. Quatro marcas lendárias seguem alcançadas mas não superadas no lote: Bolas de Ouro, Bolas de Ouro seguidas, Chuteiras de Ouro e Premier League.
+- **Vitrine: troféus primeiro, prêmios depois, com duas exceções.** A Bola de Ouro e a Chuteira de Ouro, quando ganhas, abrem a vitrine antes de todas as taças; depois vêm os troféus, pela importância, e então os outros prêmios (Luva de Ouro, Rei da América, Revelação, craque e artilheiro de competição). Vale para a vitrine da carreira, a linha do tempo e as conquistas do jornal (`compareHonours`).
+- **Dois ou mais recordes no mesmo ano.** O jornal abre a capa com um recorde só e o selo conta os outros ("+N"). O escolhido é o superado (antes do igualado) de mais valor: lendário, épico, raro e clássico; no empate, a ordem do catálogo.
+- **Ajustes.** "Pular resultado automaticamente" fica sem a frase de explicação, nos Ajustes e no laboratório.
+- **Muda o resultado das carreiras.** Motor `2.0.0-m32`, amostras de navegador reconstruídas em m32.
+
+**Como ficou (D101).** `LEVEL_BY_POSITION.st` e `SCORING.cam` em `packages/engine/src/season/production.ts`; `PRESSURE` em `records/pressure.ts`; faixa de `seasonGoals` em `packages/content/src/records.ts` e `tools/balance/src/records.ts`; ordem por valor em `recordsReachedIn` (`packages/content/src/records.ts`); `GLOBAL_AWARDS` em `packages/world/src/honourOrder.ts` e `showcaseItems` em `apps/game/src/features/summary/showcase.ts` só por `compareHonours`.
+
+## Revisão D102: centroavante Fenômeno entre 4% e 5% no recorde de gols (28/10/2026)
+
+Motor `2.0.0-m33`. Prevalece sobre o peso do centroavante e a escala das Chuteiras de Ouro da D101.
+
+- **Centroavante Fenômeno entre 4% e 5% no recorde de gols numa temporada (pedido do usuário).** O peso do nível nos gols do centroavante passa de 0,039 (D101) para **0,0365** (`LEVEL_BY_POSITION.st`). Pontas e MEI não mudam: o teto deles continua medido contra o centroavante de peso 0,032.
+- **Como foi medido.** Lotes de 900 Fenômenos centroavantes (três políticas, jogados até o fim), muitas sementes de cada vez. Com 0,039: 6,56% em 3.600 carreiras. Com 0,0355: 4,30% e com 0,0358: 4,46% nas mesmas 5.400. Com **0,0365**: 4,44% em 10.800 carreiras, 4,80% em outras 5.400 e 4,23% em 10.800 sementes novas, nunca usadas no ajuste; ao todo, **4,43% em 27.000 carreiras** (margem de cerca de 0,25 ponto). Lotes de 900 variam de 3,6% a 5,1% só pela amostra. A mediana da melhor temporada do centroavante Fenômeno fica em 52 gols.
+- **Recordes (`pnpm balance:recordes`).** Na semente padrão: gols numa temporada 2,00% (Raro, 2% a 5%), gols na carreira 0,83%, gols pela seleção 0,17%, assistências 3,94%. Na segunda semente, gols numa temporada 2,67%: a média do ataque fica perto de 2,3% (CA 4,4%, pontas cerca de 2%, MEI 0,8%), dentro da faixa Rara. Chuteiras de Ouro ficou em 0,17% e 0,06% nas duas sementes (média dentro da faixa lendária); a cauda delas afina com escala **1,6** (era 1,2 na D101), o que deixa passar da marca mais possível. As mesmas quatro marcas lendárias da D101 seguem alcançadas mas não superadas no lote.
+- **Muda o resultado das carreiras.** Motor `2.0.0-m33`, amostras de navegador reconstruídas em m33.
+
+**Como ficou (D102).** `LEVEL_BY_POSITION.st` em `packages/engine/src/season/production.ts`; `PRESSURE.goldenShoes` em `records/pressure.ts`.
+
+## Revisão D103: superar Bola de Ouro, sequência de Bolas e Chuteiras de Ouro fica possível (28/10/2026)
+
+Motor `2.0.0-m34`.
+
+- **Na marca real, a pressão do recorde para de crescer (`Tail.mark`).** Até a marca, cada conquista a mais custa mais sorte; passar da marca custa o mesmo que alcançá-la. Vale para três recordes que ninguém superava em 21.600 carreiras de Fenômeno (D44 pede superar raro, mas possível): **Bolas de Ouro** (marca 8: a 9ª fica com 45% de chance, como a 8ª, em vez de 30%), **Bolas de Ouro seguidas** (marca 4: a 5ª seguida fica com 51%, como a 4ª, em vez de 26%) e **Chuteiras de Ouro** (marca 6: a 7ª fica com 54%, como a 6ª, em vez de 29%). Alcançar a marca continua exatamente tão raro quanto antes. As outras caudas não mudam.
+- **Medido (21.600 Fenômenos de ataque: CA, MEI, PE e PD, seis sementes).** Bolas de Ouro: alcança 0,27%, supera 0,032% (12% de quem alcança; antes, 0 em 29). Bolas seguidas: alcança 0,30%, supera 0,023% (8% de quem alcança). Chuteiras de Ouro: alcança 0,27%, supera 0,042% (15% de quem alcança).
+- **O relatório de recordes.** Na semente padrão, Bolas de Ouro seguidas passa a ser superada no lote; Bolas de Ouro e Chuteiras de Ouro ainda aparecem marcadas, porque o lote do relatório tem 1.800 carreiras de ataque e só 3 ou 4 chegam à marca: com 12% a 15% de quem alcança superando, o lote espera perto de meia carreira que supere. A medição grande acima é a prova de que superar é possível.
+- **Tabela por posição (D102, 1.800 Fenômenos por posição, a mesma conta de recordes do jogo).** Gols numa temporada: CA 4,2%, PE 2,1%, PD 2,2%, MEI 0,39%, ME e MD perto de 0,15%, MC 0,11%, defensores e goleiro 0. Assistências numa temporada: ME 8,8%, MEI 8,4%, MD 7,4%, PE 4,9%, PD 4,1%, MC 1,1%, LE 0,94%, CA e LD 0,67%. Jogos sem sofrer gol numa temporada de liga: goleiro 10,7%. Jogos pela seleção: goleiro 23%, zagueiro 16%, demais de 5% a 10%. Títulos e ligas dependem do clube e quase não mudam com a posição.
+- **Muda o resultado das carreiras.** Motor `2.0.0-m34`, amostras de navegador reconstruídas em m34.
+
+**Como ficou (D103).** Campo `mark` em `Tail` e no cálculo do expoente (`records/pressure.ts`); `PRESSURE.ballonDor`, `PRESSURE.ballonStreak` e `PRESSURE.goldenShoes` com `mark`. Teste em `test/records.test.ts`.
+
+## Revisão D104: o centroavante alcança o recorde de gols pela seleção (28/10/2026)
+
+Motor `2.0.0-m35`.
+
+- **O centroavante passa a bater o recorde de gols pela seleção.** Na tabela por posição da D102, o CA nunca chegava aos 146, embora fosse quem mais chegava perto (55 de 900 Fenômenos com 130 ou mais). A cauda começava a afinar em 126 com escala 22 e empilhava todos entre 130 e 144. Agora ela começa em **138**, escala **7**: até 138 o gol entra livre, e daí para a frente cada gol pede mais sorte.
+- **Medido (1.800 Fenômenos por posição).** Alcança 146: CA 0,33%, PE 0,28%, PD 0,44%, MEI 0 (o MEI chega a 143); supera: CA 0,17%, PE e PD 0,22%. Ataque inteiro 0,26%. No relatório da semente padrão, 0,33% (faixa lendária, 0,1% a 0,4%), com superação no lote.
+- **Muda o resultado das carreiras.** Motor `2.0.0-m35`, amostras de navegador reconstruídas em m35.
+
+**Como ficou (D104).** `PRESSURE.nationalGoals` em `packages/engine/src/records/pressure.ts`.
+
+## Revisão D105: goleiro na seleção perto de 12%, Jogos de Champions League e talentos abaixo do Fenômeno (29/10/2026)
+
+Motor `2.0.0-m36`.
+
+- **Jogos pela seleção do goleiro perto de 12%.** O goleiro chegava aos 234 jogos pela seleção em 23% das carreiras de Fenômeno, o dobro do teto da faixa Clássica (6% a 15%): virava recorde garantido. A cauda dos jogos pela seleção do goleiro começa em **216** (`PRESSURE.capsKeeper`; a das outras posições segue em 224). Medido: 12,6% a 13,2% (5.400 goleiros Fenômeno). As outras posições não mudam.
+- **Recorde novo: Jogos de Champions League (Cristiano Ronaldo, 183; UEFA e Guinness).** Faixa Clássica, contada pelos jogos na Champions League das linhas de competição da temporada. É o recorde de carreira longa em clube grande, e por isso a meta natural das posições de trás: Fenômeno GOL 17,7%, ZAG 14,2%, VOL 14,1%, LE e LD cerca de 12,5%, ataque de 10% a 12,6%. No relatório da semente padrão, 14,27%. Textos nos três idiomas.
+- **Por que não um recorde de gols de defensor.** Pesquisado: o recorde de gols de um defensor é de Ronald Koeman (cerca de 253 na carreira; as fontes divergem entre 193 só de liga, 239 e 253), com 113 de pênalti e 60 de falta; o segundo é Daniel Passarella (175); pela seleção, Sergio Ramos (23 pela Espanha). Um zagueiro Fenômeno faz no jogo de 20 (mediana) a 54 gols na carreira e no máximo 11 pela seleção: a marca exigiria um batedor de pênalti e falta, que o jogo não tem. Ficaria inalcançável, contra a regra da D44.
+- **Talentos abaixo do Fenômeno (medição, sem mudança).** Com 1.800 carreiras por posição e faixa: **Estrela** vê recorde de vez em quando em toda posição (CA gols numa temporada 1,8%, MEI assistências 2,6%, GOL jogos sem sofrer gol 3,2%, ZAG títulos 3,3%, ligas e Champions de 0,2% a 2%), e quase nunca os individuais grandes (Bola de Ouro 0, gols na carreira só o CA 0,39%). **Craque** fica quase tudo entre 0 e 0,4% (GOL jogos sem sofrer gol 1,2%, MEI assistências 0,78%, CA gols numa temporada 0,39%, títulos continentais e de liga perto de 0,1% a 0,3%): possível, mas raro, como pedido.
+- **Ferramenta.** `runRecordCareers` aceita a faixa de talento, para medir Craque e Estrela.
+- **Muda o resultado das carreiras.** Motor `2.0.0-m36`, amostras de navegador reconstruídas em m36.
+
+**Como ficou (D105).** `PRESSURE.capsKeeper` em `packages/engine/src/records/pressure.ts`, usado em `season/playerSeason.ts` para o goleiro; `championsGames` em `packages/content/src/records.ts`, nos textos `locales/records.*.ts` e em `tools/balance/src/records.ts`.
+
+## Revisão D106: Bola de Ouro com protagonismo, legado pela tradição, empresário, bolinhas e personagem (29/10/2026)
+
+Motor `2.0.0-m37`. Esta revisão prevalece sobre a GDD 13 (Bola de Ouro), a regra de legado na seleção da D71, o ritmo Rápida da D78 e o tempo de leitura da D98.
+
+- **Bola de Ouro com protagonismo e títulos em escada.** A nota do jogador continua sendo OVR, produção, fama, prestígio e posição; mudam os títulos e entra o protagonismo.
+  - **Títulos em escada** (`BALLON_TITLE`, `BALLON_TITLE_STEPS`): Copa do Mundo 4,2, Champions (continental principal) 2,5, Eurocopa ou Copa América 1,6, liga 1, continental secundário 0,7, Mundial de Clubes 0,6, copa nacional e continental terciário 0,35, intercontinental 0,3, supercopa continental 0,2, copa da liga 0,15, supercopa nacional 0,1; segunda divisão não conta. O maior título conta inteiro e os seguintes 70%, 50%, 35%, 25% e 20%: ganhar a Copa e a Champions é o melhor ano, mas três copas menores não somam uma Champions.
+  - **Ano de Copa** (`WORLD_CUP_SHADOW` 0,85): quem não ganhou a Copa vê os títulos de clube pesarem 85%. Com a campeã conhecida, a elite daquela seleção leva 60% da Copa (`ELITE_CHAMPION_SHARE`), e o resto da elite também carrega a sombra.
+  - **Título decidido por ele** (`STARRED_TITLE` 1,25): a competição em que o lance de protagonista do jogo-chave deu certo pesa 25% a mais.
+  - **Protagonismo** (`SPOTLIGHT`): cada jogo-chave em que ele assume a jogada (ou a cobrança) soma 0,25, mais 0,35 se deu certo, vezes o peso da fase (liga 0,7, quartas 0,9, semifinal 1,1, final 1,4) e 1,15 pela seleção, até **2,2** pontos na nota (o goleiro leva metade). O teto e a chance menor do lance ousado impedem a fazenda de Bola de Ouro. A opção diz "Mais protagonismo." (D107: sem citar a Bola de Ouro).
+  - **Rei da América igual:** o prêmio das Américas usa a mesma escada de títulos (sem a sombra do ano de Copa) e o mesmo protagonismo, com desconto de 1,1 (`AMERICA_RECALIBRATION`) para não inflar: por temporada elegível, a frequência fica como antes (CA 18,7%, ZAG 16,8%, MC 8,6%), e quem ousa duas ou mais vezes ganha mais (CA 26,6%).
+  - **Recalibragem:** força do campo 9,0 (era 8,25) e desconto do goleiro 13 (era 11).
+  - **Medido (300 Fenômenos por posição, temporadas com OVR 90 ou mais):** atacante ganha em 54% dos anos de Copa sem Champions e 44% dos anos de Champions sem Copa (eram 23% e 43%); Copa e Champions juntas, de 62% (ZAG) a 100% (CA). Sem título grande ainda dá (cerca de 1%, como a temporada de 2025 de Harry Kane). Quem ousa 3 ou mais vezes no ano ganha de 3 a 5 vezes mais que quem nunca ousa. Bolas por carreira: CA 1,07, PE 0,82, MEI 0,87, MC 0,51, VOL 0,34, ZAG 0,23, LE 0,23, GOL 0,01 (0,7% dos goleiros Fenômeno ganham uma, raríssimo como na D90). No total, 18,8% dos Fenômenos ganham ao menos uma (2.400 carreiras).
+  - **Fora da Europa, raro mas possível:** a temporada histórica fora da Europa (OVR 91 ou mais, 38 jogos, continental principal ou Copa, 50 gols mais metade das assistências, ou 28 jogos sem sofrer gol) tira o desconto de 8 e deixa 1 (`outsideHistoricPenalty`), com 60% de o voto se confirmar (`outsideEuropeChance`). Medido: 0,42% das carreiras de Fenômeno (1 em 240) ganham uma Bola de Ouro jogando fora da Europa; antes, nenhuma em 2.400.
+- **Legado na seleção pela tradição do país.** `WORLD_CUP_TITLES` (packages/world) guarda as campeãs do mundo: Brasil 5, Alemanha 4, Itália 4, Argentina 3, França 2, Uruguai 2, Inglaterra 1, Espanha 1. Nelas, só a Copa do Mundo faz uma lenda; com números de lenda e sem a Copa, o jogador fica como ídolo, e o resumo diz por quê. Seleção forte sem Copa (força 82 ou mais, como Portugal, Holanda e Bélgica) cobra a Copa ou o título continental. As outras fazem lenda com números e protagonismo, e nelas o título continental pesa mais (até 1,6 vez).
+- **Troca de empresário com efeito garantido.** Deu certo ou errado, a decisão seguinte é uma janela de transferências com proposta garantida: propostas melhores que o normal (`agentUp`) ou piores (`agentDown`), com ficar no clube como opção. O evento só aparece até os 29 anos (era 32). Os textos dizem exatamente isso.
+- **Concorrência na posição só quando faz sentido.** O clube não contrata um concorrente para quem está mais de 6 pontos de OVR acima da força do elenco (condição `clubGap`). Perto disso, brigar pela vaga fica mais fácil: +4% de chance por ponto acima da força, de -2 a +6 (`gapEdge`).
+- **Ritmo Normal: nenhuma temporada abre sem decisão principal.** Quando a janela não tinha proposta, não sobrava treino possível (atributos no teto) e nem a proposta garantida aparecia, o ano começava direto num jogo-chave. Agora esse ano abre com a promessa da temporada, que é decisão principal. O ritmo Rápida segue como antes: a decisão principal e até um jogo-chave por ano, até três decisões nas duas temporadas.
+- **Bolinhas da temporada clicáveis.** A bolinha de uma decisão já respondida no ano abre o resultado dela, só para ler: a decisão principal com o cartão do resultado e "Sua escolha" marcada, o jogo-chave com o placar e o desfecho. A bolinha atual (ou "Voltar à decisão atual") volta para a decisão em aberto. Nada volta no tempo.
+- **Resultado do lance em 3 s** (eram 2,5 s na D98), com o mesmo ajuste de pular automaticamente.
+- **Jogo-chave e jornal com mais variação.** O título grande do jogo-chave fala do momento (final, desvantagem, acréscimos, seleção, pênaltis), com variantes que não se repetem em duas decisões seguidas; o nome da cena ("Domínio na área") vira a linha de cima. A crônica do lance no jornal tem três a quatro manchetes por desfecho, três aberturas e quatro finais por situação, com mais emoção e sem inventar nada. As capas não repetem uma manchete do mesmo ângulo na carreira até esgotar as opções, e os ângulos mais comuns ganharam três manchetes e duas linhas de apoio novas nos três idiomas.
+- **Criador de personagem.** Cabelo: 14 estilos (novos: repartido ao meio, para trás, espetado, topete, moicano e nagô; o ondulado agora fica dentro da cabeça, sem encostar na orelha). Barba: 8 (novas: cavanhaque, cavanhaque e bigode e lenhador). Itens: 7 (novos: faixa nasal levemente curva, boné e gorro; a bandana saiu na D107); boné, gorro e boina escondem o cabelo inteiro. Rosto: opção sem sobrancelha, sem nariz e sem boca. Detalhes novos: cicatriz pequena (sobrancelha, bochecha, queixo) e brinco (esquerdo, direito, os dois) em cinco modelos (ponto, argola, diamante, cruz, pingente) e seis cores. Saves antigos abrem sem cicatriz nem brinco, e um estilo que não existe mais volta ao padrão.
+- **Interface.** Conquistas de cada aba da comum à lendária e, dentro da raridade, em ordem alfabética (a secreta fechada vai para o fim); o seletor Craque | Técnico na fonte de título. No Início do Craque, o painel das conquistas fica, sem o título "Memória". Ritmo: "Uma decisão principal a cada duas temporadas." e "Uma decisão principal por temporada.". Etiqueta "Escolha original" (era "Escolha da original"), dentro da borda da opção. A regra do desafio com idade diz quando vale: "Antes dos 23 anos, vale tudo. Dos 23 anos até o fim, nenhuma temporada na segunda divisão." e "Quebrou a regra uma vez, a pontuação final cai pela metade."
+- **Recordes e desafio depois da recalibragem.** A cauda das Bolas de Ouro seguidas fica mais curta (escala 0,9, era 1,5): o protagonismo ajudava quem já ganha a ganhar de novo, e a quarta seguida chegou a 0,67% dos Fenômenos. A terceira Copa do Mundo pede mais sorte (escala 2,2, era 3,5), de 1,56% para 1,38%. Relatório de recordes: 19 de 22 marcas na faixa; Bolas de Ouro (0,33%), Bolas seguidas (0,39%) e Premier League (0,18%) são alcançadas na faixa, mas ninguém superou na amostra, como já acontecia na D105. Metas do Desafio do dia recalibradas (`pnpm desafio:calibrar`).
+- **Muda o resultado das carreiras.** Motor `2.0.0-m37`, amostras de navegador reconstruídas em m37.
+
+**Como ficou (D106).** Bola de Ouro em `packages/engine/src/awards/awards.ts` (`BALLON_TITLE`, `BALLON_TITLE_STEPS`, `WORLD_CUP_SHADOW`, `ELITE_CHAMPION_SHARE`, `STARRED_TITLE`, `SPOTLIGHT`, `ballonTitleValue`, `ballonSpotlight`), alimentada em `season/playerSeason.ts`; legado em `season/nationalLegacy.ts` e `WORLD_CUP_TITLES` em `packages/world/src/world.ts`; empresário em `career/decisions.ts` (razões `agentUp` e `agentDown`); concorrência em `events/catalog.ts`, condição `clubGap` e `gapEdge`; ano sem decisão principal em `career/decisions.ts` (`nextDecision`, promessa no lugar da partida). Bolinhas em `screens/career/SeasonDecision.tsx`, `CareerScreen.tsx` e `features/career/useSeasonFlow.ts` (`DecisionRecall`). Manchetes em `packages/content/src/matchHeadlines.ts`, `matchStory.ts` e `cover.ts`. Avatar em `packages/art/src/avatar`. Pressão em `records/pressure.ts` (`ballonStreak`, `worldCups`); metas do desafio em `challenge/targets.ts`. Testes: `packages/engine/test/d106.test.ts`, `packages/art/test/avatarStyles.test.ts`, `apps/game/e2e/d106.spec.ts` (e amostra `e2e/fixtures/despedida-m37.json` para a capa da despedida com recorde).
+
+## Revisão D107: erro no jogo-chave, top 10 da Bola de Ouro, explosão jovem e promessa no Rápida (29/10/2026)
+
+Motor do Craque `2.0.0-m38`. Detalhes na revisão D107 do GDD e na decisão D107.
+
+- **Bola de Ouro: o erro tira um pouquinho e o jogo coletivo soma um pouquinho.** Complementos ao protagonismo da D106, que segue igual para o lance de protagonista que dá certo (0,25 + 0,35 vezes a fase).
+  - **Lance que deu errado** (`SPOTLIGHT.miss` 0,12): qualquer opção (ousada, coletiva, segura, canto) tira 0,12 vezes o peso da fase (liga 0,7 a final 1,4), vezes 1,15 pela seleção, vezes o peso da competição: 1 mais 0,12 por ponto do título na escada da Bola de Ouro, até +50% (`missStake`). Errar a final da Copa tira cerca de 0,28; acertar dá 0,97. O lance ousado que dá errado deixou de somar a tentativa.
+  - **Jogo coletivo que deu certo** (`SPOTLIGHT.teamSuccess` 0,1): vezes a fase e a seleção. Menos de um quinto do lance de protagonista.
+  - **Limites:** o ano soma no máximo 2,2 e tira no máximo 0,9 (`SPOTLIGHT.min`). Abrir mão do pênalti decisivo não soma nem tira.
+  - **A dica da opção** fica só "Mais protagonismo.", sem citar a Bola de Ouro.
+  - **Medido (300 Fenômenos por posição e lote, 7.200 carreiras):** 19,6% ganham ao menos uma Bola de Ouro (era 18,5%); fora da Europa, 0,28% das carreiras (era 0,25%).
+- **Top 10 da Bola de Ouro nos detalhes da temporada.** Entre os dez da votação, a Bola de Ouro aparece em "Competições da temporada", num grupo "Prêmios", com a arte do prêmio e a colocação ("4º lugar", ou "Vencedor").
+- **Homenagem com "Manter o número".** O evento da homenagem ganha a opção de ficar com o número de sempre: torcida +2 e nenhuma pressão nova, contra a camisa escolhida com torcida +4 e mais pressão.
+- **Explosão jovem** (`YOUNG_BREAKOUT`, `evolution/breakthrough.ts`): dos 17 aos 22 anos, com OVR de 50 a 67, uma vez na carreira, o jogador pode subir do nada para 70 a 76 (pelo menos 8 pontos), no começo da temporada. Chance de 1,8% por ano até os 19 e 1% dos 20 aos 22. O salto vale já naquele ano: o OVR novo decide o papel no elenco, e ele ganha ao menos a vaga de titular. Os detalhes da temporada dizem "Explosão: do nada, seu futebol subiu de patamar e o técnico te deu a vaga de titular." Medido: 88 de 1.440 carreiras (cerca de 6%, de Operário a Estrela) têm uma.
+- **Promessa no ritmo Rápida.** A janela de transferências garantida que aparece no meio do período de duas temporadas oferecia aposentar; quem aceitava perdia a promessa sem julgamento. Com promessa em andamento (`promisePending`), essa janela não oferece aposentar. Auditoria de 120 carreiras no Rápida e 60 no Normal, com as quatro políticas: toda promessa feita é julgada, nenhum período abre em jogo-chave, nenhuma carreira trava. O Rápida tem a decisão principal e até um jogo-chave por ano (até três decisões no período); o Normal, até cinco decisões por ano.
+- **Jornal: notas do ano sem sobreposição.** Em "Também nesta temporada", cada nota tinha altura de uma linha, e a nota longa ("Artilheiro: UEFA Champions League, 15 gols") invadia a de baixo. Agora a nota quebra em duas linhas e só aparecem as que cabem inteiras.
+- **Jornal: capa de recorde com manchete longa.** A marca de cinco detentores ("alcança a marca de Gento, Modrić, Kroos, Carvajal e Nacho") deixava a caixa "Os números" passar por cima de "Até aqui na carreira". A manchete com selo de recorde desce um tamanho antes, a muito longa ganha um tamanho menor (22 px), e nessa capa (`data-tight`) os números se juntam. Auditoria em todas as edições das 17 amostras, no PC e no celular: nenhuma caixa se cobre e nenhuma nota sai do lugar.
+- **Recordes depois da recalibragem.** O erro no jogo-chave pesa contra quem domina muitos anos, e as oito Bolas de Ouro caíram para 1 em 1.800 Fenômenos; a cauda das Bolas fica mais branda (`ballonDor` escala 3,2, era 2,5) e volta a 0,22%. A Serie A passou o teto épico por uma carreira (1,56%); a cauda italiana fica mais firme (escala 3,2, era 4) e volta a 1,47%. Ficam 19 de 22 marcas na faixa, com as mesmas três da D106 sinalizadas só porque ninguém as superou na amostra (oito Bolas, quatro seguidas, Premier League). Metas do desafio recalibradas.
+- **Personagem:** a bandana saiu (um save com bandana abre sem item).
+**Como ficou (D107).** Bola de Ouro em `packages/engine/src/awards/awards.ts` (`SPOTLIGHT.teamSuccess`, `miss`, `missStake`, `missStakeMax`, `min`, `ballonSpotlight`); explosão em `evolution/breakthrough.ts` (`YOUNG_BREAKOUT`, `youngBreakout`) e `season/playerSeason.ts` (`breakout`); promessa em `career/decisions.ts` (`promisePending`); homenagem em `events/catalog.ts`. Tela: `screens/career/PlayFeed.tsx` (grupo Prêmios e nota da explosão), `screens/summary/Newspaper.tsx` e `styles/summary.css` (notas do ano, `data-tight`); pressão em `records/pressure.ts` (`ballonDor`, `leagues.ITA`). Testes: `packages/engine/test/d107.test.ts`, `apps/game/e2e/d107.spec.ts`.
+
+- **Muda o resultado das carreiras.** Motor `2.0.0-m38`, amostras de navegador reconstruídas em m38.
+
+## Revisão D108: Portugal, Liga das Nações, Troféu Kopa, prêmios na Bola de Ouro, dispensa e jornal (29/10/2026)
+
+Motor do Craque `2.0.0-m39`, Técnico `1.10.0`. Detalhes na revisão D108 do GDD e na decisão D108.
+
+- **Portugal no mundo.** Primeira Liga (18 clubes, 34 rodadas, 2 sobem e 2 caem) e Liga Portugal 2 (18), Taça de Portugal (`cup:POR`), Taça da Liga (`leaguecup:POR`) e Supertaça Cândido de Oliveira (`super:POR`). Os 18 clubes da primeira divisão são os do EA FC 27 (elencos 99% reais, força pela média dos 14 melhores: Porto 80, Sporting e Benfica 79, Braga 76); os 18 da segunda têm elencos gerados com nomes da cultura do país. Vagas continentais: campeão e vice na Champions, terceiro e campeão da Taça na Europa League, quarto na Conference (`QUALIFICATION.POR`). Clássicos: Benfica x Sporting, Benfica x Porto, Porto x Sporting, Braga x Vitória, Marítimo x Nacional e Belenenses x Benfica. Artilharia: Primeira Liga média 26 (recorde 43, Peyroteo), Liga Portugal 2 média 17. Transmissão própria (verde e vermelho com a grade do azulejo). O Técnico também ganha Portugal (16 países).
+- **Escudos de Portugal gerados como os outros.** Os 36 clubes não têm arquivo de escudo: o gerador de `packages/art/src/crest` desenha cada um com a cor real, o padrão da camisa e um símbolo da identidade (o dragão do Porto, o leão rampante do Sporting, a águia do Benfica, o canhão do Braga, o castelo de Guimarães, o galo de Barcelos do Gil Vicente, a nau do Rio Ave, os vulcões de Santa Clara, a âncora do Marítimo...). Os selos das ligas saem gerados (LP e LP2).
+- **Liga das Nações da UEFA** (`nationsleague:UEFA`, tipo `nationsLeague`). Fase final nos anos ímpares (2027, 2029...), entre a Copa e a Euro (`NATIONS_LEAGUE.parity`). Só a Liga A disputa o título: as 16 seleções mais fortes da UEFA no ano. Jogos: 6 na fase de liga, 8 nas quartas, 10 na fase final. Esses jogos ocupam datas de amistoso e eliminatória, então descontam dos jogos comuns de seleção (a convocação não incha). Pesa pouco: importância 1 (a Euro é 2), 0,6 na escada da Bola de Ouro (a liga é 1), 40% do continental no legado na seleção, sem valer como o título que o país cobra. Tem artilharia e craque, troféu real, transmissão própria (azul-cobalto e prata) e conquista rara.
+- **Troféu Kopa** (era o Prêmio Revelação; a chave segue `youngPlayer`). O melhor jogador do mundo até 21 anos, com pelo menos 20 jogos, contra a elite jovem do mundo inteiro. A nota é a da Bola de Ouro: escada de títulos, 60% do protagonismo, Chuteira e coroas, desconto de posição, sem fama nem prestígio. Cada jovem da elite ganha +4 (`YOUNG_PLAYER.fieldBonus`: o resto da geração), para um jogador de 80 não ganhar só porque a elite daquele ano é nova. Fora da Europa, -7; na temporada histórica (OVR 86 ou mais e Champions, Libertadores ou Copa), -2,5. Medido (600 carreiras por talento): por temporada elegível, OVR 80 a 83 ganha 0 a 2%, 84 a 87 de 6 a 20%, 88 ou mais de 51 a 63%; carreiras com Kopa: Craque 0,2% (era 1%), Estrela 9,3% (era 16%), Fenômeno 21,3% (era 27%). Fora da Europa o Fenômeno ganhava em 12% das temporadas elegíveis; agora em 3,7%, e só com 92 a 98 de OVR antes dos 21 (o melhor jovem do mundo de longe). Arte nova do troféu e do Rei da América.
+- **Chuteira de Ouro e coroas somam à Bola de Ouro** (`AWARD_BOOST`). A Chuteira soma 0,5; cada artilharia ou craque de competição soma 0,15 vezes o peso do título na escada (craque da Champions 0,38, artilheiro da liga 0,15, da copa nacional 0,05), até 0,9. A Chuteira e as coroas agora saem antes da votação. Para o total não inflar, a força do campo sobe de 9,0 para 9,8: medido em 7.200 Fenômenos, 19,7% ganham ao menos uma (era 19,6%), 3.075 Bolas (era 3.072), fora da Europa 0,24%. Quem ganha a Chuteira e as coroas fica na frente de quem não ganha.
+- **Dispensa mais rápida de quem não joga** (`BENCH_LIMIT`). O jovem no banco fica no máximo até os 22: aos 23, se o banco começou aos 22 ou antes, é dispensado. A partir dos 23, o reserva fica no máximo 5 anos de casa; 7 se for ídolo do clube, 9 se for lenda. Vale junto com a regra de antes (25 anos e duas temporadas no banco no Normal).
+- **Primeira carreira com talento.** A primeira carreira do Craque no aparelho nasce com talento de Promissor para cima (Promissor, Craque, Estrela ou Fenômeno): a semente é sorteada de novo enquanto der Operário (`firstCareerSeed`, até 64 tentativas). Uma preferência (`startedCareer`) guarda que a pessoa já começou.
+- **Peru sem copa.** A Copa Bicentenario acabou e saiu do jogo; o Peru fica como o México, sem copa nacional.
+- **Ultimato do empresário:** "a proposta de um clube melhor" (era "maior").
+- **Rápida: a janela do meio do período não aposenta.** Aposentar é decisão principal; antes, quem aceitava a aposentadoria na janela garantida do segundo ano terminava a carreira com o período pela metade, sem a temporada e sem o resultado na tela.
+- **Troféus novos.** 36 imagens geradas pelo usuário entraram em `public/assets` (fundo branco tirado só onde encosta na borda, recortadas, 480 px de altura, WebP de 12 a 44 KB): Bola de Ouro (substitui a antiga), Troféu Kopa, Rei da América, supercopas de Argentina, Brasil, Chile, Colômbia, Equador, Espanha, França, Alemanha, Itália, México, Paraguai, Portugal e Uruguai, EFL Cup, Copa de la Liga, Taça da Liga, Taça de Portugal, Copa Bolivia (Copa Paceña), Conference League, Supercopa da UEFA, Recopa, Intercontinental, Liga das Nações e as ligas Brasileirão Série B (substitui a antiga), Primeira Liga, Liga Portugal 2, Copa Simón Bolívar, Primera B, Torneo Dimayor, LigaPro Serie B, Segunda División e Liga FUTVE 2. Há troféu real para 83 das 85 competições; a arte gerada continua de reserva.
+- **Jornal: a coluna da direita da capa sempre cabe.** Conquistas, etiquetas (lesão, contratação) e notas mudam a cada ano; quando não cabem, as conquistas viram só os ícones e, se ainda faltar, as etiquetas saem. Nada aparece cortado. Auditoria em 40 carreiras novas (metade de Estrela e Fenômeno) e nas 17 amostras, todas as páginas, no PC e no celular: nenhuma caixa cortada nem sobreposta (1.636 notas visíveis, 41 em duas linhas; o ajuste agiu em 12 capas).
+- **Recordes depois da recalibragem.** Jogos pela seleção: a cauda começa em 220, escala 13 (era 224 e 16), porque a Liga das Nações dá alguns jogos a mais a quem vai longe nela; Bolas de Ouro: escala 2,9 (era 3,2); títulos na carreira: escala 5,5 (era 6). Ficam 21 de 22 marcas na faixa; a de 4 Bolas seguidas está na frequência certa (0,39%) e só é sinalizada porque ninguém a superou na amostra. Metas do desafio recalibradas; a amostra da calibragem voltou a cruzar todas as posições, estilos e países (com 18 países, o passo antigo repetia combinações).
+**Como ficou (D108).** Portugal em `packages/world/data/clubs/por.json`, `leagues.json`, `kits.json`, `rivalries.json`, `fontes/aliases.json`, elencos em `data/squads/por.ts` (`pnpm elencos:montar`), copas em `src/competitions.ts` (`CUPS`, `SUPER_CUPS`, `LEAGUE_CUPS`), vagas em `engine/src/world/tuning.ts` (`QUALIFICATION.POR`), escudos em `packages/art/src/crest/clubs.ts`. Liga das Nações: `nationsLeague` em `competitions.ts`, `simulateNationsLeague` em `world/season.ts`, `NATIONS_LEAGUE` em `world/tuning.ts`, `NATIONS_LEAGUE_FORMAT` em `world/model.ts`, jogos em `season/schedule.ts` e `season/national.ts` (`overlap`), legado em `season/nationalLegacy.ts` (`NATIONS_LEAGUE_SHARE`). Prêmios em `awards/awards.ts` (`YOUNG_PLAYER`, `AWARD_BOOST`, `awardBoost`). Dispensa em `career/decisions.ts` (`BENCH_LIMIT`, `benchLimitReached`). Primeira carreira em `apps/game/src/features/career/newCareer.ts` e `store/prefs.ts`. Jornal em `screens/summary/Newspaper.tsx` (`useSideFit`). Testes: `packages/engine/test/d108.test.ts`, `apps/game/src/features/career/newCareer.test.ts`, `packages/world/test/integrity.test.ts`.
+
+- **Muda o resultado das carreiras.** Motor `2.0.0-m39`, Técnico `1.10.0`, amostras de navegador reconstruídas em m39.
+
+## Revisão D109: calendário dos torneios, Bola de Ouro pelo que se fez, Kopa pelo desempenho, carreira até 2050 e telas (30/10/2026)
+
+Motor do Craque `2.0.0-m40`. Detalhes na revisão D109 do GDD e na decisão D109.
+
+- **Torneios de seleções no ano certo** (`nationsCupYear`, `world/tuning.ts`). Antes, todos os continentais de seleções eram no mesmo ano da Euro. Agora: Eurocopa, Copa América e Copa das Nações da OFC a cada quatro anos (2028, 2032); Copa Ouro a cada dois, nos anos ímpares (2027, 2029); Copa da Ásia a cada quatro, a partir de 2027 (2031); Copa Africana em 2027 e 2028 e depois a cada quatro (2032), como a CAF decidiu em 2025. Copa do Mundo (2026, 2030...), Mundial de Clubes (2029...), Liga das Nações (anos ímpares) e os torneios de clubes anuais já seguiam o calendário real. O evento de ano de torneio do jogador olha o torneio da confederação dele.
+- **Bola de Ouro: o OVR conta menos, o que o jogador fez conta mais.** A nota usa `88 + 0,8 × (OVR - 88)` para a elite e para o jogador (`BALLON.ovrWeight`, `ovrPivot`). A temporada histórica de gols passa do teto de 3 da produção, até 1,5 a mais (`productionBeyond`; 70 gols e 20 assistências chegam lá); o goleiro, até 0,75. A força do campo passa de 9,8 para 8,6 para manter a frequência: 19,4% dos Fenômenos ganham ao menos uma (era 19,7%), com 2.864 Bolas em 7.200 carreiras (eram 3.075: com o OVR pesando menos, o mesmo craque domina menos anos seguidos); fora da Europa, 0,25%.
+- **Top 10 da Bola de Ouro pela posição.** Para ganhar, o desconto de posição continua inteiro (D91). Para a colocação, entra só metade (`placementPositionShare` 0,5): entrar no top 10 é um pouco mais difícil para quem joga atrás, principalmente na defesa, mas bem menos que ganhar.
+- **Troféu Kopa pelo desempenho.** O OVR pesa 70% em torno de 84 (`YOUNG_PLAYER.ovrWeight`, `ovrPivot`); a produção acima da referência pesa o dobro (`productionWeight`, só a parte positiva: o ano grande conta mais, o fraco não perde em dobro); o campo jovem é 0. Fora da Europa o desconto é 4 (era 7; na Bola de Ouro é 8) e 1,5 na temporada histórica. Medido (600 carreiras por talento): com 80 a 83 de OVR e um ano grande (32 gols mais metade das assistências, ou título de liga ou continental), o jovem ganha em cerca de 7% das vezes, e sem ele em cerca de 1% (os rivais nesses anos são os jovens reais, de 85 a 90); 84 a 87, de 11 a 22%; 88 ou mais, de 61 a 69%; carreiras com Kopa: Estrela 10,2%, Fenômeno 22%; fora da Europa, o Fenômeno ganha em 6,1% das temporadas elegíveis.
+- **Primeira carreira Craque ou Estrela.** A primeira carreira no aparelho nasce Craque ou Estrela (`FIRST_CAREER_TALENTS`), só ela.
+- **A carreira vai até 2050.** Última idade jogável 40 (era 39), fim por idade aos 41: quem começa em 2026 joga a temporada de 2050 e a Copa do Mundo dela. As políticas de teste se aposentam antes, então as metas não mudam.
+- **Ritmo e dificuldade na tela de quem é você.** Saíram do Início, que fica só com Começar carreira e Jogo rápido (o jogo rápido usa a última escolha). No celular a seção aparece na etapa final, com a aparência.
+- **Aparência:** Voltar descarta o que mudou nesta visita, só Pronto guarda; em Detalhes, no PC, marcas, brinco e acessório têm cada um a sua coluna (o acessório não pula de lugar quando o brinco abre opções).
+- **Troféus sem fundo.** As imagens de troféus e prêmios foram trocadas pelas versões sem fundo do usuário (recortadas, 480 px, WebP), com o Troféu Yashin novo.
+**Como ficou (D109).** Calendário em `engine/src/world/tuning.ts` (`nationsCupYear`), usado em `world/season.ts` e `career/context.ts`; Bola de Ouro e Kopa em `awards/awards.ts` (`BALLON.ovrWeight`, `ovrPivot`, `placementPositionShare`, `placementRank`, `productionBeyond`, `YOUNG_PLAYER.ovrWeight`, `productionWeight`, `kopaOvrDiscount`); idade em `types.ts` (`LAST_AGE`, `RETIREMENT_AGE`); primeira carreira em `apps/game/src/features/career/newCareer.ts`; telas em `features/career/CareerSettings.tsx`, `screens/identity/IdentityScreen.tsx`, `screens/home/HomeScreen.tsx`, `screens/appearance/AppearanceScreen.tsx`, `features/appearance/AvatarEditor.tsx`. Testes: `packages/engine/test/d109.test.ts`, `apps/game/e2e/d109.spec.ts`.
+
+- **Recordes com a temporada a mais.** A cauda dos jogos na carreira começa em 1.320, escala 65 (era 1.330 e 80): com a carreira até os 40, o recorde de 1.390 jogos de Peter Shilton passava para 6,8% dos Fenômenos; volta a 4,67% (faixa rara). Ficam 21 de 22 marcas na faixa; a de 4 Bolas seguidas está na frequência certa (0,28%) e só é sinalizada porque ninguém a superou na amostra. Metas do desafio recalibradas.
+- **Muda o resultado das carreiras.** Motor `2.0.0-m40`, amostras de navegador reconstruídas em m40.
+
+## Revisão D110: sem o Início do Craque, hipotético com sorteio refeito, briga com a diretoria e o batedor do time (30/10/2026)
+
+Motor do Craque `2.0.0-m41`. Detalhes na revisão D110 do GDD e na decisão D110.
+
+- **Sem o Início do Craque.** "Jogar" no Craque abre direto a tela de quem é você. Ela traz o que ficava no Início: Jogo rápido (ao lado de Começar carreira no PC; no celular, embaixo), o Desafio do dia, as conquistas, os números do mundo e o laboratório. Voltar leva ao hub do Futeiros. O texto do ritmo ficou curto ("Decisão principal a cada 2 anos" e "todo ano") para não empurrar a dificuldade.
+- **Hipotético com o sorteio refeito.** Na linha alternativa, da decisão de troca em diante, o sorteio de dar certo ou errado (acontecimento e jogo-chave) leva um sal novo (`setup.rerolls`, `career/outcome.ts`): a mesma escolha da linha original pode ter outro resultado. As decisões antes da troca se refazem iguais; um hipotético dentro de outro guarda as trocas anteriores.
+- **Briga com a diretoria.** Não recuar é a transferência certa, sem sorteio: a diretoria vende você e fecha as portas. Retratar-se custa 10 de torcida (era 2).
+- **O batedor do time.** Fora do ataque (zagueiro, lateral, volante, meias), finalização a partir de 80 faz do jogador o cobrador de pênalti e falta: gols a mais por jogo, até 0,06 (zagueiro e volante), 0,05 (lateral), 0,04 (meio-campista) e 0,03 (meia e alas) no 99 de FIN (`SET_PIECE_TAKER`, `setPieceSkill`, `season/production.ts`), e o jogo-chave vira uma cobrança (pênalti, falta, pênalti decisivo) com até 30% de chance (`SET_PIECE_SCENE_CHANCE`, `career/matchMoments.ts`).
+- **Muda o resultado das carreiras.** Motor `2.0.0-m41`, amostras de navegador reconstruídas em m41.
+
+## Revisão D111: escudos e selos reais por padrão (30/10/2026)
+
+- **Escudos e selos reais por padrão.** O build usa `VITE_ASSETS=real` quando nada é dito (`apps/game/src/lib/env.ts`); `gerado` continua disponível para comparar. Onde não há imagem real, entra a arte desenhada.
+- **Escudos que faltavam.** Vieram da Wikipédia (o campo de imagem da página de cada clube): os 36 clubes de Portugal, Vaca Díez, San Juan, Patriotas Boyacá e os selos da Primeira Liga e da Liga Portugal 2. Ficam com o escudo desenhado, sem imagem achada: Real Oruro, Santo Domingo, Torreense, União de Leiria, Atlético El Vigía, Real Frontera e Marítimo de La Guaira; e os selos da LigaPro Serie B, da Liga 2 peruana e da Liga FUTVE 2. Agora são 518 de 525 escudos e 31 de 34 selos reais.
+- **Imagens trocadas pelo usuário (30/10/2026):** o escudo do Vasco da Gama (`clubs/vasco-da-gama.png`) e o selo do Brasileirão Série B (`leagues/brasileirao-serie-b.png`) passaram a ser as versões PNG enviadas pelo usuário, recortadas e com 512 px de altura; os dados (`clubs/bra.json`, `leagues.json`) registram a extensão `png`.

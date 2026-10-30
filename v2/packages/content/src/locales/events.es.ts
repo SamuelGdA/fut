@@ -17,21 +17,6 @@ export const eventsEs: EventsMessages = {
       }
     }
   },
-  "silentWeek": {
-    "title": "Una semana sin focos",
-    "body": "La agenda está llena. Elige entre descanso y presencia en la prensa.",
-    "options": {
-      "silence": {
-        "label": "Apagar el teléfono",
-        "result": "Riesgo de lesión -20% durante el período. Afición -3."
-      },
-      "press": {
-        "label": "Hablar con la afición",
-        "result": "Afición +3. Evolución -5% durante el período."
-      }
-    }
-  }
-,
   extraTraining: {
     title: "Entrenamiento extra",
     body: "El preparador físico propone un programa aparte: gimnasio antes del amanecer y definición después de la práctica del equipo.",
@@ -265,7 +250,7 @@ export const eventsEs: EventsMessages = {
   },
   agentUltimatum: {
     title: "Ultimátum del representante",
-    body: "Tu representante tiene la oferta de un club más grande y amenaza con romper si no fuerzas la salida.",
+    body: "Tu representante tiene la oferta de un club mejor y amenaza con romper si no fuerzas la salida.",
     options: {
       force: {
         label: "Forzar la salida",
@@ -308,8 +293,8 @@ export const eventsEs: EventsMessages = {
     options: {
       change: {
         label: "Cambiar de representante",
-        success: "Sus contactos calientan el mercado. Más clubes preguntan por ti.",
-        failure: "Mucha promesa, poco resultado. El mercado se enfría.",
+        success: "Sus contactos calientan el mercado. En la próxima decisión, el mercado se abre con ofertas mejores de lo normal.",
+        failure: "Mucha promesa, poco resultado. En la próxima decisión, el mercado se abre con ofertas peores de lo normal.",
       },
       keep: { label: "Seguir con el actual", result: "Te quedas con quien está a tu lado desde el principio." },
     },
@@ -365,12 +350,8 @@ export const eventsEs: EventsMessages = {
     title: "Pelea con la dirigencia",
     body: "Criticaste a la dirigencia en público, y el presidente exige una rectificación.",
     options: {
-      standGround: {
-        label: "No retroceder",
-        success: "La hinchada te apoya, y la dirigencia retrocede.",
-        failure: "La dirigencia no perdona. Te venden, y el club te cierra las puertas para siempre.",
-      },
-      apologize: { label: "Rectificarse", result: "Retrocedes. La imagen queda algo golpeada." },
+      standGround: { label: "No retroceder", result: "No retrocedes. La dirigencia te vende, y el club te cierra las puertas para siempre." },
+      apologize: { label: "Rectificarse", result: "Te rectificas en público, y la hinchada no perdona la debilidad." },
     },
   },
   rowFans: {
@@ -398,6 +379,7 @@ export const eventsEs: EventsMessages = {
     body: "El club quiere inmortalizar tu historia y te deja elegir el número de la camiseta.",
     options: {
       number: { label: "Ponerse la {number}", result: "La {number} ahora cuenta tu historia en el club." },
+      keep: { label: "Mantener el número", result: "Sigues con el número de siempre, sin presión nueva, y la hinchada aplaude la fidelidad." },
     },
   },
   seriousInjury: {

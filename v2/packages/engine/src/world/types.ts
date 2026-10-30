@@ -74,7 +74,7 @@ export interface LeagueResult {
  * - `groups32`: grupos e mata-mata a partir da fase de 32 (Copa do Mundo).
  */
 export interface KnockoutFormat {
-  readonly kind: "knockout" | "groups" | "groups32";
+  readonly kind: "knockout" | "groups" | "groups32" | "nationsLeague";
   readonly groupSlots: number;
 }
 

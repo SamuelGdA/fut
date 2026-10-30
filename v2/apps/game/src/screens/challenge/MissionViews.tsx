@@ -1,6 +1,6 @@
-import { axisName, edictName, edictRule, edictStateName, missionGoal, missionHint, missionName, missionValue } from "@craque/content";
+import { axisName, edictName, edictRule, edictStateName, missionGoal, missionHint, missionName, missionValue, REAL_RECORDS, recordText } from "@craque/content";
 import { type EdictState, getEdict, getMission, HIDDEN_REVEAL_AGE } from "@craque/engine";
-import { EyeOff } from "lucide-react";
+import { EyeOff, Trophy } from "lucide-react";
 import { useT } from "../../i18n/useT";
 import { cn } from "../../ui/cn";
 import { InfoTip } from "../../ui/InfoTip";
@@ -98,6 +98,49 @@ export function MissionLine({ id, target, value, hidden = false, muted = false, 
           <span>{note}</span>
           {points && count ? <span className="numeric">{count}</span> : null}
         </p>
+      ) : null}
+    </div>
+  );
+}
+
+interface RecordTargetProps {
+  id: string;
+  mark: number;
+  /** Marca da carreira agora; sem ela, só o alvo (a entrada do desafio). */
+  value?: number;
+  /** Pontos do recorde, no resumo e no painel. */
+  points?: number;
+  compact?: boolean;
+  className?: string;
+}
+
+/**
+ * O recorde do dia (D94): o recorde real que a mão persegue, com o detentor,
+ * a marca e o progresso. Perto rende, igualar e superar rendem mais.
+ */
+export function RecordTarget({ id, mark, value, points, compact = false, className }: RecordTargetProps) {
+  const { t, locale, number } = useT();
+  const record = REAL_RECORDS.find((item) => item.id === id);
+  if (!record) return null;
+  const text = recordText(locale, record);
+  const status = value === undefined ? null : value > mark ? "beaten" : value >= mark ? "matched" : "short";
+  const progress = value === undefined ? null : t("challenge.record.progress", { value: number(value), mark: number(mark) });
+  return (
+    <div className={cn("challenge-record", compact && "challenge-record-compact", className)} data-tier={record.tier} data-status={status ?? undefined}>
+      <div className="challenge-record-head">
+        <Trophy size={compact ? 14 : 16} aria-hidden="true" className="shrink-0" />
+        <span className="challenge-record-label">{t("challenge.record.title")}</span>
+        {points !== undefined ? <span className="numeric challenge-record-points">{t("challenge.record.points", { points: Math.round(points) })}</span> : null}
+      </div>
+      <p className="challenge-record-name">{text.name}</p>
+      <p className="challenge-record-holder">{t("challenge.record.holder", { holder: text.holder, mark: number(mark) })}</p>
+      {value !== undefined ? (
+        <>
+          <div className="mission-bar" role="meter" aria-label={text.name} aria-valuemin={0} aria-valuemax={mark} aria-valuenow={Math.min(value, mark)} aria-valuetext={progress ?? undefined}>
+            <span style={{ transform: `scaleX(${Math.min(1, value / mark)})` }} />
+          </div>
+          <p className="mission-note"><span>{status === "short" ? t("challenge.record.missing", { missing: number(mark - value) }) : status === "beaten" ? t("challenge.record.beaten") : t("challenge.record.matched")}</span><span className="numeric">{progress}</span></p>
+        </>
       ) : null}
     </div>
   );

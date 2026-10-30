@@ -74,6 +74,7 @@ export function ControlsSection({ index }: SectionProps) {
   const pace = usePrefs((state) => state.pace);
   const difficulty = usePrefs((state) => state.difficulty);
   const haptics = usePrefs((state) => state.haptics);
+  const autoAdvance = usePrefs((state) => state.autoAdvance);
   const actions = usePrefs.getState();
   const [surname, setSurname] = useState("");
   const [touched, setTouched] = useState(false);
@@ -142,6 +143,16 @@ export function ControlsSection({ index }: SectionProps) {
               checked={haptics}
               onCheckedChange={(next) => {
                 actions.setHaptics(next);
+                feedback("tick");
+              }}
+            />
+          </div>
+          <div className="border-t border-line pt-3">
+            <Switch
+              label={t("settings.autoAdvance")}
+              checked={autoAdvance}
+              onCheckedChange={(next) => {
+                actions.setAutoAdvance(next);
                 feedback("tick");
               }}
             />

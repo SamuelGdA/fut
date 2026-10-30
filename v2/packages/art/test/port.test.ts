@@ -53,14 +53,18 @@ function kitFor(key: string): Kit | null {
 }
 
 describe("porte da arte do v1", () => {
-  it("todos os 489 escudos saem idênticos", () => {
-    const changed = CLUBS.filter((club) => hash(teamCrestSvg(club.id)) !== fixture.crests[club.id]).map((c) => c.id);
-    expect(Object.keys(fixture.crests)).toHaveLength(CLUBS.length);
+  it("todos os 489 escudos do v1 saem idênticos", () => {
+    // D108: os clubes de Portugal são novos, sem escudo no v1.
+    const ported = CLUBS.filter((club) => club.id in fixture.crests);
+    const changed = ported.filter((club) => hash(teamCrestSvg(club.id)) !== fixture.crests[club.id]).map((c) => c.id);
+    expect(ported).toHaveLength(489);
+    expect(Object.keys(fixture.crests)).toHaveLength(489);
     expect(changed).toEqual([]);
   });
 
   it("todos os selos de liga gerados saem idênticos, salvo a correção de dado conhecida", () => {
-    const changed = LEAGUES.filter(
+    // D108: as ligas de Portugal são novas, sem selo no v1.
+    const changed = LEAGUES.filter((league) => league.id in fixture.leagueBadges).filter(
       (league) => hash(generatedLeagueBadge(toArtLeague(league))) !== fixture.leagueBadges[league.id],
     ).map((league) => league.id);
     expect(new Set(changed)).toEqual(EXPECTED_BADGE_CHANGES);
@@ -77,7 +81,8 @@ describe("porte da arte do v1", () => {
   });
 
   it("o avatar sai idêntico em 62 combinações de rosto, camisa e fundo", () => {
-    const changed = fixture.avatars.filter((sample) => {
+    // D106: o cabelo ondulado do v1 saía da cabeça e encostava na orelha; foi corrigido de propósito.
+    const changed = fixture.avatars.filter((sample) => sample.config?.hair !== "wavy").filter((sample) => {
       const svg = renderAvatarSvg(sample.config, {
         kit: kitFor(sample.kit),
         showBackground: sample.showBackground,

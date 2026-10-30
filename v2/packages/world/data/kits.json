@@ -713,5 +713,185 @@
     "base": "#56C7ED",
     "accent": "#ffffff",
     "pattern": "diagonal_sash"
+  },
+  "fc-porto": {
+    "base": "#003F87",
+    "accent": "#ffffff",
+    "pattern": "vertical_stripes"
+  },
+  "sporting-cp": {
+    "base": "#00804A",
+    "accent": "#ffffff",
+    "pattern": "horizontal_stripes"
+  },
+  "benfica": {
+    "base": "#E30613",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "sc-braga": {
+    "base": "#D7141A",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "vitoria-sc": {
+    "base": "#ffffff",
+    "accent": "#1A1A1A",
+    "pattern": "solid"
+  },
+  "famalicao": {
+    "base": "#123C8C",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "arouca": {
+    "base": "#F2C400",
+    "accent": "#1B3A8C",
+    "pattern": "solid"
+  },
+  "estoril-praia": {
+    "base": "#FFD200",
+    "accent": "#1B3A8C",
+    "pattern": "solid"
+  },
+  "casa-pia": {
+    "base": "#111111",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "gil-vicente": {
+    "base": "#C8102E",
+    "accent": "#1F3F8F",
+    "pattern": "solid"
+  },
+  "rio-ave": {
+    "base": "#00843D",
+    "accent": "#ffffff",
+    "pattern": "vertical_stripes"
+  },
+  "estrela-amadora": {
+    "base": "#D50032",
+    "accent": "#00843D",
+    "pattern": "solid"
+  },
+  "santa-clara": {
+    "base": "#D0021B",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "alverca": {
+    "base": "#0057A8",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "nacional-madeira": {
+    "base": "#000000",
+    "accent": "#ffffff",
+    "pattern": "vertical_stripes"
+  },
+  "moreirense": {
+    "base": "#00843D",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "maritimo": {
+    "base": "#CE1126",
+    "accent": "#00843D",
+    "pattern": "vertical_stripes"
+  },
+  "academico-de-viseu": {
+    "base": "#1A1A1A",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "avs": {
+    "base": "#D71920",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "tondela": {
+    "base": "#00924A",
+    "accent": "#FFD100",
+    "pattern": "solid"
+  },
+  "chaves": {
+    "base": "#0B3D91",
+    "accent": "#C8102E",
+    "pattern": "vertical_stripes"
+  },
+  "vizela": {
+    "base": "#0055A4",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "portimonense": {
+    "base": "#111111",
+    "accent": "#ffffff",
+    "pattern": "vertical_stripes"
+  },
+  "pacos-de-ferreira": {
+    "base": "#F7D117",
+    "accent": "#00843D",
+    "pattern": "solid"
+  },
+  "farense": {
+    "base": "#ffffff",
+    "accent": "#111111",
+    "pattern": "solid"
+  },
+  "torreense": {
+    "base": "#0057B8",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "leixoes": {
+    "base": "#D71920",
+    "accent": "#ffffff",
+    "pattern": "vertical_stripes"
+  },
+  "feirense": {
+    "base": "#0047AB",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "penafiel": {
+    "base": "#C8102E",
+    "accent": "#111111",
+    "pattern": "solid"
+  },
+  "oliveirense": {
+    "base": "#F6C700",
+    "accent": "#111111",
+    "pattern": "horizontal_stripes"
+  },
+  "uniao-de-leiria": {
+    "base": "#D71920",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "felgueiras": {
+    "base": "#C8102E",
+    "accent": "#1B3A8C",
+    "pattern": "diagonal_sash"
+  },
+  "lusitania-lourosa": {
+    "base": "#1D5A2E",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "belenenses": {
+    "base": "#004B9B",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "academica": {
+    "base": "#111111",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "varzim": {
+    "base": "#D71920",
+    "accent": "#ffffff",
+    "pattern": "horizontal_stripes"
   }
 }

@@ -26,9 +26,9 @@ import type { Six } from "../types";
  */
 export const SCORING: Readonly<Record<Position, { readonly goals: number; readonly assists: number }>> = {
   st: { goals: 0.385, assists: 0.12 },
-  lw: { goals: 0.24, assists: 0.17 },
-  rw: { goals: 0.24, assists: 0.17 },
-  cam: { goals: 0.22, assists: 0.22 },
+  lw: { goals: 0.285, assists: 0.19 },
+  rw: { goals: 0.285, assists: 0.19 },
+  cam: { goals: 0.275, assists: 0.15 },
   lm: { goals: 0.15, assists: 0.17 },
   rm: { goals: 0.15, assists: 0.17 },
   cm: { goals: 0.07, assists: 0.11 },
@@ -40,7 +40,25 @@ export const SCORING: Readonly<Record<Position, { readonly goals: number; readon
 };
 
 const LEVEL_GOALS = 0.032;
+/**
+ * D100: teto da finalização das outras posições, em fração da do centroavante
+ * com os mesmos números. O finalizador de elite da ponta pode passar o
+ * centroavante (é o que abre a temporada recorde para ele), mas só até aqui.
+ */
+const STRIKER_CEILING = 1.3;
+const STRIKER_CEILING_BY_POSITION: Readonly<Partial<Record<Position, number>>> = { cam: 1.25 };
 const LEVEL_ASSISTS = 0.045;
+/**
+ * D100: o peso do nível muda por posição. Pontas e meias que sobram em campo
+ * transformam a sobra em gols (a temporada recorde fica possível para o ponta
+ * Fenômeno) sem mudar a temporada comum, que joga perto do nível da oposição.
+ */
+const LEVEL_BY_POSITION: Readonly<Partial<Record<Position, { readonly goals?: number; readonly assists?: number }>>> = {
+  st: { goals: 0.0365 },
+  lw: { goals: 0.05 },
+  rw: { goals: 0.05 },
+  cam: { goals: 0.05 },
+};
 const TEAM = 0.03;
 
 /**
@@ -62,6 +80,20 @@ const FINISHING_OPPORTUNITIES: Readonly<Partial<Record<Position, number>>> = {
 export function finishingOpportunities(position: Position, finishing: number): number {
   const skill = Math.max(0, Math.min(1, (finishing - 80) / 19));
   return (FINISHING_OPPORTUNITIES[position] ?? 0) * skill * skill * (3 - 2 * skill);
+}
+/**
+ * D110: o batedor do time. Fora do ataque, a finalização alta (de 80 para
+ * cima) faz dele quem cobra pênalti e falta: gols a mais por jogo, até
+ * `SET_PIECE_GOALS` no 99 de FIN. O atacante já finaliza pela posição.
+ */
+export const SET_PIECE_TAKER = { from: 80, span: 19 } as const;
+const SET_PIECE_GOALS: Readonly<Partial<Record<Position, number>>> = {
+  cb: 0.06, lb: 0.05, rb: 0.05, cdm: 0.06, cm: 0.04, cam: 0.03, lm: 0.03, rm: 0.03,
+};
+export function setPieceSkill(position: Position, finishing: number): number {
+  if (!SET_PIECE_GOALS[position]) return 0;
+  const skill = Math.max(0, Math.min(1, (finishing - SET_PIECE_TAKER.from) / SET_PIECE_TAKER.span));
+  return skill * skill * (3 - 2 * skill);
 }
 const CONCEDED_BASE = 1.2;
 const CONCEDED_SLOPE = 0.055;
@@ -109,10 +141,16 @@ export function productionRates(input: ProductionInput, phase = 1): ProductionRa
   const level = softAdvantage(input.ovr - input.opposition);
   const finishing = input.attributes[FINISHING_SLOT] ?? input.ovr;
   const passing = input.attributes[PASSING_SLOT] ?? input.ovr;
-  const goalsPerGame =
-    (scoring.goals + finishingOpportunities(input.position, finishing)) * Math.exp(LEVEL_GOALS * level) * team * Math.exp(SKILL * (finishing - input.ovr)) * phase * scale;
+  const context = team * Math.exp(SKILL * (finishing - input.ovr)) * phase * scale;
+  // D100: com a finalização comum, o centroavante finaliza mais que todos; o
+  // finalizador de elite da ponta e do meia pode passá-lo, até o teto.
+  // O teto mede contra o centroavante de peso de nível comum (0,032): o peso
+  // maior dele (D101) é dele e não afrouxa o teto das outras posições.
+  const striker = SCORING.st.goals * Math.exp(LEVEL_GOALS * level) * context;
+  const own = (scoring.goals + finishingOpportunities(input.position, finishing) + (SET_PIECE_GOALS[input.position] ?? 0) * setPieceSkill(input.position, finishing)) * Math.exp((LEVEL_BY_POSITION[input.position]?.goals ?? LEVEL_GOALS) * level) * context;
+  const goalsPerGame = input.position === "st" ? own : Math.min(own, (STRIKER_CEILING_BY_POSITION[input.position] ?? STRIKER_CEILING) * striker);
   const assistsPerGame =
-    scoring.assists * Math.exp(LEVEL_ASSISTS * level) * team * Math.exp(SKILL * (passing - input.ovr)) * phase * scale;
+    scoring.assists * Math.exp((LEVEL_BY_POSITION[input.position]?.assists ?? LEVEL_ASSISTS) * level) * team * Math.exp(SKILL * (passing - input.ovr)) * phase * scale;
 
   const gap = input.ovr - input.clubStrength;
   const defence = isGoalkeeper(input.position) ? 0.5 * gap : isDefender(input.position) ? 0.2 * gap : 0;

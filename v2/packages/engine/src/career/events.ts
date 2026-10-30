@@ -4,9 +4,9 @@ import type { Effect, EventContext, EventDefinition, EventOption } from "../even
 import { clamp } from "../math";
 import { TRAIT_EFFECTS } from "../player/traits";
 import { type Rng, stream } from "../rng";
-import { type Pace, SEASONS_PER_PERIOD } from "../types";
+import { FIRST_AGE, LAST_AGE, type Pace, SEASONS_PER_PERIOD } from "../types";
 import { clubIndex } from "../world/model";
-import { grandfatherCountry, residenceCountry, homeClub, legacyClub, marketContext } from "./context";
+import { eventContext, grandfatherCountry, residenceCountry, homeClub, legacyClub, marketContext } from "./context";
 import { buildOffer, interestedClubs, marketOffers, offerFrom } from "./market";
 import type { Career, ClubOffer, Decision, DecisionOption, EventTarget } from "./types";
 import { hasPublicRole } from "./drama";
@@ -29,7 +29,7 @@ export const AGENDA = {
 function decisionAges(pace: Pace): number[] {
   const step = SEASONS_PER_PERIOD[pace];
   const ages: number[] = [];
-  for (let age = 16; age <= 39; age += step) ages.push(age);
+  for (let age = FIRST_AGE; age <= LAST_AGE; age += step) ages.push(age);
   return ages;
 }
 
@@ -49,7 +49,7 @@ export function planAgenda(seed: string, pace: Pace): number[] {
 /** Os eventos que podem aparecer agora: elegíveis, inéditos e dentro do limite de lesões. */
 export function eligibleEvents(career: Career, context: EventContext): EventDefinition[] {
   return EVENT_CATALOG.filter((event) => {
-    if (!hasPublicRole(career) && (event.tags.some((tag) => ["fame", "fans", "leadership", "legacy", "shirt", "final"].includes(tag)) || event.id === "silentWeek")) return false;
+    if (!hasPublicRole(career) && (event.tags.some((tag) => ["fame", "fans", "leadership", "legacy", "shirt", "final"].includes(tag)))) return false;
     if (career.eventsSeen.includes(event.id)) return false;
     if (event.tags.includes(INJURY_TAG) && career.injuryEvents >= MAX_INJURY_EVENTS) return false;
     return allHold(event.when, context);
@@ -66,7 +66,8 @@ export function pickEvent(career: Career, context: EventContext): EventDefinitio
 export function optionChance(career: Career, option: EventOption): number | null {
   if (option.kind !== "risky") return null;
   if (option.fixedChance) return clamp(option.chance ?? 0.5, 0.05, 0.95);
-  return clamp((option.chance ?? 0.5) * TRAIT_EFFECTS[career.player.trait].risk, 0.05, 0.95);
+  const edge = option.gapEdge ? option.gapEdge * clamp(eventContext(career).clubGap ?? 0, -2, 6) : 0;
+  return clamp(((option.chance ?? 0.5) + edge) * TRAIT_EFFECTS[career.player.trait].risk, 0.05, 0.95);
 }
 
 function allEffects(option: EventOption): readonly Effect[] {

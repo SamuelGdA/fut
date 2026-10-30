@@ -31,8 +31,7 @@ test("registro legado corrompido é descartado e o rascunho permanece intacto", 
   await expect(page.getByRole("button", { name: "Continuar carreira" })).toHaveCount(0);
   await entrarNoCraque(page);
   expect(await page.evaluate(() => localStorage.getItem("craque.v2.save"))).toBeNull();
-  await page.getByRole("button", { name: "Começar carreira" }).click();
-  await expect(page.getByLabel("Sobrenome")).toHaveValue("Guardado");
+  await expect(page.getByRole("textbox", { name: "Nome", exact: true })).toHaveValue("Guardado");
 });
 
 test("tela que não baixa: o erro aparece dentro da casca, com recarregar e volta ao Início", async ({ page }) => {

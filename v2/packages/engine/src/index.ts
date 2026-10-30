@@ -73,7 +73,7 @@ export {
   type Player,
 } from "./player/player";
 export { SCOUT_GATES, SCOUT_LEVELS, scoutLevel, scoutReading, type ScoutLevel, type ScoutReading } from "./player/scout";
-export { ageValueFactor, baseMarketValue, marketValue, leagueMarketFactor, marketLeagueStrength, MAX_MARKET_VALUE } from "./player/value";
+export { ageValueFactor, baseMarketValue, famedMarketValue, marketValue, leagueMarketFactor, marketLeagueStrength, MAX_MARKET_VALUE } from "./player/value";
 
 export {
   breakthroughChance,
@@ -225,6 +225,8 @@ export {
 } from "./awards/elite";
 export {
   BALLON,
+  ballonEliteBonus,
+  BALLON_POSITION,
   decideAwards,
   GOLDEN_SHOE,
   PLAYER,
@@ -297,6 +299,7 @@ export { appendLog, LOG_MAX, stepLog } from "./career/log";
 export { nationalLegacy } from "./season/nationalLegacy";
 export { challengeDayId, challengeDayStart, challengeYear, DAY_MS, daysSinceEpoch, isChallengeDayId, nextChallengeAt, shiftChallengeDay } from "./challenge/day";
 export { CHALLENGE_AXES, contradicts, getMission, type ChallengeAxis, type Mission, missionFitsPosition, MISSIONS, missionTarget, UNDERDOG_STRENGTH } from "./challenge/missions";
+export { CHALLENGE_RECORD_CHANCE, CHALLENGE_RECORDS, type ChallengeRecordId, getChallengeRecord, RECORD_POINTS, RECORD_SHARE, recordPoints } from "./challenge/records";
 export { MISSION_TARGETS } from "./challenge/targets";
 export { BENCH_FROM_AGE, EDICTS, edictState, getEdict, GIANT_STRENGTH, SECOND_DIVISION_FROM_AGE, type Edict, type EdictKind, type EdictState } from "./challenge/edicts";
 export { challengeSeed, challengeSetup, dailyHand, HIDDEN_REVEAL_AGE, type ChallengeHand } from "./challenge/hand";
@@ -327,7 +330,7 @@ export {
   traitorMoves,
 } from "./challenge/measures";
 export { autoplay, CAREER_POLICIES, MAX_DECISIONS, policyChoice, type CareerPolicy } from "./career/policy";
-export { RELEASE } from "./career/decisions";
+export { BENCH_LIMIT, benchLimitReached, RELEASE } from "./career/decisions";
 export { AGENDA, eligibleEvents, planAgenda } from "./career/events";
 export { BENCH_ROLES } from "./career/period";
 export {
@@ -383,4 +386,5 @@ export {
 
 export * from "./career/dramaTypes";
 export * from "./career/matchMoments";
-export { promiseOptions, veteranModifiers, matchChance, resolveKeyMatch } from "./career/drama";
+export { promiseOptions, veteranModifiers, matchChance, matchFanLoss, resolveKeyMatch, penaltySide, KEEPER_SAVE, recordStake, type RecordStake, type StakeRecord } from "./career/drama";
+export { leagueSnapshot, leagueAfter, LEAGUE_ROUND, type LeagueSnapshot, type LeagueTableRow } from "./career/leagueTable";

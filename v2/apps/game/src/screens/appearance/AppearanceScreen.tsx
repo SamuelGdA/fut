@@ -1,5 +1,5 @@
 import { getCountryKit } from "@craque/world";
-import type { CSSProperties } from "react";
+import { type CSSProperties, useState } from "react";
 import { useNavigation } from "../../app/navigation";
 import { AvatarEditor } from "../../features/appearance/AvatarEditor";
 import { useAppearanceContext } from "../../features/appearance/context";
@@ -23,6 +23,12 @@ export function AppearanceScreen() {
     // A próxima abertura, pela Identidade, volta ao padrão.
     useAppearanceContext.getState().open("identity", null);
   };
+  // D109: Voltar descarta o que mudou nesta visita; só Pronto guarda.
+  const [original] = useState(avatar);
+  const cancel = () => {
+    useDraft.getState().update({ avatar: original });
+    leave();
+  };
 
   return (
     <div className="appearance-page mx-auto max-w-6xl px-4 pt-6 pb-16" style={{ "--subbar": "0px" } as CSSProperties}>
@@ -30,7 +36,7 @@ export function AppearanceScreen() {
         value={avatar}
         onChange={(next) => useDraft.getState().update({ avatar: next })}
         kit={nationality ? getCountryKit(nationality) : null}
-        onBack={leave}
+        onBack={cancel}
         onDone={leave}
       />
     </div>

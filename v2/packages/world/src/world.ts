@@ -12,6 +12,7 @@ import itaClubs from "../data/clubs/ita.json";
 import mexClubs from "../data/clubs/mex.json";
 import parClubs from "../data/clubs/par.json";
 import perClubs from "../data/clubs/per.json";
+import porClubs from "../data/clubs/por.json";
 import uruClubs from "../data/clubs/uru.json";
 import usaClubs from "../data/clubs/usa.json";
 import venClubs from "../data/clubs/ven.json";
@@ -67,6 +68,22 @@ export const COUNTRIES: readonly Country[] = countriesJson.map((row) => ({
 }));
 
 const countryByCode = new Map(COUNTRIES.map((country) => [country.code, country]));
+
+/**
+ * Copas do Mundo de cada seleção campeã (D106). A tradição muda o que o país
+ * cobra de um jogador: no Brasil, sem Copa não há lenda; nos Estados Unidos, os
+ * números e a Copa Ouro já bastam.
+ */
+export const WORLD_CUP_TITLES: Readonly<Partial<Record<CountryCode, number>>> = {
+  BRA: 5,
+  GER: 4,
+  ITA: 4,
+  ARG: 3,
+  FRA: 2,
+  URU: 2,
+  ENG: 1,
+  ESP: 1,
+};
 
 export function getCountry(code: CountryCode | null | undefined): Country | null {
   if (!code) return null;
@@ -126,6 +143,7 @@ const CLUB_FILES: ReadonlyArray<readonly [CountryCode, readonly RawClub[]]> = [
   ["MEX", mexClubs],
   ["PAR", parClubs],
   ["PER", perClubs],
+  ["POR", porClubs],
   ["URU", uruClubs],
   ["USA", usaClubs],
   ["VEN", venClubs],

@@ -41,12 +41,12 @@ describe("relatório", () => {
     expect(new Set(runs.map((run) => run.born.position)).size).toBe(12);
   });
 
-  it("cada carreira rende 24 variações de OVR", () => {
-    expect(seasonDeltas(runs[0]!)).toHaveLength(24);
+  it("cada carreira rende 25 variações de OVR (D109: dos 16 aos 40)", () => {
+    expect(seasonDeltas(runs[0]!)).toHaveLength(25);
   });
 
   it("a curva tem um caractere por idade", () => {
-    expect(sparkline(metrics.ovrCurve.class)).toHaveLength(24);
+    expect(sparkline(metrics.ovrCurve.class)).toHaveLength(25);
     expect(sparkline([40, 99])).toBe("▁█");
   });
 

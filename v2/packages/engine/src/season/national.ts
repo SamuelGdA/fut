@@ -57,9 +57,10 @@ export function nationalAgeFactor(age: number): number {
  * Jogos pela seleção na temporada: amistosos e eliminatórias pela situação e
  * pela idade, mais a fase alcançada no torneio do ano. Sempre um sorteio.
  */
-export function drawNationalGames(rng: Rng, status: NationalStatus, age: number, tournamentGames: number): number {
+export function drawNationalGames(rng: Rng, status: NationalStatus, age: number, tournamentGames: number, overlap = 0): number {
   const [min, max] = stepOf(status).games;
-  const regular = Math.round((min + rng.next() * (max - min)) * nationalAgeFactor(age));
+  // D108: jogos de torneio que ocupam datas de amistoso e eliminatória (a Liga das Nações) descontam dos comuns.
+  const regular = Math.max(0, Math.round((min + rng.next() * (max - min)) * nationalAgeFactor(age)) - (inTournamentSquad(status) ? overlap : 0));
   const tournament = inTournamentSquad(status) ? tournamentGames : 0;
   return regular + tournament;
 }
@@ -68,4 +69,4 @@ export function drawNationalGames(rng: Rng, status: NationalStatus, age: number,
 export const NATIONAL_OPPOSITION = 76;
 
 /** Fator de gols e assistências em jogo de seleção, mais travado que o de clube. */
-export const NATIONAL_SCORING = 0.6;
+export const NATIONAL_SCORING = 0.64;

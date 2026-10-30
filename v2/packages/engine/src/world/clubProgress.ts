@@ -2,7 +2,7 @@ import { getCompetition, type CompetitionKind } from "@craque/world";
 
 /** Conquistas pequenas também contam, sem permitir crescimento ilimitado. */
 export const CLUB_TROPHY_PROGRESS = {
-  rewards: { league: 0.4, second: 0.2, cup: 0.15, leagueCup: 0.1, superCup: 0.1, continental1: 0.6, continental2: 0.25, continental3: 0.15, continentalSuper: 0.1, intercontinental: 0.25, clubWorldCup: 0.6, nationsCup: 0, worldCup: 0 } satisfies Record<CompetitionKind, number>,
+  rewards: { league: 0.4, second: 0.2, cup: 0.15, leagueCup: 0.1, superCup: 0.1, continental1: 0.6, continental2: 0.25, continental3: 0.15, continentalSuper: 0.1, intercontinental: 0.25, clubWorldCup: 0.6, nationsCup: 0, nationsLeague: 0, worldCup: 0 } satisfies Record<CompetitionKind, number>,
   annualCap: 1.2,
   droughtGrace: 3,
   droughtStep: 0.02,

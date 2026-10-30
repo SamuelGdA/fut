@@ -8,16 +8,22 @@ const input: ProductionInput = { position: "lw", ovr: 94, attributes: [94, 94, 9
 const rate = (position: Position, finishing: number) => productionRates({ ...input, position, attributes: [94, finishing, 94, 94, 60, 80] }).goalsPerGame;
 
 describe("D68: oportunidades dos finalizadores e valor", () => {
-  it("um ponta excepcional se aproxima de um centroavante sem transformar todo ponta em artilheiro", () => {
+  it("um ponta excepcional se aproxima de um centroavante e o finalizador comum segue abaixo dele", () => {
     expect(rate("lw", 99) / rate("st", 99)).toBeGreaterThan(0.9);
-    expect(rate("lw", 80) / rate("st", 80)).toBeLessThan(0.65);
+    // D100: a ponta Fenômeno chega à temporada recorde (perto de 2%); com finalização comum, segue abaixo do centroavante.
+    expect(rate("lw", 80) / rate("st", 80)).toBeLessThan(0.92);
+    expect(rate("lw", 99) / rate("st", 99)).toBeLessThanOrEqual(1.3 + 1e-9);
     expect(rate("rw", 99)).toBe(rate("lw", 99));
     expect(rate("lw", 99) * 50).toBeGreaterThan(30);
-    expect(rate("lw", 99) * 50).toBeLessThan(50);
+    // D100: o finalizador de elite da ponta passa dos 50 gols esperados em 50 jogos, mas não chega aos 60 de todo ano.
+    expect(rate("lw", 99) * 50).toBeLessThan(55);
   });
   it("meias finalizadores melhoram, preservando a diferença de oportunidades entre funções", () => {
-    const order = (["st", "lw", "cam", "lm", "cm", "cdm", "cb", "gk"] as const).map(position => rate(position, 99));
+    // D100: a ordem das funções vale com a finalização comum; no topo, a ponta e o meia de elite podem passar o centroavante.
+    const order = (["st", "lw", "cam", "lm", "cm"] as const).map(position => rate(position, 80));
     expect(order.every((value, i) => !i || value < order[i - 1]!)).toBe(true);
+    const elite = (["lw", "cam", "lm", "cm", "cdm", "cb", "gk"] as const).map(position => rate(position, 99));
+    expect(elite.every((value, i) => !i || value < elite[i - 1]!)).toBe(true);
     expect(rate("cm", 99) * 50).toBeGreaterThan(10);
     expect(rate("cm", 99) * 50).toBeLessThan(20);
     expect(rate("cm", 99)).toBeGreaterThan(rate("cm", 80) * 2);
@@ -29,7 +35,8 @@ describe("D68: oportunidades dos finalizadores e valor", () => {
       expect(finishingOpportunities(position, 80)).toBe(0);
       const rates = Array.from({ length: 60 }, (_, i) => rate(position, 40 + i));
       expect(rates.every((value, i) => !i || value > rates[i - 1]!)).toBe(true);
-      expect(rate(position, 81) / rate(position, 80)).toBeLessThan(1.05);
+      // D110: o batedor fora do ataque soma um pouco de gol de bola parada a partir de 80.
+      expect(rate(position, 81) / rate(position, 80)).toBeLessThan(1.06);
     }
   });
   it("o valor nunca ultrapassa €400M, nem com humor positivo ou atributos extremos de teste", () => {

@@ -1,5 +1,5 @@
 import { getEvent, INJURY_TAG } from "../events/catalog";
-import { stream } from "../rng";
+import { outcomeStream } from "./outcome";
 import { applyEffects } from "./effects";
 import { appendLog, stepLog } from "./log";
 import { moveTo } from "./move";
@@ -102,7 +102,7 @@ export function resolveChoice(career: Career, choice: Choice): Step {
     const source = definition?.options.find((candidate) => candidate.id === option.option);
     if (definition && source) {
       const success =
-        option.chance === null ? null : stream(next.setup.seed, "events", "outcome", decision.id).next() < option.chance;
+        option.chance === null ? null : outcomeStream(next, decision.id, "events", "outcome", decision.id).next() < option.chance;
       const effects = success === false ? (source.failure ?? []) : source.success;
       // O resultado vem antes dos efeitos: a notícia do evento, depois o anúncio da transferência.
       notices.push({ kind: "eventOutcome", event: definition.id, option: option.id, success, effects });

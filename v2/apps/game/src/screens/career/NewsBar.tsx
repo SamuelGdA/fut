@@ -5,6 +5,7 @@ import { m } from "motion/react";
 import { Newspaper } from "lucide-react";
 import { useMemo } from "react";
 import { useT } from "../../i18n/useT";
+import { RecordSeal } from "./RecordSeal";
 
 interface NewsBarProps {
   career: Career;
@@ -32,6 +33,7 @@ export function NewsBar({ career, index, fresh }: NewsBarProps) {
       key={`${cover.year}-${fresh ? "novo" : "visto"}`}
       className="cover news-bar"
       data-tone={cover.tone}
+      data-record={cover.record ? (cover.record.beaten ? "beaten" : "matched") : undefined}
       aria-label={t("career.play.newspaper")}
       initial={fresh && reduced !== true ? { opacity: 0, y: 14, rotate: -0.8 } : false}
       animate={{ opacity: 1, y: 0, rotate: 0 }}
@@ -42,7 +44,7 @@ export function NewsBar({ career, index, fresh }: NewsBarProps) {
           <Newspaper size={13} aria-hidden="true" className="shrink-0" />
           <span className="cover-paper">{cover.paper}</span>
         </span>
-        <span className="cover-dateline">{cover.dateline}</span>
+        {cover.record ? <RecordSeal record={cover.record} compact /> : <span className="cover-dateline">{cover.dateline}</span>}
       </p>
       <h3 className="cover-headline">
         <span className="sr-only">{toneLabel}: </span>

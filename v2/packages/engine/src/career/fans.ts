@@ -113,9 +113,16 @@ export function legacySeasonPoints(stats: PlayerSeasonStats, fans: number, trait
   return points * TRAIT_EFFECTS[trait].legacy;
 }
 
+/** Barras do legado no clube (GDD 17.4, D90). */
+export const LEGACY_BAR = {
+  legend: { points: 50, prestige: 11, seasons: 5, games: 140 },
+  idol: { points: 25, prestige: 6, seasons: 2, games: 70 },
+} as const;
+
 export function legacyLevel(points: number, seasons: number, prestige: number, games: number): LegacyLevel {
-  if (points >= 45 + 10 * prestige && seasons >= 4 && games >= 120) return "legend";
-  if (points >= 22 + 5 * prestige && seasons >= 2 && games >= 60) return "idol";
+  // D90: lenda e ídolo um pouco mais exigentes.
+  if (points >= LEGACY_BAR.legend.points + LEGACY_BAR.legend.prestige * prestige && seasons >= LEGACY_BAR.legend.seasons && games >= LEGACY_BAR.legend.games) return "legend";
+  if (points >= LEGACY_BAR.idol.points + LEGACY_BAR.idol.prestige * prestige && seasons >= LEGACY_BAR.idol.seasons && games >= LEGACY_BAR.idol.games) return "idol";
   if (points >= 8 + 2 * prestige) return "respected";
   return "none";
 }

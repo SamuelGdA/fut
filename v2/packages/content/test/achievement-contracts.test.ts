@@ -10,7 +10,7 @@ import { COACH_ACHIEVEMENTS, coachAchievementsMet } from "../src/coach";
 const setup={seed:"d72-conquistas",startYear:2026,pace:"intense" as const,difficulty:"normal" as const,identity:{surname:"Teste",nationality:"BRA" as const,position:"st" as const,foot:"right" as const,dreamNumber:9}};
 const fresh=createCareer(setup),base=autoplay(fresh,"ambitious"),record=base.history[0]!;
 const league=(country:string,division=1)=>LEAGUES.find(item=>item.country===country && item.division===division)!;
-const annual=(year:number,club="barcelona"):SeasonRecord=>({...record,year,age:16+year-2026,club,league:league(CLUBS.find(item=>item.id===club)!.country).id,games:60,ovrEnd:95,loan:false,legacy:"legend",production:{...record.production,goals:73,assists:25},national:{...record.national,games:12,goals:10},awards:{...record.awards,won:["ballonDor","goldenShoe","goldenGlove","youngPlayer","topScorer","bestPlayer"]},titles:["league:laliga","cup:ESP","cont1:UEFA",...(year%4===2?["worldcup"]:[])]});
+const annual=(year:number,club="barcelona"):SeasonRecord=>({...record,year,age:16+year-2026,club,league:league(CLUBS.find(item=>item.id===club)!.country).id,games:60,ovrEnd:95,loan:false,legacy:"legend",production:{...record.production,goals:73,assists:35,cleanSheets:34,lines:[{competition:"league:laliga",kind:"league",games:38,goals:30,assists:20,cleanSheets:27}]},national:{...record.national,games:12,goals:10},awards:{...record.awards,won:["ballonDor","goldenShoe","goldenGlove","youngPlayer","topScorer","bestPlayer"]},titles:["league:laliga","cup:ESP","cont1:UEFA",...(year%4===2?["worldcup"]:[])]});
 const ended=(history:readonly SeasonRecord[]):Career=>({...base,history,end:{reason:"age",age:40}});
 const main=ended(Array.from({length:24},(_,i)=>annual(2026+i)));
 const national=ended(main.history.map(item=>({...item,club:"palmeiras",league:league("BRA").id,titles:["league:brasileirao","cup:BRA","cont1:CONMEBOL","nations:CONMEBOL"]})));
@@ -27,7 +27,11 @@ const contexts:AchievementContext[]=[main,national,road,home,recovered,
   {...road,nationality:"ARG" as const},
   {...road,log:base.log.map(entry=>entry.kind==="transfer"?{...entry,traitor:true}:entry)},
   ended(main.history.map(item=>({...item,ovrEnd:item.age<31?79:95}))),
-  ...["ENG","ESP","ITA","GER"].map(country=>ended(main.history.map(item=>({...item,titles:[`league:${league(country).id}`]})))),
+  // O recorde de jogos sem sofrer gol é de goleiro (D95): só a carreira de goleiro o alcança.
+  ended(main.history.map(item=>({...item,position:"gk" as const}))),
+  // Jogos de Champions League (D105): 13 por temporada em 24 temporadas passam dos 183.
+  ended(main.history.map(item=>({...item,production:{...item.production,lines:[...item.production.lines,{competition:"cont1:UEFA",kind:"continental1" as const,games:13,goals:5,assists:3,cleanSheets:4}]}}))),
+  ...["ENG","ESP","ITA","GER","FRA"].map(country=>ended(main.history.map(item=>({...item,titles:[`league:${league(country).id}`]})))),
   ...COMPETITIONS.map(competition=>ended([{...record,titles:[competition.id]}])),
 ].map(career=>({career,challenge:null,finishedBefore:9,rankedDays:7}));
 contexts.push({career:challengeCareer,challenge:{...challengeResult,total:900,erased:0,edict:{...challengeResult.edict,state:"intact"},missions:challengeResult.missions.map(mission=>({...mission,ratio:1}))},finishedBefore:9,rankedDays:7});

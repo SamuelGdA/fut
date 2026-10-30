@@ -20,6 +20,12 @@ export function ResultMessage({ career, play }: { career: Career | null; play: P
   return <ResultLayer view={view} />;
 }
 
+/** D106: o resultado de uma decisão revista pelas bolinhas, parado dentro do card. */
+export function ResultRecall({ career, play }: { career: Career | null; play: PlaySession | null }) {
+  const view = useResultView(career, play);
+  return view ? <div className="result-recall"><ResultCard view={view} /></div> : null;
+}
+
 /** Resultado mais recente, sem cobrir ou deslocar a decisão durante a leitura. */
 export function ResultLayer({ view }: { view: ResultView | null }) {
   if (view === null) return null;
@@ -97,6 +103,12 @@ function Badge({ view, reduced }: { view: ResultView; reduced: boolean }) {
         <svg viewBox="0 0 24 24" className="result-icon">
           <m.path d="M7 7l10 10" {...draw(0.2)} />
           <m.path d="M17 7L7 17" {...draw(0.34)} />
+        </svg>
+      ) : null}
+      {view.mark === "draw" || view.mark === "short" ? (
+        <svg viewBox="0 0 24 24" className="result-icon">
+          <m.path d={view.mark === "draw" ? "M6 9.5h12" : "M6 12h12"} {...draw(0.2)} />
+          {view.mark === "draw" ? <m.path d="M6 14.5h12" {...draw(0.32)} /> : null}
         </svg>
       ) : null}
       {view.mark === "done" ? (

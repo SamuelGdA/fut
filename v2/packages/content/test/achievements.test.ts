@@ -210,7 +210,7 @@ describe("texto do Desafio do dia", () => {
         if (edict.limit > 0) expect(rule, `${locale} ${edict.id}`).toContain(String(edict.limit));
       }
     }
-    expect(edictRule("pt", "noBench")).toBe("A partir dos 20 anos, no máximo 1 temporada terminada no banco.");
+    expect(edictRule("pt", "noBench")).toBe("Antes dos 20 anos, vale tudo. Dos 20 anos até o fim, no máximo 1 temporada terminada no banco.");
   });
 
   it("cada mão de um ano inteiro tem meta escrita para as três missões", () => {

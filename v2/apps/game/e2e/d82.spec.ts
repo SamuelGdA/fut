@@ -3,11 +3,11 @@ import { readFile } from "node:fs/promises";
 import { deflateRawSync } from "node:zlib";
 import { abrir, abrirMomento, auditar, esperarQueCaiba, fixturePlans } from "./apoio";
 
-const metadata = JSON.parse(await readFile(new URL("./fixtures/momentos-m23.json", import.meta.url), "utf8")) as { moments: Record<string, { file: string; index: number }> };
+const metadata = JSON.parse(await readFile(new URL("./fixtures/momentos-m41.json", import.meta.url), "utf8")) as { moments: Record<string, { file: string; index: number }> };
 for (const theme of ["light", "dark"] as const) {
   test(`D82: jornal ampliado navega sem fechar e preserva a folha, ${theme}`, async ({ page }, info) => {
     await page.setViewportSize({ width: 360, height: 640 });
-    const raw = await readFile(new URL("./fixtures/colecao-m23.json", import.meta.url));
+    const raw = await readFile(new URL("./fixtures/colecao-m41.json", import.meta.url));
     await abrir(page, { theme, motion: "reduced" }, `/#c=z${deflateRawSync(raw).toString("base64url")}`);
     await page.getByRole("link", { name: "Jornal", exact: true }).click();
     await page.getByRole("button", { name: "Ampliar jornal", exact: true }).click();
@@ -48,7 +48,7 @@ for (const theme of ["light", "dark"] as const) {
     await expect(next).toBeDisabled(); await expect(dialog).toBeVisible();
     await dialog.getByRole("button", { name: "Fechar", exact: true }).click();
     await expect(dialog).not.toBeVisible();
-    await expect(page.locator(".paper-stage .paper-spread")).toHaveAttribute("data-year", "2046");
+    await expect(page.locator(".paper-stage .paper-spread")).toHaveAttribute("data-year", String(fixturePlans[(JSON.parse(raw.toString()) as { setup: { seed: string } }).setup.seed]!.at(-1)!.history.at(-1)));
   });
 
   for (const route of ["sameYear", "fastYear", "nextMain"] as const) test(`D82: deslize conserva dimensões até sair, ${route}, ${theme}`, async ({ page }, info) => {

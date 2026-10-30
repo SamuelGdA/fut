@@ -51,7 +51,7 @@ export default defineConfig({
       includeManifestIcons: false,
       manifest: {
         id: "./",
-        name: "Futeiros: dois jogos de futebol",
+        name: "Futeiros: futebol de escolhas",
         short_name: "Futeiros",
         description: "Craque, a carreira de jogador, e Técnico, a carreira de treinador: dois jogos de futebol decididos por escolhas.",
         lang: "pt-BR",

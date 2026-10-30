@@ -14,17 +14,13 @@ export const EVENT_CATALOG: readonly EventDefinition[] = [
     { id: "study", kind: "choice", success: [{ kind: "boost", target: "cup", amount: 1 }, { kind: "games", scale: 0.94 }] },
     { id: "play", kind: "choice", success: [{ kind: "games", scale: 1.04 }] },
   ] },
-  { id: "silentWeek", weight: 40, tags: ["fitness"], when: [{ kind: "age", min: 23 }], options: [
-    { id: "silence", kind: "choice", success: [{ kind: "fans", amount: -3 }, { kind: "injury", scale: 0.8 }] },
-    { id: "press", kind: "choice", success: [{ kind: "fans", amount: 3 }, { kind: "growth", scale: 0.95 }] },
-  ] },
   {
     id: "extraTraining",
     weight: 100,
     tags: ["training"],
     when: [],
     options: [
-      { id: "push", kind: "risky", chance: 0.6, success: [{ kind: "capacity", amount: 1, when: "now" }], failure: [{ kind: "games", scale: 0.8 }, { kind: "story", tag: "overtraining" }] },
+      { id: "push", kind: "risky", chance: 0.6, success: [{ kind: "capacity", amount: 1, when: "now" }], failure: [{ kind: "games", scale: 0.8 }] },
       { id: "routine", kind: "safe", success: [] },
     ],
   },
@@ -56,9 +52,9 @@ export const EVENT_CATALOG: readonly EventDefinition[] = [
         kind: "risky",
         chance: 0.55,
         success: [{ kind: "capacity", amount: 2, when: "now" }],
-        failure: [{ kind: "suspension", seasons: 1 }, { kind: "fans", amount: -15 }, { kind: "story", tag: "doping" }],
+        failure: [{ kind: "suspension", seasons: 1 }, { kind: "fans", amount: -15 }],
       },
-      { id: "refuse", kind: "safe", success: [{ kind: "story", tag: "clean" }] },
+      { id: "refuse", kind: "safe", success: [] },
     ],
   },
   {
@@ -85,9 +81,12 @@ export const EVENT_CATALOG: readonly EventDefinition[] = [
     id: "rivalSigned",
     weight: 90,
     tags: ["squad"],
-    when: [{ kind: "role", in: ["starter", "star"] }],
+    // D106: um clube não contrata concorrente para quem está muito acima do
+    // elenco (mais de 6 pontos sobre a força). Perto disso, a disputa fica
+    // mais fácil quanto mais acima ele estiver: +4% por ponto, de -2 a +6.
+    when: [{ kind: "role", in: ["starter", "star"] }, { kind: "clubGap", max: 6 }],
     options: [
-      { id: "fight", kind: "risky", chance: 0.5, success: [{ kind: "fans", amount: 3 }], failure: [{ kind: "role", change: "down" }] },
+      { id: "fight", kind: "risky", chance: 0.5, gapEdge: 0.04, success: [{ kind: "fans", amount: 3 }], failure: [{ kind: "role", change: "down" }] },
       { id: "leave", kind: "change", success: [{ kind: "transfer", to: "offer" }] },
     ],
   },
@@ -97,7 +96,7 @@ export const EVENT_CATALOG: readonly EventDefinition[] = [
     tags: ["leadership"],
     when: [{ kind: "age", min: 24 }, { kind: "seasonsAtClub", min: 3 }],
     options: [
-      { id: "accept", kind: "choice", success: [{ kind: "fans", amount: 10 }, { kind: "pressure", amount: 0.2 }, { kind: "story", tag: "captain" }] },
+      { id: "accept", kind: "choice", success: [{ kind: "fans", amount: 10 }, { kind: "pressure", amount: 0.2 }] },
       { id: "decline", kind: "safe", success: [] },
     ],
   },
@@ -157,7 +156,7 @@ export const EVENT_CATALOG: readonly EventDefinition[] = [
     tags: ["personal"],
     when: [{ kind: "age", max: 30 }],
     options: [
-      { id: "doIt", kind: "risky", chance: 0.8, success: [{ kind: "fans", amount: 6 }], failure: [{ kind: "games", scale: 0.5 }, { kind: "story", tag: "infection" }] },
+      { id: "doIt", kind: "risky", chance: 0.8, success: [{ kind: "fans", amount: 6 }], failure: [{ kind: "games", scale: 0.5 }] },
       { id: "skip", kind: "safe", success: [] },
     ],
   },
@@ -172,7 +171,7 @@ export const EVENT_CATALOG: readonly EventDefinition[] = [
         id: "fight",
         kind: "risky",
         chance: 0.5,
-        success: [{ kind: "fans", amount: 4 }, { kind: "story", tag: "acquitted" }],
+        success: [{ kind: "fans", amount: 4 }],
         failure: [{ kind: "suspension", seasons: 0.5 }, { kind: "fans", amount: -8 }],
       },
     ],
@@ -295,7 +294,7 @@ export const EVENT_CATALOG: readonly EventDefinition[] = [
     tags: ["leadership"],
     when: [{ kind: "age", min: 28 }],
     options: [
-      { id: "mentor", kind: "choice", success: [{ kind: "fans", amount: 8 }, { kind: "growth", scale: 0.9 }, { kind: "story", tag: "mentor" }] },
+      { id: "mentor", kind: "choice", success: [{ kind: "fans", amount: 8 }, { kind: "growth", scale: 0.9 }] },
       { id: "compete", kind: "risky", chance: 0.5, fixedChance: true, success: [{ kind: "games", scale: 1.2 }], failure: [{ kind: "games", scale: 0.8 }] },
     ],
   },
@@ -305,7 +304,8 @@ export const EVENT_CATALOG: readonly EventDefinition[] = [
     tags: ["fame"],
     when: [{ kind: "ovr", min: 75 }],
     options: [
-      { id: "flashy", kind: "choice", success: [{ kind: "fans", amount: 6 }, { kind: "pressure", amount: 0.15 }] },
+      // A campanha dá mídia: o valor de mercado sobe 8% pelo resto da carreira, sem aparecer na mensagem (D90).
+      { id: "flashy", kind: "choice", success: [{ kind: "fans", amount: 6 }, { kind: "pressure", amount: 0.15 }, { kind: "fame", amount: 0.08 }] },
       { id: "discreet", kind: "safe", success: [] },
     ],
   },
@@ -323,7 +323,8 @@ export const EVENT_CATALOG: readonly EventDefinition[] = [
     id: "newAgent",
     weight: 40,
     tags: ["transfer"],
-    when: [{ kind: "age", min: 20, max: 32 }],
+    // D106: até os 29. A janela que vem logo depois tem de valer uma mudança de verdade.
+    when: [{ kind: "age", min: 20, max: 29 }],
     options: [
       { id: "change", kind: "risky", chance: 0.6, success: [{ kind: "market", amount: 2 }], failure: [{ kind: "market", amount: -2 }] },
       { id: "keep", kind: "safe", success: [] },
@@ -375,8 +376,9 @@ export const EVENT_CATALOG: readonly EventDefinition[] = [
     tags: ["discipline", "transfer"],
     when: [],
     options: [
-      { id: "standGround", kind: "risky", chance: 0.35, success: [{ kind: "fans", amount: 8 }], failure: [{ kind: "block" }, { kind: "transfer", to: "offer" }] },
-      { id: "apologize", kind: "safe", success: [{ kind: "fans", amount: -2 }] },
+      // D110: não recuar é sair, sem sorteio: a diretoria vende e fecha as portas. Recuar custa caro com a torcida.
+      { id: "standGround", kind: "choice", success: [{ kind: "block" }, { kind: "transfer", to: "offer" }] },
+      { id: "apologize", kind: "safe", success: [{ kind: "fans", amount: -10 }] },
     ],
   },
   {
@@ -414,6 +416,8 @@ export const EVENT_CATALOG: readonly EventDefinition[] = [
     expand: "homageNumbers",
     options: [
       { id: "number", kind: "choice", success: [{ kind: "shirt", number: "chosen" }, { kind: "pressure", amount: 0.1 }, { kind: "fans", amount: 4 }] },
+      // D107: manter o número de sempre também é homenagem: menos festa, nenhuma cobrança nova.
+      { id: "keep", kind: "safe", success: [{ kind: "fans", amount: 2 }] },
     ],
   },
   {

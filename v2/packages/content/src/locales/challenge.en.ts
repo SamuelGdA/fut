@@ -70,7 +70,7 @@ export const challengeEn: ChallengeMessages = {
       goal: { one: "{n} scoring award", other: "{n} scoring awards" },
       hint: "The Golden Shoe and the top scorer award of any competition both count.",
     },
-    goldenGloves: { name: "Brick wall", goal: { one: "{n} Golden Glove", other: "{n} Golden Gloves" } },
+    goldenGloves: { name: "Brick wall", goal: { one: "{n} Yashin Trophy top ten finish", other: "{n} Yashin Trophy top ten finishes" } },
   },
   worldCupGoals: [
     "Play at a World Cup",
@@ -90,9 +90,9 @@ export const challengeEn: ChallengeMessages = {
     noRelegation: { name: "Never go down", rule: "No relegation with your club." },
     noBench: {
       name: "Always a starter",
-      rule: { one: "From age {age}, no more than {limit} season finished on the bench.", other: "From age {age}, no more than {limit} seasons finished on the bench." },
+      rule: { one: "Before age {age}, anything goes. From age {age} to the end, no more than {limit} season finished on the bench.", other: "Before age {age}, anything goes. From age {age} to the end, no more than {limit} seasons finished on the bench." },
     },
-    noSecondDivision: { name: "First class", rule: "From age {age}, never in the second division." },
+    noSecondDivision: { name: "First class", rule: "Before age {age}, anything goes. From age {age} to the end, no season in the second division." },
     stayThree: { name: "Put down roots", rule: "Never leave a club before three seasons. Loans do not count." },
     homeContinent: { name: "Close to home", rule: "Never play outside your continent." },
     noGiants: { name: "No giants", rule: "Never play for a giant, a club of strength {strength} or more." },

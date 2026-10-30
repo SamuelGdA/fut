@@ -1,6 +1,6 @@
 import { HonourGroups } from "../../ui/HonourGroups";
 import { d71 } from "../../i18n/d71";
-import { biography, recordText, type RecordResult } from "@craque/content";
+import { REAL_RECORDS, recordText, type RecordResult } from "@craque/content";
 import { type Career, nationalLegacy, isGoalkeeper, KEEPER_ATTRIBUTES, OUTFIELD_ATTRIBUTES } from "@craque/engine";
 import { getClub, getCountry } from "@craque/world";
 import { m } from "motion/react";
@@ -9,6 +9,7 @@ import {
   ovrCurve,
   peakCard,
   summaryNumbers,
+  nearRecords,
   summaryRecords,
   timeline,
   type TimelineItem,
@@ -19,22 +20,6 @@ import { Crest, Flag } from "../../ui/Media";
 import { Chip } from "../../ui/Signals";
 import { AttributeBar } from "../../ui/Stats";
 import { OvrCurve } from "./Poster";
-
-/** A biografia (GDD 25): cinco capítulos, cada um um parágrafo. */
-export function BiographySection({ career }: { career: Career }) {
-  const { locale } = useT();
-  const bio = biography(locale, career);
-  return (
-    <div className="bio">
-      {bio.chapters.map((chapter) => (
-        <section key={chapter.id} className="bio-chapter">
-          <h3 className="bio-title">{chapter.title}</h3>
-          <p className="bio-text">{chapter.lines.join(" ")}</p>
-        </section>
-      ))}
-    </div>
-  );
-}
 
 const MONEY_KEYS = new Set(["peakValue"]);
 
@@ -49,6 +34,7 @@ export function NumbersSection({ career }: { career: Career }) {
   const peak = peakCard(career);
   const curve = ovrCurve(career.history);
   const records = summaryRecords(career.history);
+  const near = nearRecords(career.history);
   const keeper = isGoalkeeper(career.player.position);
   const keys = keeper ? KEEPER_ATTRIBUTES : OUTFIELD_ATTRIBUTES;
 
@@ -94,24 +80,29 @@ export function NumbersSection({ career }: { career: Career }) {
         ) : null}
       </div>
 
-      {records.length > 0 ? <RecordsList records={records} /> : null}
+      {records.length > 0 || near.length > 0 ? <RecordsList records={[...records, ...near]} reached={records.length} /> : null}
     </div>
   );
 }
 
 const RECORD_TONE = { beaten: "glory", matched: "good", short: "neutral" } as const;
 
-function RecordsList({ records }: { records: readonly RecordResult[] }) {
+/**
+ * Os recordes igualados ou superados e, depois, os que ficaram perto (D94):
+ * "faltaram 2" vale mais que a lista vazia para fazer jogar de novo. Cada um
+ * mostra a faixa de raridade.
+ */
+function RecordsList({ records, reached }: { records: readonly RecordResult[]; reached: number }) {
   const { t, number, locale } = useT();
   return (
     <section>
-      <h3 className="eyebrow mb-3">{t("summary.records.title")}</h3>
+      <h3 className="eyebrow mb-3 flex flex-wrap items-baseline justify-between gap-2">{t("summary.records.title")}<span className="numeric normal-case tracking-normal text-muted">{t("summary.records.collection", { count: reached, total: REAL_RECORDS.length })}</span></h3>
       <ul className="summary-records">
         {records.map((result) => {
           const text = recordText(locale, result.record);
           const ratio = Math.min(1, result.value / result.record.value);
           return (
-            <li key={result.record.id}>
+            <li key={result.record.id} data-tier={result.record.tier} data-status={result.status}>
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
                   <p className="font-semibold">{text.name}</p>
@@ -120,9 +111,12 @@ function RecordsList({ records }: { records: readonly RecordResult[] }) {
                     {text.checked ? ` · ${text.checked}` : ""}
                   </p>
                 </div>
-                <Chip tone={RECORD_TONE[result.status]} glyph={result.status !== "short"} variant={result.status === "beaten" ? "solid" : "soft"}>
-                  {t(`summary.records.status.${result.status}`)}
-                </Chip>
+                <span className="flex shrink-0 flex-col items-end gap-1">
+                  <Chip tone={RECORD_TONE[result.status]} glyph={result.status !== "short"} variant={result.status === "beaten" ? "solid" : "soft"}>
+                    {result.status === "short" ? t("summary.records.near", { missing: number(result.record.value - result.value) }) : t(`summary.records.status.${result.status}`)}
+                  </Chip>
+                  <span className="record-tier" data-tier={result.record.tier}>{t(`summary.records.tiers.${result.record.tier}`)}</span>
+                </span>
               </div>
               <div className="mt-2 flex items-center gap-3">
                 <div className="meter-track flex-1" aria-hidden="true">
@@ -178,6 +172,7 @@ export function TimelineSection({ career }: { career: Career }) {
                     : t("summary.timeline.ages", { from: item.stint.fromAge, to: item.stint.toAge })}
                   {item.stint.loan ? ` · ${t("career.history.loan")}` : ""}
                 </p>
+                <StintNumbers career={career} stint={item.stint} />
                 {item.legacy !== "none" || item.traitor ? (
                   <p className="mt-1.5 flex flex-wrap gap-1">
                     {item.legacy !== "none" ? (
@@ -208,6 +203,29 @@ export function TimelineSection({ career }: { career: Career }) {
   );
 }
 
+/**
+ * Os números do jogador em cada clube (D96), como os da seleção: jogos, gols e
+ * assistências; jogos sem sofrer gol entram se ele jogou no gol ou na defesa
+ * nessa passagem, e o goleiro puro mostra só jogos e jogos sem sofrer gol.
+ */
+function StintNumbers({ career, stint }: { career: Career; stint: Extract<TimelineItem, { kind: "stint" }>["stint"] }) {
+  const seasons = career.history.filter((record) => record.club === stint.club && record.year >= stint.fromYear && record.year <= stint.toYear);
+  if (!seasons.length) return null;
+  const sum = (pick: (record: (typeof seasons)[number]) => number) => seasons.reduce((total, record) => total + pick(record), 0);
+  const keeperOnly = seasons.every((record) => record.position === "gk");
+  const backLine = seasons.some((record) => ["gk", "cb", "lb", "rb"].includes(record.position));
+  return <NumbersLine keeperOnly={keeperOnly} backLine={backLine} games={sum((record) => record.games)} goals={sum((record) => record.production.goals)} assists={sum((record) => record.production.assists)} cleanSheets={sum((record) => record.production.cleanSheets)} />;
+}
+
+/** Jogos · gols · assistências (e jogos sem sofrer gol para quem jogou atrás): a mesma linha para clube e seleção. */
+function NumbersLine({ keeperOnly, backLine, games, goals, assists, cleanSheets, className = "mt-1" }: { keeperOnly: boolean; backLine: boolean; games: number; goals: number; assists: number; cleanSheets: number; className?: string }) {
+  const { t, number } = useT();
+  const parts = [`${number(games)} ${t("summary.numbers.games")}`];
+  if (!keeperOnly) parts.push(`${number(goals)} ${t("summary.numbers.goals")}`, `${number(assists)} ${t("summary.numbers.assists")}`);
+  if (backLine) parts.push(`${number(cleanSheets)} ${t("summary.numbers.cleanSheets")}`);
+  return <p className={`numeric text-xs font-semibold text-muted ${className}`}>{parts.join(" · ")}</p>;
+}
+
 function markerOf(item: TimelineItem): "traitor" | "legend" | "idol" | "debut" | "plain" {
   if (item.kind === "debut") return "debut";
   if (item.traitor) return "traitor";
@@ -220,13 +238,17 @@ function DebutCard({ career, age, year }: { career: Career; age: number; year: n
   const { t, c, locale } = useT();
   const country = getCountry(career.nationality);
   const legacy = nationalLegacy(career.history, career.nationality, country?.strength ?? 75);
+  const seasons = career.history.filter((record) => record.nationality === career.nationality && record.national.games > 0);
   return (
     <div className="timeline-card">
       {country ? <Flag country={country} size={40} language={locale} decorative /> : null}
       <div className="min-w-0 flex-1">
         <p className="display text-xl font-extrabold uppercase">{t("summary.timeline.debut")}</p>
         <p className="text-xs text-muted">{t("summary.timeline.debutAt", { age, year })}</p>
-        <div className="mt-2 flex flex-wrap items-center gap-2"><Chip tone={LEGACY_TONE[legacy.level]} size="sm">{d71(locale,"nationalLegacy")}: {legacy.level === "none" ? d71(locale,"common") : c(`legacy.${legacy.level}`)}</Chip><span className="numeric text-xs text-muted">{legacy.games} {t("career.header.games")} · {legacy.goals} {t("career.header.goals")}</span></div>
+        <div className="mt-2 flex flex-wrap items-center gap-2"><Chip tone={LEGACY_TONE[legacy.level]} size="sm">{d71(locale,"nationalLegacy")}: {legacy.level === "none" ? d71(locale,"common") : c(`legacy.${legacy.level}`)}</Chip></div>
+        {/* D106: quando os números davam lenda, mas faltou o título que o país cobra, a tela diz por quê. */}
+        {legacy.capped ? <p className="mt-1.5 text-xs text-muted">{d71(locale, legacy.tradition === "worldCup" ? "capWorldCup" : "capContinental")}</p> : null}
+        <NumbersLine className="mt-1.5" keeperOnly={seasons.every((record) => record.position === "gk")} backLine={seasons.some((record) => ["gk", "cb", "lb", "rb"].includes(record.position))} games={legacy.games} goals={legacy.goals} assists={legacy.assists} cleanSheets={legacy.cleanSheets} />
       </div>
     </div>
   );

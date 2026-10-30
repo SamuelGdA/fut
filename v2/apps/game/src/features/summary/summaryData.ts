@@ -1,4 +1,4 @@
-import { careerRecords, type RecordResult, type Stint, stintsOf } from "@craque/content";
+import { careerRecords, recordChases, type RecordResult, type Stint, stintsOf } from "@craque/content";
 import { type Career, careerTotals, isDefender, isGoalkeeper, type LegacyLevel, peakSeason, type SeasonRecord } from "@craque/engine";
 import { type AwardKey, getClub, compareHonours } from "@craque/world";
 
@@ -138,4 +138,9 @@ export function peakCard(career: Career): SeasonRecord | null {
  */
 export function summaryRecords(history: readonly SeasonRecord[]): RecordResult[] {
   return careerRecords(history).filter((result) => result.status !== "short");
+}
+
+/** Os que ficaram perto (D94): a partir de 80% da marca, do mais perto ao mais longe. */
+export function nearRecords(history: readonly SeasonRecord[]): RecordResult[] {
+  return recordChases(history).filter((chase) => chase.goal === "match").map((chase) => chase.result);
 }

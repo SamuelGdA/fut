@@ -13,6 +13,8 @@ export function competitionPrestige(id: string): number {
   const leagues: Readonly<Record<string, number>> = { ENG: 60, ESP: 55, ITA: 50, GER: 45, FRA: 40, BRA: 35, ARG: 30 };
   if (kind === "league") return 720 + (leagues[competition.country ?? ""] ?? 0);
   if (kind === "continental2") return 700;
+  // D108: a Liga das Nações fica abaixo da Europa League e acima das copas nacionais.
+  if (kind === "nationsLeague") return 650;
   if (kind === "cup") return 600;
   if (kind === "continental3") return 580;
   if (kind === "continentalSuper") return 450;
@@ -22,7 +24,12 @@ export function competitionPrestige(id: string): number {
 }
 
 export interface OrderedHonour { readonly kind: "title" | "award"; readonly id: string; readonly competition?: string }
-const GLOBAL_AWARDS: Partial<Record<AwardKey, number>> = { ballonDor: 980, kingOfAmerica: 790, goldenShoe: 770, goldenGlove: 760, youngPlayer: 550 };
+/**
+ * D101: troféus primeiro, prêmios depois. Só a Bola de Ouro e a Chuteira de
+ * Ouro passam à frente de todas as taças; os outros prêmios ficam abaixo da
+ * menor taça (200), na ordem deles.
+ */
+const GLOBAL_AWARDS: Partial<Record<AwardKey, number>> = { ballonDor: 2000, goldenShoe: 1990, kingOfAmerica: 190, goldenGlove: 185, youngPlayer: 170 };
 export function honourPrestige(item: OrderedHonour): number {
   if (item.kind === "title") return competitionPrestige(item.id);
   // Nenhum prêmio de competição específica passa à frente da menor taça.

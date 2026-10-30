@@ -3,12 +3,12 @@ import type { EventContext } from "../events/model";
 import { ovrAt } from "../player/player";
 import type { Position } from "../player/positions";
 import type { SquadRole } from "../season/role";
-import { baseMarketValue, marketLeagueStrength } from "../player/value";
+import { famedMarketValue, marketLeagueStrength } from "../player/value";
 import { stream } from "../rng";
 import { inTournamentSquad, nationalStatus } from "../season/national";
 import { clubIndex, COUNTRY_CLUBS } from "../world/model";
 import { continentalEntrants } from "../world/season";
-import { CALENDAR } from "../world/tuning";
+import { CALENDAR, nationsCupYear } from "../world/tuning";
 import { canWearTen, legacyLevel } from "./fans";
 import { type MarketContext, marketLevel } from "./market";
 import { firstContractNumber, freePrestigeNumbers, homageNumbers, newClubNumber } from "./shirt";
@@ -125,6 +125,7 @@ export function marketContext(career: Career, overrides: Partial<MarketContext> 
     firstClub: career.history[0]?.club ?? null,
     proving: career.proving,
     shirt: (club, role) => offerShirt(career, club, role),
+    recent: career.recentOffers ?? [],
     ...overrides,
   };
 }
@@ -218,7 +219,7 @@ export function eventContext(career: Career): EventContext {
   const shirt = career.contract?.shirt ?? 0;
 
   const nation = getCountry(career.nationality);
-  const tournamentYear = career.world.year % 4 === CALENDAR.worldCup || career.world.year % 4 === CALENDAR.nationsCup;
+  const tournamentYear = career.world.year % 4 === CALENDAR.worldCup || (nation !== null && nationsCupYear(nation.confederation, career.world.year));
   const status = nation ? nationalStatus(ovr, nation.strength) : "out";
   const legacyHere = club ? bondLegacy(career, club) : "none";
 
@@ -229,6 +230,7 @@ export function eventContext(career: Career): EventContext {
     trait: career.player.trait,
     lastRole: last && last.club === club ? last.role : null,
     lastGames: last?.games ?? 0,
+    clubGap: club ? ovr - strength : 0,
     seasonsAtClub: seasonsAtClub(career),
     clubDecline: career.contract ? career.contract.strengthAtArrival - strength : 0,
     continental,
@@ -239,7 +241,7 @@ export function eventContext(career: Career): EventContext {
     tenFree:
       canWearTen(position) && shirt !== 10 && (last?.role === "star" || last?.role === "starter") && tenRoll < 0.35,
     abroadSeasons: homeClub(career) === null ? 0 : abroadSeasons(career),
-    value: baseMarketValue(ovr, age, marketLeagueStrength(career.world, club)),
+    value: famedMarketValue(ovr, age, marketLeagueStrength(career.world, club), career.fame),
     residenceEligible: residenceCountry(career) !== null,
     nationWeakOrUncapped:
       grandfatherCountry(career) !== null &&

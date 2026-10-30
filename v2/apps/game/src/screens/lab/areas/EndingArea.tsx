@@ -1,5 +1,4 @@
 import { type AvatarConfig, DEFAULT_AVATAR } from "@craque/art";
-import { biography } from "@craque/content";
 import { autoplay, type Career, type CareerPolicy, type CareerSetup, createCareer } from "@craque/engine";
 import { FileText, RefreshCw } from "lucide-react";
 import { useMemo, useRef, useState } from "react";
@@ -47,17 +46,16 @@ function playCareer(profile: Profile, round: number): Career {
 
 /**
  * Área "Fim de carreira" (M6, GDD 38): uma carreira inteira jogada pela
- * política automática, com a prévia do pôster e a biografia. "Abrir no
+ * política automática, com a prévia do pôster. "Abrir no
  * resumo" consulta esta carreira de teste somente na sessão atual.
  */
 export function EndingArea() {
-  const { t, locale } = useT();
+  const { t } = useT();
   const go = useNavigation((state) => state.go);
   const [profile, setProfile] = useState<Profile>("ambitious");
   const [round, setRound] = useState(1);
   const career = useMemo(() => playCareer(profile, round), [profile, round]);
   const avatar = PROFILE_SETUP[profile].avatar;
-  const bio = biography(locale, career);
   const [frameRef, width] = useElementWidth(320);
   const posterRef = useRef<HTMLDivElement>(null);
   const posterHeight = usePosterHeight(posterRef, true);
@@ -106,27 +104,14 @@ export function EndingArea() {
         })}
       </p>
 
-      <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
-        <section>
-          <SectionRule className="mb-3">{t("lab.ending.poster")}</SectionRule>
-          <div ref={frameRef} className="poster-frame" style={{ height: posterHeight * scale }}>
-            <div className="poster-scale" style={{ transform: `scale(${scale})` }}>
-              <Poster ref={posterRef} career={career} avatar={avatar} showSurname />
-            </div>
+      <section className="max-w-xl">
+        <SectionRule className="mb-3">{t("lab.ending.poster")}</SectionRule>
+        <div ref={frameRef} className="poster-frame" style={{ height: posterHeight * scale }}>
+          <div className="poster-scale" style={{ transform: `scale(${scale})` }}>
+            <Poster ref={posterRef} career={career} avatar={avatar} showSurname />
           </div>
-        </section>
-        <section>
-          <SectionRule className="mb-3">{t("lab.ending.biography")}</SectionRule>
-          <div className="bio">
-            {bio.chapters.map((chapter) => (
-              <section key={chapter.id} className="bio-chapter">
-                <h3 className="bio-title">{chapter.title}</h3>
-                <p className="bio-text">{chapter.lines.join(" ")}</p>
-              </section>
-            ))}
-          </div>
-        </section>
-      </div>
+        </div>
+      </section>
 
     </div>
   );

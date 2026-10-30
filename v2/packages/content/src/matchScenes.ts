@@ -35,6 +35,8 @@ const pt = {
   chipShot: ["Goleiro adiantado", "Você passou pelo zagueiro. O goleiro sai e o companheiro acompanha pelo lado.", "Tentar por cobertura", "Tocar para o lado"],
   cutInside: ["Corte para dentro", "O lateral protege a linha de fundo. Seu pé bom fica livre se você cortar para o meio.", "Cortar e finalizar", "Tabelar por dentro"],
   nearPostRun: ["Primeiro poste", "O ponta vai cruzar rasteiro. Você pode chegar antes do zagueiro ou abrir espaço para quem vem atrás.", "Atacar o primeiro poste", "Escorar para quem chega"],
+  suddenDeath: ["Nas alternadas", "A disputa de pênaltis foi para as alternadas e os batedores de sempre já cobraram. Agora é a sua vez.", "Canto esquerdo", "Canto direito"],
+  keeperShootout: ["Só falta você", "Os dez de linha dos dois times já cobraram e a disputa segue empatada. Só falta o goleiro: você.", "Canto esquerdo", "Canto direito"],
 } as const;
 type Extra = { [K in keyof typeof pt]: readonly [string, string, string, string] };
 const en: Extra = {
@@ -70,6 +72,8 @@ const en: Extra = {
   chipShot: ["Keeper off the line", "You beat the defender. The keeper comes out and a teammate runs alongside.", "Try the chip", "Square the ball"],
   cutInside: ["Cutting inside", "The full-back guards the byline. Cutting inside opens up your stronger foot.", "Cut inside and shoot", "Combine through the middle"],
   nearPostRun: ["The near-post run", "A low cross is coming. Beat the defender to it or create room for the player behind.", "Attack the near post", "Lay it off to the runner"],
+  suddenDeath: ["Sudden death", "The shootout has gone to sudden death and the usual takers are done. Now it is your turn.", "Left corner", "Right corner"],
+  keeperShootout: ["Only you left", "All ten outfield players on both sides have taken their kicks and it is still level. Only the goalkeeper is left: you.", "Left corner", "Right corner"],
 };
 const es: Extra = {
   bicycle: ["De espaldas a portería", "El centro llega algo atrás. Puedes intentar la chilena o dejarla al compañero que llega de frente.", "Intentar la chilena", "Dejarla de cabeza"],
@@ -104,6 +108,8 @@ const es: Extra = {
   chipShot: ["Portero adelantado", "Superaste al central. El portero sale y tu compañero acompaña por el lado.", "Intentar una vaselina", "Tocar al lado"],
   cutInside: ["Recorte hacia dentro", "El lateral protege la línea de fondo. Si recortas al medio, liberas tu pierna buena.", "Recortar y rematar", "Combinar por dentro"],
   nearPostRun: ["Primer palo", "El extremo va a centrar raso. Llega antes del central o deja espacio para quien viene detrás.", "Atacar el primer palo", "Dejarla al que llega"],
+  suddenDeath: ["Muerte súbita", "La tanda llegó a la muerte súbita y los lanzadores de siempre ya tiraron. Ahora te toca a ti.", "Esquina izquierda", "Esquina derecha"],
+  keeperShootout: ["Solo faltas tú", "Los diez jugadores de campo de los dos equipos ya tiraron y la tanda sigue empatada. Solo falta el portero: tú.", "Esquina izquierda", "Esquina derecha"],
 };
 export const EXTRA_MATCH_TEXTS = { pt, en, es };
 
@@ -165,6 +171,8 @@ const safeOptions: Record<MatchScene, readonly [string, string, string]> = {
   chipShot: ["Frear e proteger", "Slow down and shield", "Frenar y proteger"],
   cutInside: ["Voltar pelo lado", "Go back down the flank", "Volver por la banda"],
   nearPostRun: ["Esperar na sobra", "Wait for the loose ball", "Esperar el rechace"],
+  suddenDeath: ["Esperar a cobrança", "Wait for the kick", "Esperar el lanzamiento"],
+  keeperShootout: ["Esperar a cobrança", "Wait for the kick", "Esperar el lanzamiento"],
   corner: ["Cobrar escanteio curto", "Take a short corner", "Sacar en corto"],
   decisivePenalty: ["Esperar a cobrança", "Wait for the kick", "Esperar el lanzamiento"],
 };

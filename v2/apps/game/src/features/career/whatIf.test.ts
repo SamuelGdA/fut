@@ -10,10 +10,10 @@ describe("hipotético em sessões com ajustes de teste", () => {
     const all = actualDecisionPoints(career, "pt");
     const points = principalDecisionPoints(all);
     expect(new Set(points.map(point => point.year)).size).toBe(points.length);
-    expect(points.every(point => !["match", "promise", "veteran"].includes(point.kind))).toBe(true);
+    expect(points.every(point => point.kind !== "match")).toBe(true);
     expect(points.length).toBeLessThan(all.length);
     for (const point of points) {
-      expect(all.find(candidate => candidate.year === point.year && !["match", "promise", "veteran"].includes(candidate.kind))).toBe(point);
+      expect(all.find(candidate => candidate.year === point.year && candidate.kind !== "match")).toBe(point);
       expect(decisionCheckpoint(career, point.index)?.decision?.kind).toBe(point.kind);
     }
   });
@@ -36,7 +36,10 @@ describe("hipotético em sessões com ajustes de teste", () => {
     expect(originals.length).toBeGreaterThan(10);
     useCareer.setState({career:current,internalTesting:true,status:"ready"});
     expect(useCareer.getState().branch(saveOf(current),null,9)).toBe(true);
-    expect(useCareer.getState().career).toBe(originals[9]);
+    // D110: o ponto de troca é o da carreira real, com a marca do sorteio refeito.
+    const { rerolls, ...setup } = useCareer.getState().career!.setup;
+    expect({ ...useCareer.getState().career!, setup }).toEqual(originals[9]);
+    expect(rerolls?.map((reroll) => reroll.from)).toEqual([originals[9]!.decision!.id]);
     expect(useCareer.getState().internalTesting).toBe(true);
     useCareer.getState().discard();
   });

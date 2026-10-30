@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { attributesAt, choose, createCareer, EVENT_CATALOG, policyChoice, type Career, type KeyMatch, type Position } from "../src";
-import { matchChance, matchChanceCeiling, veteranDue } from "../src/career/drama";
+import { KEEPER_SAVE, matchChance, matchChanceCeiling, matchFanLoss, penaltySide, resolveKeyMatch, veteranDue } from "../src/career/drama";
 import { matchSkillWeights } from "../src/career/matchMoments";
 
 const setup = (seed: string, position: Position = "st") => ({ seed, startYear: 2026, pace: "intense" as const, difficulty: "normal" as const, identity: { surname: "TESTE", nationality: "BRA", foot: "right" as const, position, dreamNumber: null } });
@@ -39,14 +39,26 @@ describe("D79: chances ligadas à ação, com limites reproduzíveis", () => {
     expect(matchChance({ ...career, player: { ...career.player, capacity: 110 } }, { ...match, scene: "corner" }, "bold")).toBeLessThanOrEqual(0.08);
     expect(matchSkillWeights("cm", { ...match, scene: "corner" }, "bold")[2]).toBe(0.75);
   });
-  it("especialista melhora todas as defesas de pênalti, sem ultrapassar 45%", () => {
+  it("D91: goleiro defende o pênalti quando acerta o canto do cobrador; o especialista alcança 20% do outro", () => {
     const career = player("d79-gk", "gk");
     for (const scene of ["penaltySave", "shootout"] as const) for (const action of ["left", "right"]) {
-      const base = matchChance(career, { ...match, scene }, action);
+      expect(matchChance(career, { ...match, scene }, action)).toBe(KEEPER_SAVE.guess);
       const trained = matchChance({ ...career, veteran: "poacher" }, { ...match, scene }, action);
-      expect(trained).toBeGreaterThan(base); expect(trained).toBeLessThanOrEqual(0.45);
+      expect(trained).toBeCloseTo(KEEPER_SAVE.guess + (1 - KEEPER_SAVE.guess) * KEEPER_SAVE.specialistReach);
       expect(trained).toBe(matchChance({ ...career, veteran: "poacher" }, { ...match, scene }, action === "left" ? "right" : "left"));
     }
+    let sides = 0;
+    for (let i = 0; i < 60; i++) {
+      const keeper = { ...player(`d79-side-${i}`, "gk") };
+      const scene = { ...match, scene: "penaltySave" as const };
+      const side = penaltySide(keeper, scene);
+      if (side === "left") sides++;
+      for (const action of ["left", "right"]) {
+        const result = resolveKeyMatch(keeper, scene, { id: `drama:${action}`, kind: "drama", action, chance: matchChance(keeper, scene, action) });
+        expect(result.success).toBe(action === side);
+      }
+    }
+    expect(sides).toBeGreaterThan(15); expect(sides).toBeLessThan(45);
   });
 });
 describe("D79: catálogo e envelhecimento", () => {
@@ -67,14 +79,14 @@ describe("D79: catálogo e envelhecimento", () => {
     }
     expect(invitations).toBeGreaterThan(20);expect(invitations).toBeLessThan(70);
   });
-  it("pênalti convertido conserva as duas alternativas e torcida +8/-6 ou neutra", () => {
+  it("pênalti convertido conserva as duas alternativas e torcida +8 (+2 na final), erro escalado ou neutra", () => {
     const base=player("d79-decisive");
     const game={...match,scene:"decisivePenalty" as const,competition:"cup:BRA",stage:"final" as const};
     // Isola o momento para verificar consequências, sem alterar resultados de carreira.
     for(const action of ["take","leave"]) for(const chance of [0,1]) {
       const career:Career={...base, drama:{remaining:1,startAge:base.age,startAttributes:attributesAt(base.player,base.age),event:null,traitor:false,prepared:true,queue:[game],results:[],decisions:1},decision:{...base.decision!,kind:"match",match:game,options:[{id:`drama:${action}`,kind:"drama",action,chance}]}};
       const result=choose(career,{decision:career.decision!.id,option:`drama:${action}`}).notices.find(n=>n.kind==="matchOutcome");
-      expect(result?.kind==="matchOutcome"?result.result.fans:null).toBe(action==="leave"?0:chance?8:-6);
+      expect(result?.kind==="matchOutcome"?result.result.fans:null).toBe(action==="leave"?0:chance?8+2:-matchFanLoss(career,game)); // D89: herói da final +2; D90: erro escalado
       expect(policyChoice(career,"ambitious")).not.toBeNull();
     }
   });

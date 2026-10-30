@@ -221,6 +221,12 @@ describe("a sessão: terminar, interromper, ranquear e conquistar", () => {
     expect(unlocked.has("challengeFirst")).toBe(true);
     expect(useUnlocks.getState().queue.filter((notice) => notice.id === "firstCareer")).toHaveLength(1);
     expect(useHall.getState().achievements.find((row) => row.id === "challengeFirst")?.by).toBe("PRIMEIRO");
+
+    // O controle de teste zera tudo (D91): conquistas, contadores e carreiras terminadas.
+    await useHall.getState().resetAchievements();
+    expect(useHall.getState().achievements).toEqual([]);
+    expect(useHall.getState().progress).toEqual({});
+    expect(useHall.getState().finished).toBe(0);
   });
 
   it("começar outra não arquiva a carreira interrompida", async () => {

@@ -3,6 +3,9 @@ import {
   type AvatarConfig,
   BEARD_STYLES,
   DEFAULT_AVATAR,
+  EARRING_COLORS,
+  EARRING_SIDES,
+  EARRING_STYLES,
   EYE_COLORS,
   EYE_OFFSET_MAX,
   EYE_OFFSET_MIN,
@@ -21,6 +24,7 @@ import {
   NOSE_OFFSET_MAX,
   NOSE_OFFSET_MIN,
   NOSE_SHAPES,
+  SCAR_SPOTS,
   SKIN_TONES,
 } from "@craque/art";
 import { bool, intInRange, isRecord, oneOf } from "../../lib/validate";
@@ -54,5 +58,10 @@ export function sanitizeAvatar(input: unknown): AvatarConfig | null {
     mole: oneOf(input["mole"], MOLE_SPOTS, d.mole),
     accessory: oneOf(input["accessory"], ACCESSORY_STYLES, d.accessory),
     accessoryColor: intInRange(input["accessoryColor"], 0, HAIR_COLORS.length - 1, d.accessoryColor),
+    // D106: detalhes novos; um save antigo sem eles abre sem cicatriz nem brinco. Estilos removidos voltam ao padrão.
+    scar: oneOf(input["scar"], SCAR_SPOTS, d.scar ?? "none"),
+    earring: oneOf(input["earring"], EARRING_SIDES, d.earring ?? "none"),
+    earringStyle: oneOf(input["earringStyle"], EARRING_STYLES, d.earringStyle ?? "stud"),
+    earringColor: intInRange(input["earringColor"], 0, EARRING_COLORS.length - 1, d.earringColor ?? 0),
   };
 }

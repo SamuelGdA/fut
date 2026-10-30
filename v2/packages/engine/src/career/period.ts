@@ -2,7 +2,7 @@ import { promiseReport, veteranModifiers } from "./drama";
 import { getClub } from "@craque/world";
 import { clamp } from "../math";
 import { attributesAt, ovrAt } from "../player/player";
-import { baseMarketValue, marketLeagueStrength } from "../player/value";
+import { famedMarketValue, marketLeagueStrength } from "../player/value";
 import { recordTally } from "../records/pressure";
 import type { SquadRole } from "../season/role";
 import { simulatePlayerSeason, type PlayerSeasonStats, type SeasonModifiers } from "../season/playerSeason";
@@ -168,7 +168,7 @@ export function simulatePeriod(
       nationality: next.nationality,
       position: player.position,
       event: season === 0 ? event : null,
-      marketValue: baseMarketValue(ovrEnd, age, marketLeagueStrength(next.world, club)),
+      marketValue: famedMarketValue(ovrEnd, age, marketLeagueStrength(next.world, club), next.fame),
     };
     notices.push({ kind: "season", year: stats.year }, ...seasonNotices);
     next = { ...updated, history: [...updated.history, record] };

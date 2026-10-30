@@ -123,7 +123,8 @@ describe("copas e supercopas (GDD 8.5 e 8.6)", () => {
     const season = run.results[0] as SeasonResults;
     for (const country of PLAYABLE_COUNTRIES) {
       const cup = season.cups[`cup:${country}`];
-      if (country === "MEX") {
+      // D108: o Peru ficou sem copa (a Copa Bicentenario acabou).
+      if (country === "MEX" || country === "PER") {
         expect(cup).toBeUndefined();
         continue;
       }

@@ -6,7 +6,7 @@ import { posterFileName } from "./poster";
 import { readShareHash } from "./shareHash";
 import { decodeShare, encodeShare, ShareError, shareUrl } from "./shareLink";
 import { SHOWCASE_GAP, showcaseItems, showcaseLayout } from "./showcase";
-import { ovrCurve, posterNumbers, summaryNumbers, summaryRecords, timeline } from "./summaryData";
+import { nearRecords, ovrCurve, posterNumbers, summaryNumbers, summaryRecords, timeline } from "./summaryData";
 
 /** O resumo (M6): link compartilhado, pôster, vitrine e os dados que a tela mostra. */
 
@@ -99,6 +99,21 @@ describe("vitrine (GDD 24.5)", () => {
     const counted = items.filter((item) => item.kind === "title").reduce((total, item) => total + item.count, 0);
     expect(counted).toBe(titles);
     for (const item of items) expect(item.years).toHaveLength(item.count);
+  });
+
+  it("recordes que ficaram perto aparecem com o que faltou (D94)", () => {
+    for (const result of nearRecords(finished.history)) {
+      expect(result.status).toBe("short");
+      expect(result.value / result.record.value).toBeGreaterThanOrEqual(0.8);
+    }
+  });
+
+  it("troféus primeiro, prêmios depois (D91); só Bola de Ouro e Chuteira de Ouro abrem a vitrine (D101)", () => {
+    const group = (item: ReturnType<typeof showcaseItems>[number]) =>
+      item.kind === "award" && !item.competition && (item.id === "ballonDor" || item.id === "goldenShoe") ? 0 : item.kind === "title" ? 1 : 2;
+    const groups = showcaseItems(finished.history).map(group);
+    expect(groups).toEqual([...groups].sort((a, b) => a - b));
+    expect(groups).toContain(1);
   });
 });
 

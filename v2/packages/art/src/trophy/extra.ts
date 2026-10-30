@@ -42,6 +42,10 @@ export const EXTRA_TROPHY_ART: Readonly<Record<string, TrophySpec>> = {
   "cup:ENG": spec("cup", "silver", "#1d3f8f", "FA"),
   "cup:ESP": spec("cup", "silver", "#c60b1e", "ES"),
   "cup:FRA": spec("cup", "silver", "#0b2d7a", "FR"),
+  // D108: Portugal e a Copa de la Liga chilena com arte própria.
+  "cup:POR": spec("cup", "silver", "#c8102e", "TP"),
+  "leaguecup:POR": spec("chalice", "silver", "#006600", "TL"),
+  "leaguecup:CHI": spec("chalice", "silver", "#c8102e", "CDL"),
   "cup:GER": spec("cup", "gold", "#12161c", "DE"),
   "cup:ITA": spec("cup", "silver", "#0b7a3b", "IT"),
   "cup:PAR": spec("cup", "silver", "#c8102e", "PY"),
@@ -65,6 +69,8 @@ export const EXTRA_TROPHY_ART: Readonly<Record<string, TrophySpec>> = {
   "league:laliga-2": spec("cup", "silver", "#c60b1e", "LL2"),
   "league:ligue-1": spec("bowl", "silver", "#0b2d7a", "L1"),
   "league:ligue-2": spec("cup", "silver", "#0b2d7a", "L2"),
+  "league:primeira-liga": spec("bowl", "silver", "#006600", "LP"),
+  "league:liga-portugal-2": spec("cup", "silver", "#006600", "LP2"),
   "league:bundesliga": spec("salver", "silver", "#d20515", "BL"),
   "league:2-bundesliga": spec("cup", "silver", "#12161c", "2BL"),
   "league:serie-a": spec("cup", "gold", "#0b7a3b", "SA"),
@@ -90,6 +96,7 @@ export const EXTRA_TROPHY_ART: Readonly<Record<string, TrophySpec>> = {
   "nations:CAF": spec("cup", "gold", "#0b7a3b", "AFCN"),
   "nations:AFC": spec("cup", "silver", "#7a1f2b", "ASIA"),
   "nations:OFC": spec("cup", "silver", "#0b6b8f", "OFC"),
+  "nationsleague:UEFA": spec("chalice", "silver", "#0b1f5c", "UNL"),
   worldcup: spec("chalice", "gold", "#0b7a3b", "WC"),
   clubworldcup: spec("chalice", "gold", "#1d3f8f", "CWC"),
 };

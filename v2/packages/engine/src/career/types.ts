@@ -1,3 +1,4 @@
+import type { TalentBand } from "../player/talent";
 import type { DramaPeriod, KeyMatch, KeyMatchResult, PromiseReport, SeasonPromise, VeteranPath } from "./dramaTypes";
 import type { CountryCode, Division } from "@craque/world";
 import type { TrainingFocus } from "../evolution/training";
@@ -31,6 +32,15 @@ export interface CareerSetup {
   readonly identity: Identity;
   /** Desafio do dia (M7): muda só a idade em que aposentar aparece. */
   readonly challengeId?: string;
+  /** Dia de recorde do Desafio (D94): o talento é fixo, Fenômeno para todo mundo. */
+  readonly talent?: TalentBand;
+  /**
+   * D110: linhas alternativas do hipotético, uma por troca. Da decisão `from`
+   * em diante, o sorteio de dar certo ou errado (acontecimento e jogo-chave)
+   * usa também o `salt` dela: a mesma escolha da linha original tem a chance
+   * sorteada de novo. As decisões antes de cada troca se refazem iguais no replay.
+   */
+  readonly rerolls?: readonly { readonly from: number; readonly salt: string }[];
 }
 
 // ------------------------------------------------------------------- missão
@@ -153,7 +163,7 @@ export interface Decision {
   /** Evento por trás da decisão. */
   readonly event: string | null;
   /** Por que esta decisão apareceu, quando importa para o texto. */
-  readonly reason: "noRoom" | "released" | "loanEnded" | "suspended" | null;
+  readonly reason: "noRoom" | "released" | "loanEnded" | "suspended" | "agentUp" | "agentDown" | null;
 }
 
 export interface Choice {
@@ -252,6 +262,10 @@ export interface Career {
   readonly veteranYear?: number;
   /** Última temporada em que outra equipe apresentou uma proposta. */
   readonly lastOfferYear?: number;
+  /** Clubes das últimas propostas, mais recentes primeiro, para variar as próximas (D89). Refeito pelo replay. */
+  readonly recentOffers?: readonly string[];
+  /** Exposição na mídia (contrato de chuteira): fração a mais no valor de mercado (D90). */
+  readonly fame?: number;
   readonly drama?: DramaPeriod;
   readonly promise?: SeasonPromise;
   readonly promiseYears?: readonly number[];

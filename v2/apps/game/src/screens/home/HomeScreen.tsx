@@ -1,8 +1,8 @@
 import { CLUBS, COUNTRIES, LEAGUES } from "@craque/world";
-import { ArrowRight, Award, Crosshair, Dices, FlaskConical, Pencil, Play, Timer } from "lucide-react";
-import { useEffect, useState } from "react";
+import { ArrowRight, Award, Crosshair, Dices, FlaskConical, Timer } from "lucide-react";
+import { useEffect } from "react";
 import { useNavigation } from "../../app/navigation";
-import { useDraft } from "../../features/career/draft";
+import type { QuickStart } from "../../features/career/useQuickStart";
 import { useChallengeClock } from "../../features/challenge/clock";
 import { dayRanking } from "../../features/hall/model";
 import { useHall } from "../../features/hall/store";
@@ -10,172 +10,32 @@ import { formatCountdown } from "../../i18n/format";
 import { useT } from "../../i18n/useT";
 import { IS_DEV } from "../../lib/env";
 import { feedback } from "../../services/feedback";
-import { type Difficulty, type Pace, usePrefs } from "../../store/prefs";
 import { Button } from "../../ui/Button";
 import { Panel } from "../../ui/Panel";
-import { PlayerCard } from "../../ui/PlayerCard";
-import { Segmented } from "../../ui/Segmented";
 
 /**
- * Início (GDD 6.1): marca, o Desafio do dia com a contagem até a virada, ritmo
- * e dificuldade, começar, jogo rápido, a carta com o último jogador montado, o
- * Hall da Fama, as conquistas e os números do mundo. No PC, tudo numa tela
- * só, em três colunas, sem rolar a página (D43). O Início é para começar: a
- * carreira em andamento não aparece aqui, e começar outra não pergunta nada
- * (D45); a de antes, com ao menos uma temporada, entra no Hall da Fama como
- * interrompida. O motor só é baixado quando o jogador começa uma carreira.
+ * D110: o Início do Craque saiu. "Jogar" abre direto a tela de quem é você,
+ * que traz o que ficava aqui: jogo rápido, o Desafio do dia, as conquistas,
+ * os números do mundo e o laboratório. Este arquivo guarda essas peças.
  */
-export function HomeScreen() {
-  const { t, locale, number } = useT();
+
+/** O que acompanha a tela de quem é você: Desafio do dia, conquistas, mundo e laboratório. */
+export function CraqueExtras({ quick }: { quick: QuickStart }) {
+  const { t, number } = useT();
   const go = useNavigation((state) => state.go);
-  const pace = usePrefs((state) => state.pace);
-  const difficulty = usePrefs((state) => state.difficulty);
-  const draft = useDraft();
-  const [starting, setStarting] = useState(false);
-
-  const startQuick = async () => {
-    setStarting(true);
-    try {
-      const [{ quickDraft, setupFromDraft }, { useCareer }] = await Promise.all([
-        import("../../features/career/newCareer"),
-        import("../../features/career/store"),
-      ]);
-      // O jogo rápido sorteia um jogador só para esta carreira: o último jogador
-      // montado continua guardado para a próxima (D43).
-      const next = quickDraft(locale);
-      useCareer.getState().start(setupFromDraft({ draft: next, pace, difficulty, locale }), next.avatar);
-      feedback("whistle");
-      go("career");
-    } finally {
-      setStarting(false);
-    }
-  };
-
-  const onQuick = () => {
-    feedback("select");
-    void startQuick();
-  };
-
-  const card = (width: number) => (
-    <PlayerCard
-      surname={draft.surname.trim().toLocaleUpperCase() || t("card.you")}
-      position={draft.position ?? "st"}
-      ovr={null}
-      attributes={null}
-      nationality={draft.nationality}
-      club={null}
-      league={null}
-      shirt={draft.dreamNumber}
-      avatar={draft.avatar}
-      width={width}
-    />
-  );
-
   return (
-    <div className="home-board pitch-stripes">
-      <section className="home-hero">
-        <p className="eyebrow text-glory">{t("app.tagline")}</p>
-        <h1 className="home-title mt-3">{t("app.name")}</h1>
-        <p className="mt-4 max-w-xl text-base text-muted">{t("home.lead")}</p>
-        <div className="home-card">
-          {card(210)}
-          {draft.surname.trim() ? (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => {
-                feedback("select");
-                go("identity");
-              }}
-            >
-              <Pencil size={15} aria-hidden="true" />
-              {t("home.editPlayer")}
-            </Button>
-          ) : null}
-        </div>
-      </section>
-
-      <div className="home-main">
-        <Panel title={t("home.setup")}>
-          <div className="grid gap-5 sm:grid-cols-2">
-            <div>
-              <p className="eyebrow mb-2.5">{t("pace.label")}</p>
-              <Segmented<Pace>
-                block
-                label={t("pace.label")}
-                value={pace}
-                onValueChange={(next) => {
-                  usePrefs.getState().setPace(next);
-                  feedback("tick");
-                }}
-                options={[
-                  { value: "normal", label: t("pace.normal.name") },
-                  { value: "intense", label: t("pace.intense.name") },
-                ]}
-              />
-              <p className="mt-2 text-xs text-faint">{t(`pace.${pace}.hint`)}</p>
-            </div>
-            <div>
-              <p className="eyebrow mb-2.5">{t("difficulty.label")}</p>
-              <Segmented<Difficulty>
-                block
-                label={t("difficulty.label")}
-                value={difficulty}
-                onValueChange={(next) => {
-                  usePrefs.getState().setDifficulty(next);
-                  feedback("tick");
-                }}
-                options={[
-                  { value: "normal", label: t("difficulty.normal.name") },
-                  { value: "hard", label: t("difficulty.hard.name"), tone: "bad" },
-                ]}
-              />
-              <p className="mt-2 text-xs text-faint">{t(`difficulty.${difficulty}.hint`)}</p>
-            </div>
-          </div>
-
-          <div className="mt-6 grid gap-3 sm:grid-cols-2">
-            <Button
-              size="lg"
-              block
-              onClick={() => {
-                feedback("confirm");
-                go("identity");
-              }}
-            >
-              <Play size={18} aria-hidden="true" />
-              {t("home.start")}
-            </Button>
-            <div>
-              <Button size="lg" block variant="secondary" loading={starting} onClick={onQuick}>
-                <Dices size={18} aria-hidden="true" />
-                {t("home.quick")}
-              </Button>
-              <p className="mt-2 text-xs text-faint">{t("home.quickHint")}</p>
-            </div>
-          </div>
-        </Panel>
-
-        <div className="flex justify-center lg:hidden">{card(220)}</div>
+    <div className="craque-extras">
+      {/* No celular, o jogo rápido fica aqui; no PC, ao lado de Começar carreira. */}
+      <div className="lg:hidden">
+        <Button size="lg" block variant="secondary" loading={quick.starting} onClick={quick.start}>
+          <Dices size={18} aria-hidden="true" />
+          {t("home.quick")}
+        </Button>
+        <p className="mt-2 text-xs text-faint">{t("home.quickHint")}</p>
       </div>
-
-      <aside className="home-side">
-        <DailyChallengeCard />
-        <MemoryPanel />
-        <Panel title={t("home.world")}>
-          <dl className="grid grid-cols-3 divide-x divide-line">
-            {[
-              { label: t("home.worldClubs"), value: CLUBS.length },
-              { label: t("home.worldLeagues"), value: LEAGUES.length },
-              { label: t("home.worldNations"), value: COUNTRIES.length },
-            ].map((item) => (
-              <div key={item.label} className="flex flex-col-reverse items-center gap-1 px-1">
-                <dt className="eyebrow">{item.label}</dt>
-                <dd className="display numeric text-3xl font-black">{number(item.value)}</dd>
-              </div>
-            ))}
-          </dl>
-        </Panel>
+      <DailyChallengeCard />
+      <div className="flex flex-col gap-4">
+        <AchievementsPanel />
         {IS_DEV ? (
           <Button
             variant="ghost"
@@ -190,8 +50,21 @@ export function HomeScreen() {
             {t("home.lab")}
           </Button>
         ) : null}
-      </aside>
-
+      </div>
+      <Panel title={t("home.world")}>
+        <dl className="grid grid-cols-3 divide-x divide-line">
+          {[
+            { label: t("home.worldClubs"), value: CLUBS.length },
+            { label: t("home.worldLeagues"), value: LEAGUES.length },
+            { label: t("home.worldNations"), value: COUNTRIES.length },
+          ].map((item) => (
+            <div key={item.label} className="flex flex-col-reverse items-center gap-1 px-1">
+              <dt className="eyebrow">{item.label}</dt>
+              <dd className="display numeric text-3xl font-black">{number(item.value)}</dd>
+            </div>
+          ))}
+        </dl>
+      </Panel>
     </div>
   );
 }
@@ -205,6 +78,7 @@ function DailyChallengeCard() {
   const go = useNavigation((state) => state.go);
   const clock = useChallengeClock();
   const attempts = useHall((state) => state.attempts);
+
   const ranked = dayRanking(attempts, clock.day).find((attempt) => attempt.ranked) ?? null;
 
   return (
@@ -246,8 +120,8 @@ function DailyChallengeCard() {
   );
 }
 
-/** O Hall da Fama e as conquistas: a memória entre carreiras (GDD 28). */
-function MemoryPanel() {
+/** As conquistas, a memória entre carreiras (GDD 28). D106: sem o título "Memória" em cima. */
+function AchievementsPanel() {
   const { t, tp } = useT();
   const go = useNavigation((state) => state.go);
   const unlocked = useHall((state) => state.achievements.filter((row) => !row.id.startsWith("tecnico:")).length);
@@ -257,26 +131,24 @@ function MemoryPanel() {
   }, []);
 
   return (
-    <Panel title={t("home.memory")}>
-      <div className="flex flex-col gap-2">
-        <button
-          type="button"
-          className="option"
-          onClick={() => {
-            feedback("select");
-            go("achievements");
-          }}
-        >
-          <span className="option-lead text-glory">
-            <Award size={22} aria-hidden="true" />
-          </span>
-          <span className="option-main">
-            <span className="option-title">{t("home.achievements")}</span>
-            <span className="option-meta text-xs text-muted">{tp("home.achievementsCount", unlocked)}</span>
-          </span>
-          <ArrowRight size={18} aria-hidden="true" className="text-faint" />
-        </button>
-      </div>
+    <Panel>
+      <button
+        type="button"
+        className="option"
+        onClick={() => {
+          feedback("select");
+          go("achievements");
+        }}
+      >
+        <span className="option-lead text-glory">
+          <Award size={22} aria-hidden="true" />
+        </span>
+        <span className="option-main">
+          <span className="option-title">{t("home.achievements")}</span>
+          <span className="option-meta text-xs text-muted">{tp("home.achievementsCount", unlocked)}</span>
+        </span>
+        <ArrowRight size={18} aria-hidden="true" className="text-faint" />
+      </button>
     </Panel>
   );
 }

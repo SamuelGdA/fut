@@ -164,7 +164,7 @@ describe("prêmios do ano (GDD 13.2 a 13.4)", () => {
     expect(young.youngPlayer.ranking).toContain(PLAYER);
   });
 
-  it("Luva de Ouro só entre goleiros", () => {
+  it("Troféu Yashin só entre goleiros", () => {
     expect(decideAwards("luva", 2034, {}, legend, false).goldenGlove.ranking).not.toContain(PLAYER);
     const keeper = decideAwards("luva", 2034, {}, { ...legend, position: "gk", cleanSheets: 30 }, false);
     expect(keeper.goldenGlove.ranking).toContain(PLAYER);

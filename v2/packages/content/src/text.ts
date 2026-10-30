@@ -73,7 +73,16 @@ interface EventEntry {
   readonly options: Readonly<Record<string, OptionText>>;
 }
 
-function eventEntry(locale: Locale, id: string): EventEntry | null {
+/** Versões do goleiro para eventos que falam do pé (D91): a chuteira vira luva. */
+const KEEPER_EVENTS: Readonly<Record<Locale, Readonly<Record<string, EventEntry>>>> = {
+  pt: { bootDeal: { title: "Contrato de luva", body: "Uma marca esportiva quer você na campanha principal, com luva colorida e comercial na TV.", options: { flashy: { label: "Topar a campanha", result: "Você vira rosto de campanha. Mais fama, mais cobrança." }, discreet: { label: "Manter a discrição", result: "Você prefere luva preta e poucas entrevistas." } } } },
+  en: { bootDeal: { title: "Glove deal", body: "A sportswear brand wants you as the face of its main campaign, with bright gloves and a TV advert.", options: { flashy: { label: "Front the campaign", result: "You become the face of the campaign. More fame, more pressure." }, discreet: { label: "Stay low-key", result: "You prefer black gloves and few interviews." } } } },
+  es: { bootDeal: { title: "Contrato de guantes", body: "Una marca deportiva te quiere en su campaña principal, con guantes de colores y anuncio en la tele.", options: { flashy: { label: "Aceptar la campaña", result: "Te conviertes en la cara de la campaña. Más fama, más exigencia." }, discreet: { label: "Mantener la discreción", result: "Prefieres guantes negros y pocas entrevistas." } } } },
+};
+
+function eventEntry(locale: Locale, id: string, career?: Career): EventEntry | null {
+  const keeper = career?.player.position === "gk" ? KEEPER_EVENTS[locale][id] : undefined;
+  if (keeper) return keeper;
   const own = (EVENT_TEXTS[locale] as Readonly<Record<string, EventEntry>>)[id];
   return own ?? (EVENT_TEXTS.pt as Readonly<Record<string, EventEntry>>)[id] ?? null;
 }
@@ -117,7 +126,7 @@ export interface DecisionText {
 export function decisionText(locale: Locale, career: Career, decision: Decision): DecisionText {
   if (["match", "promise", "veteran"].includes(decision.kind)) return dramaDecision(locale, career, decision);
   if (decision.kind === "event" && decision.event) {
-    const entry = eventEntry(locale, decision.event);
+    const entry = eventEntry(locale, decision.event, career);
     const vars = eventVars(locale, career, decisionTarget(decision));
     return entry
       ? { title: interpolate(entry.title, vars), body: interpolate(entry.body, vars) }
@@ -131,7 +140,7 @@ export function decisionText(locale: Locale, career: Career, decision: Decision)
         return decision.options.some((option) => option.kind === "club" && option.offer.back) ? "returnRetained" : "returnReleased";
       case "window":
       case "event":
-        return decision.reason === "suspended" ? "suspended" : "window";
+        return decision.reason === "suspended" ? "suspended" : decision.reason === "agentUp" ? "agentUp" : decision.reason === "agentDown" ? "agentDown" : "window";
       case "match":
       case "promise":
       case "veteran":
@@ -162,7 +171,7 @@ export function optionLabel(locale: Locale, career: Career, decision: Decision, 
     case "focus":
       return careerText(locale, `focus.${option.focus}.name`);
     case "event": {
-      const entry = decision.event ? eventEntry(locale, decision.event) : null;
+      const entry = decision.event ? eventEntry(locale, decision.event, career) : null;
       const text = entry?.options[baseOptionId(option.id)];
       return text ? interpolate(text.label, eventVars(locale, career, option.target)) : option.id;
     }
@@ -181,7 +190,7 @@ export function eventOutcomeText(
   option: Extract<DecisionOption, { kind: "event" }>,
   success: boolean | null,
 ): string {
-  const text = eventEntry(locale, eventId)?.options[baseOptionId(option.id)];
+  const text = eventEntry(locale, eventId, career)?.options[baseOptionId(option.id)];
   if (!text) return "";
   const template = success === null ? text.result : success ? text.success : text.failure;
   return template ? interpolate(template, eventVars(locale, career, option.target)) : "";
@@ -195,8 +204,8 @@ function percent(scale: number, locale: Locale): string {
 }
 
 /**
- * Um efeito em uma linha, para a prévia da opção e o resultado. `story` não
- * aparece (é só biografia) e devolve `null`.
+ * Um efeito em uma linha, para a prévia da opção e o resultado. A mídia do
+ * contrato de chuteira (`fame`) não aparece e devolve `null`.
  */
 export function describeEffect(locale: Locale, effect: Effect, target: EventTarget | null = null): string | null {
   const t = (key: CareerKey, vars?: Vars) => careerText(locale, key, vars);
@@ -255,7 +264,8 @@ export function describeEffect(locale: Locale, effect: Effect, target: EventTarg
       return t("effect.clubStrength", { value: formatSigned(effect.amount, locale) });
     case "award":
       return t(effect.amount >= 0 ? "effect.awardUp" : "effect.awardDown");
-    case "story":
+    // A mídia do contrato de chuteira mexe só no valor e fica fora da mensagem, a pedido (D90).
+    case "fame":
       return null;
   }
 }
@@ -303,8 +313,9 @@ export function effectTone(effect: Effect): EffectTone {
     case "transfer":
     case "position":
     case "nationality":
-    case "story":
       return "neutral";
+    case "fame":
+      return "good";
   }
 }
 

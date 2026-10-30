@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 import { readFile } from "node:fs/promises";
 import { abrirMomento, auditar, esperarQueCaiba } from "./apoio";
 
-const metadata = JSON.parse(await readFile(new URL("./fixtures/momentos-m23.json", import.meta.url), "utf8")) as { engine: string; moments: Record<string, { file: string; index: number }> };
+const metadata = JSON.parse(await readFile(new URL("./fixtures/momentos-m41.json", import.meta.url), "utf8")) as { engine: string; moments: Record<string, { file: string; index: number }> };
 
 for (const theme of ["light", "dark"] as const) for (const kind of ["match", "promise", "veteran"] as const) {
   test(`D73: ${kind}, ${theme}, teclado e leitura`, async ({ page }, info) => {

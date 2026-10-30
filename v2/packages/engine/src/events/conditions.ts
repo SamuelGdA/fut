@@ -39,6 +39,8 @@ export function holds(condition: Condition, context: EventContext): boolean {
       return context.fans >= (condition.min ?? 0) && context.fans <= (condition.max ?? 100);
     case "ovr":
       return context.ovr >= condition.min;
+    case "clubGap":
+      return (context.clubGap ?? 0) >= (condition.min ?? -Infinity) && (context.clubGap ?? 0) <= (condition.max ?? Infinity);
     case "trait":
       return condition.in.includes(context.trait);
     case "neighbourPosition":

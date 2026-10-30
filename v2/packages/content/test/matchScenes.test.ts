@@ -2,10 +2,10 @@ import { describe, expect, it } from "vitest";
 import { matchScenes, POSITIONS } from "@craque/engine";
 import { dramaText, sceneOption } from "../src";
 
-describe("D80: contrato dos 53 lances", () => {
+describe("D80: contrato dos 55 lances", () => {
   for (const locale of ["pt", "en", "es"] as const) it(`${locale}: todo contexto jogável tem pergunta e opções próprias`, () => {
     const scenes = new Set(POSITIONS.flatMap(position => matchScenes(position, true)));
-    expect(scenes.size).toBe(53);
+    expect(scenes.size).toBe(55);
     for (const scene of scenes) {
       const [title, body] = dramaText(locale).scenes[scene];
       const bold = sceneOption(locale, scene, "bold");
