@@ -76,9 +76,10 @@ describe("D71: reconhecimento internacional", () => {
       if(decideAwards(seed,2030,{},player,true).ballonDor.winner==="player")europe++;
       if(decideAwards(seed,2030,{},{...player,playsInUefa:false},true).ballonDor.winner==="player")outside++;
     }
+    // D106: na temporada histórica, o desconto cai e o voto se confirma em 60%; segue atrás da Europa.
+    // Na carreira isso fica raro (0,42% dos Fenômenos), porque um ano assim fora da Europa é raro.
     expect(outside).toBeGreaterThan(0);
-    expect(outside).toBeLessThan(1500*0.025);
-    expect(europe).toBeGreaterThan(outside*20);
+    expect(outside).toBeLessThan(europe * 0.75);
     expect(decideAwards("ordinary",2030,{},{...player,playsInUefa:false,goals:30,assists:5},true).ballonDor.winner).not.toBe("player");
   });
   it("seleção menor pode ter lenda sem títulos, enquanto a forte exige mais", () => {

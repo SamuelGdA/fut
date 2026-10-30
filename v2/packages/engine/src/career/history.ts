@@ -49,6 +49,8 @@ export interface CareerTotals {
   readonly awards: number;
   readonly nationalGames: number;
   readonly nationalGoals: number;
+  readonly nationalAssists: number;
+  readonly nationalCleanSheets: number;
   readonly clubs: number;
   readonly peakOvr: number;
 }
@@ -62,17 +64,23 @@ export function careerTotals(history: readonly SeasonRecord[]): CareerTotals {
   let awards = 0;
   let nationalGames = 0;
   let nationalGoals = 0;
+  let nationalAssists = 0;
+  let nationalCleanSheets = 0;
   let peakOvr = 0;
   for (const record of history) {
-    games += record.games;
-    goals += record.production.goals;
-    assists += record.production.assists;
-    cleanSheets += record.production.cleanSheets;
+    // D97: jogos, gols, assistências e jogos sem sofrer gol somam clube e seleção,
+    // como os recordes já contavam; os campos national* guardam a parte da seleção.
+    games += record.games + record.national.games;
+    goals += record.production.goals + record.national.goals;
+    assists += record.production.assists + record.national.assists;
+    cleanSheets += record.production.cleanSheets + record.national.cleanSheets;
     titles += record.titles.length;
     // O selo anual resume Craque/artilheiro; cada competição ganha conta uma vez.
     awards += record.awards.won.filter(id=>id!=="bestPlayer" && id!=="topScorer").length + record.awards.crowns.length;
     nationalGames += record.national.games;
     nationalGoals += record.national.goals;
+    nationalAssists += record.national.assists;
+    nationalCleanSheets += record.national.cleanSheets;
     peakOvr = Math.max(peakOvr, record.ovrEnd);
   }
   return {
@@ -85,6 +93,8 @@ export function careerTotals(history: readonly SeasonRecord[]): CareerTotals {
     awards,
     nationalGames,
     nationalGoals,
+    nationalAssists,
+    nationalCleanSheets,
     clubs: new Set(history.map((record) => record.club)).size,
     peakOvr,
   };

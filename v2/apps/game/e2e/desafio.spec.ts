@@ -11,11 +11,13 @@ test("da entrada do desafio ao resultado ranqueado", async ({ page }, info) => {
   const celular = info.project.name === "celular";
   await abrirCraque(page);
   await page.getByRole("button", { name: "Ver o desafio" }).click();
-  await expect(page.getByRole("heading", { name: /^A mão de / })).toBeVisible();
+  // D96: a data é o título, e as regras fixas viram selos curtos.
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText(/de /);
+  await expect(page.locator(".ch-rules li")).toHaveCount(4);
   await expect(page.getByText("Missão surpresa")).toBeVisible();
-  await expect(page.getByText("A primeira tentativa que você terminar hoje é a ranqueada.")).toBeVisible();
+  await expect(page.getByText("A primeira que você terminar hoje vale o ranking.")).toBeVisible();
 
-  await page.getByLabel("Sobrenome").fill("Teste");
+  await page.getByRole("textbox", { name: "Nome", exact: true }).fill("Teste");
   await page.getByRole("button", { name: "Jogar o desafio" }).click();
   await expect(page.locator(OPCOES).first()).toBeVisible();
 

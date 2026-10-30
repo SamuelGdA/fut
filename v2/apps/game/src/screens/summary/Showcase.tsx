@@ -63,7 +63,7 @@ export function Showcase({ history, maxHeight = 520, maxArt, kind }: ShowcasePro
                 {item.count > 1 ? <span className="showcase-count numeric">{t("career.trophies.times", { count: item.count })}</span> : null}
               </span>
               {layout.labels ? (
-                <span className="showcase-label" data-competition={item.kind === "award" && !!item.competition || undefined}>
+                <span className="showcase-label" data-competition={item.kind === "award" && !!item.competition || undefined} data-long={longestWord(item.kind === "award" && item.competition ? `${AWARDS[item.id].names[locale]} ${getCompetition(item.competition)?.names[locale] ?? ""}` : name) >= 13 || undefined}>
                   {item.kind === "award" && item.competition ? <><span>{AWARDS[item.id].names[locale]}</span><span className="showcase-competition">{getCompetition(item.competition)?.names[locale] ?? item.competition}</span></> : name}
                 </span>
               ) : (
@@ -80,4 +80,9 @@ export function Showcase({ history, maxHeight = 520, maxArt, kind }: ShowcasePro
       </Sheet>
     </div>
   );
+}
+
+/** A maior palavra do nome: acima de 12 letras ela não cabe na célula e a fonte encolhe (D90). */
+function longestWord(text: string): number {
+  return Math.max(0, ...text.split(/\s+/).map((word) => word.length));
 }

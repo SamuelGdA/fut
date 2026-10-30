@@ -1,8 +1,28 @@
+import { setPieceSkill } from "../season/production";
 import type { Position } from "../player/positions";
 import type { KeyMatch, MatchScene } from "./dramaTypes";
 import type { Rng } from "../rng";
 
 export type MatchActionKind = "shot" | "pass" | "save" | "tackle" | "hold";
+
+/**
+ * Disputas de pênaltis (D91). A comum entra no catálogo da posição; as raras
+ * chegam a quem quase nunca cobra: a série alternada até um defensor (7ª a 10ª
+ * cobrança) e, mais rara ainda, todos já cobraram e só falta o goleiro.
+ */
+export const SHOOTOUT_SCENES: readonly MatchScene[] = ["shootout", "suddenDeath", "keeperShootout"];
+export const RARE_SHOOTOUT = { defenders: ["cb", "lb", "rb", "cdm"] as readonly Position[], defenderChance: 0.04, keeperChance: 0.012 } as const;
+export function isShootout(scene: MatchScene): boolean {
+  return SHOOTOUT_SCENES.includes(scene);
+}
+/** Lances decididos pelo canto, sem a opção segura. */
+export function isCornerChoice(scene: MatchScene): boolean {
+  return scene === "penalty" || scene === "penaltySave" || isShootout(scene);
+}
+/** O goleiro defendendo um pênalti: o cobrador já escolheu o canto (D91). */
+export function isKeeperSave(position: Position, scene: MatchScene): boolean {
+  return position === "gk" && (scene === "penaltySave" || scene === "shootout");
+}
 /** A posição decide o contexto; a ação decide o atributo e a contribuição. */
 function nativeScenes(position: Position, knockout: boolean): readonly MatchScene[] {
   if (position === "gk") return ["keeper", "distribution", "nearPost", "lowCross", "backPass", "cornerClaim", "longShot", "sweeper", ...(knockout ? ["penaltySave", "shootout"] as const : [])];
@@ -26,10 +46,26 @@ function visitingScenes(position: Position, knockout: boolean): readonly MatchSc
 }
 /** Catálogo completo para conteúdo e laboratório; a frequência é decidida separadamente. */
 export function matchScenes(position: Position, knockout: boolean): readonly MatchScene[] {
-  return [...new Set([...nativeScenes(position, knockout), ...(position === "gk" && !knockout ? [] : visitingScenes(position, knockout))])];
+  const rare: MatchScene[] = !knockout ? [] : position === "gk" ? ["keeperShootout"] : RARE_SHOOTOUT.defenders.includes(position) ? ["suddenDeath"] : [];
+  return [...new Set([...nativeScenes(position, knockout), ...(position === "gk" && !knockout ? [] : visitingScenes(position, knockout)), ...rare])];
 }
+/**
+ * D110: o batedor do time. Quem não é atacante e tem finalização alta (a
+ * partir de 80) cobra pênalti e falta: o jogo-chave vira uma dessas
+ * cobranças com até `SET_PIECE_SCENE_CHANCE` (no 99 de FIN; `setPieceSkill`, em `season/production.ts`).
+ */
+export const SET_PIECE_SCENE_CHANCE = 0.3;
+
 /** Escolhe a família antes de evitar repetição, para não tornar um lance raro comum. */
-export function pickMatchScene(position: Position, knockout: boolean, used: ReadonlySet<MatchScene>, rng: Rng): MatchScene {
+export function pickMatchScene(position: Position, knockout: boolean, used: ReadonlySet<MatchScene>, rng: Rng, finishing = 0): MatchScene {
+  const taker = setPieceSkill(position, finishing);
+  if (taker > 0 && rng.chance(SET_PIECE_SCENE_CHANCE * taker)) {
+    const kicks = (["penalty", "freeKick", ...(knockout ? ["decisivePenalty"] as const : [])] as MatchScene[]).filter((scene) => !used.has(scene));
+    if (kicks.length) return rng.pick(kicks);
+  }
+  // As disputas raras vêm antes de tudo, uma vez por ano no máximo (D91).
+  if (knockout && position === "gk" && !used.has("keeperShootout") && rng.chance(RARE_SHOOTOUT.keeperChance)) return "keeperShootout";
+  if (knockout && RARE_SHOOTOUT.defenders.includes(position) && !used.has("suddenDeath") && rng.chance(RARE_SHOOTOUT.defenderChance)) return "suddenDeath";
   const native = nativeScenes(position, knockout);
   const visitors = visitingScenes(position, knockout).filter(scene => !native.includes(scene));
   const rate = position === "gk" ? knockout ? 0.008 : 0 : position === "cb" ? 0.015 : ["lb", "rb"].includes(position) ? 0.03 : ["st", "lw", "rw"].includes(position) ? 0.08 : 0.06;
@@ -44,6 +80,7 @@ export function matchActionKind(position: Position, match: KeyMatch, action: str
   if (action === "safe") return "hold";
   if (action === "leave") return "hold";
   if (match.scene === "keeperCorner") return action === "bold" ? "shot" : action === "team" ? "pass" : "hold";
+  if (match.scene === "suddenDeath" || match.scene === "keeperShootout") return "shot";
   if (position === "gk") return ["distribution", "backPass"].includes(match.scene) ? "pass" : action === "team" ? "hold" : "save";
   if (["interception", "aerialDuel", "lastBlock", "cover", "recoveryRun", "secondBall", "backPost", "offsideTrap", "defensiveHeader", "goalLine"].includes(match.scene)) return "tackle";
   if (action === "team" || ["buildUp", "cross", "pressEscape", "switchPlay", "throughBall", "overlap", "underlap", "earlyCross", "cutback", "halfTurn", "thirdMan", "oneTwo", "diagonal", "edgePass"].includes(match.scene)) return "pass";
@@ -54,6 +91,9 @@ export function matchActionKind(position: Position, match: KeyMatch, action: str
 export function matchSkillWeights(position: Position, match: KeyMatch, action: string): readonly number[] {
   const kind = matchActionKind(position, match, action);
   if (match.scene === "keeperCorner") return action === "bold" ? [0.5, 0, 0, 0, 0.2, 0.3] : action === "team" ? [0.3, 0.2, 0, 0, 0, 0.5] : [0, 0, 0.4, 0, 0.3, 0.3];
+  // O goleiro cobra com o pé da reposição e a calma da posição; o defensor, com a finalização e o físico.
+  if (match.scene === "keeperShootout") return [0, 0, 0.7, 0, 0, 0.3];
+  if (match.scene === "suddenDeath") return [0, 0.8, 0, 0, 0, 0.2];
   if (position === "gk") {
     if (kind === "hold") return ["distribution", "backPass"].includes(match.scene) ? [0, 0, 0.6, 0, 0, 0.4] : [0.15, 0.15, 0, 0.2, 0, 0.5];
     if (kind === "pass") return [0, 0, 0.8, 0, 0, 0.2];

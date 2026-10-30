@@ -3,7 +3,7 @@ import { readFile } from "node:fs/promises";
 import { deflateRawSync } from "node:zlib";
 import { abrir, abrirMomento, auditar, esperarQueCaiba, fixturePlans, OPCOES } from "./apoio";
 
-const metadata = JSON.parse(await readFile(new URL("./fixtures/momentos-m23.json",import.meta.url),"utf8")) as {moments:Record<string,{file:string;index:number}>};
+const metadata = JSON.parse(await readFile(new URL("./fixtures/momentos-m41.json",import.meta.url),"utf8")) as {moments:Record<string,{file:string;index:number}>};
 for(const theme of ["light","dark"] as const) for(const scene of ["corner","decisivePenalty"] as const) test(`D79: ${scene}, texto, resultado e cards inteiros, ${theme}`,async({page},info)=>{
   await page.setViewportSize(info.project.name==="celular"?{width:360,height:640}:{width:1280,height:720});
   const sample=metadata.moments[scene]!;
@@ -12,9 +12,10 @@ for(const theme of ["light","dark"] as const) for(const scene of ["corner","deci
   await expect(choices).toHaveCount(scene==="corner"?3:2);
   if(scene==="corner") {
     expect(await choices.locator(".option-title").allTextContents()).toEqual(["Tentar o gol olímpico","Cruzar na área","Cobrar escanteio curto"]);
+    // D91: o custo do erro saiu das opções, a pedido; a regra continua valendo no resultado.
     expect(await choices.locator(".drama-hint").allTextContents()).toEqual(["Mais protagonismo.","Bônus individual menor.","Sem bônus individual."]);
   } else {
-    await expect(page.locator(".decision-title")).toHaveText("O pênalti decisivo");
+    await expect(page.locator(".drama-kicker")).toHaveText("O pênalti decisivo"); // D106: o nome da cena fica acima do título do momento
     expect(await choices.locator(".option-title").allTextContents()).toEqual(["Assumir a cobrança","Deixar com o companheiro"]);
   }
   expect((await choices.allTextContents()).join(" ")).not.toMatch(/%|Proteger o espaço/);
@@ -45,15 +46,20 @@ test("D79: ficar informa continental e os números se alinham sem rolagem",async
     const card=page.locator(".career-right > .play");
     expect(await card.evaluate(n=>!["auto","scroll"].includes(getComputedStyle(n).overflowY))).toBe(true);
     await card.locator(".play-details-button").click();
-    await expect(page.getByRole("dialog")).toBeVisible();
-    await expect(page.getByRole("dialog").locator(".play-season-details")).toBeVisible();
+    await expect(page.getByRole("dialog",{name:"O último lance"})).toBeVisible();
+    await expect(page.getByRole("dialog",{name:"O último lance"}).locator(".play-season-details")).toBeVisible();
+    // D90: as colocações do clube no ano ficam nos detalhes, com a liga pela posição.
+    const competitions=page.getByRole("dialog",{name:"O último lance"}).locator(".season-competitions");
+    await expect(competitions).toBeVisible();
+    await expect(competitions.locator(".season-competition").first()).toContainText(/lugar/);
+    expect(await competitions.locator(".season-competition").evaluateAll(nodes=>nodes.every(n=>n.scrollWidth<=n.clientWidth+1))).toBe(true);
   }
   await page.screenshot({path:info.outputPath("d79-permanencia.png"),style:".toast-viewport, .toast-viewport * {visibility:hidden !important}"});
 });
 
 test("D79: fim de carreira preenche a mesma largura da decisão",async({page},info)=>{
   await page.setViewportSize(info.project.name==="celular"?{width:360,height:640}:{width:1280,height:720});
-  const raw=await readFile(new URL("./fixtures/colecao-m23.json",import.meta.url));
+  const raw=await readFile(new URL("./fixtures/colecao-m41.json",import.meta.url));
   const seed=(JSON.parse(raw.toString()) as {setup:{seed:string}}).setup.seed;
   const plan=fixturePlans[seed]!;const last=plan.at(-1)!;
   await abrirMomento(page,raw,plan.length-1,{theme:"light"});
@@ -70,7 +76,8 @@ test("D79: fim de carreira preenche a mesma largura da decisão",async({page},in
 test("D79: laboratório usa os lances e chips atuais",async({page},info)=>{
   await abrir(page,{theme:"light",motion:"reduced"},"http://127.0.0.1:4174/#lab");
   await page.getByRole("tab",{name:"Design",exact:true}).click();
-  const lab=page.locator(".match-lab");await expect(lab).toBeVisible();
+  // A área Design é carregada sob demanda; com a suíte inteira em paralelo, o primeiro carregamento frio passa dos 15 s no celular.
+  const lab=page.locator(".match-lab");await expect(lab).toBeVisible({ timeout: 30_000 });
   await lab.getByRole("button",{name:/Direto do escanteio ·/}).click();
   await expect(lab.locator(".drama-option .option-title")).toHaveText(["Tentar o gol olímpico","Cruzar na área","Cobrar escanteio curto"]);
   await lab.getByRole("button",{name:/O pênalti decisivo ·/}).click();
@@ -89,7 +96,7 @@ test("D79: laboratório usa os lances e chips atuais",async({page},info)=>{
 
 for(const locale of ["pt","en","es"] as const) test(`D79: todas as folhas do jornal cabem com crônicas, ${locale}`,async({page},info)=>{
   await page.setViewportSize(info.project.name==="celular"?{width:360,height:640}:{width:1280,height:800});
-  const raw=await readFile(new URL("./fixtures/colecao-m23.json",import.meta.url));
+  const raw=await readFile(new URL("./fixtures/colecao-m41.json",import.meta.url));
   await abrir(page,{locale,motion:"reduced",theme:"light"},`/#c=z${deflateRawSync(raw).toString("base64url")}`);
   await page.locator('a[href="#capitulo-newspaper"]').click();
   const spread=page.locator(".paper-stage .paper-spread");

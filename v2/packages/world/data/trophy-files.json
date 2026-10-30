@@ -26,11 +26,37 @@
     "nations-AFC": "svg",
     "nations-OFC": "png",
     "world-cup": "png",
-    "club-world-cup": "png"
+    "club-world-cup": "png",
+    "super-ARG": "webp",
+    "super-BRA": "webp",
+    "super-CHI": "webp",
+    "super-COL": "webp",
+    "super-ECU": "webp",
+    "super-ENG": "webp",
+    "super-ESP": "webp",
+    "super-FRA": "webp",
+    "super-GER": "webp",
+    "super-ITA": "webp",
+    "super-MEX": "webp",
+    "super-PAR": "webp",
+    "super-POR": "webp",
+    "super-URU": "webp",
+    "leaguecup-ENG": "webp",
+    "leaguecup-CHI": "webp",
+    "leaguecup-POR": "webp",
+    "cup-POR": "webp",
+    "uefa-conference-league": "webp",
+    "uefa-super-cup": "webp",
+    "conmebol-recopa": "webp",
+    "intercontinental": "webp",
+    "nationsleague-UEFA": "webp",
+    "cup-BOL": "webp"
   },
   "awards": {
-    "ballon-dor": "png",
-    "golden-glove": "png",
-    "golden-shoe": "png"
+    "ballon-dor": "webp",
+    "golden-glove": "webp",
+    "golden-shoe": "png",
+    "kopa": "webp",
+    "king-of-america": "webp"
   }
 }

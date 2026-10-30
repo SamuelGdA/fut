@@ -140,6 +140,8 @@ export const careerEn: CareerMessages = {
   decision: {
     base: { title: "The first club", body: "Three clubs want you in their academy. At {age}, the first choice is where to learn." },
     window: { title: "Transfer window", body: "Season over at {club}. Do you stay or move on?" },
+    agentUp: { title: "The agent delivered", body: "Your new agent's contacts brought in better offers than usual. Do you stay at {club} or make the leap?" },
+    agentDown: { title: "The agent fell short", body: "Your new agent could only find worse offers than usual. Do you stay at {club} or take one of them?" },
     suspended: { title: "Suspended", body: "The ban goes on, but the market never stops. Do you serve it where you are or start over somewhere else?" },
     loan: { title: "Loan offer", body: "There is little room in the squad. Some clubs offer guaranteed minutes on loan." },
     returnRetained: { title: "Loan over", body: "{owner} want you back. What is the next step?" },
@@ -215,8 +217,8 @@ export const careerEn: CareerMessages = {
     shirtTen: "Wears the number 10",
     shirt: "Wears the number {number}",
     block: "The club shuts the door for good",
-    marketUp: "More clubs interested in the next window",
-    marketDown: "Fewer clubs interested in the next window",
+    marketUp: "Next decision: a window with better offers",
+    marketDown: "Next decision: a window with worse offers",
     clubStrength: "Club strength {value}",
     awardUp: "More votes in the awards",
     awardDown: "Fewer votes in the awards",
@@ -233,7 +235,7 @@ export const careerEn: CareerMessages = {
   },
 
   end: {
-    age: "At 40, the body called time on the career.",
+    age: "At 41, the body called time on the career.",
     noRoom: "With no club interested, the career came to an end.",
     noOffers: "No club made an offer. The career came to an end.",
     release: "After being released, you decided to stop.",
@@ -263,5 +265,6 @@ export const careerEn: CareerMessages = {
     goalsCount: { zero: "{count} goals", one: "{count} goal", other: "{count} goals" },
     assistsCount: { zero: "{count} assists", one: "{count} assist", other: "{count} assists" },
     cleanSheetsCount: { zero: "{count} clean sheets", one: "{count} clean sheet", other: "{count} clean sheets" },
+    titlesCount: { zero: "no titles", one: "{count} title", other: "{count} titles" },
   },
 };

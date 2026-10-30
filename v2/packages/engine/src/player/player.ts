@@ -42,6 +42,8 @@ export interface Player {
   /** Chegou pronto aos 16 (GDD 9.6). */
   readonly prodigy: boolean;
   readonly breakthroughAge?: number;
+  /** D107: idade da explosão jovem, uma vez na carreira. */
+  readonly breakoutAge?: number;
   readonly maturity: Maturity;
   readonly peakAge: number;
   /**
@@ -61,6 +63,8 @@ export interface NewPlayerInput {
   readonly seed: string;
   readonly position: Position;
   readonly difficulty: Difficulty;
+  /** Talento fixo (dia de recorde do Desafio, D94); sem ele, o sorteio do nascimento. */
+  readonly talent?: TalentBand;
 }
 
 /** Desvio do DNA por atributo antes de recentrar (GDD 9.4). */
@@ -109,8 +113,10 @@ export function drawLongevity(rng: Rng, position: Position): number {
  * Cria o jogador aos 16 anos. Cada característica vem de um fluxo próprio do
  * nascimento: ajustar o sorteio do DNA nunca muda o talento de uma semente.
  */
-export function createPlayer({ seed, position, difficulty }: NewPlayerInput): Player {
-  const talent = drawTalent(stream(seed, "birth", "talent"), difficulty);
+export function createPlayer({ seed, position, difficulty, talent: fixed }: NewPlayerInput): Player {
+  // O sorteio sai sempre, para os outros fluxos do nascimento não mudarem.
+  const drawn = drawTalent(stream(seed, "birth", "talent"), difficulty);
+  const talent = fixed ?? drawn;
   const potential = drawPotential(stream(seed, "birth", "potential"), talent);
   const initial = drawInitialCapacity(stream(seed, "birth", "capacity"), talent);
   const prodigyCapacity = drawProdigy(stream(seed, "birth", "prodigy"), talent, potential, initial);

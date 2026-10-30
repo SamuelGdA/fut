@@ -23,6 +23,9 @@ const WORLD_CUP_GAMES: StageTable = { champion: 8, final: 8, semi: 7, quarter: 6
 /** Continental de seleções: 3 nos grupos, mais um por fase. */
 const NATIONS_CUP_GAMES: StageTable = { champion: 7, final: 7, semi: 6, quarter: 5, roundOf16: 4, roundOf32: 3, groups: 3, early: 3 };
 
+/** D108: Liga das Nações: 6 na fase de liga, 2 nas quartas, semifinal e final (ou o terceiro lugar). */
+const NATIONS_LEAGUE_GAMES: StageTable = { champion: 10, final: 10, semi: 10, quarter: 8, roundOf16: 6, roundOf32: 6, groups: 6, early: 6 };
+
 function gamesTable(kind: CompetitionKind): StageTable {
   switch (kind) {
     case "cup":
@@ -39,6 +42,8 @@ function gamesTable(kind: CompetitionKind): StageTable {
       return WORLD_CUP_GAMES;
     case "nationsCup":
       return NATIONS_CUP_GAMES;
+    case "nationsLeague":
+      return NATIONS_LEAGUE_GAMES;
     default:
       return CUP_GAMES;
   }

@@ -2,7 +2,7 @@ import type { Career } from "@craque/engine";
 import { challengeOf } from "../../features/hall/session";
 import { formatChallengeDay } from "../../i18n/format";
 import { useT } from "../../i18n/useT";
-import { EdictBand, MissionLine } from "../challenge/MissionViews";
+import { EdictBand, MissionLine, RecordTarget } from "../challenge/MissionViews";
 
 /** "Temporada apagada" passa a valer depois do pico; o aviso aparece a partir desta idade (GDD 27.6). */
 export const ERASED_WARNING_AGE = 27;
@@ -43,6 +43,7 @@ export function ChallengePanel({ career }: { career: Career }) {
         ))}
       </div>
 
+      {status.record ? <RecordTarget id={status.record.id} mark={status.record.mark} value={status.record.value} compact /> : null}
       <EdictBand id={status.edict.id} state={status.edict.state} value={status.edict.value} compact />
 
       {age >= ERASED_WARNING_AGE ? (

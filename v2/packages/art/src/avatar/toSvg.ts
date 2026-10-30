@@ -14,6 +14,10 @@ import {
   type AccessoryStyle,
   type AvatarConfig,
   type BeardStyle,
+  EARRING_COLORS,
+  type EarringSide,
+  type EarringStyle,
+  type ScarSpot,
   type EyebrowStyle,
   type EyeShape,
   type HairStyle,
@@ -211,7 +215,7 @@ function eyes(color: string, shape: EyeShape, size: number, offset: number): str
  * always has clearance above the eyes, even at max eye size plus max
  * down-offset.
  */
-const EYEBROW_PATHS: Record<EyebrowStyle, { d: string; width: number }> = {
+const EYEBROW_PATHS: Record<Exclude<EyebrowStyle, "none">, { d: string; width: number }> = {
   straight: { d: "M68 72h20", width: 4.5 },
   arched: { d: "M68 73q10 -7 20 0", width: 4.5 },
   thick: { d: "M67 72h22", width: 7 },
@@ -220,6 +224,7 @@ const EYEBROW_PATHS: Record<EyebrowStyle, { d: string; width: number }> = {
 };
 
 function eyebrows(style: EyebrowStyle, color: string, offset: number): string {
+  if (style === "none") return "";
   const { d, width } = EYEBROW_PATHS[style];
   const brow = `<path d="${d}" stroke="${color}" stroke-width="${width}" stroke-linecap="round" fill="none"/>`;
   return `<g transform="translate(0 ${offset})">${brow}<g transform="translate(200,0) scale(-1,1)">${brow}</g></g>`;
@@ -243,13 +248,14 @@ function noseShape(shape: NoseShape, tone: string): string {
 }
 
 function nose(shape: NoseShape, size: number, tone: string, offset: number): string {
+  if (shape === "none") return "";
   const scale = sizeScale(size);
   const { x, y } = NOSE_ORIGIN;
   const inner = `<g transform="translate(${x} ${y}) scale(${scale}) translate(${-x} ${-y})" opacity="0.55">${noseShape(shape, tone)}</g>`;
   return `<g transform="translate(0 ${offset})">${inner}</g>`;
 }
 
-const MOUTH_PATHS: Record<MouthStyle, { normal: string; narrow: string }> = {
+const MOUTH_PATHS: Record<Exclude<MouthStyle, "none">, { normal: string; narrow: string }> = {
   smile: { normal: "M88 115q12 8 24 0", narrow: "M91 116q9 6 18 0" },
   grin: { normal: "M85 114q15 11 30 0", narrow: "M89 115q11 8 22 0" },
   smirk: { normal: "M88 117q12 5 24 -3", narrow: "M91 117q9 4 18 -2" },
@@ -258,9 +264,10 @@ const MOUTH_PATHS: Record<MouthStyle, { normal: string; narrow: string }> = {
 };
 
 function mouth(beard: BeardStyle, style: MouthStyle, offset: number): string {
+  if (style === "none") return "";
   // A full beard covers the mouth corners, so it gets a smaller line.
   const { normal, narrow } = MOUTH_PATHS[style];
-  const d = beard === "full" ? narrow : normal;
+  const d = beard === "full" || beard === "long" ? narrow : normal;
   return `<g transform="translate(0 ${offset})"><path d="${d}" stroke="#6B3B32" stroke-width="3.2" stroke-linecap="round" fill="none"/></g>`;
 }
 
@@ -288,6 +295,42 @@ function mole(spot: MoleSpot): string {
   return `<circle cx="${cx}" cy="${cy}" r="2.4" fill="#000000"/>`;
 }
 
+/** All three the size of the chin scar: a nick, not a slash. */
+const SCAR_PATHS: Record<Exclude<ScarSpot, "none">, string> = {
+  brow: "M83 67l3 7",
+  cheek: "M120 102l7 4",
+  chin: "M104 126l7 4",
+};
+
+function scar(spot: ScarSpot, tone: string): string {
+  if (spot === "none") return "";
+  // Two strokes: a pale line and its stitch marks, so it reads on light and dark skin.
+  const d = SCAR_PATHS[spot];
+  return `<g stroke-linecap="round" fill="none"><path d="${d}" stroke="#9E5550" stroke-opacity="0.75" stroke-width="3.4"/><path d="${d}" stroke="#F3C9C0" stroke-opacity="0.8" stroke-width="1.2"/><path d="${d}" stroke="${tone}" stroke-width="5" stroke-opacity="0.25"/></g>`;
+}
+
+function earringShape(style: EarringStyle, cx: number, color: string): string {
+  const edge = 'stroke="#00000055" stroke-width="0.8"';
+  switch (style) {
+    case "hoop":
+      return `<circle cx="${cx}" cy="108" r="3.6" fill="none" stroke="${color}" stroke-width="1.8"/>`;
+    case "diamond":
+      return `<path d="M${cx} 102.5l3 3.5-3 3.5-3-3.5Z" fill="${color}" ${edge}/>`;
+    case "cross":
+      return `<path d="M${cx} 104v9M${cx - 2.6} 106.6h5.2" stroke="${color}" stroke-width="1.8" stroke-linecap="round"/>`;
+    case "drop":
+      return `<path d="M${cx} 104v3" stroke="${color}" stroke-width="1"/><circle cx="${cx}" cy="109.5" r="2.4" fill="${color}" ${edge}/>`;
+    default:
+      return `<circle cx="${cx}" cy="106" r="2.6" fill="${color}" ${edge}/>`;
+  }
+}
+
+function earrings(side: EarringSide, style: EarringStyle, color: string): string {
+  if (side === "none") return "";
+  return (side === "left" || side === "both" ? earringShape(style, 57.5, color) : "") + (side === "right" || side === "both" ? earringShape(style, 142.5, color) : "");
+}
+
+
 // ---------------------------------------------------------------------------
 // Hair
 // ---------------------------------------------------------------------------
@@ -309,6 +352,39 @@ function hair(style: HairStyle, color: string): string {
 
     case "short":
       return `<path d="${CAP}" fill="${color}"/>`;
+
+    case "curtains":
+      // Middle parting with two curtains framing the forehead, the 90s cut.
+      return `<path d="M60 84C60 46 76 37 100 37C124 37 140 46 140 84C139 72 134 64 126 60C118 56 108 52 101 46C99 52 88 56 77 60C68 64 62 72 60 84Z" fill="${color}"/>`;
+
+    case "slickBack":
+      return [
+        `<g fill="${color}"><path d="M60 82C60 44 76 35 100 35C124 35 140 44 140 82C138 64 124 53 100 53C76 53 62 64 60 82Z"/></g>`,
+        '<g fill="none" stroke="#FFFFFF2E" stroke-width="2" stroke-linecap="round"><path d="M80 50C84 42 92 39 100 39"/><path d="M100 46C108 41 117 41 124 46"/></g>',
+      ].join("");
+
+    case "spiky":
+      return `<path d="M60 84C60 62 63 54 66 50L64 36L76 44L80 28L90 40L100 24L110 40L120 28L124 44L136 36L134 50C137 54 140 62 140 84C140 66 122 58 100 58C78 58 60 66 60 84Z" fill="${color}"/>`;
+
+    case "quiff":
+      // Short sides and a tall front swept up and back.
+      // One continuous volume, tallest over the forehead, with the sweep drawn as a crease.
+      return [
+        `<path d="M60 84C59 54 66 40 80 33C92 27 111 26 122 32C135 38 141 54 140 84C140 66 122 58 100 58C78 58 60 66 60 84Z" fill="${color}"/>`,
+        '<path d="M70 52C80 39 104 33 126 42" stroke="#00000033" stroke-width="3" fill="none" stroke-linecap="round"/>',
+      ].join("");
+
+    case "mohawk":
+      return `<path d="M89 60C88 40 92 22 100 14C108 22 112 40 111 60Z" fill="${color}"/>`;
+
+    case "cornrows":
+      // Braids run front to back; the light parting lines read as rows on any colour.
+      return [
+        `<path d="${CAP}" fill="${color}"/>`,
+        '<g fill="none" stroke="#FFFFFF33" stroke-width="1.6" stroke-linecap="round">',
+        '<path d="M74 60C76 50 80 44 84 41"/><path d="M87 58C88 48 90 42 93 39"/><path d="M100 57V38"/><path d="M113 58C112 48 110 42 107 39"/><path d="M126 60C124 50 120 44 116 41"/>',
+        "</g>",
+      ].join("");
 
     case "sidePart":
       /*
@@ -340,7 +416,7 @@ function hair(style: HairStyle, color: string): string {
        */
       return [
         `<g fill="${color}">`,
-        '<path d="M57 90C55 56 72 32 100 32C128 32 145 56 143 90C141 78 138 68 133 64C128 72 121.5 70 116.5 62C111.5 70 105 70 100 62C95 70 88.5 70 83.5 62C78.5 70 72 72 67 64C62 68 59 78 57 90Z"/>',
+        '<path d="M60 86C58 56 72 32 100 32C128 32 142 56 140 86C139 76 137 68 133 64C128 72 121.5 70 116.5 62C111.5 70 105 70 100 62C95 70 88.5 70 83.5 62C78.5 70 72 72 67 64C63 68 61 76 60 86Z"/>',
         '<g fill="none" stroke="#00000038" stroke-width="3.2" stroke-linecap="round">',
         '<path d="M66 62C74 52 86 52 94 60C98 64 102 64 106 60C114 52 126 52 134 62"/>',
         '<path d="M74 48C82 40 92 40 100 46C108 40 118 40 126 48"/>',
@@ -405,6 +481,17 @@ function beard(style: BeardStyle, color: string): string {
       return "";
     case "moustache":
       return `<path d="M86 108q14 -7 28 0q-6 6 -14 6q-8 0 -14 -6Z" fill="${color}"/>`;
+    case "goatee":
+      // Narrow and pointed, so it reads as hair on the chin and never as an open mouth.
+      return `<path d="M94 123q6 2 12 0l-3 11q-3 3 -6 0Z" fill="${color}"/>`;
+    case "vandyke":
+      return [
+        `<path d="M86 108q14 -7 28 0q-6 6 -14 6q-8 0 -14 -6Z" fill="${color}"/>`,
+        `<path d="M90 121q10 5 20 0l-2 13q-8 6 -16 0Z" fill="${color}"/>`,
+      ].join("");
+    case "long":
+      // The lumberjack: the full beard keeps going down over the collar.
+      return `<g fill="${color}"><path d="M63 94L61 108C60 128 76 152 100 156C124 152 140 128 139 108L137 94C128 104 115 109 100 109C85 109 72 104 63 94Z"/></g>`;
     case "soulPatch":
       return `<rect x="95" y="122" width="10" height="9" rx="3" fill="${color}"/>`;
     case "chinstrap":
@@ -429,6 +516,30 @@ function accessory(style: AccessoryStyle, accent: string): string {
       '<path d="M58 68q42 -28 84 0" stroke="#161616" stroke-width="11" stroke-linecap="round" fill="none"/>',
       `<path d="M58 68q42 -28 84 0" stroke="${accent}" stroke-width="3.5" stroke-linecap="round" fill="none"/>`,
       "</g>",
+    ].join("");
+  }
+
+  if (style === "noseStrip") {
+    return `<path d="M88 97q12 -3.5 24 0v6q-12 -3.5 -24 0Z" fill="${accent}" stroke="#00000033" stroke-width="1" stroke-linejoin="round"/>`;
+  }
+
+  if (style === "cap") {
+    return [
+      `<path d="M58 72C58 40 76 30 100 30C124 30 142 40 142 72Z" fill="${accent}"/>`,
+      '<path d="M58 72C58 40 76 30 100 30C124 30 142 40 142 72Z" fill="#00000014"/>',
+      `<path d="M52 70q48 -10 96 0q-2 9 -48 11q-46 -2 -48 -11Z" fill="${accent}"/>`,
+      '<path d="M52 70q48 -10 96 0q-2 9 -48 11q-46 -2 -48 -11Z" fill="#00000038"/>',
+      '<circle cx="100" cy="31" r="3" fill="#00000040"/>',
+    ].join("");
+  }
+
+  if (style === "beanie") {
+    return [
+      `<path d="M58 70C58 38 78 28 100 28C122 28 142 38 142 70Z" fill="${accent}"/>`,
+      `<path d="M56 62h88v12q-44 7 -88 0Z" fill="${accent}"/>`,
+      '<path d="M56 62h88v12q-44 7 -88 0Z" fill="#00000030"/>',
+      '<g stroke="#00000022" stroke-width="2"><path d="M70 63v12M84 63v13M100 63v13M116 63v13M130 63v12"/></g>',
+      `<circle cx="100" cy="26" r="8" fill="${accent}"/>`,
     ].join("");
   }
 
@@ -504,9 +615,11 @@ export function renderAvatarSvg(
           config.noseOffset ?? NOSE_OFFSET_DEFAULT,
         ),
         mole(config.mole),
+        scar(config.scar ?? "none", shadow),
         beard(config.beard, beardColor),
         mouth(config.beard, config.mouth ?? "smile", config.mouthOffset ?? MOUTH_OFFSET_DEFAULT),
         showHair ? hair(config.hair, hairColor) : "",
+        earrings(config.earring ?? "none", config.earringStyle ?? "stud", EARRING_COLORS[config.earringColor ?? 0] ?? EARRING_COLORS[0]!),
         accessory(accessoryStyle, accessoryColor),
       ].join("");
 

@@ -21,10 +21,10 @@ export type Six<T = number> = readonly [T, T, T, T, T, T];
 export const SLOTS = [0, 1, 2, 3, 4, 5] as const;
 export type Slot = (typeof SLOTS)[number];
 
-/** Primeira e última idade jogável (GDD 4). */
+/** Primeira e última idade jogável (GDD 4). D109: até os 40, para a carreira de 2026 chegar à Copa de 2050. */
 export const FIRST_AGE = 16;
-export const LAST_AGE = 39;
-export const RETIREMENT_AGE = 40;
+export const LAST_AGE = 40;
+export const RETIREMENT_AGE = 41;
 /** No Desafio do dia, aposentar só vale a partir desta idade (GDD 27.1). */
 export const CHALLENGE_RETIRE_AGE = 27;
 

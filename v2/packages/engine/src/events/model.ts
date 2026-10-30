@@ -21,6 +21,8 @@ export type Condition =
   | { readonly kind: "age"; readonly min?: number; readonly max?: number }
   /** Jogos na última temporada. */
   | { readonly kind: "lastGames"; readonly min: number }
+  /** D106: OVR menos a força do clube atual, dentro da faixa. */
+  | { readonly kind: "clubGap"; readonly min?: number; readonly max?: number }
   /** Papel no elenco na última temporada. */
   | { readonly kind: "role"; readonly in: readonly SquadRole[] }
   /** Temporadas seguidas no clube atual. */
@@ -117,8 +119,9 @@ export type Effect =
   | { readonly kind: "clubStrength"; readonly amount: number }
   /** Nota extra nas eleições de prêmios durante o período. */
   | { readonly kind: "award"; readonly amount: number }
-  /** Um fato para a biografia, sem efeito em jogo. */
-  | { readonly kind: "story"; readonly tag: string };
+  /** Exposição na mídia: o valor de mercado sobe esta fração pelo resto da carreira (D90). */
+  | { readonly kind: "fame"; readonly amount: number }
+  /** Um fato para a biografia, sem efeito em jogo. */;
 
 // --------------------------------------------------------------------- opções
 
@@ -137,6 +140,8 @@ export interface EventOption {
   readonly chance?: number;
   /** Probabilidade exata, sem ajuste pelo traço. */
   readonly fixedChance?: boolean;
+  /** D106: chance a mais por ponto de OVR acima da força do clube (de -2 a +6), antes do traço. */
+  readonly gapEdge?: number;
   readonly success: readonly Effect[];
   readonly failure?: readonly Effect[];
 }
@@ -163,6 +168,8 @@ export interface EventContext {
   readonly trait: Trait;
   readonly lastRole: SquadRole | null;
   readonly lastGames: number;
+  /** OVR menos a força do clube atual (0 sem clube). */
+  readonly clubGap?: number;
   readonly seasonsAtClub: number;
   readonly clubDecline: number;
   readonly continental: boolean;

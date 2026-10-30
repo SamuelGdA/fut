@@ -13,6 +13,7 @@ import { useCareer } from "../../features/career/store";
 import { useT } from "../../i18n/useT";
 import { useMediaQuery } from "../../lib/useMediaQuery";
 import { feedback } from "../../services/feedback";
+import { Button } from "../../ui/Button";
 import { Loading } from "../../ui/Loading";
 import { ConfirmDialog } from "../../ui/Overlays";
 import { notify } from "../../ui/toast/notify";
@@ -22,7 +23,7 @@ import { EndPanel, HistoryPanel, NationPanel, PlayerPanel, TrophiesPanel } from 
 import { DecisionPanel } from "./DecisionPanel";
 import { NewsBar } from "./NewsBar";
 import { PlayFeed } from "./PlayFeed";
-import { ResultMessage } from "./ResultMessage";
+import { ResultMessage, ResultRecall } from "./ResultMessage";
 
 /**
  * Abas do celular: temporada, jogador e (no desafio) o painel do desafio cabem
@@ -60,7 +61,7 @@ export function CareerScreen() {
   const setGuard = useNavigation((state) => state.setGuard);
   const status = useCareer((state) => state.status);
   const activeCareer = useCareer((state) => state.career);
-  const { career, presentation, transitioning, settled, result: matchResult, previousPlay, choose: chooseOption, finish: finishMatch } = useSeasonFlow(activeCareer);
+  const { career, presentation, transitioning, settled, result: matchResult, previousPlay, choose: chooseOption, finish: finishMatch, recall, recallable, openRecall } = useSeasonFlow(activeCareer);
   const avatar = useCareer((state) => state.avatar);
   const activePlay = useCareer((state) => state.play);
   const latest = matchResult || transitioning ? previousPlay : activePlay;
@@ -139,11 +140,32 @@ export function CareerScreen() {
   const stackDramatic = ["match", "promise", "veteran"].includes(career.decision?.kind ?? "");
   const stackPending = stackPlay?.outcome?.kind === "event" && !stackPlay.pages.some((page) => page.kind === "season");
   const stackNewsIndex = stackShown?.pages.reduce<number | null>((found, page) => (page.kind === "season" ? page.index : found), null) ?? null;
+  const closeRecall = () => {
+    feedback("back");
+    openRecall(null);
+  };
+  // D106: a bolinha de uma decisão respondida mostra, no lugar da atual, o que ela foi e o que deu. Só leitura.
   const decision = career.end ? (
     <EndPanel career={career} onSummary={openSummary} />
+  ) : recall?.result ? (
+    // O jogo-chave revisto usa o mesmo painel do resultado; a tabela da liga fica de fora para o placar e o Continuar caberem.
+    <div className="recall-match" key={`recall-${recall.index}`}>
+      <DecisionPanel career={recall.career} onChoose={() => false} chosen={recall.choice} result={recall.result} onContinue={closeRecall} />
+    </div>
+  ) : recall ? (
+    <div className="recall" key={`recall-${recall.index}`}>
+      <ResultRecall career={recall.after} play={recall.play} />
+      <div className="recall-body" inert>
+        <DecisionPanel career={recall.career} onChoose={() => false} chosen={recall.choice} />
+      </div>
+      <Button size="lg" block variant="secondary" onClick={closeRecall}>
+        {t("career.recall.back")}
+      </Button>
+    </div>
   ) : (
     <DecisionPanel career={career} onChoose={onChoose} original={original} result={matchResult} onContinue={finishMatch} />
   );
+  const recallProps = { recallable, viewing: recall?.index ?? null, onRecall: (index: number | null) => { feedback(index === null ? "back" : "select"); openRecall(index); } };
   const feed = (compact: boolean, play = shown) =>
     play ? (
       <PlayFeed key={play.id} career={career} play={play} reviewing={review !== null} onCloseReview={closeReview} compact={compact} />
@@ -177,7 +199,7 @@ export function CareerScreen() {
               <PlayerPanel career={career} avatar={avatar} />
             </aside>
             <div className="fit-panel loop-panel">
-              <SeasonDecision career={career} presentation={presentation ?? career} onSettled={settled} blocked={transitioning}><div className="slide-stack">{decision}{news}</div></SeasonDecision>
+              <SeasonDecision career={career} presentation={presentation ?? career} onSettled={settled} blocked={transitioning} {...recallProps}><div className="slide-stack">{decision}{recall ? null : news}</div></SeasonDecision>
             </div>
             <div className="career-right">
               <ResultMessage career={career} play={review === null && (matchResult || career.decision?.kind !== "veteran") ? resultPlay : null} />
@@ -201,7 +223,7 @@ export function CareerScreen() {
             <BaseTabs.Panel value="season" className="fit-panel loop-panel">
               <ResultMessage career={career} play={review === null && (matchResult || !resultPlay?.outcome || resultPlay.outcome.kind !== "drama" || !resultPlay.outcome.result) ? resultPlay : null} />
               {/* D85: o resumo e o jornal viajam dentro do card que desliza. Cada decisão chega com o próprio arranjo e nada em volta se rearranja depois. */}
-              <SeasonDecision career={career} presentation={presentation ?? career} onSettled={settled} blocked={transitioning}><div className="slide-stack">{career.decision?.kind !== "veteran" && (!stackDramatic || stackPending || stackPlay?.pages.some((page) => page.kind === "season")) ? feed(true, stackShown) : null}{decision}{news}</div></SeasonDecision>
+              <SeasonDecision career={career} presentation={presentation ?? career} onSettled={settled} blocked={transitioning} {...recallProps}><div className="slide-stack">{!recall && career.decision?.kind !== "veteran" && (!stackDramatic || stackPending || stackPlay?.pages.some((page) => page.kind === "season")) ? feed(true, stackShown) : null}{decision}{recall ? null : news}</div></SeasonDecision>
             </BaseTabs.Panel>
             <BaseTabs.Panel value="player" className="fit-panel">
               <PlayerPanel career={career} avatar={avatar} />

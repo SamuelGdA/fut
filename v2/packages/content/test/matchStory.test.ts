@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { KeyMatchResult } from "@craque/engine";
 import { matchStory, sceneOption } from "../src";
-const result:KeyMatchResult={match:{competition:"cont1:CONMEBOL",team:"flamengo",opponent:"palmeiras",national:false,stage:"final",minute:88,score:[1,1],scene:"throughBall"},action:"team",success:true,won:true,score:[2,1],penalties:null,goals:0,assists:1,fans:2,legacy:1};
+const result:KeyMatchResult={match:{competition:"cont1:CONMEBOL",team:"flamengo",opponent:"palmeiras",national:false,stage:"final",minute:88,score:[1,1],scene:"throughBall"},action:"team",success:true,won:true,score:[2,1],penalties:null,goals:0,assists:1,fans:2,legacy:1,recognition:1};
 describe("D79: crônica de decisões no jornal",()=>{
   for(const locale of ["pt","en","es"] as const) it(`${locale}: conta adversário, momento, escolha e consequência reais`,()=>{
     const story=matchStory(locale,result,"cm","MOREIRA");

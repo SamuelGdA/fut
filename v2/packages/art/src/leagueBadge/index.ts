@@ -24,6 +24,8 @@ const MARKS: Record<string, string> = {
   "liga-futve-2": "FV2",
   "segunda-division-uruguaya": "SD",
   "copa-simon-bolivar": "CSB",
+  // D108: a marca da liga portuguesa é Liga Portugal; a segunda divisão fica LP2.
+  "primeira-liga": "LP",
 };
 
 /**

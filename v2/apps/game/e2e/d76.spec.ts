@@ -2,7 +2,7 @@ import { expect, test, type Page } from "@playwright/test";
 import { readFile } from "node:fs/promises";
 import { abrirMomento, auditar, esperarQueCaiba } from "./apoio";
 
-const metadata = JSON.parse(await readFile(new URL("./fixtures/momentos-m23.json", import.meta.url), "utf8")) as { moments: Record<string, { file: string; index: number; resultScore?: number[] }> };
+const metadata = JSON.parse(await readFile(new URL("./fixtures/momentos-m41.json", import.meta.url), "utf8")) as { moments: Record<string, { file: string; index: number; resultScore?: number[] }> };
 async function partida(page: Page, moment: string, theme: "light" | "dark", motion: "full" | "reduced" = "full") {
   const fixture = metadata.moments[moment]!;
   const raw = await readFile(new URL(`./fixtures/${fixture.file}`, import.meta.url));

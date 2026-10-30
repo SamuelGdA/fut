@@ -1,7 +1,7 @@
 import { keyProduction } from "./production";
 import type { KeyMatchResult } from "../career/dramaTypes";
-import { lateBreakthrough } from "../evolution/breakthrough";
-import { type CountryCode, getClub, getCountry, leagueAt, titleImportance } from "@craque/world";
+import { lateBreakthrough, youngBreakout } from "../evolution/breakthrough";
+import { type CountryCode, getClub, getCompetition, getCountry, leagueAt, titleImportance } from "@craque/world";
 import { decideAwards, type AwardsOutcome } from "../awards/awards";
 import type { CrownEntry, Placing } from "../awards/crowns";
 import { evolveSeason, type SeasonEvolutionInput, type SeasonEvolutionReport } from "../evolution/evolve";
@@ -132,6 +132,8 @@ export interface PlayerSeasonStats {
   readonly national: NationalSeason;
   readonly awards: AwardsOutcome;
   readonly breakthrough?: boolean;
+  /** D107: explosão jovem nesta temporada. */
+  readonly breakout?: boolean;
   readonly ovrStart: number;
   readonly ovrEnd: number;
   readonly attributes: Six;
@@ -218,9 +220,12 @@ export function simulatePlayerSeason(input: PlayerSeasonInput): PlayerSeasonResu
   const modifiers = input.modifiers ?? {};
   const tally = input.tally ?? EMPTY_TALLY;
   const shift = modifiers.capacityShift ?? 0;
-  // Capacidade emprestada vale só durante a temporada e é devolvida no fim.
-  const player: Player = shift === 0 ? input.player : { ...input.player, capacity: input.player.capacity + shift };
   const year = world.year;
+  // D107: a explosão jovem vem antes de tudo, para o salto valer já nesta temporada.
+  const base = youngBreakout(input.player, age, stream(seed, "growth", "youngBreakout", year));
+  const breakout = base !== input.player;
+  // Capacidade emprestada vale só durante a temporada e é devolvida no fim.
+  const player: Player = shift === 0 ? base : { ...base, capacity: base.capacity + shift };
   const suspended = input.suspended ?? false;
   const ovrStart = ovrAt(player, age);
   const attributesStart = attributesAt(player, age);
@@ -234,7 +239,9 @@ export function simulatePlayerSeason(input: PlayerSeasonInput): PlayerSeasonResu
     squadRole(player.position, ovrStart, clubStrength),
   );
   const shifted = modifiers.roleShift ? shiftRole(player.position, natural, modifiers.roleShift) : natural;
-  const role = modifiers.minimumRole ? atLeastRole(player.position, shifted, modifiers.minimumRole) : shifted;
+  const floored = modifiers.minimumRole ? atLeastRole(player.position, shifted, modifiers.minimumRole) : shifted;
+  // D107: quem explode ganha a vaga de titular no mesmo ano.
+  const role = breakout ? atLeastRole(player.position, floored, "starter") : floored;
   const participation = suspended ? 0 : role.participation;
 
   // Seleção: a convocação vem antes do torneio, porque soma força à seleção.
@@ -328,8 +335,8 @@ export function simulatePlayerSeason(input: PlayerSeasonInput): PlayerSeasonResu
   // Pressão do recorde (D44): convocações (234) e jogos da carreira (1.390).
   const nationalGames = suspended
     ? 0
-    : thinUnits(nationalRecordRng, drawNationalGames(nationalRng, status, age, tournamentGames), [
-        { tail: PRESSURE.caps, before: tally.caps },
+    : thinUnits(nationalRecordRng, drawNationalGames(nationalRng, status, age, tournamentGames, nationEntries.reduce((sum, entry) => sum + (entry.kind === "nationsLeague" ? entry.games : 0), 0)), [
+        { tail: isGoalkeeper(player.position) ? PRESSURE.capsKeeper : PRESSURE.caps, before: tally.caps },
         { tail: PRESSURE.careerGames, before: tally.games + games },
       ]);
   const nationStrength = nation?.strength ?? 70;
@@ -353,12 +360,11 @@ export function simulatePlayerSeason(input: PlayerSeasonInput): PlayerSeasonResu
             : [],
           scoringScale: NATIONAL_SCORING,
         });
-  // Pressão do recorde (D44): gols pela seleção (146) e da carreira (979).
+  // Pressão do recorde (D44): gols pela seleção (146). A cauda dos gols da
+  // carreira (979) não freia de novo os gols da seleção: o artilheiro perto dos
+  // dois recordes ficava preso nos dois e os 146 nunca saíam (D92).
   const nationalProduction = thinProduction(nationalRecordRng, keyProduction(nationalDrawn, modifiers.keyMatches ?? [], true), {
-    goals: [
-      { tail: PRESSURE.nationalGoals, before: tally.nationalGoals },
-      { tail: PRESSURE.careerGoals, before: tally.goals + production.goals },
-    ],
+    goals: [{ tail: PRESSURE.nationalGoals, before: tally.nationalGoals }],
   });
   const national: NationalSeason = {
     status,
@@ -423,8 +429,12 @@ export function simulatePlayerSeason(input: PlayerSeasonInput): PlayerSeasonResu
         nationsCup: won("nationsCup"),
       },
       bonus: modifiers.awardBonus ?? 0,
+      // D106: a escada dos títulos e o protagonismo dos jogos-chave.
+      titles: titles.map((entry) => ({ kind: entry.kind, competition: entry.competition })),
+      keyMatches: modifiers.keyMatches ?? [],
     },
     year % 4 === CALENDAR.worldCup,
+    worldCupChampion(results),
   );
 
   // 6. Evolução.
@@ -437,7 +447,9 @@ export function simulatePlayerSeason(input: PlayerSeasonInput): PlayerSeasonResu
       fans: input.fans,
       difficulty,
       titleImportance: importance,
-      successBonus: Math.min(3, titles.length + awards.crowns.length + awards.won.filter((award) => award !== "topScorer" && award !== "bestPlayer").length + (country && (results.promoted[country] ?? []).includes(club) && games > 0 ? 1 : 0)),
+      successBonus: Math.min(3, titles.length + awards.crowns.length + awards.won.filter((award) => award !== "topScorer" && award !== "bestPlayer").length + (country && (results.promoted[country] ?? []).includes(club) && games > 0 ? 1 : 0)
+        // O lance decisivo jogado por ele conta como mais um reconhecimento (D89).
+        + (modifiers.keyMatches ?? []).reduce((sum, item) => sum + item.recognition, 0)),
       focus: input.focus,
       growthScale: modifiers.growthScale ?? 1,
       restoreCapacity: shift,
@@ -469,6 +481,7 @@ export function simulatePlayerSeason(input: PlayerSeasonInput): PlayerSeasonResu
     national,
     awards,
     breakthrough: evolved.breakthroughAge === age,
+    breakout,
     ovrStart,
     ovrEnd: ovrAt(evolved, age),
     attributes: attributesAt(evolved, age),
@@ -481,4 +494,11 @@ export function simulatePlayerSeason(input: PlayerSeasonInput): PlayerSeasonResu
     stats,
     evolution: evolved===evolution.player ? evolution.report : {...evolution.report,breakthroughGain:evolved.capacity-evolution.player.capacity,capacityAfter:evolved.capacity,attributesAfter:attributesAt(evolved,age)},
   };
+}
+
+/** D106: a seleção campeã da Copa do ano, se houve Copa. */
+function worldCupChampion(results: SeasonResults): CountryCode | null {
+  const cup = Object.values(results.nations).find((tournament) => getCompetition(tournament.competition)?.kind === "worldCup");
+  const champion = cup?.order[0];
+  return champion ? (champion as CountryCode) : null;
 }

@@ -23,6 +23,7 @@ import livres from "../data/squads/livres";
 import mex from "../data/squads/mex";
 import par from "../data/squads/par";
 import per from "../data/squads/per";
+import por from "../data/squads/por";
 import uru from "../data/squads/uru";
 import usa from "../data/squads/usa";
 import ven from "../data/squads/ven";
@@ -102,7 +103,7 @@ function parse(text: string): SquadPlayer[] {
 }
 
 /** Todos os jogadores com clube no início, país por país. */
-export const SQUAD_PLAYERS: readonly SquadPlayer[] = [arg, bol, bra, chi, col, ecu, eng, esp, fra, ger, ita, mex, par, per, uru, usa, ven].flatMap(
+export const SQUAD_PLAYERS: readonly SquadPlayer[] = [arg, bol, bra, chi, col, ecu, eng, esp, fra, ger, ita, mex, par, per, por, uru, usa, ven].flatMap(
   parse,
 );
 

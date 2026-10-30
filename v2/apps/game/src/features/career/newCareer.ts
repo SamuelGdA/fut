@@ -1,6 +1,6 @@
 import { type AvatarConfig, randomAvatar } from "@craque/art";
 import { generatedParts } from "@craque/content";
-import { type CareerSetup, DEFAULT_START_YEAR, type Difficulty, type Pace, POSITIONS, PRESTIGE_NUMBERS } from "@craque/engine";
+import { type CareerSetup, DEFAULT_START_YEAR, type Difficulty, drawTalent, type Pace, POSITIONS, PRESTIGE_NUMBERS, stream, type TalentBand } from "@craque/engine";
 import { PLAYABLE_COUNTRIES } from "@craque/world";
 import { upperName } from "../../i18n/format";
 import type { Locale } from "../../i18n/types";
@@ -31,6 +31,21 @@ export function newSeed(): string {
   return `${Date.now().toString(36)}-${random}`;
 }
 
+/**
+ * D108, D109: a primeira carreira de quem chega ao jogo nasce Craque ou
+ * Estrela. O talento sai só da semente e da dificuldade (o mesmo fluxo de
+ * `createPlayer`), então basta sortear a semente de novo; o save continua
+ * sendo a semente e as escolhas.
+ */
+export const FIRST_CAREER_TRIES = 64;
+export const FIRST_CAREER_TALENTS: readonly TalentBand[] = ["class", "star"];
+
+export function firstCareerSeed(difficulty: Difficulty, next: () => string = newSeed): string {
+  let seed = next();
+  for (let attempt = 1; attempt < FIRST_CAREER_TRIES && !FIRST_CAREER_TALENTS.includes(drawTalent(stream(seed, "birth", "talent"), difficulty)); attempt++) seed = next();
+  return seed;
+}
+
 /** O ano corrente, preso ao mundo do jogo (que começa em 2026) e ao limite do motor. */
 export function currentStartYear(now: Date = new Date()): number {
   const year = now.getFullYear();
@@ -42,13 +57,15 @@ export interface NewCareerInput {
   readonly pace: Pace;
   readonly difficulty: Difficulty;
   readonly locale: Locale;
+  /** D108: a primeira carreira do jogador no aparelho. */
+  readonly first?: boolean;
 }
 
 /** O setup da carreira a partir do rascunho confirmado. Rascunho incompleto é erro de quem chamou. */
-export function setupFromDraft({ draft, pace, difficulty, locale }: NewCareerInput): CareerSetup {
+export function setupFromDraft({ draft, pace, difficulty, locale, first = false }: NewCareerInput): CareerSetup {
   if (!draft.nationality || !draft.position) throw new Error("CRAQUE: rascunho incompleto");
   return {
-    seed: newSeed(),
+    seed: first ? firstCareerSeed(difficulty) : newSeed(),
     startYear: currentStartYear(),
     pace,
     difficulty,

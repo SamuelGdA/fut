@@ -16,7 +16,7 @@ describe("D74: decisões coerentes com o jogador", () => {
     const low: Career = { ...base, player: { ...base.player, capacity: 25 } };
     expect(hasPublicRole(low)).toBe(false);
     const events = eligibleEvents(low, eventContext(low));
-    expect(events.some((event) => event.tags.some((tag) => ["fame", "fans", "leadership", "legacy", "shirt", "final"].includes(tag)) || event.id === "silentWeek")).toBe(false);
+    expect(events.some((event) => event.tags.some((tag) => ["fame", "fans", "leadership", "legacy", "shirt", "final"].includes(tag)))).toBe(false);
     for (const position of POSITIONS) {
       const promises = promiseOptions({ ...base, player: { ...base.player, position } });
       expect(promises.map((item) => item.target % 10)).toEqual([0, 0, 0]);
@@ -44,7 +44,7 @@ describe("D74: decisões coerentes com o jogador", () => {
     const technique = { ...career, player: { ...career.player, training: [0, 8, 0, 0, 0, 0] as const } };
     const unrelated = { ...career, player: { ...career.player, training: [0, 0, 0, 0, 8, 0] as const } };
     expect(matchChance(technique, match, "bold")).toBeGreaterThan(matchChance(unrelated, match, "bold"));
-    expect(new Set(POSITIONS.flatMap((position) => matchScenes(position, true))).size).toBe(53);
+    expect(new Set(POSITIONS.flatMap((position) => matchScenes(position, true))).size).toBe(55);
     expect(matchActionKind("gk", { ...match, scene: "keeper" }, "bold")).toBe("save");
     expect(matchActionKind("cb", { ...match, scene: "interception" }, "bold")).toBe("tackle");
     expect(matchActionKind("rb", { ...match, scene: "cross" }, "bold")).toBe("pass");

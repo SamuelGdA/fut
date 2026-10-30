@@ -31,6 +31,7 @@ import {
   hasClub,
   KNOCKOUT,
   NATIONS_BY_CONFEDERATION,
+  NATIONS_LEAGUE_FORMAT,
   WORLD_CUP_FORMAT,
 } from "./model";
 import {
@@ -43,6 +44,8 @@ import {
   LEAGUE,
   NATIONAL_IMPACT,
   NATIONS_CUP_SIZE,
+  NATIONS_LEAGUE,
+  nationsCupYear,
   NOISE,
   PRIMARY_HISTORY,
   QUALIFICATION,
@@ -489,13 +492,12 @@ function simulateWorldCup(context: Context): KnockoutResult | null {
   return nationsKnockout(context, "worldcup", qualified, WORLD_CUP_FORMAT);
 }
 
-/** Continentais de seleções (GDD 8.12): todos da confederação, a Eurocopa com 24. */
+/** Continentais de seleções (GDD 8.12): todos da confederação, a Eurocopa com 24, cada um no ano dele (D109). */
 function simulateNationsCups(context: Context): Record<string, KnockoutResult> {
   const results: Record<string, KnockoutResult> = {};
-  if (context.year % 4 !== CALENDAR.nationsCup) return results;
   for (const confederation of CONFEDERATIONS) {
     const competition = `nations:${confederation}`;
-    if (!getCompetition(competition)) continue;
+    if (!getCompetition(competition) || !nationsCupYear(confederation, context.year)) continue;
     let nations = NATIONS_BY_CONFEDERATION.get(confederation) ?? [];
     const size = NATIONS_CUP_SIZE[confederation];
     if (size && nations.length > size) {
@@ -509,6 +511,23 @@ function simulateNationsCups(context: Context): Record<string, KnockoutResult> {
     results[competition] = nationsKnockout(context, competition, nations, groupsFormat(nations.length));
   }
   return results;
+}
+
+/**
+ * D108: Liga das Nações da UEFA, nos anos ímpares. A Liga A são as 16
+ * seleções mais fortes da UEFA no ano (força efetiva com o sorteio de sempre);
+ * a ordem final sai das notas, como nos outros torneios.
+ */
+function simulateNationsLeague(context: Context): Record<string, KnockoutResult> {
+  const competition = "nationsleague:UEFA";
+  if (context.year % 2 !== NATIONS_LEAGUE.parity || !getCompetition(competition)) return {};
+  const rng = rngFor(context, "nations", competition, "leagueA");
+  const leagueA = (NATIONS_BY_CONFEDERATION.get("UEFA") ?? [])
+    .map((country, position) => ({ country, position, note: nationEffective(context, country) + rng.normal(0, NOISE.nations) }))
+    .sort((a, b) => b.note - a.note || a.position - b.position)
+    .slice(0, NATIONS_LEAGUE.size)
+    .map((entry) => entry.country);
+  return { [competition]: nationsKnockout(context, competition, leagueA, NATIONS_LEAGUE_FORMAT) };
 }
 
 // ------------------------------------------------- acesso e força dos clubes
@@ -666,7 +685,7 @@ export function simulateWorldSeason(
   for (const [id, result] of Object.entries(continental)) continental[id] = keyKnockout(result, impact?.keyMatches) ?? result;
   const intercontinental = recordIntercontinental(context, simulateIntercontinental(context, continental));
   const clubWorldCup = recordKnockout(context, simulateClubWorldCup(context), context.impact?.club);
-  const nations: Record<string, KnockoutResult> = recordKnockouts(context, simulateNationsCups(context), context.impact?.nationality);
+  const nations: Record<string, KnockoutResult> = recordKnockouts(context, { ...simulateNationsCups(context), ...simulateNationsLeague(context) }, context.impact?.nationality);
   const worldCup = recordKnockout(context, simulateWorldCup(context), context.impact?.nationality);
   if (worldCup) nations.worldcup = worldCup;
   for (const [id, result] of Object.entries(nations)) nations[id] = keyKnockout(result, impact?.keyMatches) ?? result;

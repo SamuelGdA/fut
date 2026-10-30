@@ -5,6 +5,7 @@ import type { ChallengeHand } from "./hand";
 import { HIDDEN_REVEAL_AGE } from "./hand";
 import { getMission } from "./missions";
 import { best, erasedSeasons, lastPlayedAge } from "./measures";
+import { getChallengeRecord, RECORD_SHARE, recordPoints } from "./records";
 
 /**
  * A pontuação do Desafio do dia (GDD 27.5), sobre 1000:
@@ -15,6 +16,10 @@ import { best, erasedSeasons, lastPlayedAge } from "./measures";
  *   bruto = soma das DUAS melhores missões               (máx. 900)
  *   pico  = 100 × limitar((OVR de pico − 72) / 27, 0, 1)^1,4  (máx. 100)
  *   total = arredondar((bruto + pico) × (édito ? 1 : 0,5) × 0,97^apagadas)
+ *
+ * Dia de recorde (D94): bruto + pico valem 75%, e o recorde soma até 250
+ * (perto rende, igualar +60, superar +40), sob o mesmo édito e as mesmas
+ * apagadas. A nota continua de 0 a 1000.
  *
  * Contar só duas é o que faz perseguir as três ser a linha perdedora.
  */
@@ -54,6 +59,8 @@ export interface ChallengeStatus {
   readonly peakOvr: number;
   readonly raw: number;
   readonly peak: number;
+  /** Dia de recorde (D94): a marca da carreira, a real e os pontos. */
+  readonly record: { readonly id: string; readonly value: number; readonly mark: number; readonly points: number } | null;
   readonly total: number;
 }
 
@@ -86,7 +93,11 @@ export function challengeStatus(hand: ChallengeHand, career: Career): ChallengeS
   const peakOvr = best(career.history, (record) => record.ovrEnd);
   const peak = peakBonus(peakOvr);
   const edictFactor = state === "broken" || state === "pending" ? 0.5 : 1;
-  const total = Math.round((raw + peak) * edictFactor * Math.pow(0.97, erased));
+  const target = hand.record ? getChallengeRecord(hand.record.id) : null;
+  const recordValue = target ? target.measure(career) : 0;
+  const record = hand.record && target ? { id: hand.record.id, value: recordValue, mark: hand.record.mark, points: recordPoints(recordValue, hand.record.mark) } : null;
+  const base = record ? (raw + peak) * RECORD_SHARE + record.points : raw + peak;
+  const total = Math.round(base * edictFactor * Math.pow(0.97, erased));
   return {
     hand,
     missions: withCounted,
@@ -95,6 +106,7 @@ export function challengeStatus(hand: ChallengeHand, career: Career): ChallengeS
     peakOvr,
     raw,
     peak,
+    record,
     total,
   };
 }

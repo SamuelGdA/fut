@@ -55,6 +55,11 @@ export function baseMarketValue(ovr: number, age: number, leagueStrength?: numbe
   return Math.min(marketValueCeiling(age), BASE_VALUE * Math.exp(exponent) * ageValueFactor(age) * (leagueStrength === undefined ? 1 : leagueMarketFactor(leagueStrength)));
 }
 
+/** O valor de um jogador com exposição de mídia (D90), dentro do teto da idade. */
+export function famedMarketValue(ovr: number, age: number, leagueStrength: number | undefined, fame = 0): number {
+  return Math.min(marketValueCeiling(age), baseMarketValue(ovr, age, leagueStrength) * (1 + fame));
+}
+
 /** Valor com o humor do ano, em três algarismos significativos. */
 export function marketValue(rng: Rng, ovr: number, age: number, leagueStrength?: number): number {
   return Math.min(marketValueCeiling(age), roundSignificant(baseMarketValue(ovr, age, leagueStrength) * rng.real(0.94, 1.06), 3));

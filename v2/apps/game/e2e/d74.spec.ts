@@ -3,7 +3,7 @@ import { readFile } from "node:fs/promises";
 import { deflateRawSync } from "node:zlib";
 import { abrir, abrirMomento, auditar, esperarQueCaiba, fixturePlans } from "./apoio";
 
-const metadata = JSON.parse(await readFile(new URL("./fixtures/momentos-m23.json", import.meta.url), "utf8")) as { moments: Record<string, { file: string; index: number }> };
+const metadata = JSON.parse(await readFile(new URL("./fixtures/momentos-m41.json", import.meta.url), "utf8")) as { moments: Record<string, { file: string; index: number }> };
 for (const motion of ["full", "reduced"] as const) test(`D74: avanço automático no mesmo ano, movimento ${motion}`, async ({ page }) => {
   const moment = metadata.moments.europe!;
   const raw = await readFile(new URL(`./fixtures/${moment.file}`, import.meta.url));
@@ -64,7 +64,7 @@ for (const position of ["gk", "cb", "rb", "cm"] as const) test(`D74: lance por p
 
 for (const theme of ["light", "dark"] as const) test(`D74: duas folhas por ano, legendas completas e sem arquivo anual, ${theme}`, async ({ page }, info) => {
   if (info.project.name === "celular") await page.setViewportSize({ width: 360, height: 640 });
-  const raw = await readFile(new URL("./fixtures/colecao-m23.json", import.meta.url));
+  const raw = await readFile(new URL("./fixtures/colecao-m41.json", import.meta.url));
   await abrir(page, { theme, motion: "reduced" }, `/#c=z${deflateRawSync(raw).toString("base64url")}`);
   await page.getByRole("link", { name: "Números", exact: true }).click();
   await expect(page.locator(".drama-archive")).toHaveCount(0);
@@ -113,8 +113,8 @@ for (const theme of ["light", "dark"] as const) test(`D74: duas folhas por ano, 
   await page.screenshot({ path: info.outputPath(`jornal-aberto-lances-${theme}.png`) });
 });
 
-test("D74: pilha grande abre gradualmente e termina sem sobreposição", async ({ page }, info) => {
-  const raw = await readFile(new URL("./fixtures/pilhas-m23.json", import.meta.url));
+test("D74: pilha grande abre num painel flutuante, dentro da tela e sem sobreposição", async ({ page }, info) => {
+  const raw = await readFile(new URL("./fixtures/pilhas-m41.json", import.meta.url));
   if (info.project.name === "celular") await page.setViewportSize({ width: 360, height: 640 });
   await abrir(page, { theme: "dark" }, `/#c=z${deflateRawSync(raw).toString("base64url")}`);
   await page.getByRole("link", { name: "Caminho", exact: true }).click();
@@ -123,32 +123,37 @@ test("D74: pilha grande abre gradualmente e termina sem sobreposição", async (
   const count = Math.max(...counts);
   expect(count).toBeGreaterThanOrEqual(9);
   const stack = stacks.nth(counts.indexOf(count));
-  const copies = stack.locator(".honour-copy");
-  await copies.last().scrollIntoViewIfNeeded();
-  // Começa antes do toque: uma consulta só depois pode perder os quadros intermediários.
-  const entering = copies.evaluateAll(async (nodes) => {
-    const group = nodes[0]?.closest(".honour-stack");
-    const until = performance.now() + 5000;
+  await stack.scrollIntoViewIfNeeded();
+  const before = await page.locator(".timeline-card").evaluateAll((nodes) => nodes.map((node) => node.getBoundingClientRect().height));
+  // D90: abrir a pilha não mexe na linha do tempo; o painel entra com transição curta.
+  const entering = page.evaluate(async () => {
+    const until = performance.now() + 4000;
     while (performance.now() < until) {
-      if (group?.hasAttribute("data-expanded") && [...group.querySelectorAll(".honour-copy")].some(node => {
-        const opacity = Number(getComputedStyle(node).opacity);
-        return opacity > 0 && opacity < 1;
-      })) return true;
+      const popup = document.querySelector(".honour-pile");
+      if (popup) { const opacity = Number(getComputedStyle(popup).opacity); if (opacity > 0 && opacity < 1) return true; }
       await new Promise(requestAnimationFrame);
     }
     return false;
   });
-  if (info.project.name === "desktop") await copies.last().hover();
-  else await copies.last().locator(".honour-token").tap();
-  await expect(copies).toHaveCount(count);
-  expect(await entering, "A abertura deve mostrar opacidade intermediária depois do toque ou hover").toBe(true);
-  await auditar(page, "D74 pilha grande");
-  expect(await copies.evaluateAll((nodes) => nodes.every((node, index) => {
+  if (info.project.name === "desktop") await stack.hover();
+  else await stack.tap();
+  const items = page.locator(".honour-pile .honour-pile-item");
+  await expect(items).toHaveCount(count);
+  expect(await entering, "O painel deve entrar com opacidade intermediária").toBe(true);
+  expect(await page.locator(".timeline-card").evaluateAll((nodes) => nodes.map((node) => node.getBoundingClientRect().height))).toEqual(before);
+  const viewport = page.viewportSize()!;
+  const box = (await page.locator(".honour-pile").boundingBox())!;
+  expect(box.x).toBeGreaterThanOrEqual(0);
+  expect(box.x + box.width).toBeLessThanOrEqual(viewport.width);
+  expect(box.y).toBeGreaterThanOrEqual(0);
+  expect(box.y + box.height).toBeLessThanOrEqual(viewport.height);
+  expect(await items.evaluateAll((nodes) => nodes.every((node, index) => {
     const rect = node.getBoundingClientRect();
     return nodes.slice(index + 1).every((other) => {
       const next = other.getBoundingClientRect();
       return Math.min(rect.right, next.right) - Math.max(rect.left, next.left) < 1 || Math.min(rect.bottom, next.bottom) - Math.max(rect.top, next.top) < 1;
     });
   }))).toBe(true);
+  await auditar(page, "D74 pilha grande");
   await page.screenshot({ path: info.outputPath("pilha-grande.png") });
 });

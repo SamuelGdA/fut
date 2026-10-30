@@ -3,12 +3,12 @@ import { readFile } from "node:fs/promises";
 import { deflateRawSync } from "node:zlib";
 import { abrir, abrirMomento, auditar, esperarQueCaiba } from "./apoio";
 
-const metadata = JSON.parse(await readFile(new URL("./fixtures/momentos-m23.json", import.meta.url), "utf8")) as { moments: Record<string, {file:string;index:number}> };
+const metadata = JSON.parse(await readFile(new URL("./fixtures/momentos-m41.json", import.meta.url), "utf8")) as { moments: Record<string, {file:string;index:number}> };
 for (const theme of ["light", "dark"] as const) {
   test(`D81: jornal proporcional e leitura ampliada, ${theme}`, async ({page},info) => {
     const mobile=info.project.name==="celular";
     await page.setViewportSize(mobile?{width:360,height:640}:{width:1280,height:720});
-    const raw=await readFile(new URL("./fixtures/colecao-m23.json",import.meta.url));
+    const raw=await readFile(new URL("./fixtures/colecao-m41.json",import.meta.url));
     await abrir(page,{theme,motion:"reduced"},`/#c=z${deflateRawSync(raw).toString("base64url")}`);
     await page.getByRole("link",{name:"Jornal",exact:true}).click();
     const book=page.locator(".paper-stage").first();

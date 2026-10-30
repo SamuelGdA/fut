@@ -6,6 +6,7 @@ import { type Rng, stream } from "../rng";
 import { challengeYear, daysSinceEpoch, isChallengeDayId } from "./day";
 import { EDICTS, type Edict } from "./edicts";
 import { contradicts, type Mission, missionFitsPosition, MISSIONS, missionTarget } from "./missions";
+import { CHALLENGE_RECORD_CHANCE, type ChallengeRecordId, pickChallengeRecord } from "./records";
 
 /**
  * A mão do dia (GDD 27.2): nacionalidade, posição, três missões e um édito,
@@ -47,6 +48,8 @@ export interface ChallengeHand {
   readonly edict: string;
   /** Qual das três fica escondida até os 24 anos. */
   readonly hidden: 0 | 1 | 2;
+  /** Dia de recorde (D94): o recorde real que a mão persegue, com todo mundo Fenômeno. */
+  readonly record: { readonly id: ChallengeRecordId; readonly mark: number } | null;
 }
 
 function shuffled<T>(items: readonly T[], rng: Rng): T[] {
@@ -113,8 +116,11 @@ export function dailyHand(id: string): ChallengeHand {
   const day = daysSinceEpoch(id);
   const nationality = rotationPick(PLAYABLE_COUNTRIES, "nação", day);
   const position = rotationPick(POSITIONS, "posição", day);
+  // Dia de recorde (D94): todo mundo Fenômeno, para a marca real estar ao alcance de todos.
+  const recordDay = stream(seed, "challenge", "recordDay").chance(CHALLENGE_RECORD_CHANCE);
+  const picked = recordDay ? pickChallengeRecord(position, stream(seed, "challenge", "record")) : null;
   // O mesmo sorteio que cria o jogador (GDD 9.6), no Difícil do desafio.
-  const talent = drawTalent(stream(seed, "birth", "talent"), "hard");
+  const talent: TalentBand = recordDay ? "phenom" : drawTalent(stream(seed, "birth", "talent"), "hard");
   const missions = shuffled(MISSIONS, stream(seed, "challenge", "missões"));
   // O édito do rodízio primeiro; os outros só se ele não fechar mão nenhuma.
   const preferred = rotationPick(EDICTS, "édito", day);
@@ -137,6 +143,7 @@ export function dailyHand(id: string): ChallengeHand {
             targets: [missionTarget(triple[0]?.id ?? "", talent), missionTarget(triple[1]?.id ?? "", talent), missionTarget(triple[2]?.id ?? "", talent)],
             edict: edict.id,
             hidden: (((day % 3) + 3) % 3) as 0 | 1 | 2,
+            record: picked ? { id: picked.id, mark: picked.mark } : null,
           };
         }
       }
@@ -158,6 +165,7 @@ export function challengeSetup(hand: ChallengeHand, free: Pick<Identity, "surnam
     pace: "normal",
     difficulty: "hard",
     challengeId: hand.id,
+    ...(hand.record ? { talent: hand.talent } : {}),
     identity: { ...free, nationality: hand.nationality, position: hand.position },
   };
 }

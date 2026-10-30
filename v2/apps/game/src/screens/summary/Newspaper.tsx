@@ -1,13 +1,14 @@
 import { useReducedMotion } from "../../lib/useReducedMotion";
-import { dramaAction, dramaText, matchStory, type CareerHeadline, careerHeadlines, type SeasonCover, seasonCovers } from "@craque/content";
+import { displayName, dramaAction, dramaText, matchStory, type CareerHeadline, careerHeadlines, type SeasonCover, seasonCovers } from "@craque/content";
 import { d74 } from "../../i18n/d74";
 import { type Career, isGoalkeeper, movementOf, type SeasonRecord } from "@craque/engine";
 import { AWARDS, compareHonours, getClub, getCompetition, getLeague } from "@craque/world";
 import { animate } from "motion";
 
-import { type KeyboardEvent, useCallback, useEffect, useRef, useState } from "react";
+import { type KeyboardEvent, type RefObject, useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useT } from "../../i18n/useT";
 import { Crest } from "../../ui/Media";
+import { RecordSeal } from "../career/RecordSeal";
 import { HonourToken } from "../../ui/HonourToken";
 import { Sheet } from "../../ui/Overlays";
 import { Expand } from "lucide-react";
@@ -41,10 +42,6 @@ const DRAG_SWEEP_FRACTION = 0.55;
 const SETTLE_MIN_MS = 280;
 /** Limites das listas da coluna da direita: a página tem altura fixa. */
 const ALSO_ITEM_LIMIT = 4;
-/** Altura de uma linha de nota, em px, e o espaço entre linhas. */
-const ALSO_ROW_HEIGHT = 13;
-const ALSO_ROW_GAP = 4;
-const ALSO_HEADING_HEIGHT = 14;
 
 interface Honour {
   readonly key: string;
@@ -76,10 +73,11 @@ function buildEditions(career: Career, locale: "pt" | "es" | "en"): Edition[] {
     const cover = covers[index];
     if (!cover) return [];
     const previous = career.history[index - 1];
-    running.games += record.games;
-    running.goals += record.production.goals;
-    running.assists += record.production.assists;
-    running.cleanSheets += record.production.cleanSheets;
+    // A carreira até aqui soma clube e seleção (D97), como os recordes.
+    running.games += record.games + record.national.games;
+    running.goals += record.production.goals + record.national.goals;
+    running.assists += record.production.assists + record.national.assists;
+    running.cleanSheets += record.production.cleanSheets + record.national.cleanSheets;
     running.titles += record.titles.length;
     const titles = [...record.titles]
       .map(
@@ -356,12 +354,12 @@ export function Newspaper({ career }: { career: Career }) {
         onKeyDown={onKeyDown}
       >
         <div className="paper-canvas">
-        {base ? <div className="paper-spread" data-year={base.record.year}><FrontPage edition={base} total={editions.length} keeper={keeper} /><InsidePage edition={base} /></div> : null}
+        {base ? <div className="paper-spread" data-year={base.record.year}><FrontPage edition={base} total={editions.length} keeper={keeper} stamp={!turn} /><InsidePage edition={base} /></div> : null}
         {turn && current && base ? <>
-          <div aria-hidden="true" className="paper-static-leaf" data-side={turn.dir === 1 ? "left" : "right"}>{turn.dir === 1 ? <FrontPage edition={current} total={editions.length} keeper={keeper} /> : <InsidePage edition={current} />}</div>
+          <div aria-hidden="true" className="paper-static-leaf" data-side={turn.dir === 1 ? "left" : "right"}>{turn.dir === 1 ? <FrontPage edition={current} total={editions.length} keeper={keeper} stamp={false} /> : <InsidePage edition={current} />}</div>
           <div ref={sheetRef} aria-hidden="true" className="paper-sheet" style={{ transform: turn.dir === 1 ? undefined : `rotateY(-${TURN_DEGREES}deg)` }}>
             <div className="paper-sheet-front"><InsidePage edition={turn.dir === 1 ? current : base} /></div>
-            <div className="paper-sheet-back"><FrontPage edition={turn.dir === 1 ? base : current} total={editions.length} keeper={keeper} /></div>
+            <div className="paper-sheet-back"><FrontPage edition={turn.dir === 1 ? base : current} total={editions.length} keeper={keeper} stamp={false} /></div>
           </div></>
         : null}
         </div>
@@ -388,15 +386,45 @@ function TurnButton({ direction, label, disabled, onClick }: { direction: "prev"
 
 const TONE_GLYPH = { good: "▲", bad: "▼", neutral: "●" } as const;
 
-function FrontPage({ edition, total, keeper }: { edition: Edition; total: number; keeper: boolean }) {
+/**
+ * D108: a coluna da direita da capa tem a altura que sobra, e taças, prêmios
+ * e etiquetas variam a cada ano. Quando não cabe, primeiro as conquistas viram
+ * só os ícones (como já acontece acima de cinco); se ainda não couber, as
+ * etiquetas saem. Nada aparece cortado pela metade.
+ */
+function useSideFit(ref: RefObject<HTMLDivElement | null>, edition: string) {
+  const [fit, setFit] = useState({ edition, level: 0 });
+  const level = fit.edition === edition ? fit.level : 0;
+  useLayoutEffect(() => {
+    const side = ref.current;
+    if (!side) return;
+    const check = () => {
+      if (side.scrollHeight > side.clientHeight + 1) setFit((current) => ({ edition, level: Math.min(2, (current.edition === edition ? current.level : 0) + 1) }));
+    };
+    check();
+    if (typeof ResizeObserver === "undefined") return;
+    const observer = new ResizeObserver(check);
+    observer.observe(side);
+    return () => observer.disconnect();
+  }, [ref, edition, level]);
+  return { compact: level >= 1, hideTags: level >= 2 };
+}
+
+function FrontPage({ edition, total, keeper, stamp = true }: { edition: Edition; total: number; keeper: boolean; stamp?: boolean }) {
   const { t, tp, c, cp, money, locale } = useT();
   const { cover, record, honours, items, toDate, index } = edition;
+  const sideRef = useRef<HTMLDivElement>(null);
+  const side = useSideFit(sideRef, `${record.year}:${index}`);
   // Manchete longa encolhe: a página tem a mesma altura em toda edição.
-  const size = cover.headline.length > 46 ? "small" : cover.headline.length > 30 ? "medium" : "large";
+  // D107: o selo de recorde ocupa a altura da foto e mais um pouco, então a
+  // manchete com selo desce um tamanho antes; a muito longa (a marca de cinco
+  // detentores) ganha o tamanho menor, para os números não invadirem o rodapé.
+  const length = cover.headline.length + (cover.record ? 14 : 0);
+  const size = length > 60 ? "tiny" : length > 46 ? "small" : length > 30 ? "medium" : "large";
   const tags = seasonTags(record).map((tag) => ({ ...tag, text: tagText(tag.kind, record, t, c) }));
 
   return (
-    <article className="paper-page" data-tone={cover.tone} data-leaf="cover" data-year={record.year}>
+    <article className="paper-page" data-tone={cover.tone} data-leaf="cover" data-year={record.year} data-record={cover.record ? (cover.record.beaten ? "beaten" : "matched") : undefined} data-tight={(cover.record && size !== "large" && size !== "medium") || undefined}>
       <div className="paper-nameplate">
         <h3>{cover.paper}</h3>
       </div>
@@ -422,12 +450,15 @@ function FrontPage({ edition, total, keeper }: { edition: Edition; total: number
       </h4>
 
       <div className="paper-lede">
-        <figure>
-          <div className="paper-photo">
-            <Crest club={record.club} size={64} decorative plain fill />
-          </div>
-          <figcaption>{edition.clubName}</figcaption>
-        </figure>
+        {/* Com recorde, o selo toma o lugar da foto do escudo (D95): fica no fluxo e não cobre a manchete. A chave por ano refaz a batida do carimbo a cada edição que assenta. */}
+        {cover.record ? <RecordSeal key={record.year} record={cover.record} player={displayName(edition.surname, locale)} stamp={stamp} /> : (
+          <figure>
+            <div className="paper-photo">
+              <Crest club={record.club} size={64} decorative plain fill />
+            </div>
+            <figcaption>{edition.clubName}</figcaption>
+          </figure>
+        )}
         <p>{cover.support}</p>
       </div>
 
@@ -449,21 +480,21 @@ function FrontPage({ edition, total, keeper }: { edition: Edition; total: number
           </dl>
         </div>
 
-        <div className="paper-side">
+        <div className="paper-side" ref={sideRef}>
           {honours.length > 0 ? (
             <div className="paper-box">
               <p className="paper-section">{honours.some((honour) => !honour.award) ? t("summary.newspaper.trophies") : t("summary.newspaper.awards")}</p>
-              <ul className="paper-honours" data-compact={honours.length>5 || undefined}>
+              <ul className="paper-honours" data-compact={honours.length > 5 || side.compact || undefined}>
                 {honours.map((honour) => (
                   <li key={honour.key} data-award={honour.award || undefined}>
                     <HonourToken id={honour.art.kind==="award" ? honour.art.competition ?? honour.art.id : honour.art.id} award={honour.art.kind==="award" ? honour.art.id : undefined} language={locale} size={20} label={`${honour.name} · ${record.year}`} />
-                    <span>{honour.name}</span>
+                    <span title={honour.name}>{honour.name}</span>
                   </li>
                 ))}
               </ul>
             </div>
           ) : null}
-          {tags.length > 0 ? (
+          {tags.length > 0 && !side.hideTags ? (
             <div className="paper-tags">
               {tags.map((tag) => (
                 <span key={tag.kind} data-tone={tag.tone}>
@@ -497,13 +528,14 @@ function FrontPage({ edition, total, keeper }: { edition: Edition; total: number
 function InsidePage({ edition }: { edition: Edition }) {
   const { locale, t, c } = useT(); const copy = d74(locale); const drama = dramaText(locale);
   const record = edition.record;
+  // Dois lances da mesma competição no ano são comuns (dois jogos de liga): a chave do item não pode ser só a competição, senão o React deixa itens de outra edição para trás ao virar a página (D96).
   const moments = [...(record.keyMatches ?? [])].sort((a, b) => Number(b.match.stage === "final") - Number(a.match.stage === "final") || Number(b.match.national) - Number(a.match.national)).slice(0, 2);
   if (!moments.length && !record.promise && !edition.veteranChosen) return <article className="paper-page paper-blank" data-leaf="blank" data-year={record.year} aria-label={t("summary.newspaper.blank")} />;
   return <article className="paper-page paper-inside" data-leaf="inside" data-year={record.year}>
     <div className="paper-nameplate"><h3>{edition.cover.paper}</h3></div><div className="paper-dateline"><span>{t("summary.newspaper.at", { age: record.age, year: record.year })}</span><span>2 / 2</span></div>
     <p className="paper-club">{edition.clubName}</p><h4 className="paper-headline" data-size="small">{copy.backPage}</h4><p className="paper-inside-deck">{copy.backDeck}</p>
     <div className="paper-inside-body">
-      {moments.length ? <ol className="paper-moments">{moments.map((result) => <li key={result.match.competition} data-won={result.won}>
+      {moments.length ? <ol className="paper-moments">{moments.map((result, order) => <li key={`${order}-${result.match.competition}-${result.match.stage}-${result.match.minute}`} data-won={result.won}>
         <div className="paper-moment-top"><span>{getCompetition(result.match.competition)?.names[locale]} · {drama.stages[result.match.stage]}</span><strong>{result.score.join(" × ")}</strong></div>
         <h5>{matchStory(locale, result, record.position, edition.surname).title}</h5>
         <p className="paper-moment-story">{matchStory(locale, result, record.position, edition.surname).body}</p>
@@ -569,37 +601,48 @@ function tagText(
 }
 
 /**
- * "Também nesta temporada", cortado em linhas inteiras: o espaço que sobra
- * muda a cada página (de nada a cinco taças acima), então o número de linhas
- * vem da medida, nunca de uma constante. O observador avisa na primeira medida
- * e a cada mudança de tamanho.
+ * "Também nesta temporada", cortado em itens inteiros: o espaço que sobra
+ * muda a cada página (de nada a cinco taças acima), então quantos itens cabem
+ * vem da medida, nunca de uma constante. Um item longo quebra em duas linhas
+ * (D107: antes a linha tinha altura fixa e o texto invadia o item de baixo);
+ * os que não cabem inteiros ficam invisíveis, sem mexer no lugar dos outros.
  */
 function AlsoThisSeason({ items }: { items: readonly CareerHeadline[] }) {
   const { t } = useT();
   const boxRef = useRef<HTMLDivElement>(null);
   const [rows, setRows] = useState(ALSO_ITEM_LIMIT);
+  const listed = items.slice(0, ALSO_ITEM_LIMIT);
 
   useEffect(() => {
     const box = boxRef.current;
-    if (!box || typeof ResizeObserver === "undefined") return;
-    const observer = new ResizeObserver(() => {
-      const available = box.clientHeight - ALSO_HEADING_HEIGHT;
-      const fits = Math.floor((available + ALSO_ROW_GAP) / (ALSO_ROW_HEIGHT + ALSO_ROW_GAP));
-      setRows(Math.max(0, Math.min(ALSO_ITEM_LIMIT, fits)));
-    });
+    if (!box) return;
+    const measure = () => {
+      const bottom = box.getBoundingClientRect().bottom + 0.5;
+      let fits = 0;
+      for (const item of box.querySelectorAll("li")) {
+        if (item.getBoundingClientRect().bottom > bottom) break;
+        fits += 1;
+      }
+      setRows(fits);
+    };
+    measure();
+    if (typeof ResizeObserver === "undefined") return;
+    const observer = new ResizeObserver(measure);
     observer.observe(box);
+    // A lista também muda de altura sem a caixa mudar (fonte que chega depois, quebra de linha).
+    const list = box.querySelector("ul");
+    if (list) observer.observe(list);
     return () => observer.disconnect();
-  }, []);
+  }, [items]);
 
-  const shown = items.slice(0, rows);
   return (
     <div ref={boxRef} className="paper-also">
-      {shown.length > 0 ? (
+      {listed.length > 0 ? (
         <>
-          <p className="paper-section-flat">{t("summary.newspaper.also")}</p>
+          <p className="paper-section-flat" data-cut={rows === 0 || undefined}>{t("summary.newspaper.also")}</p>
           <ul>
-            {shown.map((item) => (
-              <li key={`${item.key}-${item.text}`} data-tone={item.tone} title={item.text}>
+            {listed.map((item, index) => (
+              <li key={`${item.key}-${item.text}`} data-tone={item.tone} data-cut={index >= rows || undefined} title={item.text}>
                 <span aria-hidden="true" />
                 <span>{item.text}</span>
               </li>

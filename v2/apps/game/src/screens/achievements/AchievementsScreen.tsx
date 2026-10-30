@@ -1,4 +1,4 @@
-import { type Achievement, ACHIEVEMENT_GROUPS, achievementGroupName, ACHIEVEMENTS, achievementText } from "@craque/content";
+import { type Achievement, ACHIEVEMENT_GROUPS, achievementGroupName, achievementRarity, ACHIEVEMENT_RARITIES, ACHIEVEMENTS, achievementText } from "@craque/content";
 import { COACH_ACHIEVEMENTS, coachAchievementText } from "@craque/content/coach";
 import { Tabs as BaseTabs } from "@base-ui/react/tabs";
 import { ArrowLeft, Check, Lock } from "lucide-react";
@@ -65,6 +65,7 @@ export function AchievementsScreen() {
       <div className="mb-6 max-w-sm">
         <Segmented<Game>
           block
+          className="seg-games"
           label={t("achievements.title")}
           value={game}
           onValueChange={(next) => {
@@ -118,27 +119,30 @@ export function AchievementsScreen() {
             ))}
           </BaseTabs.List>
           {ACHIEVEMENT_GROUPS.filter((group) => group === tab).map((group) => {
-            const items = ACHIEVEMENTS.filter((item) => item.group === group);
+            const items = sortByRarity(ACHIEVEMENTS.filter((item) => item.group === group), group, byId, locale);
             const done = items.filter((item) => byId.has(item.id)).length;
             return (
               <BaseTabs.Panel key={group} value={group}>
                 <h2 id={`titulo-${group}`} className="mb-3 flex items-baseline justify-between gap-3 border-b border-line pb-2">
                   <span className="display text-2xl font-black uppercase">{achievementGroupName(locale, group)}</span>
-                  <span className="numeric text-sm text-muted">{t("achievements.count", { count: done, total: items.length })}</span>
+                  <span className="numeric text-sm text-muted">{group === "records" ? t("achievements.recordsCollection", { count: done, total: items.length }) : t("achievements.count", { count: done, total: items.length })}</span>
                 </h2>
                 <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                   {items.map((item) => {
                     const row = byId.get(item.id);
                     const text = group === "secret" && !row ? { name: t("achievements.secretName"), description: t("achievements.secretHint") } : achievementText(locale, item.id);
                     const progress = row ? null : bestProgress(item, progressCounts, finished, attempts);
+                    // A secreta não entrega a raridade antes de cair (D94).
+                    const rarity = group === "secret" && !row ? null : achievementRarity(item.id);
                     return (
-                      <li key={item.id} className="achievement" data-unlocked={row ? true : undefined}>
+                      <li key={item.id} className="achievement" data-unlocked={row ? true : undefined} data-rarity={rarity ?? undefined}>
                         <span className="achievement-mark" aria-hidden="true">
                           {row ? <Check size={20} strokeWidth={3} /> : <Lock size={16} />}
                         </span>
                         <div className="min-w-0">
                           <p className="achievement-name">{text.name}</p>
                           <p className="mt-1 text-sm text-muted">{text.description}</p>
+                          {rarity ? <span className="achievement-rarity">{t(`achievements.rarity.${rarity}`)}</span> : null}
                           {row ? (
                             <p className="mt-1.5 text-2xs text-glory">
                               {t("achievements.by", { surname: row.by, date: formatShortDate(row.at, locale) })}
@@ -177,4 +181,19 @@ function bestProgress(item: Achievement, counts: Readonly<Record<string, number>
   else if (item.id === "challengeWeek") value = rankedDays(attempts);
   else value = counts[item.id] ?? 0;
   return { value: Math.min(value, target), target };
+}
+
+/**
+ * D106: cada aba vai da comum à lendária e, dentro da mesma raridade, em ordem
+ * alfabética do nome no idioma da tela. A secreta ainda fechada não entrega
+ * nome nem raridade, então fica no fim, na ordem do catálogo.
+ */
+function sortByRarity(items: readonly Achievement[], group: string, unlocked: ReadonlyMap<string, unknown>, locale: Parameters<typeof achievementText>[0]): Achievement[] {
+  const hidden = (item: Achievement) => group === "secret" && !unlocked.has(item.id);
+  const shown = items.filter((item) => !hidden(item));
+  const collator = new Intl.Collator(locale, { sensitivity: "base" });
+  shown.sort((a, b) =>
+    ACHIEVEMENT_RARITIES.indexOf(achievementRarity(a.id)) - ACHIEVEMENT_RARITIES.indexOf(achievementRarity(b.id))
+    || collator.compare(achievementText(locale, a.id).name, achievementText(locale, b.id).name));
+  return [...shown, ...items.filter(hidden)];
 }

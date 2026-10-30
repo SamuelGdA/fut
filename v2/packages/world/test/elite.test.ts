@@ -46,7 +46,7 @@ describe("elite real", () => {
     }
   });
 
-  it("todas as posições têm representantes, com goleiros para a Luva de Ouro", () => {
+  it("todas as posições têm representantes, com goleiros para o Troféu Yashin", () => {
     for (const position of ["gk", "cb", "cm", "st"]) {
       expect(ELITE.filter((profile) => profile.position === position).length).toBeGreaterThanOrEqual(8);
     }

@@ -19,7 +19,7 @@ export function usePlayAnnouncement(career: Career | null, play: PlaySession | n
   if (play.outcome?.kind === "drama") {
     const copy = dramaText(locale);
     const result = play.outcome.result;
-    return result ? `${result.success ? copy.success : copy.failure} ${matchResultText(locale, result)} ${copy.fans} ${result.fans}. ${copy.legacy} ${result.legacy}.` : `${dramaAction(locale, play.outcome.action)}. ${play.outcome.decision.kind === "promise" ? copy.promiseAccepted : copy.veteranChosen}.`;
+    return result ? `${result.success ? copy.success : copy.failure} ${matchResultText(locale, result)} ${copy.fans} ${result.fans}. ${copy.legacy} ${result.legacy}.${result.recognition ? ` ${copy.standout}.` : ""}` : `${dramaAction(locale, play.outcome.action)}. ${play.outcome.decision.kind === "promise" ? copy.promiseAccepted : copy.veteranChosen}.`;
   }
   const seasons = play.pages.filter((page): page is SeasonPage => page.kind === "season");
   const page = seasons[seasons.length - 1];

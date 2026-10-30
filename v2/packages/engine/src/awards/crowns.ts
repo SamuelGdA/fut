@@ -80,11 +80,17 @@ const LEAGUE_MARKS: Readonly<Record<string, ScoringMark>> = {
   liga2: { mean: 14, spread: 2, record: 26 },
   "segunda-division-uruguaya": { mean: 13, spread: 2, record: 24 },
   "liga-futve-2": { mean: 12, spread: 2, record: 22 },
+  // D108: Portugal (Gyökeres fez 39 em 2024-25; o recorde da liga é de Peyroteo, 43).
+  "primeira-liga": { mean: 26, spread: 3.5, record: 43 },
+  "liga-portugal-2": { mean: 17, spread: 2.5, record: 30 },
 };
 
 /** Copas, continentais e seleções, por competição. */
 const CUP_MARKS: Readonly<Record<string, ScoringMark>> = {
   "leaguecup:ENG": { mean: 5, spread: 1.5, record: 9 },
+  "leaguecup:POR": { mean: 4, spread: 1.5, record: 8 },
+  // D108: a Liga das Nações (fase de liga e fase final juntas).
+  "nationsleague:UEFA": { mean: 5, spread: 1.5, record: 9 },
   "cont1:UEFA": { mean: 12, spread: 2, record: 17 },
   "cont2:UEFA": { mean: 8, spread: 2, record: 17 },
   "cont3:UEFA": { mean: 7, spread: 2, record: 11 },
@@ -116,6 +122,7 @@ export const CROWNED_KINDS: readonly CompetitionKind[] = [
   "clubWorldCup",
   "worldCup",
   "nationsCup",
+  "nationsLeague",
 ];
 
 export function hasCrowns(kind: CompetitionKind): boolean {
@@ -160,6 +167,7 @@ export const BEST_PLAYER_BAR: Readonly<Partial<Record<CompetitionKind, number>>>
   clubWorldCup: 10,
   worldCup: 10,
   nationsCup: 10.5,
+  nationsLeague: 10,
 };
 
 export const BEST_PLAYER = {

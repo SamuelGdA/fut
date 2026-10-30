@@ -35,7 +35,8 @@ describe("propostas iniciais (spec 4)", () => {
   it("sem segunda divisão no jogo, não há treinador daquele país (México e Estados Unidos)", () => {
     expect(COACH_COUNTRIES).not.toContain("MEX");
     expect(COACH_COUNTRIES).not.toContain("USA");
-    expect(COACH_COUNTRIES).toHaveLength(15);
+    // D108: Portugal entra com as duas divisões.
+    expect(COACH_COUNTRIES).toHaveLength(16);
     expect(() => createCoachCareer({ seed: "x", startYear: 2026, mode: "fast", identity: { name: "X", nationality: "USA" } }, WORLD)).toThrow();
   });
 

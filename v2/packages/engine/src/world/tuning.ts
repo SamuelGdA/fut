@@ -80,6 +80,35 @@ export const NATIONS_CUP_SIZE: Readonly<Partial<Record<Confederation, number>>> 
 export const CALENDAR = { worldCup: 2, nationsCup: 0, clubWorldCup: 1 } as const;
 
 /**
+ * D109: cada torneio continental de seleções no ano dele, como no calendário
+ * real. Eurocopa, Copa América e Copa das Nações da OFC a cada quatro anos
+ * (2028); Copa Ouro a cada dois, nos anos ímpares (2027); Copa da Ásia a cada
+ * quatro, a partir de 2027; Copa Africana em 2027 e 2028 e depois a cada quatro
+ * (2032), como a CAF decidiu em 2025.
+ */
+export function nationsCupYear(confederation: Confederation, year: number): boolean {
+  switch (confederation) {
+    case "CONCACAF":
+      return year % 2 === 1;
+    case "AFC":
+      return year % 4 === 3;
+    case "CAF":
+      return year === 2027 || (year >= 2028 && year % 4 === 0) || (year < 2027 && year % 2 === 1);
+    default:
+      return year % 4 === CALENDAR.nationsCup;
+  }
+}
+
+/**
+ * D108: Liga das Nações da UEFA. A fase final é nos anos ímpares (2025, 2027),
+ * entre a Copa e a Euro. Só a Liga A (as 16 seleções mais fortes no ano)
+ * disputa o título. Os jogos dela (fase de liga, quartas e fase final)
+ * ocupam datas de amistoso e de eliminatória: descontam dos jogos comuns de
+ * seleção, para as convocações não incharem.
+ */
+export const NATIONS_LEAGUE = { parity: 1, size: 16 } as const;
+
+/**
  * Força dos clubes ao longo do tempo (GDD 8.13). O equilíbrio de um campeão
  * perene fica em `sucesso / reversão` acima da força base: com os números
  * iniciais do GDD (+2,5 por ano contra 25% de volta) ele subia 10 pontos e
@@ -134,6 +163,8 @@ export const QUALIFICATION: Readonly<Record<CountryCode, QualificationRule>> = {
   PER: SOUTH_TABLE,
   URU: SOUTH_TABLE,
   VEN: SOUTH_TABLE,
+  // D108: campeão e vice na Champions, o terceiro e o campeão da Taça na Europa League, o quarto na Conference.
+  POR: { primary: 2, secondary: 1, tertiary: 1, cup: "secondary" },
   MEX: { primary: 6, secondary: 0, tertiary: 0, cup: null },
   USA: { primary: 5, secondary: 0, tertiary: 0, cup: "primary" },
 };

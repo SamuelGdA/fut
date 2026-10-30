@@ -20,7 +20,7 @@ função de classificação e a mesma memória da temporada encerrada.
 - O primeiro ano tem quatro temporadas de preparação simulada para preencher
   campeões e tabelas anteriores. A lista nacional vem da primeira divisão.
 
-## Os 17 países jogáveis
+## Os 18 países jogáveis
 
 "Liga" significa a classificação anual simulada. Em países com Apertura,
 Clausura e tabela acumulada, essa liga anual condensa suas indicações: não há
@@ -44,6 +44,7 @@ incluem vagas preliminares e diretas; não são apenas vagas de fase de grupos.
 | Itália | 4 pela liga, mais eventual vaga de desempenho | 1 pela liga + Coppa Italia | 1 seguinte da liga | Mesma redistribuição da copa. |
 | Alemanha | 4 pela liga, mais eventual vaga de desempenho | 1 pela liga + DFB Pokal | 1 seguinte da liga | Mesma redistribuição da copa. |
 | França | 4 pela liga, contando a indicação preliminar, mais eventual vaga de desempenho | 1 pela liga + Coupe de France | 1 seguinte da liga | Mesma redistribuição da copa. |
+| Portugal (D108) | 2 pela liga | 1 pela liga + Taça de Portugal | 1 seguinte da liga | Campeão da Taça já classificado cede a indicação à liga. A Taça da Liga não dá vaga continental. |
 | México | 6 para Champions Cup | Nenhuma | Nenhuma | A liga anual condensa campeões, vices de Apertura/Clausura e a classificação acumulada. |
 | Estados Unidos | 5 pela liga + US Open Cup para Champions Cup | Nenhuma | Nenhuma | A liga anual condensa MLS Cup, Supporters' Shield, outra conferência e classificação acumulada. |
 
@@ -75,6 +76,10 @@ Leagues Cup fictícia nem se atribui sua vaga a um clube arbitrário. Da mesma
 forma, não há estaduais, todas as séries inferiores ou torneios regionais de
 todos os países. As copas nacionais usam os clubes efetivamente presentes no
 mundo e um mata-mata condensado. A Copa da Liga chilena é restrita à elite.
+
+## Liga das Nações da UEFA (D108)
+
+A fase final é nos anos ímpares. O jogo condensa as divisões: só a Liga A disputa o título, com as 16 seleções mais fortes da UEFA naquele ano (força efetiva com o sorteio de sempre), e a ordem final sai das notas, como nos outros torneios. Fase de liga, quartas em ida e volta e fase final de quatro (6, 8 ou 10 jogos). Os jogos ocupam datas de amistoso e de eliminatória e descontam dos jogos comuns de seleção.
 
 ## Supercopas, Mundial e Intercontinental
 

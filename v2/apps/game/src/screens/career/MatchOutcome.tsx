@@ -14,14 +14,18 @@ export function MatchOutcome({ result, position, onContinue }: { result: KeyMatc
   const { locale } = useT(); const text = d74(locale); const copy = dramaText(locale);
   const labels = decisionFeedback(locale);
   const kind = matchActionKind(position, result.match, result.action);
-  const badge = result.success ? kind === "shot" && result.match.scene === "shootout" ? labels.shootout : labels[kind] : kind === "shot" ? labels.missedShot : kind === "pass" ? labels.missedPass : kind === "hold" ? labels.missedHold : labels.missedDefence;
   const champion = result.won && result.match.stage === "final";
+  // Segurar o jogo (D96): o selo diz o que foi segurado, não um "certeira" fixo.
+  const holdBadge = result.match.stage === "league" ? result.won ? labels.holdWin : result.score[0] === result.score[1] ? labels.holdDraw : labels.holdShort : champion ? labels.holdTitle : result.won ? labels.holdAdvance : labels.holdShort;
+  const badge = result.success ? kind === "shot" && result.match.scene === "shootout" ? labels.shootout : kind === "hold" ? holdBadge : labels[kind] : kind === "shot" ? labels.missedShot : kind === "pass" ? labels.missedPass : kind === "hold" ? labels.missedHold : labels.missedDefence;
   const competition = champion ? getCompetition(result.match.competition) : null;
   const ending = result.match.stage === "league" ? result.score[0] === result.score[1] ? copy.draw : result.won ? text.victory : text.defeat : result.match.stage === "final" ? result.won ? copy.champion : copy.runnerUp : result.won ? copy.advanced : copy.eliminated;
   const Icon = result.success ? Check : X;
   // O som acompanha o aviso do resultado (D87): um para o lance que deu certo, outro para o que não deu.
   useEffect(() => { feedback(result.success ? "hit" : "miss"); }, [result]);
-  return <div className="match-outcome" data-success={result.success} data-champion={champion || undefined} data-kind={kind}>
+  // Lance certo sem vitória (D91): empate segurado na liga, queda nos pênaltis no mata-mata.
+  const level = result.success && !result.won ? result.match.stage === "league" ? "draw" : "short" : undefined;
+  return <div className="match-outcome" data-success={result.success} data-level={level} data-champion={champion || undefined} data-kind={kind}>
     <div className="match-feedback">
       <div className="match-feedback-top"><span className="match-result-badge"><Icon size={14} aria-hidden="true" />{badge}</span>{competition ? <span className="match-result-trophy"><TrophyArt competition={competition} language={locale} size={48} decorative /></span> : null}</div>
       <div className="match-final"><h3 className="result-title">{copy.fullTime}: {result.score.join(" × ")}{result.penalties ? ` (${copy.penalties} ${result.penalties.join(" × ")})` : ""} · {ending}</h3><p>{matchOutcomeText(locale, result, position)}</p></div>

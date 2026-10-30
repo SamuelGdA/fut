@@ -65,7 +65,11 @@ describe("totais, auge e honras", () => {
   it("os totais somam o histórico", () => {
     const totals = careerTotals(career.history);
     expect(totals.seasons).toBe(career.history.length);
-    expect(totals.games).toBe(career.history.reduce((sum, record) => sum + record.games, 0));
+    expect(totals.games).toBe(career.history.reduce((sum, record) => sum + record.games + record.national.games, 0));
+    // D97: gols e assistências somam clube e seleção; a parte da seleção fica à parte.
+    expect(totals.goals).toBe(career.history.reduce((sum, record) => sum + record.production.goals + record.national.goals, 0));
+    expect(totals.assists).toBe(career.history.reduce((sum, record) => sum + record.production.assists + record.national.assists, 0));
+    expect(totals.nationalAssists).toBe(career.history.reduce((sum, record) => sum + record.national.assists, 0));
     expect(totals.titles).toBe(career.history.reduce((sum, record) => sum + record.titles.length, 0));
     expect(totals.awards).toBe(career.history.reduce((sum,record)=>sum+record.awards.won.filter(id=>id!=="bestPlayer" && id!=="topScorer").length+record.awards.crowns.length,0));
   });

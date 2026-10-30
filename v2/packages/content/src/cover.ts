@@ -1,7 +1,7 @@
 import { type Career, isGoalkeeper, movementOf, type SeasonRecord } from "@craque/engine";
 import { AWARDS, type AwardKey, getCompetition, getLeague } from "@craque/world";
 import { formatDecimal, interpolate, type Locale } from "./i18n";
-import { type RecordResult, recordsBeatenIn, recordText } from "./records";
+import { type RecordResult, recordsReachedIn, type RecordTier, recordText } from "./records";
 import { coverEn } from "./locales/cover.en";
 import { coverEs } from "./locales/cover.es";
 import { type CoverMessages, coverPt } from "./locales/cover.pt";
@@ -37,6 +37,7 @@ export const COVER_ANGLES = [
   "superCup",
   "trophy",
   "record",
+  "recordMatch",
   "explosion",
   "scorer",
   "playmaker",
@@ -46,6 +47,7 @@ export const COVER_ANGLES = [
   "prospect",
   "forgotten",
   "newAddress",
+  "farewell",
   "lastDance",
   "fading",
   "steady",
@@ -55,7 +57,7 @@ export type CoverAngle = (typeof COVER_ANGLES)[number];
 export type CoverTone = "good" | "bad" | "neutral";
 
 const BAD: ReadonlySet<CoverAngle> = new Set(["relegated", "injured", "suspended", "forgotten", "fading"]);
-const NEUTRAL: ReadonlySet<CoverAngle> = new Set(["prospect", "newAddress", "lastDance", "steady"]);
+const NEUTRAL: ReadonlySet<CoverAngle> = new Set(["prospect", "newAddress", "farewell", "lastDance", "steady"]);
 
 export function coverTone(angle: CoverAngle): CoverTone {
   if (BAD.has(angle)) return "bad";
@@ -74,8 +76,10 @@ export interface CoverFacts {
   readonly previous: SeasonRecord | null;
   /** A primeira convocação foi nesta temporada. */
   readonly firstCap: boolean;
-  /** Recordes reais que a carreira passou nesta temporada, do mais importante ao menos. */
+  /** Recordes reais que a carreira alcançou nesta temporada (superados antes dos igualados). */
   readonly beaten?: readonly RecordResult[];
+  /** É a última temporada de uma carreira encerrada (D95). */
+  readonly final?: boolean;
 }
 
 export interface CoverPick {
@@ -89,7 +93,7 @@ export interface CoverPick {
 
 /** O primeiro ângulo que se aplicar, na ordem da tabela do GDD 21.2. */
 export function coverAngle(facts: CoverFacts): CoverPick {
-  const { record, previous, firstCap, beaten = [] } = facts;
+  const { record, previous, firstCap, beaten = [], final = false } = facts;
   const kinds = record.titles.map((id) => ({ id, kind: getCompetition(id)?.kind ?? null }));
   const title = (...wanted: string[]) => kinds.find((entry) => entry.kind !== null && wanted.includes(entry.kind))?.id ?? null;
   const won = (award: AwardKey) => record.awards.won.includes(award);
@@ -99,6 +103,13 @@ export function coverAngle(facts: CoverFacts): CoverPick {
     award,
     realRecord,
   });
+
+  // Recorde real abre o jornal antes de qualquer taça (D94): é o que o jogador vai lembrar.
+  const realRecord = beaten[0] ?? null;
+  // A última edição é sempre a despedida (D95): o jornal fecha a carreira. Um
+  // recorde do último ano continua no selo da página.
+  if (final) return pick("farewell", null, null, realRecord);
+  if (realRecord) return pick(realRecord.beatenYear === record.year ? "record" : "recordMatch", null, null, realRecord);
 
   const league = title("league");
   const cup = title("cup");
@@ -137,8 +148,6 @@ export function coverAngle(facts: CoverFacts): CoverPick {
   if (oneOff) return pick("superCup", oneOff);
   const other = kinds[0]?.id ?? null;
   if (other) return pick("trophy", other);
-  const realRecord = beaten[0] ?? null;
-  if (realRecord) return pick("record", null, null, realRecord);
 
   const delta = record.ovrEnd - record.ovrStart;
   if (delta >= 4 && record.games >= 15) return pick("explosion");
@@ -193,12 +202,31 @@ export interface SeasonCover {
   /** Qual das manchetes do ângulo saiu, para a regra de não repetir. */
   readonly index: number;
   readonly supportIndex: number;
+  /** O recorde da capa (D94), para o selo e o placar "detentor × você". */
+  readonly record: CoverRecord | null;
 }
 
-/** Sorteia uma redação, avançando para a próxima se repetiria a do ano anterior. */
-function pickIndex(key: string, size: number, repeated: number | null): number {
-  const index = hash(key) % size;
-  return repeated !== null && index === repeated ? (index + 1) % size : index;
+export interface CoverRecord {
+  readonly name: string;
+  readonly holder: string;
+  readonly mark: number;
+  readonly value: number;
+  readonly tier: RecordTier;
+  readonly beaten: boolean;
+  /** Outros recordes alcançados na mesma temporada. */
+  readonly more: number;
+}
+
+/**
+ * Sorteia uma redação. D106: avança até uma que o mesmo ângulo ainda não usou
+ * nesta carreira; só quando todas saíram a lista recomeça (sem repetir a do ano anterior).
+ */
+function pickIndex(key: string, size: number, used: Set<number>, previous: number | null): number {
+  if (used.size >= size) { used.clear(); }
+  let index = hash(key) % size;
+  for (let step = 0; step < size && (used.has(index) || index === previous); step += 1) index = (index + 1) % size;
+  used.add(index);
+  return index;
 }
 
 /** As capas de todas as temporadas da carreira, na ordem do histórico. */
@@ -208,18 +236,29 @@ export function seasonCovers(locale: Locale, career: Career): SeasonCover[] {
   const surname = displayName(career.setup.identity.surname, locale);
   const paper = paperName(locale, seed);
   const covers: SeasonCover[] = [];
+  const usedHeadlines = new Map<CoverAngle, Set<number>>();
+  const usedSupports = new Map<CoverAngle, Set<number>>();
+  const usedOf = (map: Map<CoverAngle, Set<number>>, angle: CoverAngle) => map.get(angle) ?? map.set(angle, new Set()).get(angle)!;
 
   career.history.forEach((record, position) => {
     const previous = position > 0 ? (career.history[position - 1] ?? null) : null;
-    const picked = coverAngle({ record, previous, firstCap: career.firstCapAge === record.age, beaten: recordsBeatenIn(career.history, position) });
+    const reached = recordsReachedIn(career.history, position);
+    const final = career.end !== null && position === career.history.length - 1;
+    const picked = coverAngle({ record, previous, firstCap: career.firstCapAge === record.age, beaten: reached, final });
     const entry = texts.angles[picked.angle];
     const last = covers[covers.length - 1];
     const sameAngle = last !== undefined && last.angle === picked.angle;
-    const index = pickIndex(`${seed}|${record.year}|${picked.angle}`, entry.headlines.length, sameAngle ? last.index : null);
-    const supportIndex = pickIndex(`${seed}|${record.year}|${picked.angle}|apoio`, entry.support.length, sameAngle ? last.supportIndex : null);
+    const index = pickIndex(`${seed}|${record.year}|${picked.angle}`, entry.headlines.length, usedOf(usedHeadlines, picked.angle), sameAngle ? last.index : null);
+    const supportIndex = pickIndex(`${seed}|${record.year}|${picked.angle}|apoio`, entry.support.length, usedOf(usedSupports, picked.angle), sameAngle ? last.supportIndex : null);
 
     const keeper = isGoalkeeper(record.position);
     const realRecord = picked.realRecord;
+    // Os números da carreira até aqui, para a despedida (D95): os mesmos do
+    // rodapé "Até aqui na carreira" do jornal, que somam clube e seleção (D97).
+    const totals = career.history.slice(0, position + 1).reduce(
+      (sum, season) => ({ games: sum.games + season.games + season.national.games, goals: sum.goals + season.production.goals + season.national.goals, cleanSheets: sum.cleanSheets + season.production.cleanSheets + season.national.cleanSheets, titles: sum.titles + season.titles.length }),
+      { games: 0, goals: 0, cleanSheets: 0, titles: 0 },
+    );
     const realText = realRecord ? recordText(locale, realRecord.record) : null;
     const vars = {
       surname,
@@ -243,6 +282,9 @@ export function seasonCovers(locale: Locale, career: Career): SeasonCover[] {
       productionText: keeper
         ? careerPlural(locale, "stats.cleanSheetsCount", record.production.cleanSheets)
         : careerPlural(locale, "stats.goalsCount", record.production.goals),
+      careerGamesText: careerPlural(locale, "stats.gamesCount", totals.games),
+      careerTitlesText: careerPlural(locale, "stats.titlesCount", totals.titles),
+      careerProductionText: keeper ? careerPlural(locale, "stats.cleanSheetsCount", totals.cleanSheets) : careerPlural(locale, "stats.goalsCount", totals.goals),
       record: realText?.name ?? "",
       holder: realText?.holder ?? "",
       mark: realRecord ? formatDecimal(realRecord.record.value, locale, 0) : "",
@@ -258,6 +300,7 @@ export function seasonCovers(locale: Locale, career: Career): SeasonCover[] {
       support: interpolate(entry.support[supportIndex] ?? entry.support[0] ?? "", vars),
       index,
       supportIndex,
+      record: realRecord && realText ? { name: realText.name, holder: realText.holder, mark: realRecord.record.value, value: realRecord.value, tier: realRecord.record.tier, beaten: realRecord.beatenYear === record.year, more: reached.length - 1 } : null,
     });
   });
   return covers;

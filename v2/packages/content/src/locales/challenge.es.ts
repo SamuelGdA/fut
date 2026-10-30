@@ -70,7 +70,7 @@ export const challengeEs: ChallengeMessages = {
       goal: { one: "{n} premio de goleador", other: "{n} premios de goleador" },
       hint: "Valen la Bota de Oro y el título de máximo goleador de cualquier competición.",
     },
-    goldenGloves: { name: "Paredón", goal: { one: "{n} Guante de Oro", other: "{n} Guantes de Oro" } },
+    goldenGloves: { name: "Paredón", goal: { one: "{n} vez entre los diez del Trofeo Yashin", other: "{n} veces entre los diez del Trofeo Yashin" } },
   },
   worldCupGoals: [
     "Jugar en una Copa del Mundo",
@@ -90,9 +90,9 @@ export const challengeEs: ChallengeMessages = {
     noRelegation: { name: "Nunca descender", rule: "Ningún descenso con tu club." },
     noBench: {
       name: "Siempre titular",
-      rule: { one: "Desde los {age} años, como máximo {limit} temporada terminada en el banquillo.", other: "Desde los {age} años, como máximo {limit} temporadas terminadas en el banquillo." },
+      rule: { one: "Antes de los {age} años, vale todo. De los {age} años al final, como máximo {limit} temporada terminada en el banquillo.", other: "Antes de los {age} años, vale todo. De los {age} años al final, como máximo {limit} temporadas terminadas en el banquillo." },
     },
-    noSecondDivision: { name: "Primera clase", rule: "Desde los {age} años, nunca en segunda división." },
+    noSecondDivision: { name: "Primera clase", rule: "Antes de los {age} años, vale todo. De los {age} años al final, ninguna temporada en segunda división." },
     stayThree: { name: "Echar raíces", rule: "Nunca dejar un club antes de tres temporadas. Las cesiones no cuentan." },
     homeContinent: { name: "En casa", rule: "Nunca jugar fuera de tu continente." },
     noGiants: { name: "Sin gigantes", rule: "Nunca jugar en un club gigante, de fuerza {strength} o más." },

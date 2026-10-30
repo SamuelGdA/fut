@@ -12,8 +12,9 @@ export function keyKnockout(result: KnockoutResult | null, matches: readonly Key
     const upper = match.stage === "final" ? 0 : match.stage === "semi" ? 1 : 3;
     const lower = match.stage === "final" ? 1 : match.stage === "semi" ? 3 : 7;
     const opponentRank = order.indexOf(match.opponent);
+    // Vencer uma fase anterior (D89) não rebaixa quem o mundo já levou mais longe.
     const placements: Array<readonly [string, number]> = [
-      [match.team, won ? upper : lower],
+      [match.team, won ? Math.min(order.indexOf(match.team), upper) : lower],
       [match.opponent, won ? lower : Math.min(opponentRank, upper)],
     ];
     // Quem perdeu o confronto não pode reaparecer como campeão na projeção.

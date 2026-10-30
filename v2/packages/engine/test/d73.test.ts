@@ -15,7 +15,7 @@ function advance(career: Career): Career {
 }
 
 describe("D73: temporada interrompível", () => {
-  it("limita cinco decisões por ano, mantém 1–3 momentos elegíveis e refaz o meio do lance", () => {
+  it("limita cinco decisões por ano, mantém 1–4 momentos elegíveis e refaz o meio do lance", () => {
     let matches = 0;
     for (const pace of ["intense", "normal"] as const) for (const position of ["st", "gk", "cm"] as const) {
       let career = createCareer(setup(`d73-${pace}-${position}`, pace, position));
@@ -39,10 +39,13 @@ describe("D73: temporada interrompível", () => {
       }
       expect(career.end).not.toBeNull();
       expect(Math.max(...counts.values())).toBeLessThanOrEqual(5);
-      expect(Math.max(0, ...matchCounts.values())).toBeLessThanOrEqual(3);
+      expect(Math.max(0, ...matchCounts.values())).toBeLessThanOrEqual(4); // D90: até quatro partidas
       expect(career.promiseYears?.length).toBeGreaterThanOrEqual(1);
       expect(career.promiseYears?.length).toBeLessThanOrEqual(3);
-      expect(career.history.flatMap((record) => record.promise ? [record.promise.year] : [])).toEqual(career.promiseYears);
+      // Quem se aposenta antes do fim do prazo deixa a última promessa sem balanço.
+      const lastYear = career.history.at(-1)?.year ?? 0;
+      const settled = (career.promiseYears ?? []).filter((year) => career.history.some((record) => record.promise?.year === year) || year + (pace === "normal" ? 1 : 0) <= lastYear);
+      expect(career.history.flatMap((record) => record.promise ? [record.promise.year] : [])).toEqual(settled);
       const reinventions = career.history.filter(record => record.veteranChosen);
       expect(reinventions.length).toBe(career.veteran ? 1 : 0);
       if (reinventions[0]) expect(reinventions[0].age).toBeGreaterThanOrEqual(33);
@@ -50,7 +53,7 @@ describe("D73: temporada interrompível", () => {
         expect(record.production.lines.reduce((sum, line) => sum + line.goals, 0)).toBe(record.production.goals);
         expect(record.production.lines.reduce((sum, line) => sum + line.assists, 0)).toBe(record.production.assists);
         expect(record.games).toBeLessThanOrEqual(record.clubGames);
-        expect(record.keyMatches?.length ?? 0).toBeLessThanOrEqual(3);
+        expect(record.keyMatches?.length ?? 0).toBeLessThanOrEqual(4);
         for (const result of record.keyMatches ?? []) {
           if (result.match.scene === "shootout") expect(result.goals).toBe(0);
           const entry = [...record.competitions, ...record.national.competitions].find((item) => item.competition === result.match.competition);
@@ -94,7 +97,7 @@ describe("D73: temporada interrompível", () => {
 
 describe("D73: consequências restritas ao jogo apresentado", () => {
   const teams = CLUBS.slice(0, 9).map((club) => club.id);
-  const outcome: KeyMatchResult = { match: { competition: "cup:BRA", team: teams[1]!, opponent: teams[0]!, national: false, stage: "final", minute: 88, score: [1, 1], scene: "penalty" }, action: "left", success: true, won: true, score: [2, 1], penalties: null, goals: 1, assists: 0, fans: 3, legacy: 2 };
+  const outcome: KeyMatchResult = { match: { competition: "cup:BRA", team: teams[1]!, opponent: teams[0]!, national: false, stage: "final", minute: 88, score: [1, 1], scene: "penalty" }, action: "left", success: true, won: true, score: [2, 1], penalties: null, goals: 1, assists: 0, fans: 3, legacy: 2, recognition: 1 };
   it("final muda campeão e vice somente no torneio apresentado, sem duplicar times", () => {
     const result = { competition: "cup:BRA", order: teams, format: { kind: "knockout" as const, groupSlots: 0 } };
     const updated = keyKnockout(result, [outcome])!;
@@ -115,7 +118,10 @@ describe("D73: consequências restritas ao jogo apresentado", () => {
     for (const stage of ["quarter", "semi"] as const) {
       const updated = keyKnockout(result, [{ ...outcome, match: { ...outcome.match, stage } }])!;
       expect(updated.order.indexOf(outcome.match.opponent)).toBe(stage === "semi" ? 3 : 7);
-      expect(updated.order.indexOf(outcome.match.team)).toBe(stage === "semi" ? 1 : 3);
+      // Vencer uma fase não rebaixa quem o mundo já levou mais longe (D89).
+      expect(updated.order.indexOf(outcome.match.team)).toBe(1);
+      const deeper = keyKnockout({ ...result, order: [teams[0]!, ...teams.slice(2, 6), teams[1]!, ...teams.slice(6)] }, [{ ...outcome, match: { ...outcome.match, stage } }])!;
+      expect(deeper.order.indexOf(outcome.match.team)).toBe(stage === "semi" ? 1 : 3);
       expect(new Set(updated.order).size).toBe(teams.length);
       const lost = keyKnockout(result, [{ ...outcome, won: false, match: { ...outcome.match, stage } }])!;
       expect(lost.order.indexOf(outcome.match.team)).toBe(stage === "semi" ? 3 : 7);

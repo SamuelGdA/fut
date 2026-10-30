@@ -154,6 +154,9 @@ export function applyEffects(
       case "market":
         next = { ...next, marketBonus: next.marketBonus + effect.amount };
         break;
+      case "fame":
+        next = { ...next, fame: (next.fame ?? 0) + effect.amount };
+        break;
       case "clubStrength":
         if (club) {
           const strength = [...next.world.strength];
@@ -163,7 +166,7 @@ export function applyEffects(
         }
         break;
       default:
-        // Efeitos de período já entraram nos modificadores; "story" é só biografia.
+        // Efeitos de período já entraram nos modificadores.
         break;
     }
   }

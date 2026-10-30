@@ -16,6 +16,7 @@ import { AWARDS, getClub, getCompetition, getCountry } from "@craque/world";
 import { History } from "lucide-react";
 import { currentFans, currentOvr, currentAttributes, currentValue, lastRecord } from "../../features/career/view";
 import { useT } from "../../i18n/useT";
+import { cn } from "../../ui/cn";
 import { feedback } from "../../services/feedback";
 import { AnimatedNumber } from "../../ui/AnimatedNumber";
 import { Button } from "../../ui/Button";
@@ -231,13 +232,26 @@ export function TrophiesPanel({ career }: { career: Career }) {
   return <Showcase history={career.history} />;
 }
 
-/** A seleção: situação, jogos, gols, estreia e torneios. */
+/** A seleção: situação, jogos, gols, assistências (ou jogos sem sofrer gol), títulos, estreia e torneios. */
 export function NationPanel({ career }: { career: Career }) {
   const { t, c, number, locale } = useT();
   const country = getCountry(career.nationality);
   const last = lastRecord(career);
-  const games = career.history.reduce((total, record) => total + record.national.games, 0);
-  const goals = career.history.reduce((total, record) => total + record.national.goals, 0);
+  // D98: os números pela posição, como na linha do tempo: goleiro puro vê jogos sem sofrer gol no lugar de gols e assistências; quem jogou atrás vê os dois.
+  const played = career.history.filter((record) => record.national.games > 0);
+  const sum = (pick: (record: Career["history"][number]) => number) => career.history.reduce((total, record) => total + pick(record), 0);
+  // Sem jogos pela seleção ainda, vale a posição da carreira.
+  const seasons = played.length ? played : career.history;
+  const keeperOnly = seasons.length > 0 ? seasons.every((record) => record.position === "gk") : career.player.position === "gk";
+  const backLine = seasons.length > 0 ? seasons.some((record) => ["gk", "cb", "lb", "rb"].includes(record.position)) : ["gk", "cb", "lb", "rb"].includes(career.player.position);
+  // Títulos só dos torneios que ele disputou, como a lista de torneios abaixo.
+  const titles = career.history.reduce((total, record) => total + playedTournaments(record).filter((entry) => entry.champion).length, 0);
+  const stats: { key: "caps" | "goals" | "assists" | "cleanSheets" | "titles"; value: number }[] = [
+    { key: "caps" as const, value: sum((record) => record.national.games) },
+    ...(keeperOnly ? [] : [{ key: "goals" as const, value: sum((record) => record.national.goals) }, { key: "assists" as const, value: sum((record) => record.national.assists) }]),
+    ...(backLine ? [{ key: "cleanSheets" as const, value: sum((record) => record.national.cleanSheets) }] : []),
+    { key: "titles" as const, value: titles },
+  ];
   // Só os torneios que ele disputou (no grupo do torneio e com jogos), não a campanha da seleção sem ele.
   const tournaments = career.history.flatMap((record) => playedTournaments(record).map((entry) => ({ year: record.year, entry })));
   return (
@@ -249,16 +263,15 @@ export function NationPanel({ career }: { career: Career }) {
           <p className="mt-1 text-xs text-muted">{last ? c(`national.${last.national.status}`) : c("national.out")}</p>
         </div>
       </div>
-      <dl className="grid grid-cols-3 divide-x divide-line rounded-sm border border-line bg-panel">
-        <div className="flex flex-col-reverse items-center gap-1 py-3">
-          <dt className="eyebrow">{t("career.nation.caps")}</dt>
-          <dd className="display numeric text-3xl font-black">{number(games)}</dd>
-        </div>
-        <div className="flex flex-col-reverse items-center gap-1 py-3">
-          <dt className="eyebrow">{t("career.nation.goals")}</dt>
-          <dd className="display numeric text-3xl font-black">{number(goals)}</dd>
-        </div>
-        <div className="flex flex-col-reverse items-center gap-1 px-1 py-3 text-center">
+      <dl className="grid grid-cols-3 gap-px overflow-hidden rounded-sm border border-line bg-line" data-count={stats.length}>
+        {stats.map((stat) => (
+          <div key={stat.key} className="flex flex-col-reverse items-center gap-1 bg-panel px-1 py-3 text-center">
+            <dt className="eyebrow">{t(`career.nation.${stat.key}`)}</dt>
+            <dd className="display numeric text-3xl font-black">{number(stat.value)}</dd>
+          </div>
+        ))}
+        {/* A estreia fecha a última linha da grade, sem buraco. */}
+        <div className={cn("flex flex-col-reverse items-center gap-1 bg-panel px-1 py-3 text-center", (stats.length + 1) % 3 === 2 && "col-span-2", (stats.length + 1) % 3 === 1 && "col-span-3")}>
           <dt className="eyebrow">{t("career.nation.debut")}</dt>
           <dd className="text-sm font-semibold">
             {career.firstCapAge !== null ? t("career.nation.debutAt", { age: career.firstCapAge }) : t("career.nation.uncapped")}

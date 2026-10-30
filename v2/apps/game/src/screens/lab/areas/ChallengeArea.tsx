@@ -11,6 +11,7 @@ import { feedback } from "../../../services/feedback";
 import { Button } from "../../../ui/Button";
 import { Flag } from "../../../ui/Media";
 import { Chip } from "../../../ui/Signals";
+import { RecordTarget } from "../../challenge/MissionViews";
 
 /** Quantos dias a área mostra, a partir de hoje (UTC). */
 const DAYS = 14;
@@ -73,6 +74,8 @@ export function ChallengeArea() {
                   );
                 })}
               </ul>
+              {/* Dia de recorde (D94): o recorde-alvo, com todo mundo Fenômeno. */}
+              {hand.record ? <RecordTarget id={hand.record.id} mark={hand.record.mark} compact /> : null}
               <p className="text-sm">
                 <span className="mr-2 text-2xs font-bold tracking-wider text-bad uppercase">{t("challenge.edict")}</span>
                 {edictName(locale, hand.edict)}

@@ -19,7 +19,7 @@ export function SeasonDrama({ record, matches = true }: { record: SeasonRecord; 
       {promise.fulfilled ? <div className="promise-rewards">{promise.fans > 0 ? <span>+{promise.fans} {copy.fans}</span> : null}{promise.legacy > 0 ? <span>+{promise.legacy} {copy.legacy}</span> : null}{promise.capacity > 0 ? <span>+{number(promise.capacity, { maximumFractionDigits: 1 })} {copy.evolution}</span> : null}</div> : null}
     </section> : null}
     {record.veteranChosen && record.veteran ? <p className="eyebrow">{copy.veteran}: {dramaAction(locale, record.veteran, record.position)}</p> : null}
-    {matches && record.keyMatches?.map((result) => <p className="season-key-result" key={result.match.competition}><strong>{result.success ? copy.success : copy.failure}</strong> {matchResultText(locale, result)}</p>)}
+    {matches && record.keyMatches?.map((result, order) => <p className="season-key-result" key={`${order}-${result.match.competition}-${result.match.stage}`}><strong>{result.success ? copy.success : copy.failure}</strong> {matchResultText(locale, result)}</p>)}
   </div>;
 }
 

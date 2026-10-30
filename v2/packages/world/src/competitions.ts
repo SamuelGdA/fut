@@ -16,6 +16,8 @@ export type CompetitionKind =
   | "intercontinental"
   | "clubWorldCup"
   | "nationsCup"
+  /** D108: Liga das Nações da UEFA, fase final nos anos ímpares. */
+  | "nationsLeague"
   | "worldCup";
 
 /** Silhueta usada quando a competição não tem arte própria. */
@@ -46,7 +48,7 @@ const same = (name: string): LocalizedText => ({ pt: name, es: name, en: name })
 
 // -------------------------------------------------------------- nacionais
 
-/** Copas nacionais, por país. O México não tem uma desde 2020. */
+/** Copas nacionais, por país. O México não tem uma desde 2020; o Peru deixou de ter (D108: a Copa Bicentenario acabou). */
 const CUPS: Readonly<Record<CountryCode, { name: string; artKey?: string }>> = {
   ARG: { name: "Copa Argentina" },
   BOL: { name: "Copa Bolivia", artKey: "cup:bol-copa-bolivia" },
@@ -60,7 +62,7 @@ const CUPS: Readonly<Record<CountryCode, { name: string; artKey?: string }>> = {
   GER: { name: "DFB-Pokal" },
   ITA: { name: "Coppa Italia" },
   PAR: { name: "Copa Paraguay" },
-  PER: { name: "Copa Bicentenario", artKey: "cup:per-copa-bicentenario" },
+  POR: { name: "Taça de Portugal" },
   URU: { name: "Copa AUF Uruguay" },
   USA: { name: "U.S. Open Cup" },
   VEN: { name: "Copa Venezuela" },
@@ -81,6 +83,14 @@ const SUPER_CUPS: Readonly<Record<CountryCode, string>> = {
   ECU: "Supercopa de Ecuador",
   URU: "Supercopa Uruguaya",
   PAR: "Supercopa Paraguay",
+  POR: "Supertaça Cândido de Oliveira",
+};
+
+/** Copas da liga que existem de fato (D108: a Taça da Liga portuguesa). */
+const LEAGUE_CUPS: Readonly<Partial<Record<CountryCode, string>>> = {
+  ENG: "EFL Cup",
+  CHI: "Copa de la Liga",
+  POR: "Taça da Liga",
 };
 
 // ------------------------------------------------------------ continentais
@@ -132,6 +142,9 @@ const CONTINENTAL_TROPHY: Readonly<Partial<Record<string, string>>> = {
   "cont1:CONMEBOL": "conmebol-libertadores",
   "cont2:CONMEBOL": "conmebol-sudamericana",
   "cont1:CONCACAF": "concacaf-champions-cup",
+  "cont3:UEFA": "uefa-conference-league",
+  "contsuper:UEFA": "uefa-super-cup",
+  "contsuper:CONMEBOL": "conmebol-recopa",
 };
 
 // ----------------------------------------------------------- montagem
@@ -174,23 +187,23 @@ function build(): Competition[] {
         names: same(superCup),
         country,
         confederation,
-        trophy: null,
+        trophy: realTrophy(`super-${country}`),
         art: { key: `super:${country}`, category: "super_cup" },
       });
     }
   }
 
-  list.push({
-    id: "leaguecup:ENG",
-    kind: "leagueCup",
-    names: same("EFL Cup"),
-    country: "ENG",
-    confederation: "UEFA",
-    trophy: null,
-    art: { key: "leaguecup:ENG", category: "cup" },
-  });
-
-  list.push({ id: "leaguecup:CHI", kind: "leagueCup", names: same("Copa de la Liga"), country: "CHI", confederation: "CONMEBOL", trophy: null, art: { key: "leaguecup:CHI", category: "cup" } });
+  for (const [country, name] of Object.entries(LEAGUE_CUPS) as [CountryCode, string][]) {
+    list.push({
+      id: `leaguecup:${country}`,
+      kind: "leagueCup",
+      names: same(name),
+      country,
+      confederation: getCountry(country)?.confederation,
+      trophy: realTrophy(`leaguecup-${country}`),
+      art: { key: `leaguecup:${country}`, category: "cup" },
+    });
+  }
 
   for (const [confederation, set] of Object.entries(CONTINENTAL) as [Confederation, ContinentalSet][]) {
     const continental: Array<[CompetitionKind, string, LocalizedText | undefined, string]> = [
@@ -226,12 +239,22 @@ function build(): Competition[] {
     });
   }
 
+  // D108: a Liga das Nações da UEFA (a Liga A decide o título).
+  list.push({
+    id: "nationsleague:UEFA",
+    kind: "nationsLeague",
+    names: { pt: "Liga das Nações da UEFA", es: "Liga de Naciones de la UEFA", en: "UEFA Nations League" },
+    confederation: "UEFA",
+    trophy: realTrophy("nationsleague-UEFA"),
+    art: { key: "nationsleague:UEFA", category: "continental" },
+  });
+
   list.push(
     {
       id: "intercontinental",
       kind: "intercontinental",
       names: { pt: "Copa Intercontinental", es: "Copa Intercontinental", en: "Intercontinental Cup" },
-      trophy: null,
+      trophy: realTrophy("intercontinental"),
       art: { key: "cup:intercontinental", category: "cup" },
     },
     {
@@ -278,6 +301,7 @@ const BASE_IMPORTANCE: Readonly<Record<CompetitionKind, number>> = {
   intercontinental: 1,
   clubWorldCup: 2.5,
   nationsCup: 2,
+  nationsLeague: 1,
   worldCup: 3.5,
 };
 
@@ -324,7 +348,7 @@ export const AWARDS: Readonly<Record<AwardKey, Award>> = {
   kingOfAmerica: {
     key: "kingOfAmerica",
     names: { pt: "Rei da América", es: "Rey de América", en: "King of America" },
-    image: null,
+    image: awardImage("king-of-america"),
     art: "award:king-of-america",
   },
   ballonDor: {
@@ -335,7 +359,7 @@ export const AWARDS: Readonly<Record<AwardKey, Award>> = {
   },
   goldenGlove: {
     key: "goldenGlove",
-    names: { pt: "Luva de Ouro", es: "Guante de Oro", en: "Golden Glove" },
+    names: { pt: "Troféu Yashin", es: "Trofeo Yashin", en: "Yashin Trophy" },
     image: awardImage("golden-glove"),
     art: "award:golden-glove",
   },
@@ -347,8 +371,9 @@ export const AWARDS: Readonly<Record<AwardKey, Award>> = {
   },
   youngPlayer: {
     key: "youngPlayer",
-    names: { pt: "Prêmio Revelação", es: "Premio Revelación", en: "Young Player Award" },
-    image: null,
+    // D108: o Troféu Kopa, da France Football (a chave continua `youngPlayer` nos saves).
+    names: { pt: "Troféu Kopa", es: "Trofeo Kopa", en: "Kopa Trophy" },
+    image: awardImage("kopa"),
     art: "award:young-player",
   },
   topScorer: {

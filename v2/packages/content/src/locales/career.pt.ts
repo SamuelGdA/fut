@@ -147,6 +147,8 @@ export const careerPt = {
     base: { title: "O primeiro clube", body: "Três clubes querem você na base. Aos {age} anos, a primeira escolha é onde aprender." },
     window: { title: "Janela de transferências", body: "{club} fecha a temporada. Você fica ou muda de ares?" },
     suspended: { title: "Suspenso", body: "A suspensão segue, mas o mercado não para. Você cumpre a pena onde está ou recomeça em outro lugar?" },
+    agentUp: { title: "O empresário entregou", body: "Os contatos do novo empresário trouxeram propostas melhores que o normal. Você fica em {club} ou dá o salto?" },
+    agentDown: { title: "O empresário falhou", body: "O novo empresário só conseguiu propostas piores que o normal. Você fica em {club} ou aceita uma delas?" },
     loan: { title: "Proposta de empréstimo", body: "Falta espaço no elenco. Alguns clubes oferecem minutos garantidos por empréstimo." },
     returnRetained: { title: "Fim do empréstimo", body: "{owner} quer você de volta. Qual é o próximo passo?" },
     returnReleased: { title: "Fim do empréstimo", body: "{owner} não conta com você. É hora de achar um clube." },
@@ -221,8 +223,8 @@ export const careerPt = {
     shirtTen: "Veste a camisa 10",
     shirt: "Veste a camisa {number}",
     block: "O clube fecha as portas para sempre",
-    marketUp: "Mais clubes interessados na próxima janela",
-    marketDown: "Menos clubes interessados na próxima janela",
+    marketUp: "Próxima decisão: janela com propostas melhores",
+    marketDown: "Próxima decisão: janela com propostas piores",
     clubStrength: "Força do clube {value}",
     awardUp: "Mais votos nos prêmios",
     awardDown: "Menos votos nos prêmios",
@@ -239,7 +241,7 @@ export const careerPt = {
   },
 
   end: {
-    age: "Aos 40 anos, o corpo encerrou a carreira.",
+    age: "Aos 41 anos, o corpo encerrou a carreira.",
     noRoom: "Sem clube interessado, a carreira chegou ao fim.",
     noOffers: "Nenhum clube fez proposta. A carreira chegou ao fim.",
     release: "Depois da dispensa, você decidiu parar.",
@@ -269,6 +271,7 @@ export const careerPt = {
     goalsCount: { zero: "{count} gols", one: "{count} gol", other: "{count} gols" },
     assistsCount: { zero: "{count} assistências", one: "{count} assistência", other: "{count} assistências" },
     cleanSheetsCount: { zero: "{count} jogos sem sofrer gol", one: "{count} jogo sem sofrer gol", other: "{count} jogos sem sofrer gol" },
+    titlesCount: { zero: "nenhum título", one: "{count} título", other: "{count} títulos" },
   },
 } as const;
 

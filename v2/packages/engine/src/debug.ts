@@ -16,6 +16,7 @@ import { eventDecision } from "./career/events";
 import { baseDecision, windowDecision, returnDecision, releaseDecision } from "./career/decisions";
 import { buildOffer, loanOffers } from "./career/market";
 import { matchChance, promiseOptions } from "./career/drama";
+import { isCornerChoice, isShootout } from "./career/matchMoments";
 import { focusesFor } from "./evolution/training";
 import { VETERAN_PATHS, type MatchScene } from "./career/dramaTypes";
 import type { Decision, DecisionKind, DecisionOption } from "./career/types";
@@ -40,8 +41,10 @@ export function debugDecision(career: Career, key: string): Career {
     const team = next.contract?.club ?? "flamengo";
     const club = getClub(team);
     const opponent = CLUBS.find(candidate => candidate.country === club?.country && candidate.id !== team)?.id ?? "palmeiras";
-    const match = { competition: scene === "keeperCorner" || scene === "shootout" || scene === "decisivePenalty" ? `cup:${club?.country ?? "BRA"}` : `league:${leagueAt(club?.country ?? "BRA", next.world.division[clubIndex(team)] ?? 1)?.id ?? "brasileirao"}`, team, opponent, national: false, stage: scene === "keeperCorner" || scene === "shootout" || scene === "decisivePenalty" ? "quarter" as const : "league" as const, minute: scene === "shootout" ? 120 : scene === "keeperCorner" ? 94 : 86, score: [1, scene === "keeperCorner" ? 2 : 1] as const, scene };
-    const actions = scene === "decisivePenalty" ? ["take", "leave"] : ["penalty", "shootout", "penaltySave"].includes(scene) ? ["left", "right"] : ["bold", "team", "safe"];
+    const knockout = scene === "keeperCorner" || scene === "decisivePenalty" || scene === "penaltySave" || isShootout(scene);
+    const kick = scene === "suddenDeath" ? 8 : scene === "keeperShootout" ? 11 : 0;
+    const match = { competition: knockout ? `cup:${club?.country ?? "BRA"}` : `league:${leagueAt(club?.country ?? "BRA", next.world.division[clubIndex(team)] ?? 1)?.id ?? "brasileirao"}`, team, opponent, national: false, stage: knockout ? "quarter" as const : "league" as const, minute: isShootout(scene) ? 120 : scene === "keeperCorner" ? 94 : 86, score: [1, scene === "keeperCorner" ? 2 : 1] as const, scene, ...(kick ? { kick } : {}) };
+    const actions = scene === "decisivePenalty" ? ["take", "leave"] : isCornerChoice(scene) ? ["left", "right"] : ["bold", "team", "safe"];
     decision = { ...common, kind: "match", match, options: actions.map(action => ({ id: `drama:${action}`, kind: "drama", action, chance: matchChance(next, match, action) })) };
     next = { ...next, drama: { ...drama, queue: [match] } };
   } else if (key === "promise" || key === "veteran") {

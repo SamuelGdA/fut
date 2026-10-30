@@ -2,6 +2,9 @@ import {
   ACCESSORY_STYLES,
   type AvatarConfig,
   BEARD_STYLES,
+  EARRING_COLORS,
+  EARRING_SIDES,
+  EARRING_STYLES,
   DEFAULT_AVATAR,
   EYE_COLORS,
   EYE_OFFSET_MAX,
@@ -16,6 +19,7 @@ import {
   HAIR_STYLES,
   type KitDef,
   MOLE_SPOTS,
+  SCAR_SPOTS,
   MOUTH_OFFSET_MAX,
   MOUTH_OFFSET_MIN,
   MOUTH_STYLES,
@@ -94,7 +98,6 @@ export function AvatarEditor({ value, onChange, kit, outfit = "kit", onBack, onD
         <div className="min-w-0">
           <p className="eyebrow text-good">{t("appearance.eyebrow")}</p>
           <h2 className="display mt-2 text-4xl font-black uppercase sm:text-5xl lg:text-4xl">{t("appearance.title")}</h2>
-          <p className="mt-1.5 max-w-lg text-sm text-muted">{t("appearance.subtitle")}</p>
         </div>
         <div className="flex flex-wrap gap-2">
           <Button
@@ -296,7 +299,8 @@ export function AvatarEditor({ value, onChange, kit, outfit = "kit", onBack, onD
           </BaseTabs.Panel>
 
           <BaseTabs.Panel value="details" className="avatar-panel" keepMounted>
-            <div className="avatar-columns">
+            {/* D109: no PC, marcas, brinco e acessório têm cada um a sua coluna: o acessório não pula de lugar quando o brinco abre opções. */}
+            <div className="avatar-columns" data-split>
               <Section label={t("appearance.marks")}>
                 <Row label={t("appearance.freckles")}>
                   <Chips
@@ -315,6 +319,37 @@ export function AvatarEditor({ value, onChange, kit, outfit = "kit", onBack, onD
                     onPick={(mole) => update({ mole })}
                   />
                 </Row>
+                <Row label={t("appearance.scar")}>
+                  <Chips
+                    items={SCAR_SPOTS.map((spot) => ({ value: spot, label: t(`appearance.scarSpots.${spot}`) }))}
+                    active={avatar.scar ?? "none"}
+                    onPick={(scar) => update({ scar })}
+                  />
+                </Row>
+              </Section>
+
+              <Section label={t("appearance.styleSection")}>
+                <Row label={t("appearance.earring")}>
+                  <Chips
+                    items={EARRING_SIDES.map((side) => ({ value: side, label: t(`appearance.earringSides.${side}`) }))}
+                    active={avatar.earring ?? "none"}
+                    onPick={(earring) => update({ earring })}
+                  />
+                </Row>
+                {(avatar.earring ?? "none") !== "none" ? (
+                  <>
+                    <Row label={t("appearance.earringStyle")}>
+                      <Chips
+                        items={EARRING_STYLES.map((style) => ({ value: style, label: t(`appearance.earringStyles.${style}`) }))}
+                        active={avatar.earringStyle ?? "stud"}
+                        onPick={(earringStyle) => update({ earringStyle })}
+                      />
+                    </Row>
+                    <Row label={t("appearance.earringColor")}>
+                      <Swatches colors={EARRING_COLORS} active={avatar.earringColor ?? 0} onPick={(earringColor) => update({ earringColor })} />
+                    </Row>
+                  </>
+                ) : null}
               </Section>
 
               <Section label={t("appearance.accessorySection")}>

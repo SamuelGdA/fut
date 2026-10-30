@@ -65,6 +65,8 @@ interface DecisionPanelProps {
   onChoose(optionId: string): boolean;
   /** Na linha alternativa (GDD 28.3), a opção que a original escolheu nesta decisão. */
   original?: string | null;
+  /** D106: a decisão revista pelas bolinhas, com a opção que o jogador marcou. Só leitura. */
+  chosen?: string | null;
 }
 
 const ROLE_TONE: Readonly<Record<SquadRole, Tone>> = {
@@ -97,7 +99,7 @@ const FOCUS_ICON: Readonly<Record<TrainingFocus, LucideIcon>> = {
  * confirma. Duas etapas de propósito: num celular, um toque sem querer não
  * pode mudar uma carreira.
  */
-export function DecisionPanel({ career, onChoose, original = null, result, onContinue }: DecisionPanelProps) {
+export function DecisionPanel({ career, onChoose, original = null, result, onContinue, chosen = null }: DecisionPanelProps) {
   const { t, c, locale } = useT();
   const decision = career.decision;
   const [picked, setPicked] = useState<{ decision: number; option: string } | null>(null);
@@ -120,9 +122,9 @@ export function DecisionPanel({ career, onChoose, original = null, result, onCon
   }, [decisionId]);
 
   if (!decision) return null;
-  if (["match", "promise", "veteran"].includes(decision.kind)) return <DramaDecisionPanel career={career} onChoose={onChoose} original={original} result={result} onContinue={onContinue} />;
+  if (["match", "promise", "veteran"].includes(decision.kind)) return <DramaDecisionPanel career={career} onChoose={onChoose} original={chosen ?? original} originalLabel={chosen ? t("career.recall.yourChoice") : undefined} result={result} onContinue={onContinue} />;
 
-  const selected = picked && picked.decision === decision.id ? picked.option : null;
+  const selected = chosen ?? (picked && picked.decision === decision.id ? picked.option : null);
   const text = decisionText(locale, career, decision);
   // Rádio com foco itinerante (GDD 36): Tab entra no grupo pela marcada (ou pela
   // primeira) e as setas andam entre as opções, marcando.
@@ -215,13 +217,13 @@ export function DecisionPanel({ career, onChoose, original = null, result, onCon
             option={option}
             checked={option.id === selected}
             tabIndex={index === focusIndex ? 0 : -1}
-            original={option.id === original ? t("career.originalChoice") : null}
+            original={chosen ? (option.id === chosen ? t("career.recall.yourChoice") : null) : option.id === original ? t("career.originalChoice") : null}
             onSelect={() => select(option.id)}
           />
         ))}
       </div>
 
-      <div className="decision-confirm">
+      {chosen ? null : <div className="decision-confirm">
         <Button
           size="lg"
           block
@@ -232,7 +234,7 @@ export function DecisionPanel({ career, onChoose, original = null, result, onCon
         >
           {selectedOption ? t("career.confirm") : t("career.pick")}
         </Button>
-      </div>
+      </div>}
     </section>
   );
 }

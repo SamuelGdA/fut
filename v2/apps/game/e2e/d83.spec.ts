@@ -2,7 +2,7 @@ import { expect, test, type Page } from "@playwright/test";
 import { readFile } from "node:fs/promises";
 import { abrir, abrirMomento, auditar, esperarQueCaiba } from "./apoio";
 
-const metadata = JSON.parse(await readFile(new URL("./fixtures/momentos-m23.json", import.meta.url), "utf8")) as { moments: Record<string, { file: string; index: number }> };
+const metadata = JSON.parse(await readFile(new URL("./fixtures/momentos-m41.json", import.meta.url), "utf8")) as { moments: Record<string, { file: string; index: number }> };
 
 /** Os momentos reais das fixtures e o pacote de transmissão que cada um tem de mostrar. */
 const FAMILIES = { europe: ["ucl", "stars"], america: ["libertadores", "rays"], world: ["worldcup", "globe"], nation: ["copaamerica", "aguayo"], league: ["league:BRA", "stands"] } as const;

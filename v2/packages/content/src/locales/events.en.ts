@@ -17,21 +17,6 @@ export const eventsEn: EventsMessages = {
       }
     }
   },
-  "silentWeek": {
-    "title": "A week away from the spotlight",
-    "body": "Your calendar is full. Choose between rest and a media appearance.",
-    "options": {
-      "silence": {
-        "label": "Switch off your phone",
-        "result": "Injury risk -20% for the period. Support -3."
-      },
-      "press": {
-        "label": "Talk to the fans",
-        "result": "Support +3. Development -5% for the period."
-      }
-    }
-  }
-,
   extraTraining: {
     title: "Extra training",
     body: "The fitness coach suggests a programme of your own: gym before sunrise and finishing drills after team training.",
@@ -265,7 +250,7 @@ export const eventsEn: EventsMessages = {
   },
   agentUltimatum: {
     title: "The agent's ultimatum",
-    body: "Your agent has an offer from a bigger club and threatens to walk away if you do not force the move.",
+    body: "Your agent has an offer from a better club and threatens to walk away if you do not force the move.",
     options: {
       force: {
         label: "Force the move",
@@ -308,8 +293,8 @@ export const eventsEn: EventsMessages = {
     options: {
       change: {
         label: "Switch agents",
-        success: "His contacts heat up the market. More clubs ask about you.",
-        failure: "Big promises, little to show. The market cools.",
+        success: "His contacts heat up the market. At the next decision, the window opens with better offers than usual.",
+        failure: "Big promises, little to show. At the next decision, the window opens with worse offers than usual.",
       },
       keep: { label: "Keep your agent", result: "You stay with the person who has been there from the start." },
     },
@@ -365,12 +350,8 @@ export const eventsEn: EventsMessages = {
     title: "Row with the board",
     body: "You criticised the board in public, and the president demands a retraction.",
     options: {
-      standGround: {
-        label: "Do not back down",
-        success: "The fans back you, and the board backs down.",
-        failure: "The board does not forgive. You are sold, and the club shuts its doors to you for good.",
-      },
-      apologize: { label: "Retract", result: "You back down. Your image takes a small hit." },
+      standGround: { label: "Do not back down", result: "You do not back down. The board sells you, and the club shuts its doors to you for good." },
+      apologize: { label: "Retract", result: "You back down in public, and the fans do not forgive the weakness." },
     },
   },
   rowFans: {
@@ -398,6 +379,7 @@ export const eventsEn: EventsMessages = {
     body: "The club wants to immortalise your story and lets you choose your shirt number.",
     options: {
       number: { label: "Wear the {number}", result: "The {number} now tells your story at the club." },
+      keep: { label: "Keep your number", result: "You stay with your usual number, no new pressure, and the fans applaud the loyalty." },
     },
   },
   seriousInjury: {

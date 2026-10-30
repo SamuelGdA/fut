@@ -1,6 +1,8 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { ENGINE_VERSION } from "@craque/engine";
-import { recordRows, runRecordCareers } from "./records";
+import { RECORD_BANDS, recordRows, runRecordCareers } from "./records";
+
+const TIER_NAMES = { entry: "Clássico", rare: "Raro", epic: "Épico", legendary: "Lendário" } as const;
 
 /**
  * pnpm balance:recordes [--carreiras N] [--semente texto] [--sem-arquivo]
@@ -27,11 +29,11 @@ function main() {
   const seconds = ((performance.now() - started) / 1000).toFixed(1);
 
   const table = [
-    "| Recorde | Marca real | Melhor do lote | Mediana | Carreiras que alcançaram | +1 | +2 | +3 |",
-    "|---|---:|---:|---:|---:|---:|---:|---:|",
+    "| Recorde | Faixa | Marca real | Melhor do lote | Mediana | Carreiras que alcançaram | +1 | +2 | +3 | Na faixa |",
+    "|---|---|---:|---:|---:|---:|---:|---:|---:|:---:|",
     ...rows.map(
       (row) =>
-        `| ${row.target.label} | ${row.target.value} | ${row.best} | ${row.median} | ${row.reached} de ${row.careers} (${((100 * row.reached) / row.careers).toFixed(1)}%) | ${row.beyond.join(" | ")} |`,
+        `| ${row.target.label} | ${TIER_NAMES[row.target.tier]} (${RECORD_BANDS[row.target.tier].map((value) => `${(100 * value).toFixed(1)}%`).join(" a ")}) | ${row.target.value} | ${row.best} | ${row.median} | ${row.reached} de ${row.careers} (${((100 * row.reached) / row.careers).toFixed(2)}%) | ${row.beyond.join(" | ")} | ${row.inBand ? "✓" : "✗"} |`,
     ),
   ];
   const report = [
@@ -49,6 +51,8 @@ function main() {
   ].join("\n");
 
   console.log(table.join("\n"));
+  const outside = rows.filter((row) => !row.inBand).length;
+  console.log(outside === 0 ? "\nTodas as marcas na faixa." : `\n${outside} marca(s) fora da faixa.`);
   console.log(`\n${seconds} s`);
   if (args.writeFile) {
     mkdirSync(new URL("../relatorios/", import.meta.url), { recursive: true });

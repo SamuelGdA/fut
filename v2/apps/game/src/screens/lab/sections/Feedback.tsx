@@ -1,4 +1,4 @@
-import { EVENT_TEXTS } from "@craque/content";
+import { dramaText, EVENT_TEXTS } from "@craque/content";
 import { CLUBS } from "@craque/world";
 import { Vibrate } from "lucide-react";
 import { useState } from "react";
@@ -20,9 +20,9 @@ interface SectionProps {
   index: number;
 }
 
-type ResultSample = "success" | "failure" | "done" | "move" | "stay" | "focus";
+type ResultSample = "success" | "failure" | "draw" | "short" | "done" | "move" | "stay" | "focus";
 
-const RESULT_SAMPLES: readonly ResultSample[] = ["success", "failure", "done", "move", "stay", "focus"];
+const RESULT_SAMPLES: readonly ResultSample[] = ["success", "failure", "draw", "short", "done", "move", "stay", "focus"];
 
 /** Um clube de verdade para as amostras: o primeiro da primeira divisão brasileira. */
 const SAMPLE_CLUB = CLUBS.find((club) => club.country === "BRA" && club.division === 1)?.id ?? CLUBS[0]?.id ?? "";
@@ -58,6 +58,27 @@ export function OverlaysSection({ index }: SectionProps) {
         body: events.personalCoach.options.hire.failure,
         club: null,
         chips: [{ key: "role", text: c("effect.roleDown"), tone: "bad" }],
+      },
+      // O lance certo que não venceu (D91): empate segurado e queda nos pênaltis.
+      draw: {
+        id,
+        mark: "draw",
+        tone: "draw",
+        eyebrow: dramaText(locale).heldDraw,
+        title: `${dramaText(locale).fullTime}: 1 × 1 · ${dramaText(locale).draw}`,
+        body: null,
+        club: null,
+        chips: [{ key: "fans", text: `${dramaText(locale).fans} 0`, tone: "neutral" }],
+      },
+      short: {
+        id,
+        mark: "short",
+        tone: "short",
+        eyebrow: dramaText(locale).shortfall,
+        title: `${dramaText(locale).fullTime}: 1 × 1 (${dramaText(locale).penalties} 4 × 5) · ${dramaText(locale).eliminated}`,
+        body: null,
+        club: null,
+        chips: [{ key: "fans", text: `${dramaText(locale).fans} 0`, tone: "neutral" }],
       },
       done: {
         id,
@@ -101,7 +122,7 @@ export function OverlaysSection({ index }: SectionProps) {
       },
     };
     setResult(views[sample]);
-    feedback(sample === "failure" ? "back" : sample === "move" ? "whistle" : "reveal");
+    feedback(sample === "failure" || sample === "short" ? "back" : sample === "move" ? "whistle" : "reveal");
   };
 
   const openSheet = () => {

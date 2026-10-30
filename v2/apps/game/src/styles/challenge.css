@@ -422,6 +422,41 @@
     color: var(--canvas);
   }
 
+  /* D94: cada conquista com a cor da raridade; a lendária liberada brilha. */
+  .achievement[data-rarity] {
+    position: relative;
+    border-left: 4px solid color-mix(in oklab, var(--rarity) 70%, var(--line));
+  }
+  .achievement[data-unlocked][data-rarity] {
+    border-color: color-mix(in oklab, var(--rarity) 45%, var(--line));
+    border-left-color: var(--rarity);
+    background: linear-gradient(135deg, color-mix(in oklab, var(--rarity) 12%, var(--panel)), var(--panel) 60%);
+  }
+  .achievement[data-unlocked][data-rarity] .achievement-mark {
+    background: var(--rarity);
+  }
+  .achievement[data-unlocked][data-rarity="common"] .achievement-mark {
+    background: var(--fg);
+  }
+  .achievement[data-unlocked][data-rarity="legendary"] {
+    box-shadow: 0 0 0 1px color-mix(in oklab, var(--glory) 40%, transparent), 0 10px 26px -14px color-mix(in oklab, var(--glory) 70%, transparent);
+  }
+  .achievement[data-unlocked][data-rarity="epic"] {
+    box-shadow: 0 10px 24px -16px color-mix(in oklab, var(--epic) 70%, transparent);
+  }
+  .achievement-rarity {
+    display: inline-block;
+    margin-top: 6px;
+    padding: 1px 6px;
+    border: 1px solid color-mix(in oklab, var(--rarity) 55%, transparent);
+    border-radius: 3px;
+    color: color-mix(in oklab, var(--rarity) 85%, var(--fg));
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
   .achievement:not([data-unlocked]) .achievement-name {
     color: var(--muted);
   }
@@ -456,11 +491,12 @@
 
 @layer components {
   /* A escolha da original, na decisão onde a linha alternativa se separou:
-     uma etiqueta no canto, sem mudar a altura da linha. */
+     uma etiqueta no canto, sem mudar a altura da linha. D106: dentro da
+     borda; acima dela o recorte da lista de opções comia metade do texto. */
   .option[data-original]::after {
     content: attr(data-original);
     position: absolute;
-    top: -7px;
+    top: 5px;
     right: 10px;
     padding: 1px 6px;
     border-radius: 3px;
@@ -502,4 +538,30 @@
       padding-bottom: 2px;
     }
   }
+}
+
+/* D94: o recorde do dia, com a cor da faixa e a borda dourada quando igualado ou superado. */
+.challenge-record { display: grid; gap: 4px; padding: 10px 12px; border: 1px solid color-mix(in oklab, var(--rarity) 50%, var(--line)); border-left: 4px solid var(--rarity); border-radius: var(--radius-sm); background: linear-gradient(135deg, color-mix(in oklab, var(--rarity) 12%, var(--panel)), var(--panel) 65%); }
+.challenge-record[data-status="matched"], .challenge-record[data-status="beaten"] { border-color: var(--glory); border-left-color: var(--glory); }
+.challenge-record-head { display: flex; align-items: center; gap: 6px; color: color-mix(in oklab, var(--rarity) 85%, var(--fg)); }
+.challenge-record-label { flex: 1; font-size: 11px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+.challenge-record-points { font-weight: 800; color: var(--fg); }
+.challenge-record-name { font-family: var(--font-display); font-size: 1.15rem; font-weight: 800; line-height: 1.1; text-transform: uppercase; }
+.challenge-record-holder { font-size: 12px; color: var(--muted); }
+.challenge-record-compact { gap: 2px; padding: 7px 9px; }
+.challenge-record-compact .challenge-record-name { font-size: .95rem; }
+
+/* D96: a entrada do desafio com menos texto. Relógio em selo, regras fixas em
+   selos curtos, a mão com a bandeira grande e o jogador compacto. */
+@layer components {
+  .ch-clock { display: inline-flex; align-items: center; gap: 7px; padding: 7px 12px; border: 1px solid color-mix(in srgb, var(--glory) 45%, var(--line)); border-radius: 999px; background: color-mix(in srgb, var(--glory) 10%, var(--panel)); font-size: 13px; font-weight: 700; color: var(--fg); }
+  .ch-clock svg { color: var(--glory); }
+  .ch-hand { border-top: 3px solid var(--glory); }
+  .ch-hand-top { display: flex; align-items: center; gap: 14px; }
+  .ch-hand-top img, .ch-hand-top svg { border-radius: 4px; box-shadow: 0 0 0 1px var(--line); }
+  .ch-rules { display: flex; flex-wrap: wrap; gap: 6px; margin: 14px 0 0; padding: 0; list-style: none; }
+  .ch-rules li { padding: 4px 9px; border: 1px solid var(--line); border-radius: 999px; background: var(--panel-2); font-size: 12px; font-weight: 600; color: var(--muted); }
+  .ch-rules li:first-child { border-color: color-mix(in srgb, var(--bad) 45%, var(--line)); color: var(--bad); }
+  .ch-you-face { display: flex; align-items: center; gap: 14px; }
+  .ch-play { gap: 10px; }
 }

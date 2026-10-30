@@ -2,8 +2,6 @@ import { autoplay, type Career, type CareerSetup, createCareer, POSITIONS, REAL_
 import { describe, expect, it } from "vitest";
 import {
   ACHIEVEMENTS,
-  bioFacts,
-  biography,
   CAREER_TEXTS,
   careerHeadlines,
   describeEffect,
@@ -14,7 +12,7 @@ import {
 } from "../src";
 
 /**
- * Os textos da revisão do M8 (D42 e D43): biografia sem contradição, lesão sem
+ * Os textos da revisão do M8 (D42 e D43; a biografia saiu na D99): lesão sem
  * jogos fora, artilharia e craque com o nome da competição, rótulos da volta
  * de empréstimo e números redondos.
  */
@@ -32,42 +30,6 @@ function setupOf(seed: string, position = POSITIONS[seed.length % POSITIONS.leng
 const careers: Career[] = Array.from({ length: 50 }, (_, index) =>
   autoplay(createCareer(setupOf(`revisao-texto-${index}`)), index % 2 === 0 ? "balanced" : "ambitious"),
 );
-
-describe("biografia coerente (D42)", () => {
-  it("titular aos 18 nunca convive com 'precisou sair para jogar' na mesma idade", () => {
-    for (const career of careers) {
-      const facts = bioFacts(career);
-      const { themes } = biography("pt", career);
-      if (facts.earlyStarter && facts.earlyLoan) expect(facts.earlyStarter.age).not.toBe(facts.earlyLoan.age);
-      // Emprestado e titular no empréstimo: uma frase só (loanStarter), nunca as duas.
-      expect(themes.includes("startOnLoan") && themes.includes("loanStarter")).toBe(false);
-      // O titular precoce é do clube dono do passe.
-      if (facts.earlyStarter) {
-        const season = career.history.find((record) => record.age === facts.earlyStarter?.age && record.club === facts.earlyStarter.club);
-        expect(season?.loan).toBe(false);
-      }
-    }
-  });
-
-  it("nenhuma frase fala do rival pessoal, de jogos fora por lesão ou de 'volta à elite'", () => {
-    for (const career of careers) {
-      for (const locale of ["pt", "es", "en"] as const) {
-        const text = biography(locale, career).chapters.flatMap((chapter) => chapter.lines).join(" ");
-        expect(text).not.toMatch(/\{|\}/);
-        expect(text.toLowerCase()).not.toMatch(/volta à elite|de volta à elite|vuelve a la élite|back in the top flight/);
-        expect(text).not.toMatch(/jogos fora|partidos afuera|games missed/);
-      }
-    }
-  });
-
-  it("artilharia e craque de competição aparecem na biografia quando houve", () => {
-    const withCrown = careers.find((career) => career.history.some((record) => record.awards.crowns.length > 0));
-    expect(withCrown).toBeDefined();
-    if (!withCrown) return;
-    const facts = bioFacts(withCrown);
-    expect(facts.topScorer.length + facts.bestPlayer.length).toBeGreaterThan(0);
-  });
-});
 
 describe("manchetes e capas (D42)", () => {
   it("lesão sem jogos fora; artilharia e craque com o nome da competição", () => {

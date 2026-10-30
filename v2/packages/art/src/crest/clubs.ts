@@ -599,6 +599,79 @@ export const CLUB_CRESTS: Record<string, CrestSpec> = {
   "san-telmo": c("#104185", W, "stripes", "drum", { n: 7, ink: W }),
   temperley: c("#00bcea", W, "solid", "flame", { ink: W }),
   "tristan-suarez": c("#1e1f41", "#ffd100", "stripes", "plane", { n: 7, ink: W }),
+  // ---------------------------------------------------------------- Portugal (D108)
+  // The Dragons, in blue and white stripes.
+  "fc-porto": c("#003F87", "#ffffff", "stripes", "dragon", { n: 5, ink: "#ffffff" }),
+  // The rampant lion, green and white hoops.
+  "sporting-cp": c("#00804A", "#ffffff", "hoops", "lionRampant", { n: 5, ink: "#ffffff" }),
+  // The eagle over the red.
+  benfica: c("#E30613", "#ffffff", "solid", "eagle", { ink: "#ffffff" }),
+  // The Arsenal do Minho, a cannon.
+  "sc-braga": c("#D7141A", "#ffffff", "band", "cannon", { ink: "#ffffff" }),
+  // Guimarães castle, the birthplace of the nation.
+  "vitoria-sc": c("#ffffff", "#1A1A1A", "solid", "castle", { ink: "#1A1A1A" }),
+  // The textile town.
+  famalicao: c("#123C8C", "#ffffff", "halves", "gear", { ink: "#ffffff" }),
+  // The mountains of the Arouca geopark.
+  arouca: c("#F2C400", "#1B3A8C", "band", "mountain", { ink: "#1B3A8C" }),
+  // The Canarinhos.
+  "estoril-praia": c("#FFD200", "#1B3A8C", "bandV", "songbird", { ink: "#1B3A8C" }),
+  // The Geese.
+  "casa-pia": c("#111111", "#ffffff", "solid", "swan", { ink: "#ffffff" }),
+  // The Barcelos rooster.
+  "gil-vicente": c("#C8102E", "#1F3F8F", "band", "rooster", { ink: "#ffffff" }),
+  // The ship of Vila do Conde.
+  "rio-ave": c("#00843D", "#ffffff", "stripes", "ship", { n: 5, ink: "#ffffff" }),
+  // The tricolour star.
+  "estrela-amadora": c("#D50032", "#00843D", "tricolor", "star", { third: "#ffffff", ink: "#ffffff" }),
+  // The volcanic Azores.
+  "santa-clara": c("#D0021B", "#ffffff", "solid", "volcano", { ink: "#ffffff" }),
+  // The air base and the Air Museum.
+  alverca: c("#0057A8", "#ffffff", "diagonal", "plane", { ink: "#ffffff" }),
+  // The Madeira sea in black and white.
+  "nacional-madeira": c("#000000", "#ffffff", "stripes", "wave", { n: 5, ink: "#ffffff" }),
+  // The Cónegos, the canons of the parish.
+  moreirense: c("#00843D", "#ffffff", "solid", "bell", { ink: "#ffffff" }),
+  // Green and red stripes, the anchor of the name.
+  maritimo: c("#CE1126", "#00843D", "stripes", "anchor", { n: 5, ink: "#ffffff" }),
+  // The Dão wine.
+  "academico-de-viseu": c("#1A1A1A", "#ffffff", "band", "grapes", { ink: "#ffffff" }),
+  // The birds in the name (Aves).
+  avs: c("#D71920", "#ffffff", "solid", "birdFlight", { ink: "#ffffff" }),
+  // The Auriverdes under the Caramulo.
+  tondela: c("#00924A", "#FFD100", "halves", "mountain", { ink: "#ffffff" }),
+  // Trajan's Roman bridge.
+  chaves: c("#0B3D91", "#C8102E", "stripes", "bridge", { n: 5, ink: "#ffffff" }),
+  // The Roman baths.
+  vizela: c("#0055A4", "#ffffff", "band", "column", { ink: "#ffffff" }),
+  // The Portimão sardine.
+  portimonense: c("#111111", "#ffffff", "stripes", "fish", { n: 5, ink: "#ffffff" }),
+  // The furniture capital.
+  "pacos-de-ferreira": c("#F7D117", "#00843D", "halves", "hammers", { ink: "#00843D" }),
+  // The Faro lighthouse.
+  farense: c("#ffffff", "#111111", "band", "lighthouse", { ink: "#111111" }),
+  // The towers of Torres Vedras.
+  torreense: c("#0057B8", "#ffffff", "solid", "tower", { ink: "#ffffff" }),
+  // The port of Leixões.
+  leixoes: c("#D71920", "#ffffff", "stripes", "anchor", { n: 5, ink: "#ffffff" }),
+  // The castle of Santa Maria da Feira.
+  feirense: c("#0047AB", "#ffffff", "solid", "castle", { ink: "#ffffff" }),
+  // The red and black.
+  penafiel: c("#C8102E", "#111111", "halves", "keys", { ink: "#ffffff" }),
+  // Yellow and black.
+  oliveirense: c("#F6C700", "#111111", "hoops", "bee", { n: 4, ink: "#111111" }),
+  // The Leiria pine forest.
+  "uniao-de-leiria": c("#D71920", "#ffffff", "solid", "pine", { ink: "#ffffff" }),
+  // Red with the blue sash.
+  felgueiras: c("#C8102E", "#1B3A8C", "sash", "markV", { ink: "#ffffff" }),
+  // The Lusitanians.
+  "lusitania-lourosa": c("#1D5A2E", "#ffffff", "band", "laurel", { ink: "#ffffff" }),
+  // The Cross of the Order of Christ of Belém.
+  belenenses: c("#004B9B", "#ffffff", "solid", "crossHeraldic", { ink: "#ffffff" }),
+  // The University of Coimbra.
+  academica: c("#111111", "#ffffff", "solid", "book", { ink: "#ffffff" }),
+  // The Sea Wolves.
+  varzim: c("#D71920", "#ffffff", "hoops", "wolf", { n: 5, ink: "#ffffff" }),
 };
 
 export type ClubCrestId = keyof typeof CLUB_CRESTS;

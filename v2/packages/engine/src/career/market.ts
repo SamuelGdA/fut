@@ -37,6 +37,27 @@ export const MARKET = {
   veteranPerYear: 1.8,
   /** Passo acima: força pelo menos isto maior que a do clube atual. */
   stepUp: 2,
+  /**
+   * Variedade (D89): quem fez proposta nas últimas janelas pesa isto no sorteio
+   * do clube, contra 1 de quem não fez. Os gigantes continuam aparecendo mais
+   * para quem é craque, só não toda vez.
+   */
+  recentWeight: 0.15,
+  /** Quantos clubes de propostas recentes a carreira lembra (cerca de três janelas). */
+  recentMemory: 9,
+  /**
+   * No topo há poucos clubes na faixa: a partir deste nível, a faixa desce até
+   * `eliteBelow` em vez de `below`, para os grandes logo abaixo da elite também
+   * aparecerem (D89).
+   */
+  eliteFrom: 88,
+  eliteBelow: 9,
+  /**
+   * Acima do clube mais forte do mundo, o nível não acha mais ninguém na faixa:
+   * para o craque de elite, a faixa sempre alcança os clubes até esta distância
+   * do mais forte (D90). Sem isso, só dois ou três gigantes faziam propostas.
+   */
+  eliteSpan: 7,
 } as const;
 
 export const LOAN = { minAge: 18, maxAge: 23, maxPerCareer: 2, below: 6, above: 1, sameCountry: 0.75 } as const;
@@ -116,6 +137,8 @@ export interface MarketContext {
   readonly proving: boolean;
   /** O número que cada clube daria a ele, pelo papel com que chega (GDD 19). */
   readonly shirt: (club: string, role: SquadRole) => number;
+  /** Clubes que fizeram proposta há pouco: pesam menos no sorteio (D89). */
+  readonly recent?: readonly string[];
 }
 
 /** Clubes interessados: força na faixa do nível, fora o atual e os bloqueados. */
@@ -136,9 +159,11 @@ export function interestedClubs(context: MarketContext, below: number = MARKET.b
 /** Os interessados, com a faixa alargada se não houver clubes para `count` ofertas. */
 export function widenedClubs(context: MarketContext, count: number): number[] {
   const steps = context.age <= WIDEN.youngUntil ? WIDEN.young : WIDEN.adult;
+  const top = Math.max(...context.world.strength);
+  const elite = context.level >= MARKET.eliteFrom ? Math.max(MARKET.eliteBelow - MARKET.below, context.level - (top - MARKET.eliteSpan) - MARKET.below) : 0;
   let pool: number[] = [];
   for (const [below, above] of steps) {
-    pool = interestedClubs(context, below, above);
+    pool = interestedClubs(context, below + elite, above);
     if (pool.length >= count) return pool;
   }
   return pool;
@@ -181,7 +206,9 @@ function pickByRegion(rng: Rng, context: MarketContext, pool: readonly number[])
     [2, regions[2].length > 0 ? adjusted[2] : 0],
   ] as const);
   const list = regions[region] ?? [];
-  return list.length > 0 ? rng.pick(list) : null;
+  if (list.length === 0) return null;
+  const recent = new Set(context.recent ?? []);
+  return rng.weighted(list.map((index) => [index, recent.has(CLUBS[index]?.id ?? "") ? MARKET.recentWeight : 1] as const));
 }
 
 /** O cartão da oferta (GDD 15.3). */

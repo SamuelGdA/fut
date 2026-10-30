@@ -29,8 +29,8 @@ const HEX = /^#[0-9a-fA-F]{6}$/;
 const DASH = /[–—]/;
 
 describe("escala do mundo (GDD 7.1)", () => {
-  it("211 países, 17 com liga, 32 ligas, 489 clubes", () => {
-    expect(WORLD_SIZE).toEqual({ countries: 211, playableCountries: 17, leagues: 32, clubs: 489 });
+  it("211 países, 18 com liga, 34 ligas, 525 clubes (D108: Portugal)", () => {
+    expect(WORLD_SIZE).toEqual({ countries: 211, playableCountries: 18, leagues: 34, clubs: 525 });
   });
 
   it("México e Estados Unidos só têm a primeira divisão", () => {
@@ -184,10 +184,23 @@ describe("competições e prêmios", () => {
     }
   });
 
-  it("toda liga tem a sua competição; todo país jogável tem copa, menos o México", () => {
+  it("toda liga tem a sua competição; todo país jogável tem copa, menos o México e o Peru", () => {
     for (const league of LEAGUES) expect(getCompetition(`league:${league.id}`)).not.toBeNull();
     for (const country of PLAYABLE_COUNTRIES) {
-      expect(getCompetition(`cup:${country}`) === null).toBe(country === "MEX");
+      // D108: a Copa Bicentenario acabou; o Peru fica sem copa nacional, como o México.
+      expect(getCompetition(`cup:${country}`) === null).toBe(country === "MEX" || country === "PER");
+    }
+  });
+
+  it("D108: Portugal com liga, copa, Taça da Liga e Supertaça; a Liga das Nações da UEFA com troféu", () => {
+    expect(getCompetition("league:primeira-liga")?.kind).toBe("league");
+    expect(getCompetition("league:liga-portugal-2")?.kind).toBe("second");
+    expect(getCompetition("cup:POR")?.names.pt).toBe("Taça de Portugal");
+    expect(getCompetition("leaguecup:POR")?.names.pt).toBe("Taça da Liga");
+    expect(getCompetition("super:POR")?.names.pt).toBe("Supertaça Cândido de Oliveira");
+    expect(getCompetition("nationsleague:UEFA")?.kind).toBe("nationsLeague");
+    for (const id of ["league:primeira-liga", "league:liga-portugal-2", "cup:POR", "leaguecup:POR", "super:POR", "nationsleague:UEFA", "intercontinental", "contsuper:UEFA", "cont3:UEFA"]) {
+      expect(getCompetition(id)?.trophy, id).toMatch(/\.webp$/);
     }
   });
 

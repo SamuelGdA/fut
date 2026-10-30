@@ -35,6 +35,7 @@ export function SettingsPanel() {
   const motion = usePrefs((state) => state.motion);
   const mobile = useMediaQuery("(pointer: coarse)");
   const haptics = usePrefs((state) => state.haptics);
+  const autoAdvance = usePrefs((state) => state.autoAdvance);
   const actions = usePrefs.getState();
 
   const vibration = canVibrate();
@@ -133,9 +134,19 @@ export function SettingsPanel() {
       <div className="border-t border-line pt-2">
         <Switch
           label={t("settings.motion")}
-          description={t("settings.motionHint")}
           checked={motion === "full"}
           onCheckedChange={(next) => actions.setMotion(next ? "full" : "reduced")}
+        />
+      </div>
+
+      <div className="border-t border-line pt-2">
+        <Switch
+          label={t("settings.autoAdvance")}
+          checked={autoAdvance}
+          onCheckedChange={(next) => {
+            actions.setAutoAdvance(next);
+            feedback("tick");
+          }}
         />
       </div>
 

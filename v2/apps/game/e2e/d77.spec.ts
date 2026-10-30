@@ -3,7 +3,7 @@ import { readFile } from "node:fs/promises";
 import { deflateRawSync } from "node:zlib";
 import { abrir, abrirMomento, esperarQueCaiba } from "./apoio";
 
-const metadata = JSON.parse(await readFile(new URL("./fixtures/momentos-m23.json", import.meta.url), "utf8")) as { moments: Record<string, { file: string; index: number }> };
+const metadata = JSON.parse(await readFile(new URL("./fixtures/momentos-m41.json", import.meta.url), "utf8")) as { moments: Record<string, { file: string; index: number }> };
 interface UiFrame { t: number; opacity: number; resultY: number; digitY: number; incoming: number; outgoing: number; changed: boolean; width: number }
 for (const theme of ["light", "dark"] as const) test(`D77: espaço, aviso imediato, resultado e dígitos animados, arrasto automático, ${theme}`, async ({ page }, info) => {
   await page.setViewportSize(info.project.name === "celular" ? { width: 360, height: 640 } : { width: 1280, height: 720 });
@@ -37,7 +37,7 @@ for (const theme of ["light", "dark"] as const) test(`D77: espaço, aviso imedia
         const incoming = document.querySelector(".season-decision-slide[data-active]"), outgoing = document.querySelector(".season-decision-slide[aria-hidden='true']");
         const shift = (node: Element | null, axis: "m41" | "m42") => node && getComputedStyle(node).transform !== "none" ? new DOMMatrixReadOnly(getComputedStyle(node).transform)[axis] : 0;
         frames.push({ t: performance.now() - start, opacity: result ? +getComputedStyle(result).opacity : 1, resultY: shift(result, "m42"), digitY: shift(digits, "m42"), incoming: shift(incoming, "m41"), outgoing: shift(outgoing, "m41"), changed: Boolean(outgoing), width: incoming?.getBoundingClientRect().width ?? 0 });
-        if (performance.now() - start < 3500) requestAnimationFrame(sample); else resolve(frames);
+        if (performance.now() - start < 4500) requestAnimationFrame(sample); else resolve(frames);
       };
       requestAnimationFrame(sample);
     });
@@ -54,14 +54,14 @@ for (const theme of ["light", "dark"] as const) test(`D77: espaço, aviso imedia
   expect(samples.some(frame => frame.digitY > 2)).toBe(true);
   expect(samples.some(frame => frame.incoming > frame.width * .4 && frame.outgoing < -1)).toBe(true);
   const begins = samples.find(frame => frame.changed)!;
-  expect(begins).toBeDefined(); expect(begins.t).toBeGreaterThan(1700); expect(begins.t).toBeLessThan(2400);
+  expect(begins).toBeDefined(); expect(begins.t).toBeGreaterThan(2600); expect(begins.t).toBeLessThan(3300); // D106: 3 s de leitura
   await expect(page.locator(".season-decision-slide")).toHaveCount(1);
   await esperarQueCaiba(page);
 });
 
 test("D77: jornal aberto folheia a temporada inteira e volta por teclado", async ({ page }, info) => {
   if (info.project.name === "celular") await page.setViewportSize({ width: 360, height: 640 });
-  const raw = await readFile(new URL("./fixtures/colecao-m23.json", import.meta.url));
+  const raw = await readFile(new URL("./fixtures/colecao-m41.json", import.meta.url));
   await abrir(page, { theme: "light" }, `/#c=z${deflateRawSync(raw).toString("base64url")}`);
   await page.getByRole("link", { name: "Jornal", exact: true }).click();
   const book = page.locator(".paper-stage"), spread = book.locator(".paper-spread");

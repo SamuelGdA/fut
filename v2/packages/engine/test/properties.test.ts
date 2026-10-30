@@ -87,11 +87,11 @@ describe("invariantes da evolução em carreiras sorteadas", () => {
     );
   });
 
-  it("toda carreira vai dos 16 aos 39 e termina (invariante 7)", () => {
+  it("toda carreira vai dos 16 aos 40 e termina (invariante 7; D109: até 2050)", () => {
     fc.assert(
       fc.property(careerInput, (input) => {
         const run = runDevelopment(input);
-        return run.seasons.length === 24 && run.seasons[0]?.age === 16 && run.seasons[23]?.age === 39;
+        return run.seasons.length === 25 && run.seasons[0]?.age === 16 && run.seasons[24]?.age === 40;
       }),
       { ...settings, numRuns: 60 },
     );

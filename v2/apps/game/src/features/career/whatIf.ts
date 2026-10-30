@@ -62,7 +62,8 @@ export interface DecisionPoint {
 export function principalDecisionPoints(points: readonly DecisionPoint[]): DecisionPoint[] {
   const seen = new Set<number>();
   return points.filter((point) => {
-    if (["match", "promise", "veteran"].includes(point.kind) || seen.has(point.year)) return false;
+    // Promessa e reinvenção são decisões principais desde a D89; só as partidas são etapas do ano.
+    if (point.kind === "match" || seen.has(point.year)) return false;
     seen.add(point.year);
     return true;
   });

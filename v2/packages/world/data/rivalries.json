@@ -338,5 +338,29 @@
   [
     "new-york-rb",
     "new-york-city-fc"
+  ],
+  [
+    "benfica",
+    "sporting-cp"
+  ],
+  [
+    "benfica",
+    "fc-porto"
+  ],
+  [
+    "fc-porto",
+    "sporting-cp"
+  ],
+  [
+    "sc-braga",
+    "vitoria-sc"
+  ],
+  [
+    "maritimo",
+    "nacional-madeira"
+  ],
+  [
+    "belenenses",
+    "benfica"
   ]
 ]

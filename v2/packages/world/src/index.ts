@@ -16,6 +16,7 @@ export {
   CLUBS,
   clubsOf,
   COUNTRIES,
+  WORLD_CUP_TITLES,
   getClub,
   getClubKit,
   getCountry,

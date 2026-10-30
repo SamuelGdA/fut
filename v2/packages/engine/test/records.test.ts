@@ -10,6 +10,7 @@ import {
   keepChance,
   leagueTail,
   PRESSURE,
+  REAL_MARKS,
   type RecordTally,
   recordTally,
   thinUnits,
@@ -90,8 +91,10 @@ describe("a produção perto do recorde", () => {
       thinned += result.goals;
     }
     expect(raw / 200).toBeGreaterThan(80);
-    // Bem perto da marca, nunca dezenas acima dela.
-    expect(thinned / 200).toBeLessThan(76);
+    // Bem perto da marca real (73), nunca dezenas acima dela. A cauda começa um
+    // gol antes da marca (D100); com o centroavante mais forte (D101), a temporada
+    // absurda fica até dez gols acima.
+    expect(thinned / 200).toBeLessThan(REAL_MARKS.seasonGoals + 10);
     expect(thinned / 200).toBeGreaterThan(PRESSURE.seasonGoals.start);
   });
 
@@ -160,17 +163,31 @@ describe("títulos e prêmios perto do recorde", () => {
 
   it("a sequência de ligas e a de continentais também pesam", () => {
     expect(titleKeepChance(tally({ leagueStreak: 10 }), "league:laliga")).toBeLessThan(titleKeepChance(tally({ leagueStreak: 8 }), "league:laliga"));
-    expect(titleKeepChance(tally({ continentalStreak: 4 }), "cont1:UEFA")).toBeLessThan(1);
+    expect(titleKeepChance(tally({ continentalStreak: 5 }), "cont1:UEFA")).toBeLessThan(1); // D93: a cauda da sequência começa no 5º
   });
 
-  it("Bola de Ouro e Chuteira de Ouro: livres no começo, cada vez mais difíceis depois", () => {
+  it("Bola de Ouro e Chuteira de Ouro: livres no começo, cada vez mais difíceis até a marca", () => {
     expect(ballonKeepChance(0, 0)).toBe(1);
-    expect(ballonKeepChance(4, 0)).toBeLessThan(1);
+    expect(ballonKeepChance(5, 0)).toBe(1); // D94: a cauda começa na 7ª, calibrada para a faixa lendária
+    expect(ballonKeepChance(6, 0)).toBeLessThan(1);
     expect(ballonKeepChance(7, 0)).toBeLessThan(ballonKeepChance(6, 0));
     expect(ballonKeepChance(2, 3)).toBeLessThan(ballonKeepChance(2, 2));
     expect(goldenShoeKeepChance(2)).toBe(1);
-    expect(goldenShoeKeepChance(6)).toBeLessThan(goldenShoeKeepChance(5));
+    expect(goldenShoeKeepChance(5)).toBeLessThan(goldenShoeKeepChance(4));
     expect(goldenShoeKeepChance(20)).toBeGreaterThan(0);
+  });
+
+  it("D103: na marca real a pressão para de crescer: superar custa o mesmo que alcançar", () => {
+    // 9ª Bola de Ouro (com 8) custa o mesmo que a 8ª (com 7).
+    expect(ballonKeepChance(8, 0)).toBe(ballonKeepChance(7, 0));
+    expect(ballonKeepChance(12, 0)).toBe(ballonKeepChance(7, 0));
+    // 5ª seguida custa o mesmo que a 4ª.
+    expect(ballonKeepChance(2, 4)).toBe(ballonKeepChance(2, 3));
+    // 7ª Chuteira de Ouro custa o mesmo que a 6ª.
+    expect(goldenShoeKeepChance(6)).toBe(goldenShoeKeepChance(5));
+    expect(goldenShoeKeepChance(5)).toBeGreaterThan(0.5);
+    // Sem `mark`, a cauda continua crescendo depois da marca.
+    expect(keepChance(3, 2.5)).toBeLessThan(keepChance(2, 2.5));
   });
 });
 

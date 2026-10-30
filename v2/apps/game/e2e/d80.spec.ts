@@ -7,11 +7,11 @@ for (const scenario of [{ scene: "bicycle", title: "De costas para o gol", posit
   await entrarNoCraque(page); await jogoRapido(page);
   await page.getByRole("button", { name: "Controles de teste", exact: true }).click();
   const debug = page.getByRole("dialog", { name: "Controles de teste" });
-  await expect(debug.getByLabel("Forçar decisão").locator("option")).toHaveCount(102);
+  await expect(debug.getByLabel("Forçar decisão").locator("option")).toHaveCount(103);
   await debug.getByLabel("Forçar decisão").selectOption(`match:${scenario.scene}`);
   await debug.getByLabel("Posição", { exact: true }).selectOption(scenario.position);
   await debug.getByRole("button", { name: "Aplicar cenário", exact: true }).click();
-  await expect(page.locator(".decision-title")).toContainText(scenario.title);
+  await expect(page.locator(".drama-kicker")).toContainText(scenario.title); // D106: o nome da cena fica acima do título do momento
   await expect(page.locator(OPCOES)).toHaveCount(3);
   if (scenario.scene === "keeperCorner") { await expect(page.locator(".match-minute")).toContainText("94"); await expect(page.locator(".led-score")).toHaveAttribute("aria-label", "1 : 2"); }
   await esperarQueCaiba(page); await auditar(page, `D80 ${scenario.scene}`);
@@ -28,7 +28,7 @@ test("D80: laboratório resolve reação como empate e pênalti conserva subtext
   await page.getByRole("tab", { name: "Design", exact: true }).click();
   const lab = page.locator(".match-lab");
   await lab.getByRole("button", { name: /O pênalti decisivo ·/ }).click();
-  await expect(lab.locator(".drama-hint")).toHaveText(["Mais protagonismo", "Sem bônus individual."]);
+  await expect(lab.locator(".drama-hint")).toHaveText(["Mais protagonismo.", "Sem bônus individual."]); // D91: sem o custo do erro na opção
   await lab.getByRole("button", { name: /Entre as linhas ·/ }).click();
   expect(await lab.locator(".match-scoreboard b").evaluateAll(nodes => nodes.every(node => node.getBoundingClientRect().height <= parseFloat(getComputedStyle(node).lineHeight) + 1)), "Flamengo e Palmeiras devem caber sem quebrar o nome no meio").toBe(true);
   await expect(lab.locator(".led-score")).toHaveAttribute("aria-label", "0 : 1");

@@ -98,6 +98,9 @@ export function groupsFormat(groupSlots: number): KnockoutFormat {
 
 export const WORLD_CUP_FORMAT: KnockoutFormat = { kind: "groups32", groupSlots: 48 };
 
+/** D108: Liga A da Liga das Nações: fase de liga, quartas em ida e volta e a fase final de quatro. */
+export const NATIONS_LEAGUE_FORMAT: KnockoutFormat = { kind: "nationsLeague", groupSlots: 16 };
+
 /**
  * A fase alcançada por quem terminou em `position` (0 é o campeão). A ordem
  * final de um torneio é a ordem das notas, e a fase sai dela (GDD 8.5).
@@ -108,6 +111,7 @@ export function stageAt(position: number, format: KnockoutFormat): Stage {
   if (rank === 2) return "final";
   if (rank <= 4) return "semi";
   if (rank <= 8) return "quarter";
+  if (format.kind === "nationsLeague") return "groups";
   if (rank <= 16) return "roundOf16";
   if (format.kind === "knockout") return rank <= 32 ? "roundOf32" : "early";
   if (format.kind === "groups32") return rank <= 32 ? "roundOf32" : "groups";

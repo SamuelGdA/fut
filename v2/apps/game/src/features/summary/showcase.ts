@@ -11,7 +11,7 @@ export type ShowcaseItem =
   | { readonly kind: "title"; readonly id: string; readonly count: number; readonly years: readonly number[] }
   | { readonly kind: "award"; readonly id: AwardKey; readonly competition?: string; readonly count: number; readonly years: readonly number[] };
 
-/** Coleção inteira pela importância da conquista, independentemente da quantidade. */
+/** Coleção inteira: Bola de Ouro e Chuteira de Ouro, troféus e depois os outros prêmios, pela importância, independentemente da quantidade. */
 export function showcaseItems(history: readonly SeasonRecord[]): ShowcaseItem[] {
   const grouped = honours(history);
   const yearsOf = (matches: (record: SeasonRecord) => boolean) =>
@@ -40,6 +40,8 @@ export function showcaseItems(history: readonly SeasonRecord[]): ShowcaseItem[] 
       const years = history.filter((record) => record.awards.crowns.some((crown) => crown.award === id && crown.competition === competition)).map((record) => record.year);
       return { kind: "award", id, competition, count: years.length, years };
     }),
+  // Troféus primeiro, prêmios depois (D91); só a Bola de Ouro e a Chuteira de
+  // Ouro abrem a vitrine, antes das taças (D101). A ordem mora em `compareHonours`.
   ].sort(compareHonours);
 }
 

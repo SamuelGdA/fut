@@ -27,7 +27,7 @@ test("carreira hipotética e conquistas sem Hall", async ({ page }) => {
   await page.getByRole("tab", { name: "Títulos", exact: true }).click();
   await expect(page.locator(".achievement").filter({ hasText: "Brasileirão" }).first()).toBeVisible();
   await page.getByRole("tab", { name: "Recordes", exact: true }).click();
-  await expect(page.locator(".achievement")).toHaveCount(18);
+  await expect(page.locator(".achievement")).toHaveCount(22); // D105: 22 recordes reais (Jogos de Champions League)
   await page.getByRole("tab", { name: "Secretas", exact: true }).click();
   await expect(page.locator(".achievement")).toHaveCount(4);
   await expect(page.locator(".achievement").filter({ hasText: "Conquista secreta" }).first()).toBeVisible();

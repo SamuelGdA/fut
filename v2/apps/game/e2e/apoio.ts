@@ -4,7 +4,7 @@ import { deflateRawSync } from "node:zlib";
 import { readFileSync } from "node:fs";
 
 export interface FixtureStep { id:number;kind:string;year:number;age:number;option:number;history:number[];match:boolean }
-export const fixturePlans = (JSON.parse(readFileSync(new URL("./fixtures/momentos-m23.json",import.meta.url),"utf8")) as { plans:Record<string,FixtureStep[]> }).plans;
+export const fixturePlans = (JSON.parse(readFileSync(new URL("./fixtures/momentos-m41.json",import.meta.url),"utf8")) as { plans:Record<string,FixtureStep[]> }).plans;
 
 /**
  * O que toda jornada usa: abrir o jogo com preferências conhecidas, jogar um
@@ -24,6 +24,8 @@ export interface Prefs {
   pace?: "intense" | "normal";
   difficulty?: "normal" | "hard";
   motion?: "full" | "reduced";
+  /** D99: pular o resultado do lance sozinho (padrão: ligado). */
+  autoAdvance?: boolean;
 }
 
 /**
@@ -42,6 +44,7 @@ export async function abrir(page: Page, prefs: Prefs = {}, path = "/"): Promise<
     haptics: false,
     pace: prefs.pace ?? "intense",
     difficulty: prefs.difficulty ?? "normal",
+    autoAdvance: prefs.autoAdvance ?? true,
   };
   await page.addInitScript((value) => {
     if (window.sessionStorage.getItem("craque-e2e")) return;
@@ -63,9 +66,11 @@ export async function abrirMomento(page: Page, raw: Buffer, index: number, prefs
   const path: { option: number; drama: boolean; match: boolean; id: number }[] = [];
   for (let i=0; i<=index; i++) {
     const decision = plan[i]!;
-    if (!["match", "promise", "veteran"].includes(decision.kind) && !firstYears.has(decision.year)) { firstYears.add(decision.year); anchor=i; }
+    if (decision.kind !== "match" && !firstYears.has(decision.year)) { firstYears.add(decision.year); anchor=i; }
     path.push({ option: decision.option, drama: ["match", "promise", "veteran"].includes(decision.kind), match: decision.kind==="match", id: decision.id });
   }
+  // D110: a linha alternativa refaz os sorteios; aqui ela repete os da amostra.
+  await page.addInitScript(() => { (globalThis as { __CRAQUE_REROLL_SALT__?: string }).__CRAQUE_REROLL_SALT__ = ""; });
   await abrir(page,prefs,`/#c=z${deflateRawSync(raw).toString("base64url")}`);
   await page.getByRole("link", {name:"Hipotético",exact:true}).click();
   await page.locator(`.what-if-chapter li[data-choice-index='${anchor}'] button`).click();
@@ -91,10 +96,11 @@ export async function entrarNoCraque(page: Page): Promise<void> {
   await cartao(page, "craque")
     .getByRole("button", { name: /^(Jogar|Início do Craque)$/ })
     .click();
-  await expect(page.getByRole("heading", { name: "CRAQUE", level: 1 })).toBeVisible();
+  // D110: o Craque abre direto na tela de quem é você.
+  await expect(page.getByRole("heading", { name: /Quem é você/i, level: 1 })).toBeVisible();
 }
 
-/** Abre o jogo e entra no Início do Craque. */
+/** Abre o jogo e entra no Craque (a tela de quem é você). */
 export async function abrirCraque(page: Page, prefs: Prefs = {}): Promise<void> {
   await abrir(page, prefs);
   await entrarNoCraque(page);
@@ -207,7 +213,7 @@ export async function sairDaCarreira(page: Page): Promise<void> {
   await abrirMenuDaCarreira(page);
   await page.getByRole("menuitem", { name: "Voltar ao início" }).click();
   await page.locator(".dialog-popup").getByRole("button", { name: "Sair", exact: true }).click();
-  await expect(page.getByRole("heading", { name: "CRAQUE", level: 1 })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /Quem é você/i, level: 1 })).toBeVisible();
 }
 
 /**

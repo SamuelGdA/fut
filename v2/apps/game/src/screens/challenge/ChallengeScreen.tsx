@@ -20,13 +20,14 @@ import { TextField } from "../../ui/Fields";
 import { Flag } from "../../ui/Media";
 import { Panel, SectionRule } from "../../ui/Panel";
 import { Chip } from "../../ui/Signals";
-import { EdictBand, MissionLine } from "./MissionViews";
+import { EdictBand, RecordTarget, MissionLine } from "./MissionViews";
 
 /**
  * A entrada do Desafio do dia (GDD 27.6): a mão do dia (bandeira, nação,
- * posição), as duas missões abertas, a escondida tracejada com a idade de
- * abertura, o édito em vermelho, o que é livre, o aviso de ranqueada já feita,
- * o botão Jogar e o ranking do dia ao lado. Vira sozinha à meia-noite UTC.
+ * posição e as regras fixas em selos curtos), as missões, o recorde do dia
+ * quando houver, o édito, o jogador (nome, número, aparência), o botão Jogar e
+ * o ranking do dia ao lado. Vira sozinha à meia-noite UTC. Desde a D96 tem
+ * menos texto: nada de avisos repetidos nem notas de rodapé.
  */
 export function ChallengeScreen() {
   const { t, c, locale } = useT();
@@ -80,45 +81,34 @@ export function ChallengeScreen() {
     void begin();
   };
 
-  const actions = (
-    <div className="flex flex-wrap items-center gap-3">
-      <Button variant="ghost" onClick={() => go("home")}>
-        <ArrowLeft size={18} aria-hidden="true" />
-        {t("common.back")}
-      </Button>
-      <Button size="lg" className="flex-1 sm:flex-none" loading={starting} onClick={play}><Play size={18} aria-hidden="true" />{t("challenge.play")}</Button>
-    </div>
-  );
+  const rules = [t("challenge.ruleHard"), t("challenge.rulePace"), t("challenge.ruleRetire"), t("challenge.ruleBest")];
 
   return (
     <div className="ch-page">
       <div className="ch-head">
         <div className="min-w-0">
           <p className="eyebrow text-glory">{t("challenge.eyebrow")}</p>
-          <h1 className="display mt-2 text-5xl font-black uppercase sm:text-6xl lg:text-5xl">{t("challenge.title", { date })}</h1>
+          <h1 className="display mt-1 text-4xl font-black uppercase sm:text-5xl">{t("challenge.title", { date })}</h1>
         </div>
-        <div className="flex flex-col items-start gap-1 sm:items-end">
-          <p className="numeric flex items-center gap-2 text-sm font-semibold text-fg">
-            <Timer size={16} aria-hidden="true" className="text-glory" />
-            {t("challenge.nextIn", { time: formatCountdown(clock.msLeft) })}
-          </p>
-          <p className="text-2xs text-faint">{t("challenge.utcNote")}</p>
-        </div>
+        <p className="ch-clock numeric">
+          <Timer size={15} aria-hidden="true" />
+          {t("challenge.nextIn", { time: formatCountdown(clock.msLeft) })}
+        </p>
       </div>
 
       <div className="ch-grid">
-        <div className="flex min-w-0 flex-col gap-6 lg:contents">
+        <div className="flex min-w-0 flex-col gap-5 lg:contents">
           <Panel className="ch-hand">
-            <div className="flex flex-wrap items-center gap-4">
-              {country ? <Flag country={country} size={44} language={locale} decorative /> : null}
+            <div className="ch-hand-top">
+              {country ? <Flag country={country} size={52} language={locale} decorative /> : null}
               <div className="min-w-0">
-                <p className="eyebrow">{t("challenge.hand")}</p>
-                <p className="display mt-1 truncate text-3xl font-black uppercase">{country?.names[locale] ?? hand.nationality}</p>
-                <p className="text-sm text-muted">
-                  {c(`positions.${hand.position}`)} · {t("challenge.rules")}
-                </p>
+                <p className="display truncate text-3xl leading-none font-black uppercase">{country?.names[locale] ?? hand.nationality}</p>
+                <p className="mt-1 text-sm font-semibold text-muted">{c(`positions.${hand.position}`)}</p>
               </div>
             </div>
+            <ul className="ch-rules" aria-label={t("challenge.hand")}>
+              {rules.map((rule) => <li key={rule}>{rule}</li>)}
+            </ul>
 
             <SectionRule className="mt-5 mb-3">{t("challenge.missions")}</SectionRule>
             <div className="grid gap-2.5">
@@ -127,71 +117,73 @@ export function ChallengeScreen() {
               ))}
             </div>
 
+            {hand.record ? (
+              <>
+                <RecordTarget id={hand.record.id} mark={hand.record.mark} className="mt-4" />
+                <p className="mt-2 text-xs text-muted">{t("challenge.record.rule")}</p>
+              </>
+            ) : null}
             <EdictBand id={hand.edict} className="mt-4" />
-            <p className="mt-2 text-xs text-faint">{t("challenge.edictPenalty")}</p>
           </Panel>
 
           <Panel title={t("challenge.you")} className="ch-you">
-            <p className="-mt-1 mb-4 text-sm text-muted">{t("challenge.youHint")}</p>
-            <div className="grid gap-5 sm:grid-cols-[minmax(0,1fr)_auto] lg:grid-cols-1 lg:gap-4">
-              <div className="flex min-w-0 flex-col gap-5">
-                <TextField
-                  label={t("identity.surname")}
-                  value={draft.surname}
-                  onValueChange={(value) => useDraft.getState().update({ surname: value.slice(0, SURNAME_MAX) })}
-                  maxLength={SURNAME_MAX}
-                  placeholder={t("identity.surnamePlaceholder")}
-                  counter={`${draft.surname.length}/${SURNAME_MAX}`}
-                  error={touched && !surnameOk ? t("identity.surnameMissing") : undefined}
-                />
-                <div className="flex flex-wrap gap-5">
-                  <div>
-                    <label htmlFor={dreamId} className="eyebrow mb-1.5 block text-fg">
-                      {t("identity.dreamNumber")}
-                    </label>
-                    <input
-                      id={dreamId}
-                      className="field-input max-w-32"
-                      inputMode="numeric"
-                      pattern="[0-9]*"
-                      value={dreamText}
-                      onChange={(event) => setDream(event.target.value)}
-                      placeholder={t("identity.dreamPlaceholder")}
-                      aria-invalid={!dreamValid || undefined}
-                      aria-describedby={`${dreamId}-note`}
-                      autoComplete="off"
-                    />
-                    <p id={`${dreamId}-note`} className={cn("mt-1.5 text-xs", dreamValid ? "text-faint" : "text-bad")}>
-                      {dreamValid ? null : t("identity.dreamInvalid")}
-                    </p>
-                  </div>
-                </div>
+            <div className="ch-you-face">
+              <div className="size-20 shrink-0 overflow-hidden rounded-md border border-line bg-panel">
+                <Avatar config={draft.avatar} kit={getCountryKit(hand.nationality)} className="h-full w-full" />
               </div>
-              <div className="flex items-center gap-4 sm:flex-col sm:items-center lg:order-first lg:flex-row">
-                <div className="size-28 shrink-0 overflow-hidden rounded-md border border-line bg-panel lg:size-20">
-                  <Avatar config={draft.avatar} kit={getCountryKit(hand.nationality)} className="h-full w-full" />
-                </div>
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  onClick={() => {
-                    feedback("select");
-                    useAppearanceContext.getState().open("challenge", hand.nationality);
-                    go("appearance");
-                  }}
-                >
-                  <Pencil size={15} aria-hidden="true" />
-                  {t("challenge.appearanceEdit")}
-                </Button>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => {
+                  feedback("select");
+                  useAppearanceContext.getState().open("challenge", hand.nationality);
+                  go("appearance");
+                }}
+              >
+                <Pencil size={15} aria-hidden="true" />
+                {t("challenge.appearanceEdit")}
+              </Button>
+            </div>
+            <div className="mt-4 flex flex-col gap-4">
+              <TextField
+                label={t("identity.surname")}
+                value={draft.surname}
+                onValueChange={(value) => useDraft.getState().update({ surname: value.slice(0, SURNAME_MAX) })}
+                maxLength={SURNAME_MAX}
+                placeholder={t("identity.surnamePlaceholder")}
+                counter={`${draft.surname.length}/${SURNAME_MAX}`}
+                error={touched && !surnameOk ? t("identity.surnameMissing") : undefined}
+              />
+              <div>
+                <label htmlFor={dreamId} className="eyebrow mb-1.5 block text-fg">
+                  {t("identity.dreamNumber")}
+                </label>
+                <input
+                  id={dreamId}
+                  className="field-input max-w-32"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  value={dreamText}
+                  onChange={(event) => setDream(event.target.value)}
+                  placeholder={t("identity.dreamPlaceholder")}
+                  aria-invalid={!dreamValid || undefined}
+                  aria-describedby={dreamValid ? undefined : `${dreamId}-note`}
+                  autoComplete="off"
+                />
+                {dreamValid ? null : <p id={`${dreamId}-note`} className="mt-1.5 text-xs text-bad">{t("identity.dreamInvalid")}</p>}
               </div>
             </div>
           </Panel>
 
           <div className="ch-play">
-            <p className={cn("text-sm lg:order-last", rankedToday ? "text-glory" : "text-muted")}>
+            <Button size="lg" variant="glory" block loading={starting} onClick={play}><Play size={18} aria-hidden="true" />{t("challenge.play")}</Button>
+            <p className={cn("text-sm", rankedToday ? "text-glory" : "text-muted")}>
               {rankedToday ? t("challenge.rankedDone", { score: rankedToday.score }) : t("challenge.rankedFirst")}
             </p>
-            {actions}
+            <Button variant="ghost" size="sm" className="self-start" onClick={() => go("home")}>
+              <ArrowLeft size={16} aria-hidden="true" />
+              {t("common.back")}
+            </Button>
           </div>
         </div>
 
@@ -200,7 +192,6 @@ export function ChallengeScreen() {
           <StatsPanel attempts={attempts} />
         </aside>
       </div>
-
     </div>
   );
 }
@@ -235,7 +226,6 @@ function DayRanking({ attempts, day }: RankingProps) {
           ))}
         </ol>
       )}
-      <p className="mt-3 text-2xs text-faint">{t("challenge.rankingNote")}</p>
     </Panel>
   );
 }
@@ -248,19 +238,18 @@ function StatsPanel({ attempts }: { attempts: readonly AttemptEntry[] }) {
     { label: t("challenge.stats.played"), value: stats.played },
     { label: t("challenge.stats.best"), value: stats.best },
     { label: t("challenge.stats.average"), value: stats.average },
-    { label: t("challenge.stats.clean"), value: stats.clean },
+    { label: t("challenge.stats.clean"), value: stats.clean, hint: t("challenge.stats.cleanHint") },
   ];
   return (
     <Panel title={t("challenge.stats.title")}>
       <dl className="grid grid-cols-4 divide-x divide-line">
         {items.map((item) => (
           <div key={item.label} className="flex flex-col-reverse items-center gap-1 px-1">
-            <dt className="eyebrow text-center text-2xs">{item.label}</dt>
+            <dt className="eyebrow text-center text-2xs" title={item.hint}>{item.label}</dt>
             <dd className="display numeric text-3xl font-black">{item.value}</dd>
           </div>
         ))}
       </dl>
-      <p className="mt-3 text-2xs text-faint">{t("challenge.stats.cleanHint")}</p>
     </Panel>
   );
 }

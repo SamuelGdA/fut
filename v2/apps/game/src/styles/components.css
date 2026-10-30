@@ -433,6 +433,10 @@
     .avatar-columns {
       columns: 3 200px;
     }
+
+    .avatar-columns[data-split] > .avatar-editor-section + .avatar-editor-section {
+      break-before: column;
+    }
   }
 
   .avatar-foot {
@@ -652,6 +656,17 @@
     outline-offset: 1px;
   }
 
+  /* D106: o seletor Craque | Técnico das conquistas fala com a mesma voz dos
+     títulos (fonte de display), não com a do corpo do texto. */
+  .seg-games .seg-item {
+    min-height: 46px;
+    font-family: var(--font-display);
+    font-size: 19px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
   .seg[data-size="sm"] .seg-item {
     min-height: 30px;
     padding: 0 10px;
@@ -823,7 +838,8 @@
     flex-direction: column;
     width: 100%;
     max-width: 560px;
-    max-height: min(88dvh, 780px);
+    /* Cresce até quase a tela toda antes de rolar (D95): os detalhes da temporada cabem inteiros no PC. */
+    max-height: min(94dvh, 1100px);
     border: 1px solid var(--line);
     border-bottom: 0;
     border-radius: var(--radius-lg) var(--radius-lg) 0 0;

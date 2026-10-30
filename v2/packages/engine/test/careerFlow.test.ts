@@ -22,6 +22,8 @@ import {
   policyChoice,
   POSITIONS,
   RELEASE,
+  RETIREMENT_AGE,
+  BENCH_LIMIT,
   replay,
   saveOf,
 } from "../src";
@@ -107,7 +109,7 @@ describe("começo da carreira", () => {
 });
 
 describe("invariantes do laço (GDD 39)", () => {
-  it("6 e 7: toda decisão tem opção, e toda carreira termina entre 17 e 40 anos", () => {
+  it("6 e 7: toda decisão tem opção, e toda carreira termina entre 17 e 41 anos (D109: até 2050)", () => {
     fc.assert(
       fc.property(setupArbitrary, ({ setup, policy }) => {
         const steps = walk(setup, policy);
@@ -120,7 +122,7 @@ describe("invariantes do laço (GDD 39)", () => {
           if (new Set(decision.options.map((option) => option.id)).size !== decision.options.length) return false;
         }
         if (!last.end || last.decision) return false;
-        return last.end.age >= FIRST_AGE + 1 && last.end.age <= 40;
+        return last.end.age >= FIRST_AGE + 1 && last.end.age <= RETIREMENT_AGE;
       }),
       settings,
     );
@@ -275,10 +277,10 @@ describe("eventos, empréstimos e clubes bloqueados", () => {
     }
   });
 
-  it("dispensa só a partir da idade da dificuldade", () => {
+  it("dispensa só a partir da idade da dificuldade, ou do teto do banco (D108: depois dos 22)", () => {
     for (const steps of careers) {
       for (const career of steps) {
-        if (career.decision?.kind === "release") expect(career.age).toBeGreaterThanOrEqual(RELEASE[career.setup.difficulty].age);
+        if (career.decision?.kind === "release") expect(career.age).toBeGreaterThanOrEqual(Math.min(RELEASE[career.setup.difficulty].age, BENCH_LIMIT.youthUpTo + 1));
       }
     }
   });

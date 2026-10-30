@@ -151,7 +151,7 @@
     "strength": 54,
     "prestige": 1.0,
     "color": "#0B7A3B",
-    "crest": null
+    "crest": "png"
   },
   {
     "id": "san-juan-sc",
@@ -162,7 +162,7 @@
     "strength": 53,
     "prestige": 1.0,
     "color": "#0033A0",
-    "crest": null
+    "crest": "svg"
   },
   {
     "id": "academia-balompie",

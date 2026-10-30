@@ -90,3 +90,16 @@ it("detalhes começam fechados e a preferência sobrevive à reidratação", asy
   expect(usePrefs.getState().seasonDetails).toBe(true);
   usePrefs.getState().setSeasonDetails(false);
 });
+
+it("D99: o avanço automático começa ligado, desliga e sobrevive à reidratação", async () => {
+  expect(sanitizePrefs({}).autoAdvance).toBe(true);
+  expect(sanitizePrefs({ autoAdvance: "sim" }).autoAdvance).toBe(true);
+  usePrefs.getState().setAutoAdvance(false);
+  const stored = safeStorage.getItem(STORAGE_KEYS.prefs);
+  expect(JSON.parse(stored!).state.autoAdvance).toBe(false);
+  usePrefs.setState({ autoAdvance: true });
+  safeStorage.setItem(STORAGE_KEYS.prefs, stored!);
+  await usePrefs.persist.rehydrate();
+  expect(usePrefs.getState().autoAdvance).toBe(false);
+  usePrefs.getState().setAutoAdvance(true);
+});

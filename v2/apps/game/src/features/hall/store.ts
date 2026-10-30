@@ -39,6 +39,8 @@ interface HallState {
   archive(entry: ArchiveEntry): Promise<void>;
   remove(id: string): Promise<void>;
   unlock(rows: readonly AchievementRow[]): Promise<void>;
+  /** Só pelos controles de teste (D91): apaga todas as conquistas e os contadores. */
+  resetAchievements(): Promise<void>;
   recordAttempt(attempt: AttemptEntry): Promise<void>;
 }
 
@@ -152,6 +154,14 @@ export const useHall = create<HallState>()((set, get) => ({
     if (fresh.length === 0) return;
     set((state) => ({ achievements: [...state.achievements, ...fresh] }));
     await Promise.all(fresh.map((row) => database?.put("achievements", row)));
+  },
+
+  async resetAchievements() {
+    await get().load();
+    const ids = get().achievements.map((row) => row.id);
+    set({ achievements: [], progress: {}, finished: 0, finishedIds: [] });
+    safeStorage.removeItem("craque.v2.progress");
+    await Promise.all(ids.map((id) => database?.remove("achievements", id)));
   },
 
   async recordAttempt(attempt) {

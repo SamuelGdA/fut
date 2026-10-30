@@ -4,7 +4,7 @@ import { attributesAt, choose, createCareer, ENGINE_VERSION, FOCUS_SLOT, MAX_DEC
 import { hasPublicRole, matchOrder, veteranDue } from "../../../packages/engine/src/career/drama";
 
 /** Auditoria reproduzível do laço real; o lote principal mede o simulador puro. */
-let careers = 0, seasons = 0, matches = 0, promises = 0, fulfilled = 0;
+let careers = 0, seasons = 0, matches = 0, promises = 0, fulfilled = 0, chains = 0, rare = 0;
 let maximum = 0;
 const paths = new Map(VETERAN_PATHS.map((path) => [path, 0]));
 const policies: readonly CareerPolicy[] = ["balanced", "ambitious", "random"];
@@ -20,7 +20,11 @@ for (const position of POSITIONS) for (const pace of ["intense", "normal"] as co
     if (decision.year - lastOffer > 3) throw new Error("Mais de três anos sem oferta");
     if (decision.kind === "window" && decision.options.length === 1 && decision.options[0]?.kind === "stay") throw new Error("Janela sem alternativa");
     if (decision.kind === "promise" && !hasPublicRole(career)) throw new Error("Promessa sem espaço no elenco");
+    // D89: a promessa é a decisão principal do ano, nunca uma etapa depois de outra.
+    if ((decision.kind === "promise" || decision.kind === "veteran") && (career.drama || (counts.get(decision.year) ?? 0) > 0)) throw new Error("Promessa depois de outra decisão principal");
     if (decision.kind === "veteran" && !veteranDue(career)) throw new Error("Reinvenção sem queda por idade");
+    // D90: no ritmo anual, o ano sempre abre com uma decisão principal (no rápido, uma por período de dois anos).
+    if (pace === "intense" && decision.kind === "match" && !counts.has(decision.year)) throw new Error(`Ano sem decisão principal: ${career.setup.seed} ${decision.year}`);
     if (decision.match?.national) nationalYears.add(decision.year);
     else if (decision.match && nationalYears.has(decision.year)) throw new Error("Seleção antes do clube");
     if (decision.match) {
@@ -50,7 +54,18 @@ for (const position of POSITIONS) for (const pace of ["intense", "normal"] as co
   if (career.veteran) paths.set(career.veteran, (paths.get(career.veteran) ?? 0) + 1);
   for (const season of career.history) {
     const moments = season.keyMatches ?? [];
-    if (moments.length > (pace === "normal" ? 1 : 3) || new Set(moments.map((item) => item.match.competition)).size !== moments.length) throw new Error("Momentos repetidos ou em excesso");
+    if (moments.length > (pace === "normal" ? 1 : 4) || new Set(moments.map((item) => `${item.match.competition}:${item.match.stage}`)).size !== moments.length) throw new Error("Momentos repetidos ou em excesso");
+    // D89: a fase seguinte da mesma copa só vem depois de vencer a anterior; erro nunca vence.
+    for (const [index, outcome] of moments.entries()) {
+      if (!outcome.success && outcome.won) throw new Error("Lance errado terminou em vitória");
+      if (moments.slice(index + 1).some((later) => later.match.competition === outcome.match.competition && later.match.stage !== "league") && !outcome.won) throw new Error("Fase seguinte depois de eliminação");
+    }
+    chains += moments.length - new Set(moments.map((item) => item.match.competition)).size;
+    // D91: as disputas raras só no mata-mata, com a cobrança no placar dos pênaltis.
+    for (const outcome of moments) if (outcome.match.scene === "suddenDeath" || outcome.match.scene === "keeperShootout") {
+      rare++;
+      if (outcome.match.stage === "league" || !outcome.match.kick || outcome.penalties?.[outcome.won ? 0 : 1] !== outcome.match.kick) throw new Error("Disputa rara fora do mata-mata ou sem a cobrança");
+    }
     if (season.promise) {
       const promise = season.promise;
       const seasons = career.history.filter(record => record.year >= promise.year && record.year <= (promise.throughYear ?? promise.year));
@@ -70,7 +85,8 @@ for (const position of POSITIONS) for (const pace of ["intense", "normal"] as co
     }
   }
 }
-const report = `# Craque: auditoria dos novos momentos\n\nMotor ${ENGINE_VERSION}. Lote fixo: 12 posições × 2 ritmos × 3 políticas × 2 sementes, prefixo d73-audit. Dificuldade Normal, Brasil, início em 2026.\n\n| Medida | Observado |\n|---|---:|\n| Carreiras concluídas | ${careers} |\n| Temporadas | ${seasons} |\n| Máximo de decisões em um ano | ${maximum} |\n| Jogos-chave | ${matches} |\n| Promessas | ${promises} |\n| Promessas cumpridas | ${fulfilled} |\n${[...paths].map(([path, count]) => `| Veterano: ${path} | ${count} |`).join("\n")}\n\nSem falhas: término, teto anual, até três partidas no anual e uma no rápido, finais continentais antes das seleções, promessas agregadas no prazo e apenas com espaço no elenco, reinvenção apenas no declínio por idade, ofertas a cada três anos, treino imediato e seleção por último, soma de gols por competição e campeão da final igual ao resultado escolhido. Replay integral conferido a cada 12 carreiras. Os testes unitários cobrem também replay no meio do lance e as chances de lesão.\n\nO lote confirma coerência e frequência observada, não demonstra igualdade de valor estratégico entre os seis caminhos. Eles trocam benefícios diferentes por minutos, produção, crescimento ou risco físico. Reproduzir: pnpm balance:craque:momentos.\n`;
+const report = `# Craque: auditoria dos novos momentos\n\nMotor ${ENGINE_VERSION}. Lote fixo: 12 posições × 2 ritmos × 3 políticas × 2 sementes, prefixo d73-audit. Dificuldade Normal, Brasil, início em 2026.\n\n| Medida | Observado |\n|---|---:|\n| Carreiras concluídas | ${careers} |\n| Temporadas | ${seasons} |\n| Máximo de decisões em um ano | ${maximum} |\n| Jogos-chave | ${matches} |\n| Promessas | ${promises} |\n| Promessas cumpridas | ${fulfilled} |\n| Fases seguidas da mesma copa no ano (D89) | ${chains} |
+| Disputas de pênaltis raras (D91) | ${rare} |\n${[...paths].map(([path, count]) => `| Veterano: ${path} | ${count} |`).join("\n")}\n\nSem falhas: término, lance errado nunca vence, fase seguinte só depois da vitória na anterior, promessa e reinvenção só como decisão principal, fase eliminada trocada por outro jogo quando há reserva, teto anual, até quatro partidas no anual (cinco decisões com a principal) e uma no rápido, todo ano aberto por uma decisão principal, disputas de pênaltis raras só no mata-mata e com a cobrança no placar, finais continentais antes das seleções, promessas agregadas no prazo e apenas com espaço no elenco, reinvenção apenas no declínio por idade, ofertas a cada três anos, treino imediato e seleção por último, soma de gols por competição e campeão da final igual ao resultado escolhido. Replay integral conferido a cada 12 carreiras. Os testes unitários cobrem também replay no meio do lance e as chances de lesão.\n\nO lote confirma coerência e frequência observada, não demonstra igualdade de valor estratégico entre os seis caminhos. Eles trocam benefícios diferentes por minutos, produção, crescimento ou risco físico. Reproduzir: pnpm balance:craque:momentos.\n`;
 const folder = fileURLToPath(new URL("../relatorios/", import.meta.url));
 mkdirSync(folder, { recursive: true });
 writeFileSync(`${folder}craque-momentos.md`, report);

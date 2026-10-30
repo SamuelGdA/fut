@@ -4,7 +4,6 @@ import { type Career, careerTotals, isGoalkeeper, saveOf } from "@craque/engine"
 import { getCountry } from "@craque/world";
 import {
   ArrowLeft,
-  BookOpen,
   Crosshair,
   GitBranch,
   Hash,
@@ -36,15 +35,15 @@ import { Newspaper } from "./Newspaper";
 import { PosterSheet } from "./PosterSheet";
 import { Showcase } from "./Showcase";
 import { ChallengeChapter } from "./ChallengeChapter";
-import { BiographySection, NumbersSection, TimelineSection } from "./SummarySections";
+import { NumbersSection, TimelineSection } from "./SummarySections";
 import { WhatIfChapter } from "./WhatIfChapter";
 
-const CHAPTERS = ["challenge", "biography", "numbers", "timeline", "trophies", "newspaper", "whatIf"] as const;
+// D99: números, troféus, linha do tempo, jornal e hipotético; a biografia saiu do jogo.
+const CHAPTERS = ["challenge", "numbers", "trophies", "timeline", "newspaper", "whatIf"] as const;
 type ChapterKey = (typeof CHAPTERS)[number];
 
-const CHAPTER_ICONS: Readonly<Record<ChapterKey, typeof BookOpen>> = {
+const CHAPTER_ICONS: Readonly<Record<ChapterKey, typeof Hash>> = {
   challenge: Crosshair,
-  biography: BookOpen,
   numbers: Hash,
   timeline: History,
   trophies: Trophy,
@@ -216,20 +215,17 @@ export function SummaryView({ career, avatar, mode, alternate = false, internalT
             <ChallengeChapter career={career} shared={mode === "shared"} />
           </Chapter>
         ) : null}
-        <Chapter id="biography" title={t("summary.chapters.biography")}>
-          <BiographySection career={career} />
-        </Chapter>
         <Chapter id="numbers" title={t("summary.chapters.numbers")}>
           <NumbersSection career={career} />
-        </Chapter>
-        <Chapter id="timeline" title={t("summary.chapters.timeline")}>
-          <TimelineSection career={career} />
         </Chapter>
         <Chapter id="trophies" title={t("summary.chapters.trophies")}>
           <h3 className="eyebrow mb-3">{t("summary.newspaper.trophies")}</h3>
           <Showcase history={career.history} kind="title" maxHeight={640} maxArt={72} />
           <h3 className="eyebrow mt-8 mb-3">{t("summary.newspaper.awards")}</h3>
           <Showcase history={career.history} kind="award" maxHeight={640} maxArt={72} />
+        </Chapter>
+        <Chapter id="timeline" title={t("summary.chapters.timeline")}>
+          <TimelineSection career={career} />
         </Chapter>
         <Chapter id="newspaper" title={t("summary.chapters.newspaper")}>
           <Newspaper career={career} />
@@ -265,7 +261,7 @@ function Chapter({ id, title, children }: { id: ChapterKey; title: string; child
 function ChapterNav({ chapters }: { chapters: readonly ChapterKey[] }) {
   const { t } = useT();
   const reduced = useReducedMotion() === true;
-  const [active, setActive] = useState<ChapterKey>(chapters[0] ?? "biography");
+  const [active, setActive] = useState<ChapterKey>(chapters[0] ?? "numbers");
 
   useEffect(() => {
     if (typeof IntersectionObserver === "undefined") return;

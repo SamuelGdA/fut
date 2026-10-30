@@ -3,6 +3,9 @@ import { getCountryKit } from "@craque/world";
 import { ArrowLeft, ArrowRight, Dices, Pencil, Play } from "lucide-react";
 import { type CSSProperties, type ReactNode, useId, useState } from "react";
 import { useNavigation } from "../../app/navigation";
+import { CareerSettings } from "../../features/career/CareerSettings";
+import { useQuickStart } from "../../features/career/useQuickStart";
+import { CraqueExtras } from "../home/HomeScreen";
 import { isDraftComplete, isSurnameValid, SURNAME_MAX, useDraft } from "../../features/career/draft";
 import { useT } from "../../i18n/useT";
 import { useMediaQuery } from "../../lib/useMediaQuery";
@@ -72,7 +75,8 @@ export function IdentityScreen() {
         import("../../features/career/store"),
       ]);
       const current = useDraft.getState();
-      useCareer.getState().start(setupFromDraft({ draft: current, pace, difficulty, locale }), current.avatar);
+      useCareer.getState().start(setupFromDraft({ draft: current, pace, difficulty, locale, first: !usePrefs.getState().startedCareer }), current.avatar);
+      usePrefs.getState().markCareerStarted();
       feedback("whistle");
       go("career");
     } finally {
@@ -116,10 +120,11 @@ export function IdentityScreen() {
       window.scrollTo({ top: 0 });
     } else {
       feedback("back");
-      go("home");
+      go("hub");
     }
   };
 
+  const quick = useQuickStart();
   const kit = draft.nationality ? getCountryKit(draft.nationality) : null;
 
   return (
@@ -136,9 +141,13 @@ export function IdentityScreen() {
           {missing.length > 0 && touched ? (
             <p className="max-w-64 text-right text-sm text-bad">{t("identity.missing", { list: missing.join(", ") })}</p>
           ) : null}
-          <Button variant="ghost" onClick={() => go("home")}>
+          <Button variant="ghost" onClick={() => go("hub")}>
             <ArrowLeft size={18} aria-hidden="true" />
             {t("identity.previous")}
+          </Button>
+          <Button size="lg" variant="secondary" loading={quick.starting} onClick={quick.start}>
+            <Dices size={18} aria-hidden="true" />
+            {t("home.quick")}
           </Button>
           <Button size="lg" loading={starting} onClick={confirm}>
             <Play size={18} aria-hidden="true" />
@@ -201,19 +210,23 @@ export function IdentityScreen() {
               </div>
             </div>
           </StepSection>
+          {/* D109: ritmo e dificuldade saíram do Início e entram aqui, com o resto da escolha. */}
+          <StepSection step="review" active={step} title={t("home.setup")}>
+            <CareerSettings stacked />
+          </StepSection>
         </div>
 
         <div className="id-middle">
           <StepSection step="name" active={step} title={t("identity.steps.name")}>
             <div className="flex flex-col gap-4">
               <TextField
-                label={t("identity.surname")}
+                label={t("identity.steps.name")}
+                hideLabel
                 value={draft.surname}
                 onValueChange={(value) => useDraft.getState().update({ surname: value.slice(0, SURNAME_MAX) })}
                 maxLength={SURNAME_MAX}
                 placeholder={t("identity.surnamePlaceholder")}
                 counter={`${draft.surname.length}/${SURNAME_MAX}`}
-                hint={t("identity.surnameHint", { max: SURNAME_MAX })}
                 error={touched && !surnameOk ? t("identity.surnameMissing") : undefined}
               />
               <div className="grid gap-4">
@@ -256,6 +269,8 @@ export function IdentityScreen() {
           ) : null}
         </StepSection>
       </div>
+
+      <CraqueExtras quick={quick} />
 
       <nav className="id-step-nav fixed inset-x-0 bottom-0 z-40 border-t border-line bg-canvas px-4 pt-3 pb-[calc(12px+env(safe-area-inset-bottom))]">
         <div className="mx-auto flex max-w-xl items-center justify-between gap-3">

@@ -33,6 +33,11 @@
   --glory: #e3b341;
   --bad: #ec5b60;
   --info: #7aa6cf;
+  /* Resultado parcial do lance (D91): segurou o empate, caiu nos pênaltis. */
+  --draw: #e6cf3a;
+  --short: #f08c3a;
+  /* Raridade épica (D94); comum, rara e lendária usam muted, info e glory. */
+  --epic: #b996f5;
   /* Fundo de botão vermelho com texto branco: o mesmo nos dois temas. */
   --alert: #bd2c34;
 
@@ -67,6 +72,9 @@
   --glory: #86600b;
   --bad: #bd2c34;
   --info: #2f6c9e;
+  --draw: #776700;
+  --short: #a64f0b;
+  --epic: #6a3db0;
 
   --accent: #161b18;
   --on-accent: #f3f0e8;
@@ -334,6 +342,25 @@
 }
 [data-tone="info"] {
   --tone: var(--info);
+}
+[data-tone="draw"] {
+  --tone: var(--draw);
+}
+[data-tone="short"] {
+  --tone: var(--short);
+}
+/* Raridade de conquista e faixa de recorde (D94). */
+[data-rarity="common"], [data-tier="entry"] {
+  --rarity: var(--muted);
+}
+[data-rarity="rare"], [data-tier="rare"] {
+  --rarity: var(--info);
+}
+[data-rarity="epic"], [data-tier="epic"] {
+  --rarity: var(--epic);
+}
+[data-rarity="legendary"], [data-tier="legendary"] {
+  --rarity: var(--glory);
 }
 [data-tone="neutral"] {
   --tone: var(--muted);

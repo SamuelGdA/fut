@@ -4,7 +4,14 @@
   .season-decision-slide { position: absolute; inset: 0; display: flex; flex-direction: column; min-height: 0; min-width: 0; background: var(--canvas); will-change: transform; }
   .season-decision-slide > .decision { flex: 1; }
   .season-progress { display: grid; justify-items: center; gap: 5px; flex: 0 0 auto; padding-block: 2px; color: var(--muted); }
-  .season-progress > span { display: flex; gap: 7px; }
+  .season-progress > span { display: flex; gap: 0; }
+  /* D106: cada bolinha ocupa a mesma casa; a de uma decisão respondida vira botão, com a área de toque maior que o ponto. */
+  .season-progress-step { position: relative; display: inline-grid; place-items: center; width: 13px; height: 12px; padding: 0; border: 0; background: none; }
+  button.season-progress-step { cursor: pointer; }
+  button.season-progress-step::before { content: ""; position: absolute; inset: -7px -2px; }
+  button.season-progress-step:hover i, button.season-progress-step:focus-visible i { transform: scale(1.5); opacity: 1; }
+  .season-progress-step i { transition: transform 140ms ease, opacity 140ms ease; }
+  .season-progress i[data-viewing] { opacity: 1; transform: scale(1.4); box-shadow: 0 0 0 3px color-mix(in srgb, var(--info) 45%, transparent); }
   .season-progress i { width: 6px; height: 6px; border-radius: 50%; background: var(--rule); opacity: .45; }
   .season-progress i[data-state="done"] { opacity: .7; background: var(--club); }
   .season-progress i[data-state="current"] { opacity: 1; background: var(--club); box-shadow: 0 0 0 3px color-mix(in srgb, var(--club) 20%, transparent); }
@@ -28,6 +35,8 @@
   .match-final > p { animation: decision-detail-enter 360ms ease-out 210ms both; }
   .match-feedback { --result-accent: #70ca96; --result-ink: #c9efd7; padding: 14px; border: 1px solid color-mix(in srgb, var(--result-accent) 50%, var(--line)); border-radius: 4px; background: var(--panel); box-shadow: inset 0 0 24px color-mix(in srgb, var(--result-accent) 7%, transparent); }
   .match-outcome[data-champion][data-success="true"] .match-feedback { --result-accent: #dfbc70; --result-ink: #f2dcad; }
+  .match-outcome[data-level="draw"] .match-feedback { --result-accent: #e6cf3a; --result-ink: #f5ebb0; }
+  .match-outcome[data-level="short"] .match-feedback { --result-accent: #f08c3a; --result-ink: #ffd9b8; }
   .match-outcome[data-success="false"] .match-feedback { --result-accent: #d87d70; --result-ink: #ffd0c4; animation: decision-result-shake 150ms ease-out 420ms both; }
   .match-feedback-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
   .match-result-badge { display: inline-flex; align-items: center; gap: 6px; padding: 5px 7px; border: 1px solid color-mix(in srgb, var(--result-accent) 35%, transparent); border-radius: 2px; color: var(--result-ink); background: color-mix(in srgb, var(--result-accent) 9%, transparent); font-size: 10px; line-height: 1.3; letter-spacing: .06em; font-weight: 700; }
@@ -56,6 +65,8 @@
   .career { isolation: isolate; }
   .drama-decision { gap: 12px; }
   .drama-heading { display: grid; gap: 8px; flex-shrink: 0; }
+  /* D106: o nome da cena em cima do título do momento; o h2 vem logo abaixo, sem o espaço do grid. */
+  .drama-kicker { margin-bottom: -6px; color: var(--match-accent, var(--club)); font-family: var(--font-display); font-size: 12px; font-weight: 800; letter-spacing: 0.12em; line-height: 1.1; text-transform: uppercase; }
   .drama-option { padding-block: 12px; align-items: start; height: auto; min-height: max-content; overflow: visible; }
   .drama-options[data-layout="grid"] { grid-auto-rows: max-content; align-items: stretch; }
   .drama-option .option-main { gap: 5px; }
@@ -190,3 +201,118 @@
 }
 
 .season-key-result > strong, .play-event-head > span:first-child { font-family: var(--font-display); font-size: 1rem; line-height: 1.15; text-transform: uppercase; }
+/* D94: a final que vale recorde. Faixa dourada sob o placar, com brilho que passa uma vez. */
+.match-stake { position: relative; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 4px 8px; margin: 8px -2px 0; padding: 5px 10px; overflow: hidden; border: 1px solid #e3b341; border-radius: 3px; background: linear-gradient(90deg, #3a2a06, #5c4410 50%, #3a2a06); color: #fbe7b0; font-size: 11px; font-weight: 600; line-height: 1.3; text-align: center; }
+.match-stake-label { padding: 1px 6px; border-radius: 2px; background: #e3b341; color: #1d1503; font-family: var(--font-display); font-size: 12px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }
+@media (prefers-reduced-motion: no-preference) {
+  .match-stake::after { content: ""; position: absolute; inset: 0; background: linear-gradient(100deg, transparent 30%, rgb(255 240 200 / .35) 50%, transparent 70%); transform: translateX(-100%); animation: stake-shine 1.6s ease .4s 2; pointer-events: none; }
+  @keyframes stake-shine { to { transform: translateX(100%); } }
+}
+
+
+/*
+ * D96: a tabela da liga no jogo decisivo de liga. Ocupa o espaço que sobra
+ * embaixo das opções (ou do resultado) e rola por dentro; o laço continua
+ * sem rolar a página. Sem espaço útil (celular baixo), some.
+ */
+.league-live { --lv-up: #4cc38a; --lv-down: #ff8a80; --lv-draw: #e6cf3a; display: flex; flex: 0 0 auto; margin-top: auto; min-height: 0; flex-direction: column; gap: 6px; padding: 10px 12px 8px; border: 1px solid var(--line); border-radius: var(--radius-sm); background: linear-gradient(180deg, rgb(255 255 255 / 0.03), transparent 40%), var(--panel); }
+.league-live-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+.league-live-round { font-size: 11px; font-weight: 700; color: var(--muted); }
+.league-live[data-done] .league-live-round { color: var(--club); }
+.league-live-cols, .league-live-row { display: grid; grid-template-columns: 26px minmax(0, 1fr) 30px 46px; align-items: center; gap: 6px; }
+.league-live-cols { padding: 0 8px 4px; border-bottom: 1px solid var(--line); font-size: 10px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.league-live-cols > span:nth-child(n + 3) { text-align: right; }
+.league-live-rows { position: relative; flex: 1 1 0; min-height: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; margin: 0; padding: 2px 0; list-style: none; }
+.league-live-row { min-height: 30px; padding: 3px 8px; border-radius: 6px; font-size: 13px; }
+.league-live-row:nth-child(even) { background: rgb(255 255 255 / 0.025); }
+.league-live-row[data-rival] { box-shadow: inset 2px 0 color-mix(in srgb, var(--fg) 45%, transparent); }
+.league-live-row[data-me] { position: relative; z-index: 1; background: linear-gradient(90deg, color-mix(in srgb, var(--club) 26%, transparent), color-mix(in srgb, var(--club) 8%, transparent)); box-shadow: inset 3px 0 var(--club), 0 0 0 1px color-mix(in srgb, var(--club) 45%, transparent); font-weight: 800; }
+.league-live-pos { font-weight: 800; color: var(--muted); text-align: center; }
+.league-live-row[data-me] .league-live-pos { color: var(--fg); }
+.league-live-club { display: flex; min-width: 0; align-items: center; gap: 7px; }
+.league-live-move { flex-shrink: 0; font-size: 10px; font-weight: 800; color: var(--lv-down); }
+.league-live-move[data-up] { color: var(--lv-up); }
+.league-live-played { text-align: right; color: var(--muted); }
+.league-live-points { display: flex; align-items: baseline; justify-content: flex-end; gap: 4px; font-weight: 800; }
+.league-live-points small { font-size: 10px; font-weight: 700; color: var(--muted); }
+.league-live-points small[data-gain="3"] { color: var(--lv-up); }
+.league-live-points small[data-gain="1"] { color: var(--lv-draw); }
+@media (prefers-reduced-motion: no-preference) {
+  .league-live[data-done] .league-live-points small { animation: league-gain .5s ease-out both .1s; }
+  @keyframes league-gain { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+  /* D97: quem mudou de lugar pisca a seta, e o clube do jogador acende quando assenta. */
+  .league-live[data-done] .league-live-move { animation: league-move .9s ease-out both .2s; }
+  .league-live[data-done] .league-live-row[data-me] { animation: league-me 1.1s ease-out .75s both; }
+  @keyframes league-move { 0% { opacity: 0; transform: scale(.4); } 45% { opacity: 1; transform: scale(1.35); } 100% { transform: none; } }
+  @keyframes league-me { 0% { filter: brightness(1); } 35% { filter: brightness(1.5); } 100% { filter: brightness(1); } }
+}
+/*
+ * D98: tamanho fixo e preso ao pé do card (margin-top: auto), do lance ao
+ * resultado: não cresce nem encolhe com o número de opções ou com o texto do
+ * resultado. Cinco linhas à vista; o resto rola por dentro.
+ */
+.league-live-title { display: inline-flex; align-items: center; gap: 6px; }
+.league-live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--lv-down); box-shadow: 0 0 0 0 color-mix(in srgb, var(--lv-down) 60%, transparent); }
+.league-live[data-done] .league-live-dot { background: var(--club); }
+.league-live-row { transition: background-color .5s ease; }
+.league-live[data-done] .league-live-row[data-gain="3"]:not([data-me]) { background: color-mix(in srgb, var(--lv-up) 9%, transparent); }
+.league-live[data-done] .league-live-row[data-move="up"]:not([data-me]) .league-live-pos { color: var(--lv-up); }
+.league-live[data-done] .league-live-row[data-move="down"]:not([data-me]) .league-live-pos { color: var(--lv-down); }
+@media (prefers-reduced-motion: no-preference) {
+  .league-live { animation: league-in .45s cubic-bezier(.22, 1, .36, 1) both; }
+  .league-live:not([data-done]) .league-live-dot { animation: league-live-pulse 1.4s ease-out infinite; }
+  .league-live-round { animation: league-round .4s ease-out both; }
+  .league-live[data-waiting] .league-live-rows { animation: league-hold .45s ease-in-out both; }
+  .league-live[data-done] .league-live-row[data-me] .league-live-pos { animation: league-pos 0.6s ease-out .85s both; }
+  .league-live[data-done]::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; background: linear-gradient(100deg, transparent 30%, color-mix(in srgb, var(--club) 22%, transparent) 50%, transparent 70%) -150% 0 / 250% 100% no-repeat; animation: league-sweep 1.1s ease-out .1s both; }
+  @keyframes league-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  @keyframes league-live-pulse { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--lv-down) 60%, transparent); } 100% { box-shadow: 0 0 0 7px transparent; } }
+  @keyframes league-round { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: none; } }
+  @keyframes league-hold { 50% { filter: brightness(1.18); } }
+  @keyframes league-pos { 40% { transform: scale(1.45); } }
+  @keyframes league-sweep { to { background-position: 150% 0; } }
+}
+.league-live { position: relative; overflow: hidden; }
+/* Com a tabela no card, as opções do jogo de liga ficam mais baixas, para tudo caber sem rolar. */
+.drama-decision:has(.league-live) .drama-option { padding-block: 8px; }
+.drama-decision:has(.league-live) .league-live-row { min-height: 27px; padding-block: 2px; }
+.league-live-round-short { display: none; }
+/*
+ * D98: a faixa, para tela baixa. Uma linha de clubes (posição, escudo e
+ * pontos) que rola de lado e reordena do mesmo jeito; o nome fica para o
+ * leitor de tela e para a dica.
+ */
+.league-live[data-mode="strip"] { flex-direction: row; align-items: center; gap: 8px; padding: 6px 8px; }
+.league-live[data-mode="strip"] .league-live-head { flex-direction: column; align-items: flex-start; gap: 2px; flex-shrink: 0; }
+.league-live[data-mode="strip"] .league-live-title { font-size: 0; gap: 0; }
+.league-live[data-mode="strip"] .league-live-round-long, .league-live[data-mode="strip"] .league-live-cols { display: none; }
+.league-live[data-mode="strip"] .league-live-round-short { display: inline; font-size: 11px; }
+.league-live[data-mode="strip"] .league-live-rows { display: flex; gap: 4px; height: 100%; overflow-x: auto; overflow-y: hidden; padding: 0; }
+.league-live[data-mode="strip"] .league-live-row { display: flex; flex-shrink: 0; align-items: center; gap: 5px; min-height: 0; padding: 4px 7px; }
+.league-live[data-mode="strip"] .league-live-row:nth-child(even) { background: transparent; }
+.league-live[data-mode="strip"] .league-live-club { gap: 0; }
+.league-live[data-mode="strip"] .league-live-club > .truncate { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.league-live[data-mode="strip"] .league-live-played { display: none; }
+.league-live[data-mode="strip"] .league-live-move { margin-left: 2px; }
+.league-live[data-mode="strip"] .league-live-points small { display: none; }
+.league-live-none { flex: 0 0 auto; height: 0; margin-top: auto; }
+@media (max-width: 767px) {
+  .drama-decision:has(.league-live, .league-live-none) .drama-option { padding-block: 6px; }
+}
+.league-live[data-mode="strip"] { padding-block: 4px; }
+
+@layer components {
+  /* D106: a decisão revista pelas bolinhas. O resultado em cima, a decisão
+     parada embaixo, no mesmo espaço do card, sem rolar a página. */
+  .recall { display: flex; flex: 1 1 auto; flex-direction: column; gap: 8px; min-height: 0; }
+  .recall-body { display: flex; flex: 1 1 auto; flex-direction: column; min-height: 0; }
+  .recall-body > * { flex: 1 1 auto; min-height: 0; }
+  .result-recall { flex: 0 0 auto; }
+  .result-recall .result-msg { box-shadow: none; }
+}
+
+/* D106: o jogo-chave revisto pelas bolinhas. O painel do resultado sem moldura
+   nova; a tabela da liga é do momento do jogo, não da releitura. Fora de camada,
+   como as regras da tabela que ela precisa vencer. */
+.recall-match { display: contents; }
+.recall-match .league-live, .recall-match .league-live-none { display: none; }

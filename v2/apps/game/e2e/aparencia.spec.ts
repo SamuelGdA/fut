@@ -4,9 +4,8 @@ import { abrirCraque, auditar } from "./apoio";
 for (const theme of ["light", "dark"] as const) {
   test(`aparência sem salto entre abas, ${theme}`, async ({ page }, info) => {
     await abrirCraque(page, { theme });
-    await page.getByRole("button", { name: "Começar carreira", exact: true }).click();
     if (info.project.name === "celular") {
-      await page.getByLabel("Sobrenome").fill("Silva");
+      await page.getByRole("textbox", { name: "Nome", exact: true }).fill("Silva");
       await page.getByRole("button", { name: "Avançar", exact: true }).click();
       await page.getByRole("searchbox", { name: "Buscar país" }).fill("Brasil");
       await page.getByRole("option", { name: /Brasil/ }).click();

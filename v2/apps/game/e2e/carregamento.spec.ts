@@ -35,7 +35,8 @@ for (const game of ["craque", "tecnico"] as const) {
     await context.setOffline(true); await page.reload();
     await expect(page.getByRole("heading", { name: "Futeiros", exact: true })).toBeVisible();
     await cartao(page, game).getByRole("button", { name: "Jogar", exact: true }).click();
-    await expect(page.getByRole("heading", { name: game === "craque" ? "CRAQUE" : "Quem está no banco", exact: true })).toBeVisible();
+    // D110: o Craque abre direto na tela de quem é você.
+    await expect(page.getByRole("heading", { name: game === "craque" ? /Quem é você/i : "Quem está no banco", exact: game !== "craque" })).toBeVisible();
     if (game === "tecnico" && info.project.name === "celular") await expect(page.getByLabel("Nome do técnico")).toBeVisible();
   });
 }

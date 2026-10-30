@@ -74,7 +74,7 @@ export const challengePt = {
       goal: { one: "{n} prêmio de artilharia", other: "{n} prêmios de artilharia" },
       hint: "Vale a Chuteira de Ouro e a artilharia de qualquer competição.",
     },
-    goldenGloves: { name: "Paredão", goal: { one: "{n} Luva de Ouro", other: "{n} Luvas de Ouro" } },
+    goldenGloves: { name: "Paredão", goal: { one: "{n} vez entre os dez do Troféu Yashin", other: "{n} vezes entre os dez do Troféu Yashin" } },
   },
   /** A meta da Campanha de Copa, pela fase: o primeiro é a fase 1, o último a 8. */
   worldCupGoals: [
@@ -96,9 +96,9 @@ export const challengePt = {
     noRelegation: { name: "Nunca cair", rule: "Nenhum rebaixamento com o seu clube." },
     noBench: {
       name: "Titular sempre",
-      rule: { one: "A partir dos {age} anos, no máximo {limit} temporada terminada no banco.", other: "A partir dos {age} anos, no máximo {limit} temporadas terminadas no banco." },
+      rule: { one: "Antes dos {age} anos, vale tudo. Dos {age} anos até o fim, no máximo {limit} temporada terminada no banco.", other: "Antes dos {age} anos, vale tudo. Dos {age} anos até o fim, no máximo {limit} temporadas terminadas no banco." },
     },
-    noSecondDivision: { name: "Primeira classe", rule: "A partir dos {age} anos, nunca na segunda divisão." },
+    noSecondDivision: { name: "Primeira classe", rule: "Antes dos {age} anos, vale tudo. Dos {age} anos até o fim, nenhuma temporada na segunda divisão." },
     stayThree: { name: "Raízes", rule: "Nunca sair de um clube antes de três temporadas. Empréstimo não conta." },
     homeContinent: { name: "Casa no continente", rule: "Nunca jogar fora do seu continente." },
     noGiants: { name: "Sem gigantes", rule: "Nunca jogar num clube gigante, de força {strength} ou mais." },

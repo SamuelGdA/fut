@@ -10,6 +10,9 @@ import { useT } from "../../i18n/useT";
 import { usePrefs } from "../../store/prefs";
 import { useNavigation } from "../../app/navigation";
 import { Button } from "../../ui/Button";
+import { ConfirmDialog } from "../../ui/Overlays";
+import { notify } from "../../ui/toast/notify";
+import { useHall } from "../hall/store";
 import { COPY } from "./copy";
 
 export function PlayerControls({ done }: { done(): void }) {
@@ -23,6 +26,7 @@ export function PlayerControls({ done }: { done(): void }) {
   const [trait, setTrait] = useState<Trait>(current?.player.trait ?? "professional");
   const [owner, setOwner] = useState(current?.contract?.loan?.owner ?? "");
   const [forced, setForced] = useState("");
+  const [resetting, setResetting] = useState(false);
   const forceLabel = { pt: "Forçar decisão", en: "Force a decision", es: "Forzar decisión" }[locale];
   const groups = useMemo(() => {
     const career = current ?? createCareer({ seed: "debug-catalog", startYear: 2026, pace: "intense", difficulty: "normal", identity: { surname: "TESTE", position: "st", nationality: "BRA", foot: "right", dreamNumber: 9 } });
@@ -51,5 +55,7 @@ export function PlayerControls({ done }: { done(): void }) {
       useCareer.setState({ career: adjusted, status: "ready", avatar: useCareer.getState().avatar ?? draft.avatar, internalTesting: true, play: null, review: null });
       done(); useNavigation.getState().go("career", { force: true });
     }}>{text.apply}</Button>
+    <Button variant="secondary" onClick={() => setResetting(true)}>{text.resetAchievements}</Button>
+    <ConfirmDialog open={resetting} onOpenChange={setResetting} title={text.resetTitle} description={text.resetBody} confirmLabel={text.resetConfirm} cancelLabel={text.cancel} onConfirm={() => { void useHall.getState().resetAchievements().then(() => notify({ id: "achievements-reset", tone: "info", title: text.resetDone })); }} />
   </div>;
 }
