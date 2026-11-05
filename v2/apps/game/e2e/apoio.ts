@@ -4,7 +4,7 @@ import { deflateRawSync } from "node:zlib";
 import { readFileSync } from "node:fs";
 
 export interface FixtureStep { id:number;kind:string;year:number;age:number;option:number;history:number[];match:boolean }
-export const fixturePlans = (JSON.parse(readFileSync(new URL("./fixtures/momentos-m41.json",import.meta.url),"utf8")) as { plans:Record<string,FixtureStep[]> }).plans;
+export const fixturePlans = (JSON.parse(readFileSync(new URL("./fixtures/momentos-m43.json",import.meta.url),"utf8")) as { plans:Record<string,FixtureStep[]> }).plans;
 
 /**
  * O que toda jornada usa: abrir o jogo com preferências conhecidas, jogar um

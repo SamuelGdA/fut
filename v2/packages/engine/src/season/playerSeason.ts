@@ -14,7 +14,7 @@ import { stream } from "../rng";
 import type { Difficulty, Six } from "../types";
 import { clubIndex } from "../world/model";
 import { confederationOfClub, currentDivision, currentStrength, simulateWorldSeason } from "../world/season";
-import { CALENDAR, CLUB_IMPACT, GENERIC_CHAMPIONS, NATIONAL_IMPACT } from "../world/tuning";
+import { CALENDAR, CLUB_IMPACT, genericClubStrength as genericStrength, NATIONAL_IMPACT } from "../world/tuning";
 import type { CompetitionBoosts, LeagueResult, SeasonResults, WorldState } from "../world/types";
 import { drawInjury, type Injury } from "./injury";
 import {
@@ -151,8 +151,9 @@ function mean(values: readonly number[]): number {
   return values.length === 0 ? 0 : values.reduce((total, value) => total + value, 0) / values.length;
 }
 
+/** Representante genérico: a mesma força dos jogos do mundo (D117: inclui o asiático de reserva). */
 function genericClubStrength(id: string): number {
-  return GENERIC_CHAMPIONS.find((entry)=>entry.id===id || id.startsWith(`${entry.id}:`))?.strength ?? 60;
+  return genericStrength(id) ?? 60;
 }
 
 /**
@@ -215,6 +216,18 @@ function opposition(world: WorldState, results: SeasonResults, league: LeagueRes
   return 0.85 * leagueMean + 0.15 * mean(field.order.map(strengthOf));
 }
 
+/**
+ * D118: a partir dos 35, o clube poupa o veterano, mesmo titular: 4% menos
+ * participação por ano (96% aos 35, 76% aos 40), em jogos e no peso dele no
+ * time. Sem isso, o Fenômeno jogava aos 39 tanto quanto aos 28 e passava os
+ * 1.390 jogos de Shilton e os 46 títulos com folga.
+ */
+export const VETERAN_LOAD = { from: 35, perYear: 0.04 } as const;
+
+export function veteranLoad(age: number): number {
+  return 1 - VETERAN_LOAD.perYear * Math.max(0, age - VETERAN_LOAD.from + 1);
+}
+
 export function simulatePlayerSeason(input: PlayerSeasonInput): PlayerSeasonResult {
   const { seed, world, age, club, difficulty } = input;
   const modifiers = input.modifiers ?? {};
@@ -242,7 +255,7 @@ export function simulatePlayerSeason(input: PlayerSeasonInput): PlayerSeasonResu
   const floored = modifiers.minimumRole ? atLeastRole(player.position, shifted, modifiers.minimumRole) : shifted;
   // D107: quem explode ganha a vaga de titular no mesmo ano.
   const role = breakout ? atLeastRole(player.position, floored, "starter") : floored;
-  const participation = suspended ? 0 : role.participation;
+  const participation = suspended ? 0 : role.participation * veteranLoad(age);
 
   // Seleção: a convocação vem antes do torneio, porque soma força à seleção.
   const nation = getCountry(input.nationality);

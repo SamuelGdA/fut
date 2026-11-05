@@ -3,7 +3,7 @@ import { readFile } from "node:fs/promises";
 import { abrir, abrirMomento, auditar, esperarQueCaiba } from "./apoio";
 import { comConta } from "./conta";
 
-const metadata = JSON.parse(await readFile(new URL("./fixtures/momentos-m41.json", import.meta.url), "utf8")) as { moments: Record<string, { file: string; index: number }> };
+const metadata = JSON.parse(await readFile(new URL("./fixtures/momentos-m43.json", import.meta.url), "utf8")) as { moments: Record<string, { file: string; index: number }> };
 const RARITY = ["common", "rare", "epic", "legendary"];
 
 test("D106: conquistas da comum à lendária e seletor na fonte de título", async ({ page }) => {

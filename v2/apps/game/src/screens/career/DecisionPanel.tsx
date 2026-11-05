@@ -14,8 +14,11 @@ import {
   type DecisionOption,
   type Effect,
   type EventTarget,
+  canRedraw,
   FOCUS_SLOT,
   marketContext,
+  REDRAW,
+  redrawsLeft,
   continentalEntrants,
   starsAt,
   pressureTone,
@@ -41,6 +44,7 @@ import {
   Send,
   Shield,
   Shirt,
+  Shuffle,
   Swords,
   Zap,
 } from "lucide-react";
@@ -50,6 +54,8 @@ import { lastRecord } from "../../features/career/view";
 import { attributeText } from "../../i18n/attributes";
 import { useT } from "../../i18n/useT";
 import { feedback } from "../../services/feedback";
+import { useCareer } from "../../features/career/store";
+import { AdBreak } from "./AdBreak";
 import { Button } from "../../ui/Button";
 import { cn } from "../../ui/cn";
 import { Crest, Flag as CountryFlag, LeagueBadge } from "../../ui/Media";
@@ -103,6 +109,7 @@ export function DecisionPanel({ career, onChoose, original = null, result, onCon
   const { t, c, locale } = useT();
   const decision = career.decision;
   const [picked, setPicked] = useState<{ decision: number; option: string } | null>(null);
+  const [adOpen, setAdOpen] = useState(false);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const sectionRef = useRef<HTMLElement>(null);
   const decisionId = decision?.id ?? null;
@@ -222,6 +229,17 @@ export function DecisionPanel({ career, onChoose, original = null, result, onCon
           />
         ))}
       </div>
+
+      {/* D118: sortear outros clubes, depois de um anúncio. Some quando as duas vezes da carreira acabam. */}
+      {!chosen && canRedraw(career) ? (
+        <button type="button" className="option-redraw" title={t("career.redraw.hint", { left: redrawsLeft(career), max: REDRAW.max })} onClick={() => { feedback("select"); setAdOpen(true); }}>
+          <Shuffle size={16} aria-hidden="true" />
+          <span className="option-redraw-label">{t("career.redraw.label")}</span>
+          <span className="option-redraw-count numeric">{t("career.redraw.count", { left: redrawsLeft(career), max: REDRAW.max })}</span>
+          <span className="sr-only">{t("career.redraw.hint", { left: redrawsLeft(career), max: REDRAW.max })}</span>
+        </button>
+      ) : null}
+      <AdBreak open={adOpen} onDone={() => { setAdOpen(false); if (useCareer.getState().redraw()) feedback("confirm"); }} />
 
       {chosen ? null : <div className="decision-confirm">
         <Button

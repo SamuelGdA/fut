@@ -152,10 +152,12 @@ test("perfil: esqueletos enquanto carrega, números da conta e troféus com quan
   await expect(page.getByRole("heading", { name: "@craque_e2e", level: 1 })).toBeVisible();
   await expect(page.locator(".profile-stat").filter({ hasText: "Gols" }).first()).toContainText("2.840");
   await expect(page.locator(".profile-stat").filter({ hasText: "Bolas de Ouro" })).toContainText("5");
-  // A vitrine: o mais raro primeiro, com o selo da quantidade e nome acessível completo.
-  const first = page.locator(".profile-showcase .trophy-icon").first();
-  await expect(first).toHaveAttribute("aria-label", /Bola de Ouro: conquistada, conquistada em 5 carreiras/);
-  await expect(first.locator(".trophy-count")).toHaveText("×5");
+  // A vitrine (D118): os títulos primeiro, depois as outras conquistas, com o
+  // selo da quantidade e o nome acessível completo.
+  const icons = page.locator(".profile-showcase .trophy-icon");
+  await expect(icons.first()).toHaveAttribute("aria-label", /^Copa Libertadores: conquistada, conquistada em 3 carreiras/);
+  const ballon = icons.filter({ has: page.locator(".trophy-count", { hasText: "×5" }) }).first();
+  await expect(ballon).toHaveAttribute("aria-label", /Bola de Ouro: conquistada, conquistada em 5 carreiras/);
   await auditar(page, "Perfil");
   await page.screenshot({ path: info.outputPath("perfil.png"), fullPage: true });
 

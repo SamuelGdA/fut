@@ -240,9 +240,9 @@ test("recarregar retoma a última carreira do Técnico pelo diário de comandos"
   const header = await page.locator(".career-header").textContent();
   expect(await page.evaluate(() => JSON.parse(localStorage.getItem("futeiros.tecnico.save") ?? "{}").commands.length)).toBe(1);
   const dialogs: string[] = []; page.on("dialog", dialog => { dialogs.push(dialog.type()); void dialog.accept(); });
+  // D118: o endereço é o do Técnico; recarregar retoma a carreira direto, sem passar pelo hub.
+  await expect(page).toHaveURL(/\/tecnico$/);
   await page.reload();
-  await expect(page.getByRole("heading", { name: "Futeiros", level: 1 })).toBeVisible();
-  await cartao(page, "tecnico").getByRole("button", { name: "Voltar à carreira" }).click();
   await expect(page.getByRole("heading", { name: "Ações", level: 2 })).toBeVisible();
   expect(await page.locator(".career-header").textContent()).toBe(header);
   expect(dialogs).not.toContain("beforeunload");
@@ -587,8 +587,7 @@ test("o último Técnico retoma formação e seleção aberta depois de recarreg
   const name = await folha(page).getByRole("radio", { disabled: false }).first().locator(".font-semibold").first().innerText();
   const record = await page.evaluate(() => localStorage.getItem("futeiros.tecnico.save"));
   expect(record).not.toBeNull();
-  await page.reload(); await expect(page.getByRole("heading", { name: "Futeiros", exact: true })).toBeVisible();
-  await cartao(page, "tecnico").getByRole("button", { name: "Voltar à carreira", exact: true }).click();
+  await page.reload();
   await expect(folha(page).getByRole("radio", { disabled: false }).first()).toContainText(name);
   expect(await page.evaluate(() => localStorage.getItem("futeiros.tecnico.save"))).toBe(record);
   await folha(page).getByRole("button", { name: "Fechar", exact: true }).click();

@@ -3,7 +3,7 @@ import { create } from "zustand";
 import { safeStorage } from "../../services/storage";
 import { cloudClient, errorCode, isNetworkError } from "./client";
 import { ACCOUNTS_ENABLED, hasStoredSession } from "./config";
-import type { Profile, Trophy } from "./schemas";
+import type { ChallengeStreak, Profile, Trophy } from "./schemas";
 
 /** O Zod só chega com a primeira ação de conta: a abertura do jogo continua leve (D62). */
 const schemas = () => import("./schemas");
@@ -40,6 +40,8 @@ interface AccountState {
   user: AccountUser | null;
   profile: Profile | null;
   trophies: Trophy[];
+  /** Nota de hoje e sequências do Desafio (D118); `null` até o banco responder. */
+  streak: ChallengeStreak | null;
   dataStatus: DataStatus;
   /** A sessão veio de um link de recuperação: a tela pede a senha nova. */
   recovery: boolean;
@@ -128,11 +130,14 @@ export const useAccount = create<AccountState>()((set, get) => {
   /** Lê perfil e troféus do banco. Só as colunas da tela (D114). */
   async function loadData(client: SupabaseClient, user: AccountUser): Promise<void> {
     set({ dataStatus: "loading" });
-    const { PROFILE_COLUMNS, TROPHY_COLUMNS, profileSchema, trophySchema } = await schemas();
-    const [profile, trophies] = await Promise.all([
+    const { PROFILE_COLUMNS, TROPHY_COLUMNS, profileSchema, trophySchema, challengeStreakSchema } = await schemas();
+    const [profile, trophies, streak] = await Promise.all([
       client.from("profiles").select(PROFILE_COLUMNS).eq("id", user.id).maybeSingle(),
       client.from("user_trophies").select(TROPHY_COLUMNS),
+      client.rpc("meu_desafio"),
     ]);
+    const parsedStreak = challengeStreakSchema.array().safeParse(streak.data ?? []);
+    set({ streak: parsedStreak.success ? (parsedStreak.data[0] ?? null) : null });
     if (get().user?.id !== user.id) return;
     const parsedProfile = profile.data ? profileSchema.safeParse(profile.data) : null;
     const parsedTrophies = trophySchema.array().safeParse(trophies.data ?? []);
@@ -159,7 +164,7 @@ export const useAccount = create<AccountState>()((set, get) => {
 
   async function applySession(client: SupabaseClient, session: Session | null): Promise<void> {
     if (!session) {
-      set({ status: "guest", user: null, profile: null, trophies: [], dataStatus: "idle", recovery: false });
+      set({ status: "guest", user: null, profile: null, trophies: [], streak: null, dataStatus: "idle", recovery: false });
       return;
     }
     const user = userOf(session);
@@ -188,6 +193,7 @@ export const useAccount = create<AccountState>()((set, get) => {
     user: null,
     profile: null,
     trophies: [],
+    streak: null,
     dataStatus: "idle",
     recovery: false,
     notice: null,
@@ -368,6 +374,7 @@ export const useAccount = create<AccountState>()((set, get) => {
       if (error) {
         if (error.code === "23505") return "taken";
         if (error.code === "23514") return "username";
+        if (/username_recente/.test(error.message)) return "recent";
         return isNetworkError(error) ? "network" : "unknown";
       }
       if (!data) return "unknown";
@@ -384,7 +391,7 @@ export const useAccount = create<AccountState>()((set, get) => {
       } catch {
         /* Sem internet: a sessão local sai do mesmo jeito. */
       }
-      set({ status: "guest", user: null, profile: null, trophies: [], dataStatus: "idle", recovery: false, notice: "signedOut" });
+      set({ status: "guest", user: null, profile: null, trophies: [], streak: null, dataStatus: "idle", recovery: false, notice: "signedOut" });
     },
 
     async deleteAccount() {
@@ -398,7 +405,7 @@ export const useAccount = create<AccountState>()((set, get) => {
       } catch {
         /* A conta já não existe; a sessão local sai de qualquer jeito. */
       }
-      set({ status: "guest", user: null, profile: null, trophies: [], dataStatus: "idle", recovery: false, notice: "deleted" });
+      set({ status: "guest", user: null, profile: null, trophies: [], streak: null, dataStatus: "idle", recovery: false, notice: "deleted" });
       return null;
     },
 

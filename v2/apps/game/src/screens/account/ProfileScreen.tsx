@@ -1,8 +1,9 @@
+import { Tooltip } from "@base-ui/react/tooltip";
 import { ArrowRight, LogOut, Pencil, Play, Trash2 } from "lucide-react";
 import { type FormEvent, useEffect, useState } from "react";
 import { screenUrl, useNavigation } from "../../app/navigation";
 import { openLogin } from "../../features/account/openLogin";
-import type { Profile, Trophy } from "../../features/account/schemas";
+import { type Profile, type Trophy, USERNAME_COOLDOWN_DAYS } from "../../features/account/schemas";
 import { useAccount } from "../../features/account/store";
 import { AdSlot } from "../../features/consent/AdSlot";
 import { formatShortDate } from "../../i18n/format";
@@ -105,11 +106,9 @@ function ProfileError() {
 function ProfileView({ profile }: { profile: Profile }) {
   const { t, ct, locale, number } = useContaT();
   const go = useNavigation((state) => state.go);
-  const user = useAccount((state) => state.user);
   const trophies = useAccount((state) => state.trophies);
+  const streak = useAccount((state) => state.streak);
   const username = profile.username ?? "";
-  const providers = (user?.providers ?? []).map((provider) => (provider === "google" ? ct("profile.providers.google") : ct("profile.providers.email")));
-  const list = new Intl.ListFormat(locale, { type: "conjunction" }).format(providers);
 
   const stats: { section: ContaKey; items: { key: ContaKey; value: number }[] }[] = [
     {
@@ -129,8 +128,11 @@ function ProfileView({ profile }: { profile: Profile }) {
     {
       section: "profile.sections.challenge",
       items: [
-        { key: "profile.stats.challenges", value: profile.desafios },
+        { key: "profile.stats.today", value: streak?.hoje ?? 0 },
+        { key: "profile.stats.streakNow", value: streak?.sequencia_atual ?? 0 },
+        { key: "profile.stats.streakBest", value: streak?.maior_sequencia ?? 0 },
         { key: "profile.stats.bestChallenge", value: profile.melhor_desafio },
+        { key: "profile.stats.challenges", value: profile.desafios },
       ],
     },
     {
@@ -152,7 +154,6 @@ function ProfileView({ profile }: { profile: Profile }) {
           <h1 className="profile-name">@{username}</h1>
           <p className="mt-1 text-sm text-muted">
             {ct("profile.memberSince", { date: formatShortDate(Date.parse(profile.criado_em), locale) })}
-            {list ? ` · ${ct("profile.signsInWith", { list })}` : ""}
           </p>
         </div>
         <Button
@@ -185,7 +186,7 @@ function ProfileView({ profile }: { profile: Profile }) {
 
       <Showcase trophies={trophies} />
 
-      <AccountPanel username={username} />
+      <AccountPanel username={username} changedAt={profile.username_alterado_em} />
 
       <AdSlot placement="perfil" className="mt-6" />
 
@@ -222,7 +223,8 @@ function Showcase({ trophies }: { trophies: readonly Trophy[] }) {
   const shown = trophies
     .map((trophy) => ({ trophy, entry: catalogEntry(trophy.id_trophy) }))
     .filter((item): item is { trophy: Trophy; entry: NonNullable<ReturnType<typeof catalogEntry>> } => item.entry !== null)
-    .sort((a, b) => rarityRank(a.entry.rarity) - rarityRank(b.entry.rarity) || b.trophy.quantidade - a.trophy.quantidade || a.trophy.data_desbloqueio.localeCompare(b.trophy.data_desbloqueio))
+    // Os títulos primeiro, depois as outras conquistas; em cada parte, da mais rara à mais comum.
+    .sort((a, b) => Number(!a.entry.id.startsWith("title:")) - Number(!b.entry.id.startsWith("title:")) || rarityRank(a.entry.rarity) - rarityRank(b.entry.rarity) || b.trophy.quantidade - a.trophy.quantidade || a.trophy.data_desbloqueio.localeCompare(b.trophy.data_desbloqueio))
     .slice(0, SHOWCASE);
   return (
     <Panel
@@ -235,12 +237,12 @@ function Showcase({ trophies }: { trophies: readonly Trophy[] }) {
       ) : (
         <ul className="profile-showcase">
           {shown.map(({ trophy, entry }) => {
-            const { name } = entryText(locale, entry);
+            const { name, description } = entryText(locale, entry);
             const label = `${t("achievements.trophyUnlocked", { name })}, ${tp("achievements.quantity", trophy.quantidade).toLocaleLowerCase(locale)}`;
             return (
               <li key={trophy.id_trophy} className="profile-trophy">
                 <TrophyIcon id={entry.id} group={entry.group} rarity={entry.rarity} unlocked quantity={trophy.quantidade} label={label} language={locale} size="lg" />
-                <span className="profile-trophy-name" aria-hidden="true">{name}</span>
+                <TrophyCaption name={name} description={description} />
               </li>
             );
           })}
@@ -262,8 +264,13 @@ function Showcase({ trophies }: { trophies: readonly Trophy[] }) {
   );
 }
 
-function AccountPanel({ username }: { username: string }) {
-  const { ct } = useContaT();
+function AccountPanel({ username, changedAt }: { username: string; changedAt: string | null }) {
+  const { ct, locale } = useContaT();
+  // D118: depois de uma troca, o @ só muda de novo 30 dias depois.
+  const unlockAt = changedAt ? Date.parse(changedAt) + USERNAME_COOLDOWN_DAYS * 86_400_000 : 0;
+  const [now] = useState(() => Date.now());
+  const locked = unlockAt > now;
+  const nextChange = locked ? formatShortDate(unlockAt, locale) : null;
   const go = useNavigation((state) => state.go);
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(username);
@@ -278,7 +285,7 @@ function AccountPanel({ username }: { username: string }) {
     const result = await useAccount.getState().setUsername(draft);
     setBusy(false);
     if (result) {
-      setError(result === "taken" ? ct("login.errors.taken") : result === "network" ? ct("login.errors.network") : ct("login.errors.username"));
+      setError(result === "taken" ? ct("login.errors.taken") : result === "network" ? ct("login.errors.network") : result === "recent" ? ct("login.errors.recent", { date: nextChange ?? "" }) : ct("login.errors.username"));
       return;
     }
     feedback("confirm");
@@ -298,7 +305,7 @@ function AccountPanel({ username }: { username: string }) {
         </form>
       ) : (
         <div className="flex flex-wrap gap-2">
-          <Button variant="secondary" size="sm" onClick={() => setEditing(true)}>
+          <Button variant="secondary" size="sm" disabled={locked} title={nextChange ? ct("profile.usernameNext", { date: nextChange }) : undefined} onClick={() => setEditing(true)}>
             <Pencil size={15} aria-hidden="true" />
             {ct("profile.editUsername")}
           </Button>
@@ -320,6 +327,7 @@ function AccountPanel({ username }: { username: string }) {
           </Button>
         </div>
       )}
+      {!editing && nextChange ? <p className="mt-3 text-xs text-faint">{ct("profile.usernameNext", { date: nextChange })}</p> : null}
       <ConfirmDialog
         open={confirming}
         onOpenChange={setConfirming}
@@ -334,5 +342,21 @@ function AccountPanel({ username }: { username: string }) {
         }}
       />
     </Panel>
+  );
+}
+
+/** O nome do troféu inteiro, com o resumo da conquista ao passar o mouse ou focar (D118). */
+function TrophyCaption({ name, description }: { name: string; description: string }) {
+  return (
+    <Tooltip.Provider>
+      <Tooltip.Root>
+        <Tooltip.Trigger delay={150} render={<span className="profile-trophy-name" tabIndex={0} />}>{name}</Tooltip.Trigger>
+        <Tooltip.Portal>
+          <Tooltip.Positioner side="top" sideOffset={6} collisionPadding={10} className="layer-popover">
+            <Tooltip.Popup className="popover-popup" data-size="tip">{description}</Tooltip.Popup>
+          </Tooltip.Positioner>
+        </Tooltip.Portal>
+      </Tooltip.Root>
+    </Tooltip.Provider>
   );
 }

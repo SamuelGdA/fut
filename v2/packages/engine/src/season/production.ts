@@ -25,7 +25,7 @@ import type { Six } from "../types";
  * fazendo os mesmos gols.
  */
 export const SCORING: Readonly<Record<Position, { readonly goals: number; readonly assists: number }>> = {
-  st: { goals: 0.385, assists: 0.12 },
+  st: { goals: 0.377, assists: 0.12 },
   lw: { goals: 0.285, assists: 0.19 },
   rw: { goals: 0.285, assists: 0.19 },
   cam: { goals: 0.275, assists: 0.15 },

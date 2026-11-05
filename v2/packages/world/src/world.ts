@@ -2,13 +2,18 @@ import argClubs from "../data/clubs/arg.json";
 import bolClubs from "../data/clubs/bol.json";
 import braClubs from "../data/clubs/bra.json";
 import chiClubs from "../data/clubs/chi.json";
+import chnClubs from "../data/clubs/chn.json";
 import colClubs from "../data/clubs/col.json";
 import ecuClubs from "../data/clubs/ecu.json";
 import engClubs from "../data/clubs/eng.json";
 import espClubs from "../data/clubs/esp.json";
 import fraClubs from "../data/clubs/fra.json";
 import gerClubs from "../data/clubs/ger.json";
+import idnClubs from "../data/clubs/idn.json";
 import itaClubs from "../data/clubs/ita.json";
+import jpnClubs from "../data/clubs/jpn.json";
+import korClubs from "../data/clubs/kor.json";
+import ksaClubs from "../data/clubs/ksa.json";
 import mexClubs from "../data/clubs/mex.json";
 import parClubs from "../data/clubs/par.json";
 import perClubs from "../data/clubs/per.json";
@@ -133,13 +138,18 @@ const CLUB_FILES: ReadonlyArray<readonly [CountryCode, readonly RawClub[]]> = [
   ["BOL", bolClubs],
   ["BRA", braClubs],
   ["CHI", chiClubs],
+  ["CHN", chnClubs],
   ["COL", colClubs],
   ["ECU", ecuClubs],
   ["ENG", engClubs],
   ["ESP", espClubs],
   ["FRA", fraClubs],
   ["GER", gerClubs],
+  ["IDN", idnClubs],
   ["ITA", itaClubs],
+  ["JPN", jpnClubs],
+  ["KOR", korClubs],
+  ["KSA", ksaClubs],
   ["MEX", mexClubs],
   ["PAR", parClubs],
   ["PER", perClubs],

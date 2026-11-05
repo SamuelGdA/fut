@@ -18,8 +18,12 @@ export const GA_MEASUREMENT_ID = clean(import.meta.env.VITE_GA_MEASUREMENT_ID, /
 /** ID de editor do AdSense (`ca-pub-0000000000000000`). */
 export const ADSENSE_CLIENT = clean(import.meta.env.VITE_ADSENSE_CLIENT, /^ca-pub-\d{10,20}$/);
 
-/** Os espaços de anúncio do jogo. Nenhum fica no laço da carreira (o laço cabe numa tela, D23). */
-export const AD_PLACEMENTS = ["perfil", "resumo", "conquistas"] as const;
+/**
+ * Os espaços de anúncio do jogo. Nenhum fica dentro do laço da carreira (o
+ * laço cabe numa tela, D23): o da carreira (D118) ocupa só as margens laterais
+ * das telas largas, fora das três colunas.
+ */
+export const AD_PLACEMENTS = ["perfil", "resumo", "conquistas", "carreira"] as const;
 export type AdPlacement = (typeof AD_PLACEMENTS)[number];
 
 /** O bloco do AdSense de cada espaço (`VITE_ADSENSE_SLOT_PERFIL` e assim por diante), lido campo a campo. */
@@ -27,6 +31,7 @@ const SLOTS: Readonly<Record<AdPlacement, string | undefined>> = {
   perfil: import.meta.env.VITE_ADSENSE_SLOT_PERFIL,
   resumo: import.meta.env.VITE_ADSENSE_SLOT_RESUMO,
   conquistas: import.meta.env.VITE_ADSENSE_SLOT_CONQUISTAS,
+  carreira: import.meta.env.VITE_ADSENSE_SLOT_CARREIRA,
 };
 
 export function adSlotId(placement: AdPlacement): string | null {

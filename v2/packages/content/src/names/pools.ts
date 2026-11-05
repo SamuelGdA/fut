@@ -214,6 +214,37 @@ export const NAME_POOLS = {
       "Al-Malki", "Al-Amri", "Al-Juhani", "Al-Hajri", "Al-Subaie", "Al-Rashidi", "Al-Saadi", "Al-Hamdan", "Al-Faraj", "Al-Khaldi",
     ],
   },
+  // D117: as três culturas dos países asiáticos que ganharam liga e ainda caíam na mistura da AFC.
+  chinese: {
+    first: [
+      "Hao", "Jie", "Lei", "Yang", "Wei", "Jun", "Peng", "Tao", "Xin", "Bo",
+      "Yuxuan", "Zihao", "Haoran", "Mingze", "Junjie", "Tianyu", "Yifan", "Zhiwei", "Chenxi", "Ruiqi",
+    ],
+    last: [
+      "Wang", "Li", "Zhang", "Liu", "Chen", "Yang", "Huang", "Zhao", "Zhou", "Wu",
+      "Xu", "Sun", "Ma", "Zhu", "Hu", "Guo", "He", "Lin", "Gao", "Luo",
+    ],
+  },
+  indian: {
+    first: [
+      "Arjun", "Rohan", "Aditya", "Rahul", "Vikram", "Karan", "Siddharth", "Nikhil", "Pranav", "Rajesh",
+      "Lalremruata", "Jeakson", "Anirudh", "Suresh", "Deepak", "Imran", "Akash", "Manvir", "Lalthan", "Bipin",
+    ],
+    last: [
+      "Sharma", "Singh", "Kumar", "Das", "Nair", "Menon", "Reddy", "Bose", "Ghosh", "Pillai",
+      "Thapa", "Rao", "Gupta", "Mondal", "Lalrinzuala", "Fernandes", "Dsouza", "Khan", "Iyer", "Verma",
+    ],
+  },
+  indonesian: {
+    first: [
+      "Rizky", "Arif", "Fajar", "Dimas", "Bayu", "Yoga", "Andika", "Rafi", "Hendra", "Bagas",
+      "Ilham", "Agung", "Teguh", "Wahyu", "Rendy", "Fikri", "Ricky", "Dicky", "Yusuf", "Eka",
+    ],
+    last: [
+      "Saputra", "Pratama", "Wijaya", "Hidayat", "Nugroho", "Setiawan", "Kurniawan", "Santoso", "Gunawan", "Siregar",
+      "Simanjuntak", "Lubis", "Nasution", "Hasibuan", "Purnomo", "Sihombing", "Firmansyah", "Ramadhan", "Syahputra", "Maulana",
+    ],
+  },
 } as const satisfies Readonly<Record<string, NamePool>>;
 
 export type NameCulture = keyof typeof NAME_POOLS;
@@ -284,6 +315,9 @@ export const COUNTRY_CULTURES: Readonly<Record<CountryCode, readonly NameCulture
   BFA: ["westAfricaFrancophone"],
   JPN: ["japanese"],
   KOR: ["korean"],
+  CHN: ["chinese"],
+  IND: ["indian"],
+  IDN: ["indonesian"],
   TUR: ["turkish"],
   POL: ["eastern"],
   CZE: ["eastern"],

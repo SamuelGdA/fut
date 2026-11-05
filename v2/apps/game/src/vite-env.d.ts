@@ -18,6 +18,7 @@ interface ImportMetaEnv {
   readonly VITE_ADSENSE_SLOT_PERFIL?: string;
   readonly VITE_ADSENSE_SLOT_RESUMO?: string;
   readonly VITE_ADSENSE_SLOT_CONQUISTAS?: string;
+  readonly VITE_ADSENSE_SLOT_CARREIRA?: string;
   /** E-mail de contato das páginas legais (D113). */
   readonly VITE_CONTACT_EMAIL?: string;
 }

@@ -76,13 +76,6 @@ function Stage() {
   ];
   return (
     <section className="auth-stage pitch-stripes" aria-labelledby="auth-title">
-      <svg className="auth-stage-pitch" viewBox="0 0 400 600" aria-hidden="true" focusable="false" preserveAspectRatio="xMidYMid slice">
-        <rect x="20" y="20" width="360" height="560" rx="6" />
-        <line x1="20" y1="300" x2="380" y2="300" />
-        <circle cx="200" cy="300" r="64" className="auth-stage-circle" />
-        <rect x="110" y="20" width="180" height="84" />
-        <rect x="110" y="496" width="180" height="84" />
-      </svg>
       <div className="auth-stage-copy">
         <p className="eyebrow text-glory">{ct("login.eyebrow")}</p>
         <h1 id="auth-title" className="auth-title">{ct("login.title")}</h1>
@@ -96,19 +89,29 @@ function Stage() {
           ))}
         </ul>
       </div>
-      <div className="auth-stage-card" aria-hidden="true">
-        <PlayerCard
-          surname={draft.surname.trim().toLocaleUpperCase() || t("card.you")}
-          position={draft.position ?? "st"}
-          ovr={null}
-          attributes={null}
-          nationality={draft.nationality}
-          club={null}
-          league={null}
-          shirt={draft.dreamNumber}
-          avatar={draft.avatar}
-          width={168}
-        />
+      {/* D118: o campo e a carta no meio do palco, à mostra, no espaço que sobrava. */}
+      <div className="auth-stage-art" aria-hidden="true">
+        <svg className="auth-stage-pitch" viewBox="0 0 400 600" aria-hidden="true" focusable="false" preserveAspectRatio="xMidYMid slice">
+          <rect x="20" y="20" width="360" height="560" rx="6" />
+          <line x1="20" y1="300" x2="380" y2="300" />
+          <circle cx="200" cy="300" r="64" className="auth-stage-circle" />
+          <rect x="110" y="20" width="180" height="84" />
+          <rect x="110" y="496" width="180" height="84" />
+        </svg>
+        <div className="auth-stage-card">
+          <PlayerCard
+            surname={draft.surname.trim().toLocaleUpperCase() || t("card.you")}
+            position={draft.position ?? "st"}
+            ovr={null}
+            attributes={null}
+            nationality={draft.nationality}
+            club={null}
+            league={null}
+            shirt={draft.dreamNumber}
+            avatar={draft.avatar}
+            width={200}
+          />
+        </div>
       </div>
     </section>
   );

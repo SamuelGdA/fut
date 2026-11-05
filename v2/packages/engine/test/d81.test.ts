@@ -40,8 +40,8 @@ describe("D81: raridade e contexto da partida", () => {
     expect(matchChance(at(50), { ...match, scene: "decisivePenalty" }, "leave")).toBe(0.5);
   });
   it("aumenta a ajuda de um destaque fraco sem beneficiar elite ou reserva que não joga", () => {
-    expect(playerClubImpact(60, 85, 1)).toBeCloseTo(7.1);
-    expect(playerClubImpact(70, 97, 1)).toBeCloseTo(5.97);
+    expect(playerClubImpact(60, 85, 1)).toBeCloseTo(6.86); // D119: limite 14 (era 7,1)
+    expect(playerClubImpact(70, 97, 1)).toBeCloseTo(5.73);
     expect(playerClubImpact(80, 85, 1)).toBe(1.5);
     expect(playerClubImpact(60, 85, 0)).toBe(0);
   });

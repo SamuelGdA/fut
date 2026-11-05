@@ -75,9 +75,31 @@ export const SCREEN_PATHS: Readonly<Partial<Record<Screen, string>>> = {
   privacy: "privacidade",
 };
 
-/** O endereço de uma tela com caminho próprio, dentro da base do build. */
+/**
+ * O endereço de cada modo (D118): toda tela do Craque mostra `/craque` e toda
+ * tela do Técnico mostra `/tecnico`, então o link do modo pode ser
+ * compartilhado. Abrir o endereço cai na entrada do modo: a casa do Craque
+ * (a sessão dele vive em memória) e o Técnico, que retoma a carreira salva
+ * ou, sem carreira, abre a criação do técnico. A tela do link de carreira
+ * (`#c=`) fica na raiz, com o hash.
+ */
+export const GAME_PATHS: Readonly<Record<Exclude<Game, "hub">, { path: string; entry: Screen }>> = {
+  craque: { path: "craque", entry: "home" },
+  tecnico: { path: "tecnico", entry: "tecnico" },
+};
+
+/** O caminho que a barra de endereço mostra numa tela, sem a base; `undefined` é a raiz. */
+export function screenPath(screen: Screen): string | undefined {
+  const own = SCREEN_PATHS[screen];
+  if (own) return own;
+  const game = SCREEN_GAME[screen];
+  if (game === "hub" || screen === "shared") return undefined;
+  return GAME_PATHS[game].path;
+}
+
+/** O endereço de uma tela com caminho próprio ou de modo, dentro da base do build. */
 export function screenUrl(screen: Screen, base: string = import.meta.env.BASE_URL): string | undefined {
-  const path = SCREEN_PATHS[screen];
+  const path = screenPath(screen);
   if (!path) return undefined;
   return `${base.endsWith("/") ? base : `${base}/`}${path}`;
 }
@@ -132,16 +154,16 @@ function canUseHistory(): boolean {
 /**
  * Ao sair da tela do link compartilhado, o `#c=` sai da barra de endereço; ao
  * sair da página não encontrada, o endereço desconhecido vira a raiz do jogo:
- * recarregar depois abre o jogo normal. Telas com endereço próprio (D112)
- * põem o caminho delas; sair delas volta para a raiz. Fora isso, a URL fica
- * como está.
+ * recarregar depois abre o jogo normal. Telas com endereço próprio (D112) ou
+ * de modo (D118) põem o caminho delas; sair delas para o hub volta para a
+ * raiz. Fora isso, a URL fica como está.
  */
 function urlLeaving(from: Screen, to: Screen): string | undefined {
   if (from === to) return undefined;
   const own = screenUrl(to);
   if (own) return own;
   if (from === "shared") return `${window.location.pathname}${window.location.search}`;
-  if (from === "notFound" || SCREEN_PATHS[from]) return import.meta.env.BASE_URL;
+  if (from === "notFound" || screenPath(from)) return import.meta.env.BASE_URL;
   return undefined;
 }
 

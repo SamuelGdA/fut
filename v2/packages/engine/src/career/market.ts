@@ -30,11 +30,12 @@ export const MARKET = {
   reputationMax: 3,
   /**
    * Clube nenhum contrata um veterano pelo nível de um jovem. Acima desta
-   * idade, cada ano tira 1,8 do nível: é o que faz a maioria das carreiras
-   * acabar entre 33 e 38 (GDD 40.1). Calibrado pelo harness.
+   * idade, cada ano tira 2,2 do nível: é o que faz a maioria das carreiras
+   * acabar entre 33 e 38 (GDD 40.1). Calibrado pelo harness; era 1,8 até a
+   * D117, quando as ligas asiáticas encheram o mercado de clubes modestos.
    */
   veteranFrom: 32,
-  veteranPerYear: 1.8,
+  veteranPerYear: 2.3,
   /** Passo acima: força pelo menos isto maior que a do clube atual. */
   stepUp: 2,
   /**

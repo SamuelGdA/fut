@@ -50,9 +50,18 @@ describe("endereço do jogo e página não encontrada", () => {
     expect(screenOfPath("/craque/login", "/craque/")).toBe("login");
     expect(screenOfPath("/login/outra", "/")).toBeNull();
     expect(startScreen("", "/perfil")).toBe("profile");
+    expect(screenOfPath("/craque", "/")).toBe("home");
+    expect(screenOfPath("/tecnico/", "/")).toBe("tecnico");
+    expect(startScreen("#c=abc", "/craque")).toBe("shared");
+    expect(startScreen("", "/craque")).toBe("home");
     expect(startScreen("?code=abc", "/login")).toBe("login");
     expect(screenUrl("privacy", "/")).toBe("/privacidade");
-    expect(screenUrl("career", "/")).toBeUndefined();
+    // D118: cada modo tem o seu endereço; o hub e o link de carreira ficam na raiz.
+    expect(screenUrl("career", "/")).toBe("/craque");
+    expect(screenUrl("home", "/")).toBe("/craque");
+    expect(screenUrl("tecnicoIdentity", "/")).toBe("/tecnico");
+    expect(screenUrl("hub", "/")).toBeUndefined();
+    expect(screenUrl("shared", "/")).toBeUndefined();
   });
 
   it("caminho desconhecido abre a página não encontrada, antes de qualquer save", () => {

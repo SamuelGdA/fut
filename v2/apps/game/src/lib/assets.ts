@@ -4,7 +4,7 @@ import {
   toArtLeague,
   trophyArtUrl,
 } from "@craque/art";
-import { type Award, type Club, type Competition, getClub, type League } from "@craque/world";
+import { type Award, awardImageFor, type Club, type Competition, getClub, type League } from "@craque/world";
 import { create } from "zustand";
 import { ASSET_MODE, TROPHY_ASSET_MODE, type AssetMode } from "./env";
 
@@ -62,8 +62,9 @@ export function competitionTrophyUrl(competition: Competition, mode: AssetMode):
   return trophyArtUrl(competition.art.key, competition.art.category);
 }
 
-export function awardImageUrl(award: Award, mode: AssetMode): string {
-  if (mode === "real" && award.image) return publicAsset(award.image);
+export function awardImageUrl(award: Award, mode: AssetMode, competition?: string | null): string {
+  const image = awardImageFor(award, competition);
+  if (mode === "real" && image) return publicAsset(image);
   return trophyArtUrl(award.art, "cup");
 }
 

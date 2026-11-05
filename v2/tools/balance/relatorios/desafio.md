@@ -1,6 +1,6 @@
 # Desafio do dia
 
-Motor 2.0.0-m25, semente `balanco-m2`. 3650 dias a partir de 2026-01-01.
+Motor 2.0.0-m43, semente `balanco-m2`. 3650 dias a partir de 2026-01-01.
 
 O alvo de cada missão depende da faixa de talento do jogador do dia e é o percentil 65 de carreiras comuns com as regras do desafio (Difícil, Normal, aposentar a partir dos 27): o jogo comum cumpre cerca de um terço, e quem persegue a missão cumpre bem mais. Recalibrar: `pnpm desafio:calibrar`.
 Equilibrada, ambiciosa e fiel têm o mesmo peso na amostra e nas tentativas. Nenhuma consulta a missão ou o édito para escolher.
@@ -11,63 +11,63 @@ Equilibrada, ambiciosa e fiel têm o mesmo peso na amostra e nas tentativas. Nen
 |---|---|---|---|
 | ✓ | Mão do dia válida em 3650 dias seguidos (invariante 21) | 100% | 100.0% |
 | ✓ | Toda missão aparece em alguma mão | 37 de 37 | 37 de 37 |
-| ✓ | Missões cumpridas pelo jogo comum, por faixa de talento (alvo no percentil 65) | 15% a 55% em toda célula com 30+ carreiras (mais a tolerância da amostra) | 161 células, todas dentro |
+| ✓ | Missões cumpridas pelo jogo comum, por faixa de talento (alvo no percentil 65) | 15% a 55% em toda célula com 30+ carreiras (mais a tolerância da amostra) | 157 células, todas dentro |
 | ✓ | Todo édito tem dente e dá para cumprir: quebra pelo jogo comum | 10% a 75% | 10 éditos dentro |
-| ✓ | Missões cheias por tentativa típica (perto de uma cheia e uma parcial) | 0,6 a 1,6 | 0.94 |
+| ✓ | Missões cheias por tentativa típica (perto de uma cheia e uma parcial) | 0,6 a 1,6 | 1.09 |
 
 ## Tentativas de jogadores comuns
 
-360 tentativas em 120 dias. Pontuação: mediana 592, percentil 90 778, máxima 885. Édito intacto em 57% (o jogo comum não presta atenção nele). Missões cheias por tentativa: 0.94.
+360 tentativas em 120 dias. Pontuação: mediana 442, percentil 90 776, máxima 877. Édito intacto em 55% (o jogo comum não presta atenção nele). Missões cheias por tentativa: 1.09.
 
 | Faixa do dia | Dias em 10 anos | Tentativas | Pontuação (mediana) | Missões cheias |
 |---|---:|---:|---:|---:|
-| Operário | 1621 | 159 | 620 | 0.92 |
-| Promissor | 1216 | 111 | 555 | 0.95 |
-| Craque | 570 | 60 | 539 | 0.80 |
-| Estrela | 179 | 27 | 634 | 1.26 |
-| Fenômeno | 64 | 3 | 355 | 1.33 |
+| Operário | 1215 | 132 | 400 | 1.14 |
+| Promissor | 873 | 81 | 606 | 1.16 |
+| Craque | 433 | 51 | 582 | 0.94 |
+| Estrela | 133 | 18 | 408 | 1.11 |
+| Fenômeno | 996 | 78 | 366 | 1.00 |
 
 ## Alvos e cumprimento por missão
 
 | Missão | Mãos | Operário | Promissor | Craque | Estrela | Fenômeno |
 |---|---:|---:|---:|---:|---:|---:|
-| careerGoals | 239 | 90 (33%) | 115 (32%) | 145 (32%) | 180 (33%) | 250 (37%) |
-| seasonGoals | 203 | 14 (37%) | 17 (34%) | 19 (30%) | 22 (33%) | 30 (33%) |
-| contributions | 323 | 160 (34%) | 210 (34%) | 260 (32%) | 310 (34%) | 410 (36%) |
-| cleanSheets | 154 | 160 (29%) | 195 (31%) | 230 (48%) | 300 (38%) | 400 (26%) |
-| totalTitles | 400 | 4 (32%) | 5 (35%) | 6 (38%) | 13 (38%) | 29 (33%) |
-| leagueTitles | 373 | 1 (41%) | 2 (30%) | 2 (39%) | 4 (38%) | 8 (34%) |
-| continentalTitles | 84 | fora | fora | 1 (19%) | 1 (39%) | 2 (43%) |
-| cupTitles | 390 | 1 (36%) | 2 (27%) | 2 (36%) | 4 (37%) | 8 (32%) |
-| longestStay | 324 | 13 (30%) | 13 (33%) | 12 (35%) | 14 (33%) | 16 (33%) |
-| firstClubGames | 330 | 24 (38%) | 24 (34%) | 25 (30%) | 34 (31%) | 95 (35%) |
-| clubLegend | 334 | 1 (35%) | 1 (40%) | 1 (43%) | fora | fora |
-| twoClubIdol | 22 | fora | fora | fora | 2 (25%) | 2 (40%) |
-| peakFans | 408 | 85 (35%) | 90 (38%) | 95 (34%) | 100 (51%) | fora |
-| clubs | 298 | 5 (24%) | 5 (37%) | 5 (46%) | 6 (24%) | 5 (46%) |
-| countries | 348 | 3 (47%) | 4 (26%) | 4 (35%) | 4 (40%) | 4 (40%) |
-| seasonsAbroad | 407 | 16 (28%) | 16 (42%) | 17 (33%) | 17 (38%) | 17 (33%) |
-| titleCountries | 362 | 1 (41%) | 1 (51%) | 2 (18%) | 2 (33%) | 2 (47%) |
-| peakOvr | 436 | 70 (46%) | 80 (17%) | 85 (31%) | 90 (40%) | 95 (54%) |
-| bestJump | 358 | 4 (28%) | 5 (18%) | 5 (42%) | fora | 6 (19%) |
-| ovrAt21 | 320 | 60 (48%) | 65 (30%) | fora | 70 (47%) | 80 (27%) |
-| eliteSeasons | 77 | fora | fora | 1 (31%) | 10 (32%) | 14 (31%) |
-| underdogTitles | 381 | 3 (43%) | 4 (30%) | 4 (32%) | 3 (42%) | 4 (33%) |
-| promotions | 392 | 2 (44%) | 3 (19%) | 2 (43%) | 2 (34%) | 2 (25%) |
-| underdogStar | 386 | 10 (34%) | 11 (35%) | 9 (35%) | 8 (36%) | 6 (38%) |
-| underdogPodiums | 390 | 3 (30%) | 3 (40%) | 3 (37%) | 3 (38%) | 3 (35%) |
-| caps | 441 | 1 (15%) | 21 (34%) | 105 (35%) | 145 (30%) | 170 (32%) |
-| nationalGoals | 131 | fora | 1 (35%) | 7 (35%) | 16 (33%) | 27 (33%) |
-| tournaments | 225 | fora | 1 (34%) | 4 (38%) | 6 (33%) | 7 (35%) |
-| worldCupRun | 203 | fora | 2 (18%) | 3 (40%) | 5 (26%) | 6 (33%) |
-| seasons | 395 | 21 (24%) | 21 (40%) | 22 (22%) | 22 (25%) | 22 (25%) |
-| totalGames | 394 | 520 (31%) | 610 (31%) | 720 (34%) | 840 (35%) | 980 (33%) |
-| lateGames | 403 | 95 (35%) | 120 (36%) | 135 (37%) | 150 (37%) | 170 (31%) |
-| lastAge | 380 | 36 (24%) | 36 (40%) | 37 (22%) | 37 (25%) | 37 (25%) |
-| ballonPodiums | 6 | fora | fora | fora | fora | 1 (29%) |
-| awardsTotal | 418 | 3 (30%) | 5 (40%) | 8 (37%) | 16 (38%) | 29 (33%) |
-| scoringAwards | 201 | 1 (18%) | 1 (20%) | 1 (24%) | 1 (26%) | 2 (33%) |
-| goldenGloves | 14 | fora | 1 (19%) | 5 (52%) | 10 (43%) | 13 (29%) |
+| careerGoals | 241 | 110 (33%) | 150 (31%) | 195 (30%) | 240 (38%) | 330 (37%) |
+| seasonGoals | 198 | 18 (32%) | 21 (31%) | 25 (32%) | 30 (27%) | 38 (33%) |
+| contributions | 313 | 170 (36%) | 220 (32%) | 280 (30%) | 350 (36%) | 480 (36%) |
+| cleanSheets | 148 | 165 (32%) | 200 (37%) | 250 (36%) | 320 (31%) | 410 (37%) |
+| totalTitles | 382 | 4 (24%) | 5 (28%) | 7 (33%) | 16 (26%) | 32 (37%) |
+| leagueTitles | 361 | 1 (40%) | 2 (28%) | 3 (27%) | 5 (28%) | 9 (34%) |
+| continentalTitles | 161 | fora | fora | 1 (20%) | 1 (38%) | 3 (34%) |
+| cupTitles | 379 | 1 (28%) | 1 (43%) | 2 (33%) | 5 (23%) | 8 (33%) |
+| longestStay | 327 | 13 (34%) | 13 (34%) | 13 (35%) | 14 (36%) | 17 (35%) |
+| firstClubGames | 336 | 24 (36%) | 25 (28%) | 22 (36%) | 38 (32%) | 90 (32%) |
+| clubLegend | 265 | 1 (34%) | 1 (42%) | 1 (45%) | fora | fora |
+| twoClubIdol | 110 | fora | fora | fora | 2 (27%) | 2 (42%) |
+| peakFans | 308 | 85 (30%) | 90 (37%) | 100 (29%) | 100 (44%) | fora |
+| clubs | 296 | 5 (34%) | 5 (41%) | 6 (23%) | 6 (26%) | 5 (44%) |
+| countries | 353 | 3 (54%) | 4 (30%) | 4 (43%) | 4 (44%) | 4 (41%) |
+| seasonsAbroad | 405 | 16 (47%) | 17 (43%) | 18 (32%) | 18 (32%) | 18 (36%) |
+| titleCountries | 365 | 1 (40%) | 1 (45%) | 2 (22%) | 2 (32%) | 2 (45%) |
+| peakOvr | 436 | 70 (48%) | 80 (15%) | 85 (30%) | 90 (36%) | 95 (57%) |
+| bestJump | 365 | 4 (26%) | 5 (11%) | 5 (28%) | 5 (50%) | 6 (19%) |
+| ovrAt21 | 375 | 60 (50%) | 65 (31%) | 70 (14%) | 75 (20%) | 80 (33%) |
+| eliteSeasons | 164 | fora | fora | 1 (30%) | 11 (25%) | 15 (35%) |
+| underdogTitles | 383 | 3 (26%) | 4 (23%) | 3 (33%) | 3 (38%) | 4 (24%) |
+| promotions | 390 | 2 (50%) | 2 (48%) | 2 (41%) | 2 (31%) | 2 (29%) |
+| underdogStar | 389 | 11 (35%) | 11 (38%) | 10 (32%) | 8 (36%) | 6 (30%) |
+| underdogPodiums | 384 | 2 (42%) | 3 (38%) | 3 (28%) | 3 (29%) | 3 (25%) |
+| caps | 433 | 1 (10%) | 17 (30%) | 110 (28%) | 155 (30%) | 185 (36%) |
+| nationalGoals | 158 | fora | 1 (29%) | 8 (32%) | 21 (37%) | 40 (35%) |
+| tournaments | 278 | fora | 1 (30%) | 4 (40%) | 6 (36%) | 8 (39%) |
+| worldCupRun | 259 | fora | 2 (19%) | 3 (38%) | 5 (31%) | 6 (39%) |
+| seasons | 239 | 22 (32%) | 22 (46%) | fora | fora | fora |
+| totalGames | 405 | 520 (33%) | 620 (34%) | 740 (28%) | 870 (28%) | 1020 (37%) |
+| lateGames | 411 | 95 (38%) | 140 (28%) | 160 (26%) | 170 (28%) | 195 (29%) |
+| lastAge | 217 | 37 (32%) | 37 (46%) | fora | fora | fora |
+| ballonPodiums | 83 | fora | fora | fora | fora | 1 (26%) |
+| awardsTotal | 421 | 3 (28%) | 5 (31%) | 9 (27%) | 17 (28%) | 32 (36%) |
+| scoringAwards | 196 | 1 (27%) | 1 (32%) | 2 (26%) | 3 (28%) | 5 (35%) |
+| goldenGloves | 16 | fora | 1 (29%) | 6 (43%) | 11 (38%) | 14 (29%) |
 
 Cada célula: o alvo e, entre parênteses, quanto o jogo comum cumpriu. "fora": a missão não entra nas mãos daquela faixa.
 
@@ -75,15 +75,15 @@ Cada célula: o alvo e, entre parênteses, quanto o jogo comum cumpriu. "fora": 
 
 | Édito | Mãos em 10 anos | Quebrado pelo jogo comum |
 |---|---:|---:|
-| homeContinent | 366 | 65% |
-| fourClubs | 366 | 40% |
-| noRelegation | 365 | 60% |
-| noGiants | 365 | 29% |
-| minGames | 365 | 18% |
-| stayThree | 365 | 28% |
-| noBigFive | 365 | 50% |
-| noLoans | 365 | 10% |
-| noBench | 364 | 37% |
-| noSecondDivision | 364 | 70% |
+| homeContinent | 366 | 74% |
+| fourClubs | 366 | 43% |
+| noRelegation | 365 | 61% |
+| noGiants | 365 | 28% |
+| minGames | 365 | 16% |
+| stayThree | 365 | 29% |
+| noBigFive | 365 | 45% |
+| noLoans | 365 | 11% |
+| noBench | 364 | 43% |
+| noSecondDivision | 364 | 67% |
 
 A quebra é medida em todas as carreiras da amostra, contra todos os éditos: o jogo comum não presta atenção em édito nenhum.

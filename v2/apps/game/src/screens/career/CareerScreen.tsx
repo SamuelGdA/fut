@@ -1,4 +1,5 @@
 import { MatchAtmosphere } from "./MatchAtmosphere";
+import { AdSlot } from "../../features/consent/AdSlot";
 import { SeasonDecision } from "./SeasonDecision";
 import { useSeasonFlow } from "../../features/career/useSeasonFlow";
 import { matchTheme } from "../../features/career/matchTheme";
@@ -207,6 +208,9 @@ export function CareerScreen() {
               <ExploreColumn career={career} onReplay={onReplay} challenge={challenge} />
             </div>
           </div>
+          {/* D118: anúncio só nas margens das telas largas, fora das colunas do laço. */}
+          <AdSlot placement="carreira" className="career-ad" />
+          <AdSlot placement="carreira" className="career-ad" />
         </main>
       ) : (
         <BaseTabs.Root

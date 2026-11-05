@@ -3,6 +3,7 @@ import { outcomeStream } from "./outcome";
 import { applyEffects } from "./effects";
 import { appendLog, stepLog } from "./log";
 import { moveTo } from "./move";
+import { canRedraw, REDRAW, redrawWindow } from "./decisions";
 import { resolveDrama, startDrama } from "./drama";
 import { attributesAt } from "../player/player";
 import { applyFocusNow } from "../evolution/training";
@@ -66,6 +67,14 @@ function retireReason(decision: Decision): EndReason {
 }
 
 export function resolveChoice(career: Career, choice: Choice): Step {
+  // D118: o novo sorteio de clubes não é uma opção da decisão; é uma escolha
+  // à parte, guardada no save como as outras.
+  if (choice.option === REDRAW.option) {
+    if (career.end || !career.decision) throw new CareerError("ended", "a carreira já terminou");
+    if (choice.decision !== career.decision.id) throw new CareerError("stale", `escolha para a decisão ${choice.decision}, mas a atual é a ${career.decision.id}`);
+    if (!canRedraw(career)) throw new CareerError("unknownOption", "novo sorteio indisponível nesta decisão");
+    return { career: redrawWindow({ ...career, choices: [...career.choices, choice] }), notices: [] };
+  }
   const { decision, option } = findOption(career, choice);
   const notices: CareerNotice[] = [];
   const trainingStart = option.kind === "focus" ? attributesAt(career.player, career.age) : undefined;

@@ -64,8 +64,9 @@ describe("endereços próprios", () => {
   it("o build grava uma página para cada tela com caminho", () => {
     const source = readFileSync(new URL("../src/app/navigation.ts", import.meta.url), "utf8");
     const block = /export const SCREEN_PATHS[^{]*\{([^}]*)\}/.exec(source)?.[1] ?? "";
-    const paths = [...block.matchAll(/:\s*"([^"]+)"/g)].map((match) => match[1]);
-    expect(paths.length).toBe(4);
+    const games = /export const GAME_PATHS[^=]*=\s*\{([\s\S]*?)\n\};/.exec(source)?.[1] ?? "";
+    const paths = [...block.matchAll(/:\s*"([^"]+)"/g), ...games.matchAll(/path:\s*"([^"]+)"/g)].map((match) => match[1]);
+    expect(paths.length).toBe(6);
     expect([...ROUTE_PATHS].sort()).toEqual(paths.sort());
   });
 });

@@ -2,6 +2,8 @@ import type { AvatarConfig } from "@craque/art";
 import {
   attributesAt,
   canRetireNow,
+  canRedraw,
+  REDRAW,
   type Career,
   CareerError,
   type CareerSave,
@@ -63,6 +65,8 @@ interface CareerState {
   branch(source: CareerSave, avatar: AvatarConfig | null, index: number): boolean;
   /** Resolve a opção da decisão atual. Devolve falso se a escolha não serve mais (clique duplo, aba velha). */
   choose(optionId: string): boolean;
+  /** D118: sorteia outros clubes na janela (até duas vezes por carreira). Devolve falso se não vale mais. */
+  redraw(): boolean;
   /** Encerrar carreira (GDD 5): aposenta na hora. */
   retire(): void;
   /** A carreira terminou e o jogador abriu o resumo nesta sessão. */
@@ -175,6 +179,22 @@ export const useCareer = create<CareerState>()((set, get) => {
         if (step.career.end) void recordFinished(step.career, avatar, alternate !== null);
         else if (alternate === null) void recordStep(step.career);
       }
+      return true;
+    },
+
+    redraw() {
+      const { career, alternate } = get();
+      const decision = career?.decision;
+      if (!career || !decision || !canRedraw(career)) return false;
+      let next;
+      try {
+        next = choose(career, { decision: decision.id, option: REDRAW.option }).career;
+      } catch (error) {
+        if (error instanceof CareerError) return false;
+        throw error;
+      }
+      set({ career: next, review: null });
+      if (!get().internalTesting && alternate === null) void recordStep(next);
       return true;
     },
 

@@ -11,6 +11,8 @@ import type { CountryCode } from "@craque/world";
 export const BROADCAST_MOTIFS = [
   "stars", "arcs", "hatch", "rays", "papelitos", "globe", "mosaic", "aguayo", "kente", "waves", "lattice",
   "shards", "ribbons", "argyle", "blueprint", "deco", "stands", "pennants", "bracket", "peaks", "sweep", "stripes", "pinstripes",
+  // D117: Ásia.
+  "constellation", "seigaiha", "girih", "xiangyun", "gwae", "kawung",
 ] as const;
 export type BroadcastMotif = (typeof BROADCAST_MOTIFS)[number];
 
@@ -18,6 +20,8 @@ export type BroadcastMotif = (typeof BROADCAST_MOTIFS)[number];
 export const BROADCAST_EMBLEMS = [
   "starball", "arcs", "diamond", "laurel", "compass", "globe", "cup", "crown", "plate", "scudetto",
   "sunstripes", "hexagon", "starsphere", "sun", "star", "pennant", "starshield", "shield", "mosaic",
+  // D117: Ásia.
+  "orbit", "fan", "palm", "lantern", "taegeuk", "wings",
 ] as const;
 export type BroadcastEmblem = (typeof BROADCAST_EMBLEMS)[number];
 
@@ -63,6 +67,10 @@ export const CLUB_TOURNAMENTS: Readonly<Record<string, NamedPackage>> = {
   "cont2:CONMEBOL": { id: "sudamericana", deep: "#030b1b", mid: "#0a2552", light: "#4fbfff", light2: "#ffcf5a", floor: "#1f7bff", accent: "#8fd3ff", metal: "#e0c27a", rule: ["#0d3b84", "#4fbfff", "#e0c27a"], led: "#7fd0ff", motif: "papelitos", emblem: "compass" },
   "contsuper:CONMEBOL": { id: "recopa", deep: "#0f0507", mid: "#2e0c13", light: "#ffcf7a", light2: "#ff8a5c", floor: "#b3122e", accent: "#f0c97a", metal: "#d4af37", rule: ["#7a1020", "#f0c97a", "#7a1020"], led: "#ffc061", motif: "rays", emblem: "cup" },
   "cont1:CONCACAF": { id: "concacaf", deep: "#04070e", mid: "#0f1b33", light: "#36c3ff", light2: "#e9f3ff", floor: "#00a3e0", accent: "#86d6ff", metal: "#dfe6ee", rule: ["#00a3e0", "#ffffff", "#00a3e0"], led: "#7fd8ff", motif: "sweep", emblem: "diamond" },
+  // D117: a Elite asiática, noite azul-marinho, ouro e turquesa, com as cidades do continente ligadas como constelação.
+  "cont1:AFC": { id: "acle", deep: "#05060f", mid: "#141a3a", light: "#f0c75e", light2: "#4fd1c5", floor: "#2b3a8f", accent: "#f3d27a", metal: "#e8d29a", rule: ["#1b2a6b", "#f0c75e", "#4fd1c5"], led: "#f3d27a", motif: "constellation", emblem: "orbit" },
+  // A Champions League Two: verde-água e faixas em camadas.
+  "cont2:AFC": { id: "acl2", deep: "#03100f", mid: "#0b2e2c", light: "#3fe0c5", light2: "#c8f7ee", floor: "#00857a", accent: "#7fe9d6", metal: "#d9efe9", rule: ["#00857a", "#c8f7ee", "#00857a"], led: "#6ff0d8", motif: "ribbons", emblem: "compass" },
   clubworldcup: { id: "clubworld", deep: "#070604", mid: "#1d170a", light: "#ffd98a", light2: "#fff3d1", floor: "#d9a521", accent: "#f2cf7a", metal: "#e9c46a", rule: ["#8a6a1c", "#f7e2a4", "#8a6a1c"], led: "#ffd36b", motif: "globe", emblem: "globe" },
   intercontinental: { id: "intercontinental", deep: "#040b18", mid: "#0e2547", light: "#9ccaff", light2: "#ffe2a1", floor: "#326295", accent: "#c4dcff", metal: "#e8c97a", rule: ["#326295", "#e8c97a", "#326295"], led: "#dff1ff", motif: "globe", emblem: "globe" },
 };
@@ -124,6 +132,16 @@ export const LEAGUE_DNA: Readonly<Record<CountryCode, BroadcastPackage>> = {
   USA: { deep: "#050a18", mid: "#13254a", light: "#e6eeff", light2: "#ff6b7a", floor: "#0a3161", accent: "#a9c8ff", metal: "#e9edf3", rule: ["#0a3161", "#ffffff", "#b31942"], led: "#e8eeff", motif: "sweep", emblem: "starshield" },
   // D108: Portugal, verde e vermelho sobre a noite, e a grade do azulejo.
   POR: { deep: "#04110a", mid: "#0c2f1b", light: "#ff8a7a", light2: "#ffd36b", floor: "#c8102e", accent: "#ffb3a6", metal: "#f2d48a", rule: ["#006600", "#ffd36b", "#c8102e"], led: "#ffd36b", motif: "lattice", emblem: "shield" },
+  // D117: Japão, grafite de tinta sumi, o vermelho do sol, ondas seigaiha e o leque.
+  JPN: { deep: "#08090b", mid: "#1d1c22", light: "#ff8fa3", light2: "#f4f6fa", floor: "#bc002d", accent: "#ff9db0", metal: "#f2e6d8", rule: ["#f4f6fa", "#bc002d", "#f4f6fa"], led: "#ff5a6e", motif: "seigaiha", emblem: "fan" },
+  // Arábia Saudita: verde profundo, ouro e a estrela de oito pontas da geometria islâmica.
+  KSA: { deep: "#03100a", mid: "#0a3320", light: "#e9d38a", light2: "#7fe0a8", floor: "#165d31", accent: "#e9d38a", metal: "#e9d38a", rule: ["#165d31", "#f4f6fa", "#165d31"], led: "#7fe0a8", motif: "girih", emblem: "palm" },
+  // Coreia do Sul: o vermelho e o azul do taegeuk e os trigramas da bandeira.
+  KOR: { deep: "#060914", mid: "#14213f", light: "#ff6b78", light2: "#7fa6ff", floor: "#0047a0", accent: "#ff9aa3", metal: "#eef1f6", rule: ["#cd2e3a", "#f4f6fa", "#0047a0"], led: "#ff6b78", motif: "gwae", emblem: "taegeuk" },
+  // China: vermelho e ouro, nuvens auspiciosas e a lanterna.
+  CHN: { deep: "#140405", mid: "#3d0a0d", light: "#ffd34d", light2: "#ff7a6b", floor: "#de2910", accent: "#ffd34d", metal: "#ffd34d", rule: ["#de2910", "#ffde00", "#de2910"], led: "#ffde00", motif: "xiangyun", emblem: "lantern" },
+  // Indonésia: vermelho e branco, o batik kawung e as asas.
+  IDN: { deep: "#140507", mid: "#3a0c12", light: "#ff8a7a", light2: "#fff1e6", floor: "#ce1126", accent: "#ffa294", metal: "#e9c98a", rule: ["#ce1126", "#f4f6fa", "#ce1126"], led: "#ff6a5a", motif: "kawung", emblem: "wings" },
 };
 
 /**
@@ -139,6 +157,10 @@ export const CUP_DNA: Readonly<Record<CountryCode, Partial<BroadcastPackage>>> =
   GER: { deep: "#0b0b0b", mid: "#241a0a", light: "#ffce00", light2: "#ff3b3b", floor: "#dd0000", accent: "#ffd34d", metal: "#e8e8e8", rule: ["#3a3a3a", "#dd0000", "#ffce00"], led: "#ffce00" },
   // Copa do Brasil: o azul da noite de mata-mata, com verde e amarelo.
   BRA: { deep: "#031024", mid: "#0b2c5e", light: "#ffe680", light2: "#34d27a", floor: "#002776", accent: "#ffd84a", metal: "#ffd84a", rule: ["#002776", "#ffdf00", "#009c3b"], led: "#ffd84a" },
+  // D117: Copa do Imperador, roxo imperial e ouro.
+  JPN: { deep: "#0b0614", mid: "#251040", light: "#e9c46a", light2: "#b48cff", floor: "#5a2d82", accent: "#e9c97a", metal: "#e9c46a", rule: ["#5a2d82", "#e9c46a", "#5a2d82"], led: "#e9c46a" },
+  // King's Cup: o ouro do rei sobre o verde, a coroa no selo.
+  KSA: { deep: "#0a0903", mid: "#24200a", light: "#ffd46b", light2: "#7fe0a8", floor: "#c9a227", accent: "#f2d27a", metal: "#f2d27a", rule: ["#165d31", "#f2d27a", "#165d31"], led: "#ffd46b", emblem: "crown" },
 };
 
 /** Sem identidade conhecida: um estádio à noite, neutro. Só por segurança. */

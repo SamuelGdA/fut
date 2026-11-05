@@ -64,12 +64,12 @@ export function TecnicoScreen() {
     if (next.focusPlayer && next.focusPlayer !== previous.focusPlayer) { setTab("team"); setExplore("team"); }
   }), []);
 
-  // Sem carreira em memória (recarregou, ou chegou direto): volta ao hub.
+  // Sem carreira salva (chegou direto pelo /tecnico, D118): abre a criação do técnico.
   useEffect(() => {
     void useTecnico.getState().hydrate().finally(() => setRestoring(false));
   }, []);
   useEffect(() => {
-    if (!career && !restoring && !busy) go("hub", { replace: true, force: true });
+    if (!career && !restoring && !busy) go("tecnicoIdentity", { replace: true, force: true });
     else if (career?.phase === "ended") go("tecnicoLegacy", { replace: true, force: true });
   }, [career, go, restoring, busy]);
 

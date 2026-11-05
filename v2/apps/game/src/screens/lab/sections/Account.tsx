@@ -6,6 +6,7 @@ import { useT } from "../../../i18n/useT";
 import { Skeleton } from "../../../ui/Skeleton";
 import { TrophyIcon } from "../../achievements/TrophyIcon";
 import { LabSection } from "../LabSection";
+import { EmailPreview } from "./EmailPreview";
 
 /** Um troféu de cada tipo de arte: taça real, prêmio real e ícone de grupo. */
 const SAMPLES = [
@@ -77,6 +78,10 @@ export function AccountSection({ index }: { index: number }) {
 
       <p className="eyebrow mt-8 mb-3">{t("lab.account.legal")}</p>
       <LegalFinePrint />
+
+      <p className="eyebrow mt-8 mb-3">{t("lab.account.emails")}</p>
+      <p className="mb-4 max-w-2xl text-sm text-muted">{t("lab.account.emailsLead")}</p>
+      <EmailPreview />
     </LabSection>
   );
 }

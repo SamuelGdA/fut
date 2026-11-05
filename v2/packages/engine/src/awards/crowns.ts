@@ -83,6 +83,18 @@ const LEAGUE_MARKS: Readonly<Record<string, ScoringMark>> = {
   // D108: Portugal (Gyökeres fez 39 em 2024-25; o recorde da liga é de Peyroteo, 43).
   "primeira-liga": { mean: 26, spread: 3.5, record: 43 },
   "liga-portugal-2": { mean: 17, spread: 2.5, record: 30 },
+  // D117: Ásia. Marcas de referência: Cristiano Ronaldo, 35 na Saudi Pro League
+  // (2023-24); Olunga, 28 na J1 (2020); Comvalius, 37 na liga indonésia (2017).
+  "j1-league": { mean: 22, spread: 3, record: 33 },
+  "j2-league": { mean: 22, spread: 3, record: 33 },
+  "saudi-pro-league": { mean: 26, spread: 3, record: 35 },
+  "saudi-first-division": { mean: 20, spread: 3, record: 30 },
+  "chinese-super-league": { mean: 23, spread: 3, record: 32 },
+  "china-league-one": { mean: 19, spread: 2.5, record: 30 },
+  "k-league-1": { mean: 17, spread: 2.5, record: 28 },
+  "k-league-2": { mean: 17, spread: 2.5, record: 28 },
+  "super-league-indonesia": { mean: 24, spread: 3, record: 37 },
+  "championship-indonesia": { mean: 12, spread: 2, record: 20 },
 };
 
 /** Copas, continentais e seleções, por competição. */
@@ -97,6 +109,10 @@ const CUP_MARKS: Readonly<Record<string, ScoringMark>> = {
   "cont1:CONMEBOL": { mean: 9, spread: 2, record: 17 },
   "cont2:CONMEBOL": { mean: 7, spread: 2, record: 13 },
   "cont1:CONCACAF": { mean: 6, spread: 1.5, record: 10 },
+  // D117: AFC Champions League Elite e Two.
+  "cont1:AFC": { mean: 8, spread: 2, record: 14 },
+  "cont2:AFC": { mean: 6, spread: 1.5, record: 11 },
+  "leaguecup:JPN": { mean: 5, spread: 1.5, record: 9 },
   clubworldcup: { mean: 4, spread: 1, record: 7 },
   worldcup: { mean: 6, spread: 1.5, record: 13 },
   "nations:UEFA": { mean: 5, spread: 1.5, record: 9 },
@@ -155,10 +171,13 @@ export function scoringCrownChance(goals: number, mark: ScoringMark): number {
  * A barra de cada tipo de torneio, contra a nota (OVR menos o nível dos mais
  * fortes do campo, mais produção e campanha). Calibrada pelo harness: o craque
  * de uma liga grande é raro até para um OVR 88; para um 92 campeão, é provável.
+ * D117: a segunda divisão usa a mesma barra da primeira (era 9). Com as
+ * segundas asiáticas, algumas com o campo perto de 50, o prêmio ficava fácil
+ * demais para quem descia de divisão.
  */
 export const BEST_PLAYER_BAR: Readonly<Partial<Record<CompetitionKind, number>>> = {
   league: 10,
-  second: 9,
+  second: 10,
   cup: 10,
   leagueCup: 10,
   continental1: 10,

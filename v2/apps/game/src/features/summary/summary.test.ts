@@ -5,8 +5,9 @@ import { startScreen } from "../../app/startup";
 import { posterFileName } from "./poster";
 import { readShareHash } from "./shareHash";
 import { decodeShare, encodeShare, ShareError, shareUrl } from "./shareLink";
-import { SHOWCASE_GAP, showcaseItems, showcaseLayout } from "./showcase";
+import { SHOWCASE_GAP, showcaseFixedLayout, showcaseItems, showcaseLayout } from "./showcase";
 import { nearRecords, ovrCurve, posterNumbers, summaryNumbers, summaryRecords, timeline } from "./summaryData";
+import { SHARE_HEIGHT, SHARE_WIDTH, shareHighlights, shareShelf } from "./shareCard";
 
 /** O resumo (M6): link compartilhado, pôster, vitrine e os dados que a tela mostra. */
 
@@ -84,6 +85,14 @@ describe("vitrine (GDD 24.5)", () => {
     expect(showcaseLayout(400, 360, 200)).toMatchObject({ fits: false, labels: false });
   });
 
+  it("a aba Troféus tem tamanho fixo: mais títulos só acrescentam linhas (D118)", () => {
+    const few = showcaseFixedLayout(2, 360, 72);
+    const many = showcaseFixedLayout(40, 360, 72);
+    expect(few).toMatchObject({ art: 72, labels: true });
+    expect(many).toMatchObject({ art: 72, labels: true, cellWidth: few.cellWidth, cellHeight: few.cellHeight });
+    expect(many.rows).toBeGreaterThan(few.rows);
+  });
+
   it("no resumo móvel, coleções grandes mantêm o nome da competição em vez de escondê-lo", () => {
     const readable = showcaseLayout(40, 320, 640, 72, true);
     expect(readable.labels).toBe(true);
@@ -155,5 +164,29 @@ describe("resumo D61", () => {
     const crowns = finished.history.flatMap(record=>record.awards.crowns);
     const keys = [...new Set(crowns.map(crown=>`${crown.award}:${crown.competition}`))];
     expect(items.filter(item=>item.kind==="award" && item.competition).map(item=>item.kind==="award" ? `${item.id}:${item.competition}` : "").sort()).toEqual(keys.sort());
+  });
+});
+
+describe("imagem da carreira (D118)", () => {
+  it("prêmios individuais primeiro, na ordem pedida, depois os títulos; sem prêmios de competição", () => {
+    const order = ["ballonDor", "goldenGlove", "youngPlayer", "kingOfAmerica", "goldenShoe"];
+    for (const career of [finished, keeper]) {
+      const items = shareHighlights(career.history);
+      const firstTitle = items.findIndex((item) => item.kind === "title");
+      const awards = items.filter((item) => item.kind === "award");
+      expect(awards.every((item) => !item.competition && order.includes(item.id))).toBe(true);
+      if (firstTitle >= 0) expect(items.slice(firstTitle).every((item) => item.kind === "title")).toBe(true);
+      const positions = awards.map((item) => order.indexOf(item.id));
+      expect(positions).toEqual([...positions].sort((a, b) => a - b));
+    }
+  });
+
+  it("a faixa encolhe as peças e manda o resto para o +N", () => {
+    expect(shareShelf(3, 800)).toMatchObject({ art: 96, shown: 3, more: 0 });
+    const many = shareShelf(30, 800);
+    expect(many.art).toBe(64);
+    expect(many.shown + many.more).toBe(30);
+    expect(many.more).toBeGreaterThan(0);
+    expect(SHARE_WIDTH / SHARE_HEIGHT).toBeCloseTo(1.9, 1);
   });
 });

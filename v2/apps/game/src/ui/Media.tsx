@@ -201,12 +201,13 @@ export function AwardArt({
   decorative,
   language,
   tooltip,
-}: BaseProps & { award: Award; language: Language }) {
+  competition,
+}: BaseProps & { award: Award; language: Language; /** A competição do prêmio: o craque da Copa e o da Champions têm peça própria (D118). */ competition?: string | null }) {
   const mode = useAssetMode((state) => state.trophyMode);
   return (
     <Picture
       loading="eager"
-      src={awardImageUrl(award, mode)}
+      src={awardImageUrl(award, mode, competition)}
       fallback={generatedAwardUrl(award)}
       alt={award.names[language]}
       tooltip={tooltip ?? award.names[language]}

@@ -12,13 +12,18 @@ import arg from "../data/squads/arg";
 import bol from "../data/squads/bol";
 import bra from "../data/squads/bra";
 import chi from "../data/squads/chi";
+import chn from "../data/squads/chn";
 import col from "../data/squads/col";
 import ecu from "../data/squads/ecu";
 import eng from "../data/squads/eng";
 import esp from "../data/squads/esp";
 import fra from "../data/squads/fra";
 import ger from "../data/squads/ger";
+import idn from "../data/squads/idn";
 import ita from "../data/squads/ita";
+import jpn from "../data/squads/jpn";
+import kor from "../data/squads/kor";
+import ksa from "../data/squads/ksa";
 import livres from "../data/squads/livres";
 import mex from "../data/squads/mex";
 import par from "../data/squads/par";
@@ -103,7 +108,7 @@ function parse(text: string): SquadPlayer[] {
 }
 
 /** Todos os jogadores com clube no início, país por país. */
-export const SQUAD_PLAYERS: readonly SquadPlayer[] = [arg, bol, bra, chi, col, ecu, eng, esp, fra, ger, ita, mex, par, per, por, uru, usa, ven].flatMap(
+export const SQUAD_PLAYERS: readonly SquadPlayer[] = [arg, bol, bra, chi, chn, col, ecu, eng, esp, fra, ger, idn, ita, jpn, kor, ksa, mex, par, per, por, uru, usa, ven].flatMap(
   parse,
 );
 

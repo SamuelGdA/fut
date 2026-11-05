@@ -3,7 +3,7 @@ import { readFile } from "node:fs/promises";
 import { deflateRawSync } from "node:zlib";
 import { abrir, abrirMomento, auditar, esperarQueCaiba, fixturePlans } from "./apoio";
 
-const metadata = JSON.parse(await readFile(new URL("./fixtures/momentos-m41.json", import.meta.url), "utf8")) as { moments: Record<string, { file: string; index: number }> };
+const metadata = JSON.parse(await readFile(new URL("./fixtures/momentos-m43.json", import.meta.url), "utf8")) as { moments: Record<string, { file: string; index: number }> };
 for (const motion of ["full", "reduced"] as const) test(`D74: avanço automático no mesmo ano, movimento ${motion}`, async ({ page }) => {
   const moment = metadata.moments.europe!;
   const raw = await readFile(new URL(`./fixtures/${moment.file}`, import.meta.url));
@@ -64,7 +64,7 @@ for (const position of ["gk", "cb", "rb", "cm"] as const) test(`D74: lance por p
 
 for (const theme of ["light", "dark"] as const) test(`D74: duas folhas por ano, legendas completas e sem arquivo anual, ${theme}`, async ({ page }, info) => {
   if (info.project.name === "celular") await page.setViewportSize({ width: 360, height: 640 });
-  const raw = await readFile(new URL("./fixtures/colecao-m41.json", import.meta.url));
+  const raw = await readFile(new URL("./fixtures/colecao-m43.json", import.meta.url));
   await abrir(page, { theme, motion: "reduced" }, `/#c=z${deflateRawSync(raw).toString("base64url")}`);
   await page.getByRole("link", { name: "Números", exact: true }).click();
   await expect(page.locator(".drama-archive")).toHaveCount(0);
@@ -114,7 +114,7 @@ for (const theme of ["light", "dark"] as const) test(`D74: duas folhas por ano, 
 });
 
 test("D74: pilha grande abre num painel flutuante, dentro da tela e sem sobreposição", async ({ page }, info) => {
-  const raw = await readFile(new URL("./fixtures/pilhas-m41.json", import.meta.url));
+  const raw = await readFile(new URL("./fixtures/pilhas-m43.json", import.meta.url));
   if (info.project.name === "celular") await page.setViewportSize({ width: 360, height: 640 });
   await abrir(page, { theme: "dark" }, `/#c=z${deflateRawSync(raw).toString("base64url")}`);
   await page.getByRole("link", { name: "Caminho", exact: true }).click();

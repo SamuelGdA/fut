@@ -273,3 +273,30 @@ describe("importar_conquistas e excluir_conta", () => {
     expect((await db.query("select 1 from public.carreiras where id_user = $1", [user])).rows).toHaveLength(0);
   });
 });
+
+describe("D118: Desafio no perfil e @ a cada 30 dias", () => {
+  it("a primeira escolha do @ é livre; trocar de novo só depois de 30 dias", async () => {
+    const user = await createUser(db);
+    await as(db, user, () => db.query("update public.profiles set username = 'primeiro_nome' where id = $1", [user]));
+    await as(db, user, () => db.query("update public.profiles set username = 'segundo_nome' where id = $1", [user]));
+    expect((await profileOf(user)).username).toBe("segundo_nome");
+    expect(await as(db, user, () => failure(db.query("update public.profiles set username = 'terceiro_nome' where id = $1", [user])))).toContain("username_recente");
+    await db.query("update public.profiles set username_alterado_em = now() - interval '31 days' where id = $1", [user]);
+    await as(db, user, () => db.query("update public.profiles set username = 'terceiro_nome' where id = $1", [user]));
+    expect((await profileOf(user)).username).toBe("terceiro_nome");
+    expect(await as(db, user, () => failure(db.query("update public.profiles set username_alterado_em = null where id = $1", [user])))).toContain("permission denied");
+  });
+
+  it("nota de hoje, sequência atual e maior sequência", async () => {
+    const user = await createUser(db, { username: "sequencia" });
+    const vazio = await as(db, user, () => db.query<Record<string, number>>("select * from public.meu_desafio()"));
+    expect(vazio.rows[0]).toEqual({ hoje: 0, sequencia_atual: 0, maior_sequencia: 0 });
+    const dias = [0, 1, 5, 6, 7, 8];
+    for (const dia of dias) {
+      await db.query("insert into public.carreiras (id_user, jogo, chave, terminada_em, desafio_dia, desafio_pontos, desafio_ranqueada) values ($1, 'craque', $2, now(), (now() at time zone 'utc')::date - $3::integer, $4, true)", [user, `seq${dia}abc`, dia, 500 + dia]);
+    }
+    const cheio = await as(db, user, () => db.query<Record<string, number>>("select * from public.meu_desafio()"));
+    expect(cheio.rows[0]).toEqual({ hoje: 500, sequencia_atual: 2, maior_sequencia: 4 });
+    expect(await as(db, null, () => failure(db.query("select * from public.meu_desafio()")))).toContain("permission denied");
+  });
+});

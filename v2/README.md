@@ -1,12 +1,12 @@
 # Futeiros v2: Craque e Técnico
 
-## Estado atual e leitura inicial (D116, 30/10/2026)
+## Estado atual e leitura inicial (D118, 04/11/2026)
 
 O projeto ativo é exclusivamente esta pasta `v2/`: React, Zustand e Vite.
-Craque usa **`ENGINE_VERSION 2.0.0-m41`**; Técnico usa **`COACH_VERSION 1.10.0`**.
+Craque usa **`ENGINE_VERSION 2.0.0-m43`**; Técnico usa **`COACH_VERSION 1.12.0`**.
 Para começar do zero, leia `AI_RULES.md`, este resumo, a arquitetura e os comandos
 abaixo, o [GDD](docs/GDD.md) e o [README do Técnico](README-TECNICO.md).
-As revisões D73 a D116 ao fim dos documentos detalham o estado atual e prevalecem
+As revisões D73 a D118 ao fim dos documentos detalham o estado atual e prevalecem
 sobre descrições históricas do mesmo assunto. [DECISOES.md](docs/DECISOES.md)
 registra o motivo das escolhas; os relatórios em `tools/balance/relatorios/`
 registram resultados observados, sem garantir ocorrências raras.
@@ -102,6 +102,27 @@ registram resultados observados, sem garantir ocorrências raras.
   com limites por temporada, Zod no navegador, CSP sem script embutido e
   proteção contra iframe; o build recusa segredo em variável pública.
 - **D116:** sem fila offline: os envios para a conta saem direto para o banco.
+- **D117:** a Ásia entra com Japão, Arábia Saudita, China, Coreia do Sul e
+  Indonésia (duas divisões cada, 175 clubes reais), copas e supercopas reais,
+  AFC Champions League Elite e Two com as vagas de 2026-27, o campeão asiático
+  de verdade na Intercontinental e quatro asiáticos no Mundial de Clubes;
+  taças das dez ligas com as imagens do usuário; mercado de veteranos mais
+  apertado (2,3 por ano acima dos 32, D119). A Índia saiu na revisão de 04/11 e
+  continua só como nacionalidade. Motor m43, Técnico 1.12.0. Detalhes em
+  `docs/DECISOES.md` (D117) e `docs/CLASSIFICACOES.md`.
+- **D119:** calibragem depois da Ásia: craque soma ao clube até 14 pontos de
+  vantagem (era 15), base de gols do centroavante 0,377, desgaste do veterano
+  a partir dos 35 (4% de participação por ano), copas nacionais com desvio
+  4,6, e amostras maiores nos recordes (450 por posição) e no Chile (240).
+  Seção D119 do GDD.
+- **D118:** perfil com a nota de hoje do Desafio e as sequências (atual e
+  melhor), troca do `@` só a cada 30 dias, vitrine do perfil com nomes inteiros;
+  endereços por modo (`/craque` e `/tecnico`); peças próprias para o craque da
+  Copa do Mundo e da Champions; modelos de e-mail da conta em
+  `supabase/templates`; anúncios de exemplo nas margens da carreira em telas
+  largas; na janela de transferências, **sortear outros clubes** depois de um
+  anúncio, até duas vezes por carreira; a imagem da carreira passa a ter
+  1200 × 630; tamanho fixo na aba Troféus. Seção D118 ao fim.
 - **D115:** saem os atalhos `.bat`; entra `pnpm imagens:importar` (escudos,
   selos, troféus e prêmios gerados em `Downloads/geradas`). O motor não muda
   em D112 a D115.
@@ -161,7 +182,7 @@ O motor é puro, determinístico e separado do texto e da interface. Saves guard
 setup e escolhas, reconstruídos por replay, com versão obrigatória. Mudanças no
 resultado exigem nova versão, `pnpm balance` e as 51 metas. Antes de entregar:
 `pnpm verify` e `pnpm e2e`; mudanças em produção/títulos exigem também auditoria
-de recordes. As amostras de navegador atuais são replays **m36**, reconstruídos
+de recordes. As amostras de navegador atuais são replays **m43**, reconstruídos
 com escolhas válidas, não resultados fabricados.
 
 > **Futeiros (D50 a D61).** O site virou um hub com dois jogos de futebol e
@@ -278,8 +299,9 @@ tabelas, copas, continentais, seleções, prêmios e recordes reais. Uma carreir
 completa leva poucos minutos.
 
 O Futeiros abre no hub (`apps/game/src/screens/hub`), com um cartão para cada
-jogo. O Craque começa uma carreira nova, sem saves de sessão. O Técnico oferece continuar a última carreira em andamento neste aparelho. Recarregar a página
-sempre abre o hub (D50).
+jogo. O Craque começa uma carreira nova, sem saves de sessão. O Técnico oferece continuar a última carreira em andamento neste aparelho. Recarregar na raiz
+abre o hub (D50); dentro de um modo, a página está em `/craque` ou `/tecnico` (D118) e recarregar
+abre o próprio modo: a criação do jogador no Craque, a carreira salva (ou a criação) no Técnico.
 
 Este documento é a referência do projeto (e do Craque em detalhe; o Técnico
 está no [README-TECNICO.md](README-TECNICO.md)): quem nunca viu o código deve
@@ -473,10 +495,13 @@ que ele termine o período pelo menos 2 acima de onde começou
    (`season/role.ts`): Craque do time (d ≥ 3, joga 95% dos jogos), Titular
    (d ≥ −1, 85%), Rotação (d ≥ −4, 60%), Reserva (d ≥ −8, 28%), Sem espaço
    (8%). Goleiro: Titular (d ≥ −2, 92%), Reserva (d ≥ −7, 12%), Terceiro (2%).
+   Desde a D119, a partir dos 35 anos a participação cai 4% por ano (96% aos
+   35, 76% aos 40), em jogos e no peso no time.
    Quem não é titular tem de 2% a 8% de chance de subir um degrau na
    temporada.
 2. **O mundo inteiro** (seção 3), com o jogador somando força ao clube:
-   `força + 0,22 × participação × limitar(OVR − força, −3, 15)`
+   `força + participação × (0,3 × mín(14, vantagem) + 0,06 × o que passa de 14, até 35)`
+   (D119; o limite era 15)
    (`CLUB_IMPACT`), e à seleção (`NATIONAL_IMPACT`, 0,12).
 3. **Jogos e lesão.** Jogos planejados = jogos do time × participação ×
    N(1; 0,06). Lesão (`season/injury.ts`): chance
@@ -489,7 +514,7 @@ que ele termine o período pelo menos 2 acima de onde começou
      `(base da posição + oportunidades de finalização) × e^(n × v(OVR − oposição)) × e^(0,03 × v(time − oposição)) × e^(0,035 × (Finalização − OVR)) × fase`,
      onde `v(d)` vale d até 10 e `10 + 0,12 × (d − 10)` acima (o joelho que
      impede 60 gols todo ano) e `n` é 0,032, 0,0365 para o centroavante (D102) e
-     0,05 para pontas e meia ofensivo (D100). Base de gols por jogo: centroavante 0,385;
+     0,05 para pontas e meia ofensivo (D100). Base de gols por jogo: centroavante 0,377 (D119; era 0,385);
      pontas 0,285; meia ofensivo 0,275; meias abertos 0,15; volante e laterais
      0,035; zagueiro 0,04 (`SCORING`). No m14, FIN acima de 80 abre
      oportunidades extras para pontas e meias conforme a função; ver D68.
@@ -538,11 +563,11 @@ transferências.
 
 - **Primeira base** (`ACADEMY`): três clubes do país do jogador, cada um da
   primeira divisão com 30% de chance e da segunda no resto. Quem nasceu fora
-  dos 18 países com liga jogável recebe clubes da confederação ou do mundo
+  dos 23 países com liga jogável recebe clubes da confederação ou do mundo
   perto de OVR + 6.
 - **Mercado** (`career/market.ts`). O nível de mercado é o OVR, mais até +5
   para quem tem menos de 23 anos (0,8 por ano), mais reputação (até +3),
-  menos 3 no Difícil, menos 1,5 por ano acima dos 32. Os interessados têm
+  menos 3 no Difícil, menos 2,3 por ano acima dos 32 (D117 e D119; era 1,8). Os interessados têm
   força entre nível − 7 e nível + 3 (a faixa se alarga quando faltam clubes:
   o jovem alcança clubes mais fortes, o veterano mais fracos). A região vem
   do OVR (abaixo de 75: metade do próprio país, 30% da confederação, 20% do
@@ -608,10 +633,12 @@ eventos): condições para aparecer, opções e os efeitos de cada resultado.
 
 ### 3.1 Os dados (`packages/world`)
 
-525 clubes com força (40 a 92, na escala do OVR) e prestígio (1 a 5), 211
-seleções, 34 ligas (primeira e segunda divisão) de 18 países jogáveis
-(ARG, BOL, BRA, CHI, COL, ECU, ENG, ESP, FRA, GER, ITA, MEX, PAR, PER, POR,
-URU, USA, VEN), 85 competições (com a Liga das Nações da UEFA, D108), prêmios e uniformes. As notas dos clubes saem e
+700 clubes com força (40 a 92, na escala do OVR) e prestígio (1 a 5), 211
+seleções, 44 ligas (primeira e segunda divisão) de 23 países jogáveis
+(ARG, BOL, BRA, CHI, CHN, COL, ECU, ENG, ESP, FRA, GER, IDN, ITA, JPN,
+KOR, KSA, MEX, PAR, PER, POR, URU, USA, VEN; os cinco asiáticos na D117), 110
+competições (com a Liga das Nações da UEFA, D108, e a AFC Champions League
+Elite e Two, D117), prêmios e uniformes. As notas dos clubes saem e
 voltam por planilha (`pnpm notas:exportar` e `pnpm notas:importar`).
 
 ### 3.2 Uma temporada do mundo (`world/season.ts`)
@@ -739,8 +766,9 @@ não libera conquistas. Não há arquivo da carreira anterior.
 ### 4.4 O resumo e o compartilhamento
 
 Números da carreira, vitrine de troféus, linha do tempo, o jornal da carreira (capas por temporada), recordes
-reais, a carta do auge e o **pôster PNG** (gerado com modern-screenshot, com
-opção de esconder o sobrenome; carta com selo "Difícil" ou "Desafio"). O
+reais, a carta do auge e a **imagem da carreira em PNG** de 1200 × 630 (D118,
+gerada com modern-screenshot, com opção de esconder o sobrenome; carta com selo
+"Difícil" ou "Desafio"; o pôster do Técnico continua com 1080 × 1350). O
 **link da carreira** leva o replay inteiro no fragmento da URL (`#c=`,
 comprimido com deflate-raw): abrir o link refaz a carreira e mostra o resumo
 só para leitura, sem tocar no save de quem abre.
@@ -797,7 +825,7 @@ v2/
 `craque.v2.draft` (o último jogador montado) e `craque.v2.prefs` (idioma,
 tema, volume, movimento, vibração, ritmo, dificuldade). Cada escolha grava
 na hora; recarregar abre o hub, e o cartão do Craque volta para a mesma tela
-(D50). Save corrompido é descartado com aviso no Início do Craque, e o
+(D50; desde a D118, recarregar em `/craque` abre a criação do jogador). Save corrompido é descartado com aviso no Início do Craque, e o
 rascunho fica. O Técnico não tem save (D51): guarda só o rascunho da
 identidade (`craque.v2.tecnico.draft`) e as conquistas. Desde a D112 e a D113:
 `craque.v2.consent` (escolha de cookies) e `craque.v2.auth` (sessão do Supabase).
@@ -817,9 +845,9 @@ clubes), movimento reduzido respeitado (do sistema ou dos ajustes).
   `VITE_ASSETS=real` (D111; era `gerado`, D46):** o jogo usa a imagem real
   quando existe e a desenhada quando falta (sem internet e fora do cache,
   nenhum escudo aparece quebrado). Num build com `VITE_ASSETS=gerado`, só a
-  arte desenhada (bandeiras continuam reais). Há escudo real para 518 dos 525
-  clubes e selo real para 31 das 34 ligas (os escudos e selos que faltavam
-  vieram da Wikipédia e do Wikimedia Commons, D46 e D111); o laboratório troca
+  arte desenhada (bandeiras continuam reais). Há escudo real para 690 dos 700
+  clubes e selo real para 40 das 44 ligas (os escudos e selos que faltavam
+  vieram da Wikipédia e do Wikimedia Commons, D46, D111 e D117); o laboratório troca
   o modo sem rebuild.
 - **No modo real**, escudos, troféus, federações, bandeiras, selos e prêmios entram no cache
   `craque-imagens` conforme aparecem, e Ajustes > "Imagens sem internet" >
@@ -954,7 +982,7 @@ anos de mãos). Os relatórios são versionados como registro de validação.
 pnpm balance:recordes
 ```
 
-Joga 150 Fenômenos por posição em três lotes (ambicioso, fiel, fiel ao
+Joga 450 Fenômenos por posição (D119; eram 150) em três lotes (ambicioso, fiel, fiel ao
 gigante) até o fim e mostra, para cada recorde, o melhor do lote, a mediana,
 quantos alcançaram e quantos passaram por 1, 2 e 3.
 
@@ -1239,7 +1267,7 @@ regionais diferenciam Américas de Ásia; nove referências americanas
 complementam a elite, e a região futura usa fluxo separado (85% Europa;
 dos demais, 80% Américas). Bônus, idade de auge e aposentadoria são projeções.
 
-A referência de classificação dos 18 países, fontes e simplificações fica em
+A referência de classificação dos 23 países, fontes e simplificações fica em
 CLASSIFICACOES.md. Duas vagas UEFA por desempenho anual médio são calculadas
 no mundo simulado; Chile inclui Copa da Liga da elite e playoff de indicação.
 Mundial do Craque também tem 32 participantes (22 representados, nove genéricos
@@ -2179,7 +2207,7 @@ Sem `VITE_GA_MEASUREMENT_ID` e `VITE_ADSENSE_CLIENT`, nada do Google é baixado,
 o aviso de cookies não aparece e os espaços de anúncio só aparecem no
 desenvolvimento, como moldura tracejada ("Publicidade · perfil"). Para ligar:
 preencha o ID de medição do GA4, o ID de editor do AdSense e um bloco por espaço
-(`VITE_ADSENSE_SLOT_PERFIL`, `_RESUMO`, `_CONQUISTAS`), e `VITE_CONTACT_EMAIL`
+(`VITE_ADSENSE_SLOT_PERFIL`, `_RESUMO`, `_CONQUISTAS`, `_CARREIRA`), e `VITE_CONTACT_EMAIL`
 para as páginas legais. Para tráfego da Europa, o AdSense exige uma plataforma de
 consentimento certificada pelo Google (a de "Privacidade e mensagens" do próprio
 AdSense serve); o aviso do jogo cobre a LGPD.
@@ -2190,8 +2218,8 @@ O build grava `_headers` (Netlify e Cloudflare Pages leem) e o `vercel.json` na
 raiz do v2 traz os mesmos cabeçalhos: CSP sem script embutido, liberando só o
 site, o Supabase, o Google Analytics e o AdSense; `frame-ancestors 'none'`,
 `X-Frame-Options`, `nosniff`, `Referrer-Policy`, `Permissions-Policy`, `COOP` e
-`HSTS`. `/login`, `/perfil`, `/termos` e `/privacidade` funcionam em qualquer
-hospedagem estática (o build grava uma página em cada pasta).
+`HSTS`. `/login`, `/perfil`, `/termos`, `/privacidade`, `/craque` e `/tecnico`
+funcionam em qualquer hospedagem estática (o build grava uma página em cada pasta).
 
 ### Imagens geradas
 
@@ -2232,3 +2260,85 @@ git filter-repo --replace-text segredos.txt
 
 seguido de `git push --force --all` e `git push --force --tags`. Quem tiver
 clones antigos precisa clonar de novo.
+
+## D118: perfil do Desafio, endereços por modo, sorteio de clubes e imagem 1200 × 630 (01/11/2026)
+
+- **Perfil.** O Desafio do dia mostra a nota de hoje (0 sem tentativa), a
+  sequência atual e a melhor sequência de dias seguidos, lidas pela função
+  `meu_desafio()` do banco. A vitrine mostra o nome inteiro de cada conquista,
+  títulos primeiro, e o resumo dela ao passar o mouse sobre o nome. Sai a linha
+  "Entra com ...". O `@` só muda de novo 30 dias depois da última troca: o banco
+  recusa (`username_recente`) e a tela mostra a data da próxima troca.
+- **Desafio repetido.** O aviso diz que a tentativa do ranking já foi feita e que
+  jogar de novo é só treino.
+- **Endereços.** Toda tela do Craque mostra `/craque` e toda tela do Técnico,
+  `/tecnico`. Abrir `/craque` cai na criação do jogador; `/tecnico` retoma a
+  carreira salva ou abre a criação do técnico. O hub e o link de carreira
+  (`#c=`) ficam na raiz.
+- **Prêmios.** O craque da Copa do Mundo e o da Champions League têm peça
+  própria (`awards/best-player-world-cup.webp` e `best-player-champions.webp`);
+  os outros craques de competição usam a arte geral (`awardImageFor`).
+- **E-mails da conta.** Oito modelos em `supabase/templates` (confirmação,
+  recuperação, link de acesso, convite, troca de e-mail, código de segurança e
+  os avisos de senha e e-mail trocados), ligados no `supabase/config.toml`. O
+  laboratório (Design, Conta) mostra cada um com dados de exemplo. Para valerem
+  no projeto hospedado, rode `npx supabase@2.121.0 config push` na pasta `v2`
+  (confira antes com `config diff`) ou cole o HTML no painel, em
+  Authentication, Email Templates.
+- **Anúncios na carreira.** Em telas a partir de 1660 px, dois espaços de
+  160 × 600 nas margens, fora das três colunas do laço (`AdSlot` "carreira").
+  Abaixo disso, somem.
+- **Sortear outros clubes.** Na janela de transferências com pelo menos uma
+  proposta, uma linha vermelha tracejada abaixo das opções: o jogador assiste a
+  um anúncio (por enquanto de exemplo, 1 segundo) e recebe propostas novas, do
+  mesmo mercado e do mesmo nível, sem repetir nenhum clube já visto naquela
+  janela. Vale duas vezes por carreira ("Anúncio · 2/2", depois 1/2, depois
+  some) e nunca no Desafio do dia. No motor é a escolha `redraw` (`REDRAW`,
+  `canRedraw`, `redrawsLeft`): entra no save e o replay refaz o mesmo sorteio.
+  Carreiras que não sorteiam não mudam, então o motor continua no mesmo
+  `ENGINE_VERSION`.
+- **Imagem da carreira.** 1200 × 630 (1,91:1): a carta do auge, o nome, país,
+  posição e anos, os seis números e os destaques: Bola de Ouro, Troféu Yashin,
+  Troféu Kopa, Rei da América e Chuteira de Ouro primeiro, depois os títulos
+  pela importância, sem os prêmios de competição. Poucas peças ficam grandes;
+  muitas encolhem e o resto vira "+N". Embaixo, os clubes principais e o
+  endereço do jogo.
+- **Aba Troféus.** As peças têm tamanho fixo (72 px); mais títulos só
+  acrescentam linhas.
+- **Telas.** "Quem é você" cabe sem rolar de 1280 × 720 a 1920 × 1080; o login
+  traz o campo e a carta no meio do palco; o cabeçalho do perfil não corta o `@`
+  no celular; sai o "i" ao lado do OVR na carreira.
+
+## Prévia de links do Futeiros (complemento de D118)
+
+O build inclui Open Graph e Twitter Card no HTML da raiz e de todas as rotas
+próprias, antes de executar JavaScript. A arte editorial de 1200 × 630 combina
+papel de jornal, Big Shoulders, Schibsted Grotesk e o campo do Futeiros. São três
+PNGs em `apps/game/public/social/`, sem dependência externa em tempo de execução.
+Para regenerar: `pnpm --filter @craque/game exec node scripts/social-images.mjs`
+(Chrome instalado). Isso não modifica o pôster nem o link de replay da carreira.
+
+Na Vercel, `/?lang=en` e `/?lang=es` entregam imagem, título e descrição
+traduzidos; o parâmetro também funciona nas rotas próprias, por exemplo
+`/craque?lang=es`. Sem parâmetro, português. As reescritas em `vercel.json`
+apontam para cópias localizadas geradas no build, mantendo o endereço público.
+Em outra hospedagem, reproduza essas reescritas. O parâmetro escolhe apenas a
+prévia; as preferências de idioma do jogo continuam como estavam.
+
+Configure `VITE_SITE_URL=https://seu-dominio` no build para URLs absolutas. Na
+Vercel, sem essa variável, usa `VERCEL_PROJECT_PRODUCTION_URL`. Sem ambos,
+conserva imagens relativas e omite `og:url`; configure o domínio antes de publicar
+em outro provedor para máxima compatibilidade. Robôs não recebem o idioma nem
+as preferências do destinatário: uma prévia já enviada não troca de idioma por
+pessoa. O cache das redes pode conservar uma prévia antiga após a publicação.
+
+Ajuste da arte social (03/11/2026): segunda linha do título 14 px mais abaixo,
+chamada “Escolha sua própria carreira.” traduzida em EN/ES e remoção das
+inscrições inferiores e laterais. Somente os PNGs de compartilhamento mudam.
+
+A faixa inferior da arte social reaproveita a vitrine de conquistas do jogo:
+quatro células com as imagens originais da Bola de Ouro, Champions League,
+Libertadores e Copa do Mundo. O gerador lê as regras de `.showcase`,
+`.showcase-item` e `.showcase-art` de `src/styles/game.css`, com os tokens
+do tema claro. Sem ilustração paralela, legendas ou inscrições extras; a mesma
+vitrine aparece nos três idiomas. As telas do jogo não são modificadas.

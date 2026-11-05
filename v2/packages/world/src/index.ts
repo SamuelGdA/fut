@@ -33,6 +33,7 @@ export {
 export {
   AWARD_KEYS,
   AWARDS,
+  awardImageFor,
   COMPETITIONS,
   getCompetition,
   titleImportance,

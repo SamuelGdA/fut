@@ -32,9 +32,9 @@ for (const game of ["craque", "tecnico"] as const) {
     for (const file of own) expect(stored).toContain(file);
     for (const file of opposite) expect(stored).not.toContain(file);
     await test.info().attach("carregamento", { body: JSON.stringify({ game, initialRequests: initial, ownAssets: own.length, unselectedAssets: opposite.length }), contentType: "application/json" });
+    // D118: recarregar sem rede no endereço do modo abre o próprio modo, servido pelo service worker.
     await context.setOffline(true); await page.reload();
-    await expect(page.getByRole("heading", { name: "Futeiros", exact: true })).toBeVisible();
-    await cartao(page, game).getByRole("button", { name: "Jogar", exact: true }).click();
+    await expect(page).toHaveURL(new RegExp(`/${game}$`));
     // D110: o Craque abre direto na tela de quem é você.
     await expect(page.getByRole("heading", { name: game === "craque" ? /Quem é você/i : "Quem está no banco", exact: game !== "craque" })).toBeVisible();
     if (game === "tecnico" && info.project.name === "celular") await expect(page.getByLabel("Nome do técnico")).toBeVisible();

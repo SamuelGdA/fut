@@ -3,7 +3,7 @@ import { readFile } from "node:fs/promises";
 import { deflateRawSync } from "node:zlib";
 import { abrir, abrirMomento, auditar, esperarQueCaiba, fixturePlans, OPCOES } from "./apoio";
 
-const metadata = JSON.parse(await readFile(new URL("./fixtures/momentos-m41.json",import.meta.url),"utf8")) as {moments:Record<string,{file:string;index:number}>};
+const metadata = JSON.parse(await readFile(new URL("./fixtures/momentos-m43.json",import.meta.url),"utf8")) as {moments:Record<string,{file:string;index:number}>};
 for(const theme of ["light","dark"] as const) for(const scene of ["corner","decisivePenalty"] as const) test(`D79: ${scene}, texto, resultado e cards inteiros, ${theme}`,async({page},info)=>{
   await page.setViewportSize(info.project.name==="celular"?{width:360,height:640}:{width:1280,height:720});
   const sample=metadata.moments[scene]!;
@@ -59,7 +59,7 @@ test("D79: ficar informa continental e os números se alinham sem rolagem",async
 
 test("D79: fim de carreira preenche a mesma largura da decisão",async({page},info)=>{
   await page.setViewportSize(info.project.name==="celular"?{width:360,height:640}:{width:1280,height:720});
-  const raw=await readFile(new URL("./fixtures/colecao-m41.json",import.meta.url));
+  const raw=await readFile(new URL("./fixtures/colecao-m43.json",import.meta.url));
   const seed=(JSON.parse(raw.toString()) as {setup:{seed:string}}).setup.seed;
   const plan=fixturePlans[seed]!;const last=plan.at(-1)!;
   await abrirMomento(page,raw,plan.length-1,{theme:"light"});
@@ -96,7 +96,7 @@ test("D79: laboratório usa os lances e chips atuais",async({page},info)=>{
 
 for(const locale of ["pt","en","es"] as const) test(`D79: todas as folhas do jornal cabem com crônicas, ${locale}`,async({page},info)=>{
   await page.setViewportSize(info.project.name==="celular"?{width:360,height:640}:{width:1280,height:800});
-  const raw=await readFile(new URL("./fixtures/colecao-m41.json",import.meta.url));
+  const raw=await readFile(new URL("./fixtures/colecao-m43.json",import.meta.url));
   await abrir(page,{locale,motion:"reduced",theme:"light"},`/#c=z${deflateRawSync(raw).toString("base64url")}`);
   await page.locator('a[href="#capitulo-newspaper"]').click();
   const spread=page.locator(".paper-stage .paper-spread");

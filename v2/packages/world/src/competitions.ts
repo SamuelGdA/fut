@@ -48,12 +48,17 @@ const same = (name: string): LocalizedText => ({ pt: name, es: name, en: name })
 
 // -------------------------------------------------------------- nacionais
 
-/** Copas nacionais, por país. O México não tem uma desde 2020; o Peru deixou de ter (D108: a Copa Bicentenario acabou). */
+/**
+ * Copas nacionais, por país. O México não tem uma desde 2020; o Peru deixou de
+ * ter (D108: a Copa Bicentenario acabou); a Indonésia não disputa a Piala
+ * Indonesia desde 2019 (D117).
+ */
 const CUPS: Readonly<Record<CountryCode, { name: string; artKey?: string }>> = {
   ARG: { name: "Copa Argentina" },
   BOL: { name: "Copa Bolivia", artKey: "cup:bol-copa-bolivia" },
   BRA: { name: "Copa do Brasil" },
   CHI: { name: "Copa Chile" },
+  CHN: { name: "Chinese FA Cup" },
   COL: { name: "Copa Colombia" },
   ECU: { name: "Copa Ecuador" },
   ENG: { name: "FA Cup" },
@@ -61,6 +66,9 @@ const CUPS: Readonly<Record<CountryCode, { name: string; artKey?: string }>> = {
   FRA: { name: "Coupe de France" },
   GER: { name: "DFB-Pokal" },
   ITA: { name: "Coppa Italia" },
+  JPN: { name: "Emperor's Cup" },
+  KOR: { name: "Korea Cup" },
+  KSA: { name: "King's Cup" },
   PAR: { name: "Copa Paraguay" },
   POR: { name: "Taça de Portugal" },
   URU: { name: "Copa AUF Uruguay" },
@@ -84,13 +92,19 @@ const SUPER_CUPS: Readonly<Record<CountryCode, string>> = {
   URU: "Supercopa Uruguaya",
   PAR: "Supercopa Paraguay",
   POR: "Supertaça Cândido de Oliveira",
+  // D117: as supercopas asiáticas (a coreana voltou em 2026, depois de 20 anos).
+  JPN: "Japanese Super Cup",
+  KSA: "Saudi Super Cup",
+  CHN: "Chinese FA Super Cup",
+  KOR: "K League Super Cup",
 };
 
-/** Copas da liga que existem de fato (D108: a Taça da Liga portuguesa). */
+/** Copas da liga que existem de fato (D108: a Taça da Liga portuguesa; D117: a J.League Cup). */
 const LEAGUE_CUPS: Readonly<Partial<Record<CountryCode, string>>> = {
   ENG: "EFL Cup",
   CHI: "Copa de la Liga",
   POR: "Taça da Liga",
+  JPN: "J.League Cup",
 };
 
 // ------------------------------------------------------------ continentais
@@ -128,7 +142,10 @@ const CONTINENTAL: Readonly<Record<Confederation, ContinentalSet>> = {
   CAF: {
     nationsCup: { pt: "Copa Africana de Nações", es: "Copa Africana de Naciones", en: "Africa Cup of Nations" },
   },
+  // D117: a Champions League asiática e a segunda copa, sem supercopa continental.
   AFC: {
+    continental1: same("AFC Champions League Elite"),
+    continental2: same("AFC Champions League Two"),
     nationsCup: { pt: "Copa da Ásia", es: "Copa Asiática", en: "AFC Asian Cup" },
   },
   OFC: {
@@ -389,3 +406,18 @@ export const AWARDS: Readonly<Record<AwardKey, Award>> = {
     art: "award:best-player",
   },
 };
+
+/**
+ * Imagens próprias de um prêmio numa competição (D118): o craque da Copa do
+ * Mundo e o da Champions League têm peça própria; os outros craques de
+ * competição usam a arte geral do prêmio.
+ */
+const COMPETITION_AWARD_IMAGES: Readonly<Partial<Record<string, string | null>>> = {
+  "bestPlayer:worldcup": awardImage("best-player-world-cup"),
+  "bestPlayer:cont1:UEFA": awardImage("best-player-champions"),
+};
+
+/** A imagem real do prêmio, a da competição quando houver. */
+export function awardImageFor(award: Award, competition?: string | null): string | null {
+  return (competition ? COMPETITION_AWARD_IMAGES[`${award.key}:${competition}`] : null) ?? award.image;
+}

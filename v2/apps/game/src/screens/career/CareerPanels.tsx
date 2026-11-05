@@ -211,7 +211,7 @@ export function HistoryPanel({ career, onReplay }: { career: Career; onReplay(in
                   </span>
                 ) : null}
                 {honours > 0 ? (
-                  <span className="history-honours" title={collection.map(item => item.kind === "title" ? competitionName(item.id,locale) : `${AWARDS[item.id].names[locale]}${item.competition ? ` · ${competitionName(item.competition,locale)}` : ""}`).join(", ")}>{collection.map(item => { const comp = item.kind === "title" ? getCompetition(item.id) : null; const label = item.kind === "title" ? competitionName(item.id,locale) : `${AWARDS[item.id].names[locale]}${item.competition ? ` · ${competitionName(item.competition,locale)}` : ""}`; return item.kind === "award" ? <AwardArt key={`${item.id}:${item.competition ?? ""}`} award={AWARDS[item.id]} size={24} language={locale} tooltip={label} /> : comp ? <TrophyArt key={item.id} competition={comp} size={24} language={locale} /> : null; })}</span>
+                  <span className="history-honours" title={collection.map(item => item.kind === "title" ? competitionName(item.id,locale) : `${AWARDS[item.id].names[locale]}${item.competition ? ` · ${competitionName(item.competition,locale)}` : ""}`).join(", ")}>{collection.map(item => { const comp = item.kind === "title" ? getCompetition(item.id) : null; const label = item.kind === "title" ? competitionName(item.id,locale) : `${AWARDS[item.id].names[locale]}${item.competition ? ` · ${competitionName(item.competition,locale)}` : ""}`; return item.kind === "award" ? <AwardArt key={`${item.id}:${item.competition ?? ""}`} award={AWARDS[item.id]} competition={item.competition} size={24} language={locale} tooltip={label} /> : comp ? <TrophyArt key={item.id} competition={comp} size={24} language={locale} /> : null; })}</span>
                 ) : null}
               </span>
               <span className="flex flex-col items-end">
@@ -229,7 +229,7 @@ export function HistoryPanel({ career, onReplay }: { career: Career; onReplay(in
 
 /** A estante da carreira em andamento: a mesma vitrine do resumo (GDD 24.5). */
 export function TrophiesPanel({ career }: { career: Career }) {
-  return <Showcase history={career.history} />;
+  return <Showcase history={career.history} fixedArt={72} />;
 }
 
 /** A seleção: situação, jogos, gols, assistências (ou jogos sem sofrer gol), títulos, estreia e torneios. */

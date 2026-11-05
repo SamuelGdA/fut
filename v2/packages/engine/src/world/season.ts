@@ -407,7 +407,7 @@ function simulateIntercontinental(
 ): IntercontinentalResult | null {
   const europe = continental["cont1:UEFA"]?.order[0];
   if (!europe || !hasClub(europe)) return null;
-  const clubs = (["CONMEBOL", "CONCACAF"] as const).flatMap((confederation) => {
+  const clubs = (["CONMEBOL", "CONCACAF", "AFC"] as const).flatMap((confederation) => {
     const winner = continental[`cont1:${confederation}`]?.order[0];
     return winner ? [winner] : [];
   });
@@ -440,7 +440,7 @@ function simulateClubWorldCup(context: Context): KnockoutResult | null {
     for (let index = 0; chosen.length < quota; index++) chosen.push(`generic:${confederation}:${index}`);
     entrants.push(...chosen);
   }
-  for (const [confederation,count] of [["AFC",4],["CAF",4],["OFC",1]] as const) {
+  for (const [confederation,count] of [["CAF",4],["OFC",1]] as const) {
     for(let index=0;index<count;index+=1) entrants.push(`generic:${confederation}:${index}`);
   }
   // A sede futura é condensada na mesma indicação norte-americana do Técnico.

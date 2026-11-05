@@ -9,6 +9,7 @@ import { defineConfig } from "vitest/config";
 import { errorPages } from "./build/errorPages.ts";
 import { gameLoading } from "./build/gameLoading.ts";
 import { routeCopies } from "./build/routes.ts";
+import { socialPreview } from "./build/social.ts";
 import { devSecurityHeaders, securityHeaders, securityPlugin } from "./build/security.ts";
 import { CODE_CACHE, IMAGE_CACHE, RUNTIME_IMAGE_DIRS, RUNTIME_IMAGE_PATTERN } from "./src/services/cacheNames.ts";
 
@@ -46,6 +47,7 @@ export default defineConfig({
     securityPlugin(),
     // D112: /login, /perfil, /termos e /privacidade abrem em qualquer hospedagem estática.
     routeCopies(),
+    socialPreview(),
     loading.plugin,
     // PWA (GDD 37): instalável, e a casca e o jogo funcionam sem internet.
     VitePWA({

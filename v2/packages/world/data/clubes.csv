@@ -140,6 +140,38 @@ deportes-magallanes;CHI;2;Deportes Magallanes;58;1,3
 deportes-temuco;CHI;2;Deportes Temuco;58;1,2
 rangers-de-talca;CHI;2;Rangers de Talca;58;1,3
 san-marcos-de-arica;CHI;2;San Marcos de Arica;57;1,1
+chengdu-rongcheng;CHN;1;Chengdu Rongcheng;70;1,7
+shanghai-port;CHN;1;Shanghai Port;70;2,4
+shanghai-shenhua;CHN;1;Shanghai Shenhua;70;2,4
+beijing-guoan;CHN;1;Beijing Guoan;69;2,5
+shandong-taishan;CHN;1;Shandong Taishan;69;2,5
+dalian-yingbo;CHN;1;Dalian Yingbo;67;1,2
+zhejiang;CHN;1;Zhejiang FC;66;1,6
+tianjin-jinmen-tiger;CHN;1;Tianjin Jinmen Tiger;65;1,8
+henan;CHN;1;Henan FC;64;1,7
+wuhan-three-towns;CHN;1;Wuhan Three Towns;64;1,4
+yunnan-yukun;CHN;1;Yunnan Yukun;64;1
+qingdao-west-coast;CHN;1;Qingdao West Coast;63;1
+shenzhen-peng-city;CHN;1;Shenzhen Peng City;63;1
+liaoning-tieren;CHN;1;Liaoning Tieren;62;1,2
+qingdao-hainiu;CHN;1;Qingdao Hainiu;62;1,4
+chongqing-tonglianglong;CHN;1;Chongqing Tonglianglong;61;1
+changchun-yatai;CHN;2;Changchun Yatai;60;1,6
+meizhou-hakka;CHN;2;Meizhou Hakka;59;1,2
+dalian-kun-city;CHN;2;Dalian K'un City;58;1
+guangdong-gz-power;CHN;2;Guangdong GZ-Power;58;1
+nantong-zhiyun;CHN;2;Nantong Zhiyun;58;1,1
+nanjing-city;CHN;2;Nanjing City;57;1
+shaanxi-union;CHN;2;Shaanxi Union;57;1
+shenzhen-juniors;CHN;2;Shenzhen Juniors;57;1
+shijiazhuang-gongfu;CHN;2;Shijiazhuang Gongfu;57;1
+suzhou-dongwu;CHN;2;Suzhou Dongwu;57;1
+yanbian-longding;CHN;2;Yanbian Longding;57;1,3
+foshan-nanshi;CHN;2;Foshan Nanshi;56;1
+guangxi-hengchen;CHN;2;Guangxi Hengchen;56;1
+jiangxi-dingnan-united;CHN;2;Jiangxi Dingnan United;56;1
+ningbo-fc;CHN;2;Ningbo FC;56;1
+wuxi-wugo;CHN;2;Wuxi Wugo;56;1
 atletico-nacional;COL;1;Atlético Nacional;70;3,2
 america-de-cali;COL;1;América de Cali;68;2,7
 junior;COL;1;Junior;68;2,5
@@ -334,6 +366,44 @@ spvgg-greuther-furth;GER;2;SpVgg Greuther Fürth;68;1,6
 eintracht-braunschweig;GER;2;Eintracht Braunschweig;67;1,8
 energie-cottbus;GER;2;Energie Cottbus;67;1,6
 vfl-osnabruck;GER;2;VfL Osnabrück;66;1,3
+persib;IDN;1;Persib Bandung;61;2,1
+borneo-samarinda;IDN;1;Borneo Samarinda;60;1,3
+persija;IDN;1;Persija Jakarta;60;2
+bali-united;IDN;1;Bali United;59;1,4
+dewa-united;IDN;1;Dewa United Banten;59;1
+arema;IDN;1;Arema FC;58;1,6
+persebaya;IDN;1;Persebaya Surabaya;58;1,7
+psm-makassar;IDN;1;PSM Makassar;58;1,6
+bhayangkara;IDN;1;Bhayangkara Presisi;56;1,1
+java-united;IDN;1;Java United;56;1
+madura-united;IDN;1;Madura United;56;1,1
+persik-kediri;IDN;1;Persik Kediri;56;1,1
+persita;IDN;1;Persita Tangerang;56;1
+garudayaksa;IDN;1;Garudayaksa FC;55;1
+persijap;IDN;1;Persijap Jepara;55;1
+psim-yogyakarta;IDN;1;PSIM Yogyakarta;55;1,1
+pss-sleman;IDN;1;PSS Sleman;55;1,2
+isenmulang-kalteng;IDN;1;Isenmulang Kalteng;54;1
+barito-putera;IDN;2;Barito Putera;53;1,2
+persipura;IDN;2;Persipura Jayapura;53;1,8
+persis-solo;IDN;2;Persis Solo;53;1,2
+semen-padang;IDN;2;Semen Padang;53;1,2
+adhyaksa-bekasi;IDN;2;Adhyaksa Bekasi;52;1
+psbs-biak;IDN;2;PSBS Biak;52;1
+psis-semarang;IDN;2;PSIS Semarang;52;1,3
+psms-medan;IDN;2;PSMS Medan;52;1,4
+persela;IDN;2;Persela Lamongan;51;1,2
+persiraja;IDN;2;Persiraja Banda Aceh;51;1,1
+de-red;IDN;2;de Red FC;50;1
+deltras;IDN;2;Deltras FC;50;1,1
+kendal-tornado;IDN;2;Kendal Tornado;50;1
+persiba;IDN;2;Persiba Balikpapan;50;1,1
+persikad;IDN;2;Persikad Depok;50;1
+persiku;IDN;2;Persiku Kudus;50;1
+psps-pekanbaru;IDN;2;PSPS Pekanbaru;50;1
+rans-nusantara;IDN;2;RANS Nusantara;50;1
+psgc-ciamis;IDN;2;PSGC Ciamis;49;1
+sumsel-united;IDN;2;Sumsel United;49;1
 inter;ITA;1;Inter;85;4,5
 napoli;ITA;1;Napoli;84;3,8
 ac-milan;ITA;1;AC Milan;83;4,6
@@ -374,6 +444,111 @@ reggiana;ITA;2;Reggiana;67;1,3
 carrarese;ITA;2;Carrarese;66;1,1
 sudtirol;ITA;2;Sudtirol;66;1,1
 virtus-entella;ITA;2;Virtus Entella;66;1,2
+kashima-antlers;JPN;1;Kashima Antlers;72;3
+sanfrecce-hiroshima;JPN;1;Sanfrecce Hiroshima;71;2,4
+vissel-kobe;JPN;1;Vissel Kobe;71;2,3
+kashiwa-reysol;JPN;1;Kashiwa Reysol;70;1,9
+kawasaki-frontale;JPN;1;Kawasaki Frontale;70;2,5
+machida-zelvia;JPN;1;FC Machida Zelvia;70;1,4
+urawa-reds;JPN;1;Urawa Red Diamonds;70;3
+gamba-osaka;JPN;1;Gamba Osaka;69;2,6
+kyoto-sanga;JPN;1;Kyoto Sanga;69;1,6
+yokohama-f-marinos;JPN;1;Yokohama F. Marinos;69;2,8
+cerezo-osaka;JPN;1;Cerezo Osaka;68;2,1
+fc-tokyo;JPN;1;FC Tokyo;68;2
+nagoya-grampus;JPN;1;Nagoya Grampus;68;2,3
+avispa-fukuoka;JPN;1;Avispa Fukuoka;67;1,5
+fagiano-okayama;JPN;1;Fagiano Okayama;66;1,2
+shimizu-s-pulse;JPN;1;Shimizu S-Pulse;66;2
+tokyo-verdy;JPN;1;Tokyo Verdy;66;2,2
+v-varen-nagasaki;JPN;1;V-Varen Nagasaki;66;1,2
+jef-united-chiba;JPN;1;JEF United Chiba;65;1,9
+mito-hollyhock;JPN;1;Mito HollyHock;65;1,1
+albirex-niigata;JPN;2;Albirex Niigata;64;1,7
+consadole-sapporo;JPN;2;Hokkaido Consadole Sapporo;63;1,8
+jubilo-iwata;JPN;2;Júbilo Iwata;63;2,3
+omiya-ardija;JPN;2;RB Omiya Ardija;63;1,6
+shonan-bellmare;JPN;2;Shonan Bellmare;63;1,7
+yokohama-fc;JPN;2;Yokohama FC;63;1,4
+sagan-tosu;JPN;2;Sagan Tosu;62;1,5
+vegalta-sendai;JPN;2;Vegalta Sendai;62;1,6
+montedio-yamagata;JPN;2;Montedio Yamagata;61;1,2
+tokushima-vortis;JPN;2;Tokushima Vortis;61;1,3
+blaublitz-akita;JPN;2;Blaublitz Akita;60;1
+fc-imabari;JPN;2;FC Imabari;60;1
+iwaki-fc;JPN;2;Iwaki FC;60;1
+kataller-toyama;JPN;2;Kataller Toyama;60;1
+oita-trinita;JPN;2;Oita Trinita;60;1,5
+ventforet-kofu;JPN;2;Ventforet Kofu;60;1,4
+fujieda-myfc;JPN;2;Fujieda MYFC;59;1
+tegevajaro-miyazaki;JPN;2;Tegevajaro Miyazaki;57;1
+tochigi-city;JPN;2;Tochigi City;57;1
+vanraure-hachinohe;JPN;2;Vanraure Hachinohe;57;1
+jeonbuk-hyundai-motors;KOR;1;Jeonbuk Hyundai Motors;71;2,9
+fc-seoul;KOR;1;FC Seoul;70;2,5
+ulsan-hd;KOR;1;Ulsan HD;70;2,7
+daejeon-hana-citizen;KOR;1;Daejeon Hana Citizen;68;1,5
+pohang-steelers;KOR;1;Pohang Steelers;68;2,6
+gangwon-fc;KOR;1;Gangwon FC;67;1,3
+gimcheon-sangmu;KOR;1;Gimcheon Sangmu;67;1,3
+gwangju-fc;KOR;1;Gwangju FC;66;1,2
+incheon-united;KOR;1;Incheon United;66;1,6
+jeju-sk;KOR;1;Jeju SK;66;1,8
+fc-anyang;KOR;1;FC Anyang;65;1,2
+bucheon-fc-1995;KOR;1;Bucheon FC 1995;64;1
+daegu-fc;KOR;2;Daegu FC;63;1,6
+suwon-samsung-bluewings;KOR;2;Suwon Samsung Bluewings;63;2,6
+suwon-fc;KOR;2;Suwon FC;62;1,2
+busan-ipark;KOR;2;Busan IPark;61;1,8
+jeonnam-dragons;KOR;2;Jeonnam Dragons;61;1,6
+seongnam-fc;KOR;2;Seongnam FC;61;2,3
+seoul-e-land;KOR;2;Seoul E-Land;61;1,1
+chungnam-asan;KOR;2;Chungnam Asan;60;1
+gyeongnam-fc;KOR;2;Gyeongnam FC;60;1,3
+gimpo-fc;KOR;2;Gimpo FC;59;1
+ansan-greeners;KOR;2;Ansan Greeners;58;1
+cheonan-city;KOR;2;Cheonan City;58;1
+chungbuk-cheongju;KOR;2;Chungbuk Cheongju;58;1
+hwaseong-fc;KOR;2;Hwaseong FC;57;1
+gimhae-fc-2008;KOR;2;Gimhae FC 2008;56;1
+paju-frontier;KOR;2;Paju Frontier;56;1
+yongin-fc;KOR;2;Yongin FC;56;1
+al-hilal;KSA;1;Al-Hilal;78;3,7
+al-ahli;KSA;1;Al-Ahli;77;3,2
+al-nassr;KSA;1;Al-Nassr;77;3,3
+al-ittihad;KSA;1;Al-Ittihad;76;3,3
+al-qadsiah;KSA;1;Al-Qadsiah;74;1,8
+al-ettifaq;KSA;1;Al-Ettifaq;70;2,1
+al-shabab;KSA;1;Al-Shabab;70;2,3
+al-taawoun;KSA;1;Al-Taawoun;70;1,6
+neom;KSA;1;NEOM SC;70;1,2
+al-khaleej;KSA;1;Al-Khaleej;68;1,3
+al-fateh;KSA;1;Al-Fateh;67;1,6
+al-fayha;KSA;1;Al-Fayha;67;1,4
+al-kholood;KSA;1;Al-Kholood;66;1,1
+al-hazem;KSA;1;Al-Hazem;65;1,2
+al-riyadh;KSA;1;Al-Riyadh;65;1,2
+abha;KSA;1;Abha Club;64;1,3
+al-faisaly;KSA;1;Al-Faisaly;64;1,4
+al-diriyah;KSA;1;Al-Diriyah;63;1
+damac;KSA;2;Damac FC;61;1,3
+al-okhdood;KSA;2;Al-Okhdood;60;1,1
+al-raed;KSA;2;Al-Raed;60;1,4
+al-wehda;KSA;2;Al-Wehda;60;1,8
+al-adalah;KSA;2;Al-Adalah;59;1,1
+al-najma;KSA;2;Al-Najma;59;1
+al-orobah;KSA;2;Al-Orobah;59;1,1
+al-tai;KSA;2;Al-Tai;59;1,4
+al-bukiryah;KSA;2;Al-Bukiryah;58;1
+al-jabalain;KSA;2;Al-Jabalain;58;1,1
+al-ula;KSA;2;Al-Ula;58;1
+al-jandal;KSA;2;Al-Jandal;57;1
+al-zulfi;KSA;2;Al-Zulfi;57;1
+jeddah-club;KSA;2;Jeddah Club;57;1
+al-anwar;KSA;2;Al-Anwar;56;1
+al-jeel;KSA;2;Al-Jeel;56;1
+al-saqer;KSA;2;Al-Saqer;56;1
+hajer;KSA;2;Hajer Club;56;1,1
 club-america;MEX;1;Club América;75;3,8
 monterrey;MEX;1;Monterrey;75;3
 tigres-uanl;MEX;1;Tigres UANL;75;3
@@ -424,6 +599,42 @@ academia-cantolao;PER;2;Academia Cantolao;55;1
 deportivo-coopsol;PER;2;Deportivo Coopsol;55;1
 deportivo-llacuabamba;PER;2;Deportivo Llacuabamba;54;1
 pirata-fc;PER;2;Pirata FC;54;1
+fc-porto;POR;1;FC Porto;80;4,2
+benfica;POR;1;SL Benfica;79;4,3
+sporting-cp;POR;1;Sporting CP;79;3,9
+sc-braga;POR;1;SC Braga;76;2,9
+famalicao;POR;1;FC Famalicão;71;1,7
+vitoria-sc;POR;1;Vitória SC;71;2,5
+arouca;POR;1;FC Arouca;70;1,4
+estoril-praia;POR;1;Estoril Praia;70;1,6
+casa-pia;POR;1;Casa Pia AC;69;1,3
+estrela-amadora;POR;1;Estrela da Amadora;69;1,5
+gil-vicente;POR;1;Gil Vicente;69;1,6
+rio-ave;POR;1;Rio Ave FC;69;1,7
+alverca;POR;1;FC Alverca;68;1,2
+moreirense;POR;1;Moreirense FC;68;1,4
+nacional-madeira;POR;1;CD Nacional;68;1,6
+santa-clara;POR;1;CD Santa Clara;68;1,5
+maritimo;POR;1;CS Marítimo;67;2
+academico-de-viseu;POR;1;Académico de Viseu;66;1,3
+avs;POR;2;AVS Futebol;66;1,1
+tondela;POR;2;CD Tondela;66;1,3
+chaves;POR;2;GD Chaves;65;1,5
+pacos-de-ferreira;POR;2;FC Paços de Ferreira;65;1,6
+portimonense;POR;2;Portimonense SC;65;1,5
+vizela;POR;2;FC Vizela;65;1,3
+farense;POR;2;SC Farense;64;1,4
+torreense;POR;2;SCU Torreense;64;1,2
+feirense;POR;2;CD Feirense;63;1,3
+leixoes;POR;2;Leixões SC;63;1,4
+uniao-de-leiria;POR;2;União de Leiria;63;1,4
+academica;POR;2;Académica de Coimbra;62;1,9
+belenenses;POR;2;CF Os Belenenses;62;2
+oliveirense;POR;2;UD Oliveirense;62;1,1
+penafiel;POR;2;FC Penafiel;62;1,2
+felgueiras;POR;2;FC Felgueiras;61;1
+lusitania-lourosa;POR;2;Lusitânia Lourosa;61;1
+varzim;POR;2;Varzim SC;61;1,2
 club-nacional;URU;1;Nacional;68;3,5
 penarol;URU;1;Peñarol;68;3,6
 defensor-sporting;URU;1;Defensor Sporting;64;2

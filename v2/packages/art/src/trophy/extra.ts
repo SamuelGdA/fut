@@ -82,12 +82,36 @@ export const EXTRA_TROPHY_ART: Readonly<Record<string, TrophySpec>> = {
   "league:usa-mls": spec("chalice", "silver", "#0a3161", "MLS"),
   "league:liga-futve": spec("bowl", "gold", "#7a1f2b", "VE"),
 
+  // --- D117: Ásia (troféus desenhados até chegarem as imagens reais) ---
+  // Primeira divisão em ouro e segunda em prata, como no resto da tabela.
+  "league:j1-league": spec("chalice", "gold", "#bc002d", "J1"),
+  "league:j2-league": spec("cup", "silver", "#bc002d", "J2"),
+  "league:saudi-pro-league": spec("bowl", "gold", "#165d31", "SPL"),
+  "league:saudi-first-division": spec("cup", "silver", "#165d31", "FDL"),
+  "league:chinese-super-league": spec("chalice", "gold", "#ee1c25", "CSL"),
+  "league:china-league-one": spec("cup", "silver", "#ee1c25", "CL1"),
+  "league:k-league-1": spec("bowl", "gold", "#0047a0", "K1"),
+  "league:k-league-2": spec("cup", "silver", "#0047a0", "K2"),
+  "league:super-league-indonesia": spec("bowl", "gold", "#ce1126", "SLI"),
+  "league:championship-indonesia": spec("chalice", "silver", "#ce1126", "CHI"),
+  "cup:JPN": spec("cup", "gold", "#5a2d82", "EC"),
+  "cup:KSA": spec("cup", "gold", "#165d31", "KC"),
+  "cup:CHN": spec("cup", "silver", "#ee1c25", "FA"),
+  "cup:KOR": spec("cup", "silver", "#0047a0", "KOR"),
+  "leaguecup:JPN": spec("chalice", "silver", "#bc002d", "JLC"),
+  "super:JPN": spec("salver", "silver", "#bc002d", "JP"),
+  "super:KSA": spec("salver", "gold", "#165d31", "SA"),
+  "super:CHN": spec("salver", "gold", "#ee1c25", "CN"),
+  "super:KOR": spec("salver", "silver", "#cd2e3a", "KR"),
+
   // --- Continentais principais ---
   "cont:UEFA:continental_primary": spec("chalice", "silver", "#0b1f5c", "UCL"),
   "cont:UEFA:continental_secondary": spec("chalice", "silver", "#e8650c", "UEL"),
   "cont:CONMEBOL:continental_primary": spec("chalice", "silver", "#0b6b3a", "LIB"),
   "cont:CONMEBOL:continental_secondary": spec("chalice", "silver", "#0b6b8f", "SUD"),
   "cont:CONCACAF:continental_primary": spec("chalice", "silver", "#12161c", "CCC"),
+  "cont:AFC:continental_primary": spec("chalice", "silver", "#1b2a6b", "ACLE"),
+  "cont:AFC:continental_secondary": spec("chalice", "silver", "#00857a", "ACL2"),
 
   // --- Seleções e mundiais ---
   "nations:UEFA": spec("cup", "silver", "#0b2d7a", "EURO"),

@@ -1,12 +1,14 @@
 import type { Plugin } from "vite";
 
 /**
- * Endereços próprios (D112): `/login`, `/perfil`, `/termos` e `/privacidade`.
+ * Endereços próprios (D112): `/login`, `/perfil`, `/termos` e `/privacidade`,
+ * mais os dos modos (D118): `/craque` e `/tecnico`.
  * O build grava uma cópia do `index.html` em cada pasta, então qualquer
  * hospedagem estática abre esses endereços (e a volta do Google no `/login`)
- * sem regra de reescrita. Os mesmos caminhos de `SCREEN_PATHS` (um teste confere).
+ * sem regra de reescrita. Os mesmos caminhos de `SCREEN_PATHS` e `GAME_PATHS`
+ * (um teste confere).
  */
-export const ROUTE_PATHS = ["login", "perfil", "termos", "privacidade"] as const;
+export const ROUTE_PATHS = ["login", "perfil", "termos", "privacidade", "craque", "tecnico"] as const;
 
 export function routeCopies(paths: readonly string[] = ROUTE_PATHS): Plugin {
   return {

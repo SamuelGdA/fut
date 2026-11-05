@@ -34,13 +34,13 @@ export function CraqueExtras({ quick }: { quick: QuickStart }) {
         <p className="mt-2 text-xs text-faint">{t("home.quickHint")}</p>
       </div>
       <DailyChallengeCard />
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-center">
         <AchievementsPanel />
         {IS_DEV ? (
           <Button
             variant="ghost"
             size="sm"
-            className="self-start"
+            className="self-start lg:hidden"
             onClick={() => {
               feedback("tick");
               go("lab");
@@ -98,8 +98,8 @@ function DailyChallengeCard() {
           {t("home.challengeNext", { time: formatCountdown(clock.msLeft) })}
         </p>
       </div>
-      <p className="mt-3 max-w-xl text-sm text-muted">{t("home.challengeBody")}</p>
-      <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
+      <p className="home-challenge-body mt-3 max-w-xl text-sm text-muted">{t("home.challengeBody")}</p>
+      <div className="home-challenge-foot mt-4 flex flex-wrap items-center justify-between gap-3">
         <p className="text-sm">
           {ranked ? (
             <span className="text-glory">{t("home.challengeRanked", { score: ranked.score })}</span>

@@ -43,5 +43,161 @@
         }
       ]
     }
+  ],
+  "rewrites": [
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "query",
+          "key": "lang",
+          "value": "en"
+        }
+      ],
+      "destination": "/social/en/index.html"
+    },
+    {
+      "source": "/login",
+      "has": [
+        {
+          "type": "query",
+          "key": "lang",
+          "value": "en"
+        }
+      ],
+      "destination": "/social/en/login/index.html"
+    },
+    {
+      "source": "/perfil",
+      "has": [
+        {
+          "type": "query",
+          "key": "lang",
+          "value": "en"
+        }
+      ],
+      "destination": "/social/en/perfil/index.html"
+    },
+    {
+      "source": "/termos",
+      "has": [
+        {
+          "type": "query",
+          "key": "lang",
+          "value": "en"
+        }
+      ],
+      "destination": "/social/en/termos/index.html"
+    },
+    {
+      "source": "/privacidade",
+      "has": [
+        {
+          "type": "query",
+          "key": "lang",
+          "value": "en"
+        }
+      ],
+      "destination": "/social/en/privacidade/index.html"
+    },
+    {
+      "source": "/craque",
+      "has": [
+        {
+          "type": "query",
+          "key": "lang",
+          "value": "en"
+        }
+      ],
+      "destination": "/social/en/craque/index.html"
+    },
+    {
+      "source": "/tecnico",
+      "has": [
+        {
+          "type": "query",
+          "key": "lang",
+          "value": "en"
+        }
+      ],
+      "destination": "/social/en/tecnico/index.html"
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "query",
+          "key": "lang",
+          "value": "es"
+        }
+      ],
+      "destination": "/social/es/index.html"
+    },
+    {
+      "source": "/login",
+      "has": [
+        {
+          "type": "query",
+          "key": "lang",
+          "value": "es"
+        }
+      ],
+      "destination": "/social/es/login/index.html"
+    },
+    {
+      "source": "/perfil",
+      "has": [
+        {
+          "type": "query",
+          "key": "lang",
+          "value": "es"
+        }
+      ],
+      "destination": "/social/es/perfil/index.html"
+    },
+    {
+      "source": "/termos",
+      "has": [
+        {
+          "type": "query",
+          "key": "lang",
+          "value": "es"
+        }
+      ],
+      "destination": "/social/es/termos/index.html"
+    },
+    {
+      "source": "/privacidade",
+      "has": [
+        {
+          "type": "query",
+          "key": "lang",
+          "value": "es"
+        }
+      ],
+      "destination": "/social/es/privacidade/index.html"
+    },
+    {
+      "source": "/craque",
+      "has": [
+        {
+          "type": "query",
+          "key": "lang",
+          "value": "es"
+        }
+      ],
+      "destination": "/social/es/craque/index.html"
+    },
+    {
+      "source": "/tecnico",
+      "has": [
+        {
+          "type": "query",
+          "key": "lang",
+          "value": "es"
+        }
+      ],
+      "destination": "/social/es/tecnico/index.html"
+    }
   ]
 }

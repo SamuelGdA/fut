@@ -73,6 +73,8 @@ export const profileSchema = z.object({
   temporadas_tecnico: z.number().int().nonnegative(),
   titulos_tecnico: z.number().int().nonnegative(),
   progresso: z.record(z.string(), z.number().int().nonnegative()).catch({}),
+  /** A última troca do @ (D118): a próxima só 30 dias depois. */
+  username_alterado_em: z.string().nullable().catch(null),
 });
 
 export type Profile = z.infer<typeof profileSchema>;
@@ -87,6 +89,18 @@ export const trophySchema = z.object({
 });
 
 export type Trophy = z.infer<typeof trophySchema>;
+
+/** O Desafio do dia de quem está logado (D118): nota de hoje e as sequências de dias. */
+export const challengeStreakSchema = z.object({
+  hoje: z.number().int().min(0).max(1000),
+  sequencia_atual: z.number().int().nonnegative(),
+  maior_sequencia: z.number().int().nonnegative(),
+});
+
+export type ChallengeStreak = z.infer<typeof challengeStreakSchema>;
+
+/** Dias entre uma troca de @ e a próxima (D118). */
+export const USERNAME_COOLDOWN_DAYS = 30;
 
 export const TROPHY_COLUMNS = "id_trophy,quantidade,data_desbloqueio";
 

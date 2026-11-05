@@ -123,8 +123,8 @@ export function promisePending(career: Career): boolean {
 export function transferOpportunityDue(career: Career): boolean {
   return Boolean(career.contract) && career.world.year - (career.lastOfferYear ?? career.setup.startYear) >= 3;
 }
-export function windowDecision(career: Career, reason: Decision["reason"] = null, guaranteed = false): Career {
-  const context = marketContext(career);
+export function windowDecision(career: Career, reason: Decision["reason"] = null, guaranteed = false, redrawn: readonly string[] = []): Career {
+  const context = marketContext(career, redrawn.length ? { excluded: [...career.blocked, ...redrawn] } : {});
   let offers = marketOffers(context, 2, rng(career, "window"));
   // A oferta é garantida a cada três temporadas (D91): no prazo vencido, sem
   // interessados, chega ao menos a do clube mais perto do nível. Fora do prazo,
@@ -142,7 +142,35 @@ export function windowDecision(career: Career, reason: Decision["reason"] = null
   // pode terminar pela metade, sem a temporada e sem o resultado na tela.
   if (career.age >= retireFrom(career, 33) && !career.drama && !promisePending(career)) options.push({ id: "retire", kind: "retire" });
   if (options.length === 0) return ended(career, "noOffers");
-  return withDecision(offers.length ? { ...career, lastOfferYear: career.world.year } : career, decision(career, "window", options, { reason }));
+  const next = decision(career, "window", options, { reason });
+  return withDecision(offers.length ? { ...career, lastOfferYear: career.world.year } : career, redrawn.length ? { ...next, redrawn } : next);
+}
+
+/**
+ * Novo sorteio de clubes na janela (D118): até duas vezes por carreira, fora
+ * do Desafio do dia, só numa janela com pelo menos uma proposta. Os clubes
+ * novos saem do mesmo mercado, no mesmo nível (o sorteio troca as opções, não
+ * melhora a carreira), e nenhum clube já visto nesta janela volta.
+ */
+export const REDRAW = { max: 2, option: "redraw" } as const;
+
+export function redrawsLeft(career: Career): number {
+  return Math.max(0, REDRAW.max - (career.redraws ?? 0));
+}
+
+export function canRedraw(career: Career): boolean {
+  const current = career.decision;
+  if (career.end || !current || current.kind !== "window" || career.setup.challengeId) return false;
+  return redrawsLeft(career) > 0 && current.options.some((option) => option.kind === "club");
+}
+
+/** Refaz a janela com clubes novos. A escolha entra no save, então o replay refaz o mesmo sorteio. */
+export function redrawWindow(career: Career): Career {
+  const current = career.decision;
+  if (!current || !canRedraw(career)) return career;
+  const shown = current.options.flatMap((option) => option.kind === "club" ? [option.offer.club] : []);
+  const redrawn = [...(current.redrawn ?? []), ...shown.filter((club) => !(current.redrawn ?? []).includes(club))];
+  return windowDecision({ ...career, redraws: (career.redraws ?? 0) + 1 }, current.reason, true, redrawn);
 }
 
 /** Chance de o clube do empréstimo querer comprar o passe, se o dono o quer de volta ou não. */

@@ -75,6 +75,14 @@ function measure(count: number, width: number, maxHeight: number, art: number, l
 }
 
 /**
+ * Tamanho fixo, com legenda: a aba Troféus da carreira não troca o tamanho das
+ * peças a cada título novo (D118). Se não couber na altura, o painel rola.
+ */
+export function showcaseFixedLayout(count: number, width: number, art: number): ShowcaseLayout {
+  return measure(count, Math.max(width, 120), Number.POSITIVE_INFINITY, art, true);
+}
+
+/**
  * O maior tamanho em que `count` peças cabem em `width` × `maxHeight`. Se nem
  * o menor cabe, devolve o menor mesmo (a vitrine rola), com `fits` falso.
  */

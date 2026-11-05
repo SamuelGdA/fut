@@ -26,6 +26,17 @@ const MARKS: Record<string, string> = {
   "copa-simon-bolivar": "CSB",
   // D108: a marca da liga portuguesa é Liga Portugal; a segunda divisão fica LP2.
   "primeira-liga": "LP",
+  // D117: as marcas que as ligas asiáticas usam de fato (J1, K1, CSL, ISL).
+  "j1-league": "J1",
+  "j2-league": "J2",
+  "saudi-pro-league": "SPL",
+  "saudi-first-division": "FD",
+  "chinese-super-league": "CSL",
+  "china-league-one": "CL1",
+  "k-league-1": "K1",
+  "k-league-2": "K2",
+  "super-league-indonesia": "SL",
+  "championship-indonesia": "CH",
 };
 
 /**

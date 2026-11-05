@@ -17,7 +17,7 @@ function readArgs(argv: readonly string[]) {
     const index = argv.indexOf(name);
     return index >= 0 ? argv[index + 1] : undefined;
   };
-  const careers = Number(value("--carreiras") ?? 150);
+  const careers = Number(value("--carreiras") ?? 450);
   if (!Number.isInteger(careers) || careers < 10) throw new Error("--carreiras precisa ser um inteiro de 10 para cima");
   return { careers, seed: value("--semente") ?? "recordes", writeFile: !argv.includes("--sem-arquivo") };
 }

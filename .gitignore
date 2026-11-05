@@ -15,3 +15,6 @@ yarn.lock
 .futeiros-teste.json
 .futeiros-atualizacao-*/
 .futeiros-backups/
+
+# Atalho local para abrir o jogo no PC (não versionado).
+iniciar.bat

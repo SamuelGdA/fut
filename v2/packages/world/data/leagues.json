@@ -80,6 +80,26 @@
     "trophy": "webp"
   },
   {
+    "id": "chinese-super-league",
+    "name": "Chinese Super League",
+    "country": "CHN",
+    "division": 1,
+    "games": 30,
+    "promotionSlots": 2,
+    "crest": "png",
+    "trophy": "webp"
+  },
+  {
+    "id": "china-league-one",
+    "name": "China League One",
+    "country": "CHN",
+    "division": 2,
+    "games": 30,
+    "promotionSlots": 2,
+    "crest": "svg",
+    "trophy": "webp"
+  },
+  {
     "id": "liga-dimayor",
     "name": "Liga Dimayor",
     "country": "COL",
@@ -200,6 +220,26 @@
     "trophy": "png"
   },
   {
+    "id": "super-league-indonesia",
+    "name": "Super League Indonesia",
+    "country": "IDN",
+    "division": 1,
+    "games": 34,
+    "promotionSlots": 3,
+    "crest": "svg",
+    "trophy": "webp"
+  },
+  {
+    "id": "championship-indonesia",
+    "name": "Championship Indonesia",
+    "country": "IDN",
+    "division": 2,
+    "games": 22,
+    "promotionSlots": 3,
+    "crest": null,
+    "trophy": "webp"
+  },
+  {
     "id": "serie-a",
     "name": "Serie A",
     "country": "ITA",
@@ -215,6 +255,66 @@
     "country": "ITA",
     "division": 2,
     "games": 38,
+    "promotionSlots": 3,
+    "crest": "svg",
+    "trophy": "webp"
+  },
+  {
+    "id": "j1-league",
+    "name": "J1 League",
+    "country": "JPN",
+    "division": 1,
+    "games": 38,
+    "promotionSlots": 3,
+    "crest": "svg",
+    "trophy": "webp"
+  },
+  {
+    "id": "j2-league",
+    "name": "J2 League",
+    "country": "JPN",
+    "division": 2,
+    "games": 38,
+    "promotionSlots": 3,
+    "crest": "svg",
+    "trophy": "webp"
+  },
+  {
+    "id": "k-league-1",
+    "name": "K League 1",
+    "country": "KOR",
+    "division": 1,
+    "games": 38,
+    "promotionSlots": 2,
+    "crest": "svg",
+    "trophy": "webp"
+  },
+  {
+    "id": "k-league-2",
+    "name": "K League 2",
+    "country": "KOR",
+    "division": 2,
+    "games": 32,
+    "promotionSlots": 2,
+    "crest": "svg",
+    "trophy": "webp"
+  },
+  {
+    "id": "saudi-pro-league",
+    "name": "Saudi Pro League",
+    "country": "KSA",
+    "division": 1,
+    "games": 34,
+    "promotionSlots": 3,
+    "crest": "png",
+    "trophy": "webp"
+  },
+  {
+    "id": "saudi-first-division",
+    "name": "Saudi First Division",
+    "country": "KSA",
+    "division": 2,
+    "games": 34,
     "promotionSlots": 3,
     "crest": "svg",
     "trophy": "webp"

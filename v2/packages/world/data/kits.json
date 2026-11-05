@@ -893,5 +893,155 @@
     "base": "#D71920",
     "accent": "#ffffff",
     "pattern": "horizontal_stripes"
+  },
+  "urawa-reds": {
+    "base": "#D7000F",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "kashima-antlers": {
+    "base": "#B71C2F",
+    "accent": "#0a1f4f",
+    "pattern": "solid"
+  },
+  "kashiwa-reysol": {
+    "base": "#FFE100",
+    "accent": "#0a0a0a",
+    "pattern": "solid"
+  },
+  "yokohama-f-marinos": {
+    "base": "#003A8C",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "gamba-osaka": {
+    "base": "#0D3C96",
+    "accent": "#0a0a0a",
+    "pattern": "vertical_stripes"
+  },
+  "cerezo-osaka": {
+    "base": "#E94B8C",
+    "accent": "#0a1f4f",
+    "pattern": "solid"
+  },
+  "kawasaki-frontale": {
+    "base": "#1E9FE0",
+    "accent": "#0a0a0a",
+    "pattern": "vertical_stripes"
+  },
+  "vissel-kobe": {
+    "base": "#8C1D3C",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "sanfrecce-hiroshima": {
+    "base": "#5A2D82",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "nagoya-grampus": {
+    "base": "#E50012",
+    "accent": "#F5A400",
+    "pattern": "solid"
+  },
+  "consadole-sapporo": {
+    "base": "#D7000F",
+    "accent": "#0a0a0a",
+    "pattern": "vertical_stripes"
+  },
+  "jubilo-iwata": {
+    "base": "#6CB8E6",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "al-hilal": {
+    "base": "#0B4CA3",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "al-nassr": {
+    "base": "#FCD116",
+    "accent": "#0B3D91",
+    "pattern": "solid"
+  },
+  "al-ittihad": {
+    "base": "#FFC72C",
+    "accent": "#0a0a0a",
+    "pattern": "vertical_stripes"
+  },
+  "al-ahli": {
+    "base": "#00843D",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "al-shabab": {
+    "base": "#ffffff",
+    "accent": "#0a0a0a",
+    "pattern": "solid"
+  },
+  "al-ettifaq": {
+    "base": "#00843D",
+    "accent": "#D71920",
+    "pattern": "solid"
+  },
+  "jeonbuk-hyundai-motors": {
+    "base": "#00843D",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "ulsan-hd": {
+    "base": "#0050A0",
+    "accent": "#F9C80E",
+    "pattern": "solid"
+  },
+  "fc-seoul": {
+    "base": "#C8102E",
+    "accent": "#0a0a0a",
+    "pattern": "vertical_stripes"
+  },
+  "pohang-steelers": {
+    "base": "#D7000F",
+    "accent": "#0a0a0a",
+    "pattern": "vertical_stripes"
+  },
+  "suwon-samsung-bluewings": {
+    "base": "#0050A0",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "shanghai-port": {
+    "base": "#C8102E",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "shanghai-shenhua": {
+    "base": "#0047AB",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "beijing-guoan": {
+    "base": "#00843D",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "shandong-taishan": {
+    "base": "#F28C00",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "persib": {
+    "base": "#0B3D91",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "persija": {
+    "base": "#E35205",
+    "accent": "#ffffff",
+    "pattern": "solid"
+  },
+  "persebaya": {
+    "base": "#00843D",
+    "accent": "#ffffff",
+    "pattern": "solid"
   }
 }

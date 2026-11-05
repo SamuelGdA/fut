@@ -7,7 +7,7 @@ import { abrirMomento } from "./apoio";
  * o clique no card da decisão; com "Pular resultado automaticamente"
  * desligado, só Continuar segue.
  */
-const metadata = JSON.parse(await readFile(new URL("./fixtures/momentos-m41.json", import.meta.url), "utf8")) as { moments: Record<string, { file: string; index: number }> };
+const metadata = JSON.parse(await readFile(new URL("./fixtures/momentos-m43.json", import.meta.url), "utf8")) as { moments: Record<string, { file: string; index: number }> };
 
 async function abrirLance(page: Page, autoAdvance: boolean) {
   const moment = metadata.moments.cb!;

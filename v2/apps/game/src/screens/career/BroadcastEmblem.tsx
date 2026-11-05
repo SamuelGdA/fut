@@ -52,6 +52,13 @@ const SHAPES: Readonly<Record<Emblem, ReactNode>> = {
   starshield: <><path d={SHIELD} /><path d={star(12, 11.6, 3.8)} fill="currentColor" stroke="none" /></>,
   shield: <><path d={SHIELD} /><path d="M4.6 10.6h14.8" /></>,
   mosaic: <><circle cx="12" cy="12" r="9" /><path d="M12 3a9 9 0 0 1 9 9h-9ZM12 21a9 9 0 0 1-9-9h9Z" fill="currentColor" stroke="none" /></>,
+  // D117: Ásia.
+  orbit: <><circle cx="12" cy="12" r="5.2" /><ellipse cx="12" cy="12" rx="10" ry="3.8" transform="rotate(-24 12 12)" /><path d={star(19.4, 5, 2.2)} fill="currentColor" stroke="none" /></>,
+  fan: <><path d="M12 20.5 3.2 10a11.5 11.5 0 0 1 17.6 0Z" /><path d="M12 20.5 7.2 6.4M12 20.5V5M12 20.5l4.8-14.1" strokeWidth="1.2" /></>,
+  palm: <path d="M12 21.5c.6-4.4.6-8.4 0-12.4M12 9.1C10.3 6 7.2 5 4 6.2M12 9.1c1.7-3.1 4.8-4.1 8-2.9M12 9.1c-3.2-.6-6.2 1-7.4 4.2M12 9.1c3.2-.6 6.2 1 7.4 4.2M12 9.1c-.6-2.8.4-5 2.6-6.4M8.5 21.5h7" />,
+  lantern: <><ellipse cx="12" cy="12" rx="6.6" ry="6" /><path d="M12 6v12M9 6.7c-1.4 3.4-1.4 7.2 0 10.6M15 6.7c1.4 3.4 1.4 7.2 0 10.6M9.4 4h5.2M9.4 20h5.2M12 1.8V4M12 20v2.2" /></>,
+  taegeuk: <><circle cx="12" cy="12" r="9" /><path d="M3 12a9 9 0 0 1 18 0 4.5 4.5 0 0 1-9 0 4.5 4.5 0 0 0-9 0Z" fill="currentColor" stroke="none" /></>,
+  wings: <><circle cx="12" cy="5.6" r="1.9" fill="currentColor" stroke="none" /><path d="M12 8.6v11.8M12 10.4C9.6 7 5.6 6.4 2.6 8.4c2 .2 3.6 1 4.6 2.4-2-.6-3.8-.2-5 1.2 2-.1 3.6.6 4.8 1.8M12 10.4c2.4-3.4 6.4-4 9.4-2-2 .2-3.6 1-4.6 2.4 2-.6 3.8-.2 5 1.2-2-.1-3.6.6-4.8 1.8M9.4 20.4h5.2" /></>,
 };
 
 export function BroadcastEmblem({ emblem }: { emblem: Emblem }) {

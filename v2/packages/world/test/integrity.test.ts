@@ -29,8 +29,8 @@ const HEX = /^#[0-9a-fA-F]{6}$/;
 const DASH = /[–—]/;
 
 describe("escala do mundo (GDD 7.1)", () => {
-  it("211 países, 18 com liga, 34 ligas, 525 clubes (D108: Portugal)", () => {
-    expect(WORLD_SIZE).toEqual({ countries: 211, playableCountries: 18, leagues: 34, clubs: 525 });
+  it("211 países, 23 com liga, 44 ligas, 700 clubes (D108: Portugal; D117: cinco países da Ásia)", () => {
+    expect(WORLD_SIZE).toEqual({ countries: 211, playableCountries: 23, leagues: 44, clubs: 700 });
   });
 
   it("México e Estados Unidos só têm a primeira divisão", () => {
@@ -184,12 +184,30 @@ describe("competições e prêmios", () => {
     }
   });
 
-  it("toda liga tem a sua competição; todo país jogável tem copa, menos o México e o Peru", () => {
+  it("toda liga tem a sua competição; todo país jogável tem copa, menos o México, o Peru e a Indonésia", () => {
     for (const league of LEAGUES) expect(getCompetition(`league:${league.id}`)).not.toBeNull();
     for (const country of PLAYABLE_COUNTRIES) {
       // D108: a Copa Bicentenario acabou; o Peru fica sem copa nacional, como o México.
-      expect(getCompetition(`cup:${country}`) === null).toBe(country === "MEX" || country === "PER");
+      // D117: a Piala Indonesia não é disputada desde 2019.
+      expect(getCompetition(`cup:${country}`) === null, country).toBe(["MEX", "PER", "IDN"].includes(country));
     }
+  });
+
+  it("D117: Japão, Arábia Saudita, China, Coreia do Sul e Indonésia com duas divisões, copas reais e os continentais da AFC", () => {
+    for (const country of ["JPN", "KSA", "CHN", "KOR", "IDN"]) {
+      expect(getCountry(country)?.confederation, country).toBe("AFC");
+      expect(leagueAt(country, 1), country).not.toBeNull();
+      expect(leagueAt(country, 2), country).not.toBeNull();
+    }
+    expect(getCompetition("cup:JPN")?.names.en).toBe("Emperor's Cup");
+    expect(getCompetition("leaguecup:JPN")?.names.en).toBe("J.League Cup");
+    for (const country of ["JPN", "KSA", "CHN", "KOR"]) expect(getCompetition(`super:${country}`), country).not.toBeNull();
+    // A Índia ficou fora (D117): continua só como nacionalidade.
+    expect(leagueAt("IND", 1)).toBeNull();
+    expect(getCompetition("cont1:AFC")?.kind).toBe("continental1");
+    expect(getCompetition("cont2:AFC")?.kind).toBe("continental2");
+    expect(getCompetition("contsuper:AFC")).toBeNull();
+    expect(titleImportance("clubWorldCup", "AFC")).toBe(3.5);
   });
 
   it("D108: Portugal com liga, copa, Taça da Liga e Supertaça; a Liga das Nações da UEFA com troféu", () => {

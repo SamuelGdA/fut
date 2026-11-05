@@ -6,8 +6,8 @@ import { abrir, abrirMomento, auditar } from "./apoio";
 for (const theme of ["light", "dark"] as const) test(`D107: o top 10 da Bola de Ouro aparece nos detalhes da temporada, ${theme}`, async ({ page }, info) => {
   test.skip(info.project.name === "celular", "os detalhes abrem pelo cartão do lance, no PC");
   await page.setViewportSize({ width: 1280, height: 720 });
-  // Na amostra da coleção, a janela de 2040 (decisão 39) vem logo depois de uma temporada no top 10 da Bola de Ouro.
-  await abrirMomento(page, await readFile(new URL("./fixtures/colecao-m41.json", import.meta.url)), 39, { theme, motion: "reduced" });
+  // Na amostra da coleção, a janela de 2040 (decisão 40) vem logo depois de uma temporada no top 10 da Bola de Ouro.
+  await abrirMomento(page, await readFile(new URL("./fixtures/colecao-m43.json", import.meta.url)), 40, { theme, motion: "reduced" });
   await page.locator(".career-right > .play .play-details-button").click();
   const dialog = page.getByRole("dialog", { name: "O último lance" });
   const ballon = dialog.locator(".season-competition[data-award='ballonDor']");
@@ -22,7 +22,7 @@ for (const theme of ["light", "dark"] as const) test(`D107: o top 10 da Bola de 
 
 for (const theme of ["light", "dark"] as const) test(`D107: no jornal, notas do ano e números da capa não se cobrem, ${theme}`, async ({ page }) => {
   // D108: a amostra de pilhas tem capas cheias de taças e prêmios, com etiquetas e notas do ano.
-  const raw = await readFile(new URL("./fixtures/pilhas-m41.json", import.meta.url));
+  const raw = await readFile(new URL("./fixtures/pilhas-m43.json", import.meta.url));
   await abrir(page, { theme, motion: "reduced" }, `/#c=z${deflateRawSync(raw).toString("base64url")}`);
   await page.getByRole("link", { name: "Jornal", exact: true }).click();
   const book = page.locator(".paper-stage").first();

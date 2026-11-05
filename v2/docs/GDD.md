@@ -417,13 +417,15 @@ Ver seção 27.
 | Conjunto | Quantidade |
 |---|---|
 | Países (nacionalidades) | 211 |
-| Países com liga jogável | 18 |
-| Ligas | 34 (18 primeiras divisões, 16 segundas) |
-| Clubes | 525 |
+| Países com liga jogável | 23 |
+| Ligas | 44 (23 primeiras divisões, 21 segundas) |
+| Clubes | 700 |
 | Confederações | UEFA, CONMEBOL, CONCACAF, CAF, AFC, OFC |
 
 México e Estados Unidos têm só a primeira divisão, e por isso lá não há acesso
-nem rebaixamento.
+nem rebaixamento. **D117:** a Ásia entra com Japão, Arábia Saudita, China,
+Coreia do Sul e Indonésia, todos com duas divisões. A Índia ficou fora (revisão
+de 04/11); continua como nacionalidade e seleção.
 
 Nomes, países e divisões de clubes são fatos e são mantidos. **Todas as notas
 são novas**, escritas para o v2, e ficam num CSV revisável
@@ -505,12 +507,14 @@ A força de um clube numa temporada é:
 efetiva = força_atual + impacto_do_jogador (só no clube do jogador)
 vantagem = limitar(OVR - força_atual, -3, 35)
 suporte = limitar((76 - força_atual) / 16, 0, 1)
-impacto = participação × (0,3 × mín(15, vantagem) + 0,06 × máx(0, vantagem - 15)
+impacto = participação × (0,3 × mín(14, vantagem) + 0,06 × máx(0, vantagem - 14)
           + suporte × limitar((vantagem - 8) × 0,12, 0, 2))
 participação = fração dos jogos do clube que o jogador disputou
+               × desgaste do veterano (1 até os 34; 4% a menos por ano a partir dos 35)
 ```
 
-Um craque 15 pontos acima de um clube que joga tudo vale +4,5 na parcela base.
+Um craque 14 pontos acima de um clube que joga tudo vale +4,2 na parcela base
+(D119; era 15 pontos e +4,5).
 Cada ponto adicional até 35 continua ajudando; participação integral limita
 a base a +5,7 (D64); D81 acrescenta até +2 em elencos fracos conforme a fórmula acima. Permanência acrescenta investimento de até +0,35 por ano,
 antes da reversão de 30% à força base.
@@ -545,8 +549,12 @@ mundo e vale para tudo que o jogador vê (ofertas, carta, histórico, jornal).
 Todos os clubes do país (1ª e 2ª divisão).
 
 ```
-nota_i = efetiva_i + N(0; 4,2)
+nota_i = efetiva_i + N(0; 4,6)
 ```
+
+**Como ficou (D119):** o desvio subiu de 4,2 para 4,6. O gigante ganhava a
+copa quase todo ano e 15,3% dos Fenômenos passavam os 46 títulos na carreira
+(faixa: até 15%); com 4,6, ficam 14%.
 
 Campeão é a maior nota; a segunda é o vice. A posição do clube do jogador na
 ordem define a fase alcançada: 1 campeão, 2 final, 3-4 semi, 5-8 quartas, 9-16
@@ -575,6 +583,10 @@ Definida pela tabela e pelas copas de `Y-1`, para a temporada `Y`.
 | CONMEBOL: ARG | 1º-5º + campeão da copa | 6º-11º | - |
 | CONMEBOL: demais | 1º-3º + campeão da copa | 4º-6º | - |
 | CONCACAF: MEX, USA | 1º-5º + campeão da copa (USA) | - | - |
+| AFC: JPN, KSA (D117) | 1º-4º + campeão da copa | 5º | - |
+| AFC: KOR (D117) | 1º-3º + campeão da copa | 4º | - |
+| AFC: CHN (D117) | 1º + campeão da copa | 2º | - |
+| AFC: IDN (D117) | - | 1º-2º | - |
 
 O campeão da primária entra na edição seguinte mesmo sem vaga pela liga. Vaga
 repetida desce para o próximo da tabela. Clubes de outros países europeus, se o
@@ -603,14 +615,16 @@ logística da seção 8.6.
   seguem o ano civil, e as europeias terminam no meio do ano: é por isso que o
   campeão europeu joga no ano seguinte.
 - Chaveamento: nota com σ 3,4; final pela fórmula logística.
-- Campeões de AFC, CAF e OFC entram como adversários genéricos de força 72, 74 e
-  60 quando não houver clube desses continentes nos dados.
+- Campeões de CAF e OFC entram como adversários genéricos de força 74 e 60,
+  porque não há clube desses continentes nos dados. **D117:** a AFC manda o
+  campeão de verdade da AFC Champions League Elite.
 
 ### 8.11 Mundial de Clubes
 
 Anos de Mundial (seção 4). Participantes: os campeões das primárias de UEFA,
-CONMEBOL e CONCACAF nas quatro temporadas anteriores, completados pelos mais
-fortes de cada confederação até UEFA 12, CONMEBOL 6, CONCACAF 4. Nota com σ 3,4.
+CONMEBOL, CONCACAF e AFC nas quatro temporadas anteriores, completados pelos mais
+fortes de cada confederação até UEFA 12, CONMEBOL 6, CONCACAF 4, AFC 4 (D117).
+Nota com σ 3,4.
 
 ### 8.12 Seleções
 
@@ -1021,7 +1035,7 @@ gols ~ Poisson(λ_gols × jogos);  assistências ~ Poisson(λ_ast × jogos)
 
 | Pos | g_pos | a_pos | bônus_pos |
 |---|---|---|---|
-| CA | 0,385 | 0,12 | 0 |
+| CA | 0,377 (D119; era 0,385) | 0,12 | 0 |
 | PE / PD | 0,285 | 0,19 | 0,12 |
 | MEI | 0,275 | 0,15 | 0,095 |
 | ME / MD | 0,15 | 0,17 | 0,09 |
@@ -1187,6 +1201,9 @@ liga: cada competição (menos supercopas e Intercontinental) tem artilharia,
 pela marca dos artilheiros reais, e o **Craque da competição**, pela nota de
 desempenho com mínimo de jogos. Ver D42.
 
+**Como ficou na D117:** a barra do craque é a mesma (10) para primeira e
+segunda divisão; a segunda tinha 9.
+
 **Como ficou depois (D44):** perto dos recordes, Bola de Ouro e Chuteira de
 Ouro passam pela pressão do recorde: a partir da quinta Bola de Ouro, da
 terceira seguida e da quarta Chuteira, cada uma a mais precisa de mais
@@ -1229,6 +1246,16 @@ A primeira regra que se aplicar vence:
 
 **Aposentar agora** entra como opção extra em janelas, retornos e dispensas a
 partir dos 33 anos, e a partir dos 27 no Desafio do dia.
+
+**Como ficou (D118): sortear outros clubes.** Numa janela com pelo menos uma
+proposta, fora do Desafio do dia, o jogador pode pedir um novo sorteio depois de
+um anúncio. Não é uma opção da decisão: é a escolha `redraw`, gravada no save
+como as outras. A janela é refeita no mesmo mercado e no mesmo nível, com a
+proposta garantida, excluindo todo clube que já apareceu naquela janela
+(`Decision.redrawn`). Vale duas vezes por carreira (`Career.redraws`,
+`REDRAW.max = 2`); a terceira é recusada. A tela mostra "Anúncio · 2/2" e
+depois 1/2, e some quando acaba. Em 60 janelas medidas, o melhor clube
+oferecido tem força média 61,1 antes do sorteio e 61,3 depois.
 
 ### 14.3 Resolução de uma escolha
 
@@ -1276,7 +1303,7 @@ nível = OVR + juventude + reputação - dificuldade - veterano + empresário
 juventude = limitar((23 - idade) × 0,8, 0, 5) × (índice_da_faixa + 1) / 3
 reputação = min(3, 0,5 × prêmios_recentes + 0,3 × títulos_recentes)   (últimas 3 temporadas)
 dificuldade = 0 no Normal, 3 no Difícil
-veterano = max(0, idade - 32) × 1,5
+veterano = max(0, idade - 32) × 2,3   (1,5 no início; 1,8 na D61; 2,2 na D117; 2,3 na D119)
 empresário = ±2 na próxima janela, pelo evento 30; rompimento no evento 26 limita só a próxima decisão a clubes 2 pontos mais fracos (D49)
 ```
 
@@ -1823,6 +1850,11 @@ Troféus e prêmios agrupados por competição com "×N". A grade escolhe o maio
 tamanho em que a coleção inteira cabe, largando as legendas antes de encolher
 demais as peças. Vazia: moldura tracejada e uma frase.
 
+**Como ficou (D118):** na aba Troféus da carreira as peças têm tamanho fixo
+(72 px, com legenda); mais títulos só acrescentam linhas, e o painel rola. O
+resumo continua com a regra de cima. O craque da Copa do Mundo e o da
+Champions League usam peça própria (`awardImageFor`).
+
 ### 24.6 Jornal (portado do v1)
 
 O arquivo de jornais do resumo do v1 é **portado como está**, a pedido do
@@ -2130,6 +2162,16 @@ mostra "Linha alternativa" e a opção que a original escolheu ganha a etiqueta
   curva do OVR se couber, rodapé.
 - Nenhuma imagem externa: escudos, bandeiras e avatar entram embutidos. As
   fontes são garantidas antes de desenhar.
+
+**Como ficou (D118): a imagem da carreira do Craque tem 1200 × 630** (1,91:1,
+a proporção da prévia de link nas redes). À esquerda, a carta do auge e o pico;
+à direita, a marca Futeiros com o selo do modo, país, posição e anos, o nome,
+os seis números e os destaques: Bola de Ouro, Troféu Yashin, Troféu Kopa, Rei
+da América e Chuteira de Ouro primeiro, depois os títulos pela importância, sem
+os prêmios de competição. A faixa usa peças de 96 px com poucas conquistas e
+desce até 64 px; o que não cabe vira "+N". Embaixo, até quatro clubes
+principais e o endereço do jogo. Sem curva do OVR. O quadro é fixo: nada
+cresce para fora dele. O pôster do Técnico continua 1080 × 1350.
 
 ### 29.2 Entrega
 
@@ -2654,15 +2696,20 @@ primeira regra que se aplicar vence:
 | Endereço | Abre |
 |---|---|
 | Caminho que não é o do jogo | Página não encontrada (`notFound`) |
-| Fragmento `#c=` (link de carreira, seção 29.2) | Resumo compartilhado (`shared`) |
+| Fragmento `#c=` na raiz ou em `/craque` (link de carreira, seção 29.2) | Resumo compartilhado (`shared`) |
+| `/login`, `/perfil`, `/termos`, `/privacidade` (D112) | A própria tela |
+| `/craque` (D118) | A criação do jogador (`home`) |
+| `/tecnico` (D118) | A carreira salva do Técnico ou, sem ela, a criação do técnico |
 | `#lab`, só em desenvolvimento | Laboratório (`lab`) |
 | Qualquer outro | Hub (`hub`) |
 
-- Abrir ou recarregar o site sempre cai no hub. A carreira salva do Craque não
+- Abrir ou recarregar a raiz do site cai no hub (desde a D118, cada modo tem
+  o seu endereço e recarregar nele abre o próprio modo). A carreira salva do Craque não
   abre mais sozinha: ela continua pelo cartão do Craque (41.2). O Técnico não
   tem save (D51), então recarregar nunca volta para a carreira dele.
-- A URL continua a mesma entre telas (seção 5); o botão voltar do sistema anda
-  pelo histórico.
+- Entre as telas de um mesmo modo a URL não muda; ela troca ao entrar num modo
+  (`/craque`, `/tecnico`, D118) ou numa tela com endereço próprio (D112), e
+  volta à raiz no hub. O botão voltar do sistema anda pelo histórico.
 - `SCREEN_GAME` (`apps/game/src/app/navigation.ts`) diz de que jogo é cada tela:
 
 | Jogo | Telas |
@@ -2860,7 +2907,7 @@ classificação continental segue a seção 8.7.
 | Copa nacional | Todos os clubes do país, mata-mata; Copa do Brasil em ida e volta a partir das oitavas | os últimos dias da lista 24, 52, 80, 108, 164, 192, 220, 262, um por fase (final no 262) |
 | Copa da liga (ENG) | Mata-mata; semifinal em ida e volta | os últimos dias da lista 17, 45, 73, 101, 157, 185, 213, 241 (final no 241) |
 | Continentais | Preliminar, grupos e mata-mata conforme o número de classificados | preliminar 31; grupos 38, 59, 87, 115, 129, 143; mata-mata 171 e 178, 199 e 206, 227 e 234; final 283 (secundária e terciária, um dia depois) |
-| Intercontinental | Chaveamento dos campeões de CONMEBOL e CONCACAF da temporada e dos adversários genéricos (AFC 72, CAF 74, OFC 60); o vencedor enfrenta o campeão europeu da temporada anterior | 289, 292, 295, 298 |
+| Intercontinental | Chaveamento dos campeões de CONMEBOL, CONCACAF e AFC (D117) da temporada e dos adversários genéricos (CAF 74, OFC 60); o vencedor enfrenta o campeão europeu da temporada anterior | 289, 292, 295, 298 |
 | Mundial de Clubes | Anos com `ano % 4 == 1`; cotas UEFA 12, CONMEBOL 6, CONCACAF 4 | 303, 306, 310, 314, 318 (férias) |
 
 - **Tabela**: pontos, saldo, gols pró, vitórias e, por fim, a força.
@@ -4058,7 +4105,7 @@ regionais diferenciam Américas de Ásia; nove referências americanas
 complementam a elite, e a região futura usa fluxo separado (85% Europa;
 dos demais, 80% Américas). Bônus, idade de auge e aposentadoria são projeções.
 
-A referência de classificação dos 18 países, fontes e simplificações fica em
+A referência de classificação dos 23 países, fontes e simplificações fica em
 CLASSIFICACOES.md. Duas vagas UEFA por desempenho anual médio são calculadas
 no mundo simulado; Chile inclui Copa da Liga da elite e playoff de indicação.
 Mundial do Craque também tem 32 participantes (22 representados, nove genéricos
@@ -5090,3 +5137,86 @@ O motor não muda (Craque `2.0.0-m41`, Técnico `1.10.0`): nenhuma carreira dá 
 - `pnpm imagens:importar` importa escudos, selos, troféus e prêmios gerados de `Downloads/geradas` (organização em `clubes/<Liga>/`, `ligas/`, `trofeus/`, `premios/`).
 
 **Como ficou (D112 a D115).** Conta em `apps/game/src/features/account` (`store.ts`, `sync.ts`, `schemas.ts`), consentimento e anúncios em `features/consent`, telas em `screens/account` e `screens/legal`, troféu em `screens/achievements/TrophyIcon.tsx`, ranking em `screens/challenge/WorldRanking.tsx`. Banco em `v2/supabase` (migrações, catálogo gerado por `pnpm supabase:catalogo`, testes em Postgres embutido). Cabeçalhos em `apps/game/build/security.ts`, rotas em `build/routes.ts`. Laboratório > Design > Conta e privacidade mostra o troféu nos três estados, os esqueletos, a faixa do visitante, o aviso de cookies, o espaço de anúncio e o aviso legal.
+
+## Prévia social do site (complemento de D118, seção 29)
+
+**Como ficou.** Compartilhar a URL do Futeiros apresenta uma arte de futebol
+1200 × 630, com a paleta e as fontes originais, marca, chamada curta e uma jogada
+desenhada no campo. Open Graph e Twitter Card são gravados no HTML do build,
+sem depender de React, login, cookies ou consentimento. PT é o padrão; EN e ES
+existem como versões de imagem, título, descrição e texto alternativo. Na Vercel,
+`?lang=en` ou `?lang=es` seleciona a versão por reescrita na raiz e nas seis
+rotas próprias. O jogo, os saves e a exportação de carreira não mudam.
+
+O domínio vem de `VITE_SITE_URL` ou `VERCEL_PROJECT_PRODUCTION_URL`; sem eles,
+imagem relativa e ausência de `og:url`, nunca domínio fictício. A hospedagem
+precisa do domínio e das reescritas configurados. O destinatário não informa
+seu idioma ao robô da rede: a localização depende do link compartilhado, não
+de JavaScript nem do idioma individual de quem recebe.
+
+Ajuste da arte social (03/11/2026): segunda linha do título 14 px mais abaixo,
+chamada “Escolha sua própria carreira.” traduzida em EN/ES e remoção das
+inscrições inferiores e laterais. Somente os PNGs de compartilhamento mudam.
+
+A faixa inferior da arte social reaproveita a vitrine de conquistas do jogo:
+quatro células com as imagens originais da Bola de Ouro, Champions League,
+Libertadores e Copa do Mundo. O gerador lê as regras de `.showcase`,
+`.showcase-item` e `.showcase-art` de `src/styles/game.css`, com os tokens
+do tema claro. Sem ilustração paralela, legendas ou inscrições extras; a mesma
+vitrine aparece nos três idiomas. As telas do jogo não são modificadas.
+
+## Revisão D118: perfil do Desafio, endereços por modo, e-mails e anúncios de exemplo (01/11/2026)
+
+- **Perfil (seção das contas, D112).** O bloco do Desafio do dia mostra a nota
+  de hoje (0 sem tentativa), a sequência atual e a melhor sequência de dias
+  seguidos, calculadas pela função `meu_desafio()` do banco. A vitrine do perfil
+  mostra o nome inteiro de cada conquista, títulos primeiro, e o resumo dela ao
+  passar o mouse ou focar o nome. Sai a linha "Entra com ...".
+- **Troca do `@`.** Só 30 dias depois da última troca: o banco guarda
+  `username_alterado_em` e recusa antes disso (`username_recente`); a tela
+  mostra a data em que a próxima troca libera.
+- **Endereços (seção 5).** Toda tela do Craque mostra `/craque`; toda tela do
+  Técnico, `/tecnico`. Abrir `/craque` cai na criação do jogador; `/tecnico`
+  retoma a carreira salva ou, sem ela, abre a criação do técnico. O hub e o
+  link de carreira (`#c=`) ficam na raiz.
+- **E-mails da conta.** Oito modelos com o mesmo layout (marca, título, texto,
+  botão ou código, aviso de segurança e um resumo em espanhol e inglês) em
+  `supabase/templates`: confirmação, recuperação, link de acesso, convite, troca
+  de e-mail, código de segurança e os avisos de senha e e-mail trocados. O
+  laboratório mostra cada um com dados de exemplo.
+- **Anúncios de exemplo na carreira.** A partir de 1660 px de largura, dois
+  espaços de 160 × 600 nas margens, fora das três colunas; abaixo disso, nada.
+  O laço continua cabendo na tela (D23).
+- **Telas.** "Quem é você" cabe sem rolar de 1280 × 720 a 1920 × 1080; o
+  campo e a carta do login vão para o meio do palco; o cabeçalho do perfil não
+  corta o `@` no celular; sai o "i" ao lado do OVR na carreira; o aviso do
+  Desafio repetido diz que a nova tentativa é só treino.
+
+## Revisão D119: calibragem depois da Ásia e amostras maiores (05/11/2026)
+
+- **Peso do craque no clube.** O limite de vantagem que conta com 0,3 por
+  ponto caiu de 15 para 14 (seção 8.2): o craque segue carregando o time, um
+  pouco menos. A estrela que fica no Chile ganha a Libertadores em ~24,7% das
+  carreiras (meta: até 25%); o campeão europeu segue em ~74%.
+- **Gols do centroavante.** Base de 0,385 para 0,377 por jogo (seção 11): a
+  mediana do Fenômeno cai de ~759 para ~740 gols (meta: 500 a 750). A cauda
+  continua aberta: em 18.000 carreiras de ataque, 0,68% passaram os 979 de
+  Cristiano Ronaldo e a melhor fez 1.018.
+- **Desgaste do veterano (regra nova).** A partir dos 35 anos, a participação
+  cai 4% por ano (96% aos 35, 76% aos 40), em jogos e no peso no time. Os 1.390
+  jogos de Shilton passam de 5,4% para ~3% dos Fenômenos (faixa: 2% a 5%).
+- **Copas nacionais.** Desvio de 4,2 para 4,6 (seção 8.5).
+- **Mercado do veterano.** 2,3 de nível a menos por ano acima dos 32 (era 2,2):
+  com o desgaste novo, quem parava entre 33 e 38 caiu para 49% (meta: 50% ou
+  mais); com 2,3, volta a 52%.
+- **Amostras.** `pnpm balance:recordes` joga 450 Fenômenos por posição (eram
+  150) e a meta do Chile usa 240 carreiras (eram 80). Com as amostras pequenas,
+  a mesma regra passava ou reprovava conforme a sorte do sorteio; as metas não
+  mudaram.
+- **Bolas de Ouro seguidas.** A marca Lendária exige que alguém passe do
+  recorde, e com ~13 carreiras chegando às 4 seguidas isso falha por acaso em
+  cerca de um quarto das sementes. Conferência à parte, 18.000 carreiras de
+  ataque em cinco sementes: 0,12% igualaram as 4 (faixa: 0,1% a 0,4%) e três
+  fizeram 5. A marca é alcançável e rara; quando a semente padrão não mostrar
+  ninguém passando, vale esta conferência.
+

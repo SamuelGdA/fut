@@ -51,6 +51,16 @@ describe("imagens no modo real", () => {
     expect(awards.map((award) => award.key)).toEqual([]);
   });
 
+  it("o craque da Copa e o da Champions têm peça própria; os outros craques usam a geral (D118)", () => {
+    const worldCup = awardImageUrl(AWARDS.bestPlayer, "real", "worldcup");
+    const champions = awardImageUrl(AWARDS.bestPlayer, "real", "cont1:UEFA");
+    expect(worldCup).toContain("awards/best-player-world-cup.webp");
+    expect(champions).toContain("awards/best-player-champions.webp");
+    expect(resolvesInRealMode(worldCup, true) && resolvesInRealMode(champions, true)).toBe(true);
+    expect(awardImageUrl(AWARDS.bestPlayer, "real", "cont1:CONMEBOL")).toBe(awardImageUrl(AWARDS.bestPlayer, "real"));
+    expect(awardImageUrl(AWARDS.ballonDor, "real", "worldcup")).toBe(awardImageUrl(AWARDS.ballonDor, "real"));
+  });
+
   it("toda bandeira existe, com o nome do arquivo em minúsculas", () => {
     const missing = COUNTRIES.filter((country) => !fileExists(flagUrl(country.iso2)));
     expect(missing.map((country) => country.code)).toEqual([]);

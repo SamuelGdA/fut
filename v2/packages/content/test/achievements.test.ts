@@ -39,7 +39,10 @@ import {
 
 function setup(index: number): CareerSetup {
   const positions = ["st", "cm", "cb", "gk", "lw", "cam", "rb", "cdm", "lb", "rw"] as const;
-  const nations = ["BRA", "ARG", "ENG", "JPN", "NGA", "ESP", "USA", "CRO", "FRA", "MEX", "KOR", "GER"] as const;
+  // Oito com liga no jogo e quatro sem (a base sai da confederação ou do mundo).
+  // D117: Japão e Coreia ganharam liga; Austrália e Irã, asiáticos ainda sem
+  // liga, ficam no lugar deles.
+  const nations = ["BRA", "ARG", "ENG", "AUS", "NGA", "ESP", "USA", "CRO", "FRA", "MEX", "IRN", "GER"] as const;
   return {
     seed: `conquista-${index}`,
     startYear: 2026,

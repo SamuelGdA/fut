@@ -42,12 +42,17 @@ async function settle(node: HTMLElement): Promise<void> {
   );
 }
 
-export async function renderPoster(node: HTMLElement, background = POSTER_BACKGROUND): Promise<Blob> {
+/**
+ * O PNG do nó. Sem `size`, o pôster de 1080 × 1350 (o do Técnico), que cresce
+ * com a coleção; com `size`, um quadro fixo, como a imagem de 1200 × 630 do
+ * Craque (D118).
+ */
+export async function renderPoster(node: HTMLElement, background = POSTER_BACKGROUND, size?: { width: number; height: number }): Promise<Blob> {
   await settle(node);
   const { domToBlob } = await import("modern-screenshot");
   return domToBlob(node, {
-    width: POSTER_WIDTH,
-    height: Math.max(POSTER_HEIGHT, node.scrollHeight),
+    width: size?.width ?? POSTER_WIDTH,
+    height: size?.height ?? Math.max(POSTER_HEIGHT, node.scrollHeight),
     scale: 1,
     type: "image/png",
     backgroundColor: background,

@@ -353,7 +353,7 @@ export function clubWorldCupEntrants(input: SeasonInput, seed: Seeder): string[]
     for (let index = 0; chosen.length < quota; index++) chosen.push(`generic:${confederation}:${index}`);
     entrants.push(...chosen);
   }
-  for (const [confederation, count] of [["AFC", 4], ["CAF", 4], ["OFC", 1]] as const) for (let index = 0; index < count; index += 1) entrants.push(`generic:${confederation}:${index}`);
+  for (const [confederation, count] of [["CAF", 4], ["OFC", 1]] as const) for (let index = 0; index < count; index += 1) entrants.push(`generic:${confederation}:${index}`);
   const host = Object.values(input.clubs).filter((club) => club.country === "USA" && !entrants.includes(club.id)).sort((a, b) => seed(b.id) - seed(a.id) || a.id.localeCompare(b.id))[0];
   if (host) entrants.push(host.id);
   return entrants;
@@ -679,16 +679,18 @@ function openIntercontinental(
   competitions: Record<string, CompetitionState>,
   context: DrawContext,
 ): Fixture[] {
-  const sources = ["cont1:CONMEBOL", "cont1:CONCACAF", "cont1:UEFA"];
+  // D117: o campeão asiático é um clube de verdade; a África e a Oceania seguem genéricas.
+  const sources = ["cont1:CONMEBOL", "cont1:CONCACAF", "cont1:UEFA", "cont1:AFC"];
   if (sources.some((id) => competitions[id] && !competitions[id]?.done)) return [];
   const champions = sources.map((id) => competitions[id]?.champion).filter((club): club is string => Boolean(club));
-  const entrants = [...champions, ...GENERIC_CHAMPIONS.map((entry) => entry.id)];
+  const asia = competitions["cont1:AFC"]?.champion ?? "generic:AFC";
+  const entrants = [...champions.filter((club) => club !== competitions["cont1:AFC"]?.champion), asia, ...GENERIC_CHAMPIONS.map((entry) => entry.id)];
   if (champions.length < 3) return [];
   state.alive = entrants;
   for (const club of entrants) state.reached[club] = "entered";
   (state as { entrants: readonly string[] }).entrants = entrants;
   const first = state.knockoutPlan[0]!; first.drawn = true;
-  const opener = context.year % 2 === 0 ? "generic:AFC" : "generic:CAF";
+  const opener = context.year % 2 === 0 ? asia : "generic:CAF";
   const fixtures = [...tieFixtures(state, first, 0, opener, "generic:OFC", context), ...tieFixtures(state, first, 1, champions[0]!, champions[1]!, context)];
   for (const fixture of fixtures) { state.reached[fixture.home] = "P1"; state.reached[fixture.away] = "P1"; }
   return fixtures;

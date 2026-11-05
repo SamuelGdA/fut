@@ -357,6 +357,7 @@ export {
 } from "./career/context";
 export { academyOffers, ACADEMY, LOAN, MARKET, marketLevel, clubStars, starsAt, type MarketContext, type MarketLevelInput } from "./career/market";
 export { BUYOUT_CHANCE } from "./career/decisions";
+export { canRedraw, REDRAW, redrawsLeft } from "./career/decisions";
 export { chooseMission, MISSION_TERMS, PRESSURE_MAX, pressureTone, type MissionTerms } from "./career/mission";
 export {
   arrivalFans,

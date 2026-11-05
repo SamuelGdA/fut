@@ -1,5 +1,5 @@
 # Técnico: a carreira de treinador do Futeiros
-> **Versão atual D108.** Técnico `1.10.0` (D108: Portugal entra no mundo do treinador); Craque `2.0.0-m39`. As decisões de partida (com as transmissões por competição e time da D83), promessa, reinvenção e feedback de resultado pertencem somente ao Craque; o sistema de rival pessoal foi removido. O Craque preserva o espaço do card durante a saída no celular e oferece setas no cabeçalho do jornal ampliado. `Sheet` aceita ações opcionais no cabeçalho, sem alterar regras do Técnico. Para orientação inicial e fórmulas atuais do Craque, consulte o resumo no início do README principal. As revisões ao fim deste documento prevalecem sobre as notas históricas de animações e ferramentas Windows.
+> **Versão atual D117.** Técnico `1.12.0` (D117: Japão, Arábia Saudita, China, Coreia do Sul e Indonésia entram no mundo do treinador, com 21 nacionalidades de técnico; a Índia saiu na revisão de 04/11; D108: Portugal); Craque `2.0.0-m43`. As decisões de partida (com as transmissões por competição e time da D83), promessa, reinvenção e feedback de resultado pertencem somente ao Craque; o sistema de rival pessoal foi removido. O Craque preserva o espaço do card durante a saída no celular e oferece setas no cabeçalho do jornal ampliado. `Sheet` aceita ações opcionais no cabeçalho, sem alterar regras do Técnico. Para orientação inicial e fórmulas atuais do Craque, consulte o resumo no início do README principal. As revisões ao fim deste documento prevalecem sobre as notas históricas de animações e ferramentas Windows.
 >
 > **Revisão D63 (12/10/2026).** Craque `2.0.0-m10`; Técnico `1.4.0`.
 > A última carreira do Técnico em andamento é retomável neste aparelho por replay de
@@ -458,8 +458,8 @@ GDD.
 | Copa da liga (ENG) | Mata-mata com semifinal em ida e volta |
 | Supercopas | Jogo único em campo neutro |
 | Continentais | Preliminar, grupos e mata-mata conforme o número de classificados (32 ou mais: 8 grupos e oitavas; 16 a 31: 4 grupos e quartas; menos: mata-mata); ida e volta, final única |
-| Intercontinental | Campeões de CONMEBOL e CONCACAF e adversários genéricos de AFC, CAF e OFC; o vencedor enfrenta o campeão europeu |
-| Mundial de Clubes | Anos com `ano % 4 == 1` (6 edições numa carreira que começa em 2026); cotas UEFA 12, CONMEBOL 6, CONCACAF 4; 22 clubes em campo neutro |
+| Intercontinental | Campeões de CONMEBOL, CONCACAF e AFC (D117) e adversários genéricos de CAF e OFC; o vencedor enfrenta o campeão europeu |
+| Mundial de Clubes | Anos com `ano % 4 == 1` (6 edições numa carreira que começa em 2026); cotas UEFA 12, CONMEBOL 6, CONCACAF 4, AFC 4 (D117), mais quatro genéricos da CAF, um da OFC e o anfitrião; 32 clubes em campo neutro |
 
 Cada fase de mata-mata é sorteada quando a anterior termina: o resultado do
 treinador muda quem segue. **Nenhuma competição de seleções**: nem convocação,
@@ -502,9 +502,9 @@ e determinística, por camadas, nesta ordem (D52):
 - **Teto inicial**: 30 jogadores acima de 21 anos por clube; os cortados vão
   para os livres.
 
-Resultado (`packages/world/data/squads/relatorio.md`): **13.496 jogadores em 525
-clubes**, 8.899 do FC 27, 818 do eFootball, 133 do conhecimento e 3.646
-gerados (D108: com Portugal).
+Resultado (`packages/world/data/squads/relatorio.md`): **17.660 jogadores em 700
+clubes**, 10.213 do FC 27, 818 do eFootball, 133 do conhecimento e 6.496
+gerados (D108: com Portugal; D117: com os cinco países asiáticos).
 
 | Grupo | Jogadores reais |
 |---|---|
@@ -516,6 +516,8 @@ gerados (D108: com Portugal).
 | Primeiras divisões de BOL, ECU, PAR, PER, URU e VEN | 46% a 69% |
 | Segundas divisões de COL, CHI e ARG | 37%, 15% e 1% |
 | Segundas divisões de BOL, ECU, PAR, PER, URU e VEN | 0% |
+| D117: primeiras divisões de KSA e KOR; CHN | 100%; 97% |
+| D117: J1, Super League Indonesia e as cinco segundas divisões asiáticas | 0% (gerados na escala da liga) |
 
 Os elencos ficam em `packages/world/data/squads/{país}.ts` (tuplas compactas,
 um arquivo por país, cerca de 1 MB no pedaço do build), expostos em
@@ -874,7 +876,7 @@ regionais diferenciam Américas de Ásia; nove referências americanas
 complementam a elite, e a região futura usa fluxo separado (85% Europa;
 dos demais, 80% Américas). Bônus, idade de auge e aposentadoria são projeções.
 
-A referência de classificação dos 18 países, fontes e simplificações fica em
+A referência de classificação dos 23 países, fontes e simplificações fica em
 CLASSIFICACOES.md. Duas vagas UEFA por desempenho anual médio são calculadas
 no mundo simulado; Chile inclui Copa da Liga da elite e playoff de indicação.
 Mundial do Craque também tem 32 participantes (22 representados, nove genéricos

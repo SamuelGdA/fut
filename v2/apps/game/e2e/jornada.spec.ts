@@ -54,12 +54,12 @@ test("do hub ao Resumo, montando o jogador", async ({ page }, info) => {
   expect((await page.locator(".summary-chapter-title").allTextContents()).map((title) => title.toLowerCase())).toEqual(chapters.map((title) => title.toLowerCase()));
   await expect(page.getByRole("heading", { name: "Biografia" })).toHaveCount(0);
 
-  // O pôster abre com a prévia e fecha.
-  await page.getByRole("button", { name: "Pôster" }).click();
-  await expect(page.getByRole("dialog", { name: "Pôster da carreira" })).toBeVisible();
-  await expect(page.locator(".poster").first()).toBeVisible();
+  // A imagem da carreira (D118) abre com a prévia e fecha.
+  await page.getByRole("button", { name: "Imagem", exact: true }).click();
+  await expect(page.getByRole("dialog", { name: "Imagem da carreira" })).toBeVisible();
+  await expect(page.locator(".share-card").first()).toBeVisible();
   await page.keyboard.press("Escape");
-  await expect(page.getByRole("dialog", { name: "Pôster da carreira" })).toHaveCount(0);
+  await expect(page.getByRole("dialog", { name: "Imagem da carreira" })).toHaveCount(0);
 
   // Jogar de novo volta para a identidade com o rascunho intacto.
   await page.getByRole("button", { name: "Jogar de novo" }).click();
@@ -86,24 +86,30 @@ test("o link da carreira abre o resumo só de leitura, sem tocar no save de quem
 });
 
 for (const theme of ["light", "dark"] as const) {
-  test(`D66: coleção grande cabe na prévia e no PNG, ${theme}`, async ({ page }, info) => {
+  test(`D66 e D118: coleção grande cabe na imagem de 1200 × 630, ${theme}`, async ({ page }, info) => {
     // Link público de replay, o mesmo contrato de Copiar link; sem injetar estado na página.
-    // Fixture real: autoplay ambicioso, semente d80-collection-16 no motor m41.
-    const replay=await readFile(new URL("./fixtures/colecao-m41.json",import.meta.url));
+    // Fixture real: semente d80-collection-16, refeita no motor m43 com as escolhas da amostra anterior.
+    const replay=await readFile(new URL("./fixtures/colecao-m43.json",import.meta.url));
     const token=deflateRawSync(replay).toString("base64url");
     await abrir(page,{theme},`/#c=z${token}`);
-    await page.getByRole("button",{name:"Pôster",exact:true}).click();
-    expect(await page.locator(".poster-showcase li").count()).toBeGreaterThan(14);
-    expect(await page.locator(".poster").evaluate(node=>node.scrollHeight)).toBeGreaterThan(1350);
-    await expect.poll(()=>page.locator(".poster-frame").evaluate(frame=>Math.abs(frame.getBoundingClientRect().height-frame.querySelector(".poster")!.getBoundingClientRect().height))).toBeLessThanOrEqual(1);
+    await page.getByRole("button",{name:"Imagem",exact:true}).click();
+    const card=page.locator(".share-card");
+    await expect(card).toBeVisible();
+    // Muitos destaques: a faixa mostra o que cabe e o resto vira "+N"; nada sai do quadro.
+    await expect(card.locator(".share-card-more")).toHaveText(/^\+\d+$/);
+    expect(await card.evaluate(node=>node.scrollHeight<=630 && node.scrollWidth<=1200)).toBe(true);
+    expect(await card.locator(".share-card-shelf ul").evaluate(node=>node.scrollWidth<=node.clientWidth+1)).toBe(true);
+    // Prêmios individuais abrem a faixa, antes dos títulos.
+    await expect(card.locator(".share-card-trophy").first()).toHaveText(/Bola de Ouro|Troféu Yashin|Troféu Kopa|Rei da América|Chuteira de Ouro/);
+    await expect.poll(()=>page.locator(".share-frame").evaluate(frame=>Math.abs(frame.getBoundingClientRect().height-frame.querySelector(".share-card")!.getBoundingClientRect().height))).toBeLessThanOrEqual(1);
     if(info.project.name==="desktop" && theme==="light") {
       const downloading=page.waitForEvent("download");
-      await page.getByRole("button",{name:"Baixar pôster",exact:true}).click();
+      await page.getByRole("button",{name:"Baixar imagem",exact:true}).click();
       const path=info.outputPath("colecao-completa.png");
       await (await downloading).saveAs(path);
       const png=await readFile(path);
-      expect(png.readUInt32BE(16)).toBe(1080);
-      expect(png.readUInt32BE(20)).toBeGreaterThan(1350);
+      expect(png.readUInt32BE(16)).toBe(1200);
+      expect(png.readUInt32BE(20)).toBe(630);
     }
   });
 }
@@ -111,7 +117,7 @@ for (const theme of ["light", "dark"] as const) {
 for (const theme of ["light", "dark"] as const) {
   test(`D67: troféu revela nome sem clique persistente, ${theme}`, async ({ page }, info) => {
     test.skip(info.project.name === "celular", "O comportamento específico de hover é de mouse; o nome continua acessível por rótulo.");
-    const replay = await readFile(new URL("./fixtures/colecao-m41.json", import.meta.url));
+    const replay = await readFile(new URL("./fixtures/colecao-m43.json", import.meta.url));
     const token = deflateRawSync(replay).toString("base64url");
     await abrir(page, { theme }, `/#c=z${token}`);
     await page.getByRole("link", { name: "Caminho", exact: true }).click();
@@ -135,7 +141,7 @@ for (const theme of ["light", "dark"] as const) {
 for (const theme of ["light", "dark"] as const) {
   test(`D68: hipotético em link compartilhado abre outra linha, ${theme}`, async ({ page }, info) => {
     if(info.project.name === "celular") await page.setViewportSize({ width: 360, height: 640 });
-    const replay = await readFile(new URL("./fixtures/colecao-m41.json", import.meta.url));
+    const replay = await readFile(new URL("./fixtures/colecao-m43.json", import.meta.url));
     await abrir(page, { theme }, `/#c=z${deflateRawSync(replay).toString("base64url")}`);
     await page.getByRole("link", { name: "Hipotético", exact: true }).click();
     await expect(page.getByRole("heading", { name: "MOREIRA hipotético", exact: true })).toBeVisible();

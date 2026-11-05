@@ -5,20 +5,19 @@ import { useRef, useState } from "react";
 import {
   canShareImage,
   downloadBlob,
-  POSTER_WIDTH,
   posterFileName,
   renderPoster,
   shareImage,
 } from "../../features/summary/poster";
 import { useT } from "../../i18n/useT";
 import { useElementWidth } from "../../lib/useElementWidth";
-import { usePosterHeight } from "../../lib/usePosterHeight";
 import { feedback } from "../../services/feedback";
 import { Button } from "../../ui/Button";
 import { Switch } from "../../ui/Fields";
 import { Sheet } from "../../ui/Overlays";
 import { notify } from "../../ui/toast/notify";
-import { Poster } from "./Poster";
+import { SHARE_HEIGHT, SHARE_WIDTH } from "../../features/summary/shareCard";
+import { ShareCard } from "./ShareCard";
 
 interface PosterSheetProps {
   open: boolean;
@@ -30,8 +29,9 @@ interface PosterSheetProps {
 type Busy = "download" | "share" | null;
 
 /**
- * O pôster na tela antes de sair (GDD 29.2): a prévia é o próprio pôster em
- * tamanho real, reduzido por escala; o PNG sai do mesmo nó. Baixar sempre;
+ * A imagem da carreira na tela antes de sair (GDD 29.2 e D118): a prévia é a
+ * própria imagem de 1200 × 630 em tamanho real, reduzida por escala; o PNG
+ * sai do mesmo nó. Baixar sempre;
  * compartilhar só onde o navegador aceita arquivo de imagem.
  */
 export function PosterSheet({ open, onOpenChange, career, avatar }: PosterSheetProps) {
@@ -40,8 +40,7 @@ export function PosterSheet({ open, onOpenChange, career, avatar }: PosterSheetP
   const [busy, setBusy] = useState<Busy>(null);
   const [frameRef, width] = useElementWidth(320);
   const posterRef = useRef<HTMLDivElement>(null);
-  const posterHeight = usePosterHeight(posterRef, open);
-  const scale = width / POSTER_WIDTH;
+  const scale = width / SHARE_WIDTH;
   const shareable = canShareImage();
   const fileName = posterFileName(career.setup.identity.surname, showSurname);
 
@@ -50,7 +49,7 @@ export function PosterSheet({ open, onOpenChange, career, avatar }: PosterSheetP
     if (!node || busy) return;
     setBusy(kind);
     try {
-      const blob = await renderPoster(node);
+      const blob = await renderPoster(node, undefined, { width: SHARE_WIDTH, height: SHARE_HEIGHT });
       if (kind === "download") {
         downloadBlob(blob, fileName);
         feedback("confirm");
@@ -90,9 +89,9 @@ export function PosterSheet({ open, onOpenChange, career, avatar }: PosterSheetP
     >
       <div className="flex flex-col gap-4">
         <Switch checked={showSurname} onCheckedChange={setShowSurname} label={t("summary.poster.showSurname")} />
-        <div ref={frameRef} className="poster-frame" style={{ height: posterHeight * scale }}>
-          <div className="poster-scale" style={{ transform: `scale(${scale})` }}>
-            <Poster ref={posterRef} career={career} avatar={avatar} showSurname={showSurname} />
+        <div ref={frameRef} className="share-frame" style={{ height: SHARE_HEIGHT * scale }}>
+          <div className="share-scale" style={{ transform: `scale(${scale})` }}>
+            <ShareCard ref={posterRef} career={career} avatar={avatar} showSurname={showSurname} />
           </div>
         </div>
       </div>

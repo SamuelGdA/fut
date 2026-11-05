@@ -442,7 +442,8 @@
 
   .id-grid,
   .id-card-column,
-  .id-middle {
+  .id-middle,
+  .id-middle-left {
     display: flex;
     flex-direction: column;
     gap: 28px;
@@ -451,7 +452,7 @@
 
   @media (min-width: 1024px) {
     .id-page {
-      --id-card: clamp(150px, calc((100dvh - 470px) * 0.714), 230px);
+      --id-card: clamp(140px, calc((100dvh - 530px) * 0.8), 250px);
       display: flex;
       flex-direction: column;
       max-width: 82rem;
@@ -463,18 +464,88 @@
 
     .id-grid {
       display: grid;
-      /* D110: a criação ocupa a altura da janela; o Desafio, as conquistas e o
-         mundo vêm logo abaixo, e a página rola por dentro para chegar neles. */
-      flex: 0 0 auto;
-      height: calc(100dvh - var(--topbar-h) - 120px);
-      min-height: 520px;
+      /* D118: tudo numa tela só. A criação ocupa a altura que sobra depois do
+         título e da faixa do Desafio, das conquistas e do mundo, embaixo. */
+      flex: 1 1 auto;
+      min-height: 0;
       grid-template-columns: 250px minmax(0, 1fr) minmax(0, 330px);
       gap: 28px;
     }
 
     .craque-extras {
       flex-shrink: 0;
-      padding-bottom: 8px;
+      align-items: stretch;
+      margin-top: 14px;
+    }
+
+    /* A faixa de baixo numa linha fina (D118): o Desafio sem o texto longo,
+       o título, o relógio e o botão lado a lado; conquistas e mundo baixos. */
+    .craque-extras .home-challenge {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 16px;
+      padding: 10px 14px;
+    }
+
+    .craque-extras .home-challenge > :first-child {
+      flex: 1;
+      flex-wrap: nowrap;
+    }
+
+    /* O título longo sai; a sobrelinha "Desafio do dia" já diz o que é. */
+    .craque-extras .home-challenge h2 {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+
+    .craque-extras .home-challenge .eyebrow {
+      font-size: 13px;
+    }
+
+    .craque-extras .home-challenge-body,
+    .craque-extras .home-challenge-foot > p:empty {
+      display: none;
+    }
+
+    .craque-extras .home-challenge-foot {
+      margin-top: 0;
+      flex-wrap: nowrap;
+    }
+
+    .craque-extras > div > section,
+    .craque-extras > section:not(.home-challenge) {
+      flex: 1;
+      height: 100%;
+      padding: 8px 12px;
+    }
+
+    .craque-extras > div > section .option {
+      padding-block: 6px;
+      border: 0;
+    }
+
+    .craque-extras > section:not(.home-challenge) dd {
+      font-size: 1.5rem;
+    }
+
+    .craque-extras > section:not(.home-challenge) .eyebrow {
+      font-size: 10px;
+    }
+
+    .craque-extras > section:not(.home-challenge) > :first-child {
+      margin-bottom: 4px;
+    }
+
+    .id-middle-left {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      min-height: 0;
     }
 
     .id-card-column,
@@ -518,6 +589,14 @@
       width: min(100cqw, calc((100cqh - 44px) * 0.708), 380px);
     }
   }
+  /* Monitores baixos (720 px): menos ar entre os blocos para tudo caber. */
+  @media (min-width: 1024px) and (max-height: 760px) {
+    .id-middle-left,
+    .id-card-column {
+      gap: 8px;
+    }
+  }
+
   @media (max-width: 1023px) {
     .id-step:not([data-active]) {
       display: none;
@@ -855,6 +934,39 @@
     position: relative;
     min-height: 0;
     overflow: hidden;
+  }
+
+  /*
+   * D118: os anúncios da carreira moram nas margens que sobram fora das três
+   * colunas (1280 px). Só aparecem quando a margem comporta um arranha-céu de
+   * 160 px com folga; abaixo disso, somem e o laço fica como era.
+   */
+  .ad-slot.career-ad {
+    display: none;
+  }
+
+  @media (min-width: 1660px) {
+    .ad-slot.career-ad {
+      position: absolute;
+      top: 16px;
+      display: grid;
+      align-content: start;
+      width: 160px;
+      height: min(600px, calc(100% - 32px));
+      overflow: hidden;
+    }
+
+    .ad-slot-placeholder.career-ad {
+      align-content: center;
+    }
+
+    .career-ad:nth-last-of-type(2) {
+      left: calc((100% - 1280px) / 4 - 80px);
+    }
+
+    .career-ad:last-of-type {
+      right: calc((100% - 1280px) / 4 - 80px);
+    }
   }
 
   /* Painel que cabe: coluna flexível, sem rolagem da página. */
@@ -1734,6 +1846,87 @@
 
   .option[data-tone="bad"] .option-icon {
     color: var(--bad);
+  }
+
+  /*
+   * D118: sortear outros clubes. Não é uma opção da decisão: uma linha fina,
+   * vermelha e com borda tracejada, que não tira espaço das propostas no celular.
+   */
+  .option-redraw {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    min-height: 44px;
+    margin-top: 8px;
+    padding: 8px 14px;
+    border: 1.5px dashed rgb(255 255 255 / 0.55);
+    border-radius: var(--radius-md);
+    /* O vermelho de botão com texto branco, AA nos dois temas (--alert). */
+    background: var(--alert);
+    color: #fff;
+    text-align: left;
+    cursor: pointer;
+    transition: filter 140ms ease;
+  }
+
+  .option-redraw:hover {
+    filter: brightness(1.08);
+  }
+
+  .option-redraw:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  .option-redraw-label {
+    flex: 1;
+    min-width: 0;
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    font-weight: 800;
+    line-height: 1.1;
+    text-transform: uppercase;
+  }
+
+  .option-redraw-count {
+    flex-shrink: 0;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .ad-break-art {
+    display: grid;
+    height: 120px;
+    margin-top: 16px;
+    place-content: center;
+    border: 1.5px dashed var(--rule);
+    border-radius: var(--radius-sm);
+    background: repeating-linear-gradient(135deg, transparent 0 10px, color-mix(in oklab, var(--fg) 4%, transparent) 10px 20px);
+    color: var(--faint);
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+
+  .ad-break-bar {
+    height: 4px;
+    margin-top: 14px;
+    border-radius: 999px;
+    background: var(--bad);
+    transform-origin: left;
+    animation: ad-break-fill linear both;
+  }
+
+  @keyframes ad-break-fill {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ad-break-bar { animation: none; }
   }
 
   .option-main {

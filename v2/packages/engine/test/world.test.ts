@@ -123,8 +123,8 @@ describe("copas e supercopas (GDD 8.5 e 8.6)", () => {
     const season = run.results[0] as SeasonResults;
     for (const country of PLAYABLE_COUNTRIES) {
       const cup = season.cups[`cup:${country}`];
-      // D108: o Peru ficou sem copa (a Copa Bicentenario acabou).
-      if (country === "MEX" || country === "PER") {
+      // D108: o Peru ficou sem copa (a Copa Bicentenario acabou). D117: nem a Indonésia.
+      if (country === "MEX" || country === "PER" || country === "IDN") {
         expect(cup).toBeUndefined();
         continue;
       }
@@ -215,7 +215,10 @@ describe("torneios entre continentes e de seleções (GDD 8.10 a 8.12)", () => {
       const result = season.intercontinental;
       expect(result?.final.home).toBe(season.continental["cont1:UEFA"]?.order[0]);
       expect(result?.final.away).toBe(result?.bracket[0]);
-      expect(result?.bracket).toContain("generic:AFC");
+      // D117: o campeão asiático é um clube de verdade; a África segue genérica.
+      expect(result?.bracket).not.toContain("generic:AFC");
+      expect(result?.bracket).toContain("generic:CAF");
+      expect(result?.bracket).toContain(season.continental["cont1:AFC"]?.order[0]);
       expect(result?.bracket).toContain(season.continental["cont1:CONMEBOL"]?.order[0]);
     });
   });

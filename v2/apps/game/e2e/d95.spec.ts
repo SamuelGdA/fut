@@ -14,7 +14,7 @@ test("D95: o Início não tem mais Editar jogador", async ({ page }) => {
 
 for (const theme of ["light", "dark"] as const) test(`D95: a última edição é a despedida, com o selo no lugar do escudo, ${theme}`, async ({ page }, info) => {
   // D106: amostra própria, um zagueiro que se aposenta batendo um recorde na última temporada.
-  const raw = await readFile(new URL("./fixtures/despedida-m41.json", import.meta.url));
+  const raw = await readFile(new URL("./fixtures/despedida-m43.json", import.meta.url));
   await abrir(page, { theme, motion: "reduced" }, `/#c=z${deflateRawSync(raw).toString("base64url")}`);
   await page.getByRole("link", { name: "Jornal", exact: true }).click();
   const book = page.locator(".paper-stage").first();
@@ -40,7 +40,7 @@ for (const theme of ["light", "dark"] as const) test(`D95: a última edição é
 });
 
 test("D95: virando a página, o selo da edição seguinte não vaza por cima da folha", async ({ page }) => {
-  const raw = await readFile(new URL("./fixtures/pilhas-m41.json", import.meta.url));
+  const raw = await readFile(new URL("./fixtures/pilhas-m43.json", import.meta.url));
   await abrir(page, { motion: "full" }, `/#c=z${deflateRawSync(raw).toString("base64url")}`);
   await page.getByRole("link", { name: "Jornal", exact: true }).click();
   const book = page.locator(".paper-stage").first();

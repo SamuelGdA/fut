@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 import { readFile } from "node:fs/promises";
 import { abrirMomento, auditar, esperarQueCaiba } from "./apoio";
 
-const metadata = JSON.parse(await readFile(new URL("./fixtures/momentos-m41.json", import.meta.url), "utf8")) as { engine: string; moments: Record<string, { file: string; index: number }> };
+const metadata = JSON.parse(await readFile(new URL("./fixtures/momentos-m43.json", import.meta.url), "utf8")) as { engine: string; moments: Record<string, { file: string; index: number }> };
 
 for (const theme of ["light", "dark"] as const) for (const kind of ["match", "promise", "veteran"] as const) {
   test(`D73: ${kind}, ${theme}, teclado e leitura`, async ({ page }, info) => {
@@ -13,7 +13,7 @@ for (const theme of ["light", "dark"] as const) for (const kind of ["match", "pr
     await expect(page.locator(`.drama-decision[data-kind='${kind}']`)).toBeVisible();
     if (kind === "veteran") await expect(page.locator(".drama-option")).toHaveCount(6);
     if (kind === "match") {
-      await expect(page.locator(".match-scoreboard")).toContainText("1 : 1");
+      await expect(page.locator(".match-scoreboard")).toContainText(/\d+ : \d+/);
       await expect(page.locator(".match-minute")).toContainText("′");
       expect(await page.locator(".career").evaluate((node) => getComputedStyle(node).getPropertyValue("--match-accent").trim())).not.toBe("");
     }

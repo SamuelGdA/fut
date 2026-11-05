@@ -92,6 +92,9 @@ const NATIONS: Readonly<Record<CountryCode, NationColors>> = {
   IRN: { band: ["#239f40", WHITE, "#da0000"], glow: ["#da0000", "#239f40"] },
   QAT: { band: ["#8d1b3d", WHITE, "#8d1b3d"], glow: ["#8d1b3d", WHITE] },
   CHN: { band: ["#ee1c25", "#ffde00", "#ee1c25"], glow: ["#ee1c25", "#ffde00"] },
+  // D117: Índia e Indonésia ainda não tinham identidade conferida.
+  IND: { band: ["#ff9933", WHITE, "#138808"], mark: "#000080", glow: ["#ff9933", "#138808"] },
+  IDN: { band: ["#ce1126", "#ce1126", WHITE], glow: ["#ce1126", WHITE] },
   NZL: { band: [WHITE, "#22252b", WHITE], glow: [WHITE, "#22252b"] },
   SEN: { band: ["#00853f", "#fdef42", "#e31b23"], glow: ["#00853f", "#fdef42"] },
   MAR: { band: ["#c1272d", "#006233", "#c1272d"], glow: ["#c1272d", "#006233"] },

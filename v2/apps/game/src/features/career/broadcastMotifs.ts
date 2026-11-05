@@ -82,4 +82,21 @@ export const MOTIF_MASKS: Readonly<Record<BroadcastMotif, MotifMask>> = {
   // Listras de bandeira e de camisa: largas, então bem mais discretas.
   stripes: { mask: "repeating-linear-gradient(180deg, #000 0 12px, transparent 12px 24px)", tint: "light", edge: 8, core: 2 },
   pinstripes: { mask: "repeating-linear-gradient(90deg, #000 0 10px, transparent 10px 20px)", tint: "light", edge: 8, core: 2 },
+  // D117: a Elite asiática, cidades do continente ligadas como constelação.
+  constellation: {
+    mask: tile(160, 120, "<g fill='none' stroke='black' stroke-width='.8'><path d='M14 22 52 40 88 18 126 34 150 12M52 40 44 78 86 94 120 70 126 34M86 94 112 112M44 78 10 100'/></g><circle cx='14' cy='22' r='2'/><circle cx='52' cy='40' r='2.6'/><circle cx='88' cy='18' r='1.8'/><circle cx='126' cy='34' r='2.4'/><circle cx='150' cy='12' r='1.6'/><circle cx='44' cy='78' r='1.8'/><circle cx='86' cy='94' r='2.6'/><circle cx='120' cy='70' r='1.8'/><circle cx='112' cy='112' r='1.6'/><circle cx='10' cy='100' r='1.6'/>"),
+    tint: "light",
+    edge: 20,
+    core: 4,
+  },
+  // Japão: as ondas em escamas do seigaiha.
+  seigaiha: { mask: tile(40, 20, "<g fill='none' stroke='black' stroke-width='1.1'><path d='M1 20a19 19 0 0 1 38 0M6 20a14 14 0 0 1 28 0M11 20a9 9 0 0 1 18 0M-19 10a19 19 0 0 1 38 0M-14 10a14 14 0 0 1 28 0M-9 10a9 9 0 0 1 18 0M21 10a19 19 0 0 1 38 0M26 10a14 14 0 0 1 28 0M31 10a9 9 0 0 1 18 0'/></g>"), tint: "light", edge: 13, core: 3 },
+  // Arábia Saudita: a estrela de oito pontas da geometria islâmica, em rede.
+  girih: { mask: tile(48, 48, "<g fill='none' stroke='black' stroke-width='1.1'><path d='M14 14h20v20H14ZM24 10l14 14-14 14-14-14ZM24 0v10M24 38v10M0 24h10M38 24h10'/></g>"), tint: "metal", edge: 15, core: 3 },
+  // China: as nuvens auspiciosas, em caracol.
+  xiangyun: { mask: tile(96, 64, "<g fill='none' stroke='black' stroke-width='1.3' stroke-linecap='round'><path d='M8 30c-3-7 5-12 11-8 1-8 13-10 17-3 5-4 13 0 12 6 6 0 7 8 1 9H10c-4 0-5-2-2-4ZM20 26a3.4 3.4 0 1 1 5 3M38 24a3 3 0 1 1 4 3'/><path d='M56 58c-2-5 4-9 8-6 1-6 10-7 13-2 4-3 10 0 9 5 5 0 5 6 1 7H58c-3 0-4-2-2-4ZM66 55a2.6 2.6 0 1 1 4 2'/></g>"), tint: "metal", edge: 16, core: 3 },
+  // Coreia do Sul: os trigramas da bandeira.
+  gwae: { mask: tile(64, 64, "<path d='M6 8h16v2.6H6ZM6 13h16v2.6H6ZM6 18h16v2.6H6ZM42 8h6.5v2.6H42ZM51.5 8H58v2.6h-6.5ZM42 13h6.5v2.6H42ZM51.5 13H58v2.6h-6.5ZM42 18h6.5v2.6H42ZM51.5 18H58v2.6h-6.5ZM6 42h6.5v2.6H6ZM15.5 42H22v2.6h-6.5ZM6 47h16v2.6H6ZM6 52h6.5v2.6H6ZM15.5 52H22v2.6h-6.5ZM42 42h16v2.6H42ZM42 47h6.5v2.6H42ZM51.5 47H58v2.6h-6.5ZM42 52h16v2.6H42Z'/>"), tint: "light", edge: 12, core: 2 },
+  // Indonésia: o batik kawung, quatro pétalas em torno de um ponto.
+  kawung: { mask: tile(40, 40, "<g fill='none' stroke='black' stroke-width='1.1'><ellipse cx='11' cy='11' rx='8.5' ry='5' transform='rotate(45 11 11)'/><ellipse cx='29' cy='11' rx='8.5' ry='5' transform='rotate(-45 29 11)'/><ellipse cx='11' cy='29' rx='8.5' ry='5' transform='rotate(-45 11 29)'/><ellipse cx='29' cy='29' rx='8.5' ry='5' transform='rotate(45 29 29)'/></g><circle cx='20' cy='20' r='1.8'/><circle cx='0' cy='0' r='1.8'/><circle cx='40' cy='0' r='1.8'/><circle cx='0' cy='40' r='1.8'/><circle cx='40' cy='40' r='1.8'/>"), tint: "light", edge: 14, core: 3 },
 };

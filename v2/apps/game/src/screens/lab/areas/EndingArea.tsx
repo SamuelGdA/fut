@@ -4,15 +4,14 @@ import { FileText, RefreshCw } from "lucide-react";
 import { useMemo, useRef, useState } from "react";
 import { useNavigation } from "../../../app/navigation";
 import { useCareer } from "../../../features/career/store";
-import { POSTER_WIDTH } from "../../../features/summary/poster";
-import { usePosterHeight } from "../../../lib/usePosterHeight";
+import { SHARE_HEIGHT, SHARE_WIDTH } from "../../../features/summary/shareCard";
 import { useT } from "../../../i18n/useT";
 import { useElementWidth } from "../../../lib/useElementWidth";
 import { feedback } from "../../../services/feedback";
 import { Button } from "../../../ui/Button";
 import { SectionRule } from "../../../ui/Panel";
 import { Segmented } from "../../../ui/Segmented";
-import { Poster } from "../../summary/Poster";
+import { ShareCard } from "../../summary/ShareCard";
 
 /** Perfis de carreira automática para revisar o fim de carreira sem jogar 20 temporadas. */
 const PROFILES = ["ambitious", "loyal", "keeper"] as const;
@@ -58,8 +57,7 @@ export function EndingArea() {
   const avatar = PROFILE_SETUP[profile].avatar;
   const [frameRef, width] = useElementWidth(320);
   const posterRef = useRef<HTMLDivElement>(null);
-  const posterHeight = usePosterHeight(posterRef, true);
-  const scale = Math.min(1, width / POSTER_WIDTH);
+  const scale = Math.min(1, width / SHARE_WIDTH);
 
   const openSummary = () => {
     useCareer.setState({ status: "ready", career, avatar, screen: "summary", stale: null, play: null, review: null, internalTesting: true });
@@ -106,9 +104,9 @@ export function EndingArea() {
 
       <section className="max-w-xl">
         <SectionRule className="mb-3">{t("lab.ending.poster")}</SectionRule>
-        <div ref={frameRef} className="poster-frame" style={{ height: posterHeight * scale }}>
-          <div className="poster-scale" style={{ transform: `scale(${scale})` }}>
-            <Poster ref={posterRef} career={career} avatar={avatar} showSurname />
+        <div ref={frameRef} className="share-frame" style={{ height: SHARE_HEIGHT * scale }}>
+          <div className="share-scale" style={{ transform: `scale(${scale})` }}>
+            <ShareCard ref={posterRef} career={career} avatar={avatar} showSurname />
           </div>
         </div>
       </section>

@@ -20,7 +20,7 @@ função de classificação e a mesma memória da temporada encerrada.
 - O primeiro ano tem quatro temporadas de preparação simulada para preencher
   campeões e tabelas anteriores. A lista nacional vem da primeira divisão.
 
-## Os 18 países jogáveis
+## Os 23 países jogáveis
 
 "Liga" significa a classificação anual simulada. Em países com Apertura,
 Clausura e tabela acumulada, essa liga anual condensa suas indicações: não há
@@ -47,6 +47,11 @@ incluem vagas preliminares e diretas; não são apenas vagas de fase de grupos.
 | Portugal (D108) | 2 pela liga | 1 pela liga + Taça de Portugal | 1 seguinte da liga | Campeão da Taça já classificado cede a indicação à liga. A Taça da Liga não dá vaga continental. |
 | México | 6 para Champions Cup | Nenhuma | Nenhuma | A liga anual condensa campeões, vices de Apertura/Clausura e a classificação acumulada. |
 | Estados Unidos | 5 pela liga + US Open Cup para Champions Cup | Nenhuma | Nenhuma | A liga anual condensa MLS Cup, Supporters' Shield, outra conferência e classificação acumulada. |
+| Japão (D117) | 4 pela liga + Emperor's Cup para a Elite | 5º da liga para a Two | Nenhuma | Três diretas e duas preliminares na Elite de 32 clubes, condensadas. A J.League Cup não dá vaga. |
+| Arábia Saudita (D117) | 4 pela liga + King's Cup para a Elite | 5º da liga para a Two | Nenhuma | Mesma cota do Japão (três diretas e duas preliminares). |
+| Coreia do Sul (D117) | 3 pela liga + Korea Cup para a Elite | 4º da liga para a Two | Nenhuma | Três diretas e uma preliminar. |
+| China (D117) | Campeão + Chinese FA Cup para a Elite | 2º da liga para a Two | Nenhuma | Cota de 2026-27 noticiada, sem tabela oficial da AFC publicada na consulta. |
+| Indonésia (D117) | Nenhuma | 2 pela liga para a Two | Nenhuma | Cota de 2027-28 (uma direta e uma de playoff); em 2026-27 era uma só. Sem copa nacional. |
 
 ### Vagas de desempenho da UEFA
 
@@ -69,6 +74,11 @@ dos participantes, sem criar uma partida controlável extra entre temporadas.
 
 ### Limites do mundo representado
 
+A AFC real também tem clubes dos Emirados, do Catar, do Irã, da Austrália e do
+Sudeste Asiático, e uma terceira copa (AFC Challenge League). O jogo tem só os
+cinco países com liga; a Elite e a Two são disputadas por eles, sem clubes
+inventados para os outros, e a Challenge League não existe (D117).
+
 O regulamento real da Concacaf também inclui Leagues Cup, Canadá, América Central
 e Caribe. O jogo tem apenas México e Estados Unidos como países de clubes dessa
 confederação; suas indicações confirmadas são as descritas acima. Não existe uma
@@ -90,10 +100,11 @@ com mais de dois participantes, como a Supercopa chilena.
 
 O Mundial acontece a cada quatro anos. Usa campeões continentais das quatro
 edições anteriores e ranking dos clubes para completar as cotas representadas:
-12 UEFA, 6 CONMEBOL e 4 CONCACAF, com participantes genéricos das confederações
-sem ligas no jogo para completar 32. A Intercontinental tem seis campeões
-continentais da temporada corrente e o europeu entra na final; continentes sem ligas usam adversários
-genéricos. Isso é uma adaptação explícita do mundo jogável, não um elenco real
+12 UEFA, 6 CONMEBOL, 4 CONCACAF e 4 AFC (D117), com participantes genéricos das
+confederações sem ligas no jogo (CAF e OFC) para completar 32. A Intercontinental
+tem seis campeões continentais da temporada corrente e o europeu entra na final;
+o campeão da AFC Champions League Elite é um clube de verdade (D117), e África e
+Oceania usam adversários genéricos. Isso é uma adaptação explícita do mundo jogável, não um elenco real
 completo de uma edição futura.
 
 ## Rei da América
@@ -126,4 +137,5 @@ nas Américas, em sorteio separado da evolução.
 - [UEFA, vagas europeias de desempenho](https://www.uefa.com/uefachampionsleague/news/02a2-1fdbe9a25733-8d37ff5f9226-1000--2026-27-uefa-champions-league-which-teams-are-in-the-euro/).
 - [Premier League, FA Cup e vagas europeias](https://www.premierleague.com/en/news/4657287/how-the-fa-cup-final-will-affect-european-qualification/).
 - [Concacaf, regulamento Champions Cup 2026](https://www.concacaf.com/media/mouphckx/26-ccc-regs-spa.pdf).
+- D117, AFC 2026-27 (consulta em 01/11/2026): [J.League, vagas japonesas nas competições da AFC](https://www.jleague.jp/en/news/article/33828/), [QNA, comitê da AFC aprova a Elite de 32 clubes](https://qna.org.qa/en/News-Area/News/2026-4/24/afc-professional-football-committee-adopts-key-changes-to-elevate-asian-club-football), [Oman Observer, cotas do Japão e da Arábia Saudita](https://www.omanobserver.om/article/1188481/sports/football/slot-rises-for-japan-saudi-arabia-as-asian-champions), [Jawa Pos, duas vagas indonésias na Two em 2027-28](https://www.jawapos.com/sepak-bola-indonesia/2605250189/kabar-baik-indonesia-dapat-jatah-2-klub-di-afc-champions-league-two-musim-20272028).
 - [El País, candidatos e critérios do Rei da América](https://www.elpais.com.uy/ovacion/futbol/encuesta-el-pais-los-jugadores-que-se-candidatean-a-rey-de-america-2025-y-sus-meritos-para-ir-por-el-premio).

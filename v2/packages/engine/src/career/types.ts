@@ -164,6 +164,8 @@ export interface Decision {
   readonly event: string | null;
   /** Por que esta decisão apareceu, quando importa para o texto. */
   readonly reason: "noRoom" | "released" | "loanEnded" | "suspended" | "agentUp" | "agentDown" | null;
+  /** Clubes que já apareceram nesta janela antes de um novo sorteio (D118): não voltam. */
+  readonly redrawn?: readonly string[];
 }
 
 export interface Choice {
@@ -264,6 +266,8 @@ export interface Career {
   readonly lastOfferYear?: number;
   /** Clubes das últimas propostas, mais recentes primeiro, para variar as próximas (D89). Refeito pelo replay. */
   readonly recentOffers?: readonly string[];
+  /** Novos sorteios de clubes já usados na carreira (D118). Refeito pelo replay. */
+  readonly redraws?: number;
   /** Exposição na mídia (contrato de chuteira): fração a mais no valor de mercado (D90). */
   readonly fame?: number;
   readonly drama?: DramaPeriod;

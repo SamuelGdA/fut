@@ -7,7 +7,7 @@ import { honourName } from "./honourName";
 /** Só a arte da taça ou do prêmio, sem dica: para pilhas e painéis que já dizem o nome. */
 export function HonourArt({ id, award, size, language }: { id: string; award?: AwardKey; size: number; language: Language }) {
   const competition = getCompetition(id);
-  return award ? <AwardArt award={AWARDS[award]} size={size} language={language} tooltip="" decorative /> : competition ? <TrophyArt competition={competition} size={size} language={language} tooltip="" decorative /> : null;
+  return award ? <AwardArt award={AWARDS[award]} competition={id} size={size} language={language} tooltip="" decorative /> : competition ? <TrophyArt competition={competition} size={size} language={language} tooltip="" decorative /> : null;
 }
 
 /** Dica temporária por hover ou foco de teclado; no toque (D88), abre por 2 s; quem envolve a taça decide se o toque segue adiante. Clicar com o mouse nunca prende a dica. */

@@ -93,6 +93,11 @@ export async function decodeShare(token: string): Promise<SharedCareer> {
   return { save: save as unknown as CareerSave, avatar: sanitizeAvatar(avatar) };
 }
 
-export function shareUrl(token: string, location: Pick<Location, "origin" | "pathname"> = window.location): string {
+/**
+ * O link da carreira mora na raiz do jogo, não no caminho da tela de agora:
+ * desde a D118 o resumo do Craque mostra `/craque`, e um link `/craque#c=`
+ * abriria a criação do jogador em vez da carreira compartilhada.
+ */
+export function shareUrl(token: string, location: Pick<Location, "origin" | "pathname"> = { origin: window.location.origin, pathname: import.meta.env.BASE_URL }): string {
   return `${location.origin}${location.pathname}${SHARE_PREFIX}${token}`;
 }

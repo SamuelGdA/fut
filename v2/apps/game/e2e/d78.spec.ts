@@ -3,7 +3,7 @@ import { readFile } from "node:fs/promises";
 import { abrir, abrirMomento, auditar, esperarQueCaiba, OPCOES, fixturePlans } from "./apoio";
 import { deflateRawSync } from "node:zlib";
 
-const metadata = JSON.parse(await readFile(new URL("./fixtures/momentos-m41.json",import.meta.url),"utf8")) as { moments: Record<string,{file:string;index:number}> };
+const metadata = JSON.parse(await readFile(new URL("./fixtures/momentos-m43.json",import.meta.url),"utf8")) as { moments: Record<string,{file:string;index:number}> };
 for (const theme of ["light","dark"] as const) {
   test(`D78: promessa rápida explica os dois anos e mostra as três metas inteiras, ${theme}`,async({page},info)=>{
     await page.setViewportSize(info.project.name==="celular"?{width:360,height:640}:{width:1280,height:720});
@@ -42,7 +42,7 @@ for (const theme of ["light","dark"] as const) {
   });
   test(`D78: hipotético legível conserva a primeira escolha principal de cada ano, ${theme}`,async({page},info)=>{
     await page.setViewportSize(info.project.name==="celular"?{width:360,height:640}:{width:1280,height:720});
-    const raw=await readFile(new URL("./fixtures/colecao-m41.json",import.meta.url));
+    const raw=await readFile(new URL("./fixtures/colecao-m43.json",import.meta.url));
     const save=JSON.parse(raw.toString()) as {setup:{seed:string}};
     const years=new Set<number>(),expected:number[]=[];
     for(const [i,d] of fixturePlans[save.setup.seed]!.entries()) {

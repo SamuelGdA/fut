@@ -6,7 +6,7 @@ import type { Confederation, CountryCode } from "@craque/world";
  */
 
 /** Força efetiva do clube do jogador (GDD 8.2). */
-export const CLUB_IMPACT = { kappa: 0.3, below: -3, above: 15, eliteKappa: 0.06, eliteAbove: 35, investment: 0.01 } as const;
+export const CLUB_IMPACT = { kappa: 0.3, below: -3, above: 14, eliteKappa: 0.06, eliteAbove: 35, investment: 0.01 } as const;
 
 /** Força efetiva da seleção do jogador (GDD 8.12). */
 export const NATIONAL_IMPACT = { kappa: 0.12, below: -3, above: 15 } as const;
@@ -22,7 +22,7 @@ export const LEAGUE = {
 
 /** Desvio da nota em cada tipo de torneio (GDD 8.5, 8.8, 8.11, 8.12). */
 export const NOISE = {
-  cup: 4.2,
+  cup: 4.6,
   leagueCup: 5.2,
   continental: 4.2,
   clubWorldCup: 3.4,
@@ -33,9 +33,12 @@ export const NOISE = {
 /** Jogo único: P(A vence) = 1 / (1 + e^(-(A - B) / escala)) (GDD 8.6). */
 export const SINGLE_MATCH_SCALE = 4.5;
 
-/** Adversários genéricos da Intercontinental quando os dados não têm clubes daquele continente (GDD 8.10). */
+/**
+ * Adversários genéricos da Intercontinental quando os dados não têm clubes
+ * daquele continente (GDD 8.10). D117: a Ásia ganhou ligas e manda o campeão
+ * de verdade; ficam a África e a Oceania.
+ */
 export const GENERIC_CHAMPIONS: ReadonlyArray<{ readonly id: string; readonly confederation: Confederation; readonly strength: number }> = [
-  { id: "generic:AFC", confederation: "AFC", strength: 72 },
   { id: "generic:CAF", confederation: "CAF", strength: 74 },
   { id: "generic:OFC", confederation: "OFC", strength: 60 },
 ];
@@ -45,6 +48,7 @@ export function genericClubStrength(id: string): number | null {
   if (id.startsWith("generic:UEFA:")) return 79;
   if (id.startsWith("generic:CONMEBOL:")) return 75;
   if (id.startsWith("generic:CONCACAF:")) return 72;
+  if (id.startsWith("generic:AFC")) return 70;
   return GENERIC_CHAMPIONS.find(entry => entry.id === id || id.startsWith(`${entry.id}:`))?.strength ?? null;
 }
 
@@ -53,6 +57,8 @@ export const CLUB_WORLD_CUP_QUOTA: Readonly<Partial<Record<Confederation, number
   UEFA: 12,
   CONMEBOL: 6,
   CONCACAF: 4,
+  // D117: os quatro asiáticos saem dos campeões e do ranking da AFC Champions League Elite.
+  AFC: 4,
 };
 
 /** Vagas da Copa do Mundo (GDD 8.12): 46 diretas e 2 repescagens. */
@@ -166,6 +172,16 @@ export const QUALIFICATION: Readonly<Record<CountryCode, QualificationRule>> = {
   // D108: campeão e vice na Champions, o terceiro e o campeão da Taça na Europa League, o quarto na Conference.
   POR: { primary: 2, secondary: 1, tertiary: 1, cup: "secondary" },
   MEX: { primary: 6, secondary: 0, tertiary: 0, cup: null },
+  // D117: as vagas da AFC para 2026-27, com a Elite de 32 clubes. Japão e
+  // Arábia Saudita têm cinco na Elite (três diretas e duas preliminares,
+  // condensadas aqui) e uma na Two; Coreia do Sul, quatro e uma; China, duas e
+  // uma. A Indonésia não tem Elite: manda os dois primeiros à Two (a cota de
+  // 2027-28). A Índia ficou fora do jogo como liga.
+  JPN: { primary: 4, secondary: 1, tertiary: 0, cup: "primary" },
+  KSA: { primary: 4, secondary: 1, tertiary: 0, cup: "primary" },
+  KOR: { primary: 3, secondary: 1, tertiary: 0, cup: "primary" },
+  CHN: { primary: 1, secondary: 1, tertiary: 0, cup: "primary" },
+  IDN: { primary: 0, secondary: 2, tertiary: 0, cup: null },
   USA: { primary: 5, secondary: 0, tertiary: 0, cup: "primary" },
 };
 

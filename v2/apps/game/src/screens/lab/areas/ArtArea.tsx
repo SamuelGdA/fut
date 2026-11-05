@@ -11,6 +11,7 @@ import {
   type CompetitionKind,
   type CountryCode,
   type Division,
+  getCompetition,
   getCountry,
   LEAGUES,
   leaguesOf,
@@ -223,10 +224,24 @@ function Awards() {
             </li>
           );
         })}
+        {COMPETITION_AWARDS.map((competition) => (
+          <li
+            key={competition}
+            className="flex min-w-0 flex-col items-center gap-3 rounded-md border border-line bg-panel px-3 pb-3 pt-4"
+          >
+            <AwardArt award={AWARDS.bestPlayer} competition={competition} size={120} language={locale} decorative />
+            <span className="display text-center text-lg font-extrabold uppercase leading-tight">
+              {AWARDS.bestPlayer.names[locale]} · {getCompetition(competition)?.names[locale] ?? competition}
+            </span>
+          </li>
+        ))}
       </ul>
     </section>
   );
 }
+
+/** Os craques de competição com peça própria (D118); os outros usam a arte geral do prêmio. */
+const COMPETITION_AWARDS = ["worldcup", "cont1:UEFA"] as const;
 
 /**
  * Toda a arte nos tamanhos em que ela aparece no jogo. A barra do modo de

@@ -362,5 +362,57 @@
   [
     "belenenses",
     "benfica"
+  ],
+  [
+    "al-hilal",
+    "al-nassr"
+  ],
+  [
+    "al-ittihad",
+    "al-ahli"
+  ],
+  [
+    "al-hilal",
+    "al-ittihad"
+  ],
+  [
+    "gamba-osaka",
+    "cerezo-osaka"
+  ],
+  [
+    "urawa-reds",
+    "kashima-antlers"
+  ],
+  [
+    "yokohama-f-marinos",
+    "yokohama-fc"
+  ],
+  [
+    "fc-seoul",
+    "suwon-samsung-bluewings"
+  ],
+  [
+    "ulsan-hd",
+    "pohang-steelers"
+  ],
+  [
+    "jeonbuk-hyundai-motors",
+    "ulsan-hd"
+  ],
+  [
+    "shanghai-port",
+    "shanghai-shenhua"
+  ],
+  [
+    "beijing-guoan",
+    "shandong-taishan"
+  ],
+  [
+    "persib",
+    "persija"
+  ],
+  [
+    "arema",
+    "persebaya"
   ]
 ]

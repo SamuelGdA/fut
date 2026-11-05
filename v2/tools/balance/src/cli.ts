@@ -99,7 +99,7 @@ function main() {
     phenomStrikers: runCareers({ seed: `${args.seed}:fen-ca`, careers: quick ? 80 : 160, band: "phenom", positions: ["st"], region: "europe" }),
     classStrikers: runCareers({ seed: `${args.seed}:cra-ca`, careers: quick ? 100 : 200, band: "class", positions: ["st"], region: "europe" }),
     // D81: a mesma amostra completa no verify; o prefixo de 50 oscilou por uma carreira.
-    smallLeague: runCareers({ seed: `${args.seed}:chi`, careers: 80, band: "star", positions: ATTACKING, region: "home", nationality: "CHI" }),
+    smallLeague: runCareers({ seed: `${args.seed}:chi`, careers: 240, band: "star", positions: ATTACKING, region: "home", nationality: "CHI" }),
   } as const;
   const careerMetrics = computeCareerMetrics(batches);
   const careerGoals = careerTargets(careerMetrics);

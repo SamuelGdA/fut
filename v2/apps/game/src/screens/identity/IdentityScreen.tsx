@@ -211,13 +211,10 @@ export function IdentityScreen() {
               </div>
             </div>
           </StepSection>
-          {/* D109: ritmo e dificuldade saíram do Início e entram aqui, com o resto da escolha. */}
-          <StepSection step="review" active={step} title={t("home.setup")}>
-            <CareerSettings stacked />
-          </StepSection>
         </div>
 
         <div className="id-middle">
+          <div className="id-middle-left">
           <StepSection step="name" active={step} title={t("identity.steps.name")}>
             <div className="flex flex-col gap-4">
               <TextField
@@ -254,6 +251,11 @@ export function IdentityScreen() {
               </p>
             </div>
           </StepSection>
+          {/* D109: ritmo e dificuldade saíram do Início; D118: embaixo do nome, para a tela caber sem rolar. */}
+          <StepSection step="review" active={step} title={t("home.setup")}>
+            <CareerSettings stacked />
+          </StepSection>
+          </div>
 
           <StepSection step="position" active={step} title={t("identity.position")} grow>
             <PositionPitch value={draft.position} onValueChange={(position) => useDraft.getState().update({ position })} />

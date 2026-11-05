@@ -3,7 +3,7 @@ import { readFile } from "node:fs/promises";
 import { deflateRawSync } from "node:zlib";
 import { abrir, abrirMomento, esperarQueCaiba } from "./apoio";
 
-const metadata = JSON.parse(await readFile(new URL("./fixtures/momentos-m41.json", import.meta.url), "utf8")) as { moments: Record<string, { file: string; index: number }> };
+const metadata = JSON.parse(await readFile(new URL("./fixtures/momentos-m43.json", import.meta.url), "utf8")) as { moments: Record<string, { file: string; index: number }> };
 interface UiFrame { t: number; opacity: number; resultY: number; digitY: number; incoming: number; outgoing: number; changed: boolean; width: number }
 for (const theme of ["light", "dark"] as const) test(`D77: espaço, aviso imediato, resultado e dígitos animados, arrasto automático, ${theme}`, async ({ page }, info) => {
   await page.setViewportSize(info.project.name === "celular" ? { width: 360, height: 640 } : { width: 1280, height: 720 });
@@ -61,7 +61,7 @@ for (const theme of ["light", "dark"] as const) test(`D77: espaço, aviso imedia
 
 test("D77: jornal aberto folheia a temporada inteira e volta por teclado", async ({ page }, info) => {
   if (info.project.name === "celular") await page.setViewportSize({ width: 360, height: 640 });
-  const raw = await readFile(new URL("./fixtures/colecao-m41.json", import.meta.url));
+  const raw = await readFile(new URL("./fixtures/colecao-m43.json", import.meta.url));
   await abrir(page, { theme: "light" }, `/#c=z${deflateRawSync(raw).toString("base64url")}`);
   await page.getByRole("link", { name: "Jornal", exact: true }).click();
   const book = page.locator(".paper-stage"), spread = book.locator(".paper-spread");

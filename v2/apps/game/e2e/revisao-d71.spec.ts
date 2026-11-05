@@ -3,13 +3,13 @@ import { readFile } from "node:fs/promises";
 import { deflateRawSync } from "node:zlib";
 import { abrir, abrirMomento, auditar, esperarQueCaiba, OPCOES } from "./apoio";
 
-const moments = (JSON.parse(await readFile(new URL("./fixtures/momentos-m41.json",import.meta.url),"utf8")) as {moments:Record<string,{file:string;index:number}>}).moments;
+const moments = (JSON.parse(await readFile(new URL("./fixtures/momentos-m43.json",import.meta.url),"utf8")) as {moments:Record<string,{file:string;index:number}>}).moments;
 
 for (const theme of ["light","dark"] as const) {
   test(`D71: pilhas redistribuem troféus e seleção tem legado, ${theme}`,async({page},info)=>{
     if(info.project.name==="celular")await page.setViewportSize({width:360,height:640});
     // D108: a amostra da América é o centroavante do Brasil, ídolo sem a Copa do Mundo.
-    const replay=await readFile(new URL("./fixtures/america-m41.json",import.meta.url));
+    const replay=await readFile(new URL("./fixtures/america-m43.json",import.meta.url));
     await abrir(page,{theme},`/#c=z${deflateRawSync(replay).toString("base64url")}`);
     await page.getByRole("link",{name:"Caminho",exact:true}).click();
     // D106: centroavante do Brasil sem Copa do Mundo. Os números davam lenda; o país cobra a Copa, e a tela diz por quê.

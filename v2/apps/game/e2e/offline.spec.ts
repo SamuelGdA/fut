@@ -48,8 +48,9 @@ test("sem internet: o jogo abre, joga, e nenhuma imagem quebra", async ({ page, 
   await entrarNoCraque(page);
   await expect.poll(() => page.evaluate(() => document.documentElement.dataset.offlineCraque), { timeout: 60_000 }).toBe("ready");
   await context.setOffline(true);
+  // D118: recarregar no endereço do Craque abre direto a criação do jogador.
   await page.reload();
-  await entrarNoCraque(page);
+  await expect(page.getByRole("heading", { name: /Quem é você/i, level: 1 })).toBeVisible();
 
   await jogoRapido(page);
   await jogarTurno(page);
@@ -96,7 +97,7 @@ test("guardar todas as imagens nos ajustes: sem internet, os escudos são os rea
     const status = await page.evaluate(async (url) => (await fetch(url ?? "")).status, path);
     expect(status, path).toBe(200);
   }
-  await entrarNoCraque(page);
+  await expect(page.getByRole("heading", { name: /Quem é você/i, level: 1 })).toBeVisible();
   await jogoRapido(page);
   await jogarTurno(page);
   await expect.poll(() => brokenImages(page)).toEqual([]);

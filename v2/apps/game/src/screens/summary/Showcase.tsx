@@ -1,7 +1,7 @@
 import type { SeasonRecord } from "@craque/engine";
 import { AWARDS, getCompetition } from "@craque/world";
 import { useState, type CSSProperties } from "react";
-import { showcaseItems, showcaseLayout, type ShowcaseItem } from "../../features/summary/showcase";
+import { showcaseFixedLayout, showcaseItems, showcaseLayout, type ShowcaseItem } from "../../features/summary/showcase";
 import { useT } from "../../i18n/useT";
 import { useElementWidth } from "../../lib/useElementWidth";
 import { Sheet } from "../../ui/Overlays";
@@ -14,6 +14,8 @@ interface ShowcaseProps {
   /** O maior tamanho de peça: poucas taças não viram taças gigantes (D43). */
   maxArt?: number;
   kind?: "title" | "award";
+  /** Um tamanho só, sem encolher com a coleção (aba Troféus, D118). */
+  fixedArt?: number;
 }
 
 /**
@@ -23,13 +25,13 @@ interface ShowcaseProps {
  * demais. As imagens carregam sob demanda e decodificam fora da thread
  * principal.
  */
-export function Showcase({ history, maxHeight = 520, maxArt, kind }: ShowcaseProps) {
+export function Showcase({ history, maxHeight = 520, maxArt, kind, fixedArt }: ShowcaseProps) {
   const { t, locale } = useT();
   const [selected, setSelected] = useState<ShowcaseItem | null>(null);
   const nameOf = (item: ShowcaseItem) => item.kind === "title" ? (getCompetition(item.id)?.names[locale] ?? item.id) : `${AWARDS[item.id].names[locale]}${item.competition ? ` · ${getCompetition(item.competition)?.names[locale] ?? item.competition}` : ""}`;
   const [ref, width] = useElementWidth(320);
   const items = showcaseItems(history).filter((item) => !kind || item.kind === kind);
-  const layout = showcaseLayout(items.length, width, maxHeight, maxArt, kind !== undefined);
+  const layout = fixedArt ? showcaseFixedLayout(items.length, width, fixedArt) : showcaseLayout(items.length, width, maxHeight, maxArt, kind !== undefined);
 
   if (items.length === 0) {
     return (
@@ -56,7 +58,7 @@ export function Showcase({ history, maxHeight = 520, maxArt, kind }: ShowcasePro
               <button type="button" className="showcase-item" data-kind={item.kind} aria-label={`${name}: ${years} · ×${item.count}`} title={`${name}: ${years}`} onClick={() => setSelected(item)}>
               <span className="showcase-art">
                 {item.kind === "award" ? (
-                  <AwardArt award={AWARDS[item.id]} size={layout.art} language={locale} tooltip={`${name}: ${years}`} decorative />
+                  <AwardArt award={AWARDS[item.id]} competition={item.competition} size={layout.art} language={locale} tooltip={`${name}: ${years}`} decorative />
                 ) : competition ? (
                   <TrophyArt competition={competition} size={layout.art} language={locale} tooltip={`${name}: ${years}`} decorative />
                 ) : null}
@@ -76,7 +78,7 @@ export function Showcase({ history, maxHeight = 520, maxArt, kind }: ShowcasePro
         })}
       </ul>
       <Sheet open={selected !== null} onOpenChange={(open) => { if (!open) setSelected(null); }} title={selected ? nameOf(selected) : ""} closeLabel={t("common.close")}>
-        {selected ? <div className="grid justify-items-center gap-4">{selected.kind === "award" ? <AwardArt award={AWARDS[selected.id]} size={160} language={locale} decorative /> : getCompetition(selected.id) ? <TrophyArt competition={getCompetition(selected.id)!} size={160} language={locale} decorative /> : null}<p className="numeric text-sm">{t("summary.showcaseYears", { years: selected.years.join(", ") })} · ×{selected.count}</p></div> : null}
+        {selected ? <div className="grid justify-items-center gap-4">{selected.kind === "award" ? <AwardArt award={AWARDS[selected.id]} competition={selected.competition} size={160} language={locale} decorative /> : getCompetition(selected.id) ? <TrophyArt competition={getCompetition(selected.id)!} size={160} language={locale} decorative /> : null}<p className="numeric text-sm">{t("summary.showcaseYears", { years: selected.years.join(", ") })} · ×{selected.count}</p></div> : null}
       </Sheet>
     </div>
   );

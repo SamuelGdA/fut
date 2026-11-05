@@ -2,7 +2,7 @@ import { expect, test, type Page } from "@playwright/test";
 import { readFile } from "node:fs/promises";
 import { abrirMomento, auditar, esperarQueCaiba } from "./apoio";
 
-const metadata = JSON.parse(await readFile(new URL("./fixtures/momentos-m41.json", import.meta.url), "utf8")) as { moments: Record<string, { file: string; index: number; resultScore?: number[] }> };
+const metadata = JSON.parse(await readFile(new URL("./fixtures/momentos-m43.json", import.meta.url), "utf8")) as { moments: Record<string, { file: string; index: number; resultScore?: number[] }> };
 async function partida(page: Page, moment: string, theme: "light" | "dark", motion: "full" | "reduced" = "full") {
   const fixture = metadata.moments[moment]!;
   const raw = await readFile(new URL(`./fixtures/${fixture.file}`, import.meta.url));
@@ -46,7 +46,7 @@ for (const theme of ["light", "dark"] as const) for (const moment of ["nation", 
     expect(ui.below).toBe(true); expect(ui.enter).toBe("0.42s");
     if (moment === "rb") { expect(ui.shake).toBe("decision-result-shake"); expect(ui.shakeDuration).toBe("0.15s"); expect(ui.shakeDelay).toBe("0.42s"); }
     else expect(ui.shake).toBe("none");
-    await expect(result.locator(".match-result-badge")).toContainText(moment === "nation" ? "GOL DECISIVO!" : moment === "cb" ? "NO TEMPO CERTO" : "PASSE INTERCEPTADO");
+    await expect(result.locator(".match-result-badge")).toContainText(moment === "nation" ? "GOL DECISIVO!" : moment === "cb" ? "NO TEMPO CERTO" : "O ADVERSÁRIO LEVOU A MELHOR");
     if (await result.getAttribute("data-champion") === "true") {
       await expect(result.locator(".match-result-trophy img")).toBeVisible();
       expect(await result.locator(".match-result-trophy img").evaluate((node) => {

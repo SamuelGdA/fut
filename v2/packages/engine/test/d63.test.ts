@@ -222,7 +222,7 @@ describe("D64: ajuda progressiva do craque ao clube", () => {
   it("97 ajuda um pouco mais que 90 mesmo num clube fraco, com retornos menores no topo",()=>{
     expect(playerClubImpact(70,97,1)).toBeGreaterThan(playerClubImpact(70,90,1));
     expect(playerClubImpact(70,97,1)-playerClubImpact(70,90,1)).toBeCloseTo(0.63);
-    expect(playerClubImpact(70,97,1)).toBeCloseTo(5.97);
+    expect(playerClubImpact(70,97,1)).toBeCloseTo(5.73); // D119: limite 14 (era 15, 5,97)
     expect(playerClubImpact(70,97,0.5)).toBeCloseTo(playerClubImpact(70,97,1)/2);
   });
   it("a contribuição deixa um investimento persistente pequeno, sem garantir vitórias",()=>{

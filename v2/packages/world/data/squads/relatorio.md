@@ -2,11 +2,11 @@
 
 Gerado por `pnpm elencos:montar`. Fontes, ordem das camadas e regras na D52 (docs/DECISOES.md).
 
-- FC 27: 17849 jogadores masculinos lidos; 8909 em clubes do jogo.
+- FC 27: 17849 jogadores masculinos lidos; 10230 em clubes do jogo.
 - eFootball: coleta de 2026-10-08 (build 9YQqj4WVHnB2zaXyahhhx); OVR = carta base + 4; usado em clubes com menos de 20 jogadores do FC 27.
 - Times do eFootball descartados por terem jogadores fictícios: Bari BR (bari), Pescara BA (pescara), La Spezia B (spezia), Goiás V (goias), Recife Aflitos VB (nautico), Minas Gerais VP (america-mg), Florianópolis AB (avai), Criciúma ABP (criciuma), Ponte Preta BP (ponte-preta), Vila Nova VB (vila-nova), Maceió VB (crb), Reggio Emilia G (reggiana), Ribeirão Preto BVP (botafogo-sp), Cuiabá VA (cuiaba), Clube do Remo (remo), Ponta Grossa PB (operario-pr), Novo Horizonte AP (novorizontino), São João del-Rei PB (athletic-mg).
 - Calibração: em 80 jogadores presentes nas duas fontes, FC 27 menos (base + 4) tem mediana -4.5 e média -4.8.
-- Livres no início (teto de 30 acima de 21 anos): 10.
+- Livres no início (teto de 30 acima de 21 anos): 17.
 
 ## Por país e divisão
 
@@ -20,6 +20,8 @@ Gerado por `pnpm elencos:montar`. Fontes, ordem das camadas e regras na D52 (doc
 | BRA | 2 | 20 | 443 | 0 | 33 | 40 | 370 | 16% | 9.5 (1 clubes) | +3.1 |
 | CHI | 1 | 9 | 283 | 128 | 155 | 0 | 0 | 100% | 2.2 (9 clubes) | - |
 | CHI | 2 | 10 | 232 | 0 | 34 | 0 | 198 | 15% | 15.9 (1 clubes) | +1.5 |
+| CHN | 1 | 16 | 410 | 398 | 0 | 0 | 12 | 97% | -1.6 (15 clubes) | - |
+| CHN | 2 | 16 | 352 | 0 | 0 | 0 | 352 | 0% | sem medida | +2.7 |
 | COL | 1 | 10 | 265 | 177 | 85 | 1 | 2 | 99% | 2.6 (10 clubes) | - |
 | COL | 2 | 10 | 247 | 0 | 92 | 0 | 155 | 37% | 14.8 (3 clubes) | +5.8 |
 | ECU | 1 | 9 | 213 | 125 | 0 | 2 | 86 | 60% | 1.1 (5 clubes) | - |
@@ -32,8 +34,16 @@ Gerado por `pnpm elencos:montar`. Fontes, ordem das camadas e regras na D52 (doc
 | FRA | 2 | 18 | 460 | 459 | 0 | 0 | 1 | 100% | -0.9 (18 clubes) | - |
 | GER | 1 | 18 | 548 | 548 | 0 | 0 | 0 | 100% | -0.6 (18 clubes) | - |
 | GER | 2 | 18 | 499 | 499 | 0 | 0 | 0 | 100% | -0.3 (18 clubes) | - |
+| IDN | 1 | 18 | 396 | 0 | 0 | 0 | 396 | 0% | sem medida | - |
+| IDN | 2 | 20 | 440 | 0 | 0 | 0 | 440 | 0% | sem medida | - |
 | ITA | 1 | 20 | 572 | 572 | 0 | 0 | 0 | 100% | -0.8 (20 clubes) | - |
 | ITA | 2 | 20 | 501 | 404 | 0 | 24 | 73 | 85% | 1.5 (16 clubes) | - |
+| JPN | 1 | 20 | 440 | 0 | 0 | 0 | 440 | 0% | sem medida | - |
+| JPN | 2 | 20 | 440 | 0 | 0 | 0 | 440 | 0% | sem medida | - |
+| KOR | 1 | 12 | 396 | 396 | 0 | 0 | 0 | 100% | -0.1 (12 clubes) | - |
+| KOR | 2 | 17 | 374 | 0 | 0 | 0 | 374 | 0% | sem medida | +0.8 |
+| KSA | 1 | 18 | 520 | 520 | 0 | 0 | 0 | 100% | 0.4 (18 clubes) | - |
+| KSA | 2 | 18 | 396 | 0 | 0 | 0 | 396 | 0% | sem medida | +2.9 |
 | MEX | 1 | 18 | 441 | 439 | 0 | 0 | 2 | 100% | -0.1 (18 clubes) | - |
 | PAR | 1 | 8 | 209 | 121 | 0 | 0 | 88 | 58% | 4.3 (4 clubes) | - |
 | PAR | 2 | 8 | 176 | 0 | 0 | 0 | 176 | 0% | sem medida | +2.4 |
@@ -192,6 +202,38 @@ Gerado por `pnpm elencos:montar`. Fontes, ordem das camadas e regras na D52 (doc
 | Curicó Unido | CHI | 2 | 58 | 60.2 | 60.6 | 0 | 0 | 0 | 22 |
 | Deportes Concepción | CHI | 2 | 58 | 60.2 | 73.9 | 0 | 34 | 0 | 0 |
 | San Marcos de Arica | CHI | 2 | 57 | 59.2 | 59 | 0 | 0 | 0 | 22 |
+| Shanghai Port | CHN | 1 | 70 | 68.4 | 65.8 | 30 | 0 | 0 | 0 |
+| Shanghai Shenhua | CHN | 1 | 70 | 68.4 | 67.1 | 29 | 0 | 0 | 0 |
+| Chengdu Rongcheng | CHN | 1 | 70 | 68.4 | 66.6 | 30 | 0 | 0 | 0 |
+| Shandong Taishan | CHN | 1 | 69 | 67.4 | 66.5 | 27 | 0 | 0 | 0 |
+| Beijing Guoan | CHN | 1 | 69 | 67.4 | 66.8 | 29 | 0 | 0 | 0 |
+| Dalian Yingbo | CHN | 1 | 67 | 65.4 | 64.1 | 25 | 0 | 0 | 0 |
+| Zhejiang FC | CHN | 1 | 66 | 64.4 | 64.8 | 27 | 0 | 0 | 0 |
+| Tianjin Jinmen Tiger | CHN | 1 | 65 | 63.4 | 63.4 | 23 | 0 | 0 | 0 |
+| Henan FC | CHN | 1 | 64 | 62.4 | 64.2 | 24 | 0 | 0 | 0 |
+| Yunnan Yukun | CHN | 1 | 64 | 62.4 | 65 | 26 | 0 | 0 | 0 |
+| Wuhan Three Towns | CHN | 1 | 64 | 62.4 | 64.7 | 27 | 0 | 0 | 0 |
+| Qingdao West Coast | CHN | 1 | 63 | 61.4 | 63.6 | 22 | 0 | 0 | 0 |
+| Shenzhen Peng City | CHN | 1 | 63 | 61.4 | 64.4 | 23 | 0 | 0 | 0 |
+| Qingdao Hainiu | CHN | 1 | 62 | 60.4 | 60.1 | 24 | 0 | 0 | 0 |
+| Liaoning Tieren | CHN | 1 | 62 | 60.4 | 63.4 | 20 | 0 | 0 | 2 |
+| Chongqing Tonglianglong | CHN | 1 | 61 | 59.4 | 61 | 12 | 0 | 0 | 10 |
+| Changchun Yatai | CHN | 2 | 60 | 58.4 | 59.3 | 0 | 0 | 0 | 22 |
+| Meizhou Hakka | CHN | 2 | 59 | 57.4 | 58.6 | 0 | 0 | 0 | 22 |
+| Dalian K'un City | CHN | 2 | 58 | 56.4 | 56.9 | 0 | 0 | 0 | 22 |
+| Guangdong GZ-Power | CHN | 2 | 58 | 56.4 | 57.8 | 0 | 0 | 0 | 22 |
+| Nantong Zhiyun | CHN | 2 | 58 | 56.4 | 58.4 | 0 | 0 | 0 | 22 |
+| Nanjing City | CHN | 2 | 57 | 55.4 | 56.6 | 0 | 0 | 0 | 22 |
+| Shaanxi Union | CHN | 2 | 57 | 55.4 | 57.4 | 0 | 0 | 0 | 22 |
+| Shenzhen Juniors | CHN | 2 | 57 | 55.4 | 56.7 | 0 | 0 | 0 | 22 |
+| Shijiazhuang Gongfu | CHN | 2 | 57 | 55.4 | 56.5 | 0 | 0 | 0 | 22 |
+| Suzhou Dongwu | CHN | 2 | 57 | 55.4 | 56.9 | 0 | 0 | 0 | 22 |
+| Yanbian Longding | CHN | 2 | 57 | 55.4 | 57.6 | 0 | 0 | 0 | 22 |
+| Foshan Nanshi | CHN | 2 | 56 | 54.4 | 55.6 | 0 | 0 | 0 | 22 |
+| Guangxi Hengchen | CHN | 2 | 56 | 54.4 | 55.6 | 0 | 0 | 0 | 22 |
+| Jiangxi Dingnan United | CHN | 2 | 56 | 54.4 | 56 | 0 | 0 | 0 | 22 |
+| Ningbo FC | CHN | 2 | 56 | 54.4 | 55.1 | 0 | 0 | 0 | 22 |
+| Wuxi Wugo | CHN | 2 | 56 | 54.4 | 56 | 0 | 0 | 0 | 22 |
 | Atlético Nacional | COL | 1 | 70 | 72.6 | 72.6 | 30 | 0 | 0 | 0 |
 | América de Cali | COL | 1 | 68 | 70.6 | 70 | 23 | 0 | 0 | 1 |
 | Junior | COL | 1 | 68 | 70.6 | 70.6 | 25 | 0 | 0 | 0 |
@@ -386,6 +428,44 @@ Gerado por `pnpm elencos:montar`. Fontes, ordem das camadas e regras na D52 (doc
 | Eintracht Braunschweig | GER | 2 | 67 | 66.7 | 68.1 | 29 | 0 | 0 | 0 |
 | Energie Cottbus | GER | 2 | 67 | 66.7 | 66.9 | 30 | 0 | 0 | 0 |
 | VfL Osnabrück | GER | 2 | 66 | 65.7 | 67.1 | 26 | 0 | 0 | 0 |
+| Persib Bandung | IDN | 1 | 61 | 61 | 59.2 | 0 | 0 | 0 | 22 |
+| Persija Jakarta | IDN | 1 | 60 | 60 | 58.4 | 0 | 0 | 0 | 22 |
+| Borneo Samarinda | IDN | 1 | 60 | 60 | 58.9 | 0 | 0 | 0 | 22 |
+| Bali United | IDN | 1 | 59 | 59 | 58.3 | 0 | 0 | 0 | 22 |
+| Dewa United Banten | IDN | 1 | 59 | 59 | 57.8 | 0 | 0 | 0 | 22 |
+| Persebaya Surabaya | IDN | 1 | 58 | 58 | 56.6 | 0 | 0 | 0 | 22 |
+| PSM Makassar | IDN | 1 | 58 | 58 | 56.4 | 0 | 0 | 0 | 22 |
+| Arema FC | IDN | 1 | 58 | 58 | 56.5 | 0 | 0 | 0 | 22 |
+| Persita Tangerang | IDN | 1 | 56 | 56 | 54.8 | 0 | 0 | 0 | 22 |
+| Bhayangkara Presisi | IDN | 1 | 56 | 56 | 54.2 | 0 | 0 | 0 | 22 |
+| Madura United | IDN | 1 | 56 | 56 | 55 | 0 | 0 | 0 | 22 |
+| Persik Kediri | IDN | 1 | 56 | 56 | 55 | 0 | 0 | 0 | 22 |
+| Java United | IDN | 1 | 56 | 56 | 54.7 | 0 | 0 | 0 | 22 |
+| Persijap Jepara | IDN | 1 | 55 | 55 | 54.1 | 0 | 0 | 0 | 22 |
+| PSIM Yogyakarta | IDN | 1 | 55 | 55 | 53 | 0 | 0 | 0 | 22 |
+| PSS Sleman | IDN | 1 | 55 | 55 | 52.9 | 0 | 0 | 0 | 22 |
+| Garudayaksa FC | IDN | 1 | 55 | 55 | 52.6 | 0 | 0 | 0 | 22 |
+| Isenmulang Kalteng | IDN | 1 | 54 | 54 | 52.8 | 0 | 0 | 0 | 22 |
+| Barito Putera | IDN | 2 | 53 | 53 | 51.8 | 0 | 0 | 0 | 22 |
+| Persipura Jayapura | IDN | 2 | 53 | 53 | 51.4 | 0 | 0 | 0 | 22 |
+| Persis Solo | IDN | 2 | 53 | 53 | 51.7 | 0 | 0 | 0 | 22 |
+| Semen Padang | IDN | 2 | 53 | 53 | 51.4 | 0 | 0 | 0 | 22 |
+| Adhyaksa Bekasi | IDN | 2 | 52 | 52 | 50.4 | 0 | 0 | 0 | 22 |
+| PSBS Biak | IDN | 2 | 52 | 52 | 51.1 | 0 | 0 | 0 | 22 |
+| PSIS Semarang | IDN | 2 | 52 | 52 | 50.2 | 0 | 0 | 0 | 22 |
+| PSMS Medan | IDN | 2 | 52 | 52 | 50.7 | 0 | 0 | 0 | 22 |
+| Persela Lamongan | IDN | 2 | 51 | 51 | 49.6 | 0 | 0 | 0 | 22 |
+| Persiraja Banda Aceh | IDN | 2 | 51 | 51 | 49.4 | 0 | 0 | 0 | 22 |
+| de Red FC | IDN | 2 | 50 | 50 | 47.9 | 0 | 0 | 0 | 22 |
+| Deltras FC | IDN | 2 | 50 | 50 | 49.3 | 0 | 0 | 0 | 22 |
+| Kendal Tornado | IDN | 2 | 50 | 50 | 48.2 | 0 | 0 | 0 | 22 |
+| Persiba Balikpapan | IDN | 2 | 50 | 50 | 48.3 | 0 | 0 | 0 | 22 |
+| Persikad Depok | IDN | 2 | 50 | 50 | 48.6 | 0 | 0 | 0 | 22 |
+| Persiku Kudus | IDN | 2 | 50 | 50 | 48.5 | 0 | 0 | 0 | 22 |
+| PSPS Pekanbaru | IDN | 2 | 50 | 50 | 48.1 | 0 | 0 | 0 | 22 |
+| RANS Nusantara | IDN | 2 | 50 | 50 | 48.6 | 0 | 0 | 0 | 22 |
+| PSGC Ciamis | IDN | 2 | 49 | 49 | 47.4 | 0 | 0 | 0 | 22 |
+| Sumsel United | IDN | 2 | 49 | 49 | 47.8 | 0 | 0 | 0 | 22 |
 | Inter | ITA | 1 | 85 | 84.2 | 83.4 | 27 | 0 | 0 | 0 |
 | Napoli | ITA | 1 | 84 | 83.2 | 81.5 | 30 | 0 | 0 | 0 |
 | Juventus | ITA | 1 | 83 | 82.2 | 80.9 | 29 | 0 | 0 | 0 |
@@ -426,6 +506,111 @@ Gerado por `pnpm elencos:montar`. Fontes, ordem das camadas e regras na D52 (doc
 | Carrarese | ITA | 2 | 66 | 67.5 | 67.4 | 24 | 0 | 0 | 0 |
 | Sudtirol | ITA | 2 | 66 | 67.5 | 68.9 | 22 | 0 | 0 | 2 |
 | Virtus Entella | ITA | 2 | 66 | 67.5 | 67.9 | 24 | 0 | 0 | 1 |
+| Kashima Antlers | JPN | 1 | 72 | 72 | 70.7 | 0 | 0 | 0 | 22 |
+| Sanfrecce Hiroshima | JPN | 1 | 71 | 71 | 69.6 | 0 | 0 | 0 | 22 |
+| Vissel Kobe | JPN | 1 | 71 | 71 | 70.2 | 0 | 0 | 0 | 22 |
+| Kashiwa Reysol | JPN | 1 | 70 | 70 | 68.9 | 0 | 0 | 0 | 22 |
+| FC Machida Zelvia | JPN | 1 | 70 | 70 | 68.8 | 0 | 0 | 0 | 22 |
+| Urawa Red Diamonds | JPN | 1 | 70 | 70 | 69.3 | 0 | 0 | 0 | 22 |
+| Kawasaki Frontale | JPN | 1 | 70 | 70 | 68.9 | 0 | 0 | 0 | 22 |
+| Kyoto Sanga | JPN | 1 | 69 | 69 | 67.5 | 0 | 0 | 0 | 22 |
+| Gamba Osaka | JPN | 1 | 69 | 69 | 68.1 | 0 | 0 | 0 | 22 |
+| Yokohama F. Marinos | JPN | 1 | 69 | 69 | 67.6 | 0 | 0 | 0 | 22 |
+| Cerezo Osaka | JPN | 1 | 68 | 68 | 67 | 0 | 0 | 0 | 22 |
+| FC Tokyo | JPN | 1 | 68 | 68 | 67.1 | 0 | 0 | 0 | 22 |
+| Nagoya Grampus | JPN | 1 | 68 | 68 | 66.8 | 0 | 0 | 0 | 22 |
+| Avispa Fukuoka | JPN | 1 | 67 | 67 | 65.8 | 0 | 0 | 0 | 22 |
+| Fagiano Okayama | JPN | 1 | 66 | 66 | 65.1 | 0 | 0 | 0 | 22 |
+| Shimizu S-Pulse | JPN | 1 | 66 | 66 | 63.8 | 0 | 0 | 0 | 22 |
+| Tokyo Verdy | JPN | 1 | 66 | 66 | 65.2 | 0 | 0 | 0 | 22 |
+| V-Varen Nagasaki | JPN | 1 | 66 | 66 | 64.6 | 0 | 0 | 0 | 22 |
+| Mito HollyHock | JPN | 1 | 65 | 65 | 64 | 0 | 0 | 0 | 22 |
+| JEF United Chiba | JPN | 1 | 65 | 65 | 64.1 | 0 | 0 | 0 | 22 |
+| Albirex Niigata | JPN | 2 | 64 | 64 | 62.6 | 0 | 0 | 0 | 22 |
+| Hokkaido Consadole Sapporo | JPN | 2 | 63 | 63 | 61.5 | 0 | 0 | 0 | 22 |
+| Júbilo Iwata | JPN | 2 | 63 | 63 | 61.7 | 0 | 0 | 0 | 22 |
+| RB Omiya Ardija | JPN | 2 | 63 | 63 | 61.6 | 0 | 0 | 0 | 22 |
+| Shonan Bellmare | JPN | 2 | 63 | 63 | 61.1 | 0 | 0 | 0 | 22 |
+| Yokohama FC | JPN | 2 | 63 | 63 | 61.9 | 0 | 0 | 0 | 22 |
+| Sagan Tosu | JPN | 2 | 62 | 62 | 60.7 | 0 | 0 | 0 | 22 |
+| Vegalta Sendai | JPN | 2 | 62 | 62 | 60.3 | 0 | 0 | 0 | 22 |
+| Montedio Yamagata | JPN | 2 | 61 | 61 | 60.1 | 0 | 0 | 0 | 22 |
+| Tokushima Vortis | JPN | 2 | 61 | 61 | 59.7 | 0 | 0 | 0 | 22 |
+| Blaublitz Akita | JPN | 2 | 60 | 60 | 58.5 | 0 | 0 | 0 | 22 |
+| FC Imabari | JPN | 2 | 60 | 60 | 58.5 | 0 | 0 | 0 | 22 |
+| Iwaki FC | JPN | 2 | 60 | 60 | 57.9 | 0 | 0 | 0 | 22 |
+| Kataller Toyama | JPN | 2 | 60 | 60 | 58.2 | 0 | 0 | 0 | 22 |
+| Oita Trinita | JPN | 2 | 60 | 60 | 57.5 | 0 | 0 | 0 | 22 |
+| Ventforet Kofu | JPN | 2 | 60 | 60 | 59.1 | 0 | 0 | 0 | 22 |
+| Fujieda MYFC | JPN | 2 | 59 | 59 | 58 | 0 | 0 | 0 | 22 |
+| Tegevajaro Miyazaki | JPN | 2 | 57 | 57 | 55.4 | 0 | 0 | 0 | 22 |
+| Tochigi City | JPN | 2 | 57 | 57 | 56.6 | 0 | 0 | 0 | 22 |
+| Vanraure Hachinohe | JPN | 2 | 57 | 57 | 55.4 | 0 | 0 | 0 | 22 |
+| Jeonbuk Hyundai Motors | KOR | 1 | 71 | 70.9 | 69.5 | 36 | 0 | 0 | 0 |
+| Ulsan HD | KOR | 1 | 70 | 69.9 | 69.1 | 34 | 0 | 0 | 0 |
+| FC Seoul | KOR | 1 | 70 | 69.9 | 69.7 | 29 | 0 | 0 | 0 |
+| Pohang Steelers | KOR | 1 | 68 | 67.9 | 66.1 | 34 | 0 | 0 | 0 |
+| Daejeon Hana Citizen | KOR | 1 | 68 | 67.9 | 68.1 | 35 | 0 | 0 | 0 |
+| Gangwon FC | KOR | 1 | 67 | 66.9 | 68.1 | 38 | 0 | 0 | 0 |
+| Gimcheon Sangmu | KOR | 1 | 67 | 66.9 | 65.7 | 32 | 0 | 0 | 0 |
+| Incheon United | KOR | 1 | 66 | 65.9 | 67.2 | 31 | 0 | 0 | 0 |
+| Jeju SK | KOR | 1 | 66 | 65.9 | 66.2 | 27 | 0 | 0 | 0 |
+| Gwangju FC | KOR | 1 | 66 | 65.9 | 63.8 | 34 | 0 | 0 | 0 |
+| FC Anyang | KOR | 1 | 65 | 64.9 | 66.5 | 33 | 0 | 0 | 0 |
+| Bucheon FC 1995 | KOR | 1 | 64 | 63.9 | 66.1 | 33 | 0 | 0 | 0 |
+| Suwon Samsung Bluewings | KOR | 2 | 63 | 62.9 | 62.5 | 0 | 0 | 0 | 22 |
+| Daegu FC | KOR | 2 | 63 | 62.9 | 61.9 | 0 | 0 | 0 | 22 |
+| Suwon FC | KOR | 2 | 62 | 61.9 | 61.5 | 0 | 0 | 0 | 22 |
+| Jeonnam Dragons | KOR | 2 | 61 | 60.9 | 60.6 | 0 | 0 | 0 | 22 |
+| Busan IPark | KOR | 2 | 61 | 60.9 | 60.2 | 0 | 0 | 0 | 22 |
+| Seongnam FC | KOR | 2 | 61 | 60.9 | 60 | 0 | 0 | 0 | 22 |
+| Seoul E-Land | KOR | 2 | 61 | 60.9 | 60.2 | 0 | 0 | 0 | 22 |
+| Gyeongnam FC | KOR | 2 | 60 | 59.9 | 59.6 | 0 | 0 | 0 | 22 |
+| Chungnam Asan | KOR | 2 | 60 | 59.9 | 58.9 | 0 | 0 | 0 | 22 |
+| Gimpo FC | KOR | 2 | 59 | 58.9 | 58.1 | 0 | 0 | 0 | 22 |
+| Ansan Greeners | KOR | 2 | 58 | 57.9 | 57.1 | 0 | 0 | 0 | 22 |
+| Chungbuk Cheongju | KOR | 2 | 58 | 57.9 | 56.6 | 0 | 0 | 0 | 22 |
+| Cheonan City | KOR | 2 | 58 | 57.9 | 57.5 | 0 | 0 | 0 | 22 |
+| Hwaseong FC | KOR | 2 | 57 | 56.9 | 56.8 | 0 | 0 | 0 | 22 |
+| Gimhae FC 2008 | KOR | 2 | 56 | 55.9 | 55.4 | 0 | 0 | 0 | 22 |
+| Paju Frontier | KOR | 2 | 56 | 55.9 | 55 | 0 | 0 | 0 | 22 |
+| Yongin FC | KOR | 2 | 56 | 55.9 | 55.9 | 0 | 0 | 0 | 22 |
+| Al-Hilal | KSA | 1 | 78 | 78.4 | 77.4 | 29 | 0 | 0 | 0 |
+| Al-Nassr | KSA | 1 | 77 | 77.4 | 77.6 | 30 | 0 | 0 | 0 |
+| Al-Ahli | KSA | 1 | 77 | 77.4 | 76.3 | 29 | 0 | 0 | 0 |
+| Al-Ittihad | KSA | 1 | 76 | 76.4 | 74.9 | 38 | 0 | 0 | 0 |
+| Al-Qadsiah | KSA | 1 | 74 | 74.4 | 78.7 | 31 | 0 | 0 | 0 |
+| Al-Taawoun | KSA | 1 | 70 | 70.4 | 68.1 | 29 | 0 | 0 | 0 |
+| Al-Ettifaq | KSA | 1 | 70 | 70.4 | 68.2 | 26 | 0 | 0 | 0 |
+| Al-Shabab | KSA | 1 | 70 | 70.4 | 69.7 | 31 | 0 | 0 | 0 |
+| NEOM SC | KSA | 1 | 70 | 70.4 | 71.1 | 30 | 0 | 0 | 0 |
+| Al-Khaleej | KSA | 1 | 68 | 68.4 | 70.7 | 28 | 0 | 0 | 0 |
+| Al-Fateh | KSA | 1 | 67 | 67.4 | 67 | 32 | 0 | 0 | 0 |
+| Al-Fayha | KSA | 1 | 67 | 67.4 | 66.7 | 26 | 0 | 0 | 0 |
+| Al-Kholood | KSA | 1 | 66 | 66.4 | 66.5 | 22 | 0 | 0 | 0 |
+| Al-Hazem | KSA | 1 | 65 | 65.4 | 65.2 | 29 | 0 | 0 | 0 |
+| Al-Riyadh | KSA | 1 | 65 | 65.4 | 66.4 | 25 | 0 | 0 | 0 |
+| Abha Club | KSA | 1 | 64 | 64.4 | 66.5 | 28 | 0 | 0 | 0 |
+| Al-Faisaly | KSA | 1 | 64 | 64.4 | 67.6 | 28 | 0 | 0 | 0 |
+| Al-Diriyah | KSA | 1 | 63 | 63.4 | 73.2 | 29 | 0 | 0 | 0 |
+| Damac FC | KSA | 2 | 61 | 61.4 | 62.7 | 0 | 0 | 0 | 22 |
+| Al-Raed | KSA | 2 | 60 | 60.4 | 61.8 | 0 | 0 | 0 | 22 |
+| Al-Wehda | KSA | 2 | 60 | 60.4 | 61.9 | 0 | 0 | 0 | 22 |
+| Al-Okhdood | KSA | 2 | 60 | 60.4 | 61.5 | 0 | 0 | 0 | 22 |
+| Al-Adalah | KSA | 2 | 59 | 59.4 | 60.4 | 0 | 0 | 0 | 22 |
+| Al-Orobah | KSA | 2 | 59 | 59.4 | 60.9 | 0 | 0 | 0 | 22 |
+| Al-Tai | KSA | 2 | 59 | 59.4 | 60.2 | 0 | 0 | 0 | 22 |
+| Al-Najma | KSA | 2 | 59 | 59.4 | 60.6 | 0 | 0 | 0 | 22 |
+| Al-Bukiryah | KSA | 2 | 58 | 58.4 | 60 | 0 | 0 | 0 | 22 |
+| Al-Jabalain | KSA | 2 | 58 | 58.4 | 59.8 | 0 | 0 | 0 | 22 |
+| Al-Ula | KSA | 2 | 58 | 58.4 | 59.4 | 0 | 0 | 0 | 22 |
+| Al-Jandal | KSA | 2 | 57 | 57.4 | 59 | 0 | 0 | 0 | 22 |
+| Al-Zulfi | KSA | 2 | 57 | 57.4 | 58.4 | 0 | 0 | 0 | 22 |
+| Jeddah Club | KSA | 2 | 57 | 57.4 | 59.4 | 0 | 0 | 0 | 22 |
+| Al-Anwar | KSA | 2 | 56 | 56.4 | 58.2 | 0 | 0 | 0 | 22 |
+| Al-Saqer | KSA | 2 | 56 | 56.4 | 57.4 | 0 | 0 | 0 | 22 |
+| Al-Jeel | KSA | 2 | 56 | 56.4 | 58.2 | 0 | 0 | 0 | 22 |
+| Hajer Club | KSA | 2 | 56 | 56.4 | 58.1 | 0 | 0 | 0 | 22 |
 | Club América | MEX | 1 | 75 | 74.9 | 73.9 | 28 | 0 | 0 | 0 |
 | Tigres UANL | MEX | 1 | 75 | 74.9 | 73.1 | 24 | 0 | 0 | 0 |
 | Monterrey | MEX | 1 | 75 | 74.9 | 73.6 | 25 | 0 | 0 | 0 |
@@ -581,13 +766,13 @@ Gerado por `pnpm elencos:montar`. Fontes, ordem das camadas e regras na D52 (doc
 
 | Característica | Jogadores | Fatia |
 |---|---|---|
-| aerial | 167 | 1% |
-| clutch | 199 | 1% |
-| fast | 274 | 2% |
-| leader | 140 | 1% |
-| setPiece | 205 | 2% |
-| tireless | 84 | 1% |
-| versatile | 372 | 3% |
+| aerial | 182 | 1% |
+| clutch | 220 | 1% |
+| fast | 323 | 2% |
+| leader | 153 | 1% |
+| setPiece | 236 | 1% |
+| tireless | 91 | 1% |
+| versatile | 443 | 3% |
 
 ## Identidades casadas com o FC 27 (fora do clube da outra fonte)
 
@@ -610,7 +795,7 @@ Gerado por `pnpm elencos:montar`. Fontes, ordem das camadas e regras na D52 (doc
 - Otávio (ef:153346, cruzeiro) = Otávio (fc:78088, eintracht-frankfurt)
 - Ronaldo Martínez (ef:159959, velez-sarsfield) = Ronaldo Martínez (fc:260140, talleres)
 - Isaac (ef:159966, atletico-paranaense) = Isaac (fc:74092, verona)
-- João Pedro (ef:161109, corinthians) = João Pedro (fc:70170, fora do jogo)
+- João Pedro (ef:161109, corinthians) = João Pedro (fc:70170, gwangju-fc)
 - Robert (ef:169235, atletico-mg) = Robert (fc:74233, fora do jogo)
 - Thiago Silvero (ef:170854, velez-sarsfield) = Thiago Silvero (fc:74853, velez-sarsfield)
 - Jano Gordon (ef:170857, velez-sarsfield) = Jano Gordon (fc:74857, velez-sarsfield)
