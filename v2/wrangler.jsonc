@@ -5,7 +5,7 @@
 // `404.html`, os dois gravados pelo build em apps/game/dist.
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "futeiros",
+  "name": "futeiro",
   "compatibility_date": "2026-11-01",
   "assets": {
     "directory": "./apps/game/dist",
