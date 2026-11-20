@@ -15,7 +15,9 @@
     // barra no fim, como o jogo escreve os endereços.
     "html_handling": "drop-trailing-slash"
   },
-  // Sem o subdomínio workers.dev: o site só existe em futeiro.com.
+  // O site só existe em futeiro.com (www redireciona para cá por uma regra da
+  // zona); sem o subdomínio workers.dev.
+  "routes": [{ "pattern": "futeiro.com", "custom_domain": true }],
   "workers_dev": false,
   "preview_urls": true
 }
