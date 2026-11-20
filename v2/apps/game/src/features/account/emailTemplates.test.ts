@@ -1,6 +1,6 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { renderEmail } from "../../screens/lab/sections/EmailPreview";
+import { renderEmail } from "../../screens/lab/sections/emailRender";
 
 /** Os modelos de e-mail da conta saem no idioma do jogador (D122). */
 
