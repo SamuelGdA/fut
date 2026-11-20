@@ -7,6 +7,7 @@ coverage/
 .env*
 !.env.example
 !.env.e2e
+!.env.production
 .vite/
 .DS_Store
 npm-debug.log*
