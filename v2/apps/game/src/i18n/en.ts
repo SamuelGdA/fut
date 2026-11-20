@@ -75,16 +75,6 @@ export const en: Messages = {
     autoAdvance: "Skip result automatically",
     haptics: "Vibration",
     hapticsUnsupported: "This device can't vibrate from the browser.",
-    offlineTitle: "Offline images",
-    offlineHint: "Crests and trophies are stored on this device as they appear; offline, anything missing appears drawn. To miss none, store them all at once (about {size}).",
-    offlineStore: "Store all",
-    offlineStop: "Stop",
-    offlineCounting: "Counting what is already stored",
-    offlineProgress: "{done} of {total} stored",
-    offlineDone: "All {total} stored on this device",
-    offlineFailed: "{failed} did not download. Try again with internet.",
-    offlineQuota: "This device ran out of space for the images.",
-    offlineUnsupported: "This browser cannot store images for offline use.",
   },
 
   languages: {

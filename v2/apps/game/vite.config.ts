@@ -1,6 +1,3 @@
-import { readdirSync, statSync } from "node:fs";
-import { join } from "node:path";
-import { fileURLToPath } from "node:url";
 import babel from "@rolldown/plugin-babel";
 import tailwindcss from "@tailwindcss/vite";
 import react, { reactCompilerPreset } from "@vitejs/plugin-react";
@@ -11,20 +8,8 @@ import { gameLoading } from "./build/gameLoading.ts";
 import { routeCopies } from "./build/routes.ts";
 import { socialPreview } from "./build/social.ts";
 import { devSecurityHeaders, securityHeaders, securityPlugin } from "./build/security.ts";
-import { CODE_CACHE, IMAGE_CACHE, RUNTIME_IMAGE_DIRS, RUNTIME_IMAGE_PATTERN } from "./src/services/cacheNames.ts";
+import { CODE_CACHE, IMAGE_CACHE, RUNTIME_IMAGE_PATTERN } from "./src/services/cacheNames.ts";
 
-const PUBLIC_ASSETS = fileURLToPath(new URL("./public/assets/", import.meta.url));
-
-/** O peso das imagens que entram conforme aparecem, para os Ajustes dizerem quanto é guardar tudo. */
-function folderBytes(folder: string): number {
-  return readdirSync(folder).reduce((total, name) => {
-    const path = join(folder, name);
-    const stats = statSync(path);
-    return total + (stats.isDirectory() ? folderBytes(path) : stats.size);
-  }, 0);
-}
-
-const RUNTIME_IMAGE_BYTES = RUNTIME_IMAGE_DIRS.reduce((total, directory) => total + folderBytes(join(PUBLIC_ASSETS, directory)), 0);
 
 // A casca usa submódulos pequenos de posições/atributos; os grafos dos modos
 // só são guardados após a escolha, sem antecipar o motor completo no hub.
@@ -33,9 +18,6 @@ const loading = gameLoading();
 const THEME = "#f3f0e8";
 
 export default defineConfig({
-  define: {
-    __RUNTIME_IMAGE_BYTES__: JSON.stringify(RUNTIME_IMAGE_BYTES),
-  },
   plugins: [
     react(),
     // React Compiler: memoização automática dos componentes, sem useMemo à mão.

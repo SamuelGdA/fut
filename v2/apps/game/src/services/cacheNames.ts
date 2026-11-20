@@ -10,7 +10,7 @@ export const CODE_CACHE = "futeiros-codigo";
 /** Imagens guardadas ao aparecer ou por pedido nos ajustes. */
 export const IMAGE_CACHE = "craque-imagens";
 
-/** As imagens de public/assets que entram ao aparecer ou por Guardar todas (D62). */
+/** As imagens de public/assets que entram no cache ao aparecer (D62; D121: sem o Guardar todas). */
 export const RUNTIME_IMAGE_DIRS = ["clubs", "trophies", "federations", "flags", "leagues", "awards"] as const;
 
 /** O endereço de uma imagem desse cache, em qualquer base. */

@@ -68,43 +68,7 @@ test("sem internet: o jogo abre, joga, e nenhuma imagem quebra", async ({ page, 
   await context.setOffline(false);
 });
 
-test("guardar todas as imagens nos ajustes: sem internet, os escudos são os reais", async ({ page, context }, info) => {
-  test.skip(info.project.name === "celular", "o download de ~22 MB roda uma vez, no desktop");
-  await abrir(page);
-  await controlada(page);
-  await page.getByRole("button", { name: "Abrir ajustes" }).first().click();
-  await page.getByRole("button", { name: "Guardar todas" }).click();
-  await expect(page.getByText(/^Todas as \d+ guardadas no aparelho$/)).toBeVisible({ timeout: 120_000 });
-  await page.keyboard.press("Escape");
-
-  // O que ficou no cache de imagens que o service worker lê.
-  const stored = await page.evaluate(async () => {
-    const cache = await caches.open("craque-imagens");
-    return (await cache.keys()).map((request) => new URL(request.url).pathname);
-  });
-  const crest = stored.find((path) => path.includes("/assets/clubs/"));
-  const trophy = stored.find((path) => path.includes("/assets/trophies/"));
-  expect(crest).toBeTruthy();
-  expect(trophy).toBeTruthy();
-
-  // Guardar imagens não antecipa um modo: primeiro abre o jogo ainda conectado.
-  await entrarNoCraque(page);
-  await expect.poll(() => page.evaluate(() => document.documentElement.dataset.offlineCraque), { timeout: 60_000 }).toBe("ready");
-  await context.setOffline(true);
-  await page.reload();
-  // Sem rede, o service worker entrega do cache o escudo e o troféu reais.
-  for (const path of [crest, trophy]) {
-    const status = await page.evaluate(async (url) => (await fetch(url ?? "")).status, path);
-    expect(status, path).toBe(200);
-  }
-  await expect(page.getByRole("heading", { name: /Quem é você/i, level: 1 })).toBeVisible();
-  await jogoRapido(page);
-  await jogarTurno(page);
-  await expect.poll(() => brokenImages(page)).toEqual([]);
-  await context.setOffline(false);
-});
-
-test("os ajustes cabem numa tela de 320 × 568 e a linha de imagens offline é alcançável", async ({ page }) => {
+test("os ajustes cabem numa tela de 320 × 568", async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 568 });
   await abrir(page);
   await page.getByRole("button", { name: "Abrir ajustes" }).first().click();
@@ -112,7 +76,5 @@ test("os ajustes cabem numa tela de 320 × 568 e a linha de imagens offline é a
   await expect(panel).toBeVisible();
   const box = await panel.boundingBox();
   expect((box?.y ?? 0) + (box?.height ?? 0)).toBeLessThanOrEqual(568);
-  const store = page.getByRole("button", { name: "Guardar todas" });
-  await store.scrollIntoViewIfNeeded();
-  await expect(store).toBeInViewport();
 });
+

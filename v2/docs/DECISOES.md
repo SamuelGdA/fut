@@ -2268,6 +2268,12 @@ A inspeção da abertura da pilha de troféus agora observa os quadros antes de 
 
 **Por quê.** O domínio comprado foi `futeiro.com`. Na hospedagem, o plano grátis da Cloudflare não cobra nem limita a banda de arquivos estáticos e permite uso comercial (anúncios), enquanto o Hobby da Vercel proíbe anúncios e a Netlify tira o site do ar ao estourar a cota grátis. Mudar as chaves internas apagaria a carreira salva do Técnico de quem já joga, sem ganho visível.
 
+## D121: sai o "Guardar todas as imagens" e o site publica sozinho da main (19/11/2026)
+
+**Decisão.** (1) Sai a linha "Imagens sem internet" dos Ajustes, com o download de todas as imagens (cerca de 54 MB). As imagens continuam entrando no cache conforme aparecem, só para abrir mais rápido. (2) O site na Cloudflare é publicado automaticamente a cada push na branch `main` do GitHub; o desenvolvimento acontece em outras branches e entra no ar quando é mesclado na `main`.
+
+**Por quê.** O jogo é feito para jogar com internet (conta, ranking e Desafio dependem do servidor), então baixar 54 MB para jogar sem rede era peso sem uso. Publicar só da `main` separa o que está em teste do que está no ar, sem passo manual.
+
 ## Prévia social do site: complemento de D118 (03/11/2026)
 
 **Decisão.** Arte editorial própria com as fontes e cores do Futeiros, PNGs

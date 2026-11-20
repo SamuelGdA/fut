@@ -4,7 +4,6 @@ import { TRACKERS_ENABLED } from "../consent/config";
 import { useConsent } from "../consent/store";
 import type { ReactNode } from "react";
 import { useT } from "../../i18n/useT";
-import { useAssetMode } from "../../lib/assets";
 import { LOCALES, type Locale } from "../../i18n/types";
 import { feedback } from "../../services/feedback";
 import { useMediaQuery } from "../../lib/useMediaQuery";
@@ -13,7 +12,6 @@ import { type Theme, usePrefs, VOLUME_STEPS } from "../../store/prefs";
 import { Button, IconButton } from "../../ui/Button";
 import { StepSlider, Switch } from "../../ui/Fields";
 import { Segmented } from "../../ui/Segmented";
-import { OfflineImagesRow } from "./OfflineImagesRow";
 
 const LOCALE_SHORT: Readonly<Record<Locale, string>> = { pt: "PT", es: "ES", en: "EN" };
 
@@ -30,7 +28,6 @@ function SettingRow({ label, children, note }: { label: string; children: ReactN
 /** Conteúdo do painel de ajustes. Carregado só quando o painel abre. */
 export function SettingsPanel() {
   const { t } = useT();
-  const assetMode = useAssetMode((state) => state.mode);
   const locale = usePrefs((state) => state.locale);
   const theme = usePrefs((state) => state.theme);
   const volume = usePrefs((state) => state.volume);
@@ -167,13 +164,6 @@ export function SettingsPanel() {
       </div> : null}
 
       <PrivacyRow />
-
-      {/* No modo desenhado (o padrão, D46) não há imagem real para guardar. */}
-      {assetMode === "real" ? (
-        <SettingRow label={t("settings.offlineTitle")}>
-          <OfflineImagesRow />
-        </SettingRow>
-      ) : null}
     </div>
   );
 }

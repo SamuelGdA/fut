@@ -79,16 +79,6 @@ export const pt = {
     autoAdvance: "Pular resultado automaticamente",
     haptics: "Vibração",
     hapticsUnsupported: "Este aparelho não vibra pelo navegador.",
-    offlineTitle: "Imagens sem internet",
-    offlineHint: "Escudos e troféus entram no aparelho conforme aparecem; sem conexão, o que faltar aparece desenhado. Para não faltar nenhum, guarde todos de uma vez (cerca de {size}).",
-    offlineStore: "Guardar todas",
-    offlineStop: "Parar",
-    offlineCounting: "Contando o que já está guardado",
-    offlineProgress: "{done} de {total} guardadas",
-    offlineDone: "Todas as {total} guardadas no aparelho",
-    offlineFailed: "{failed} não baixaram. Tente de novo com internet.",
-    offlineQuota: "O aparelho ficou sem espaço para guardar as imagens.",
-    offlineUnsupported: "Este navegador não guarda imagens para usar sem internet.",
   },
 
   languages: {

@@ -2236,8 +2236,7 @@ Bandeiras são sempre as reais (são desenhos de domínio público). Em
 desenvolvimento, o `/lab` permite alternar o modo sem rebuild para comparar.
 
 **Como ficou (D46):** o padrão passou a ser `gerado` (só a arte desenhada);
-`real` é escolha de build. No modo desenhado, a linha "Imagens sem internet"
-dos ajustes some. **D111:** o padrão volta a ser `real`; há escudo real para 518 dos 525
+`real` é escolha de build. **D111:** o padrão volta a ser `real`; há escudo real para 518 dos 525
 clubes e selo real para 31 das 34 ligas.
 
 **Como ficou (D49):** o padrão mistura escudos e selos gerados com fotos reais
@@ -2507,9 +2506,8 @@ recarregar** (remove só o save). Ela avisa que a carreira continua salva.
   é guardado só depois de escolhê-lo. **Conforme aparecem**, escudos, troféus,
   federações, bandeiras, selos de liga e prêmios são lidos do cache na vez
   seguinte. Imagem que ainda não foi guardada, sem internet, troca na hora
-  pela arte gerada (invariante 16): nunca aparece quebrada. Nos Ajustes,
-  "Imagens sem internet" guarda todas de uma vez para quem não quer nenhuma
-  desenhada.
+  pela arte gerada (invariante 16): nunca aparece quebrada. O "Guardar todas"
+  dos Ajustes saiu na D121: o jogo é feito para jogar com internet.
 - **Versão nova**: o jogo nunca troca sozinho no meio de uma carreira; um
   aviso espera com o botão "Atualizar". Conexão que cai ou volta também avisa.
 - **Barreiras de erro** em três níveis: a da raiz (tela inteira), uma por tela
@@ -3953,7 +3951,7 @@ Após escolher o jogo, seu manifesto de assets é lido e guardado no cache de c�
 em lotes de quatro. O SW serve módulos/fontes guardados por CacheFirst; o manifesto
 usa NetworkFirst para não reaproveitar hashes obsoletos. Offline: início e modos
 já carregados funcionam; um modo nunca aberto exige rede. As imagens são guardadas
-conforme aparecem, ou por Guardar todas (escudos, taças, bandeiras, selos e prêmios).
+conforme aparecem (escudos, taças, bandeiras, selos e prêmios; D121: sem o Guardar todas).
 
 Só v2 permanece como implementação; a raiz é um conjunto de atalhos. Arquivos da
 v1, Next/Turbo e suas dependências saem, preservando o histórico Git e uma cópia

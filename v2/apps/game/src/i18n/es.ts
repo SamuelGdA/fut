@@ -75,16 +75,6 @@ export const es: Messages = {
     autoAdvance: "Saltar el resultado automáticamente",
     haptics: "Vibración",
     hapticsUnsupported: "Este dispositivo no vibra desde el navegador.",
-    offlineTitle: "Imágenes sin internet",
-    offlineHint: "Escudos y trofeos se guardan en el dispositivo a medida que aparecen; sin conexión, lo que falte aparece dibujado. Para que no falte ninguno, guárdalos todos de una vez (unos {size}).",
-    offlineStore: "Guardar todas",
-    offlineStop: "Parar",
-    offlineCounting: "Contando lo que ya está guardado",
-    offlineProgress: "{done} de {total} guardadas",
-    offlineDone: "Las {total} guardadas en el dispositivo",
-    offlineFailed: "{failed} no se descargaron. Inténtalo de nuevo con internet.",
-    offlineQuota: "El dispositivo se quedó sin espacio para guardar las imágenes.",
-    offlineUnsupported: "Este navegador no guarda imágenes para usar sin internet.",
   },
 
   languages: {

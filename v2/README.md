@@ -850,10 +850,9 @@ clubes), movimento reduzido respeitado (do sistema ou dos ajustes).
   vieram da Wikipédia e do Wikimedia Commons, D46, D111 e D117); o laboratório troca
   o modo sem rebuild.
 - **No modo real**, escudos, troféus, federações, bandeiras, selos e prêmios entram no cache
-  `craque-imagens` conforme aparecem, e Ajustes > "Imagens sem internet" >
-  "Guardar todas" baixa o resto. No modo desenhado essa linha não aparece:
-  não há imagem real para guardar. A suíte ponta a ponta gera o build no modo
-  real, para testar esse caminho.
+  `craque-imagens` conforme aparecem, para abrir mais rápido na vez seguinte.
+  O antigo "Guardar todas" dos Ajustes saiu (D121): o jogo é feito para jogar
+  com internet. A suíte ponta a ponta gera o build no modo real.
 - **Páginas de erro estáticas** (404, 403, 500, 503) geradas no build com os
   textos e desenhos do jogo, nos três idiomas (D38).
 
@@ -1123,8 +1122,8 @@ fontes latinas necessárias, ícones e páginas de erro. `build/gameLoading.ts`
 calcula o grafo a partir do build, sem depender do nome/hash de um arquivo.
 `game-cache.json` contém os grafos dos modos e só é lido depois da escolha.
 O modo escolhido é guardado em lotes de quatro arquivos para funcionar offline;
-um modo nunca aberto precisa de conexão. Imagens entram ao aparecer, ou quando
-se escolhe Guardar todas nos ajustes. Não há cache preventivo dos dois jogos.
+um modo nunca aberto precisa de conexão. Imagens entram ao aparecer (D121: sem
+o "Guardar todas"). Não há cache preventivo dos dois jogos.
 
 A v1, Next.js, Turborepo, pacotes, docs, lockfile e dependências antigos saíram.
 A raiz delega seus comandos para v2; `pnpm deps` instala as dependências da v2.
