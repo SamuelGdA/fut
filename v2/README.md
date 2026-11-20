@@ -2193,6 +2193,10 @@ revisão D112 a D115 do GDD; o porquê em D112 a D115 de `docs/DECISOES.md`.
      Cloud (OAuth, tipo "Aplicativo da Web", URI de redirecionamento
      `https://<id do projeto>.supabase.co/auth/v1/callback`). Na tela de
      consentimento do Google, use os endereços `/privacidade` e `/termos`.
+     No ar: projeto `futeiro` do Google Cloud, da conta `contact@futeiro.com`
+     (e-mail de suporte e de contato da tela de consentimento), público
+     externo e em produção, só com os escopos de e-mail e perfil (sem logotipo,
+     para não exigir verificação). Origem `https://futeiro.com`.
    - *Emails > SMTP:* o e-mail de teste do Supabase manda poucos e-mails por
      hora; para o público, configure um SMTP próprio (Resend, Brevo e afins).
    - A vinculação automática junta Google e senha do mesmo e-mail confirmado.
