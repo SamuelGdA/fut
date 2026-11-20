@@ -9,7 +9,6 @@ import {
   renderPoster,
   shareImage,
   shareInvite,
-  copyImageAndInvite,
   isDesktopPointer,
 } from "../../features/summary/poster";
 import { useT } from "../../i18n/useT";
@@ -44,7 +43,8 @@ export function PosterSheet({ open, onOpenChange, career, avatar }: PosterSheetP
   const [frameRef, width] = useElementWidth(320);
   const posterRef = useRef<HTMLDivElement>(null);
   const scale = width / SHARE_WIDTH;
-  const shareable = canShareImage() || isDesktopPointer();
+  // No computador, compartilhar fica no painel do Compartilhar (D132).
+  const shareable = canShareImage() && !isDesktopPointer();
   const fileName = posterFileName(career.setup.identity.surname, showSurname);
 
   const produce = async (kind: Exclude<Busy, null>) => {
@@ -53,15 +53,6 @@ export function PosterSheet({ open, onOpenChange, career, avatar }: PosterSheetP
     setBusy(kind);
     try {
       const invite = shareInvite(t, showSurname ? career.setup.identity.surname : null);
-      // D131: no computador, compartilhar copia imagem e convite (cola com Ctrl+V).
-      if (kind === "share" && isDesktopPointer()) {
-        const copied = await copyImageAndInvite(renderPoster(node, undefined, { width: SHARE_WIDTH, height: SHARE_HEIGHT }), invite);
-        if (copied) {
-          feedback("confirm");
-          notify({ tone: "good", title: t("summary.link.imageCopied"), description: t("summary.link.imageCopiedBody") });
-        } else notify({ tone: "bad", title: t("summary.poster.shareFailed") });
-        return;
-      }
       const blob = await renderPoster(node, undefined, { width: SHARE_WIDTH, height: SHARE_HEIGHT });
       if (kind === "download") {
         downloadBlob(blob, fileName);

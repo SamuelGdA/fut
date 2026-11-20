@@ -2197,6 +2197,16 @@ com jogos), no fim.
 - **Copiar link**: a carreira inteira comprimida no fragmento da URL. Abrir o
   link reconstrói o resumo por replay, em modo leitura.
 
+*Como ficou (D132):* **Compartilhar** abre um painel com a imagem, a
+mensagem pronta (editável) e um botão por rede: WhatsApp, X, Facebook,
+Telegram, Reddit, Discord e Instagram, mais copiar link, copiar mensagem,
+copiar imagem (computador), baixar imagem e mais opções (celular). As redes
+recebem a mensagem e um link curto, `futeiro.com/c/<código>`, cuja prévia é a
+imagem da carreira: é assim que imagem e mensagem chegam juntas. O link curto
+vale seis meses e abre o resumo da carreira. Discord recebe a mensagem copiada;
+Instagram, o arquivo pelo compartilhar do aparelho (celular) ou baixado
+(computador).
+
 *Como ficou (D130):* o botão do resumo chama **Copiar carreira** e é o único
 que leva o link da carreira. **Compartilhar** manda a imagem da carreira
 (1200 × 630, a mesma do botão Imagem) com um convite pronto nos três idiomas,

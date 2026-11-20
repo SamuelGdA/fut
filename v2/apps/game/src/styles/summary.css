@@ -1337,12 +1337,107 @@ button.honour-stack .honour-token:hover, button.honour-stack .honour-token:focus
     transform-origin: top left;
   }
 
-  /* D130: a imagem que o "Compartilhar" do resumo desenha, fora da tela. */
-  .share-offscreen {
-    position: fixed;
-    top: 0;
-    left: -20000px;
-    pointer-events: none;
+  /* D132: o painel de compartilhar. Imagem, mensagem, uma rede por botão
+     (redondo, na cor da marca) e as ações de copiar e baixar. */
+  .share-sheet {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .share-message {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .share-message textarea {
+    width: 100%;
+    min-height: 4.6em;
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--panel);
+    color: var(--fg);
+    font: inherit;
+    font-size: 0.95rem;
+    line-height: 1.45;
+    resize: vertical;
+  }
+
+  .share-message textarea:focus-visible {
+    outline: 2px solid var(--fg);
+    outline-offset: 2px;
+  }
+
+  .share-status {
+    min-height: 1.4em;
+    color: var(--muted);
+    font-size: 0.82rem;
+  }
+
+  .share-networks {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(76px, 1fr));
+    gap: 10px 6px;
+  }
+
+  .share-network {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 2px;
+    border-radius: var(--radius-sm);
+    color: var(--fg);
+    font-size: 0.78rem;
+    font-weight: 600;
+    transition: background-color 140ms ease-out, opacity 140ms ease-out;
+  }
+
+  .share-network:hover:not(:disabled) {
+    background: var(--panel-2);
+  }
+
+  .share-network:focus-visible {
+    outline: 2px solid var(--fg);
+    outline-offset: 2px;
+  }
+
+  .share-network:disabled {
+    cursor: progress;
+    opacity: 0.45;
+  }
+
+  .share-network-icon {
+    display: grid;
+    width: 48px;
+    height: 48px;
+    place-items: center;
+    border-radius: 999px;
+    background: var(--brand);
+    color: #ffffff;
+    box-shadow: var(--lift);
+  }
+
+  /* O X é preto: no tema escuro, um contorno o separa do fundo. */
+  [data-theme="dark"] .share-network[data-network="x"] .share-network-icon {
+    box-shadow: 0 0 0 1px var(--rule);
+  }
+
+  .share-network[data-network="instagram"] .share-network-icon {
+    background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285aeb 90%);
+  }
+
+  .share-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .share-actions > * {
+    flex: 1 1 150px;
   }
 
   .share-card {

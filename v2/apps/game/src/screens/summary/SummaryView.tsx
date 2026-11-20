@@ -18,14 +18,12 @@ import {
   Trophy,
 } from "lucide-react";
 import { m } from "motion/react";
-import { type CSSProperties, type ReactNode, useEffect, useRef, useState } from "react";
+import { type CSSProperties, type ReactNode, useEffect, useState } from "react";
 import { SectionBoundary } from "../../app/ErrorBoundary";
 import { clubStyle } from "../../features/career/clubColors";
 import { challengeOf } from "../../features/hall/session";
 import { encodeShare, shareUrl } from "../../features/summary/shareLink";
 import { peakCard } from "../../features/summary/summaryData";
-import { canShareImage, copyImageAndInvite, isDesktopPointer, posterFileName, renderPoster, shareImage, shareInvite, shareText } from "../../features/summary/poster";
-import { SHARE_HEIGHT, SHARE_WIDTH } from "../../features/summary/shareCard";
 import { useT } from "../../i18n/useT";
 import { feedback } from "../../services/feedback";
 import { Button } from "../../ui/Button";
@@ -35,7 +33,7 @@ import { Chip } from "../../ui/Signals";
 import { notify } from "../../ui/toast/notify";
 import { Newspaper } from "./Newspaper";
 import { PosterSheet } from "./PosterSheet";
-import { ShareCard } from "./ShareCard";
+import { ShareSheet } from "./ShareSheet";
 import { Showcase } from "./Showcase";
 import { ChallengeChapter } from "./ChallengeChapter";
 import { NumbersSection, TimelineSection } from "./SummarySections";
@@ -89,9 +87,8 @@ export function SummaryView({ career, avatar, mode, alternate = false, internalT
   const chapters = CHAPTERS.filter((key) => (key === "challenge" ? challenge : key === "whatIf" ? !challenge && onBranch !== undefined : true));
   const country = getCountry(career.nationality);
   const [posterOpen, setPosterOpen] = useState(false);
-  const canShare = !internalTesting && typeof navigator !== "undefined" && (typeof navigator.share === "function" || isDesktopPointer());
-  const shareRef = useRef<HTMLDivElement>(null);
-  const [sharing, setSharing] = useState(false);
+  // D132: o painel de compartilhar (imagem, mensagem e uma rede por botão).
+  const [shareOpen, setShareOpen] = useState(false);
 
   const linkFor = async () => shareUrl(await encodeShare(saveOf(career), avatar));
 
@@ -103,47 +100,6 @@ export function SummaryView({ career, avatar, mode, alternate = false, internalT
       notify({ tone: "good", title: t("summary.link.copied"), description: t("summary.link.copiedBody") });
     } catch {
       notify({ tone: "bad", title: t("summary.link.failed") });
-    }
-  };
-
-  /**
-   * D130: "Compartilhar" manda a imagem da carreira e um convite pronto
-   * ("Olha a carreira que eu fiz... futeiro.com"), sem o link da carreira: o
-   * link fica só no "Copiar carreira". Onde o navegador não aceita arquivo,
-   * vai só o convite.
-   */
-  const shareCareer = async () => {
-    if (sharing) return;
-    setSharing(true);
-    const text = shareInvite(t, career.setup.identity.surname);
-    // A imagem fora da tela monta com o "sharing": espera ela aparecer e desenha.
-    const draw = async () => {
-      for (let frame = 0; frame < 30 && !shareRef.current; frame++) await new Promise((resolve) => requestAnimationFrame(resolve));
-      if (!shareRef.current) throw new Error("sem imagem");
-      return renderPoster(shareRef.current, undefined, { width: SHARE_WIDTH, height: SHARE_HEIGHT });
-    };
-    // D131: no computador, imagem e convite vão para a área de transferência.
-    if (isDesktopPointer()) {
-      const copied = await copyImageAndInvite(draw(), text);
-      setSharing(false);
-      if (copied) {
-        feedback("confirm");
-        notify({ tone: "good", title: t("summary.link.imageCopied"), description: t("summary.link.imageCopiedBody") });
-      } else notify({ tone: "bad", title: t("summary.poster.shareFailed") });
-      return;
-    }
-    try {
-      for (let frame = 0; frame < 30 && !shareRef.current; frame++) await new Promise((resolve) => requestAnimationFrame(resolve));
-      const node = shareRef.current;
-      const outcome = node && canShareImage()
-        ? await shareImage(await renderPoster(node, undefined, { width: SHARE_WIDTH, height: SHARE_HEIGHT }), posterFileName(career.setup.identity.surname, true), t("app.name"), text)
-        : await shareText(t("app.name"), text);
-      if (outcome === "shared") feedback("confirm");
-      if (outcome === "failed") notify({ tone: "bad", title: t("summary.poster.shareFailed") });
-    } catch {
-      notify({ tone: "bad", title: t("summary.poster.shareFailed") });
-    } finally {
-      setSharing(false);
     }
   };
 
@@ -197,8 +153,15 @@ export function SummaryView({ career, avatar, mode, alternate = false, internalT
                   <Image size={18} aria-hidden="true" />
                   {t("summary.actions.poster")}
                 </Button>
-                {canShare ? (
-                  <Button size="lg" variant="secondary" loading={sharing} onClick={() => void shareCareer()}>
+                {!internalTesting ? (
+                  <Button
+                    size="lg"
+                    variant="secondary"
+                    onClick={() => {
+                      feedback("select");
+                      setShareOpen(true);
+                    }}
+                  >
                     <Share2 size={18} aria-hidden="true" />
                     {t("summary.actions.share")}
                   </Button>
@@ -274,12 +237,7 @@ export function SummaryView({ career, avatar, mode, alternate = false, internalT
       </div>
 
       <PosterSheet open={posterOpen} onOpenChange={setPosterOpen} career={career} avatar={avatar} />
-      {/* A imagem que o "Compartilhar" manda, fora da tela, só enquanto compartilha (D130). */}
-      {sharing ? (
-        <div className="share-offscreen" aria-hidden="true">
-          <ShareCard ref={shareRef} career={career} avatar={avatar} showSurname />
-        </div>
-      ) : null}
+      <ShareSheet open={shareOpen} onOpenChange={setShareOpen} career={career} avatar={avatar} />
     </div>
   );
 }

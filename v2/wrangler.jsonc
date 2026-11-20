@@ -1,20 +1,32 @@
-// Hospedagem na Cloudflare (D120): o Futeiros é um site estático, servido
-// pelos arquivos estáticos dos Workers, sem código no servidor. Pedido de
-// arquivo estático não conta na cota de requisições, e não há limite de banda.
-// Os cabeçalhos de segurança vêm do `_headers` e as páginas de erro do
-// `404.html`, os dois gravados pelo build em apps/game/dist.
+// Hospedagem na Cloudflare (D120): o Futeiro é um site estático, servido
+// pelos arquivos estáticos dos Workers. Pedido de arquivo estático não conta na
+// cota de requisições, e não há limite de banda. Os cabeçalhos de segurança vêm
+// do `_headers` e as páginas de erro do `404.html`, os dois gravados pelo build
+// em apps/game/dist.
+//
+// D132: um Worker pequeno (apps/game/worker) atende só `/api/*` e `/c/*`: as
+// carreiras compartilhadas pelo link curto, guardadas no KV COMPARTILHADAS. O
+// resto do site continua indo direto para os arquivos.
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "futeiro",
+  "main": "./apps/game/worker/index.ts",
   "compatibility_date": "2026-11-01",
   "assets": {
     "directory": "./apps/game/dist",
+    "binding": "ASSETS",
+    // Só estes caminhos passam pelo Worker; o resto é arquivo estático.
+    "run_worker_first": ["/api/*", "/c/*"],
     // Endereço que não existe recebe o 404.html do jogo, com status 404.
     "not_found_handling": "404-page",
     // /login, /perfil, /craque... servem a pasta/index.html de cada um, sem a
     // barra no fim, como o jogo escreve os endereços.
     "html_handling": "drop-trailing-slash"
   },
+  // As carreiras compartilhadas (imagem e link de replay), por seis meses.
+  "kv_namespaces": [{ "binding": "COMPARTILHADAS", "id": "5504feec96d74fe29772eccac3080503" }],
+  // No máximo 10 carreiras compartilhadas por minuto por endereço de rede.
+  "ratelimits": [{ "name": "COMPARTILHAR_LIMITE", "namespace_id": "1001", "simple": { "limit": 10, "period": 60 } }],
   // O site só existe em futeiro.com (www redireciona para cá por uma regra da
   // zona); sem o subdomínio workers.dev.
   "routes": [{ "pattern": "futeiro.com", "custom_domain": true }],
