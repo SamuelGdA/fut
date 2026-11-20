@@ -20,7 +20,7 @@ export function socialOrigin(value: string | undefined): string {
 
 export function socialHtml(html: string, language: SocialLocale, origin: string, path = ""): string {
   const copy = SOCIAL_COPY[language];
-  const image = `${origin}/social/futeiros-${language}.png`;
+  const image = `${origin}/social/futeiro-${language}.png`;
   const url = `${origin}/${path}${language === "pt" ? "" : `?lang=${language}`}`;
   const meta = (name: string, value: string, kind = "property") => `<meta ${kind}="${name}" content="${escape(value)}" />`;
   const tags = [

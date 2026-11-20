@@ -765,9 +765,6 @@ export const pt = {
   },
 
   pwa: {
-    updateTitle: "Versão nova do Futeiro",
-    updateBody: "Atualize quando quiser. A sessão do Craque termina; a carreira em andamento do Técnico pode continuar pelo hub.",
-    update: "Atualizar",
     readyTitle: "Início disponível sem internet",
     readyBody: "Abra cada jogo com conexão para guardar seu conteúdo. As imagens entram conforme aparecem.",
     offlineTitle: "Sem conexão",

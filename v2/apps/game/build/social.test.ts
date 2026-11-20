@@ -13,13 +13,13 @@ describe("prévia de compartilhamento", () => {
       expect(html).toContain(`property="og:title" content="${copy.title}"`);
       expect(html).toContain(`name="description" content="${copy.description}"`);
       expect(html).toContain(`property="og:locale" content="${copy.locale}"`);
-      expect(html).toContain(`content="https://jogo.example/social/futeiros-${language}.png"`);
+      expect(html).toContain(`content="https://jogo.example/social/futeiro-${language}.png"`);
       expect(html).toContain(`property="og:url" content="https://jogo.example/craque${language === "pt" ? "" : `?lang=${language}`}"`);
       expect(html.match(/property="og:title"/g)).toHaveLength(1);
       expect(html.match(/property="og:locale:alternate"/g)).toHaveLength(2);
       expect(html).toContain('name="twitter:card" content="summary_large_image"');
       expect(html).toContain('<script src="/boot/tema.js"></script>');
-      const png = readFileSync(new URL(`../public/social/futeiros-${language}.png`, import.meta.url));
+      const png = readFileSync(new URL(`../public/social/futeiro-${language}.png`, import.meta.url));
       expect(png.subarray(1, 4).toString()).toBe("PNG");
       expect(png.readUInt32BE(16)).toBe(1200);
       expect(png.readUInt32BE(20)).toBe(630);

@@ -2442,3 +2442,18 @@ npx supabase@2.121.0 db push
 cole no painel do Supabase os oito modelos de `supabase/templates` e os
 assuntos do `config.toml` (Authentication, Emails). Não rode `config push`.
 
+
+## D129: o site se atualiza sozinho (20/11/2026)
+
+Sem o aviso "Versão nova do Futeiro". A versão nova baixa em segundo plano e
+vale na próxima abertura do site: com uma versão esperando, o jogo troca na
+hora em que abre, antes do primeiro toque (`PwaEffects`, até 6 s). Chegando
+com o site aberto, espera em silêncio; nada recarrega no meio de uma carreira.
+
+**Prévia de link.** As imagens passam a se chamar `social/futeiro-pt.png`,
+`futeiro-en.png` e `futeiro-es.png` (eram `futeiros-*`, do nome antigo). O
+endereço novo também obriga WhatsApp, Discord e afins a buscar a imagem de
+novo. Conferido no ar: título, descrição, imagem 1200 × 630, cartão grande do X
+e `og:site_name`. Uma rede que já guardou a prévia de um link antigo pode
+mostrá-la por alguns dias; o Sharing Debugger da Meta força a leitura nova.
+

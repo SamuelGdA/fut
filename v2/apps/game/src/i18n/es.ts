@@ -761,9 +761,6 @@ export const es: Messages = {
   },
 
   pwa: {
-    updateTitle: "Versión nueva de Futeiro",
-    updateBody: "Actualiza cuando quieras. La sesión de Craque termina; la carrera del Técnico en curso puede continuar desde el inicio.",
-    update: "Actualizar",
     readyTitle: "Inicio disponible sin internet",
     readyBody: "Abre cada juego con conexión para guardar su contenido. Las imágenes se guardan a medida que aparecen.",
     offlineTitle: "Sin conexión",

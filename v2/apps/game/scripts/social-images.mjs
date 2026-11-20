@@ -82,7 +82,7 @@ try {
     // Não publica arte com texto cortado se uma fonte ou tradução mudar.
     const fits = await page.locator("h1").evaluate((el) => el.scrollWidth <= el.clientWidth);
     if (!fits) throw new Error(`Texto cortado na prévia ${language}`);
-    writeFileSync(new URL(`futeiros-${language}.png`, out), await page.locator("main").screenshot());
+    writeFileSync(new URL(`futeiro-${language}.png`, out), await page.locator("main").screenshot());
     console.log(`Prévia ${language}: 1200 × 630`);
   }
 } finally { await browser.close(); }

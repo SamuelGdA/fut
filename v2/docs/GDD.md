@@ -2524,6 +2524,10 @@ recarregar** (remove só o save). Ela avisa que a carreira continua salva.
   dos Ajustes saiu na D121: o jogo é feito para jogar com internet.
 - **Versão nova**: o jogo nunca troca sozinho no meio de uma carreira; um
   aviso espera com o botão "Atualizar". Conexão que cai ou volta também avisa.
+  *Como ficou (D129):* sem aviso. A versão nova baixa em segundo plano e vale
+  na próxima vez que o site abre: se ao abrir já há uma esperando, o jogo troca
+  na hora, antes do primeiro toque (até 6 s). Chegando com o site aberto, ela
+  espera em silêncio, porque recarregar encerraria a sessão do Craque.
 - **Barreiras de erro** em três níveis: a da raiz (tela inteira), uma por tela
   (a casca fica de pé, com a volta para o Início) e uma por trecho (capítulo
   do resumo, área do laboratório, painel de ajustes). A revelação que falhar

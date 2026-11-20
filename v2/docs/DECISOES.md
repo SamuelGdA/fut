@@ -2274,6 +2274,12 @@ A inspeção da abertura da pilha de troféus agora observa os quadros antes de 
 
 **Por quê.** O jogo é feito para jogar com internet (conta, ranking e Desafio dependem do servidor), então baixar 54 MB para jogar sem rede era peso sem uso. Publicar só da `main` separa o que está em teste do que está no ar, sem passo manual.
 
+## D129: o site se atualiza sozinho, sem aviso (20/11/2026)
+
+**Decisão.** Sai o aviso "Versão nova do Futeiro" com o botão "Atualizar". O navegador baixa a versão nova em segundo plano; quando o site abre e já há uma versão esperando, o jogo a ativa e recarrega na hora, só se o jogador ainda não tocou na tela e nos primeiros 6 segundos. Uma versão que chega com o site aberto espera em silêncio até a próxima abertura.
+
+**Por quê.** Para quem joga, o Futeiro é um site: perguntar se quer atualizar não fazia sentido, e o aviso aparecia ou não sem regra visível (só quando a versão chegava com o site aberto). Trocar logo ao abrir não perde nada, porque ainda não há carreira na memória; trocar no meio do jogo encerraria a sessão do Craque, então isso nunca acontece sozinho.
+
 ## D124: Técnico "Em breve" no ar, e o que muda entre produção e desenvolvimento (20/11/2026)
 
 **Decisão.** O site no ar (`.env.production`, `VITE_MODOS_BLOQUEADOS=tecnico`) mostra o Técnico com a faixa "Em breve" no hub, sem botão; `/tecnico`, a carreira salva no aparelho e qualquer atalho abrem a tela "Em breve". As quatro telas e o guia do Técnico nem entram no build (a comparação com a variável fica escrita no `ScreenOutlet` e no `AppShell` para o build jogar fora os `import()`), e o plugin `build/blockedModes.ts` derruba o build se sobrar uma tela de `screens/tecnico/`. As conquistas do Técnico somem da tela de Conquistas e do perfil, e os números do Técnico saem do perfil. No banco, `privado.modos_bloqueados` (com `tecnico`) faz a carreira do Técnico ser recusada (`modo_bloqueado`) e a conquista do Técnico ser ignorada. O laboratório e o debug continuam só no desenvolvimento (`import.meta.env.DEV`). Todo trabalho vai para a branch `dev`; a `main` (o site) só recebe merge autorizado pelo dono do projeto. As regras moram no `AI_RULES.md`.

@@ -761,9 +761,6 @@ export const en: Messages = {
   },
 
   pwa: {
-    updateTitle: "New version of Futeiro",
-    updateBody: "Update when you like. The Craque session ends; the ongoing Coach career can continue from the hub.",
-    update: "Update",
     readyTitle: "Home available offline",
     readyBody: "Open each game online to store its content. Images are added as they appear.",
     offlineTitle: "No connection",
