@@ -2240,6 +2240,8 @@ carreira (JPEG 1200 × 630) e o link de replay no KV `COMPARTILHADAS` (seis
 meses) e devolve `futeiro.com/c/<código>`; `GET /c/<código>` é a página com a
 imagem como prévia (Open Graph), que leva ao resumo; `GET /c/<código>.jpg` é a
 imagem. Limite de 10 envios por minuto por endereço (`COMPARTILHAR_LIMITE`).
+As prévias de branch usam o bloco `previews` do `wrangler.jsonc`, com um KV
+separado (`COMPARTILHADAS_PREVIA`): uma prévia nunca toca as carreiras do site.
 Para testar no computador com o Worker: `pnpm build` e
 `npx wrangler dev --cwd v2 --port 8788 --local` (KV simulado). O `pnpm dev` não
 roda o Worker: o painel avisa e usa o endereço do jogo.
