@@ -2535,6 +2535,12 @@ recarregar** (remove só o save). Ela avisa que a carreira continua salva.
   na próxima vez que o site abre: se ao abrir já há uma esperando, o jogo troca
   na hora, antes do primeiro toque (até 6 s). Chegando com o site aberto, ela
   espera em silêncio, porque recarregar encerraria a sessão do Craque.
+  *D131:* ela entra no próximo lugar seguro: hub, início do Craque ou "Jogar
+  de novo", sem carreira em andamento (uma carreira deixada pelo "Sair" ainda
+  conta como em andamento). A troca é instantânea: a instalação velha é
+  desligada e a página recarrega do servidor, com a tela "Atualizando o
+  Futeiro…" por cima. No computador, "Compartilhar" copia a imagem e o convite
+  para colar com Ctrl+V.
 - **Barreiras de erro** em três níveis: a da raiz (tela inteira), uma por tela
   (a casca fica de pé, com a volta para o Início) e uma por trecho (capítulo
   do resumo, área do laboratório, painel de ajustes). A revelação que falhar

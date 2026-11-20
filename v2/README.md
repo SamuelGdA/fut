@@ -2462,3 +2462,15 @@ mostrá-la por alguns dias; o Sharing Debugger da Meta força a leitura nova.
 "Compartilhar" no resumo manda a imagem da carreira e um convite pronto
 (`summary.link.shareInvite`, nos três idiomas, com o endereço do jogo), sem o
 link da carreira. O link fica só em "Copiar carreira" (antes "Copiar link").
+
+## D131: atualização nos lugares seguros e convite copiado no PC (20/11/2026)
+
+Uma versão nova que chega com o site aberto entra quando o jogador vai para o
+hub, o início do Craque ou "Jogar de novo", sem carreira em andamento
+(`PwaEffects`). A troca desliga a instalação velha e recarrega do servidor
+(instantâneo; esperar a versão nova assumir levava até 30 s no Chrome), com a
+tela "Atualizando o Futeiro…" por cima. Testado com builds sucessivos servidos
+no mesmo endereço: ao abrir, no lugar seguro (troca em menos de 0,1 s) e com
+carreira em andamento (não troca). No computador, "Compartilhar" copia a imagem
+e o convite (`copyImageAndInvite`) para colar com Ctrl+V em qualquer conversa;
+a janela do Windows só lista apps instalados e descarta o texto.

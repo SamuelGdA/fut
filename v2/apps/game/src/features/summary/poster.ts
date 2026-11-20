@@ -114,3 +114,33 @@ export function shareInvite(t: (key: "summary.link.shareInvite" | "summary.link.
   const site = siteLabel() || "futeiro.com";
   return surname ? t("summary.link.shareInvite", { surname, site }) : t("summary.link.shareInviteAnonymous", { site });
 }
+
+/**
+ * Computador (mouse, sem toque)? Lá, o compartilhamento do sistema só lista
+ * apps instalados (WhatsApp Web e Discord no navegador ficam de fora) e
+ * descarta o texto (D131).
+ */
+export function isDesktopPointer(): boolean {
+  return typeof window !== "undefined" && window.matchMedia?.("(pointer: fine) and (hover: hover)").matches === true;
+}
+
+/**
+ * No computador, "Compartilhar" copia a imagem e o convite juntos para a área
+ * de transferência: Ctrl+V na conversa (WhatsApp, Discord, qualquer site)
+ * cola a imagem (D131). A imagem entra como promessa, ainda dentro do clique,
+ * para o navegador aceitar a cópia mesmo com o desenho levando um instante.
+ */
+export async function copyImageAndInvite(image: Promise<Blob>, text: string): Promise<boolean> {
+  if (typeof ClipboardItem === "undefined" || !navigator.clipboard?.write) return false;
+  try {
+    await navigator.clipboard.write([new ClipboardItem({ "image/png": image, "text/plain": new Blob([text], { type: "text/plain" }) })]);
+    return true;
+  } catch {
+    try {
+      await navigator.clipboard.write([new ClipboardItem({ "image/png": image })]);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+}

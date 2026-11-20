@@ -581,6 +581,8 @@ export const pt = {
       failed: "Não deu para gerar o link agora.",
       shareInvite: "Olha a carreira que eu fiz com o {surname} no Futeiro! Monte o seu jogador e escolha a sua história também: {site}",
       shareInviteAnonymous: "Olha a carreira que eu fiz no Futeiro! Monte o seu jogador e escolha a sua história também: {site}",
+      imageCopied: "Imagem copiada",
+      imageCopiedBody: "Cole com Ctrl+V na conversa do WhatsApp, Discord ou onde quiser. O convite vai junto onde o site aceita texto.",
     },
     chapters: {
       label: "Capítulos do resumo",
@@ -765,6 +767,7 @@ export const pt = {
   },
 
   pwa: {
+    updating: "Atualizando o Futeiro…",
     readyTitle: "Início disponível sem internet",
     readyBody: "Abra cada jogo com conexão para guardar seu conteúdo. As imagens entram conforme aparecem.",
     offlineTitle: "Sem conexão",

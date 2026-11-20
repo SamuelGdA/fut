@@ -66,7 +66,7 @@ test("do hub ao Resumo, montando o jogador", async ({ page }, info) => {
   await expect(page.getByRole("textbox", { name: "Nome", exact: true })).toHaveValue("Ribeiro");
 });
 
-test("Compartilhar manda a imagem da carreira com o convite, sem o link (D130)", async ({ page }) => {
+test("Compartilhar manda a imagem da carreira com o convite, sem o link (D130 e D131)", async ({ page }) => {
   // O compartilhamento do aparelho, simulado: guarda o que o jogo pediu.
   await page.addInitScript(() => {
     const calls: unknown[] = [];
@@ -84,14 +84,30 @@ test("Compartilhar manda a imagem da carreira com o convite, sem o link (D130)",
   for (let turn = 0; turn < 3; turn += 1) await jogarTurno(page);
   await encerrar(page);
   await page.getByRole("button", { name: "Compartilhar" }).click();
-  await expect.poll(() => page.evaluate(() => (window as unknown as { __shares: unknown[] }).__shares.length), { timeout: 30_000 }).toBe(1);
-  const [shared] = await page.evaluate(() => (window as unknown as { __shares: { files: { name: string; type: string; size: number }[]; text: string; url?: string }[] }).__shares);
-  expect(shared?.files).toHaveLength(1);
-  expect(shared?.files[0]?.type).toBe("image/png");
-  expect(shared?.files[0]?.size).toBeGreaterThan(10_000);
-  expect(shared?.text).toContain("Olha a carreira que eu fiz com o");
-  expect(shared?.text).not.toContain("#c=");
-  expect(shared?.url).toBeUndefined();
+  if (test.info().project.use.hasTouch) {
+    // Celular: o compartilhamento do aparelho recebe a imagem e o convite.
+    await expect.poll(() => page.evaluate(() => (window as unknown as { __shares: unknown[] }).__shares.length), { timeout: 30_000 }).toBe(1);
+    const [shared] = await page.evaluate(() => (window as unknown as { __shares: { files: { name: string; type: string; size: number }[]; text: string; url?: string }[] }).__shares);
+    expect(shared?.files).toHaveLength(1);
+    expect(shared?.files[0]?.type).toBe("image/png");
+    expect(shared?.files[0]?.size).toBeGreaterThan(10_000);
+    expect(shared?.text).toContain("Olha a carreira que eu fiz com o");
+    expect(shared?.text).not.toContain("#c=");
+    expect(shared?.url).toBeUndefined();
+  } else {
+    // D131: computador, imagem e convite na área de transferência (Ctrl+V na conversa).
+    await expect(page.getByText("Imagem copiada")).toBeVisible({ timeout: 30_000 });
+    const copied = await page.evaluate(async () => {
+      const [item] = await navigator.clipboard.read();
+      const image = item ? await item.getType("image/png") : null;
+      const text = item?.types.includes("text/plain") ? await (await item.getType("text/plain")).text() : "";
+      return { types: item?.types ?? [], size: image?.size ?? 0, text };
+    });
+    expect(copied.types).toContain("image/png");
+    expect(copied.size).toBeGreaterThan(10_000);
+    if (copied.text) expect(copied.text).toContain("Olha a carreira que eu fiz com o");
+    expect(await page.evaluate(() => (window as unknown as { __shares: unknown[] }).__shares.length)).toBe(0);
+  }
 });
 
 test("o link da carreira abre o resumo só de leitura, sem tocar no save de quem abre", async ({ page }) => {

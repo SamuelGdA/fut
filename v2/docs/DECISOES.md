@@ -2274,6 +2274,12 @@ A inspeção da abertura da pilha de troféus agora observa os quadros antes de 
 
 **Por quê.** O jogo é feito para jogar com internet (conta, ranking e Desafio dependem do servidor), então baixar 54 MB para jogar sem rede era peso sem uso. Publicar só da `main` separa o que está em teste do que está no ar, sem passo manual.
 
+## D131: a versão nova entra nos lugares seguros, e o convite vai para a área de transferência no PC (20/11/2026)
+
+**Decisão.** (1) Uma versão nova que chega com o site aberto não espera mais a próxima abertura: ela entra assim que o jogador vai para o hub, para o início do Craque ou toca "Jogar de novo", desde que não haja carreira do Craque em andamento (nenhuma, ou já terminada; uma carreira deixada pelo "Sair" continua na memória para o "Continuar carreira" e segura a troca). A troca desliga a instalação velha do aplicativo e recarrega direto do servidor (o caminho de esperar a versão nova assumir levava até 30 s no Chrome); durante ela, uma tela "Atualizando o Futeiro…" segura os toques. Com uma versão nova conhecida, o jogo não baixa as peças do modo para jogar sem internet. (2) No computador (mouse, sem toque), "Compartilhar" não abre a janela do sistema: copia a imagem e o convite para a área de transferência ("Imagem copiada: cole com Ctrl+V"). No celular, segue a janela de compartilhar do aparelho.
+
+**Por quê.** Quem joga várias carreiras seguidas pode ficar horas com o site aberto; esses momentos não perdem nada, então são a hora de trocar. No Windows, a janela de compartilhar do sistema só lista apps instalados (WhatsApp Web e Discord no navegador ficam de fora), descarta o texto, e o Discord dela só copia o arquivo; com a imagem na área de transferência, Ctrl+V cola em qualquer conversa, em qualquer site. A carreira do Craque vive só na memória da aba: recarregar com ela em andamento a apagaria.
+
 ## D130: compartilhar manda a imagem e um convite, não o link (20/11/2026)
 
 **Decisão.** No resumo da carreira, "Compartilhar" desenha a imagem da carreira (a de 1200 × 630) fora da tela e a manda pelo compartilhamento do aparelho com um convite pronto: "Olha a carreira que eu fiz com o {nome} no Futeiro! Monte o seu jogador e escolha a sua história também: futeiro.com" (português, espanhol e inglês; sem o nome quando a imagem o esconde). O link da carreira sai do Compartilhar e fica só no botão, que passa a se chamar "Copiar carreira". O compartilhar da janela da imagem usa o mesmo convite. Sem suporte a arquivo, vai só o convite.

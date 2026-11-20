@@ -9,6 +9,8 @@ import {
   renderPoster,
   shareImage,
   shareInvite,
+  copyImageAndInvite,
+  isDesktopPointer,
 } from "../../features/summary/poster";
 import { useT } from "../../i18n/useT";
 import { useElementWidth } from "../../lib/useElementWidth";
@@ -42,7 +44,7 @@ export function PosterSheet({ open, onOpenChange, career, avatar }: PosterSheetP
   const [frameRef, width] = useElementWidth(320);
   const posterRef = useRef<HTMLDivElement>(null);
   const scale = width / SHARE_WIDTH;
-  const shareable = canShareImage();
+  const shareable = canShareImage() || isDesktopPointer();
   const fileName = posterFileName(career.setup.identity.surname, showSurname);
 
   const produce = async (kind: Exclude<Busy, null>) => {
@@ -50,13 +52,23 @@ export function PosterSheet({ open, onOpenChange, career, avatar }: PosterSheetP
     if (!node || busy) return;
     setBusy(kind);
     try {
+      const invite = shareInvite(t, showSurname ? career.setup.identity.surname : null);
+      // D131: no computador, compartilhar copia imagem e convite (cola com Ctrl+V).
+      if (kind === "share" && isDesktopPointer()) {
+        const copied = await copyImageAndInvite(renderPoster(node, undefined, { width: SHARE_WIDTH, height: SHARE_HEIGHT }), invite);
+        if (copied) {
+          feedback("confirm");
+          notify({ tone: "good", title: t("summary.link.imageCopied"), description: t("summary.link.imageCopiedBody") });
+        } else notify({ tone: "bad", title: t("summary.poster.shareFailed") });
+        return;
+      }
       const blob = await renderPoster(node, undefined, { width: SHARE_WIDTH, height: SHARE_HEIGHT });
       if (kind === "download") {
         downloadBlob(blob, fileName);
         feedback("confirm");
         notify({ tone: "good", title: t("summary.poster.saved"), description: fileName });
       } else {
-        const outcome = await shareImage(blob, fileName, t("app.name"), shareInvite(t, showSurname ? career.setup.identity.surname : null));
+        const outcome = await shareImage(blob, fileName, t("app.name"), invite);
         if (outcome === "failed") notify({ tone: "bad", title: t("summary.poster.shareFailed") });
         if (outcome === "shared") feedback("confirm");
       }

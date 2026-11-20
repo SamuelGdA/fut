@@ -577,6 +577,8 @@ export const es: Messages = {
       failed: "No se pudo generar el enlace ahora.",
       shareInvite: "¡Mira la carrera que hice con {surname} en Futeiro! Arma tu jugador y elige tu propia historia: {site}",
       shareInviteAnonymous: "¡Mira la carrera que hice en Futeiro! Arma tu jugador y elige tu propia historia: {site}",
+      imageCopied: "Imagen copiada",
+      imageCopiedBody: "Pégala con Ctrl+V en el chat de WhatsApp, Discord o donde quieras. La invitación va junto donde el sitio acepta texto.",
     },
     chapters: {
       label: "Capítulos del resumen",
@@ -761,6 +763,7 @@ export const es: Messages = {
   },
 
   pwa: {
+    updating: "Actualizando Futeiro…",
     readyTitle: "Inicio disponible sin internet",
     readyBody: "Abre cada juego con conexión para guardar su contenido. Las imágenes se guardan a medida que aparecen.",
     offlineTitle: "Sin conexión",

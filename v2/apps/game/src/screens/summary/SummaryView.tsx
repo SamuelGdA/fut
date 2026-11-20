@@ -24,7 +24,7 @@ import { clubStyle } from "../../features/career/clubColors";
 import { challengeOf } from "../../features/hall/session";
 import { encodeShare, shareUrl } from "../../features/summary/shareLink";
 import { peakCard } from "../../features/summary/summaryData";
-import { canShareImage, posterFileName, renderPoster, shareImage, shareInvite, shareText } from "../../features/summary/poster";
+import { canShareImage, copyImageAndInvite, isDesktopPointer, posterFileName, renderPoster, shareImage, shareInvite, shareText } from "../../features/summary/poster";
 import { SHARE_HEIGHT, SHARE_WIDTH } from "../../features/summary/shareCard";
 import { useT } from "../../i18n/useT";
 import { feedback } from "../../services/feedback";
@@ -89,7 +89,7 @@ export function SummaryView({ career, avatar, mode, alternate = false, internalT
   const chapters = CHAPTERS.filter((key) => (key === "challenge" ? challenge : key === "whatIf" ? !challenge && onBranch !== undefined : true));
   const country = getCountry(career.nationality);
   const [posterOpen, setPosterOpen] = useState(false);
-  const canShare = !internalTesting && typeof navigator !== "undefined" && typeof navigator.share === "function";
+  const canShare = !internalTesting && typeof navigator !== "undefined" && (typeof navigator.share === "function" || isDesktopPointer());
   const shareRef = useRef<HTMLDivElement>(null);
   const [sharing, setSharing] = useState(false);
 
@@ -116,8 +116,23 @@ export function SummaryView({ career, avatar, mode, alternate = false, internalT
     if (sharing) return;
     setSharing(true);
     const text = shareInvite(t, career.setup.identity.surname);
+    // A imagem fora da tela monta com o "sharing": espera ela aparecer e desenha.
+    const draw = async () => {
+      for (let frame = 0; frame < 30 && !shareRef.current; frame++) await new Promise((resolve) => requestAnimationFrame(resolve));
+      if (!shareRef.current) throw new Error("sem imagem");
+      return renderPoster(shareRef.current, undefined, { width: SHARE_WIDTH, height: SHARE_HEIGHT });
+    };
+    // D131: no computador, imagem e convite vão para a área de transferência.
+    if (isDesktopPointer()) {
+      const copied = await copyImageAndInvite(draw(), text);
+      setSharing(false);
+      if (copied) {
+        feedback("confirm");
+        notify({ tone: "good", title: t("summary.link.imageCopied"), description: t("summary.link.imageCopiedBody") });
+      } else notify({ tone: "bad", title: t("summary.poster.shareFailed") });
+      return;
+    }
     try {
-      // A imagem fora da tela monta com o "sharing": espera ela aparecer.
       for (let frame = 0; frame < 30 && !shareRef.current; frame++) await new Promise((resolve) => requestAnimationFrame(resolve));
       const node = shareRef.current;
       const outcome = node && canShareImage()

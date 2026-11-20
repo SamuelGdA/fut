@@ -390,3 +390,20 @@
 [data-motion="full"] .toast * {
   transition-duration: 280ms !important;
 }
+
+/* D131: a troca de versão no lugar seguro segura os toques até recarregar. */
+.pwa-updating {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483000;
+  display: grid;
+  place-items: center;
+  background: color-mix(in oklab, var(--canvas) 88%, transparent);
+  color: var(--fg);
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+

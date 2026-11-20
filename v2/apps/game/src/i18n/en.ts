@@ -577,6 +577,8 @@ export const en: Messages = {
       failed: "Couldn't create the link right now.",
       shareInvite: "Check out the career I built with {surname} on Futeiro! Create your player and choose your own story: {site}",
       shareInviteAnonymous: "Check out the career I built on Futeiro! Create your player and choose your own story: {site}",
+      imageCopied: "Image copied",
+      imageCopiedBody: "Paste it with Ctrl+V in your WhatsApp, Discord or any chat. The invite comes along where the site accepts text.",
     },
     chapters: {
       label: "Summary chapters",
@@ -761,6 +763,7 @@ export const en: Messages = {
   },
 
   pwa: {
+    updating: "Updating Futeiro…",
     readyTitle: "Home available offline",
     readyBody: "Open each game online to store its content. Images are added as they appear.",
     offlineTitle: "No connection",
