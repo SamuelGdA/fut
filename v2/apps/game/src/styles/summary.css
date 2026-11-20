@@ -1556,16 +1556,31 @@ button.honour-stack .honour-token:hover, button.honour-stack .honour-token:focus
 
   .share-card-trophy {
     display: -webkit-box;
-    width: 100%;
+    /* A legenda usa metade do vão de 14 px de cada lado, sem tocar na vizinha. */
+    width: calc(100% + 12px);
+    margin-inline: -6px;
     overflow: hidden;
     color: #f0eee5;
-    font-size: 12px;
+    /* D128: com duas linhas de peças, a legenda tem duas linhas de 11 px:
+       nomes como "AFC Champions League Elite" cabem inteiros. */
+    font-size: 11px;
     font-weight: 600;
-    line-height: 1.2;
+    letter-spacing: -0.005em;
+    line-height: 1.15;
     overflow-wrap: anywhere;
     text-align: center;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
+  }
+
+  /* Nome muito comprido ("Copa dos Campeões da Concacaf"): um ponto a menos, para caber em duas linhas. */
+  .share-card-trophy[data-long] {
+    font-size: 10px;
+  }
+
+  .share-card-trophy[data-long="2"] {
+    font-size: 9.5px;
+    letter-spacing: -0.02em;
   }
 
   .share-card-shelf li.share-card-more {

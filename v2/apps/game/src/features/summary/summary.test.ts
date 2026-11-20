@@ -182,9 +182,9 @@ describe("imagem da carreira (D118)", () => {
   });
 
   it("a faixa usa até duas linhas, encolhe as peças e manda o resto para o +N (D128)", () => {
-    expect(shareShelf(3, 780)).toMatchObject({ art: 72, shown: 3, more: 0 });
+    expect(shareShelf(3, 780)).toMatchObject({ art: 56, shown: 3, more: 0 });
     const many = shareShelf(30, 780);
-    expect(many.art).toBe(56);
+    expect(many.art).toBe(46);
     expect(many.shown + many.more).toBe(30);
     expect(many.more).toBeGreaterThan(0);
     // Duas linhas cheias, com a última casa para o "+N".

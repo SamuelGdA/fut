@@ -39,12 +39,15 @@ export function shareShelf(count: number, width: number, rows: number = SHARE_SH
   const gap = 14;
   const cell = (art: number) => Math.round(art * 0.8) + 44;
   const perRow = (art: number) => Math.max(1, Math.floor((width + gap) / (cell(art) + gap)));
-  for (const art of [72, 64, 56]) {
+  // Duas linhas de peça e legenda (até duas linhas de texto) cabem entre os
+  // números e o rodapé só até 56 px de arte, com folga para o nome mais
+  // comprido; acima disso, a legenda da segunda linha invadia o rodapé.
+  for (const art of [56, 50, 46]) {
     if (count <= perRow(art) * rows) return { art, shown: count, more: 0, perRow: perRow(art) };
   }
-  const fits = perRow(56) * rows;
+  const fits = perRow(46) * rows;
   // Uma casa fica para o "+N".
-  return { art: 56, shown: fits - 1, more: count - (fits - 1), perRow: perRow(56) };
+  return { art: 46, shown: fits - 1, more: count - (fits - 1), perRow: perRow(46) };
 }
 
 /** Quantos clubes a imagem mostra no rodapé (D128). */

@@ -123,7 +123,7 @@ export function ShareCard({ career, avatar, showSurname, ref }: ShareCardProps) 
                       ) : null}
                       {item.count > 1 ? <span className="share-card-count">×{item.count}</span> : null}
                     </span>
-                    <span className="share-card-trophy">{label}</span>
+                    <span className="share-card-trophy" data-long={label.length > 28 ? "2" : label.length > 24 ? "1" : undefined}>{label}</span>
                   </li>
                 );
               })}

@@ -2181,7 +2181,7 @@ principais e o endereço do jogo. Sem curva do OVR. O quadro é fixo: nada
 cresce para fora dele. O pôster do Técnico continua 1080 × 1350.
 
 **Como ficou (D128):** o nome e os números ficam logo abaixo da marca, e os
-destaques ocupam até duas linhas (peças de 72, 64 ou 56 px), com o "+N" na
+destaques ocupam até duas linhas (peças de 56, 50 ou 46 px), com o "+N" na
 última casa. No rodapé, até cinco clubes: sem o da carta do auge; primeiro os
 clubes com legado (lenda, ídolo, respeitado), por legado, títulos e jogos ali;
 nunca um clube traído; e sempre o clube em que a carreira começou (o primeiro
