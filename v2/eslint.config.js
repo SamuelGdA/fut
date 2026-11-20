@@ -11,7 +11,7 @@ export default defineConfig([
   {
     // As saídas do `pnpm e2e` (relatório e rastros) trazem o visualizador do
     // Playwright em JavaScript: não são código do jogo.
-    ignores: ["**/dist/**", "**/node_modules/**", "**/coverage/**", "**/.vite/**", "**/e2e-relatorio/**", "**/e2e-resultados/**"],
+    ignores: ["**/dist/**", "**/node_modules/**", "**/coverage/**", "**/.vite/**", "**/e2e-relatorio/**", "**/e2e-resultados/**", "**/.wrangler/**"],
   },
 
   js.configs.recommended,

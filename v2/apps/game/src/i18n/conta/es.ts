@@ -3,7 +3,7 @@ import type { ContaMessages } from "./pt";
 /** Telas de conta y páginas legales en español (D112 y D113). */
 export const contaEs: ContaMessages = {
   login: {
-    eyebrow: "Tu cuenta en Futeiros",
+    eyebrow: "Tu cuenta en Futeiro",
     title: "Salta al campo",
     lead: "Guarda tus logros, entra en el ranking mundial del Desafío del día y lleva tus números a cualquier dispositivo.",
     perks: {
@@ -94,7 +94,7 @@ export const contaEs: ContaMessages = {
 
   profile: {
     eyebrow: "Perfil",
-    memberSince: "En Futeiros desde {date}",
+    memberSince: "En Futeiro desde {date}",
     providers: { google: "Google", email: "correo y contraseña" },
     loading: "Abriendo el perfil",
     loadError: "No se pudo cargar el perfil ahora.",
@@ -151,13 +151,13 @@ export const contaEs: ContaMessages = {
   },
 
   terms: {
-    eyebrow: "Futeiros",
+    eyebrow: "Futeiro",
     title: "Términos de Servicio",
-    lead: "Las reglas para usar Futeiros, en lenguaje directo. Usar el juego es aceptar estos términos.",
+    lead: "Las reglas para usar Futeiro, en lenguaje directo. Usar el juego es aceptar estos términos.",
     sections: {
       what: {
-        title: "Qué es Futeiros",
-        body: "Futeiros es un juego de fútbol gratuito, jugado en el navegador, con dos modos: Craque (carrera de jugador) y Técnico (carrera de entrenador). Es un proyecto independiente, sin fines comerciales directos. Los anuncios, cuando los haya, solo ayudan a pagar el servidor.",
+        title: "Qué es Futeiro",
+        body: "Futeiro es un juego de fútbol gratuito, jugado en el navegador, con dos modos: Craque (carrera de jugador) y Técnico (carrera de entrenador). Es un proyecto independiente, sin fines comerciales directos. Los anuncios, cuando los haya, solo ayudan a pagar el servidor.",
       },
       brands: {
         title: "Nombres, escudos y marcas",
@@ -191,7 +191,7 @@ export const contaEs: ContaMessages = {
   },
 
   privacy: {
-    eyebrow: "Futeiros",
+    eyebrow: "Futeiro",
     title: "Política de Privacidad",
     lead: "Los mínimos datos, solo para que el juego funcione, explicados sin jerga legal. Rige la LGPD (Ley 13.709/2018 de Brasil) y, para quien juega desde Europa, el RGPD.",
     sections: {

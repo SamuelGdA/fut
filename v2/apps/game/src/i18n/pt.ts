@@ -12,14 +12,14 @@ export const pt = {
   },
 
   brand: {
-    name: "Futeiros",
-    hub: "Início do Futeiros",
+    name: "Futeiro",
+    hub: "Início do Futeiro",
     games: { craque: "Craque", tecnico: "Técnico" },
   },
 
   hub: {
     eyebrow: "Futebol de escolhas",
-    title: "Futeiros",
+    title: "Futeiro",
     lead: "Viva o futebol dentro de campo, como jogador, ou da beira do gramado, como técnico.",
     craque: {
       eyebrow: "Carreira de jogador",
@@ -725,8 +725,8 @@ export const pt = {
     screenBodyTecnico: "O resto do jogo segue de pé. Tente de novo ou volte ao início para continuar a última carreira do Técnico em andamento.",
     home: "Voltar ao início",
     chunkTitle: "Faltou um pedaço do jogo",
-    chunkUpdate: "Saiu uma versão nova do Futeiros. Recarregar encerra a sessão atual do Craque.",
-    chunkUpdateTecnico: "Saiu uma versão nova do Futeiros. A última carreira em andamento do Técnico pode continuar pelo hub após atualizar.",
+    chunkUpdate: "Saiu uma versão nova do Futeiro. Recarregar encerra a sessão atual do Craque.",
+    chunkUpdateTecnico: "Saiu uma versão nova do Futeiro. A última carreira em andamento do Técnico pode continuar pelo hub após atualizar.",
     chunkOffline: "Sem internet, esta parte do jogo ainda não estava guardada no aparelho. Conecte e recarregue; depois disso ela abre sem internet.",
     reload: "Recarregar",
     sectionTitle: "Este trecho não abriu",
@@ -736,7 +736,7 @@ export const pt = {
   notFound: {
     eyebrow: "Erro 404",
     title: "Bola fora",
-    body: "Este endereço não existe no Futeiros. O jogo continua na tela de início.",
+    body: "Este endereço não existe no Futeiro. O jogo continua na tela de início.",
     home: "Voltar ao jogo",
   },
 
@@ -751,7 +751,7 @@ export const pt = {
     e404: {
       eyebrow: "Erro 404",
       title: "Bola fora",
-      body: "Este endereço não existe no Futeiros. O jogo continua na tela de início.",
+      body: "Este endereço não existe no Futeiro. O jogo continua na tela de início.",
     },
     e500: {
       eyebrow: "Erro 500",
@@ -761,12 +761,12 @@ export const pt = {
     e503: {
       eyebrow: "Erro 503",
       title: "Jogo adiado",
-      body: "O Futeiros está em manutenção. Volte em alguns minutos.",
+      body: "O Futeiro está em manutenção. Volte em alguns minutos.",
     },
   },
 
   pwa: {
-    updateTitle: "Versão nova do Futeiros",
+    updateTitle: "Versão nova do Futeiro",
     updateBody: "Atualize quando quiser. A sessão do Craque termina; a carreira em andamento do Técnico pode continuar pelo hub.",
     update: "Atualizar",
     readyTitle: "Início disponível sem internet",
@@ -980,7 +980,7 @@ export const pt = {
   },
 
   consent: {
-    title: "Cookies no Futeiros",
+    title: "Cookies no Futeiro",
     body: "Usamos cookies essenciais para o jogo e a conta funcionarem. Com sua permissão, também usamos o Google Analytics (como o jogo é usado) e o Google AdSense (anúncios que pagam o servidor).",
     acceptAll: "Aceitar todos",
     essentialOnly: "Somente essenciais",

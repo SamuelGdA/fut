@@ -1,4 +1,4 @@
-# Técnico: a carreira de treinador do Futeiros
+# Técnico: a carreira de treinador do Futeiro
 > **Versão atual D117.** Técnico `1.12.0` (D117: Japão, Arábia Saudita, China, Coreia do Sul e Indonésia entram no mundo do treinador, com 21 nacionalidades de técnico; a Índia saiu na revisão de 04/11; D108: Portugal); Craque `2.0.0-m43`. As decisões de partida (com as transmissões por competição e time da D83), promessa, reinvenção e feedback de resultado pertencem somente ao Craque; o sistema de rival pessoal foi removido. O Craque preserva o espaço do card durante a saída no celular e oferece setas no cabeçalho do jornal ampliado. `Sheet` aceita ações opcionais no cabeçalho, sem alterar regras do Técnico. Para orientação inicial e fórmulas atuais do Craque, consulte o resumo no início do README principal. As revisões ao fim deste documento prevalecem sobre as notas históricas de animações e ferramentas Windows.
 >
 > **Revisão D63 (12/10/2026).** Craque `2.0.0-m10`; Técnico `1.4.0`.
@@ -9,7 +9,7 @@
 > formações, eventos, vibração e bônus por conquistas.
 
 
-O **Técnico** é o segundo jogo do hub Futeiros (o primeiro é o Craque, a
+O **Técnico** é o segundo jogo do hub Futeiro (o primeiro é o Craque, a
 carreira de jogador). Você monta um treinador, recebe três propostas de clubes
 do seu país, quase sempre da segunda divisão, e comanda clubes por até **24
 temporadas**: até três ações por etapa (vender, contratar, treinar,

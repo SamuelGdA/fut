@@ -22,7 +22,7 @@
     if (l !== "pt") {
       var x = t[l];
       r.setAttribute("lang", l === "es" ? "es" : "en");
-      document.title = x.title + ": Futeiros";
+      document.title = x.title + ": Futeiro";
       [].forEach.call(document.querySelectorAll("[data-t]"), function (e) {
         e.textContent = x[e.getAttribute("data-t")];
       });

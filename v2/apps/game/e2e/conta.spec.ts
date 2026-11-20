@@ -61,7 +61,7 @@ test("login por e-mail: erro claro, entrada e volta para onde estava", async ({ 
   await expect(page.getByLabel("Senha", { exact: true })).toHaveAttribute("type", "text");
   await page.getByRole("button", { name: "Entrar", exact: true }).last().click();
   // De volta ao hub, com o @ no topo; a URL volta para a raiz.
-  await expect(page.getByRole("heading", { name: "Futeiros", level: 1 })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Futeiro", level: 1 })).toBeVisible();
   await expect(page).toHaveURL(/\/$/);
   await expect(page.getByRole("button", { name: "Abrir o perfil de @craque_e2e" })).toBeVisible();
   // Só as colunas que a tela usa: nunca `select=*`.
@@ -83,7 +83,7 @@ test("Google: sai para o Supabase com PKCE e volta pelo /login já logado", asyn
 
   // A volta do Google: o código na URL vira sessão e some da barra de endereço.
   await page.goto("/login?code=codigo-e2e");
-  await expect(page.getByRole("heading", { name: "Futeiros", level: 1 })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Futeiro", level: 1 })).toBeVisible();
   await expect(page).not.toHaveURL(/code=/);
   const exchange = chamadas(nuvem, "/auth/v1/token").find((call) => call.search.includes("grant_type=pkce"));
   expect((exchange?.body as { auth_code?: string } | undefined)?.auth_code).toBe("codigo-e2e");
@@ -129,7 +129,7 @@ test("primeiro login sem @: o passo do @ é obrigatório antes de jogar", async 
   await page.getByLabel("Seu @", { exact: true }).fill("meu_craque");
   await expect(page.getByText("@meu_craque está livre")).toBeVisible();
   await page.getByRole("button", { name: "Começar a jogar" }).click();
-  await expect(page.getByRole("heading", { name: "Futeiros", level: 1 })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Futeiro", level: 1 })).toBeVisible();
   // Só o username sai na atualização do perfil (mass assignment).
   const patch = chamadas(nuvem, "/rest/v1/profiles").find((call) => call.method === "PATCH");
   expect(patch?.body).toEqual({ username: "meu_craque" });
@@ -179,7 +179,7 @@ test("sair e apagar a conta pelo perfil", async ({ page }) => {
   // O foco vai para a opção que não muda nada.
   await expect(page.getByRole("button", { name: "Manter a conta" })).toBeFocused();
   await page.getByRole("button", { name: "Apagar para sempre" }).click();
-  await expect(page.getByRole("heading", { name: "Futeiros", level: 1 })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Futeiro", level: 1 })).toBeVisible();
   await expect(page.getByRole("banner").getByRole("button", { name: "Entrar" })).toBeVisible();
   expect(chamadas(nuvem, "/rest/v1/rpc/excluir_conta")).toHaveLength(1);
   expect(await page.evaluate(() => localStorage.getItem("craque.v2.auth"))).toBeNull();
@@ -214,7 +214,7 @@ test.describe("aviso de cookies", () => {
     });
     const csp = vigiarCsp(page);
     await abrir(page);
-    const banner = page.getByRole("region", { name: "Cookies no Futeiros" });
+    const banner = page.getByRole("region", { name: "Cookies no Futeiro" });
     await expect(banner).toBeVisible();
     await auditar(page, "Aviso de cookies", ".cookie-banner");
     const [essential, all] = [banner.getByRole("button", { name: "Somente essenciais" }), banner.getByRole("button", { name: "Aceitar todos" })];
@@ -230,7 +230,7 @@ test.describe("aviso de cookies", () => {
     await page.getByRole("button", { name: "Abrir ajustes" }).click();
     await page.getByRole("button", { name: "Preferências de cookies" }).click();
     await page.keyboard.press("Escape");
-    await page.getByRole("region", { name: "Cookies no Futeiros" }).getByRole("button", { name: "Aceitar todos" }).click();
+    await page.getByRole("region", { name: "Cookies no Futeiro" }).getByRole("button", { name: "Aceitar todos" }).click();
     await expect.poll(() => gtag.length).toBeGreaterThan(0);
     expect(gtag[0]).toContain("id=G-E2ETESTE00");
     expect(JSON.parse((await page.evaluate(() => localStorage.getItem("craque.v2.consent"))) ?? "{}")).toMatchObject({ v: 1, choice: "all" });

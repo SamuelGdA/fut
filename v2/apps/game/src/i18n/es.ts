@@ -8,14 +8,14 @@ export const es: Messages = {
   },
 
   brand: {
-    name: "Futeiros",
-    hub: "Inicio de Futeiros",
+    name: "Futeiro",
+    hub: "Inicio de Futeiro",
     games: { craque: "Craque", tecnico: "Técnico" },
   },
 
   hub: {
     eyebrow: "Fútbol de decisiones",
-    title: "Futeiros",
+    title: "Futeiro",
     lead: "Vive el fútbol dentro de la cancha, como jugador, o desde la banda, como entrenador.",
     craque: {
       eyebrow: "Carrera de jugador",
@@ -721,8 +721,8 @@ export const es: Messages = {
     screenBodyTecnico: "El resto del juego sigue en pie y la carrera de Técnico sigue en esta pestaña. Inténtalo de nuevo o vuelve al inicio; puedes continuar la última carrera del Técnico en curso desde el inicio.",
     home: "Volver al inicio",
     chunkTitle: "Faltó una parte del juego",
-    chunkUpdate: "Hay una versión nueva de Futeiros. Recargar termina la sesión actual de Craque.",
-    chunkUpdateTecnico: "Hay una versión nueva de Futeiros. Continúa la última carrera del Técnico en curso desde el inicio tras actualizar.",
+    chunkUpdate: "Hay una versión nueva de Futeiro. Recargar termina la sesión actual de Craque.",
+    chunkUpdateTecnico: "Hay una versión nueva de Futeiro. Continúa la última carrera del Técnico en curso desde el inicio tras actualizar.",
     chunkOffline: "Sin internet, esta parte del juego todavía no estaba guardada en el dispositivo. Conéctate y recarga; después se abre sin internet.",
     reload: "Recargar",
     sectionTitle: "Este tramo no se abrió",
@@ -732,7 +732,7 @@ export const es: Messages = {
   notFound: {
     eyebrow: "Error 404",
     title: "Balón afuera",
-    body: "Esta dirección no existe en Futeiros. El juego sigue en la pantalla de inicio.",
+    body: "Esta dirección no existe en Futeiro. El juego sigue en la pantalla de inicio.",
     home: "Volver al juego",
   },
 
@@ -747,7 +747,7 @@ export const es: Messages = {
     e404: {
       eyebrow: "Error 404",
       title: "Balón afuera",
-      body: "Esta dirección no existe en Futeiros. El juego sigue en la pantalla de inicio.",
+      body: "Esta dirección no existe en Futeiro. El juego sigue en la pantalla de inicio.",
     },
     e500: {
       eyebrow: "Error 500",
@@ -757,12 +757,12 @@ export const es: Messages = {
     e503: {
       eyebrow: "Error 503",
       title: "Partido suspendido",
-      body: "Futeiros está en mantenimiento. Vuelve en unos minutos.",
+      body: "Futeiro está en mantenimiento. Vuelve en unos minutos.",
     },
   },
 
   pwa: {
-    updateTitle: "Versión nueva de Futeiros",
+    updateTitle: "Versión nueva de Futeiro",
     updateBody: "Actualiza cuando quieras. La sesión de Craque termina; la carrera del Técnico en curso puede continuar desde el inicio.",
     update: "Actualizar",
     readyTitle: "Inicio disponible sin internet",
@@ -976,7 +976,7 @@ export const es: Messages = {
   },
 
   consent: {
-    title: "Cookies en Futeiros",
+    title: "Cookies en Futeiro",
     body: "Usamos cookies esenciales para que el juego y la cuenta funcionen. Con tu permiso, también usamos Google Analytics (cómo se usa el juego) y Google AdSense (anuncios que pagan el servidor).",
     acceptAll: "Aceptar todas",
     essentialOnly: "Solo esenciales",

@@ -30,7 +30,7 @@ export interface Prefs {
 
 /**
  * Abre o jogo com as preferências dadas (som e vibração desligados). A
- * abertura é sempre o hub do Futeiros (D50). As preferências entram só na
+ * abertura é sempre o hub do Futeiro (D50). As preferências entram só na
  * primeira abertura da aba: recarregar no meio do teste mantém o que o jogo
  * gravou.
  */
@@ -92,7 +92,7 @@ export const cartao = (page: Page, jogo: "craque" | "tecnico") => page.locator(`
 
 /** Do hub para o Início do Craque ("Jogar", ou "Início do Craque" com carreira salva). */
 export async function entrarNoCraque(page: Page): Promise<void> {
-  await expect(page.getByRole("heading", { name: "Futeiros", level: 1 })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Futeiro", level: 1 })).toBeVisible();
   await cartao(page, "craque")
     .getByRole("button", { name: /^(Jogar|Início do Craque)$/ })
     .click();
@@ -108,7 +108,7 @@ export async function abrirCraque(page: Page, prefs: Prefs = {}): Promise<void> 
 
 /** No hub, o cartão do Craque retoma a carreira salva ("Continuar carreira" ou "Ver o resumo"). */
 export async function retomarCraque(page: Page): Promise<void> {
-  await expect(page.getByRole("heading", { name: "Futeiros", level: 1 })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Futeiro", level: 1 })).toBeVisible();
   await cartao(page, "craque")
     .getByRole("button", { name: /^(Continuar carreira|Ver o resumo)$/ })
     .click();

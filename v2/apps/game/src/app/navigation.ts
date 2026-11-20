@@ -31,7 +31,7 @@ export const SCREENS = [
 
 export type Screen = (typeof SCREENS)[number];
 
-/** O Futeiros abre no hub (D50): dali, o Craque e o Técnico. */
+/** O Futeiro abre no hub (D50): dali, o Craque e o Técnico. */
 export const INITIAL_SCREEN: Screen = "hub";
 
 /** A que jogo cada tela pertence: decide a etiqueta da marca e para onde o erro volta. */

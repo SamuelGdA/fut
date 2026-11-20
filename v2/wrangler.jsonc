@@ -1,0 +1,21 @@
+// Hospedagem na Cloudflare (D120): o Futeiros é um site estático, servido
+// pelos arquivos estáticos dos Workers, sem código no servidor. Pedido de
+// arquivo estático não conta na cota de requisições, e não há limite de banda.
+// Os cabeçalhos de segurança vêm do `_headers` e as páginas de erro do
+// `404.html`, os dois gravados pelo build em apps/game/dist.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "futeiros",
+  "compatibility_date": "2026-11-01",
+  "assets": {
+    "directory": "./apps/game/dist",
+    // Endereço que não existe recebe o 404.html do jogo, com status 404.
+    "not_found_handling": "404-page",
+    // /login, /perfil, /craque... servem a pasta/index.html de cada um, sem a
+    // barra no fim, como o jogo escreve os endereços.
+    "html_handling": "drop-trailing-slash"
+  },
+  // Sem o subdomínio workers.dev: o site só existe em futeiro.com.
+  "workers_dev": false,
+  "preview_urls": true
+}

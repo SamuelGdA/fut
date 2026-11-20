@@ -13,7 +13,7 @@ import { z } from "zod";
 
 /** Os @ que ninguém pode usar. A mesma lista está em `privado.username_valido` (um teste confere). */
 export const RESERVED_USERNAMES: readonly string[] = [
-  "admin", "administrador", "adm", "suporte", "support", "ajuda", "help", "futeiros", "craque", "tecnico",
+  "admin", "administrador", "adm", "suporte", "support", "ajuda", "help", "futeiros", "futeiro", "craque", "tecnico",
   "moderador", "moderator", "mod", "root", "sistema", "system", "oficial", "official", "staff", "equipe",
   "supabase", "null", "undefined", "anonimo", "anonymous", "visitante", "guest", "perfil", "login", "conta",
 ];

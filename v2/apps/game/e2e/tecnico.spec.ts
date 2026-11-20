@@ -230,7 +230,7 @@ test("do hub ao legado: propostas, três ações, evento, simulação, avaliaç�
 
   // A volta ao hub mostra o legado em memória.
   await page.getByRole("button", { name: "Voltar ao início" }).click();
-  await expect(page.getByRole("heading", { name: "Futeiros", level: 1 })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Futeiro", level: 1 })).toBeVisible();
   await expect(cartao(page, "tecnico")).toContainText("Legado na tela");
 });
 
@@ -257,14 +257,14 @@ test("sair do Técnico pede confirmação e a carreira segue em memória até re
   const header = (await page.locator(".career-header").textContent()) ?? "";
 
   // A marca no topo leva ao hub, mas pergunta antes.
-  await page.locator(".topbar").getByRole("button", { name: /Futeiros/ }).click();
+  await page.locator(".topbar").getByRole("button", { name: /Futeiro/ }).click();
   await expect(page.getByRole("alertdialog", { name: "Sair do Técnico?", exact: true })).toBeVisible();
   await page.getByRole("button", { name: "Ficar", exact: true }).click();
   await expect(page.getByRole("heading", { name: "Ações", level: 2 })).toBeVisible();
 
-  await page.locator(".topbar").getByRole("button", { name: /Futeiros/ }).click();
+  await page.locator(".topbar").getByRole("button", { name: /Futeiro/ }).click();
   await page.getByRole("button", { name: "Sair", exact: true }).click();
-  await expect(page.getByRole("heading", { name: "Futeiros", level: 1 })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Futeiro", level: 1 })).toBeVisible();
   await expect(cartao(page, "tecnico")).toContainText("Em andamento");
 
   // Voltar à carreira: a mesma etapa, o mesmo placar.

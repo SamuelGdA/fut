@@ -3,9 +3,9 @@ import { loadEnv } from "vite";
 import { ROUTE_PATHS } from "./routes.ts";
 
 export const SOCIAL_COPY = {
-  pt: { locale: "pt_BR", title: "Futeiros: o futebol passa por você", description: "Dentro de campo ou à beira dele. Viva sua carreira de jogador ou treinador em dois jogos de futebol feitos de escolhas.", alt: "Futeiros. Seu jogo. Sua história. Campo de futebol com uma jogada desenhada em dourado." },
-  en: { locale: "en_US", title: "Futeiros: football is in your hands", description: "On the pitch or on the touchline. Live your career as a player or manager in two football games shaped by your choices.", alt: "Futeiros. Your game. Your story. Football pitch with a move drawn in gold." },
-  es: { locale: "es_ES", title: "Futeiros: el fútbol pasa por ti", description: "En el campo o desde el banquillo. Vive tu carrera de jugador o entrenador en dos juegos de fútbol que dependen de tus decisiones.", alt: "Futeiros. Tu juego. Tu historia. Campo de fútbol con una jugada dibujada en dorado." },
+  pt: { locale: "pt_BR", title: "Futeiro: o futebol passa por você", description: "Dentro de campo ou à beira dele. Viva sua carreira de jogador ou treinador em dois jogos de futebol feitos de escolhas.", alt: "Futeiro. Seu jogo. Sua história. Campo de futebol com uma jogada desenhada em dourado." },
+  en: { locale: "en_US", title: "Futeiro: football is in your hands", description: "On the pitch or on the touchline. Live your career as a player or manager in two football games shaped by your choices.", alt: "Futeiro. Your game. Your story. Football pitch with a move drawn in gold." },
+  es: { locale: "es_ES", title: "Futeiro: el fútbol pasa por ti", description: "En el campo o desde el banquillo. Vive tu carrera de jugador o entrenador en dos juegos de fútbol que dependen de tus decisiones.", alt: "Futeiro. Tu juego. Tu historia. Campo de fútbol con una jugada dibujada en dorado." },
 } as const;
 export type SocialLocale = keyof typeof SOCIAL_COPY;
 const escape = (value: string) => value.replaceAll("&", "&amp;").replaceAll('"', "&quot;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
@@ -24,7 +24,7 @@ export function socialHtml(html: string, language: SocialLocale, origin: string,
   const url = `${origin}/${path}${language === "pt" ? "" : `?lang=${language}`}`;
   const meta = (name: string, value: string, kind = "property") => `<meta ${kind}="${name}" content="${escape(value)}" />`;
   const tags = [
-    meta("og:type", "website"), meta("og:site_name", "Futeiros"), meta("og:title", copy.title),
+    meta("og:type", "website"), meta("og:site_name", "Futeiro"), meta("og:title", copy.title),
     meta("og:description", copy.description), meta("og:locale", copy.locale),
     ...Object.entries(SOCIAL_COPY).filter(([key]) => key !== language).map(([, value]) => meta("og:locale:alternate", value.locale)),
     ...(origin ? [meta("og:url", url)] : []),

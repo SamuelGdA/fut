@@ -8,7 +8,7 @@ import type { Widen } from "../types";
  */
 export const contaPt = {
   login: {
-    eyebrow: "Sua conta no Futeiros",
+    eyebrow: "Sua conta no Futeiro",
     title: "Entre em campo",
     lead: "Guarde suas conquistas, entre no ranking mundial do Desafio do dia e leve seus números para qualquer aparelho.",
     perks: {
@@ -99,7 +99,7 @@ export const contaPt = {
 
   profile: {
     eyebrow: "Perfil",
-    memberSince: "No Futeiros desde {date}",
+    memberSince: "No Futeiro desde {date}",
     providers: { google: "Google", email: "e-mail e senha" },
     loading: "Abrindo o perfil",
     loadError: "Não deu para carregar o perfil agora.",
@@ -156,13 +156,13 @@ export const contaPt = {
   },
 
   terms: {
-    eyebrow: "Futeiros",
+    eyebrow: "Futeiro",
     title: "Termos de Serviço",
-    lead: "As regras para usar o Futeiros, em linguagem direta. Usar o jogo é aceitar estes termos.",
+    lead: "As regras para usar o Futeiro, em linguagem direta. Usar o jogo é aceitar estes termos.",
     sections: {
       what: {
-        title: "O que é o Futeiros",
-        body: "O Futeiros é um jogo de futebol gratuito, jogado no navegador, com dois modos: Craque (carreira de jogador) e Técnico (carreira de treinador). É um projeto independente, sem fins comerciais diretos. Os anúncios, quando houver, só ajudam a pagar o servidor.",
+        title: "O que é o Futeiro",
+        body: "O Futeiro é um jogo de futebol gratuito, jogado no navegador, com dois modos: Craque (carreira de jogador) e Técnico (carreira de treinador). É um projeto independente, sem fins comerciais diretos. Os anúncios, quando houver, só ajudam a pagar o servidor.",
       },
       brands: {
         title: "Nomes, escudos e marcas",
@@ -196,7 +196,7 @@ export const contaPt = {
   },
 
   privacy: {
-    eyebrow: "Futeiros",
+    eyebrow: "Futeiro",
     title: "Política de Privacidade",
     lead: "O mínimo de dados, só para o jogo funcionar, explicado sem juridiquês. Vale a LGPD (Lei 13.709/2018) e, para quem joga da Europa, o GDPR.",
     sections: {

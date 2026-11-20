@@ -1,4 +1,4 @@
-# Futeiros: configuração do Supabase LOCAL (supabase start). O projeto
+# Futeiro: configuração do Supabase LOCAL (supabase start). O projeto
 # hospedado é configurado no painel do Supabase; não rode `supabase config push`
 # sem conferir site_url e as URLs de retorno (README, seção Contas na nuvem).
 # For detailed configuration reference documentation, visit:
@@ -233,7 +233,7 @@ secure_password_change = true
 # Controls the minimum amount of time that must pass before sending another signup confirmation or password reset email.
 max_frequency = "60s"
 # Number of characters used in the email OTP.
-otp_length = 6
+otp_length = 8
 # Number of seconds before the email OTP expires (defaults to 1 hour).
 otp_expiry = 3600
 
@@ -250,37 +250,37 @@ otp_expiry = 3600
 # Modelos de e-mail da conta (D118): um layout só, em supabase/templates.
 # Os caminhos partem da pasta v2, de onde o CLI roda.
 [auth.email.template.confirmation]
-subject = "Confirme seu e-mail no Futeiros"
+subject = "Confirme seu e-mail no Futeiro"
 content_path = "./supabase/templates/confirmation.html"
 
 [auth.email.template.recovery]
-subject = "Crie uma senha nova no Futeiros"
+subject = "Crie uma senha nova no Futeiro"
 content_path = "./supabase/templates/recovery.html"
 
 [auth.email.template.magic_link]
-subject = "Seu link para entrar no Futeiros"
+subject = "Seu link para entrar no Futeiro"
 content_path = "./supabase/templates/magic_link.html"
 
 [auth.email.template.invite]
-subject = "Você foi convidado para o Futeiros"
+subject = "Você foi convidado para o Futeiro"
 content_path = "./supabase/templates/invite.html"
 
 [auth.email.template.email_change]
-subject = "Confirme o novo e-mail do Futeiros"
+subject = "Confirme o novo e-mail do Futeiro"
 content_path = "./supabase/templates/email_change.html"
 
 [auth.email.template.reauthentication]
-subject = "Seu código de confirmação do Futeiros"
+subject = "Seu código de confirmação do Futeiro"
 content_path = "./supabase/templates/reauthentication.html"
 
 [auth.email.notification.password_changed]
 enabled = true
-subject = "Sua senha do Futeiros foi trocada"
+subject = "Sua senha do Futeiro foi trocada"
 content_path = "./supabase/templates/password_changed_notification.html"
 
 [auth.email.notification.email_changed]
 enabled = true
-subject = "O e-mail da sua conta do Futeiros mudou"
+subject = "O e-mail da sua conta do Futeiro mudou"
 content_path = "./supabase/templates/email_changed_notification.html"
 
 [auth.sms]
@@ -329,8 +329,8 @@ max_enrolled_factors = 10
 
 # Control MFA via App Authenticator (TOTP)
 [auth.mfa.totp]
-enroll_enabled = false
-verify_enabled = false
+enroll_enabled = true
+verify_enabled = true
 
 # Configure MFA via Phone Messaging
 [auth.mfa.phone]
@@ -363,7 +363,7 @@ skip_nonce_check = false
 # If enabled, it will allow the user to successfully authenticate when the provider does not return an email address.
 email_optional = false
 
-# Futeiros (D112): Google é o login principal. Credenciais só por variável de
+# Futeiro (D112): Google é o login principal. Credenciais só por variável de
 # ambiente do terminal que roda o Supabase local; o projeto hospedado usa o painel.
 [auth.external.google]
 # Desligado aqui: o Google é ligado no painel, com o Client ID e o Secret.

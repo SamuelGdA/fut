@@ -2262,6 +2262,12 @@ A inspeção da abertura da pilha de troféus agora observa os quadros antes de 
 
 **Por quê.** Com a Ásia e sem a Índia, o mundo sorteado mudou e quatro números passaram de metas que já viviam no limite: Chile 27%, gols do Fenômeno 759, jogos na carreira 5,4% e títulos 15,3%. As amostras pequenas escondiam isso ou acusavam marcas diferentes a cada mudança, por sorte do sorteio; com as maiores, as medições ficaram estáveis e cada ajuste mira um problema real. O limite 14 foi escolha do produto (12 também resolvia, mas tirava mais do craque). O desgaste do veterano é o ajuste mais realista: um Fenômeno de 39 anos jogava tanto quanto aos 28. As Bolas de Ouro seguidas (marca Lendária) foram conferidas à parte em 18.000 carreiras: 0,12% igualaram e três passaram, então a marca é alcançável e rara mesmo quando a semente padrão não mostra ninguém passando.
 
+## D120: o nome passa a ser Futeiro, em futeiro.com, hospedado na Cloudflare (19/11/2026)
+
+**Decisão.** (1) A marca vira **Futeiro** em todo texto do jogo, das páginas de erro, da prévia social, dos e-mails da conta e da documentação. Identificadores internos que o jogador não vê (a chave do save do Técnico no navegador, nomes de cache, `id` de elementos) continuam `futeiros`, e as migrações já aplicadas no banco não mudam. (2) O site fica em `futeiro.com`, publicado como arquivos estáticos dos Workers da Cloudflare (`wrangler.jsonc`), com o DNS, o certificado e o encaminhamento de `contact@futeiro.com` no mesmo painel. (3) Os e-mails públicos do jogo são só `@futeiro.com`.
+
+**Por quê.** O domínio comprado foi `futeiro.com`. Na hospedagem, o plano grátis da Cloudflare não cobra nem limita a banda de arquivos estáticos e permite uso comercial (anúncios), enquanto o Hobby da Vercel proíbe anúncios e a Netlify tira o site do ar ao estourar a cota grátis. Mudar as chaves internas apagaria a carreira salva do Técnico de quem já joga, sem ganho visível.
+
 ## Prévia social do site: complemento de D118 (03/11/2026)
 
 **Decisão.** Arte editorial própria com as fontes e cores do Futeiros, PNGs

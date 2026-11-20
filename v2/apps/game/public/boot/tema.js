@@ -1,4 +1,4 @@
-// Abertura do Futeiros, antes da primeira pintura (D114: fora do HTML, para a
+// Abertura do Futeiro, antes da primeira pintura (D114: fora do HTML, para a
 // Content-Security-Policy não precisar liberar script embutido).
 //
 // 1. Aplica tema, movimento e idioma salvos: a página nunca pisca no tema

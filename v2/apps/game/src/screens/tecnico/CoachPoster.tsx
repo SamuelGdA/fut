@@ -22,7 +22,7 @@ export function CoachPosterSheet({ career, avatar, open, onOpenChange }: { caree
       const blob=await renderPoster(node.current,"#0d1110");
       const slug=career.setup.identity.name.normalize("NFD").replace(/\p{M}/gu,"").replace(/[^a-z0-9]+/gi,"-").toLowerCase();
       const name=`tecnico-${slug}.png`;
-      if(share)await shareImage(blob,name,"Futeiros",revisionText(t.locale,"poster"));else downloadBlob(blob,name);
+      if(share)await shareImage(blob,name,"Futeiro",revisionText(t.locale,"poster"));else downloadBlob(blob,name);
     }catch{notify({tone:"bad",title:t.tt("errors.generic")});}finally{setBusy(false);}
   };
   return <Sheet open={open} onOpenChange={onOpenChange} title={revisionText(t.locale,"poster")} closeLabel={t.tt("common.close")} footer={<div className="flex gap-2"><Button loading={busy} onClick={()=>void produce(false)}>{revisionText(t.locale,"savePoster")}</Button>{canShareImage()?<Button variant="secondary" disabled={busy} onClick={()=>void produce(true)}>{revisionText(t.locale,"poster")}</Button>:null}</div>}><div ref={frame} style={{height:height*scale}} className="tec-poster-frame"><div style={{transform:`scale(${scale})`,transformOrigin:"top left"}}><CoachPosterArt ref={node} career={career} avatar={avatar} /></div></div></Sheet>;

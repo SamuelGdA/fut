@@ -23,3 +23,6 @@ packages/world/scripts/elencos/.cache/
 # Supabase CLI: estado local do link com o projeto (não versionar).
 supabase/.temp/
 supabase/.branches/
+
+# Arquivos temporários do wrangler (Cloudflare)
+.wrangler/

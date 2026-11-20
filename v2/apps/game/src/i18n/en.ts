@@ -8,14 +8,14 @@ export const en: Messages = {
   },
 
   brand: {
-    name: "Futeiros",
-    hub: "Futeiros home",
+    name: "Futeiro",
+    hub: "Futeiro home",
     games: { craque: "Craque", tecnico: "Técnico" },
   },
 
   hub: {
     eyebrow: "Football of choices",
-    title: "Futeiros",
+    title: "Futeiro",
     lead: "Live football on the pitch, as a player, or from the touchline, as a coach.",
     craque: {
       eyebrow: "Player career",
@@ -721,8 +721,8 @@ export const en: Messages = {
     screenBodyTecnico: "The rest of the game is still standing and your Técnico career is still in this tab. Try again or go back home; resume the last ongoing Coach career from the home screen.",
     home: "Back to home",
     chunkTitle: "A piece of the game is missing",
-    chunkUpdate: "A new Futeiros version is available. Reloading ends the current Craque session.",
-    chunkUpdateTecnico: "A new Futeiros version is available. Continue your last ongoing Coach career from the hub after updating.",
+    chunkUpdate: "A new Futeiro version is available. Reloading ends the current Craque session.",
+    chunkUpdateTecnico: "A new Futeiro version is available. Continue your last ongoing Coach career from the hub after updating.",
     chunkOffline: "Without internet, this part of the game was not stored on this device yet. Connect and reload; after that it opens offline.",
     reload: "Reload",
     sectionTitle: "This part did not open",
@@ -732,7 +732,7 @@ export const en: Messages = {
   notFound: {
     eyebrow: "Error 404",
     title: "Out of play",
-    body: "This address does not exist in Futeiros. The game carries on at the home screen.",
+    body: "This address does not exist in Futeiro. The game carries on at the home screen.",
     home: "Back to the game",
   },
 
@@ -747,7 +747,7 @@ export const en: Messages = {
     e404: {
       eyebrow: "Error 404",
       title: "Out of play",
-      body: "This address does not exist in Futeiros. The game carries on at the home screen.",
+      body: "This address does not exist in Futeiro. The game carries on at the home screen.",
     },
     e500: {
       eyebrow: "Error 500",
@@ -757,12 +757,12 @@ export const en: Messages = {
     e503: {
       eyebrow: "Error 503",
       title: "Match postponed",
-      body: "Futeiros is under maintenance.  come back in a few minutes.",
+      body: "Futeiro is under maintenance.  come back in a few minutes.",
     },
   },
 
   pwa: {
-    updateTitle: "New version of Futeiros",
+    updateTitle: "New version of Futeiro",
     updateBody: "Update when you like. The Craque session ends; the ongoing Coach career can continue from the hub.",
     update: "Update",
     readyTitle: "Home available offline",
@@ -976,7 +976,7 @@ export const en: Messages = {
   },
 
   consent: {
-    title: "Cookies on Futeiros",
+    title: "Cookies on Futeiro",
     body: "We use essential cookies so the game and your account work. With your permission, we also use Google Analytics (how the game is used) and Google AdSense (ads that pay for the server).",
     acceptAll: "Accept all",
     essentialOnly: "Essential only",

@@ -4,12 +4,12 @@
 (function () {
   var texts = {
     es: {
-      loading: "Abriendo Futeiros",
+      loading: "Abriendo Futeiro",
       failed: "No se pudo abrir el juego. Tu carrera sigue guardada; recarga para intentarlo de nuevo.",
       reload: "Recargar",
     },
     en: {
-      loading: "Opening Futeiros",
+      loading: "Opening Futeiro",
       failed: "The game could not open. Your career is still saved; reload to try again.",
       reload: "Reload",
     },

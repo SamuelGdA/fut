@@ -3,7 +3,7 @@ import { IS_DEV } from "../lib/env";
 import { GAME_PATHS, type Screen, SCREEN_PATHS } from "./navigation";
 
 /**
- * O endereço é o do jogo? O Futeiros vive na raiz do build (ou no
+ * O endereço é o do jogo? O Futeiro vive na raiz do build (ou no
  * `index.html` dela) e nos caminhos das telas com endereço próprio (D112:
  * login, perfil, termos, privacidade) e de modo (D118: craque, tecnico),
  * com ou sem barra no fim. Qualquer
@@ -31,7 +31,7 @@ export function screenOfPath(pathname: string, base: string = import.meta.env.BA
 /**
  * Onde o jogo abre (GDD 5 e D50): um endereço desconhecido abre a página não
  * encontrada; um link de carreira (`#c=`) abre o resumo compartilhado; todo o
- * resto abre o hub do Futeiros. O Craque é uma sessão em memória; o Técnico pode retomar a última
+ * resto abre o hub do Futeiro. O Craque é uma sessão em memória; o Técnico pode retomar a última
  * carreira em andamento pelo hub. Recarregar sempre abre o hub, menos nos caminhos próprios (D112),
  * que reabrem a própria tela, e nos de modo (D118), que abrem a entrada do modo. Em desenvolvimento, `#lab` abre o laboratório.
  */

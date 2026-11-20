@@ -11,7 +11,7 @@ const CoachGuide = lazy(() => import("../screens/tecnico/Guide").then((module) =
 const DebugTools = import.meta.env.DEV ? lazy(() => import("../features/debug/DebugTools").then((module) => ({ default: module.DebugTools }))) : null;
 
 /**
- * Marca (D50): o campo visto de cima e o nome do Futeiros, que leva ao hub.
+ * Marca (D50): o campo visto de cima e o nome do Futeiro, que leva ao hub.
  * Dentro de um jogo, a etiqueta dele aparece ao lado (Craque ou Técnico).
  */
 function Brand() {

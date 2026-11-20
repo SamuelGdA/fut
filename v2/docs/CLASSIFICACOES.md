@@ -1,4 +1,4 @@
-# Classificações do Futeiros, revisão D64
+# Classificações do Futeiro, revisão D64
 
 Pesquisa consultada em 13/10/2026. O motor usa regras de referência de 2026,
 incluindo as vagas brasileiras para 2027. As décadas seguintes são simulações:

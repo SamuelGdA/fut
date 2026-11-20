@@ -15,7 +15,7 @@ import { Crest } from "../../ui/Media";
 import { PlayerCard } from "../../ui/PlayerCard";
 
 /**
- * O hub do Futeiros (D50): a primeira tela. Dois cartões, um por jogo, cada
+ * O hub do Futeiro (D50): a primeira tela. Dois cartões, um por jogo, cada
  * um com o que o jogo é em três linhas e o botão de jogar. O Craque continua
  * apenas nesta sessão; o Técnico retoma a última carreira em andamento (D61). No PC, os dois lado a lado sem rolar; no celular,
  * empilhados. Nenhum motor é baixado aqui.

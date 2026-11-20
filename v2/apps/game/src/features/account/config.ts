@@ -1,5 +1,5 @@
 /**
- * A nuvem do Futeiros (D112): endereço e chave publicável do Supabase, lidos
+ * A nuvem do Futeiro (D112): endereço e chave publicável do Supabase, lidos
  * do `.env.local` no build. Nada disso fica escrito no código. Sem os dois, o
  * jogo roda como antes, só no aparelho (contas desligadas).
  *

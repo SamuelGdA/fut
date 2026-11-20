@@ -6,7 +6,7 @@ import { feedback } from "../../services/feedback";
 import { Button } from "../../ui/Button";
 
 /**
- * Página não encontrada, dentro do jogo (GDD 37): um endereço que o Futeiros
+ * Página não encontrada, dentro do jogo (GDD 37): um endereço que o Futeiro
  * não conhece abre aqui, com a casca de pé e a volta para o hub (D50). Sair
  * limpa o endereço (a navegação troca a URL pela raiz do jogo).
  */

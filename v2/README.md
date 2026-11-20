@@ -1,4 +1,4 @@
-# Futeiros v2: Craque e Técnico
+# Futeiro v2: Craque e Técnico
 
 ## Estado atual e leitura inicial (D118, 04/11/2026)
 
@@ -185,7 +185,7 @@ resultado exigem nova versão, `pnpm balance` e as 51 metas. Antes de entregar:
 de recordes. As amostras de navegador atuais são replays **m43**, reconstruídos
 com escolhas válidas, não resultados fabricados.
 
-> **Futeiros (D50 a D61).** O site virou um hub com dois jogos de futebol e
+> **Futeiro (D50 a D61).** O site virou um hub com dois jogos de futebol e
 > abre sempre nele: **Craque**, a carreira de jogador descrita neste README
 > (motor `2.0.0-m36`), e **Técnico**, a carreira de
 > treinador nova (motor próprio `COACH_VERSION 1.9.0`, 24 temporadas, elencos
@@ -298,7 +298,7 @@ vê a carreira inteira acontecer dentro de um mundo de futebol simulado:
 tabelas, copas, continentais, seleções, prêmios e recordes reais. Uma carreira
 completa leva poucos minutos.
 
-O Futeiros abre no hub (`apps/game/src/screens/hub`), com um cartão para cada
+O Futeiro abre no hub (`apps/game/src/screens/hub`), com um cartão para cada
 jogo. O Craque começa uma carreira nova, sem saves de sessão. O Técnico oferece continuar a última carreira em andamento neste aparelho. Recarregar na raiz
 abre o hub (D50); dentro de um modo, a página está em `/craque` ou `/tecnico` (D118) e recarregar
 abre o próprio modo: a criação do jogador no Craque, a carreira salva (ou a criação) no Técnico.
@@ -815,7 +815,7 @@ v2/
 |---|---|
 | Pilha | Vite 8, React 19 com React Compiler, TypeScript 6, Tailwind 4.3, Base UI, Motion 13, Zustand 5 |
 | `src/app/` | Casca (barra do topo sempre visível), navegação por `history.state` (a URL não muda entre telas, nenhum host precisa de regra de reescrita), barreiras de erro em três níveis, telas carregadas sob demanda e antecipadas apenas dentro do modo escolhido (D62) |
-| `src/screens/` | Hub do Futeiros; do Craque: Início, Identidade, Aparência, Carreira (decisão, lance, jornal, mensagem do resultado), Resumo, link compartilhado, Desafio; do Técnico (`screens/tecnico`): identidade, aparência, a carreira (propostas, etapa, processos, evento, decisão no jogo, resultados, avaliação) e o legado; Conquistas (Craque e Técnico, com o convite do visitante e o troféu `TrophyIcon`), o login, o perfil (`screens/account`), Termos e Privacidade (`screens/legal`), 404 e o laboratório |
+| `src/screens/` | Hub do Futeiro; do Craque: Início, Identidade, Aparência, Carreira (decisão, lance, jornal, mensagem do resultado), Resumo, link compartilhado, Desafio; do Técnico (`screens/tecnico`): identidade, aparência, a carreira (propostas, etapa, processos, evento, decisão no jogo, resultados, avaliação) e o legado; Conquistas (Craque e Técnico, com o convite do visitante e o troféu `TrophyIcon`), o login, o perfil (`screens/account`), Termos e Privacidade (`screens/legal`), 404 e o laboratório |
 | `src/features/` | Estado da carreira (`career/store.ts`, Zustand), save, rascunho do jogador, lance (`play.ts`) e mensagem (`resultView.ts`), transmissões das decisões de partida (`career/broadcast.ts`, `broadcastPackages.ts`, `broadcastMotifs.ts`, `teamColors.ts`; D83), "E se...?", resumo (pôster, link, vitrine), desafio (relógio), persistência (pasta `hall`: banco, ranking, conquistas), aparência, ajustes; o Técnico em `features/tecnico` (carreira só em memória, presença para o hub, rascunho, `view.ts` que esconde o rendimento); a conta em `features/account` (sessão do Supabase, esquemas Zod, envio direto das carreiras, D112 a D114) e o consentimento, o Analytics e os anúncios genéricos em `features/consent` (D113) |
 | `src/services/` | Som, vibração, `localStorage` seguro, IndexedDB com espelho em memória, imagens offline |
 | `src/ui/` | Sistema de design: botões, carta do jogador, números que contam, sinais e pílulas, painéis, janelas, avisos |
@@ -2148,7 +2148,7 @@ Motor do Craque `2.0.0-m40`. Detalhes na revisão D109 do GDD e na decisão D109
 
 Motor do Craque `2.0.0-m41`. Detalhes na revisão D110 do GDD e na decisão D110.
 
-- **Sem o Início do Craque.** "Jogar" no Craque abre direto a tela de quem é você. Ela traz o que ficava no Início: Jogo rápido (ao lado de Começar carreira no PC; no celular, embaixo), o Desafio do dia, as conquistas, os números do mundo e o laboratório. Voltar leva ao hub do Futeiros. O texto do ritmo ficou curto ("Decisão principal a cada 2 anos" e "todo ano") para não empurrar a dificuldade.
+- **Sem o Início do Craque.** "Jogar" no Craque abre direto a tela de quem é você. Ela traz o que ficava no Início: Jogo rápido (ao lado de Começar carreira no PC; no celular, embaixo), o Desafio do dia, as conquistas, os números do mundo e o laboratório. Voltar leva ao hub do Futeiro. O texto do ritmo ficou curto ("Decisão principal a cada 2 anos" e "todo ano") para não empurrar a dificuldade.
 - **Hipotético com o sorteio refeito.** Na linha alternativa, da decisão de troca em diante, o sorteio de dar certo ou errado (acontecimento e jogo-chave) leva um sal novo (`setup.rerolls`, `career/outcome.ts`): a mesma escolha da linha original pode ter outro resultado. As decisões antes da troca se refazem iguais; um hipotético dentro de outro guarda as trocas anteriores.
 - **Briga com a diretoria.** Não recuar é a transferência certa, sem sorteio: a diretoria vende você e fecha as portas. Retratar-se custa 10 de torcida (era 2).
 - **O batedor do time.** Fora do ataque (zagueiro, lateral, volante, meias), finalização a partir de 80 faz do jogador o cobrador de pênalti e falta: gols a mais por jogo, até 0,06 (zagueiro e volante), 0,05 (lateral), 0,04 (meio-campista) e 0,03 (meia e alas) no 99 de FIN (`SET_PIECE_TAKER`, `setPieceSkill`, `season/production.ts`), e o jogo-chave vira uma cobrança (pênalti, falta, pênalti decisivo) com até 30% de chance (`SET_PIECE_SCENE_CHANCE`, `career/matchMoments.ts`).
@@ -2220,6 +2220,29 @@ site, o Supabase, o Google Analytics e o AdSense; `frame-ancestors 'none'`,
 `X-Frame-Options`, `nosniff`, `Referrer-Policy`, `Permissions-Policy`, `COOP` e
 `HSTS`. `/login`, `/perfil`, `/termos`, `/privacidade`, `/craque` e `/tecnico`
 funcionam em qualquer hospedagem estática (o build grava uma página em cada pasta).
+
+**Onde o site mora (D120): Cloudflare, em `futeiro.com`.** O `wrangler.jsonc`
+na raiz do v2 publica `apps/game/dist` como arquivos estáticos dos Workers, sem
+código no servidor: arquivo estático não conta na cota de requisições e não há
+limite de banda, e o plano grátis permite anúncios (o Hobby da Vercel não). O
+`_headers` dá os cabeçalhos, o `404.html` responde endereço inexistente, e os
+endereços saem sem barra no fim (`/craque`). Os links `?lang=en` e `?lang=es`
+da prévia social são reescritos para `/social/<idioma>/...` por regras de
+reescrita da zona na Cloudflare (o `vercel.json` guarda as mesmas regras, caso
+um dia volte para lá). Para publicar do próprio computador:
+
+```bash
+pnpm build
+```
+
+```bash
+npx wrangler deploy
+```
+
+O `.env.local` precisa de `VITE_SITE_URL=https://futeiro.com` e
+`VITE_CONTACT_EMAIL=contact@futeiro.com`. E-mail do domínio: `contact@futeiro.com`
+é encaminhado pelo Email Routing da Cloudflare; os e-mails da conta saem por SMTP
+próprio (Resend), configurado no painel do Supabase.
 
 ### Imagens geradas
 
@@ -2309,11 +2332,11 @@ clones antigos precisa clonar de novo.
   traz o campo e a carta no meio do palco; o cabeçalho do perfil não corta o `@`
   no celular; sai o "i" ao lado do OVR na carreira.
 
-## Prévia de links do Futeiros (complemento de D118)
+## Prévia de links do Futeiro (complemento de D118)
 
 O build inclui Open Graph e Twitter Card no HTML da raiz e de todas as rotas
 próprias, antes de executar JavaScript. A arte editorial de 1200 × 630 combina
-papel de jornal, Big Shoulders, Schibsted Grotesk e o campo do Futeiros. São três
+papel de jornal, Big Shoulders, Schibsted Grotesk e o campo do Futeiro. São três
 PNGs em `apps/game/public/social/`, sem dependência externa em tempo de execução.
 Para regenerar: `pnpm --filter @craque/game exec node scripts/social-images.mjs`
 (Chrome instalado). Isso não modifica o pôster nem o link de replay da carreira.

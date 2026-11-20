@@ -3,7 +3,7 @@ import type { ContaMessages } from "./pt";
 /** Account screens and legal pages in English (D112 and D113). */
 export const contaEn: ContaMessages = {
   login: {
-    eyebrow: "Your Futeiros account",
+    eyebrow: "Your Futeiro account",
     title: "Take the pitch",
     lead: "Keep your achievements, join the worldwide Daily Challenge ranking and take your numbers to any device.",
     perks: {
@@ -94,7 +94,7 @@ export const contaEn: ContaMessages = {
 
   profile: {
     eyebrow: "Profile",
-    memberSince: "On Futeiros since {date}",
+    memberSince: "On Futeiro since {date}",
     providers: { google: "Google", email: "email and password" },
     loading: "Opening your profile",
     loadError: "Could not load your profile right now.",
@@ -151,13 +151,13 @@ export const contaEn: ContaMessages = {
   },
 
   terms: {
-    eyebrow: "Futeiros",
+    eyebrow: "Futeiro",
     title: "Terms of Service",
-    lead: "The rules for using Futeiros, in plain language. Using the game means accepting these terms.",
+    lead: "The rules for using Futeiro, in plain language. Using the game means accepting these terms.",
     sections: {
       what: {
-        title: "What Futeiros is",
-        body: "Futeiros is a free football game played in the browser, with two modes: Craque (a player career) and Técnico (a coach career). It is an independent project with no direct commercial purpose. Ads, when there are any, only help pay for the server.",
+        title: "What Futeiro is",
+        body: "Futeiro is a free football game played in the browser, with two modes: Craque (a player career) and Técnico (a coach career). It is an independent project with no direct commercial purpose. Ads, when there are any, only help pay for the server.",
       },
       brands: {
         title: "Names, crests and trademarks",
@@ -191,7 +191,7 @@ export const contaEn: ContaMessages = {
   },
 
   privacy: {
-    eyebrow: "Futeiros",
+    eyebrow: "Futeiro",
     title: "Privacy Policy",
     lead: "The minimum data, only so the game works, explained without legalese. Brazil's LGPD (Law 13,709/2018) applies and, for players in Europe, the GDPR.",
     sections: {

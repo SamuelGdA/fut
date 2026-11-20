@@ -12,8 +12,8 @@ import { abrir, abrirCraque, encerrar, entrarNoCraque, esperarQueCaiba, idade, j
 test("do hub ao Resumo, montando o jogador", async ({ page }, info) => {
   const celular = info.project.name === "celular";
   await abrir(page, { pace: "normal" });
-  // A abertura é o hub do Futeiros (D50), com os dois jogos.
-  await expect(page.getByRole("heading", { name: "Futeiros", level: 1 })).toBeVisible();
+  // A abertura é o hub do Futeiro (D50), com os dois jogos.
+  await expect(page.getByRole("heading", { name: "Futeiro", level: 1 })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Craque", level: 2 })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Técnico", level: 2 })).toBeVisible();
   await entrarNoCraque(page);

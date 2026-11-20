@@ -21,6 +21,8 @@ import { AUTH_STORAGE_KEY } from "./config";
 /** A conta (D112) e a validação dos envios (D114). */
 
 const SQL = readFileSync(new URL("../../../../../supabase/migrations/20261030180000_contas_e_conquistas.sql", import.meta.url), "utf8");
+// D120: a lista de @ reservados vale pela última migração que a redefine.
+const RESERVED_SQL = readFileSync(new URL("../../../../../supabase/migrations/20261119220000_reserva_futeiro.sql", import.meta.url), "utf8");
 
 
 const career = (extra: Record<string, unknown> = {}) => ({
@@ -67,7 +69,7 @@ describe("username", () => {
   });
 
   it("a lista de reservados é a mesma do banco", () => {
-    const block = /nome <> all \(array\[([\s\S]*?)\]\)/.exec(SQL)?.[1] ?? "";
+    const block = /nome <> all \(array\[([\s\S]*?)\]\)/.exec(RESERVED_SQL)?.[1] ?? "";
     const sql = [...block.matchAll(/'([^']+)'/g)].map((match) => match[1]).sort();
     expect(sql).toEqual([...RESERVED_USERNAMES].sort());
   });

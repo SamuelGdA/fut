@@ -13,7 +13,7 @@ test("endereço que não existe: Bola fora, e a volta limpa o endereço", async 
   await abrir(page, {}, "/vestiario/12");
   await expect(page.getByRole("heading", { name: "Bola fora" })).toBeVisible();
   await page.getByRole("button", { name: "Voltar ao jogo" }).click();
-  await expect(page.getByRole("heading", { name: "Futeiros", level: 1 })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Futeiro", level: 1 })).toBeVisible();
   expect(new URL(page.url()).pathname).toBe("/");
 });
 
@@ -46,7 +46,7 @@ test("tela que não baixa: o erro aparece dentro da casca, com recarregar e volt
   // A casca continua de pé: a marca no topo e os ajustes.
   await expect(page.getByRole("banner")).toBeVisible();
   await page.getByRole("button", { name: "Voltar ao início" }).click();
-  await expect(page.getByRole("heading", { name: "Futeiros", level: 1 })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Futeiro", level: 1 })).toBeVisible();
 });
 
 test("tela que quebra ao desenhar: aviso na casca e dá para voltar", async ({ page }) => {
@@ -68,7 +68,7 @@ test("tela que quebra ao desenhar: aviso na casca e dá para voltar", async ({ p
   await expect(page.getByText("O resto do jogo segue de pé")).toBeVisible();
   await expect(page.getByRole("button", { name: "Limpar dados e recarregar" })).toHaveCount(0);
   await page.getByRole("button", { name: "Voltar ao início" }).click();
-  await expect(page.getByRole("heading", { name: "Futeiros", level: 1 })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Futeiro", level: 1 })).toBeVisible();
   expect(await page.evaluate(() => window.localStorage.getItem("craque.v2.save"))).toBeNull();
 });
 
@@ -95,7 +95,7 @@ test("páginas estáticas 404, 403, 500 e 503, no idioma salvo", async ({ page }
 test("o jogo que não baixa nem começa: a abertura vira erro com recarregar", async ({ page }) => {
   await page.route(/\/assets\/index-[\w-]+\.js$/, (route) => route.abort());
   await page.goto("/");
-  await expect(page.getByText("Abrindo o Futeiros")).toBeVisible();
+  await expect(page.getByText("Abrindo o Futeiro")).toBeVisible();
   await expect(page.getByText("Não deu para abrir o jogo.", { exact: false })).toBeVisible({ timeout: 20_000 });
   await expect(page.getByRole("link", { name: "Recarregar" })).toHaveAttribute("href", "");
 });

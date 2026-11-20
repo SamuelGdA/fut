@@ -1,4 +1,4 @@
-# Futeiros v2: Game Design Document
+# Futeiro v2: Game Design Document
 
 > **Estado atual D82 (21/10/2026).** Craque `2.0.0-m23`; Técnico `1.9.0`.
 > Projeto ativo: `v2/`, React/Zustand/Vite. O resumo no início do
@@ -9,7 +9,7 @@
 > 55 cenas de partida (D91) e nenhum rival pessoal. As contas atuais de D80/D81 são
 > preservadas na D82; somente o custo de respeitar o rival muda no motor.
 
-> **Futeiros (D50 a D60).** Este documento especifica os dois jogos do hub.
+> **Futeiro (D50 a D60).** Este documento especifica os dois jogos do hub.
 > As seções 0 a 40 são o **Craque** (carreira de jogador, regras inalteradas);
 > a [seção 41](#41-o-hub-do-futeiros) é o hub e a
 > [seção 42](#42-técnico-a-carreira-de-treinador) é o **Técnico** (carreira de
@@ -146,7 +146,7 @@ os comandos, está no [`README.md`](../README.md).
 | 17 | Torcida e legado | 38 | Ferramentas de desenvolvimento |
 | 18 | Eventos de carreira | 39 | Invariantes |
 | 19 | Número da camisa | 40 | Metas de balanceamento e testes |
-| 20 | O rival | 41 | O hub do Futeiros |
+| 20 | O rival | 41 | O hub do Futeiro |
 | | | 42 | Técnico: a carreira de treinador |
 
 ---
@@ -2165,7 +2165,7 @@ mostra "Linha alternativa" e a opção que a original escolheu ganha a etiqueta
 
 **Como ficou (D118): a imagem da carreira do Craque tem 1200 × 630** (1,91:1,
 a proporção da prévia de link nas redes). À esquerda, a carta do auge e o pico;
-à direita, a marca Futeiros com o selo do modo, país, posição e anos, o nome,
+à direita, a marca Futeiro com o selo do modo, país, posição e anos, o nome,
 os seis números e os destaques: Bola de Ouro, Troféu Yashin, Troféu Kopa, Rei
 da América e Chuteira de Ouro primeiro, depois os títulos pela importância, sem
 os prêmios de competição. A faixa usa peças de 96 px com poucas conquistas e
@@ -2679,9 +2679,9 @@ para um Chromium instalado.
 
 ---
 
-## 41. O hub do Futeiros
+## 41. O hub do Futeiro
 
-O site se chama **Futeiros** e reúne dois jogos de futebol: o **Craque**, a
+O site se chama **Futeiro** e reúne dois jogos de futebol: o **Craque**, a
 carreira de jogador das seções 1 a 40, e o **Técnico**, a carreira de treinador
 da seção 42. O hub (`apps/game/src/screens/hub/HubScreen.tsx`) é a primeira
 tela. Ele não carrega motor nenhum: o motor do Técnico, os elencos e os textos
@@ -2718,7 +2718,7 @@ primeira regra que se aplicar vence:
 | `craque` | `home`, `identity`, `appearance`, `career`, `summary`, `shared`, `challenge`, `hall`, `archived` |
 | `tecnico` | `tecnicoIdentity`, `tecnicoAppearance`, `tecnico`, `tecnicoLegacy` |
 
-- A barra mostra a marca Futeiros, que volta ao hub, e, dentro de um jogo, a
+- A barra mostra a marca Futeiro, que volta ao hub, e, dentro de um jogo, a
   etiqueta dele ("Craque" ou "Técnico").
 - Sair do Técnico (marca, menu "Sair do Técnico", voltar do sistema) pede
   confirmação ("Sair do Técnico?"). Confirmar leva ao destino e **não** apaga a
@@ -2755,9 +2755,9 @@ daquele jogo foram liberadas e tem o botão de jogar.
 
 ### 41.3 Marca, PWA e erros
 
-- Título da página, manifesto (`name` "Futeiros: futebol de escolhas",
-  `short_name` "Futeiros"), tela de abertura ("Abrindo o Futeiros"), aviso sem
-  JavaScript e páginas estáticas 404, 403, 500 e 503 dizem "Futeiros".
+- Título da página, manifesto (`name` "Futeiro: futebol de escolhas",
+  `short_name` "Futeiro"), tela de abertura ("Abrindo o Futeiro"), aviso sem
+  JavaScript e páginas estáticas 404, 403, 500 e 503 dizem "Futeiro".
 - A página não encontrada ("Bola fora") volta ao hub ("Voltar ao jogo").
 - O painel de erro de uma tela usa `SCREEN_GAME`. No Técnico, a carreira em
   andamento é retomável pelo diário local; o Craque só mantém a sessão atual.
@@ -5085,7 +5085,7 @@ Motor do Craque `2.0.0-m40`. Detalhes na revisão D109 do GDD e na decisão D109
 
 Motor do Craque `2.0.0-m41`. Detalhes na revisão D110 do GDD e na decisão D110.
 
-- **Sem o Início do Craque.** "Jogar" no Craque abre direto a tela de quem é você. Ela traz o que ficava no Início: Jogo rápido (ao lado de Começar carreira no PC; no celular, embaixo), o Desafio do dia, as conquistas, os números do mundo e o laboratório. Voltar leva ao hub do Futeiros. O texto do ritmo ficou curto ("Decisão principal a cada 2 anos" e "todo ano") para não empurrar a dificuldade.
+- **Sem o Início do Craque.** "Jogar" no Craque abre direto a tela de quem é você. Ela traz o que ficava no Início: Jogo rápido (ao lado de Começar carreira no PC; no celular, embaixo), o Desafio do dia, as conquistas, os números do mundo e o laboratório. Voltar leva ao hub do Futeiro. O texto do ritmo ficou curto ("Decisão principal a cada 2 anos" e "todo ano") para não empurrar a dificuldade.
 - **Hipotético com o sorteio refeito.** Na linha alternativa, da decisão de troca em diante, o sorteio de dar certo ou errado (acontecimento e jogo-chave) leva um sal novo (`setup.rerolls`, `career/outcome.ts`): a mesma escolha da linha original pode ter outro resultado. As decisões antes da troca se refazem iguais; um hipotético dentro de outro guarda as trocas anteriores.
 - **Briga com a diretoria.** Não recuar é a transferência certa, sem sorteio: a diretoria vende você e fecha as portas. Retratar-se custa 10 de torcida (era 2).
 - **O batedor do time.** Fora do ataque (zagueiro, lateral, volante, meias), finalização a partir de 80 faz do jogador o cobrador de pênalti e falta: gols a mais por jogo, até 0,06 (zagueiro e volante), 0,05 (lateral), 0,04 (meio-campista) e 0,03 (meia e alas) no 99 de FIN (`SET_PIECE_TAKER`, `setPieceSkill`, `season/production.ts`), e o jogo-chave vira uma cobrança (pênalti, falta, pênalti decisivo) com até 30% de chance (`SET_PIECE_SCENE_CHANCE`, `career/matchMoments.ts`).
@@ -5140,7 +5140,7 @@ O motor não muda (Craque `2.0.0-m41`, Técnico `1.10.0`): nenhuma carreira dá 
 
 ## Prévia social do site (complemento de D118, seção 29)
 
-**Como ficou.** Compartilhar a URL do Futeiros apresenta uma arte de futebol
+**Como ficou.** Compartilhar a URL do Futeiro apresenta uma arte de futebol
 1200 × 630, com a paleta e as fontes originais, marca, chamada curta e uma jogada
 desenhada no campo. Open Graph e Twitter Card são gravados no HTML do build,
 sem depender de React, login, cookies ou consentimento. PT é o padrão; EN e ES

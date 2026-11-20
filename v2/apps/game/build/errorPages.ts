@@ -80,12 +80,12 @@ export function errorPageHtml(code: PageCode, base: string): string {
 <meta name="theme-color" content="#0d1110" />
 <meta name="robots" content="noindex" />
 <link rel="icon" type="image/svg+xml" href="${base}favicon.svg" />
-<title>${escape(pt.title)}: Futeiros</title>
+<title>${escape(pt.title)}: Futeiro</title>
 <style>${STYLE}</style>
 </head>
 <body>
 <main>
-<a class="brand" href="${base}">${MARK}<span>Futeiros</span><small data-t="tagline">${escape(pt.tagline)}</small></a>
+<a class="brand" href="${base}">${MARK}<span>Futeiro</span><small data-t="tagline">${escape(pt.tagline)}</small></a>
 <span class="art">${errorArt(page.art)}</span>
 <p class="eyebrow" data-t="eyebrow">${escape(pt.eyebrow)}</p>
 <h1 data-t="title">${escape(pt.title)}</h1>

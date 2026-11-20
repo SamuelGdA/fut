@@ -64,7 +64,7 @@ function artwork(language) {
     <g stroke="#68756b" stroke-width="2.5"><path d="m247 183 14 14m0-14-14 14M153 351l14 14m0-14-14 14M327 416l14 14m0-14-14 14"/></g>
   </svg>
   <div class="paper"><div class="content">
-    <div class="brand"><svg viewBox="0 0 24 32" fill="none"><rect x="2" y="1.5" width="20" height="29" rx="1.5" stroke="currentColor" stroke-width="2.2"/><path d="M2 16h20" stroke="currentColor" stroke-width="2.2"/><circle cx="12" cy="16" r="4.2" stroke="#86600b" stroke-width="2.2"/></svg>FUTEIROS</div>
+    <div class="brand"><svg viewBox="0 0 24 32" fill="none"><rect x="2" y="1.5" width="20" height="29" rx="1.5" stroke="currentColor" stroke-width="2.2"/><path d="M2 16h20" stroke="currentColor" stroke-width="2.2"/><circle cx="12" cy="16" r="4.2" stroke="#86600b" stroke-width="2.2"/></svg>FUTEIRO</div>
     <p class="eyebrow">${t.eyebrow}</p><h1><span>${t.lines[0]}</span><span>${t.lines[1]}</span></h1>
     <p class="foot">${t.foot}</p></div>
     <div class="career-showcase" aria-hidden="true"><ul class="showcase">${showcasePieces}</ul></div></div>

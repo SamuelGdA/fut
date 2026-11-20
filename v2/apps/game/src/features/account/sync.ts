@@ -52,7 +52,7 @@ let chain: Promise<unknown> = Promise.resolve();
 
 function send(work: () => Promise<void>): void {
   chain = chain.then(work).catch((error: unknown) => {
-    if (!isNetworkError(error)) console.warn("Futeiros: envio para a conta recusado", error);
+    if (!isNetworkError(error)) console.warn("Futeiro: envio para a conta recusado", error);
   });
 }
 
@@ -74,7 +74,7 @@ export function sendCareer(game: Game, key: string, data: Record<string, unknown
   if (!ACCOUNTS_ENABLED || !memberId() || !/^[a-z0-9]{6,32}$/.test(key)) return false;
   const parsed = game === "craque" ? craqueCareerSchema.safeParse(data) : tecnicoCareerSchema.safeParse(data);
   if (!parsed.success) {
-    console.warn("Futeiros: carreira fora dos limites, não enviada", parsed.error.issues);
+    console.warn("Futeiro: carreira fora dos limites, não enviada", parsed.error.issues);
     return false;
   }
   send(async () => {
