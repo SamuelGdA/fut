@@ -1237,7 +1237,7 @@ export const pt = {
       ads: "Espaço de anúncio genérico",
       legal: "Aviso legal ao começar a jogar",
       emails: "E-mails da conta",
-      emailsLead: "Os modelos que o Supabase manda (D118), com dados de exemplo. Os arquivos ficam em supabase/templates e entram no projeto pelo config.toml.",
+      emailsLead: "Os modelos que o Supabase manda (D118, D122), com dados de exemplo, no idioma da interface. Os arquivos ficam em supabase/templates e entram no projeto pelo config.toml.",
       emailKinds: {
         confirmation: "Confirmar cadastro",
         recovery: "Recuperar senha",

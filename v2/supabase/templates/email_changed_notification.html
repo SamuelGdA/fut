@@ -1,3 +1,73 @@
+{{/* Futeiro: modelo de e-mail da conta (D118, D122). Um bloco por idioma, escolhido por user_metadata.locale (es, en; o resto, português). Gerado de um layout único: mude todos juntos. */}}
+{{ if eq (printf "%v" .Data.locale) "es" }}
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light only">
+<title>Tu correo cambió | Futeiro</title>
+</head>
+<body style="margin:0;padding:0;background:#f3f0e8;">
+<div style="display:none;max-height:0;overflow:hidden;opacity:0;">El correo de tu cuenta de Futeiro cambió.</div>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f3f0e8;">
+<tr><td align="center" style="padding:32px 16px;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:560px;">
+<tr><td style="background:#0d1110;border-radius:14px 14px 0 0;padding:22px 32px;border-bottom:4px solid #3fb26a;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+<td style="font:900 22px/1 'Arial Black',Arial,Helvetica,sans-serif;letter-spacing:3px;color:#eef1ea;text-transform:uppercase;">FUTEIRO</td>
+<td align="right" style="font:700 11px/1 Arial,Helvetica,sans-serif;letter-spacing:2px;color:#e3b341;text-transform:uppercase;">Fútbol de decisiones</td>
+</tr></table>
+</td></tr>
+<tr><td style="background:#ffffff;padding:36px 32px 28px;border-left:1px solid #e2ddd0;border-right:1px solid #e2ddd0;border-bottom:1px solid #e2ddd0;border-radius:0 0 14px 14px;">
+<p style="margin:0 0 10px;font:700 12px/1.4 Arial,Helvetica,sans-serif;letter-spacing:2px;color:#2f7d4c;text-transform:uppercase;">Aviso de seguridad</p>
+<h1 style="margin:0 0 16px;font:900 28px/1.15 'Arial Black',Arial,Helvetica,sans-serif;color:#141a17;">Tu correo cambió</h1>
+<p style="margin:0 0 26px;font:400 16px/1.6 Arial,Helvetica,sans-serif;color:#3a433e;">El correo de tu cuenta de Futeiro ahora es <strong>{{ .Email }}</strong>. Si fuiste tú, todo está bien.</p>
+<p style="margin:0;padding:14px 16px;background:#f6f4ee;border-radius:8px;font:400 13px/1.55 Arial,Helvetica,sans-serif;color:#5a645e;">¿No fuiste tú? Escribe a contact@futeiro.com cuanto antes.</p>
+</td></tr>
+<tr><td align="center" style="padding:22px 12px 0;font:400 12px/1.6 Arial,Helvetica,sans-serif;color:#838e86;">
+Recibiste este correo porque se usó en una cuenta de Futeiro.<br>Futeiro nunca te pide la contraseña por correo.
+</td></tr>
+</table>
+</td></tr>
+</table>
+</body>
+</html>
+{{ else if eq (printf "%v" .Data.locale) "en" }}
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light only">
+<title>Your email was changed | Futeiro</title>
+</head>
+<body style="margin:0;padding:0;background:#f3f0e8;">
+<div style="display:none;max-height:0;overflow:hidden;opacity:0;">Your Futeiro account email was changed.</div>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f3f0e8;">
+<tr><td align="center" style="padding:32px 16px;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:560px;">
+<tr><td style="background:#0d1110;border-radius:14px 14px 0 0;padding:22px 32px;border-bottom:4px solid #3fb26a;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+<td style="font:900 22px/1 'Arial Black',Arial,Helvetica,sans-serif;letter-spacing:3px;color:#eef1ea;text-transform:uppercase;">FUTEIRO</td>
+<td align="right" style="font:700 11px/1 Arial,Helvetica,sans-serif;letter-spacing:2px;color:#e3b341;text-transform:uppercase;">Football of choices</td>
+</tr></table>
+</td></tr>
+<tr><td style="background:#ffffff;padding:36px 32px 28px;border-left:1px solid #e2ddd0;border-right:1px solid #e2ddd0;border-bottom:1px solid #e2ddd0;border-radius:0 0 14px 14px;">
+<p style="margin:0 0 10px;font:700 12px/1.4 Arial,Helvetica,sans-serif;letter-spacing:2px;color:#2f7d4c;text-transform:uppercase;">Security notice</p>
+<h1 style="margin:0 0 16px;font:900 28px/1.15 'Arial Black',Arial,Helvetica,sans-serif;color:#141a17;">Your email was changed</h1>
+<p style="margin:0 0 26px;font:400 16px/1.6 Arial,Helvetica,sans-serif;color:#3a433e;">Your Futeiro account email is now <strong>{{ .Email }}</strong>. If it was you, all good.</p>
+<p style="margin:0;padding:14px 16px;background:#f6f4ee;border-radius:8px;font:400 13px/1.55 Arial,Helvetica,sans-serif;color:#5a645e;">Wasn't you? Write to contact@futeiro.com as soon as possible.</p>
+</td></tr>
+<tr><td align="center" style="padding:22px 12px 0;font:400 12px/1.6 Arial,Helvetica,sans-serif;color:#838e86;">
+You got this email because it was used on a Futeiro account.<br>Futeiro never asks for your password by email.
+</td></tr>
+</table>
+</td></tr>
+</table>
+</body>
+</html>
+{{ else }}
 <!doctype html>
 <html lang="pt-BR">
 <head>
@@ -6,7 +76,6 @@
 <meta name="color-scheme" content="light only">
 <title>Seu e-mail foi trocado | Futeiro</title>
 </head>
-<!-- Futeiro: modelo de e-mail da conta (D118). Gerado a partir de um layout único; mude todos juntos. -->
 <body style="margin:0;padding:0;background:#f3f0e8;">
 <div style="display:none;max-height:0;overflow:hidden;opacity:0;">O e-mail da sua conta do Futeiro mudou.</div>
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f3f0e8;">
@@ -18,14 +87,11 @@
 <td align="right" style="font:700 11px/1 Arial,Helvetica,sans-serif;letter-spacing:2px;color:#e3b341;text-transform:uppercase;">Futebol de escolhas</td>
 </tr></table>
 </td></tr>
-<tr><td style="background:#ffffff;padding:36px 32px 28px;border-left:1px solid #e2ddd0;border-right:1px solid #e2ddd0;">
+<tr><td style="background:#ffffff;padding:36px 32px 28px;border-left:1px solid #e2ddd0;border-right:1px solid #e2ddd0;border-bottom:1px solid #e2ddd0;border-radius:0 0 14px 14px;">
 <p style="margin:0 0 10px;font:700 12px/1.4 Arial,Helvetica,sans-serif;letter-spacing:2px;color:#2f7d4c;text-transform:uppercase;">Aviso de segurança</p>
 <h1 style="margin:0 0 16px;font:900 28px/1.15 'Arial Black',Arial,Helvetica,sans-serif;color:#141a17;">Seu e-mail foi trocado</h1>
 <p style="margin:0 0 26px;font:400 16px/1.6 Arial,Helvetica,sans-serif;color:#3a433e;">O e-mail da sua conta do Futeiro agora é <strong>{{ .Email }}</strong>. Se foi você, está tudo certo.</p>
-<p style="margin:0;padding:14px 16px;background:#f6f4ee;border-radius:8px;font:400 13px/1.55 Arial,Helvetica,sans-serif;color:#5a645e;">Não foi você? Escreva para o contato da Política de Privacidade o quanto antes.</p>
-</td></tr>
-<tr><td style="background:#ffffff;padding:0 32px 26px;border-left:1px solid #e2ddd0;border-right:1px solid #e2ddd0;border-radius:0 0 14px 14px;border-bottom:1px solid #e2ddd0;">
-<p style="margin:0;padding-top:18px;border-top:1px solid #ece8de;font:400 12px/1.6 Arial,Helvetica,sans-serif;color:#7a837d;"><strong style="color:#5a645e;">ES</strong> El correo de tu cuenta de Futeiro cambió.<br><strong style="color:#5a645e;">EN</strong> The email on your Futeiro account was changed.</p>
+<p style="margin:0;padding:14px 16px;background:#f6f4ee;border-radius:8px;font:400 13px/1.55 Arial,Helvetica,sans-serif;color:#5a645e;">Não foi você? Escreva para contact@futeiro.com o quanto antes.</p>
 </td></tr>
 <tr><td align="center" style="padding:22px 12px 0;font:400 12px/1.6 Arial,Helvetica,sans-serif;color:#838e86;">
 Você recebeu este e-mail porque ele foi usado numa conta do Futeiro.<br>O Futeiro nunca pede sua senha por e-mail.
@@ -35,3 +101,4 @@ Você recebeu este e-mail porque ele foi usado numa conta do Futeiro.<br>O Futei
 </table>
 </body>
 </html>
+{{ end }}

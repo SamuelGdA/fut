@@ -250,39 +250,41 @@ otp_expiry = 3600
 # sender_name = "Admin"
 
 # Modelos de e-mail da conta (D118): um layout só, em supabase/templates.
+# D122: cada modelo e cada assunto trazem PT, ES e EN; o Supabase escolhe pelo
+# `locale` que o jogo grava nos dados da conta (sem ele, português).
 # Os caminhos partem da pasta v2, de onde o CLI roda.
 [auth.email.template.confirmation]
-subject = "Confirme seu e-mail no Futeiro"
+subject = "{{ if eq (printf \"%v\" .Data.locale) \"es\" }}Confirma tu correo en Futeiro{{ else if eq (printf \"%v\" .Data.locale) \"en\" }}Confirm your email for Futeiro{{ else }}Confirme seu e-mail no Futeiro{{ end }}"
 content_path = "./supabase/templates/confirmation.html"
 
 [auth.email.template.recovery]
-subject = "Crie uma senha nova no Futeiro"
+subject = "{{ if eq (printf \"%v\" .Data.locale) \"es\" }}Crea una contraseña nueva en Futeiro{{ else if eq (printf \"%v\" .Data.locale) \"en\" }}Create a new Futeiro password{{ else }}Crie uma senha nova no Futeiro{{ end }}"
 content_path = "./supabase/templates/recovery.html"
 
 [auth.email.template.magic_link]
-subject = "Seu link para entrar no Futeiro"
+subject = "{{ if eq (printf \"%v\" .Data.locale) \"es\" }}Tu enlace para entrar en Futeiro{{ else if eq (printf \"%v\" .Data.locale) \"en\" }}Your link to sign in to Futeiro{{ else }}Seu link para entrar no Futeiro{{ end }}"
 content_path = "./supabase/templates/magic_link.html"
 
 [auth.email.template.invite]
-subject = "Você foi convidado para o Futeiro"
+subject = "{{ if eq (printf \"%v\" .Data.locale) \"es\" }}Te invitaron a Futeiro{{ else if eq (printf \"%v\" .Data.locale) \"en\" }}You're invited to Futeiro{{ else }}Você foi convidado para o Futeiro{{ end }}"
 content_path = "./supabase/templates/invite.html"
 
 [auth.email.template.email_change]
-subject = "Confirme o novo e-mail do Futeiro"
+subject = "{{ if eq (printf \"%v\" .Data.locale) \"es\" }}Confirma el nuevo correo de Futeiro{{ else if eq (printf \"%v\" .Data.locale) \"en\" }}Confirm your new Futeiro email{{ else }}Confirme o novo e-mail do Futeiro{{ end }}"
 content_path = "./supabase/templates/email_change.html"
 
 [auth.email.template.reauthentication]
-subject = "Seu código de confirmação do Futeiro"
+subject = "{{ if eq (printf \"%v\" .Data.locale) \"es\" }}Tu código de confirmación de Futeiro{{ else if eq (printf \"%v\" .Data.locale) \"en\" }}Your Futeiro confirmation code{{ else }}Seu código de confirmação do Futeiro{{ end }}"
 content_path = "./supabase/templates/reauthentication.html"
 
 [auth.email.notification.password_changed]
 enabled = true
-subject = "Sua senha do Futeiro foi trocada"
+subject = "{{ if eq (printf \"%v\" .Data.locale) \"es\" }}Tu contraseña de Futeiro cambió{{ else if eq (printf \"%v\" .Data.locale) \"en\" }}Your Futeiro password was changed{{ else }}Sua senha do Futeiro foi trocada{{ end }}"
 content_path = "./supabase/templates/password_changed_notification.html"
 
 [auth.email.notification.email_changed]
 enabled = true
-subject = "O e-mail da sua conta do Futeiro mudou"
+subject = "{{ if eq (printf \"%v\" .Data.locale) \"es\" }}El correo de tu cuenta de Futeiro cambió{{ else if eq (printf \"%v\" .Data.locale) \"en\" }}Your Futeiro account email was changed{{ else }}O e-mail da sua conta do Futeiro mudou{{ end }}"
 content_path = "./supabase/templates/email_changed_notification.html"
 
 [auth.sms]

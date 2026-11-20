@@ -1233,7 +1233,7 @@ export const en: Messages = {
       ads: "Generic ad space",
       legal: "Legal notice when play starts",
       emails: "Account emails",
-      emailsLead: "The templates Supabase sends (D118), with sample data. The files live in supabase/templates and reach the project through config.toml.",
+      emailsLead: "The templates Supabase sends (D118, D122), with sample data, in the interface language. The files live in supabase/templates and reach the project through config.toml.",
       emailKinds: {
         confirmation: "Confirm sign-up",
         recovery: "Reset password",

@@ -2274,6 +2274,12 @@ A inspeção da abertura da pilha de troféus agora observa os quadros antes de 
 
 **Por quê.** O jogo é feito para jogar com internet (conta, ranking e Desafio dependem do servidor), então baixar 54 MB para jogar sem rede era peso sem uso. Publicar só da `main` separa o que está em teste do que está no ar, sem passo manual.
 
+## D122: e-mails da conta no idioma do jogador (20/11/2026)
+
+**Decisão.** Os oito modelos de e-mail e os seus assuntos trazem um bloco em português, espanhol e inglês, e o Supabase escolhe por `user_metadata.locale` (`{{ if eq (printf "%v" .Data.locale) "es" }}`, depois `"en"`, senão português). O jogo grava o idioma dos Ajustes nesse campo no cadastro, a cada login (só quando mudou) e a cada troca de idioma com a conta aberta. Sai o resumo em espanhol e inglês no rodapé do modelo em português. O remetente é `no-reply@futeiro.com`, pelo Resend.
+
+**Por quê.** O jogo existe nos três idiomas; um e-mail de conta em português com duas linhas traduzidas no rodapé fazia o jogador de fala espanhola ou inglesa adivinhar o que clicar. O `printf` transforma o campo ausente (conta antiga, convite) em texto, então a comparação nunca falha e a falta de idioma cai no português. O campo fica nos dados da conta porque o Supabase só enxerga ali o que é de cada usuário, e o jogador só muda o idioma dos próprios e-mails.
+
 ## Prévia social do site: complemento de D118 (03/11/2026)
 
 **Decisão.** Arte editorial própria com as fontes e cores do Futeiros, PNGs

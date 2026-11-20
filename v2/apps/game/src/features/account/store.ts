@@ -1,6 +1,7 @@
 import type { Session, SupabaseClient } from "@supabase/supabase-js";
 import { create } from "zustand";
 import { safeStorage } from "../../services/storage";
+import { usePrefs } from "../../store/prefs";
 import { cloudClient, errorCode, isNetworkError } from "./client";
 import { ACCOUNTS_ENABLED, hasStoredSession } from "./config";
 import type { ChallengeStreak, Profile, Trophy } from "./schemas";
@@ -100,6 +101,15 @@ function cleanAuthParams(): void {
   if (changed) window.history.replaceState(window.history.state, "", `${url.pathname}${url.search}${url.hash}`);
 }
 
+/**
+ * Idioma dos e-mails da conta. Os modelos do Supabase escolhem o texto por
+ * `user_metadata.locale`; o jogo grava ali o idioma escolhido nos Ajustes no
+ * cadastro, a cada login e a cada troca de idioma com a conta aberta.
+ */
+function emailLocaleOf(session: Session): unknown {
+  return session.user.user_metadata["locale"];
+}
+
 function userOf(session: Session): AccountUser {
   const providers = new Set<string>();
   for (const identity of session.user.identities ?? []) providers.add(identity.provider);
@@ -170,14 +180,32 @@ export const useAccount = create<AccountState>()((set, get) => {
     const user = userOf(session);
     const same = get().user?.id === user.id && get().status === "member";
     set({ status: "member", user });
+    void syncEmailLocale(client, session);
     if (same && get().dataStatus === "ready") return;
     await loadData(client, user);
     void importLocal(client, user);
   }
 
+  /** Leva o idioma atual para a conta, só quando mudou (um pedido a menos a cada login). */
+  async function syncEmailLocale(client: SupabaseClient, session: Session): Promise<void> {
+    const locale = usePrefs.getState().locale;
+    if (emailLocaleOf(session) === locale) return;
+    try {
+      await client.auth.updateUser({ data: { locale } });
+    } catch {
+      // Sem rede, o e-mail sai no idioma anterior; o próximo login tenta de novo.
+    }
+  }
+
   function listen(client: SupabaseClient): void {
     if (listening) return;
     listening = true;
+    usePrefs.subscribe((state, previous) => {
+      if (state.locale === previous.locale || get().status !== "member") return;
+      void client.auth.getSession().then(({ data }) => {
+        if (data.session) void syncEmailLocale(client, data.session);
+      });
+    });
     client.auth.onAuthStateChange((event, session) => {
       // O Supabase pede para não chamar o cliente dentro deste aviso: o trabalho sai do laço.
       window.setTimeout(() => {
@@ -303,7 +331,7 @@ export const useAccount = create<AccountState>()((set, get) => {
         const { data, error } = await client.auth.signUp({
           email: parsedEmail.data,
           password: parsedPassword.data,
-          options: { emailRedirectTo: authRedirect(), data: { username: parsedUsername.data } },
+          options: { emailRedirectTo: authRedirect(), data: { username: parsedUsername.data, locale: usePrefs.getState().locale } },
         });
         if (error) return { error: authError(error), confirm: false };
         if (data.session) {

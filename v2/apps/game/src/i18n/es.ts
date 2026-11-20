@@ -1233,7 +1233,7 @@ export const es: Messages = {
       ads: "Espacio de anuncio genérico",
       legal: "Aviso legal al empezar a jugar",
       emails: "Correos de la cuenta",
-      emailsLead: "Las plantillas que envía Supabase (D118), con datos de ejemplo. Los archivos están en supabase/templates y entran al proyecto por config.toml.",
+      emailsLead: "Las plantillas que envía Supabase (D118, D122), con datos de ejemplo, en el idioma de la interfaz. Los archivos están en supabase/templates y entran al proyecto por config.toml.",
       emailKinds: {
         confirmation: "Confirmar registro",
         recovery: "Recuperar contraseña",

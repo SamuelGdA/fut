@@ -1,14 +1,91 @@
+{{/* Futeiro: modelo de e-mail da conta (D118, D122). Um bloco por idioma, escolhido por user_metadata.locale (es, en; o resto, português). Gerado de um layout único: mude todos juntos. */}}
+{{ if eq (printf "%v" .Data.locale) "es" }}
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light only">
+<title>Te invitaron | Futeiro</title>
+</head>
+<body style="margin:0;padding:0;background:#f3f0e8;">
+<div style="display:none;max-height:0;overflow:hidden;opacity:0;">Recibiste una invitación a Futeiro.</div>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f3f0e8;">
+<tr><td align="center" style="padding:32px 16px;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:560px;">
+<tr><td style="background:#0d1110;border-radius:14px 14px 0 0;padding:22px 32px;border-bottom:4px solid #3fb26a;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+<td style="font:900 22px/1 'Arial Black',Arial,Helvetica,sans-serif;letter-spacing:3px;color:#eef1ea;text-transform:uppercase;">FUTEIRO</td>
+<td align="right" style="font:700 11px/1 Arial,Helvetica,sans-serif;letter-spacing:2px;color:#e3b341;text-transform:uppercase;">Fútbol de decisiones</td>
+</tr></table>
+</td></tr>
+<tr><td style="background:#ffffff;padding:36px 32px 28px;border-left:1px solid #e2ddd0;border-right:1px solid #e2ddd0;border-bottom:1px solid #e2ddd0;border-radius:0 0 14px 14px;">
+<p style="margin:0 0 10px;font:700 12px/1.4 Arial,Helvetica,sans-serif;letter-spacing:2px;color:#2f7d4c;text-transform:uppercase;">Invitación</p>
+<h1 style="margin:0 0 16px;font:900 28px/1.15 'Arial Black',Arial,Helvetica,sans-serif;color:#141a17;">Te invitaron</h1>
+<p style="margin:0 0 26px;font:400 16px/1.6 Arial,Helvetica,sans-serif;color:#3a433e;">Alguien invitó a <strong>{{ .Email }}</strong> a Futeiro, el juego de fútbol en el que cada decisión cambia la carrera. Toca el botón para aceptar.</p>
+<table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td style="background:#3fb26a;border-radius:10px;">
+<a href="{{ .ConfirmationURL }}" style="display:inline-block;padding:15px 28px;font:800 16px/1 Arial,Helvetica,sans-serif;color:#0d1110;text-decoration:none;border-radius:10px;">Aceptar invitación</a>
+</td></tr></table>
+<p style="margin:18px 0 0;font:400 12px/1.6 Arial,Helvetica,sans-serif;color:#7a837d;">¿El botón no abrió? Copia esta dirección en el navegador:<br><a href="{{ .ConfirmationURL }}" style="color:#2f7d4c;word-break:break-all;">{{ .ConfirmationURL }}</a></p>
+<p style="margin:26px 0 0;padding:14px 16px;background:#f6f4ee;border-radius:8px;font:400 13px/1.55 Arial,Helvetica,sans-serif;color:#5a645e;">¿No esperabas esta invitación? Ignora este correo: no se crea ninguna cuenta sin que aceptes.</p>
+</td></tr>
+<tr><td align="center" style="padding:22px 12px 0;font:400 12px/1.6 Arial,Helvetica,sans-serif;color:#838e86;">
+Recibiste este correo porque se usó en una cuenta de Futeiro.<br>Futeiro nunca te pide la contraseña por correo.
+</td></tr>
+</table>
+</td></tr>
+</table>
+</body>
+</html>
+{{ else if eq (printf "%v" .Data.locale) "en" }}
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light only">
+<title>You're invited | Futeiro</title>
+</head>
+<body style="margin:0;padding:0;background:#f3f0e8;">
+<div style="display:none;max-height:0;overflow:hidden;opacity:0;">You got an invitation to Futeiro.</div>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f3f0e8;">
+<tr><td align="center" style="padding:32px 16px;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:560px;">
+<tr><td style="background:#0d1110;border-radius:14px 14px 0 0;padding:22px 32px;border-bottom:4px solid #3fb26a;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+<td style="font:900 22px/1 'Arial Black',Arial,Helvetica,sans-serif;letter-spacing:3px;color:#eef1ea;text-transform:uppercase;">FUTEIRO</td>
+<td align="right" style="font:700 11px/1 Arial,Helvetica,sans-serif;letter-spacing:2px;color:#e3b341;text-transform:uppercase;">Football of choices</td>
+</tr></table>
+</td></tr>
+<tr><td style="background:#ffffff;padding:36px 32px 28px;border-left:1px solid #e2ddd0;border-right:1px solid #e2ddd0;border-bottom:1px solid #e2ddd0;border-radius:0 0 14px 14px;">
+<p style="margin:0 0 10px;font:700 12px/1.4 Arial,Helvetica,sans-serif;letter-spacing:2px;color:#2f7d4c;text-transform:uppercase;">Invitation</p>
+<h1 style="margin:0 0 16px;font:900 28px/1.15 'Arial Black',Arial,Helvetica,sans-serif;color:#141a17;">You're invited</h1>
+<p style="margin:0 0 26px;font:400 16px/1.6 Arial,Helvetica,sans-serif;color:#3a433e;">Someone invited <strong>{{ .Email }}</strong> to Futeiro, the football game where every choice shapes the career. Tap the button to accept.</p>
+<table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td style="background:#3fb26a;border-radius:10px;">
+<a href="{{ .ConfirmationURL }}" style="display:inline-block;padding:15px 28px;font:800 16px/1 Arial,Helvetica,sans-serif;color:#0d1110;text-decoration:none;border-radius:10px;">Accept invitation</a>
+</td></tr></table>
+<p style="margin:18px 0 0;font:400 12px/1.6 Arial,Helvetica,sans-serif;color:#7a837d;">Button not working? Copy this address into your browser:<br><a href="{{ .ConfirmationURL }}" style="color:#2f7d4c;word-break:break-all;">{{ .ConfirmationURL }}</a></p>
+<p style="margin:26px 0 0;padding:14px 16px;background:#f6f4ee;border-radius:8px;font:400 13px/1.55 Arial,Helvetica,sans-serif;color:#5a645e;">Not expecting this? Ignore this email: no account is created unless you accept.</p>
+</td></tr>
+<tr><td align="center" style="padding:22px 12px 0;font:400 12px/1.6 Arial,Helvetica,sans-serif;color:#838e86;">
+You got this email because it was used on a Futeiro account.<br>Futeiro never asks for your password by email.
+</td></tr>
+</table>
+</td></tr>
+</table>
+</body>
+</html>
+{{ else }}
 <!doctype html>
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light only">
-<title>Você foi chamado para o time | Futeiro</title>
+<title>Você foi convidado | Futeiro</title>
 </head>
-<!-- Futeiro: modelo de e-mail da conta (D118). Gerado a partir de um layout único; mude todos juntos. -->
 <body style="margin:0;padding:0;background:#f3f0e8;">
-<div style="display:none;max-height:0;overflow:hidden;opacity:0;">Você foi convidado para o Futeiro.</div>
+<div style="display:none;max-height:0;overflow:hidden;opacity:0;">Você recebeu um convite para o Futeiro.</div>
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f3f0e8;">
 <tr><td align="center" style="padding:32px 16px;">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:560px;">
@@ -18,18 +95,15 @@
 <td align="right" style="font:700 11px/1 Arial,Helvetica,sans-serif;letter-spacing:2px;color:#e3b341;text-transform:uppercase;">Futebol de escolhas</td>
 </tr></table>
 </td></tr>
-<tr><td style="background:#ffffff;padding:36px 32px 28px;border-left:1px solid #e2ddd0;border-right:1px solid #e2ddd0;">
+<tr><td style="background:#ffffff;padding:36px 32px 28px;border-left:1px solid #e2ddd0;border-right:1px solid #e2ddd0;border-bottom:1px solid #e2ddd0;border-radius:0 0 14px 14px;">
 <p style="margin:0 0 10px;font:700 12px/1.4 Arial,Helvetica,sans-serif;letter-spacing:2px;color:#2f7d4c;text-transform:uppercase;">Convite</p>
-<h1 style="margin:0 0 16px;font:900 28px/1.15 'Arial Black',Arial,Helvetica,sans-serif;color:#141a17;">Você foi chamado para o time</h1>
-<p style="margin:0 0 26px;font:400 16px/1.6 Arial,Helvetica,sans-serif;color:#3a433e;">Alguém convidou <strong>{{ .Email }}</strong> para criar uma conta no Futeiro, o futebol de escolhas. Aceite o convite para escolher sua senha e seu @.</p>
+<h1 style="margin:0 0 16px;font:900 28px/1.15 'Arial Black',Arial,Helvetica,sans-serif;color:#141a17;">Você foi convidado</h1>
+<p style="margin:0 0 26px;font:400 16px/1.6 Arial,Helvetica,sans-serif;color:#3a433e;">Alguém convidou <strong>{{ .Email }}</strong> para o Futeiro, o jogo de futebol em que cada escolha muda a carreira. Toque no botão para aceitar.</p>
 <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td style="background:#3fb26a;border-radius:10px;">
 <a href="{{ .ConfirmationURL }}" style="display:inline-block;padding:15px 28px;font:800 16px/1 Arial,Helvetica,sans-serif;color:#0d1110;text-decoration:none;border-radius:10px;">Aceitar convite</a>
 </td></tr></table>
 <p style="margin:18px 0 0;font:400 12px/1.6 Arial,Helvetica,sans-serif;color:#7a837d;">O botão não abriu? Copie este endereço no navegador:<br><a href="{{ .ConfirmationURL }}" style="color:#2f7d4c;word-break:break-all;">{{ .ConfirmationURL }}</a></p>
-<p style="margin:26px 0 0;padding:14px 16px;background:#f6f4ee;border-radius:8px;font:400 13px/1.55 Arial,Helvetica,sans-serif;color:#5a645e;">Não esperava este convite? Ignore este e-mail: nenhuma conta é criada sem você.</p>
-</td></tr>
-<tr><td style="background:#ffffff;padding:0 32px 26px;border-left:1px solid #e2ddd0;border-right:1px solid #e2ddd0;border-radius:0 0 14px 14px;border-bottom:1px solid #e2ddd0;">
-<p style="margin:0;padding-top:18px;border-top:1px solid #ece8de;font:400 12px/1.6 Arial,Helvetica,sans-serif;color:#7a837d;"><strong style="color:#5a645e;">ES</strong> Te invitaron a crear una cuenta en Futeiro.<br><strong style="color:#5a645e;">EN</strong> You were invited to create a Futeiro account.</p>
+<p style="margin:26px 0 0;padding:14px 16px;background:#f6f4ee;border-radius:8px;font:400 13px/1.55 Arial,Helvetica,sans-serif;color:#5a645e;">Não esperava este convite? Ignore este e-mail: nenhuma conta é criada sem você aceitar.</p>
 </td></tr>
 <tr><td align="center" style="padding:22px 12px 0;font:400 12px/1.6 Arial,Helvetica,sans-serif;color:#838e86;">
 Você recebeu este e-mail porque ele foi usado numa conta do Futeiro.<br>O Futeiro nunca pede sua senha por e-mail.
@@ -39,3 +113,4 @@ Você recebeu este e-mail porque ele foi usado numa conta do Futeiro.<br>O Futei
 </table>
 </body>
 </html>
+{{ end }}

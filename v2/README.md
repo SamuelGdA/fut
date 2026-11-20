@@ -2316,10 +2316,12 @@ clones antigos precisa clonar de novo.
 - **E-mails da conta.** Oito modelos em `supabase/templates` (confirmação,
   recuperação, link de acesso, convite, troca de e-mail, código de segurança e
   os avisos de senha e e-mail trocados), ligados no `supabase/config.toml`. O
-  laboratório (Design, Conta) mostra cada um com dados de exemplo. Para valerem
-  no projeto hospedado, rode `npx supabase@2.121.0 config push` na pasta `v2`
-  (confira antes com `config diff`) ou cole o HTML no painel, em
-  Authentication, Email Templates.
+  laboratório (Design, Conta) mostra cada um com dados de exemplo, no idioma da
+  interface. Cada modelo e cada assunto têm um bloco em português, espanhol e
+  inglês (D122): o Supabase escolhe pelo `locale` dos dados da conta, que o jogo
+  grava no cadastro, a cada login e a cada troca de idioma; sem ele, sai em
+  português. Para valerem no projeto hospedado, cole o HTML e o assunto no
+  painel, em Authentication, Emails (o `config push` desligaria o SMTP).
 - **Anúncios na carreira.** Em telas a partir de 1660 px, dois espaços de
   160 × 600 nas margens, fora das três colunas do laço (`AdSlot` "carreira").
   Abaixo disso, somem.

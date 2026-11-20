@@ -5178,10 +5178,14 @@ vitrine aparece nos três idiomas. As telas do jogo não são modificadas.
   retoma a carreira salva ou, sem ela, abre a criação do técnico. O hub e o
   link de carreira (`#c=`) ficam na raiz.
 - **E-mails da conta.** Oito modelos com o mesmo layout (marca, título, texto,
-  botão ou código, aviso de segurança e um resumo em espanhol e inglês) em
+  botão ou código e aviso de segurança) em
   `supabase/templates`: confirmação, recuperação, link de acesso, convite, troca
   de e-mail, código de segurança e os avisos de senha e e-mail trocados. O
   laboratório mostra cada um com dados de exemplo.
+  *Como ficou (D122):* cada e-mail sai inteiro no idioma do jogador
+  (português, espanhol ou inglês), assunto incluído. O idioma vem do `locale`
+  dos dados da conta, gravado pelo jogo no cadastro, a cada login e quando o
+  jogador troca o idioma nos Ajustes; conta sem idioma recebe português.
 - **Anúncios de exemplo na carreira.** A partir de 1660 px de largura, dois
   espaços de 160 × 600 nas margens, fora das três colunas; abaixo disso, nada.
   O laço continua cabendo na tela (D23).
