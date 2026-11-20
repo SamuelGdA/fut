@@ -39,6 +39,8 @@ export const es: Messages = {
       ended: "Legado en pantalla",
       noSave: "Sin guardado",
       noSaveHint: "Continúa aquí tu última carrera en curso.",
+      soon: "Próximamente",
+      soonHint: "El modo Técnico está en preparación y llega en una próxima versión.",
     },
     achievements: "Logros",
     achievementsCount: { zero: "Ninguno desbloqueado todavía", one: "{count} desbloqueado", other: "{count} desbloqueados" },
@@ -719,6 +721,13 @@ export const es: Messages = {
     sectionBody: "El resto de la pantalla sigue aquí.",
   },
 
+  comingSoon: {
+    badge: "Próximamente",
+    title: "Técnico",
+    body: "El modo Técnico está en preparación y llega en una próxima versión. Mientras tanto, la carrera de jugador te está esperando.",
+    home: "Volver al inicio",
+  },
+
   notFound: {
     eyebrow: "Error 404",
     title: "Balón afuera",
@@ -850,9 +859,6 @@ export const es: Messages = {
       edictBroken: "Regla incumplida: la mitad de la puntuación",
       erasedNone: "Ninguna temporada borrada",
       erased: { one: "{count} temporada borrada: menos {percent}", other: "{count} temporadas borradas: menos {percent}" },
-      placement: "{place} de {of} intentos en la clasificación del {date}.",
-      placementAlone: "El único intento del {date} en este dispositivo.",
-      shared: "La clasificación queda en el dispositivo de quien jugó.",
     },
   },
 
@@ -945,7 +951,6 @@ export const es: Messages = {
       back: "Volver al inicio",
     },
     imported: { one: "{count} logro de este dispositivo entró en tu cuenta", other: "{count} logros de este dispositivo entraron en tu cuenta" },
-    welcome: "Todo listo, @{name}",
     signedOut: "Cerraste la sesión. Puedes seguir jugando como visitante.",
     deleted: "Cuenta eliminada. Tus datos salieron del servidor.",
     legalNotice: {
@@ -1237,7 +1242,7 @@ export const es: Messages = {
       emailKinds: {
         confirmation: "Confirmar registro",
         recovery: "Recuperar contraseña",
-        magic_link: "Enlace de acceso",
+        magic_link: "Confirmar eliminación de cuenta",
         invite: "Invitación",
         email_change: "Cambiar correo",
         reauthentication: "Código de seguridad",

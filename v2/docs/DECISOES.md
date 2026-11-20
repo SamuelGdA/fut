@@ -2274,6 +2274,36 @@ A inspeção da abertura da pilha de troféus agora observa os quadros antes de 
 
 **Por quê.** O jogo é feito para jogar com internet (conta, ranking e Desafio dependem do servidor), então baixar 54 MB para jogar sem rede era peso sem uso. Publicar só da `main` separa o que está em teste do que está no ar, sem passo manual.
 
+## D124: Técnico "Em breve" no ar, e o que muda entre produção e desenvolvimento (20/11/2026)
+
+**Decisão.** O site no ar (`.env.production`, `VITE_MODOS_BLOQUEADOS=tecnico`) mostra o Técnico com a faixa "Em breve" no hub, sem botão; `/tecnico`, a carreira salva no aparelho e qualquer atalho abrem a tela "Em breve". As quatro telas e o guia do Técnico nem entram no build (a comparação com a variável fica escrita no `ScreenOutlet` e no `AppShell` para o build jogar fora os `import()`), e o plugin `build/blockedModes.ts` derruba o build se sobrar uma tela de `screens/tecnico/`. As conquistas do Técnico somem da tela de Conquistas e do perfil, e os números do Técnico saem do perfil. No banco, `privado.modos_bloqueados` (com `tecnico`) faz a carreira do Técnico ser recusada (`modo_bloqueado`) e a conquista do Técnico ser ignorada. O laboratório e o debug continuam só no desenvolvimento (`import.meta.env.DEV`). Todo trabalho vai para a branch `dev`; a `main` (o site) só recebe merge autorizado pelo dono do projeto. As regras moram no `AI_RULES.md`.
+
+**Por quê.** O Técnico ainda não está pronto para o público, mas continua sendo feito: bloquear só no ar deixa jogar e testar no computador. Tirar as telas do build, e não só esconder o botão, impede destravar o modo pelo navegador; a trava no banco impede mandar carreira ou conquista do Técnico direto pela API. Separar `dev` de `main` dá um ambiente de teste (as prévias da Cloudflare) sem arriscar o site.
+
+## D125: Desafio por conta, e menos avisos na conta (20/11/2026)
+
+**Decisão.** (1) Cada tentativa do Desafio guardada no aparelho leva a conta logada (`account`); a tela do Desafio, o Início do Craque e as Conquistas mostram só as tentativas de quem está jogando (a conta, ou o visitante), e a ranqueada do dia é a primeira de cada um. (2) Sai do resumo do Desafio a linha "1º de 2 tentativas no ranking de...": o ranking que vale é o mundial. (3) Sai o aviso "Tudo pronto, @..." depois do login (o @ no topo já mostra que entrou) e a frase "Mesmo e-mail no Google e na senha?..." do login. (4) O @ grande do perfil não perde mais a perna do "@" (a linha justa cortava o desenho). (5) Trocar o @ mostra a regra: uma troca a cada 30 dias.
+
+**Por quê.** Trocar de conta no mesmo aparelho mostrava as tentativas e a ranqueada da outra conta, o que é dado de outra pessoa e muda qual tentativa conta. A colocação entre tentativas do aparelho competia com o ranking mundial e confundia. Avisos que não dizem nada novo só atrapalham. A regra dos 30 dias tem de aparecer antes de salvar, não só depois.
+
+## D126: palavras bloqueadas no @ (20/11/2026)
+
+**Decisão.** O @ não aceita palavrão, termo sexual, insulto ou ódio em português, espanhol e inglês, e os mais comuns de francês, italiano e alemão. O @ é lido de vários jeitos: números como letras (o 1 como i e como l), sem os números, com as letras repetidas juntas, inteiro e em pedaços entre `_`. Duas listas: partes proibidas em qualquer lugar (longas, sem aparecer dentro de palavra comum) e palavras curtas que barram o pedaço inteiro (ou o começo, com cinco letras ou mais). A mesma lista mora em `blockedWords.ts` e em `privado.username_ofensivo` (o banco recusa mesmo sem o navegador); um teste confere que são iguais. O formulário diz "Esse @ não é permitido" enquanto o jogador digita. Os @ que já existem ficam como estão.
+
+**Por quê.** O @ aparece no ranking mundial para todo mundo. Listas prontas da internet barram muita palavra inocente (o "cu" de "cuca", o "puta" de "computador"); uma lista curada com as duas regras pega os disfarces comuns (`put4`, `p_u_t_a`, `puuuta`, `puta123`) sem barrar nomes como "Pinto", "Monique" ou "desviado". O banco precisa da mesma regra porque o navegador pode ser pulado.
+
+## D127: apagar a conta só com o link do e-mail (20/11/2026)
+
+**Decisão.** "Apagar a conta" manda um link para o e-mail da conta (o link de acesso do Supabase, `signInWithOtp`, de volta para `/perfil?apagar=1`). Quem abre o link volta ao perfil com a confirmação final ("Apagar para sempre"). O banco (`excluir_conta`) só apaga se o token tiver uma entrada por e-mail (`otp` ou `magiclink` no `amr`) dos últimos 15 minutos; sem isso, recusa (`confirmar_por_email`) e o jogo pede outro link. O modelo de e-mail do link de acesso vira a confirmação de exclusão (o jogo não usa esse link para mais nada). O cabeçalho dos e-mails perde o "Futebol de escolhas".
+
+**Por quê.** Apagar é para sempre; uma sessão aberta esquecida num aparelho não pode bastar. O link prova que quem pede é o dono do e-mail, e a checagem no banco vale mesmo que alguém chame a função direto. Um link pedido por outra pessoa não apaga nada: ele só leva ao perfil, onde a confirmação continua sendo do jogador.
+
+## D128: imagem da carreira mais esperta e troféus mais baixos (20/11/2026)
+
+**Decisão.** (1) Os clubes do rodapé da imagem deixam de ser os de mais temporadas: o clube da carta do auge fica de fora (já está em destaque); entram os clubes onde o jogador deixou legado (lenda, ídolo, respeitado), do maior legado para o menor e, no empate, por títulos e jogos ali; nunca um clube que ele traiu; o clube em que a carreira começou de verdade (o primeiro com jogos) entra sempre, no fim. Até cinco clubes. (2) Os destaques ocupam até duas linhas, com o "+N" na última casa; o nome e os números sobem para dar o espaço. (3) Na aba Troféus da carreira, o quadrado de cada peça reserva duas linhas de legenda (eram 76 pixels de altura só para ela); legenda longa ainda cresce sem corte.
+
+**Por quê.** A imagem é o que o jogador compartilha: os clubes que mais importaram na história dele dizem mais que os de mais temporadas, e repetir o clube da carta desperdiça lugar. Uma linha só de troféus escondia quase tudo no "+N". O quadrado alto deixava a vitrine com mais vazio do que troféu.
+
 ## D123: login com Google sem sair do site (20/11/2026)
 
 **Decisão.** O "Continuar com Google" vira o botão oficial do Google (Google Identity Services, `renderButton`, no tema e no idioma do jogo). Cada clique abre a janelinha de login do próprio navegador (FedCM), e o token de identidade que ela devolve vira sessão no Supabase por `signInWithIdToken`, com nonce (o Google assina o SHA-256, o Supabase confere o cru). Nada abre sozinho: a primeira versão oferecia a janelinha automática (One Tap) ao abrir o `/login`, mas, cancelada uma vez, o navegador a segurava por horas e o clique caía na página do Google; o botão oficial abre a janelinha sempre. Se o script do Google não carregar, fica o botão do jogo, que vai pela página do Google com o PKCE de antes. O script do Google só baixa na tela de login, e a CSP libera só o caminho `/gsi/` de accounts.google.com (mais o próprio accounts.google.com no `connect-src`, para o FedCM). O ID do cliente vai no `.env.production` (`VITE_GOOGLE_CLIENT_ID`), por ser público. A Política de Privacidade passa a dizer que a tela de entrar carrega o botão de login do Google.

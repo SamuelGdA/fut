@@ -261,8 +261,9 @@ content_path = "./supabase/templates/confirmation.html"
 subject = "{{ if eq (printf \"%v\" .Data.locale) \"es\" }}Crea una contraseña nueva en Futeiro{{ else if eq (printf \"%v\" .Data.locale) \"en\" }}Create a new Futeiro password{{ else }}Crie uma senha nova no Futeiro{{ end }}"
 content_path = "./supabase/templates/recovery.html"
 
+# D127: o jogo só usa o link de acesso para confirmar a exclusão da conta.
 [auth.email.template.magic_link]
-subject = "{{ if eq (printf \"%v\" .Data.locale) \"es\" }}Tu enlace para entrar en Futeiro{{ else if eq (printf \"%v\" .Data.locale) \"en\" }}Your link to sign in to Futeiro{{ else }}Seu link para entrar no Futeiro{{ end }}"
+subject = "{{ if eq (printf \"%v\" .Data.locale) \"es\" }}Confirma la eliminación de tu cuenta de Futeiro{{ else if eq (printf \"%v\" .Data.locale) \"en\" }}Confirm deleting your Futeiro account{{ else }}Confirme a exclusão da sua conta do Futeiro{{ end }}"
 content_path = "./supabase/templates/magic_link.html"
 
 [auth.email.template.invite]

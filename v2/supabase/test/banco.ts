@@ -31,8 +31,12 @@ create function auth.uid() returns uuid language sql stable as $$
     (nullif(current_setting('request.jwt.claims', true), '')::jsonb ->> 'sub')
   ), '')::uuid
 $$;
+create function auth.jwt() returns jsonb language sql stable as $$
+  select coalesce(nullif(current_setting('request.jwt.claims', true), '')::jsonb, '{}'::jsonb)
+$$;
 grant usage on schema auth to anon, authenticated;
 grant execute on function auth.uid() to anon, authenticated;
+grant execute on function auth.jwt() to anon, authenticated;
 grant usage on schema public to anon, authenticated;
 alter default privileges in schema public grant all on tables to anon, authenticated;
 alter default privileges in schema public grant all on functions to anon, authenticated;
@@ -61,9 +65,9 @@ export async function createUser(db: PGlite, metadata: Record<string, unknown> =
  * Roda `work` como uma requisição da API: papel `authenticated` com o JWT do
  * usuário, ou `anon` sem usuário. Sempre volta ao superusuário no fim.
  */
-export async function as<T>(db: PGlite, user: string | null, work: () => Promise<T>): Promise<T> {
+export async function as<T>(db: PGlite, user: string | null, work: () => Promise<T>, claims: Record<string, unknown> = {}): Promise<T> {
   await db.exec(`set role ${user ? "authenticated" : "anon"}`);
-  await db.query("select set_config('request.jwt.claims', $1, false)", [user ? JSON.stringify({ sub: user, role: "authenticated" }) : ""]);
+  await db.query("select set_config('request.jwt.claims', $1, false)", [user ? JSON.stringify({ sub: user, role: "authenticated", ...claims }) : ""]);
   try {
     return await work();
   } finally {

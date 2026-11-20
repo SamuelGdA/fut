@@ -106,7 +106,7 @@ export function staleArchiveEntryOf(record: SaveRecord, now: number): ArchiveEnt
   };
 }
 
-export function attemptOf(career: Career, status: ChallengeStatus, ranked: boolean, now: number): AttemptEntry {
+export function attemptOf(career: Career, status: ChallengeStatus, ranked: boolean, now: number, account?: string): AttemptEntry {
   const top = [...status.missions].sort((a, b) => b.points - a.points)[0];
   return {
     id: archiveId(saveOf(career)),
@@ -122,5 +122,6 @@ export function attemptOf(career: Career, status: ChallengeStatus, ranked: boole
     peakOvr: status.peakOvr,
     at: now,
     ranked,
+    ...(account ? { account } : {}),
   };
 }

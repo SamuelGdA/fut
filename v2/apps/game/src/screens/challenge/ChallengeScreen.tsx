@@ -1,3 +1,4 @@
+import { useOwnAttempts } from "../../features/hall/ownAttempts";
 import { missionName } from "@craque/content";
 import { getCountry, getCountryKit } from "@craque/world";
 import { ArrowLeft, Pencil, Play, Timer } from "lucide-react";
@@ -42,7 +43,7 @@ export function ChallengeScreen() {
   const clock = useChallengeClock();
   const hand = handOf(clock.day);
   const draft = useDraft();
-  const attempts = useHall((state) => state.attempts);
+  const attempts = useOwnAttempts();
   const cloud = useAccount((state) => state.status) !== "off";
   const [touched, setTouched] = useState(false);
   const [starting, setStarting] = useState(false);

@@ -1,5 +1,5 @@
 import type { PGlite } from "@electric-sql/pglite";
-import { beforeAll, describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it, onTestFinished } from "vitest";
 import { as, createUser, failure, freshDatabase } from "./banco";
 
 /**
@@ -211,6 +211,11 @@ describe("registrar_carreira", () => {
   });
 
   it("o Técnico soma nos próprios campos e não aceita os do Craque", async () => {
+    // D124: o Técnico está bloqueado; aqui ele é liberado só para provar as regras dele.
+    await db.query("delete from privado.modos_bloqueados where jogo = 'tecnico'");
+    onTestFinished(async () => {
+      await db.query("insert into privado.modos_bloqueados (jogo) values ('tecnico') on conflict do nothing");
+    });
     const user = await createUser(db);
     await as(db, user, () => registerCareer("tecnico01", { temporadas: 12, titulos: 7, conquistas: ["tecnico:firstSeason", "tecnico:firstTitle"] }, "tecnico"));
     expect(await profileOf(user)).toMatchObject({ carreiras_tecnico: 1, temporadas_tecnico: 12, titulos_tecnico: 7, carreiras: 0 });
@@ -256,16 +261,17 @@ describe("importar_conquistas e excluir_conta", () => {
     const user = await createUser(db);
     await as(db, user, () => db.query("select public.registrar_conquistas('craque', 'import001', array['firstTitle'])"));
     const imported = await as(db, user, () => db.query<{ total: number }>("select public.importar_conquistas(array['firstTitle', 'firstCap', 'inventada', 'tecnico:firstSeason']) as total"));
-    expect(imported.rows[0]!.total).toBe(2);
+    // D124: a do Técnico (bloqueado) não entra.
+    expect(imported.rows[0]!.total).toBe(1);
     await as(db, user, () => db.query("select public.importar_conquistas(array['firstCap'])"));
     const trophies = await as(db, user, () => db.query<{ id_trophy: string; quantidade: number }>("select id_trophy, quantidade from public.user_trophies order by id_trophy"));
-    expect(trophies.rows).toEqual([{ id_trophy: "firstCap", quantidade: 1 }, { id_trophy: "firstTitle", quantidade: 1 }, { id_trophy: "tecnico:firstSeason", quantidade: 1 }]);
+    expect(trophies.rows).toEqual([{ id_trophy: "firstCap", quantidade: 1 }, { id_trophy: "firstTitle", quantidade: 1 }]);
   });
 
   it("excluir a conta apaga perfil, troféus e carreiras", async () => {
     const user = await createUser(db, { username: "vai_sair" });
     await as(db, user, () => registerCareer("saida0001", career()));
-    await as(db, user, () => db.query("select public.excluir_conta()"));
+    await as(db, user, () => db.query("select public.excluir_conta()"), { amr: [{ method: "otp", timestamp: Math.floor(Date.now() / 1000) - 60 }] });
     for (const table of ["auth.users", "public.profiles"]) {
       expect((await db.query(`select 1 from ${table} where id = $1`, [user])).rows).toHaveLength(0);
     }
@@ -298,5 +304,52 @@ describe("D118: Desafio no perfil e @ a cada 30 dias", () => {
     const cheio = await as(db, user, () => db.query<Record<string, number>>("select * from public.meu_desafio()"));
     expect(cheio.rows[0]).toEqual({ hoje: 500, sequencia_atual: 2, maior_sequencia: 4 });
     expect(await as(db, null, () => failure(db.query("select * from public.meu_desafio()")))).toContain("permission denied");
+  });
+});
+
+describe("D126: palavras bloqueadas no @", () => {
+  it("recusa palavrão, mesmo disfarçado, e deixa passar palavra inocente", async () => {
+    for (const nome of ["puta", "put4", "p_u_t_a", "puuuta", "puta123", "caralho_10", "fuck_you", "sh1t", "s1ut", "mierda", "hijodeputa", "viado123x", "n1gga"]) {
+      expect((await as(db, null, () => db.query<{ livre: boolean }>("select public.username_disponivel($1) as livre", [nome]))).rows[0]!.livre, nome).toBe(false);
+    }
+    for (const nome of ["computador", "desviado", "monique", "joao_pinto", "cuca", "paulo", "assis", "niger", "therapist", "canal_10", "glasses"]) {
+      expect((await as(db, null, () => db.query<{ livre: boolean }>("select public.username_disponivel($1) as livre", [nome]))).rows[0]!.livre, nome).toBe(true);
+    }
+  });
+
+  it("o banco recusa trocar o @ por um ofensivo, mesmo pela API", async () => {
+    const user = await createUser(db);
+    expect(await as(db, user, () => failure(db.query("update public.profiles set username = 'p0rra_10' where id = $1", [user])))).toContain("username_invalido");
+  });
+});
+
+describe("D124: Técnico bloqueado no servidor", () => {
+  it("carreira do Técnico é recusada e conquista do Técnico é ignorada", async () => {
+    const user = await createUser(db);
+    expect(await as(db, user, () => failure(registerCareer("tecbloq01", { temporadas: 2, titulos: 0 }, "tecnico")))).toContain("modo_bloqueado");
+    // Registrar conquistas do Técnico também abre carreira do Técnico: recusado.
+    expect(await as(db, user, () => failure(db.query("select public.registrar_conquistas('tecnico', 'tecbloq02', array['tecnico:firstSeason'])")))).toContain("modo_bloqueado");
+    // Pela importação do aparelho, a do Técnico é ignorada.
+    const imported = await as(db, user, () => db.query<{ total: number }>("select public.importar_conquistas(array['tecnico:firstSeason']) as total"));
+    expect(imported.rows[0]!.total).toBe(0);
+    expect((await db.query("select 1 from public.user_trophies where id_user = $1", [user])).rows).toHaveLength(0);
+  });
+});
+
+describe("D127: apagar a conta exige o link do e-mail", () => {
+  const now = () => Math.floor(Date.now() / 1000);
+
+  it("sem entrada recente pelo e-mail, a conta fica", async () => {
+    const user = await createUser(db);
+    for (const amr of [[], [{ method: "password", timestamp: now() }], [{ method: "oauth", timestamp: now() }], [{ method: "otp", timestamp: now() - 3600 }]]) {
+      expect(await as(db, user, () => failure(db.query("select public.excluir_conta()")), { amr })).toContain("confirmar_por_email");
+    }
+    expect((await db.query("select 1 from auth.users where id = $1", [user])).rows).toHaveLength(1);
+  });
+
+  it("com o link aberto há pouco, a conta sai", async () => {
+    const user = await createUser(db);
+    await as(db, user, () => db.query("select public.excluir_conta()"), { amr: [{ method: "oauth", timestamp: now() - 7200 }, { method: "magiclink", timestamp: now() - 30 }] });
+    expect((await db.query("select 1 from auth.users where id = $1", [user])).rows).toHaveLength(0);
   });
 });

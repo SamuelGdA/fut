@@ -23,6 +23,37 @@ Copilot ou outro) e para qualquer pessoa. `AGENTS.md`, `CLAUDE.md` e
 
 ---
 
+## Ambientes e branches (D124)
+
+> **Leia antes de mexer.** O jogo que roda no seu computador não é igual ao
+> que está no ar.
+
+- **Branches.** Todo trabalho vai para a branch `dev` (ou uma branch a partir
+  dela), nunca direto para a `main`. A `main` é o site no ar: cada push nela
+  publica futeiro.com sozinho (Workers Builds da Cloudflare, D121). Só mescle
+  `dev` na `main` quando o dono do projeto autorizar, na conversa. Push em
+  outra branch gera só uma versão de prévia, sem mexer no site.
+- **Produção (o site no ar, `apps/game/.env.production`).**
+  - Sem **laboratório** (`/#lab`): ele só existe com `import.meta.env.DEV`.
+  - Sem **debug** (as ferramentas que mudam o jogador e o técnico na hora):
+    também só no desenvolvimento.
+  - **Modos bloqueados** (`VITE_MODOS_BLOQUEADOS`, hoje `tecnico`): o modo
+    aparece com a faixa "Em breve" e não abre. As telas dele nem entram no
+    build (o plugin `build/blockedModes.ts` derruba o build se sobrar uma),
+    as conquistas dele somem da tela e o banco recusa carreira e conquista do
+    modo (`privado.modos_bloqueados`). Liberar um modo é tirar o valor do
+    `.env.production` e apagar a linha do banco numa migração nova, com
+    decisão registrada.
+- **Desenvolvimento (`pnpm dev`, no computador).** Laboratório, debug e todos
+  os modos funcionam. O `.env.local` aponta para o mesmo Supabase do site: o
+  banco continua recusando o que é de modo bloqueado.
+- **Suíte ponta a ponta (`.env.e2e`).** Sem modo bloqueado, para testar tudo.
+- **Coisas que não vão pelo git** (painel do Supabase: modelos de e-mail, SMTP,
+  provedores; migrações): aplique em produção só junto com o merge autorizado
+  na `main`, e registre no README o que foi aplicado.
+
+---
+
 ## Antes de criar ou mudar qualquer coisa: as duas perguntas
 
 Avalie cada funcionalidade por duas perguntas:

@@ -7,7 +7,8 @@ import { useT } from "../i18n/useT";
 import { PitchMark } from "../ui/PitchMark";
 import { Toaster } from "../ui/toast/Toaster";
 import { UnlockAnnouncer } from "./UnlockAnnouncer";
-const CoachGuide = lazy(() => import("../screens/tecnico/Guide").then((module) => ({ default: module.Guide })));
+// D124: com o Técnico bloqueado, o guia dele nem entra no build.
+const CoachGuide = import.meta.env.VITE_MODOS_BLOQUEADOS === "tecnico" ? null : lazy(() => import("../screens/tecnico/Guide").then((module) => ({ default: module.Guide })));
 const DebugTools = import.meta.env.DEV ? lazy(() => import("../features/debug/DebugTools").then((module) => ({ default: module.DebugTools }))) : null;
 
 /**
@@ -40,7 +41,7 @@ function Brand() {
         </button>
       )}
       {game === "craque" || game === "tecnico" ? <span className="brand-game">{t(`brand.games.${game}`)}</span> : null}
-      {game === "tecnico" ? <Suspense fallback={null}><CoachGuide /></Suspense> : null}
+      {game === "tecnico" && CoachGuide ? <Suspense fallback={null}><CoachGuide /></Suspense> : null}
       {DebugTools && (game === "craque" || game === "tecnico") ? <Suspense fallback={null}><DebugTools game={game} /></Suspense> : null}
     </div>
   );

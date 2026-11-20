@@ -1,6 +1,6 @@
 import { type Career, saveOf } from "@craque/engine";
 import { useEffect } from "react";
-import { archiveId, placementOf } from "../../features/hall/model";
+import { archiveId } from "../../features/hall/model";
 import { challengeOf } from "../../features/hall/session";
 import { useHall } from "../../features/hall/store";
 import { formatChallengeDay } from "../../i18n/format";
@@ -11,12 +11,11 @@ import { EdictBand, RecordTarget, MissionLine } from "../challenge/MissionViews"
 /**
  * O resultado do desafio no resumo (GDD 27.6): a pontuação sobre 1000, as três
  * missões (a sacrificada em cinza, à vista), ranqueada ou amistosa, o bônus de
- * pico, o édito, a penalidade de apagadas e uma linha com a colocação do dia.
- * Num link compartilhado, a colocação fica de fora: o ranking é do aparelho de
- * quem jogou.
+ * pico, o édito e a penalidade de apagadas. A colocação entre as tentativas do
+ * aparelho saiu (D125): o ranking que vale é o mundial, na tela do Desafio.
  */
 export function ChallengeChapter({ career, shared }: { career: Career; shared: boolean }) {
-  const { t, tp, locale, number, ordinal, percent } = useT();
+  const { t, tp, locale, number, percent } = useT();
   const status = challengeOf(career);
   const attempts = useHall((state) => state.attempts);
 
@@ -27,7 +26,6 @@ export function ChallengeChapter({ career, shared }: { career: Career; shared: b
   if (!status) return null;
   const id = archiveId(saveOf(career));
   const attempt = shared ? null : (attempts.find((item) => item.id === id) ?? null);
-  const placement = attempt ? placementOf(attempts, id) : null;
   const date = formatChallengeDay(status.hand.id, locale, true);
   const kept = status.edict.state === "intact" || status.edict.state === "met";
 
@@ -94,15 +92,6 @@ export function ChallengeChapter({ career, shared }: { career: Career; shared: b
         </div>
       </dl>
 
-      {shared ? (
-        <p className="text-sm text-faint">{t("challenge.summary.shared")}</p>
-      ) : placement ? (
-        <p className="text-base">
-          {placement.of > 1
-            ? t("challenge.summary.placement", { place: ordinal(placement.place), of: placement.of, date })
-            : t("challenge.summary.placementAlone", { date })}
-        </p>
-      ) : null}
     </div>
   );
 }

@@ -2327,7 +2327,8 @@ clones antigos precisa clonar de novo.
   própria (`awards/best-player-world-cup.webp` e `best-player-champions.webp`);
   os outros craques de competição usam a arte geral (`awardImageFor`).
 - **E-mails da conta.** Oito modelos em `supabase/templates` (confirmação,
-  recuperação, link de acesso, convite, troca de e-mail, código de segurança e
+  recuperação, link de acesso (que desde a D127 é a confirmação de apagar a
+  conta), convite, troca de e-mail, código de segurança e
   os avisos de senha e e-mail trocados), ligados no `supabase/config.toml`. O
   laboratório (Design, Conta) mostra cada um com dados de exemplo, no idioma da
   interface. Cada modelo e cada assunto têm um bloco em português, espanhol e
@@ -2392,3 +2393,52 @@ Libertadores e Copa do Mundo. O gerador lê as regras de `.showcase`,
 `.showcase-item` e `.showcase-art` de `src/styles/game.css`, com os tokens
 do tema claro. Sem ilustração paralela, legendas ou inscrições extras; a mesma
 vitrine aparece nos três idiomas. As telas do jogo não são modificadas.
+
+## D124 a D128: Técnico "Em breve", conta mais segura e imagem da carreira (20/11/2026)
+
+**Ambientes (D124).** Trabalho na branch `dev`; a `main` é o site e só recebe
+merge autorizado. O site no ar (`apps/game/.env.production`) tem
+`VITE_MODOS_BLOQUEADOS=tecnico`: o Técnico aparece no hub com a faixa "Em
+breve", sem botão, e qualquer caminho para ele (`/tecnico`, carreira salva,
+atalho) abre a tela "Em breve" (`screens/comingSoon`). As telas e o guia do
+Técnico nem entram no build; `build/blockedModes.ts` derruba o build se sobrar
+uma. As conquistas e os números do Técnico somem das Conquistas e do perfil.
+No banco, `privado.modos_bloqueados` recusa carreira do Técnico e ignora
+conquista dele. Laboratório e debug continuam só com `pnpm dev`. No computador
+e na suíte, o Técnico funciona inteiro. Regras completas no `AI_RULES.md`.
+
+**Desafio e conta (D125).** Cada tentativa do Desafio no aparelho guarda a
+conta (`account`): cada conta, e o visitante, vê só as suas, e a ranqueada do
+dia é a primeira de cada um. Saem a linha "1º de N tentativas no ranking", o
+aviso "Tudo pronto, @..." do login e a frase "Mesmo e-mail no Google e na
+senha?". O @ grande do perfil não corta mais o desenho do "@". Trocar o @
+mostra a regra de uma troca a cada 30 dias.
+
+**Palavras bloqueadas no @ (D126).** `features/account/blockedWords.ts` e
+`privado.username_ofensivo` (a mesma lista; um teste confere) barram palavrão,
+termo sexual, insulto e ódio em PT, ES e EN, mais os comuns de FR, IT e DE,
+mesmo com números no lugar de letras, `_` no meio, letras repetidas ou números
+no fim. O formulário avisa "Esse @ não é permitido" enquanto o jogador digita.
+
+**Apagar a conta pelo e-mail (D127).** O botão manda um link para o e-mail da
+conta (`signInWithOtp`, volta para `/perfil?apagar=1`); só quem abre o link vê
+"Apagar para sempre", e `excluir_conta` só apaga com uma entrada pelo e-mail
+dos últimos 15 minutos no token. O modelo `magic_link` virou o e-mail dessa
+confirmação, nos três idiomas, e o cabeçalho dos e-mails perdeu o "Futebol de
+escolhas".
+
+**Imagem da carreira e troféus (D128).** Os clubes do rodapé saem do legado
+(sem o clube da carta, sem clube traído, com o clube do começo da carreira,
+até cinco); os destaques ocupam até duas linhas, com o "+N" no fim; o nome e os
+números sobem. Na aba Troféus, cada quadrado reserva só duas linhas de legenda.
+
+**Para levar ao ar (junto com o merge autorizado na `main`):**
+
+```bash
+npx supabase@2.121.0 db push
+```
+
+(rode na pasta `v2`; aplica `20261120150000_palavras_modos_exclusao.sql`), e
+cole no painel do Supabase os oito modelos de `supabase/templates` e os
+assuntos do `config.toml` (Authentication, Emails). Não rode `config push`.
+

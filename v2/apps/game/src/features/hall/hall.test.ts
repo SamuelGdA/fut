@@ -23,6 +23,7 @@ import {
   ARCHIVE_FORMAT,
   type ArchiveEntry,
   archiveId,
+  attemptsOf,
   type AttemptEntry,
   challengeStats,
   dayRanking,
@@ -339,3 +340,31 @@ describe("linha alternativa e E se...? (GDD 28.3)", () => {
     expect(sanitizeArchiveEntry({ id: "x", format: ARCHIVE_FORMAT })).toBeNull();
   });
 });
+
+describe("tentativas por conta (D125)", () => {
+  const ACCOUNT = "8d0f7c2e-1a2b-4c3d-9e8f-0123456789ab";
+  const OTHER = "11111111-2222-3333-4444-555555555555";
+
+  it("cada conta, e o visitante, vê só as próprias tentativas", () => {
+    const list = [
+      attempt({ id: "visitante", day: DAY, score: 100 }),
+      attempt({ id: "minha", day: DAY, score: 200, account: ACCOUNT }),
+      attempt({ id: "outra", day: DAY, score: 300, account: OTHER }),
+    ];
+    expect(attemptsOf(list, null).map((item) => item.id)).toEqual(["visitante"]);
+    expect(attemptsOf(list, ACCOUNT).map((item) => item.id)).toEqual(["minha"]);
+    expect(attemptsOf(list, OTHER).map((item) => item.id)).toEqual(["outra"]);
+  });
+
+  it("a conta sobrevive à leitura do banco do aparelho; um id estranho cai fora", () => {
+    expect(sanitizeAttempt(attempt({ id: "a", day: DAY, score: 10, account: ACCOUNT }))?.account).toBe(ACCOUNT);
+    expect(sanitizeAttempt({ ...attempt({ id: "a", day: DAY, score: 10 }), account: "<script>" })?.account).toBeUndefined();
+  });
+
+  it("a ranqueada do dia é a primeira de cada conta", () => {
+    const list = [attempt({ id: "outra", day: DAY, score: 300, account: OTHER, ranked: true })];
+    expect(hasRankedAttempt(attemptsOf(list, ACCOUNT), DAY)).toBe(false);
+    expect(hasRankedAttempt(attemptsOf(list, OTHER), DAY)).toBe(true);
+  });
+});
+

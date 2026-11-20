@@ -6,8 +6,8 @@ import { posterFileName } from "./poster";
 import { readShareHash } from "./shareHash";
 import { decodeShare, encodeShare, ShareError, shareUrl } from "./shareLink";
 import { SHOWCASE_GAP, showcaseFixedLayout, showcaseItems, showcaseLayout } from "./showcase";
-import { nearRecords, ovrCurve, posterNumbers, summaryNumbers, summaryRecords, timeline } from "./summaryData";
-import { SHARE_HEIGHT, SHARE_WIDTH, shareHighlights, shareShelf } from "./shareCard";
+import { nearRecords, ovrCurve, peakCard, posterNumbers, summaryNumbers, summaryRecords, timeline } from "./summaryData";
+import { SHARE_CLUBS, SHARE_HEIGHT, SHARE_WIDTH, shareClubs, shareHighlights, shareShelf } from "./shareCard";
 
 /** O resumo (M6): link compartilhado, pôster, vitrine e os dados que a tela mostra. */
 
@@ -181,12 +181,28 @@ describe("imagem da carreira (D118)", () => {
     }
   });
 
-  it("a faixa encolhe as peças e manda o resto para o +N", () => {
-    expect(shareShelf(3, 800)).toMatchObject({ art: 96, shown: 3, more: 0 });
-    const many = shareShelf(30, 800);
-    expect(many.art).toBe(64);
+  it("a faixa usa até duas linhas, encolhe as peças e manda o resto para o +N (D128)", () => {
+    expect(shareShelf(3, 780)).toMatchObject({ art: 72, shown: 3, more: 0 });
+    const many = shareShelf(30, 780);
+    expect(many.art).toBe(56);
     expect(many.shown + many.more).toBe(30);
     expect(many.more).toBeGreaterThan(0);
+    // Duas linhas cheias, com a última casa para o "+N".
+    expect(many.shown).toBe(many.perRow * 2 - 1);
     expect(SHARE_WIDTH / SHARE_HEIGHT).toBeCloseTo(1.9, 1);
+  });
+
+  it("os clubes do rodapé: sem o da carta, sem traição, com o do começo (D128)", () => {
+    for (const career of [finished, keeper]) {
+      const peak = peakCard(career);
+      const clubs = shareClubs(career.history, peak?.club ?? null);
+      expect(clubs.length).toBeLessThanOrEqual(SHARE_CLUBS);
+      expect(new Set(clubs).size).toBe(clubs.length);
+      if (peak) expect(clubs).not.toContain(peak.club);
+      const traitors = new Set(career.history.filter((record) => record.traitor).map((record) => record.club));
+      expect(clubs.filter((club) => traitors.has(club))).toEqual([]);
+      const base = career.history.find((record) => record.clubGames > 0 && !traitors.has(record.club) && record.club !== peak?.club);
+      if (base) expect(clubs).toContain(base.club);
+    }
   });
 });

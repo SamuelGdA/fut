@@ -62,12 +62,16 @@ const LABELED = [112, 96, 84, 72, 64] as const;
 const BARE = [56, 48, 40, 34] as const;
 const SMALLEST = 34;
 export const SHOWCASE_GAP = 10;
-/** Legendas longas de competição podem ocupar várias linhas, sem corte (D74). */
-const LABEL_HEIGHT = 76;
+/**
+ * Altura reservada para a legenda: duas linhas (D128; eram 76 pixels, e o
+ * quadrado ficava alto e vazio). Legenda longa de competição continua sem
+ * corte (D74): a linha da grade cresce quando precisa.
+ */
+const LABEL_HEIGHT = 32;
 
 function measure(count: number, width: number, maxHeight: number, art: number, labels: boolean): ShowcaseLayout {
   const cellWidth = labels ? Math.max(Math.round(art * 0.8) + 28, 96) : Math.round(art * 0.8) + 18;
-  const cellHeight = art + (labels ? LABEL_HEIGHT + 28 : 26);
+  const cellHeight = art + (labels ? LABEL_HEIGHT + 24 : 26);
   const columns = Math.max(1, Math.floor((width + SHOWCASE_GAP) / (cellWidth + SHOWCASE_GAP)));
   const rows = Math.ceil(count / columns);
   const height = rows * cellHeight + Math.max(0, rows - 1) * SHOWCASE_GAP;

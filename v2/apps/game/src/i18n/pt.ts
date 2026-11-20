@@ -43,6 +43,8 @@ export const pt = {
       ended: "Legado na tela",
       noSave: "Sem salvamento",
       noSaveHint: "A última carreira em andamento continua por aqui.",
+      soon: "Em breve",
+      soonHint: "O modo Técnico está sendo preparado e chega numa próxima versão.",
     },
     achievements: "Conquistas",
     achievementsCount: { zero: "Nenhuma liberada ainda", one: "{count} liberada", other: "{count} liberadas" },
@@ -723,6 +725,13 @@ export const pt = {
     sectionBody: "O resto da tela continua aqui.",
   },
 
+  comingSoon: {
+    badge: "Em breve",
+    title: "Técnico",
+    body: "O modo Técnico está sendo preparado e chega numa próxima versão. Enquanto isso, a carreira de jogador está esperando por você.",
+    home: "Voltar ao início",
+  },
+
   notFound: {
     eyebrow: "Erro 404",
     title: "Bola fora",
@@ -854,9 +863,6 @@ export const pt = {
       edictBroken: "Regra descumprida: metade da pontuação",
       erasedNone: "Nenhuma temporada apagada",
       erased: { one: "{count} temporada apagada: menos {percent}", other: "{count} temporadas apagadas: menos {percent}" },
-      placement: "{place} de {of} tentativas no ranking de {date}.",
-      placementAlone: "A única tentativa de {date} neste aparelho.",
-      shared: "O ranking fica no aparelho de quem jogou.",
     },
   },
 
@@ -949,7 +955,6 @@ export const pt = {
       back: "Voltar ao início",
     },
     imported: { one: "{count} conquista deste aparelho entrou na sua conta", other: "{count} conquistas deste aparelho entraram na sua conta" },
-    welcome: "Tudo pronto, @{name}",
     signedOut: "Você saiu da conta. Pode continuar jogando como visitante.",
     deleted: "Conta apagada. Seus dados saíram do servidor.",
     legalNotice: {
@@ -1241,7 +1246,7 @@ export const pt = {
       emailKinds: {
         confirmation: "Confirmar cadastro",
         recovery: "Recuperar senha",
-        magic_link: "Link de acesso",
+        magic_link: "Confirmar exclusão da conta",
         invite: "Convite",
         email_change: "Trocar e-mail",
         reauthentication: "Código de segurança",

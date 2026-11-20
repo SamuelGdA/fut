@@ -6,7 +6,7 @@ import { craqueKey, craquePayload } from "../account/payload";
 import { announcesUnlocks, cloudCareers, cloudUnlockedIds, memberId, sendCareer, sendUnlocks } from "../account/sync";
 import { handOf } from "../challenge/start";
 import { attemptOf } from "./build";
-import { type AchievementRow, archiveId, hasRankedAttempt, rankedDays } from "./model";
+import { type AchievementRow, archiveId, attemptsOf, hasRankedAttempt, rankedDays } from "./model";
 import { useHall } from "./store";
 import { useUnlocks } from "./unlocks";
 
@@ -66,17 +66,19 @@ export async function recordFinished(career: Career, _avatar: AvatarConfig | nul
   const id = archiveId(saveOf(career));
   const status = challengeOf(career);
 
+  const account = memberId();
   if (status) {
     const previous = useHall.getState().attempts.find((attempt) => attempt.id === id);
-    const ranked = previous ? previous.ranked : !hasRankedAttempt(useHall.getState().attempts, status.hand.id);
-    if (!previous) await hall.recordAttempt(attemptOf(career, status, ranked, now));
+    // D125: a ranqueada do dia é a primeira de quem está jogando, não a do aparelho.
+    const ranked = previous ? previous.ranked : !hasRankedAttempt(attemptsOf(useHall.getState().attempts, account), status.hand.id);
+    if (!previous) await hall.recordAttempt(attemptOf(career, status, ranked, now, account));
   }
 
   hall.recordProgress(careerAchievementCounts(career, status), id);
   const state = useHall.getState();
   // Com conta, "Dez carreiras" conta as carreiras de todos os aparelhos.
   const finishedBefore = Math.max(0, state.finished - 1, cloudCareers());
-  const days = rankedDays(state.attempts);
+  const days = rankedDays(attemptsOf(state.attempts, account));
   const ids = newAchievements({ career, challenge: status, finishedBefore, rankedDays: days }, unlockedSet());
   await grant(ids, career, now);
   sendCareer("craque", craqueKey(career), craquePayload(career, status, finishedBefore, days));

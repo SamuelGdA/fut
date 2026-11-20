@@ -1,4 +1,4 @@
-{{/* Futeiro: modelo de e-mail da conta (D118, D122). Um bloco por idioma, escolhido por user_metadata.locale (es, en; o resto, português). Gerado de um layout único: mude todos juntos. */}}
+{{/* Futeiro: modelo de e-mail da conta (D118, D122, D127). Um bloco por idioma, escolhido por user_metadata.locale (es, en; o resto, português). Gerado de um layout único: mude todos juntos. */}}
 {{ if eq (printf "%v" .Data.locale) "es" }}
 <!doctype html>
 <html lang="es">
@@ -6,28 +6,27 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light only">
-<title>Tu enlace de acceso | Futeiro</title>
+<title>Confirma la eliminación | Futeiro</title>
 </head>
 <body style="margin:0;padding:0;background:#f3f0e8;">
-<div style="display:none;max-height:0;overflow:hidden;opacity:0;">Tu enlace para entrar en Futeiro.</div>
+<div style="display:none;max-height:0;overflow:hidden;opacity:0;">Confirma que quieres eliminar tu cuenta de Futeiro.</div>
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f3f0e8;">
 <tr><td align="center" style="padding:32px 16px;">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:560px;">
 <tr><td style="background:#0d1110;border-radius:14px 14px 0 0;padding:22px 32px;border-bottom:4px solid #3fb26a;">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
 <td style="font:900 22px/1 'Arial Black',Arial,Helvetica,sans-serif;letter-spacing:3px;color:#eef1ea;text-transform:uppercase;">FUTEIRO</td>
-<td align="right" style="font:700 11px/1 Arial,Helvetica,sans-serif;letter-spacing:2px;color:#e3b341;text-transform:uppercase;">Fútbol de decisiones</td>
 </tr></table>
 </td></tr>
 <tr><td style="background:#ffffff;padding:36px 32px 28px;border-left:1px solid #e2ddd0;border-right:1px solid #e2ddd0;border-bottom:1px solid #e2ddd0;border-radius:0 0 14px 14px;">
-<p style="margin:0 0 10px;font:700 12px/1.4 Arial,Helvetica,sans-serif;letter-spacing:2px;color:#2f7d4c;text-transform:uppercase;">Entrar sin contraseña</p>
-<h1 style="margin:0 0 16px;font:900 28px/1.15 'Arial Black',Arial,Helvetica,sans-serif;color:#141a17;">Tu enlace de acceso</h1>
-<p style="margin:0 0 26px;font:400 16px/1.6 Arial,Helvetica,sans-serif;color:#3a433e;">Toca el botón para entrar en la cuenta <strong>{{ .Email }}</strong>. El enlace vale 1 hora y funciona una sola vez.</p>
+<p style="margin:0 0 10px;font:700 12px/1.4 Arial,Helvetica,sans-serif;letter-spacing:2px;color:#2f7d4c;text-transform:uppercase;">Eliminar la cuenta</p>
+<h1 style="margin:0 0 16px;font:900 28px/1.15 'Arial Black',Arial,Helvetica,sans-serif;color:#141a17;">Confirma la eliminación</h1>
+<p style="margin:0 0 26px;font:400 16px/1.6 Arial,Helvetica,sans-serif;color:#3a433e;">Pidieron eliminar la cuenta <strong>{{ .Email }}</strong>. Abre el enlace en este dispositivo y confirma en el perfil: el @, los números, los trofeos y las carreras enviadas desaparecen del servidor. El enlace vale 15 minutos.</p>
 <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td style="background:#3fb26a;border-radius:10px;">
-<a href="{{ .ConfirmationURL }}" style="display:inline-block;padding:15px 28px;font:800 16px/1 Arial,Helvetica,sans-serif;color:#0d1110;text-decoration:none;border-radius:10px;">Entrar en Futeiro</a>
+<a href="{{ .ConfirmationURL }}" style="display:inline-block;padding:15px 28px;font:800 16px/1 Arial,Helvetica,sans-serif;color:#0d1110;text-decoration:none;border-radius:10px;">Confirmar en el perfil</a>
 </td></tr></table>
 <p style="margin:18px 0 0;font:400 12px/1.6 Arial,Helvetica,sans-serif;color:#7a837d;">¿El botón no abrió? Copia esta dirección en el navegador:<br><a href="{{ .ConfirmationURL }}" style="color:#2f7d4c;word-break:break-all;">{{ .ConfirmationURL }}</a></p>
-<p style="margin:26px 0 0;padding:14px 16px;background:#f6f4ee;border-radius:8px;font:400 13px/1.55 Arial,Helvetica,sans-serif;color:#5a645e;">¿No pediste entrar? Ignora este correo: nadie entra sin este enlace.</p>
+<p style="margin:26px 0 0;padding:14px 16px;background:#f6f4ee;border-radius:8px;font:400 13px/1.55 Arial,Helvetica,sans-serif;color:#5a645e;">¿No lo pediste? Ignora este correo: sin tu confirmación en el perfil, no se elimina nada.</p>
 </td></tr>
 <tr><td align="center" style="padding:22px 12px 0;font:400 12px/1.6 Arial,Helvetica,sans-serif;color:#838e86;">
 Recibiste este correo porque se usó en una cuenta de Futeiro.<br>Futeiro nunca te pide la contraseña por correo.
@@ -44,28 +43,27 @@ Recibiste este correo porque se usó en una cuenta de Futeiro.<br>Futeiro nunca 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light only">
-<title>Your sign-in link | Futeiro</title>
+<title>Confirm deletion | Futeiro</title>
 </head>
 <body style="margin:0;padding:0;background:#f3f0e8;">
-<div style="display:none;max-height:0;overflow:hidden;opacity:0;">Your link to sign in to Futeiro.</div>
+<div style="display:none;max-height:0;overflow:hidden;opacity:0;">Confirm you want to delete your Futeiro account.</div>
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f3f0e8;">
 <tr><td align="center" style="padding:32px 16px;">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:560px;">
 <tr><td style="background:#0d1110;border-radius:14px 14px 0 0;padding:22px 32px;border-bottom:4px solid #3fb26a;">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
 <td style="font:900 22px/1 'Arial Black',Arial,Helvetica,sans-serif;letter-spacing:3px;color:#eef1ea;text-transform:uppercase;">FUTEIRO</td>
-<td align="right" style="font:700 11px/1 Arial,Helvetica,sans-serif;letter-spacing:2px;color:#e3b341;text-transform:uppercase;">Football of choices</td>
 </tr></table>
 </td></tr>
 <tr><td style="background:#ffffff;padding:36px 32px 28px;border-left:1px solid #e2ddd0;border-right:1px solid #e2ddd0;border-bottom:1px solid #e2ddd0;border-radius:0 0 14px 14px;">
-<p style="margin:0 0 10px;font:700 12px/1.4 Arial,Helvetica,sans-serif;letter-spacing:2px;color:#2f7d4c;text-transform:uppercase;">Sign in without a password</p>
-<h1 style="margin:0 0 16px;font:900 28px/1.15 'Arial Black',Arial,Helvetica,sans-serif;color:#141a17;">Your sign-in link</h1>
-<p style="margin:0 0 26px;font:400 16px/1.6 Arial,Helvetica,sans-serif;color:#3a433e;">Tap the button to sign in to <strong>{{ .Email }}</strong>. The link is valid for 1 hour and works only once.</p>
+<p style="margin:0 0 10px;font:700 12px/1.4 Arial,Helvetica,sans-serif;letter-spacing:2px;color:#2f7d4c;text-transform:uppercase;">Delete account</p>
+<h1 style="margin:0 0 16px;font:900 28px/1.15 'Arial Black',Arial,Helvetica,sans-serif;color:#141a17;">Confirm deletion</h1>
+<p style="margin:0 0 26px;font:400 16px/1.6 Arial,Helvetica,sans-serif;color:#3a433e;">Someone asked to delete the account <strong>{{ .Email }}</strong>. Open the link on this device and confirm on your profile: your @, numbers, trophies and sent careers are removed from the server. The link is valid for 15 minutes.</p>
 <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td style="background:#3fb26a;border-radius:10px;">
-<a href="{{ .ConfirmationURL }}" style="display:inline-block;padding:15px 28px;font:800 16px/1 Arial,Helvetica,sans-serif;color:#0d1110;text-decoration:none;border-radius:10px;">Sign in to Futeiro</a>
+<a href="{{ .ConfirmationURL }}" style="display:inline-block;padding:15px 28px;font:800 16px/1 Arial,Helvetica,sans-serif;color:#0d1110;text-decoration:none;border-radius:10px;">Confirm on profile</a>
 </td></tr></table>
 <p style="margin:18px 0 0;font:400 12px/1.6 Arial,Helvetica,sans-serif;color:#7a837d;">Button not working? Copy this address into your browser:<br><a href="{{ .ConfirmationURL }}" style="color:#2f7d4c;word-break:break-all;">{{ .ConfirmationURL }}</a></p>
-<p style="margin:26px 0 0;padding:14px 16px;background:#f6f4ee;border-radius:8px;font:400 13px/1.55 Arial,Helvetica,sans-serif;color:#5a645e;">Didn't ask to sign in? Ignore this email: nobody gets in without this link.</p>
+<p style="margin:26px 0 0;padding:14px 16px;background:#f6f4ee;border-radius:8px;font:400 13px/1.55 Arial,Helvetica,sans-serif;color:#5a645e;">Didn't ask for this? Ignore this email: nothing is deleted without your confirmation on the profile.</p>
 </td></tr>
 <tr><td align="center" style="padding:22px 12px 0;font:400 12px/1.6 Arial,Helvetica,sans-serif;color:#838e86;">
 You got this email because it was used on a Futeiro account.<br>Futeiro never asks for your password by email.
@@ -82,28 +80,27 @@ You got this email because it was used on a Futeiro account.<br>Futeiro never as
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light only">
-<title>Seu link de acesso | Futeiro</title>
+<title>Confirme a exclusão | Futeiro</title>
 </head>
 <body style="margin:0;padding:0;background:#f3f0e8;">
-<div style="display:none;max-height:0;overflow:hidden;opacity:0;">Seu link para entrar no Futeiro.</div>
+<div style="display:none;max-height:0;overflow:hidden;opacity:0;">Confirme que quer apagar a conta do Futeiro.</div>
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f3f0e8;">
 <tr><td align="center" style="padding:32px 16px;">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:560px;">
 <tr><td style="background:#0d1110;border-radius:14px 14px 0 0;padding:22px 32px;border-bottom:4px solid #3fb26a;">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
 <td style="font:900 22px/1 'Arial Black',Arial,Helvetica,sans-serif;letter-spacing:3px;color:#eef1ea;text-transform:uppercase;">FUTEIRO</td>
-<td align="right" style="font:700 11px/1 Arial,Helvetica,sans-serif;letter-spacing:2px;color:#e3b341;text-transform:uppercase;">Futebol de escolhas</td>
 </tr></table>
 </td></tr>
 <tr><td style="background:#ffffff;padding:36px 32px 28px;border-left:1px solid #e2ddd0;border-right:1px solid #e2ddd0;border-bottom:1px solid #e2ddd0;border-radius:0 0 14px 14px;">
-<p style="margin:0 0 10px;font:700 12px/1.4 Arial,Helvetica,sans-serif;letter-spacing:2px;color:#2f7d4c;text-transform:uppercase;">Entrar sem senha</p>
-<h1 style="margin:0 0 16px;font:900 28px/1.15 'Arial Black',Arial,Helvetica,sans-serif;color:#141a17;">Seu link de acesso</h1>
-<p style="margin:0 0 26px;font:400 16px/1.6 Arial,Helvetica,sans-serif;color:#3a433e;">Toque no botão para entrar na conta <strong>{{ .Email }}</strong>. O link vale por 1 hora e funciona uma vez só.</p>
+<p style="margin:0 0 10px;font:700 12px/1.4 Arial,Helvetica,sans-serif;letter-spacing:2px;color:#2f7d4c;text-transform:uppercase;">Apagar a conta</p>
+<h1 style="margin:0 0 16px;font:900 28px/1.15 'Arial Black',Arial,Helvetica,sans-serif;color:#141a17;">Confirme a exclusão</h1>
+<p style="margin:0 0 26px;font:400 16px/1.6 Arial,Helvetica,sans-serif;color:#3a433e;">Pediram para apagar a conta <strong>{{ .Email }}</strong>. Abra o link neste aparelho e confirme no perfil: o @, os números, os troféus e as carreiras enviadas somem do servidor. O link vale por 15 minutos.</p>
 <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td style="background:#3fb26a;border-radius:10px;">
-<a href="{{ .ConfirmationURL }}" style="display:inline-block;padding:15px 28px;font:800 16px/1 Arial,Helvetica,sans-serif;color:#0d1110;text-decoration:none;border-radius:10px;">Entrar no Futeiro</a>
+<a href="{{ .ConfirmationURL }}" style="display:inline-block;padding:15px 28px;font:800 16px/1 Arial,Helvetica,sans-serif;color:#0d1110;text-decoration:none;border-radius:10px;">Confirmar no perfil</a>
 </td></tr></table>
 <p style="margin:18px 0 0;font:400 12px/1.6 Arial,Helvetica,sans-serif;color:#7a837d;">O botão não abriu? Copie este endereço no navegador:<br><a href="{{ .ConfirmationURL }}" style="color:#2f7d4c;word-break:break-all;">{{ .ConfirmationURL }}</a></p>
-<p style="margin:26px 0 0;padding:14px 16px;background:#f6f4ee;border-radius:8px;font:400 13px/1.55 Arial,Helvetica,sans-serif;color:#5a645e;">Não pediu para entrar? Ignore este e-mail: ninguém entra sem este link.</p>
+<p style="margin:26px 0 0;padding:14px 16px;background:#f6f4ee;border-radius:8px;font:400 13px/1.55 Arial,Helvetica,sans-serif;color:#5a645e;">Não pediu? Ignore este e-mail: sem a sua confirmação no perfil, nada é apagado.</p>
 </td></tr>
 <tr><td align="center" style="padding:22px 12px 0;font:400 12px/1.6 Arial,Helvetica,sans-serif;color:#838e86;">
 Você recebeu este e-mail porque ele foi usado numa conta do Futeiro.<br>O Futeiro nunca pede sua senha por e-mail.

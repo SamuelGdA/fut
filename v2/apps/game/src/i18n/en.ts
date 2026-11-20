@@ -39,6 +39,8 @@ export const en: Messages = {
       ended: "Legacy on screen",
       noSave: "No saving",
       noSaveHint: "Continue your last ongoing career here.",
+      soon: "Coming soon",
+      soonHint: "Técnico mode is being prepared and arrives in a future version.",
     },
     achievements: "Achievements",
     achievementsCount: { zero: "None unlocked yet", one: "{count} unlocked", other: "{count} unlocked" },
@@ -719,6 +721,13 @@ export const en: Messages = {
     sectionBody: "The rest of the screen is still here.",
   },
 
+  comingSoon: {
+    badge: "Coming soon",
+    title: "Técnico",
+    body: "Técnico mode is being prepared and arrives in a future version. Meanwhile, your player career is waiting for you.",
+    home: "Back to start",
+  },
+
   notFound: {
     eyebrow: "Error 404",
     title: "Out of play",
@@ -850,9 +859,6 @@ export const en: Messages = {
       edictBroken: "Rule broken: half the score",
       erasedNone: "No erased seasons",
       erased: { one: "{count} erased season: minus {percent}", other: "{count} erased seasons: minus {percent}" },
-      placement: "{place} of {of} runs in the ranking for {date}.",
-      placementAlone: "The only run for {date} on this device.",
-      shared: "The ranking stays on the device of whoever played.",
     },
   },
 
@@ -945,7 +951,6 @@ export const en: Messages = {
       back: "Back to start",
     },
     imported: { one: "{count} achievement from this device joined your account", other: "{count} achievements from this device joined your account" },
-    welcome: "All set, @{name}",
     signedOut: "You signed out. You can keep playing as a guest.",
     deleted: "Account deleted. Your data left the server.",
     legalNotice: {
@@ -1237,7 +1242,7 @@ export const en: Messages = {
       emailKinds: {
         confirmation: "Confirm sign-up",
         recovery: "Reset password",
-        magic_link: "Sign-in link",
+        magic_link: "Confirm account deletion",
         invite: "Invite",
         email_change: "Change email",
         reauthentication: "Security code",

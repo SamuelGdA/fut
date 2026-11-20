@@ -1,3 +1,4 @@
+import { useOwnAttempts } from "../../features/hall/ownAttempts";
 import { CLUBS, COUNTRIES, LEAGUES } from "@craque/world";
 import { ArrowRight, Award, Crosshair, Dices, FlaskConical, Timer } from "lucide-react";
 import { useEffect } from "react";
@@ -77,7 +78,7 @@ function DailyChallengeCard() {
   const { t } = useT();
   const go = useNavigation((state) => state.go);
   const clock = useChallengeClock();
-  const attempts = useHall((state) => state.attempts);
+  const attempts = useOwnAttempts();
 
   const ranked = dayRanking(attempts, clock.day).find((attempt) => attempt.ranked) ?? null;
 

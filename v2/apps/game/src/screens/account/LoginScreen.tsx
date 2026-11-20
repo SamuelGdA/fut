@@ -18,10 +18,10 @@ import { notify } from "../../ui/toast/notify";
 import { AuthField, GoogleMark } from "./AuthField";
 
 type Mode = "signIn" | "signUp" | "reset" | "confirm";
-type Availability = "idle" | "checking" | "free" | "taken" | "invalid";
+type Availability = "idle" | "checking" | "free" | "taken" | "invalid" | "blocked";
 
 /** Códigos de erro que a tela sabe dizer; o resto vira "algo deu errado". */
-const ERRORS = new Set(["invalid", "unconfirmed", "weakPassword", "samePassword", "rateLimit", "disabled", "exists", "network", "unknown", "email", "username", "reserved", "taken"]);
+const ERRORS = new Set(["invalid", "unconfirmed", "weakPassword", "samePassword", "rateLimit", "disabled", "exists", "network", "unknown", "email", "username", "reserved", "offensive", "taken"]);
 const errorKey = (code: string): ContaKey => `login.errors.${ERRORS.has(code) ? code : "unknown"}` as ContaKey;
 
 /**
@@ -40,11 +40,11 @@ export function LoginScreen() {
   const go = useNavigation((state) => state.go);
   const leaving = useRef(false);
 
-  // Logado e com @: volta para onde estava (ou o hub), com as boas-vindas.
+  // Logado e com @: volta para onde estava (ou o hub). Sem aviso de boas-vindas
+  // (D125): o @ no topo já mostra que entrou.
   useEffect(() => {
     if (leaving.current || status !== "member" || dataStatus !== "ready" || !profile?.username || recovery) return;
     leaving.current = true;
-    notify({ id: "account-welcome", tone: "good", title: t("account.welcome", { name: profile.username }) });
     go(takeLoginReturn(), { replace: true });
   }, [status, dataStatus, profile, recovery, go, t]);
 
@@ -348,7 +348,6 @@ function GuestPanel() {
       ) : (
         <SignUpForm email={email} onEmail={setEmail} onConfirm={() => setMode("confirm")} />
       )}
-      <p className="mt-4 text-xs text-faint">{ct("login.sameAccount")}</p>
       <Agreement />
       <Button
         variant="ghost"
@@ -435,6 +434,7 @@ function usernameStatus(availability: Availability, username: string, ct: (key: 
   if (availability === "checking") return { text: ct("login.onboarding.checking"), tone: "muted" as const };
   if (availability === "free") return { text: ct("login.onboarding.free", { name }), tone: "good" as const };
   if (availability === "taken") return { text: ct("login.onboarding.taken", { name }), tone: "bad" as const };
+  if (availability === "blocked") return { text: ct("login.onboarding.blocked"), tone: "bad" as const };
   return null;
 }
 

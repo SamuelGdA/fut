@@ -6,6 +6,7 @@ import { openLogin } from "../../features/account/openLogin";
 import { type Profile, type Trophy, USERNAME_COOLDOWN_DAYS } from "../../features/account/schemas";
 import { useAccount } from "../../features/account/store";
 import { AdSlot } from "../../features/consent/AdSlot";
+import { isBlockedAchievement, TECNICO_BLOCKED } from "../../lib/modes";
 import { formatShortDate } from "../../i18n/format";
 import { type ContaKey, useContaT } from "../../i18n/conta/useContaT";
 import { feedback } from "../../services/feedback";
@@ -60,7 +61,7 @@ function ProfileSkeleton() {
         </div>
       </div>
       <div className="profile-stats">
-        {[0, 1, 2].map((panel) => (
+        {(TECNICO_BLOCKED ? [0, 1] : [0, 1, 2]).map((panel) => (
           <div key={panel} className="rounded-md border border-line bg-panel p-4 sm:p-5">
             <Skeleton className="mb-4 h-3 w-24" />
             <div className="grid grid-cols-3 gap-3">
@@ -135,14 +136,19 @@ function ProfileView({ profile }: { profile: Profile }) {
         { key: "profile.stats.challenges", value: profile.desafios },
       ],
     },
-    {
-      section: "profile.sections.tecnico",
-      items: [
-        { key: "profile.stats.coachCareers", value: profile.carreiras_tecnico },
-        { key: "profile.stats.coachSeasons", value: profile.temporadas_tecnico },
-        { key: "profile.stats.coachTitles", value: profile.titulos_tecnico },
-      ],
-    },
+    // D124: com o Técnico bloqueado no ar, os números dele não aparecem.
+    ...(TECNICO_BLOCKED
+      ? []
+      : [
+          {
+            section: "profile.sections.tecnico" as const,
+            items: [
+              { key: "profile.stats.coachCareers" as const, value: profile.carreiras_tecnico },
+              { key: "profile.stats.coachSeasons" as const, value: profile.temporadas_tecnico },
+              { key: "profile.stats.coachTitles" as const, value: profile.titulos_tecnico },
+            ],
+          },
+        ]),
   ];
 
   return (
@@ -217,9 +223,12 @@ function ProfileView({ profile }: { profile: Profile }) {
   );
 }
 
-function Showcase({ trophies }: { trophies: readonly Trophy[] }) {
+function Showcase({ trophies: all }: { trophies: readonly Trophy[] }) {
   const { t, tp, ct, locale } = useContaT();
   const go = useNavigation((state) => state.go);
+  // D124: troféus do Técnico bloqueado ficam fora da vitrine e da contagem.
+  const trophies = all.filter((trophy) => !isBlockedAchievement(trophy.id_trophy));
+  const total = CATALOG.filter((entry) => !isBlockedAchievement(entry.id)).length;
   const shown = trophies
     .map((trophy) => ({ trophy, entry: catalogEntry(trophy.id_trophy) }))
     .filter((item): item is { trophy: Trophy; entry: NonNullable<ReturnType<typeof catalogEntry>> } => item.entry !== null)
@@ -229,7 +238,7 @@ function Showcase({ trophies }: { trophies: readonly Trophy[] }) {
   return (
     <Panel
       title={ct("profile.showcase")}
-      aside={<span className="numeric text-xs text-muted">{ct("profile.showcaseCount", { count: trophies.length, total: CATALOG.length })}</span>}
+      aside={<span className="numeric text-xs text-muted">{ct("profile.showcaseCount", { count: trophies.length, total })}</span>}
       className="mt-6"
     >
       {shown.length === 0 ? (
@@ -276,7 +285,11 @@ function AccountPanel({ username, changedAt }: { username: string; changedAt: st
   const [draft, setDraft] = useState(username);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [confirming, setConfirming] = useState(false);
+  // D127: apagar tem dois passos. Primeiro manda o link para o e-mail; quem
+  // volta pelo link (`/perfil?apagar=1`) vê a confirmação final.
+  const [asking, setAsking] = useState(false);
+  const [confirming, setConfirming] = useState(takeDeletionReturn);
+  const email = useAccount((state) => state.user?.email ?? "");
 
   const save = async (event: FormEvent) => {
     event.preventDefault();
@@ -285,7 +298,14 @@ function AccountPanel({ username, changedAt }: { username: string; changedAt: st
     const result = await useAccount.getState().setUsername(draft);
     setBusy(false);
     if (result) {
-      setError(result === "taken" ? ct("login.errors.taken") : result === "network" ? ct("login.errors.network") : result === "recent" ? ct("login.errors.recent", { date: nextChange ?? "" }) : ct("login.errors.username"));
+      setError(
+        result === "taken" ? ct("login.errors.taken")
+        : result === "network" ? ct("login.errors.network")
+        : result === "recent" ? ct("login.errors.recent", { date: nextChange ?? "" })
+        : result === "reserved" ? ct("login.errors.reserved")
+        : result === "offensive" ? ct("login.errors.offensive")
+        : ct("login.errors.username"),
+      );
       return;
     }
     feedback("confirm");
@@ -298,6 +318,7 @@ function AccountPanel({ username, changedAt }: { username: string; changedAt: st
       {editing ? (
         <form className="flex flex-col gap-3 sm:max-w-sm" onSubmit={save} noValidate>
           <AuthField label={ct("login.username")} prefix="@" autoCapitalize="none" maxLength={21} value={draft} onValueChange={setDraft} hint={ct("login.usernameHint")} error={error ?? undefined} autoFocus />
+          <p className="text-xs text-muted">{ct("profile.usernameRule", { days: USERNAME_COOLDOWN_DAYS })}</p>
           <div className="flex gap-2">
             <Button type="submit" loading={busy}>{ct("profile.save")}</Button>
             <Button variant="ghost" onClick={() => { setEditing(false); setDraft(username); setError(null); }}>{ct("profile.cancel")}</Button>
@@ -321,13 +342,26 @@ function AccountPanel({ username, changedAt }: { username: string; changedAt: st
             <LogOut size={15} aria-hidden="true" />
             {ct("profile.signOut")}
           </Button>
-          <Button variant="danger" size="sm" onClick={() => setConfirming(true)}>
+          <Button variant="danger" size="sm" onClick={() => setAsking(true)}>
             <Trash2 size={15} aria-hidden="true" />
             {ct("profile.delete")}
           </Button>
         </div>
       )}
       {!editing && nextChange ? <p className="mt-3 text-xs text-faint">{ct("profile.usernameNext", { date: nextChange })}</p> : null}
+      <ConfirmDialog
+        open={asking}
+        onOpenChange={setAsking}
+        title={ct("profile.deleteTitle")}
+        description={ct("profile.deleteAskBody", { email })}
+        confirmLabel={ct("profile.deleteSend")}
+        cancelLabel={ct("profile.deleteKeep")}
+        onConfirm={async () => {
+          const result = await useAccount.getState().requestAccountDeletion();
+          if (result) notify({ id: "account-delete-error", tone: "bad", title: ct("profile.deleteSendError") });
+          else notify({ id: "account-delete-sent", tone: "good", title: ct("profile.deleteSent", { email }) });
+        }}
+      />
       <ConfirmDialog
         open={confirming}
         onOpenChange={setConfirming}
@@ -337,12 +371,23 @@ function AccountPanel({ username, changedAt }: { username: string; changedAt: st
         cancelLabel={ct("profile.deleteKeep")}
         onConfirm={async () => {
           const result = await useAccount.getState().deleteAccount();
-          if (result) notify({ id: "account-delete-error", tone: "bad", title: ct("profile.deleteError") });
+          if (result === "confirm") notify({ id: "account-delete-error", tone: "bad", title: ct("profile.deleteExpired") });
+          else if (result) notify({ id: "account-delete-error", tone: "bad", title: ct("profile.deleteError") });
           else go("hub", { force: true });
         }}
       />
     </Panel>
   );
+}
+
+/** Voltou pelo link do e-mail (D127)? Lê e limpa o `?apagar=1` da barra de endereço. */
+function takeDeletionReturn(): boolean {
+  if (typeof window === "undefined") return false;
+  const url = new URL(window.location.href);
+  if (url.searchParams.get("apagar") !== "1") return false;
+  url.searchParams.delete("apagar");
+  window.history.replaceState(window.history.state, "", `${url.pathname}${url.search}${url.hash}`);
+  return true;
 }
 
 /** O nome do troféu inteiro, com o resumo da conquista ao passar o mouse ou focar (D118). */

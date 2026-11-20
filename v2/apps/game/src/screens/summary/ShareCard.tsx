@@ -1,11 +1,10 @@
 import type { AvatarConfig } from "@craque/art";
-import { stintsOf } from "@craque/content";
 import type { Career } from "@craque/engine";
 import { AWARDS, getCompetition, getCountry } from "@craque/world";
 import { type CSSProperties, type Ref } from "react";
 import { clubStyle } from "../../features/career/clubColors";
 import { challengeOf } from "../../features/hall/session";
-import { SHARE_HEIGHT, SHARE_WIDTH, shareHighlights, shareShelf } from "../../features/summary/shareCard";
+import { SHARE_HEIGHT, SHARE_WIDTH, shareClubs, shareHighlights, shareShelf } from "../../features/summary/shareCard";
 import { peakCard, posterNumbers } from "../../features/summary/summaryData";
 import { useT } from "../../i18n/useT";
 import { siteLabel } from "../../lib/env";
@@ -20,10 +19,8 @@ interface ShareCardProps {
   ref?: Ref<HTMLDivElement>;
 }
 
-/** Clubes no rodapé (os de mais temporadas). */
-const SHARE_CLUBS = 4;
-/** Largura da faixa de destaques, em pixels da imagem. */
-const SHELF_WIDTH = 800;
+/** Largura da faixa de destaques, em pixels da imagem (a coluna da direita). */
+const SHELF_WIDTH = 780;
 
 /**
  * A imagem compartilhável da carreira (D118): 1200 × 630, paleta escura fixa
@@ -43,14 +40,9 @@ export function ShareCard({ career, avatar, showSurname, ref }: ShareCardProps) 
   const last = career.history[career.history.length - 1];
   const challenge = challengeOf(career);
   const name = showSurname ? surname : c(`positions.${career.player.position}`);
-  const titleSize = name.length <= 8 ? 112 : name.length <= 11 ? 90 : name.length <= 15 ? 70 : 56;
-
-  const seasonsByClub = new Map<string, { seasons: number; from: number }>();
-  for (const stint of stintsOf(career.history)) {
-    const current = seasonsByClub.get(stint.club);
-    seasonsByClub.set(stint.club, { seasons: (current?.seasons ?? 0) + stint.seasons, from: Math.min(current?.from ?? stint.fromYear, stint.fromYear) });
-  }
-  const clubs = [...seasonsByClub].sort((a, b) => b[1].seasons - a[1].seasons || a[1].from - b[1].from).slice(0, SHARE_CLUBS);
+  // D128: o nome um pouco menor sobe os números e abre espaço para duas linhas de destaques.
+  const titleSize = name.length <= 8 ? 96 : name.length <= 11 ? 80 : name.length <= 15 ? 62 : 50;
+  const clubs = shareClubs(career.history, peak?.club ?? null);
   const site = siteLabel();
 
   return (
@@ -114,7 +106,7 @@ export function ShareCard({ career, avatar, showSurname, ref }: ShareCardProps) 
           ))}
         </dl>
 
-        <section className="share-card-shelf" style={{ "--share-art": `${shelf.art}px` } as CSSProperties}>
+        <section className="share-card-shelf" style={{ "--share-art": `${shelf.art}px`, "--share-per-row": shelf.perRow } as CSSProperties}>
           <p className="share-card-label">{t("summary.poster.highlights")}</p>
           {highlights.length > 0 ? (
             <ul>
@@ -147,7 +139,7 @@ export function ShareCard({ career, avatar, showSurname, ref }: ShareCardProps) 
         <div className="share-card-clubs">
           <span>{t("summary.poster.clubs")}</span>
           <ul>
-            {clubs.map(([club]) => (
+            {clubs.map((club) => (
               <li key={club}><Crest club={club} size={38} decorative /></li>
             ))}
           </ul>

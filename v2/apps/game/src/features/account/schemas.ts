@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { isOffensiveUsername } from "./blockedWords";
 
 /**
  * Tudo que entra e sai da nuvem passa por aqui (D114). Na ida, o Zod corta o
@@ -32,8 +33,16 @@ export const usernameSchema = z
       .min(USERNAME_MIN, "short")
       .max(USERNAME_MAX, "long")
       .regex(/^[a-z0-9_]+$/, "chars")
-      .refine((value) => !RESERVED_USERNAMES.includes(value), "reserved"),
+      .refine((value) => !RESERVED_USERNAMES.includes(value), "reserved")
+      // D126: palavrão, insulto ou ódio, mesmo disfarçado (`put4`, `p_u_t_a`).
+      .refine((value) => !isOffensiveUsername(value), "offensive"),
   );
+
+/** Por que o @ foi recusado: reservado, ofensivo, ou fora do formato. */
+export function usernameRefusal(issues: readonly { message: string }[]): "reserved" | "offensive" | "username" {
+  const message = issues[0]?.message;
+  return message === "reserved" || message === "offensive" ? message : "username";
+}
 
 /** O único campo do perfil que o navegador escreve. */
 export const profileUpdateSchema = z.strictObject({ username: usernameSchema });

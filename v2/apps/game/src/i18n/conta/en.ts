@@ -27,7 +27,6 @@ export const contaEn: ContaMessages = {
     forgot: "Forgot password",
     guest: "Play as a guest",
     agree: "By continuing, you agree to the {terms} and the {privacy}.",
-    sameAccount: "Same email on Google and with a password? It is the same account: sign in whichever way you like.",
     checking: "Opening your account",
     confirm: {
       eyebrow: "Almost there",
@@ -60,6 +59,7 @@ export const contaEn: ContaMessages = {
       checking: "Checking",
       free: "@{name} is free",
       taken: "@{name} is taken",
+      blocked: "That @ isn't allowed",
       signOut: "Use another account",
     },
     notices: {
@@ -82,6 +82,7 @@ export const contaEn: ContaMessages = {
       unknown: "Something went wrong on our side. Try again in a moment.",
       email: "Enter a valid email.",
       username: "Use 3 to 20 characters: lowercase letters, numbers and _.",
+      offensive: "That @ isn't allowed. Pick another one.",
       reserved: "That @ is reserved. Choose another.",
       taken: "That @ is taken. Choose another.",
       recent: "You changed your @ less than 30 days ago. The next change unlocks on {date}.",
@@ -127,6 +128,7 @@ export const contaEn: ContaMessages = {
     play: "Play now",
     account: "Account",
     editUsername: "Change your @",
+    usernameRule: "You can change your @ once every {days} days. After saving, the next change opens in {days} days.",
     usernameNext: "Next @ change on {date}.",
     save: "Save",
     cancel: "Cancel",
@@ -138,6 +140,11 @@ export const contaEn: ContaMessages = {
     deleteConfirm: "Delete forever",
     deleteKeep: "Keep my account",
     deleteError: "Could not delete right now. Check your internet and try again.",
+    deleteAskBody: "To confirm it's you, we send a link to {email}. The account is only deleted after you open the link on this device and confirm.",
+    deleteSend: "Send the link",
+    deleteSent: "Link sent to {email}. Open it on this device within 15 minutes.",
+    deleteSendError: "Could not send the link right now. Wait a minute and try again.",
+    deleteExpired: "The confirmation link expired. Ask for another one in Delete account.",
     privacyLink: "How we look after your data",
   },
 

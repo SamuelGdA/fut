@@ -3,6 +3,7 @@ import tailwindcss from "@tailwindcss/vite";
 import react, { reactCompilerPreset } from "@vitejs/plugin-react";
 import { VitePWA } from "vite-plugin-pwa";
 import { defineConfig } from "vitest/config";
+import { blockedModes } from "./build/blockedModes.ts";
 import { errorPages } from "./build/errorPages.ts";
 import { gameLoading } from "./build/gameLoading.ts";
 import { routeCopies } from "./build/routes.ts";
@@ -30,6 +31,8 @@ export default defineConfig({
     // D112: /login, /perfil, /termos e /privacidade abrem em qualquer hospedagem estática.
     routeCopies(),
     socialPreview(),
+    // D124: modo bloqueado no ar não deixa nenhuma tela dele no build.
+    blockedModes(),
     loading.plugin,
     // PWA (GDD 37): instalável, e a casca e o jogo funcionam sem internet.
     VitePWA({

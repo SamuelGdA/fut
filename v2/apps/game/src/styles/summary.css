@@ -1370,11 +1370,13 @@ button.honour-stack .honour-token:hover, button.honour-stack .honour-token:focus
     text-transform: uppercase;
   }
 
+  /* D128: tudo encostado no topo (nome, números logo abaixo) e a faixa de
+     destaques fica com o resto da altura, para duas linhas de troféus. */
   .share-card-main {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    gap: 14px;
+    justify-content: flex-start;
+    gap: 12px;
     min-width: 0;
     min-height: 0;
   }
@@ -1455,6 +1457,7 @@ button.honour-stack .honour-token:hover, button.honour-stack .honour-token:focus
 
   .share-card-name {
     overflow: hidden;
+    padding-bottom: 0.04em;
     font-family: var(--font-display);
     font-weight: 900;
     line-height: 0.9;
@@ -1474,7 +1477,7 @@ button.honour-stack .honour-token:hover, button.honour-stack .honour-token:focus
     flex-direction: column-reverse;
     gap: 2px;
     min-width: 0;
-    padding: 10px 12px;
+    padding: 8px 12px;
     border: 1px solid #2b3631;
     border-radius: 6px;
     background: rgb(22 29 26 / 0.85);
@@ -1493,16 +1496,18 @@ button.honour-stack .honour-token:hover, button.honour-stack .honour-token:focus
 
   .share-card-numbers dd {
     font-family: var(--font-display);
-    font-size: 44px;
+    font-size: 40px;
     font-weight: 900;
     line-height: 0.95;
   }
 
   .share-card-shelf {
     display: flex;
+    flex: 1;
     flex-direction: column;
     gap: 8px;
     min-height: 0;
+    margin-top: 4px;
   }
 
   .share-card-label {
@@ -1515,8 +1520,9 @@ button.honour-stack .honour-token:hover, button.honour-stack .honour-token:focus
 
   .share-card-shelf ul {
     display: flex;
+    flex-wrap: wrap;
     align-items: flex-start;
-    gap: 14px;
+    gap: 10px 14px;
   }
 
   .share-card-shelf li {
@@ -1563,7 +1569,7 @@ button.honour-stack .honour-token:hover, button.honour-stack .honour-token:focus
   }
 
   .share-card-shelf li.share-card-more {
-    align-self: center;
+    align-self: flex-start;
     justify-content: center;
     height: var(--share-art);
     color: #e3b341;
@@ -1586,8 +1592,8 @@ button.honour-stack .honour-token:hover, button.honour-stack .honour-token:focus
     align-items: center;
     justify-content: space-between;
     gap: 16px;
-    margin-top: 16px;
-    padding-top: 14px;
+    margin-top: 12px;
+    padding-top: 12px;
     border-top: 1px solid #2b3631;
     color: #9ca79f;
     font-size: 16px;

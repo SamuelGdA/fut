@@ -150,7 +150,7 @@ export async function simularNuvem(page: Page, inicio: Partial<Nuvem> = {}): Pro
       // Confirmação de e-mail ligada: a conta nasce sem sessão.
       return json(route, { id: "novo", aud: "authenticated", role: "", email: data.email, identities: [{ provider: "email" }], created_at: new Date().toISOString(), app_metadata: {}, user_metadata: {} });
     }
-    if (path === "/auth/v1/recover" || path === "/auth/v1/resend") return json(route, {});
+    if (path === "/auth/v1/recover" || path === "/auth/v1/resend" || path === "/auth/v1/otp") return json(route, {});
 
     // ------------------------------------------------------------- dados
     if (path === "/rest/v1/profiles" && method === "GET") {

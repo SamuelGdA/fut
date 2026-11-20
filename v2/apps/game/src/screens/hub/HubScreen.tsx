@@ -8,6 +8,7 @@ import { useCoachDraft } from "../../features/tecnico/draft";
 import { useTecnicoPresence } from "../../features/tecnico/presence";
 import { useT } from "../../i18n/useT";
 import { IS_DEV } from "../../lib/env";
+import { TECNICO_BLOCKED } from "../../lib/modes";
 import { feedback } from "../../services/feedback";
 import { Avatar } from "../../ui/Avatar";
 import { Button } from "../../ui/Button";
@@ -116,6 +117,43 @@ function CraqueCard() {
 }
 
 function TecnicoCard() {
+  if (TECNICO_BLOCKED) return <TecnicoSoonCard />;
+  return <TecnicoPlayableCard />;
+}
+
+/**
+ * D124: o Técnico no ar, bloqueado. O cartão continua mostrando o que o modo
+ * é, com a faixa "Em breve" e sem botão: não há como entrar por aqui.
+ */
+function TecnicoSoonCard() {
+  const { t } = useT();
+  const draft = useCoachDraft();
+  return (
+    <article className="hub-card" data-game="tecnico" data-soon="" aria-labelledby="hub-tecnico">
+      <span className="hub-ribbon">{t("hub.tecnico.soon")}</span>
+      <div className="hub-card-art">
+        <div className="hub-coach">
+          <Avatar config={draft.avatar} kit={draft.nationality ? getCountryKit(draft.nationality) : null} outfit="coach" className="h-full w-full" />
+        </div>
+      </div>
+      <div className="hub-card-body">
+        <p className="eyebrow text-glory">{t("hub.tecnico.eyebrow")}</p>
+        <h2 id="hub-tecnico" className="hub-card-title">
+          {t("hub.tecnico.title")}
+        </h2>
+        <p className="text-sm text-muted">{t("hub.tecnico.lead")}</p>
+        <ul className="hub-points">
+          <li>{t("hub.tecnico.points.first")}</li>
+          <li>{t("hub.tecnico.points.second")}</li>
+          <li>{t("hub.tecnico.points.third")}</li>
+        </ul>
+        <p className="text-xs text-faint">{t("hub.tecnico.soonHint")}</p>
+      </div>
+    </article>
+  );
+}
+
+function TecnicoPlayableCard() {
   const { t, number } = useT();
   const go = useNavigation((state) => state.go);
   const draft = useCoachDraft();

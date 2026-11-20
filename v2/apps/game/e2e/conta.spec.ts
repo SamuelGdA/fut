@@ -172,7 +172,14 @@ test("primeiro login sem @: o passo do @ é obrigatório antes de jogar", async 
   await expect(page).toHaveURL(/\/login$/);
   await page.getByLabel("Seu @", { exact: true }).fill("admin");
   await page.getByRole("button", { name: "Começar a jogar" }).click();
-  await expect(page.getByRole("alert")).toContainText("3 a 20 caracteres");
+  // O motivo certo: reservado é reservado, não "formato errado".
+  await expect(page.getByRole("alert")).toContainText("Esse @ é reservado");
+  // D126: palavrão disfarçado avisa enquanto digita e não sai do aparelho.
+  await page.getByLabel("Seu @", { exact: true }).fill("put4_10");
+  await expect(page.getByText("Esse @ não é permitido", { exact: true })).toBeVisible();
+  await page.getByRole("button", { name: "Começar a jogar" }).click();
+  await expect(page.getByRole("alert")).toContainText("Esse @ não é permitido. Escolha outro.");
+  expect(chamadas(nuvem, "/rest/v1/profiles").filter((call) => call.method === "PATCH")).toEqual([]);
   await page.getByLabel("Seu @", { exact: true }).fill("meu_craque");
   await expect(page.getByText("@meu_craque está livre")).toBeVisible();
   await page.getByRole("button", { name: "Começar a jogar" }).click();
@@ -223,8 +230,19 @@ test("sair e apagar a conta pelo perfil", async ({ page }) => {
   await abrir(page, {}, "/perfil");
   await expect(page.getByRole("heading", { name: "@craque_e2e", level: 1 })).toBeVisible();
   await page.getByRole("button", { name: "Apagar a conta" }).click();
-  // O foco vai para a opção que não muda nada.
+  // D127: primeiro o link por e-mail. O foco vai para a opção que não muda nada.
   await expect(page.getByRole("button", { name: "Manter a conta" })).toBeFocused();
+  await expect(page.getByText("mandamos um link para jogador@exemplo.com")).toBeVisible();
+  await page.getByRole("button", { name: "Mandar o link" }).click();
+  await expect(page.getByText("Link enviado para jogador@exemplo.com")).toBeVisible();
+  const otp = chamadas(nuvem, "/auth/v1/otp")[0];
+  expect((otp?.body as { email?: string } | undefined)?.email).toBe("jogador@exemplo.com");
+  expect(decodeURIComponent(otp?.search ?? "")).toContain("redirect_to=http://localhost:4173/perfil?apagar=1");
+  expect(chamadas(nuvem, "/rest/v1/rpc/excluir_conta")).toHaveLength(0);
+
+  // A volta pelo link: o perfil abre já pedindo a confirmação final.
+  await page.goto("/perfil?apagar=1");
+  await expect(page).toHaveURL(/\/perfil$/);
   await page.getByRole("button", { name: "Apagar para sempre" }).click();
   await expect(page.getByRole("heading", { name: "Futeiro", level: 1 })).toBeVisible();
   await expect(page.getByRole("banner").getByRole("button", { name: "Entrar" })).toBeVisible();

@@ -1855,6 +1855,9 @@ demais as peças. Vazia: moldura tracejada e uma frase.
 resumo continua com a regra de cima. O craque da Copa do Mundo e o da
 Champions League usam peça própria (`awardImageFor`).
 
+**Como ficou (D128):** cada quadrado reserva duas linhas de legenda (não mais
+76 px); legenda longa de competição ainda cresce sem corte.
+
 ### 24.6 Jornal (portado do v1)
 
 O arquivo de jornais do resumo do v1 é **portado como está**, a pedido do
@@ -2074,6 +2077,10 @@ linha perdedora.
   em cinza, visível), ranqueada ou amistosa, bônus de pico, édito quebrado,
   penalidade de apagadas, e **uma linha** com a colocação do dia.
 
+  *Como ficou (D125):* a linha da colocação saiu; o ranking que vale é o
+  mundial, na tela do Desafio. As tentativas guardadas no aparelho são de cada
+  conta (ou do visitante), e a ranqueada do dia é a primeira de cada um.
+
 **Como ficou no M7:**
 
 - O painel em jogo é a **quinta aba** no celular (Temporada, Jogador, Desafio,
@@ -2172,6 +2179,13 @@ os prêmios de competição. A faixa usa peças de 96 px com poucas conquistas e
 desce até 64 px; o que não cabe vira "+N". Embaixo, até quatro clubes
 principais e o endereço do jogo. Sem curva do OVR. O quadro é fixo: nada
 cresce para fora dele. O pôster do Técnico continua 1080 × 1350.
+
+**Como ficou (D128):** o nome e os números ficam logo abaixo da marca, e os
+destaques ocupam até duas linhas (peças de 72, 64 ou 56 px), com o "+N" na
+última casa. No rodapé, até cinco clubes: sem o da carta do auge; primeiro os
+clubes com legado (lenda, ídolo, respeitado), por legado, títulos e jogos ali;
+nunca um clube traído; e sempre o clube em que a carreira começou (o primeiro
+com jogos), no fim.
 
 ### 29.2 Entrega
 
@@ -2530,6 +2544,12 @@ recarregar** (remove só o save). Ela avisa que a carreira continua salva.
 
 ## 38. Ferramentas de desenvolvimento
 
+> **Só no computador (D124).** O laboratório e o debug (as ferramentas que
+> mudam o jogador e o técnico na hora) existem só com `pnpm dev`; o site no ar
+> não tem nenhum dos dois, nem os modos bloqueados. As regras de ambiente e de
+> branch (`dev` para trabalhar, `main` só com merge autorizado) estão no
+> `AI_RULES.md`.
+
 - **`/lab`** (só em desenvolvimento): o sistema de design em todos os estados,
   nos dois temas e em largura de celular; folhas de contato de cartas por faixa,
   escudos (10, 16, 28, 48, 96 px), troféus, selos de liga, pôster com carreiras
@@ -2780,6 +2800,12 @@ que o Craque já mostrava.
 ---
 
 ## 42. Técnico: a carreira de treinador
+
+> **No ar, "Em breve" (D124).** Com `VITE_MODOS_BLOQUEADOS=tecnico` (o site),
+> o Técnico aparece no hub com a faixa "Em breve" e não abre: as telas dele
+> nem entram no build, as conquistas e os números dele somem da tela, e o banco
+> recusa carreira e conquista do Técnico. No computador (`pnpm dev`) e na
+> suíte, o Técnico funciona inteiro. Tudo abaixo descreve o modo como ele é.
 
 ### 42.1 Visão e o laço da temporada
 
@@ -5105,9 +5131,11 @@ O motor não muda (Craque `2.0.0-m41`, Técnico `1.10.0`): nenhuma carreira dá 
 - **Entrar.** Google primeiro; e-mail e senha logo abaixo (senha com 8 ou mais caracteres, letras e números). Criar conta por e-mail exige confirmar o e-mail pelo link; "Esqueci a senha" manda um link que abre o `/login` pedindo a senha nova. Contas com o mesmo e-mail confirmado são a mesma conta (vinculação automática do Supabase). O fluxo é PKCE: o código volta na URL do `/login`, vira sessão e some da barra de endereço. Link de confirmação aberto em outro navegador confirma o e-mail e pede para entrar com a senha.
   *Como ficou (D123):* o login mostra o botão oficial do Google ("Continuar como Fulano", no tema e no idioma do jogo, na largura da coluna). Cada clique abre a janelinha do próprio navegador ("Fazer login em futeiro.com com google.com"), sem sair do site, mesmo depois de o jogador cancelar; nada abre sozinho. O token que ela devolve vira sessão no Supabase, com nonce (o Google assina o hash, o Supabase confere o cru). O script do Google só baixa na tela de login; enquanto carrega, ou se não carregar, fica o botão do jogo, que vai pela página do Google com o PKCE de antes. A conta guarda o idioma do jogo (`locale`, D122), uma vez por conta e idioma em cada aba; sair espera essa gravação terminar.
 - **O `@`.** Obrigatório antes de jogar logado: 3 a 20 caracteres, `a-z`, `0-9` e `_`, sem os reservados (admin, suporte, futeiros, craque, tecnico e outros). Único. Quem cria conta por e-mail escolhe no cadastro, com a disponibilidade conferida enquanto digita; quem entra pelo Google escolhe no primeiro acesso, e nenhuma tela do jogo abre antes disso. Dá para trocar no perfil.
+  *Como ficou (D126 e D125):* nenhum @ com palavrão, termo sexual, insulto ou ódio (português, espanhol, inglês e os mais comuns de francês, italiano e alemão), mesmo disfarçado com números, `_` ou letras repetidas; o navegador avisa "Esse @ não é permitido" e o banco recusa do mesmo jeito. A tela de trocar o @ diz a regra: uma troca a cada 30 dias.
 - **Endereços próprios.** `/login`, `/perfil`, `/termos` e `/privacidade` (com e sem barra no fim). O build grava uma cópia do `index.html` em cada pasta, então funcionam em qualquer hospedagem estática. Entrar nessas telas põe o caminho na URL; sair volta para a raiz. As outras telas continuam sem mudar a URL (GDD 5).
 - **Topo.** O visitante vê "Entrar" (só o ícone no celular); logado, a inicial e o `@`, que abrem o perfil. Some nas telas do laço (Carreira e Técnico), para a carreira em memória não correr risco, e no próprio login.
 - **Perfil.** O `@`, a data de entrada e os jeitos de entrar; os totais somados de todas as carreiras terminadas: Craque (carreiras, jogos, gols, assistências, títulos, Bolas de Ouro, melhor OVR, prêmios, jogos sem sofrer gol, com clube e seleção somados como no resumo, D97), Desafio do dia (ranqueadas e melhor nota) e Técnico (carreiras, temporadas, títulos); a vitrine com até 12 troféus, do mais raro para o mais comum; trocar o `@`, sair e apagar a conta. Enquanto o banco responde, esqueletos no lugar de cada bloco.
+  *Como ficou (D127):* apagar a conta manda um link para o e-mail dela; só quem abre o link (no mesmo aparelho, em até 15 minutos) vê a confirmação final "Apagar para sempre", e o banco recusa sem essa entrada recente pelo e-mail. Com o Técnico bloqueado no ar (D124), os números e os troféus dele não aparecem.
 - **Troféus.** Cada conquista vira um troféu numa medalha com a cor da raridade (D94): a taça real nos títulos, o prêmio real na Bola de Ouro, Chuteira, Luva, Kopa, artilharia e melhor da competição, e um ícone por grupo no resto. Bloqueado: `grayscale(100%) opacity(50%)`. Liberado: colorido, com brilho que atravessa a medalha e um leve aumento no hover. A **quantidade** (em quantas carreiras a conquista caiu) fica num selo no canto inferior direito ("×3"). O nome acessível diz nome, estado e quantidade.
 - **Quantidade.** Uma conquista conta uma vez por carreira. As do meio da carreira vão na hora; no fim, a carreira manda todas as que cumpriu. Carreira abandonada conta só as que caíram pela primeira vez no aparelho. As que o aparelho guardou como visitante entram na conta no primeiro login, com quantidade 1, sem somar a quem já tem. Linha alternativa do hipotético não conta (GDD 28.3).
 - **Visitante.** Joga tudo. Não vê aviso de conquista; a tela de Conquistas vira um convite ("Faça login para começar a colecionar conquistas e registrar suas estatísticas."); no Desafio do dia, uma faixa fina diz "Você está jogando como visitante. Faça login para registrar no Ranking e desbloquear conquistas!". O aparelho guarda as conquistas em silêncio para o primeiro login.
@@ -5125,7 +5153,7 @@ O motor não muda (Craque `2.0.0-m41`, Técnico `1.10.0`): nenhuma carreira dá 
 
 ### Segurança (D114)
 
-- **Banco.** RLS em tudo; leitura só das próprias linhas; catálogo público. `UPDATE` só na coluna `username` do próprio perfil. Números só pelas funções `registrar_conquistas` (ids fora do catálogo ativo daquele jogo são ignorados) e `registrar_carreira`, que recusam campo fora da lista, número quebrado, negativo ou acima de: 40 temporadas no Craque (60 no Técnico) e, por temporada, 100 jogos, 120 gols, 80 assistências, 100 jogos sem sofrer gol, 15 títulos, 20 prêmios e uma Bola de Ouro; melhor OVR até 99; Desafio de hoje ou de ontem (UTC), nota até 1000. No máximo 20 carreiras novas por conta a cada 10 minutos. Reenviar a mesma carreira não soma de novo. `excluir_conta` apaga conta, perfil, troféus e carreiras.
+- **Banco.** RLS em tudo; leitura só das próprias linhas; catálogo público. `UPDATE` só na coluna `username` do próprio perfil. Números só pelas funções `registrar_conquistas` (ids fora do catálogo ativo daquele jogo são ignorados) e `registrar_carreira`, que recusam campo fora da lista, número quebrado, negativo ou acima de: 40 temporadas no Craque (60 no Técnico) e, por temporada, 100 jogos, 120 gols, 80 assistências, 100 jogos sem sofrer gol, 15 títulos, 20 prêmios e uma Bola de Ouro; melhor OVR até 99; Desafio de hoje ou de ontem (UTC), nota até 1000. No máximo 20 carreiras novas por conta a cada 10 minutos. Reenviar a mesma carreira não soma de novo. `excluir_conta` apaga conta, perfil, troféus e carreiras, e desde a D127 só com uma entrada pelo link do e-mail (`otp` ou `magiclink` no `amr` do token) dos últimos 15 minutos.
 - **Navegador.** O Zod repete os limites com objetos estritos; o perfil lê só as colunas da tela; o Zod e o cliente do Supabase só baixam com a primeira ação de conta (a abertura continua leve, D62).
 - **Cabeçalhos.** CSP sem script embutido (a abertura e as páginas de erro carregam `public/boot/`), liberando só o site, o Supabase, o Google Analytics, o AdSense e a janelinha de login do Google (`accounts.google.com/gsi/`, D123); `frame-ancestors 'none'`, `X-Frame-Options: DENY`, `nosniff`, `Referrer-Policy`, `Permissions-Policy`, `COOP` e `HSTS`. A suíte ponta a ponta joga sob a mesma CSP.
 - **Segredos.** Só em `.env.local`. O build recusa chave secreta, JWT de `service_role` ou senha de banco numa variável `VITE_`.
@@ -5180,7 +5208,8 @@ vitrine aparece nos três idiomas. As telas do jogo não são modificadas.
   link de carreira (`#c=`) ficam na raiz.
 - **E-mails da conta.** Oito modelos com o mesmo layout (marca, título, texto,
   botão ou código e aviso de segurança) em
-  `supabase/templates`: confirmação, recuperação, link de acesso, convite, troca
+  `supabase/templates`: confirmação, recuperação, link de acesso (desde a D127,
+  a confirmação de apagar a conta), convite, troca
   de e-mail, código de segurança e os avisos de senha e e-mail trocados. O
   laboratório mostra cada um com dados de exemplo.
   *Como ficou (D122):* cada e-mail sai inteiro no idioma do jogador

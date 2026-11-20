@@ -32,7 +32,6 @@ export const contaPt = {
     forgot: "Esqueci a senha",
     guest: "Jogar como visitante",
     agree: "Ao continuar, você concorda com os {terms} e com a {privacy}.",
-    sameAccount: "Mesmo e-mail no Google e na senha? É a mesma conta: entre pelo caminho que preferir.",
     checking: "Abrindo sua conta",
     confirm: {
       eyebrow: "Quase lá",
@@ -65,6 +64,7 @@ export const contaPt = {
       checking: "Conferindo",
       free: "@{name} está livre",
       taken: "@{name} já tem dono",
+      blocked: "Esse @ não é permitido",
       signOut: "Entrar com outra conta",
     },
     notices: {
@@ -87,6 +87,7 @@ export const contaPt = {
       unknown: "Algo deu errado do nosso lado. Tente de novo em instantes.",
       email: "Escreva um e-mail válido.",
       username: "Use de 3 a 20 caracteres: letras minúsculas, números e _.",
+      offensive: "Esse @ não é permitido. Escolha outro.",
       reserved: "Esse @ é reservado. Escolha outro.",
       taken: "Esse @ já tem dono. Escolha outro.",
       recent: "Você trocou o @ há menos de 30 dias. A próxima troca fica liberada em {date}.",
@@ -132,6 +133,7 @@ export const contaPt = {
     play: "Jogar agora",
     account: "Conta",
     editUsername: "Trocar o @",
+    usernameRule: "Você pode trocar o @ uma vez a cada {days} dias. Depois de salvar, a próxima troca só abre daqui a {days} dias.",
     usernameNext: "Próxima troca do @ em {date}.",
     save: "Salvar",
     cancel: "Cancelar",
@@ -143,6 +145,11 @@ export const contaPt = {
     deleteConfirm: "Apagar para sempre",
     deleteKeep: "Manter a conta",
     deleteError: "Não deu para apagar agora. Confira a internet e tente de novo.",
+    deleteAskBody: "Para confirmar que é você, mandamos um link para {email}. A conta só é apagada depois que você abrir o link neste aparelho e confirmar.",
+    deleteSend: "Mandar o link",
+    deleteSent: "Link enviado para {email}. Abra neste aparelho em até 15 minutos.",
+    deleteSendError: "Não deu para mandar o link agora. Espere um minuto e tente de novo.",
+    deleteExpired: "O link de confirmação venceu. Peça outro em Apagar a conta.",
     privacyLink: "Como cuidamos dos seus dados",
   },
 

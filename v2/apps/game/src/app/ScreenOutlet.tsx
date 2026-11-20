@@ -11,6 +11,8 @@ import { SCREEN_GAME, type Screen, useNavigation } from "./navigation";
  */
 type Loader = () => Promise<{ default: ComponentType }>;
 
+const comingSoon: Loader = () => import("../screens/comingSoon/ComingSoonScreen").then((module) => ({ default: module.ComingSoonScreen }));
+
 const SCREEN_LOADERS: Readonly<Record<Screen, Loader>> = {
   hub: () => import("../screens/hub/HubScreen").then((module) => ({ default: module.HubScreen })),
   // D110: o Início do Craque é a tela de quem é você.
@@ -26,10 +28,14 @@ const SCREEN_LOADERS: Readonly<Record<Screen, Loader>> = {
   achievements: () => import("../screens/achievements/AchievementsScreen").then((module) => ({ default: module.AchievementsScreen })),
   notFound: () => import("../screens/notFound/NotFoundScreen").then((module) => ({ default: module.NotFoundScreen })),
   lab: import.meta.env.DEV ? () => import("../screens/lab/LabScreen").then((module) => ({ default: module.LabScreen })) : () => import("../screens/notFound/NotFoundScreen").then((module) => ({ default: module.NotFoundScreen })),
-  tecnicoIdentity: () => import("../screens/tecnico/TecnicoIdentityScreen").then((module) => ({ default: module.TecnicoIdentityScreen })),
-  tecnicoAppearance: () => import("../screens/tecnico/TecnicoAppearanceScreen").then((module) => ({ default: module.TecnicoAppearanceScreen })),
-  tecnico: () => import("../screens/tecnico/TecnicoScreen").then((module) => ({ default: module.TecnicoScreen })),
-  tecnicoLegacy: () => import("../screens/tecnico/TecnicoLegacyScreen").then((module) => ({ default: module.TecnicoLegacyScreen })),
+  // D124: com o Técnico bloqueado (`VITE_MODOS_BLOQUEADOS=tecnico`), as quatro
+  // telas viram a "Em breve". A comparação fica escrita aqui, e não numa
+  // constante importada, para o build trocar por `true` e jogar fora os
+  // `import()` do Técnico: as telas dele nem chegam ao navegador.
+  tecnicoIdentity: import.meta.env.VITE_MODOS_BLOQUEADOS === "tecnico" ? comingSoon : () => import("../screens/tecnico/TecnicoIdentityScreen").then((module) => ({ default: module.TecnicoIdentityScreen })),
+  tecnicoAppearance: import.meta.env.VITE_MODOS_BLOQUEADOS === "tecnico" ? comingSoon : () => import("../screens/tecnico/TecnicoAppearanceScreen").then((module) => ({ default: module.TecnicoAppearanceScreen })),
+  tecnico: import.meta.env.VITE_MODOS_BLOQUEADOS === "tecnico" ? comingSoon : () => import("../screens/tecnico/TecnicoScreen").then((module) => ({ default: module.TecnicoScreen })),
+  tecnicoLegacy: import.meta.env.VITE_MODOS_BLOQUEADOS === "tecnico" ? comingSoon : () => import("../screens/tecnico/TecnicoLegacyScreen").then((module) => ({ default: module.TecnicoLegacyScreen })),
   login: () => import("../screens/account/LoginScreen").then((module) => ({ default: module.LoginScreen })),
   profile: () => import("../screens/account/ProfileScreen").then((module) => ({ default: module.ProfileScreen })),
   terms: () => import("../screens/legal/LegalScreen").then((module) => ({ default: module.TermsScreen })),

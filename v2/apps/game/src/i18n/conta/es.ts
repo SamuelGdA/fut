@@ -27,7 +27,6 @@ export const contaEs: ContaMessages = {
     forgot: "Olvidé la contraseña",
     guest: "Jugar como visitante",
     agree: "Al continuar, aceptas los {terms} y la {privacy}.",
-    sameAccount: "¿El mismo correo en Google y con contraseña? Es la misma cuenta: entra por el camino que prefieras.",
     checking: "Abriendo tu cuenta",
     confirm: {
       eyebrow: "Casi listo",
@@ -60,6 +59,7 @@ export const contaEs: ContaMessages = {
       checking: "Comprobando",
       free: "@{name} está libre",
       taken: "@{name} ya tiene dueño",
+      blocked: "Ese @ no está permitido",
       signOut: "Entrar con otra cuenta",
     },
     notices: {
@@ -82,6 +82,7 @@ export const contaEs: ContaMessages = {
       unknown: "Algo falló de nuestro lado. Inténtalo de nuevo en un momento.",
       email: "Escribe un correo válido.",
       username: "Usa de 3 a 20 caracteres: minúsculas, números y _.",
+      offensive: "Ese @ no está permitido. Elige otro.",
       reserved: "Ese @ está reservado. Elige otro.",
       taken: "Ese @ ya tiene dueño. Elige otro.",
       recent: "Cambiaste tu @ hace menos de 30 días. El próximo cambio se habilita el {date}.",
@@ -127,6 +128,7 @@ export const contaEs: ContaMessages = {
     play: "Jugar ahora",
     account: "Cuenta",
     editUsername: "Cambiar el @",
+    usernameRule: "Puedes cambiar el @ una vez cada {days} días. Después de guardar, el próximo cambio se abre en {days} días.",
     usernameNext: "Próximo cambio de @ el {date}.",
     save: "Guardar",
     cancel: "Cancelar",
@@ -138,6 +140,11 @@ export const contaEs: ContaMessages = {
     deleteConfirm: "Eliminar para siempre",
     deleteKeep: "Mantener la cuenta",
     deleteError: "No se pudo eliminar ahora. Revisa internet e inténtalo de nuevo.",
+    deleteAskBody: "Para confirmar que eres tú, enviamos un enlace a {email}. La cuenta solo se elimina después de que abras el enlace en este dispositivo y confirmes.",
+    deleteSend: "Enviar el enlace",
+    deleteSent: "Enlace enviado a {email}. Ábrelo en este dispositivo en menos de 15 minutos.",
+    deleteSendError: "No se pudo enviar el enlace ahora. Espera un minuto e inténtalo de nuevo.",
+    deleteExpired: "El enlace de confirmación venció. Pide otro en Eliminar la cuenta.",
     privacyLink: "Cómo cuidamos tus datos",
   },
 

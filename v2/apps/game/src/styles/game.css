@@ -2553,7 +2553,7 @@
 .showcase[data-labels] { grid-auto-rows: minmax(var(--cell-h), auto); }
 .showcase[data-labels] .showcase-item { content-visibility: visible; min-height: var(--cell-h); }
 .showcase[data-labels] .showcase-art { flex: 0 0 auto; }
-.showcase[data-labels] .showcase-label { height: auto; min-height: 4em; flex: 0 0 auto; width: 100%; overflow-wrap: break-word; hyphens: auto; }
+.showcase[data-labels] .showcase-label { height: auto; min-height: 2.5em; flex: 0 0 auto; width: 100%; overflow-wrap: break-word; hyphens: auto; }
 .showcase-label[data-long] { font-size: 10px; letter-spacing: -0.01em; }
 .play-season-details[open] .play-notes, .play-season-details[open] .play-notes li { display: flex; }
 @media(max-width:767px) { .play-batch-honours {display:flex;flex-wrap:wrap;gap:4px;} .play-batch-honours>div {padding:3px 5px;gap:4px;} .play-batch-honours .honour-token img {height:23px;width:auto;} }

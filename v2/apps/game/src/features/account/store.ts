@@ -61,9 +61,12 @@ interface AccountState {
   resendConfirmation(email: string): Promise<string | null>;
   requestPasswordReset(email: string): Promise<string | null>;
   updatePassword(password: string): Promise<string | null>;
-  checkUsername(username: string): Promise<"free" | "taken" | "invalid" | "network">;
+  checkUsername(username: string): Promise<"free" | "taken" | "invalid" | "blocked" | "network">;
   setUsername(username: string): Promise<string | null>;
   signOut(): Promise<void>;
+  /** D127: manda o link que confirma a exclusão para o e-mail da conta. */
+  requestAccountDeletion(): Promise<string | null>;
+  /** Apaga a conta; só funciona logo depois de abrir o link do e-mail (`confirm` se não). */
   deleteAccount(): Promise<string | null>;
   clearNotice(): void;
 }
@@ -72,6 +75,12 @@ interface AccountState {
 export function authRedirect(mode?: "nova-senha"): string {
   const base = import.meta.env.BASE_URL.endsWith("/") ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`;
   return `${window.location.origin}${base}login${mode ? `?modo=${mode}` : ""}`;
+}
+
+/** D127: a volta do link que confirma a exclusão da conta: o perfil, já pedindo a confirmação final. */
+export function deletionRedirect(): string {
+  const base = import.meta.env.BASE_URL.endsWith("/") ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`;
+  return `${window.location.origin}${base}perfil?apagar=1`;
 }
 
 /** Os parâmetros que o Supabase devolve na URL (query e fragmento). */
@@ -347,13 +356,13 @@ export const useAccount = create<AccountState>()((set, get) => {
     },
 
     async signUp(email, password, username) {
-      const { emailSchema, passwordSchema, usernameSchema } = await schemas();
+      const { emailSchema, passwordSchema, usernameSchema, usernameRefusal } = await schemas();
       const parsedEmail = emailSchema.safeParse(email);
       const parsedPassword = passwordSchema.safeParse(password);
       const parsedUsername = usernameSchema.safeParse(username);
       if (!parsedEmail.success) return { error: "email", confirm: false };
       if (!parsedPassword.success) return { error: "weakPassword", confirm: false };
-      if (!parsedUsername.success) return { error: "username", confirm: false };
+      if (!parsedUsername.success) return { error: usernameRefusal(parsedUsername.error.issues), confirm: false };
       const availability = await get().checkUsername(parsedUsername.data);
       if (availability === "taken") return { error: "taken", confirm: false };
       if (availability === "network") return { error: "network", confirm: false };
@@ -412,9 +421,10 @@ export const useAccount = create<AccountState>()((set, get) => {
     },
 
     async checkUsername(username) {
-      const { usernameSchema } = await schemas();
+      const { usernameSchema, usernameRefusal } = await schemas();
       const parsed = usernameSchema.safeParse(username);
-      if (!parsed.success) return "invalid";
+      // Reservado ou ofensivo (D126) aparece na hora; fora do formato, só ao enviar.
+      if (!parsed.success) return usernameRefusal(parsed.error.issues) === "username" ? "invalid" : "blocked";
       const client = await get().ensureClient();
       if (!client) return "network";
       const { data, error } = await client.rpc("username_disponivel", { nome: parsed.data });
@@ -424,9 +434,9 @@ export const useAccount = create<AccountState>()((set, get) => {
 
     async setUsername(username) {
       // Objeto estrito: só `username` sai daqui, nunca outro campo do perfil.
-      const { profileUpdateSchema } = await schemas();
+      const { profileUpdateSchema, usernameRefusal } = await schemas();
       const parsed = profileUpdateSchema.safeParse({ username });
-      if (!parsed.success) return "username";
+      if (!parsed.success) return usernameRefusal(parsed.error.issues);
       const client = await get().ensureClient();
       const user = get().user;
       if (!client || !user) return "network";
@@ -455,13 +465,27 @@ export const useAccount = create<AccountState>()((set, get) => {
       set({ status: "guest", user: null, profile: null, trophies: [], streak: null, dataStatus: "idle", recovery: false, notice: "signedOut" });
     },
 
+    async requestAccountDeletion() {
+      const client = await get().ensureClient();
+      const email = get().user?.email;
+      if (!client || !email) return "network";
+      try {
+        // Um link de acesso para o próprio e-mail: abri-lo prova que é o dono,
+        // e o banco só apaga com essa entrada recente no token (D127).
+        const { error } = await client.auth.signInWithOtp({ email, options: { shouldCreateUser: false, emailRedirectTo: deletionRedirect() } });
+        return error ? authError(error) : null;
+      } catch (error) {
+        return authError(error);
+      }
+    },
+
     async deleteAccount() {
       const client = await get().ensureClient();
       const user = get().user;
       if (!client || !user) return "network";
       await syncingLocale;
       const { error } = await client.rpc("excluir_conta");
-      if (error) return isNetworkError(error) ? "network" : "unknown";
+      if (error) return /confirmar_por_email/.test(error.message) ? "confirm" : isNetworkError(error) ? "network" : "unknown";
       try {
         await client.auth.signOut({ scope: "local" });
       } catch {

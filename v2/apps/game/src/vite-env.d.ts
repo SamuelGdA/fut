@@ -13,6 +13,8 @@ interface ImportMetaEnv {
   readonly VITE_SUPABASE_PUBLISHABLE_KEY?: string;
   /** ID público do cliente Google, para a janelinha de login (D123). */
   readonly VITE_GOOGLE_CLIENT_ID?: string;
+  /** Modos que o site no ar mostra como "Em breve" (D124): hoje, `tecnico`. */
+  readonly VITE_MODOS_BLOQUEADOS?: string;
   /** Google Analytics 4 e AdSense (D113): genéricos até a monetização ser ligada. */
   readonly VITE_GA_MEASUREMENT_ID?: string;
   readonly VITE_ADSENSE_CLIENT?: string;

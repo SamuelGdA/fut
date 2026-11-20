@@ -73,6 +73,46 @@
     background: var(--info);
   }
 
+  /* D124: o Técnico bloqueado no ar. Faixa "Em breve" na diagonal do canto e
+     o cartão um pouco apagado, sem botão. */
+  .hub-ribbon {
+    position: absolute;
+    z-index: 1;
+    top: 22px;
+    right: -44px;
+    width: 180px;
+    padding: 6px 0;
+    background: var(--glory);
+    color: var(--canvas);
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+    text-align: center;
+    text-transform: uppercase;
+    transform: rotate(35deg);
+    box-shadow: var(--lift);
+    pointer-events: none;
+  }
+
+  .hub-card[data-soon] .hub-card-art,
+  .hub-card[data-soon] .hub-card-body > :not(.eyebrow):not(.hub-card-title) {
+    opacity: 0.7;
+  }
+
+  .coming-soon-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: var(--radius-sm);
+    background: var(--glory);
+    color: var(--canvas);
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
   .hub-card-art {
     display: flex;
     align-items: center;

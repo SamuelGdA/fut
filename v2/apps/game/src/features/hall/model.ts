@@ -82,6 +82,17 @@ export interface AttemptEntry {
   readonly at: number;
   /** A primeira tentativa terminada do dia. Só as ranqueadas entram nas estatísticas. */
   readonly ranked: boolean;
+  /**
+   * A conta logada quando terminou (D125). Sem conta, a tentativa é do
+   * visitante. Cada conta (e o visitante) vê só as próprias tentativas no
+   * aparelho, e a ranqueada do dia é a primeira de cada uma.
+   */
+  readonly account?: string;
+}
+
+/** As tentativas de quem está jogando: a conta logada ou, sem conta, o visitante (D125). */
+export function attemptsOf(attempts: readonly AttemptEntry[], account: string | null | undefined): AttemptEntry[] {
+  return attempts.filter((attempt) => (attempt.account ?? null) === (account ?? null));
 }
 
 export interface AchievementRow {
@@ -197,6 +208,7 @@ export function sanitizeAttempt(input: unknown): AttemptEntry | null {
     peakOvr: count(input["peakOvr"], 99),
     at: instant(input["at"]),
     ranked: input["ranked"] === true,
+    ...(typeof input["account"] === "string" && /^[0-9a-f-]{36}$/.test(input["account"]) ? { account: input["account"] } : {}),
   };
 }
 

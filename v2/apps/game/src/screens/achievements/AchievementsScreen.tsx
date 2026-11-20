@@ -1,3 +1,4 @@
+import { useOwnAttempts } from "../../features/hall/ownAttempts";
 import { type Achievement, ACHIEVEMENT_GROUPS, achievementGroupName, ACHIEVEMENT_RARITIES, achievementRarity, ACHIEVEMENTS, achievementText } from "@craque/content";
 import { COACH_ACHIEVEMENTS, coachAchievementRarity, coachAchievementText } from "@craque/content/coach";
 import { Tabs as BaseTabs } from "@base-ui/react/tabs";
@@ -10,6 +11,7 @@ import { AdSlot } from "../../features/consent/AdSlot";
 import { type AttemptEntry, rankedDays } from "../../features/hall/model";
 import { useHall } from "../../features/hall/store";
 import { formatShortDate } from "../../i18n/format";
+import { TECNICO_BLOCKED } from "../../lib/modes";
 import { useT } from "../../i18n/useT";
 import { feedback } from "../../services/feedback";
 import { Button } from "../../ui/Button";
@@ -194,7 +196,7 @@ function Collection() {
   const cloudProgress = useAccount((state) => state.profile?.progresso);
   const localProgress = useHall((state) => state.progress);
   const finished = useHall((state) => state.finished);
-  const attempts = useHall((state) => state.attempts);
+  const attempts = useOwnAttempts();
   const cloudCareers = useAccount((state) => state.profile?.carreiras ?? 0);
   const [tab, setTab] = useState<(typeof ACHIEVEMENT_GROUPS)[number]>("career");
   const [game, setGame] = useState<Game>("craque");
@@ -206,8 +208,8 @@ function Collection() {
   if (member && cloudProgress) for (const [id, value] of Object.entries(cloudProgress)) progressCounts[id] = Math.max(progressCounts[id] ?? 0, value);
   const careers = member ? Math.max(finished, cloudCareers) : finished;
 
-  const total = game === "craque" ? ACHIEVEMENTS.length : COACH_ACHIEVEMENTS.length;
-  const done = game === "craque" ? ACHIEVEMENTS.filter((item) => unlocked.has(item.id)).length : COACH_ACHIEVEMENTS.filter((item) => unlocked.has(item.id)).length;
+  const total = game === "craque" || TECNICO_BLOCKED ? ACHIEVEMENTS.length : COACH_ACHIEVEMENTS.length;
+  const done = game === "craque" || TECNICO_BLOCKED ? ACHIEVEMENTS.filter((item) => unlocked.has(item.id)).length : COACH_ACHIEVEMENTS.filter((item) => unlocked.has(item.id)).length;
 
   const footnote = (row: Unlocked | undefined) => {
     if (!row) return null;
@@ -220,7 +222,8 @@ function Collection() {
   return (
     <>
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-        <div className="w-full max-w-sm">
+        {/* D124: com o Técnico bloqueado, só as conquistas do Craque aparecem. */}
+        {TECNICO_BLOCKED ? null : <div className="w-full max-w-sm">
           <Segmented<Game>
             block
             className="seg-games"
@@ -235,11 +238,11 @@ function Collection() {
               { value: "tecnico", label: t("brand.games.tecnico") },
             ]}
           />
-        </div>
+        </div>}
         <p className="display numeric text-4xl font-black">{t("achievements.count", { count: done, total })}</p>
       </div>
 
-      {game === "tecnico" ? (
+      {game === "tecnico" && !TECNICO_BLOCKED ? (
         <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {sortTecnico(locale).map((item) => {
             const row = unlocked.get(item.id);
