@@ -2198,11 +2198,11 @@ revisão D112 a D115 do GDD; o porquê em D112 a D115 de `docs/DECISOES.md`.
      externo e em produção, só com os escopos de e-mail e perfil (sem logotipo,
      para não exigir verificação). Origem `https://futeiro.com`.
    - *Login sem sair do site (D123):* o `VITE_GOOGLE_CLIENT_ID` (o ID do
-     cliente, público; o segredo fica só no Supabase) liga a janelinha de login
-     do navegador, que abre no `/login` e no botão "Continuar com Google" e
-     mostra "futeiro.com" no lugar do endereço do Supabase. O token vira
-     sessão por `signInWithIdToken`, com nonce. Sem o ID, ou quando o
-     navegador não mostra a janelinha, o botão vai pela página do Google. O ID
+     cliente, público; o segredo fica só no Supabase) põe no `/login` o botão
+     oficial do Google, que a cada clique abre a janelinha do navegador
+     dizendo "futeiro.com" no lugar do endereço do Supabase. O token vira
+     sessão por `signInWithIdToken`, com nonce. Sem o ID, ou se o script do
+     Google não carregar, fica o botão do jogo, que vai pela página do Google. O ID
      do site está no `apps/game/.env.production`. Para testar no computador,
      acrescente `http://localhost` e `http://localhost:5173` às origens do
      cliente no Google Cloud.

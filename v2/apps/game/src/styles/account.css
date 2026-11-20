@@ -490,6 +490,33 @@
     }
   }
 
+  /*
+   * D123: o lugar do "Continuar com Google". O botão oficial do Google tem 40
+   * pixels de altura; o do jogo (enquanto o script carrega, ou sem ele), 48.
+   * A altura fixa evita o pulo na troca.
+   */
+  .google-slot {
+    display: flex;
+    min-height: 48px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .google-official {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .google-official[hidden] {
+    display: none;
+  }
+
+  .google-slot[aria-busy="true"] .google-official {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
   .google-button {
     display: flex;
     width: 100%;

@@ -72,7 +72,7 @@ test("login por e-mail: erro claro, entrada e volta para onde estava", async ({ 
   expect(csp).toEqual([]);
 });
 
-test("Google sem a janelinha (script bloqueado): sai para o Supabase com PKCE e volta pelo /login já logado", async ({ page }) => {
+test("Google sem o script do Google (bloqueado): o botão do jogo sai para o Supabase com PKCE e volta pelo /login já logado", async ({ page }) => {
   const nuvem = await simularNuvem(page);
   await abrir(page, {}, "/login");
   await page.getByRole("button", { name: "Continuar com Google" }).click();
@@ -90,28 +90,26 @@ test("Google sem a janelinha (script bloqueado): sai para o Supabase com PKCE e 
   expect((exchange?.body as { auth_code?: string } | undefined)?.auth_code).toBe("codigo-e2e");
 });
 
-type Gis = { __gisPrompts: number; __gis: { client_id: string; nonce: string; fedcm: boolean }; __gisAprovar(): void; __gisFechar(): void };
+type Gis = { __gis: { renders: number; client_id: string; nonce: string; fedcm: boolean; width: number; theme: string; locale: string } };
 
-test("Google pela janelinha do navegador: entra sem sair do site, com nonce (D123)", async ({ page }) => {
+test("Google pelo botão oficial: a janelinha do navegador entra sem sair do site, com nonce (D123)", async ({ page }) => {
   const nuvem = await simularNuvem(page);
   await simularGoogle(page);
   const csp = vigiarCsp(page);
   await abrir(page, {}, "/login");
-  // A janelinha se oferece sozinha quando o login abre.
-  await expect.poll(() => page.evaluate(() => (window as unknown as Gis).__gisPrompts)).toBe(1);
-  // Fechar de propósito não leva para a página do Google.
-  await page.evaluate(() => (window as unknown as Gis).__gisFechar());
-  await expect(page).toHaveURL(/\/login$/);
-  await expect(page.getByRole("button", { name: "Continuar com Google" })).toBeEnabled();
-
-  // O botão abre a janelinha de novo, e o jogador escolhe a conta.
-  await page.getByRole("button", { name: "Continuar com Google" }).click();
-  await expect.poll(() => page.evaluate(() => (window as unknown as Gis).__gisPrompts)).toBe(2);
+  // O botão do jogo dá lugar ao oficial do Google, na largura da coluna.
+  const official = page.getByRole("button", { name: "Continuar como Jogador E2E" });
+  await expect(official).toBeVisible();
+  await expect(page.getByRole("button", { name: "Continuar com Google" })).toHaveCount(0);
   const gis = await page.evaluate(() => (window as unknown as Gis).__gis);
   expect(gis.client_id).toBe("1234567890-e2esomentetestes.apps.googleusercontent.com");
   expect(gis.fedcm).toBe(true);
-  await page.evaluate(() => (window as unknown as Gis).__gisAprovar());
+  expect(gis.theme).toBe("outline");
+  expect(gis.locale).toBe("pt-BR");
+  expect(gis.width).toBeGreaterThanOrEqual(200);
+  expect(gis.width).toBeLessThanOrEqual(400);
 
+  await official.click();
   await expect(page.getByRole("heading", { name: "Futeiro", level: 1 })).toBeVisible();
   await expect(page.getByRole("button", { name: "Abrir o perfil de @craque_e2e" })).toBeVisible();
   const exchange = chamadas(nuvem, "/auth/v1/token").find((call) => call.search.includes("grant_type=id_token"));
@@ -124,6 +122,16 @@ test("Google pela janelinha do navegador: entra sem sair do site, com nonce (D12
   // D122: a conta nova recebe o idioma do jogo, uma vez, para os e-mails.
   await expect.poll(() => chamadas(nuvem, "/auth/v1/user").filter((call) => call.method === "PUT").map((call) => (call.body as { data?: { locale?: string } }).data?.locale)).toEqual(["pt"]);
   expect(csp).toEqual([]);
+});
+
+test("Google no tema escuro e em inglês: o botão oficial acompanha", async ({ page }) => {
+  await simularNuvem(page);
+  await simularGoogle(page);
+  await abrir(page, { theme: "dark", locale: "en" }, "/login");
+  await expect(page.getByRole("button", { name: "Continuar como Jogador E2E" })).toBeVisible();
+  const gis = await page.evaluate(() => (window as unknown as Gis).__gis);
+  expect(gis.theme).toBe("filled_black");
+  expect(gis.locale).toBe("en");
 });
 
 test("link de confirmação aberto em outro navegador: e-mail confirmado, falta entrar", async ({ page }) => {

@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { readGoogleClientId } from "./config";
-import { makeNonce } from "./googleOneTap";
+import { googleButtonWidth, makeNonce } from "./googleButton";
 
 /** Login com Google pela janelinha do navegador (D123). */
 
@@ -21,6 +21,14 @@ describe("ID do cliente Google", () => {
     const env = readFileSync(new URL("../../../.env.production", import.meta.url), "utf8");
     const id = /VITE_GOOGLE_CLIENT_ID=(.*)/.exec(env)?.[1];
     expect(readGoogleClientId(id)).not.toBe("");
+  });
+});
+
+describe("botão oficial do Google", () => {
+  it("acompanha a coluna do login dentro do que o Google aceita (200 a 400 pixels)", () => {
+    expect(googleButtonWidth(312.7)).toBe(312);
+    expect(googleButtonWidth(120)).toBe(200);
+    expect(googleButtonWidth(900)).toBe(400);
   });
 });
 

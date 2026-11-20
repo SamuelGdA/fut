@@ -225,7 +225,7 @@ export const contaEn: ContaMessages = {
       },
       partners: {
         title: "Who processes the data",
-        body: "Supabase: database and sign-in (servers may be outside Brazil). Google: Google sign-in, Analytics and AdSense. The sign-in screen opens the Google sign-in window, which shows the Google accounts in your browser; nothing is sent to Futeiro until you pick one. Analytics and AdSense only when you allow it. The site host receives the technical access log (IP address, date and page), like any website.",
+        body: "Supabase: database and sign-in (servers may be outside Brazil). Google: Google sign-in, Analytics and AdSense. The sign-in screen loads the Google sign-in button, which may show the Google account in your browser; nothing is sent to Futeiro until you pick one. Analytics and AdSense only when you allow it. The site host receives the technical access log (IP address, date and page), like any website.",
       },
       rights: {
         title: "Your rights",

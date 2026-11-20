@@ -206,10 +206,10 @@ export function chamadas(nuvem: Nuvem, path: string): Chamada[] {
 }
 
 /**
- * A janelinha de login do Google (D123), simulada: o script falso guarda o que
- * o jogo passou ao `initialize` em `window.__gis` e só entrega o token quando o
- * teste chama `window.__gisAprovar()` (o jogador escolhe a conta) ou fecha com
- * `window.__gisFechar()`.
+ * O botão oficial do Google (D123), simulado: o script falso guarda o que o
+ * jogo passou ao `initialize` e ao `renderButton` em `window.__gis` e desenha
+ * um botão "Continuar como Jogador E2E". O clique faz o papel da janelinha do
+ * navegador: entrega o token na hora.
  */
 export async function simularGoogle(page: Page): Promise<void> {
   googleSimulado.add(page);
@@ -223,13 +223,20 @@ export async function simularGoogle(page: Page): Promise<void> {
       headers: { "content-type": "text/javascript" },
       body: `(() => {
         let options = null;
-        let listener = null;
-        window.__gisPrompts = 0;
-        window.__gisAprovar = () => options && options.callback({ credential: "token-google-e2e" });
-        window.__gisFechar = () => listener && listener({ isSkippedMoment: () => true, getSkippedReason: () => "user_cancel" });
+        window.__gis = { renders: 0 };
         window.google = { accounts: { id: {
-          initialize(value) { options = value; window.__gis = { client_id: value.client_id, nonce: value.nonce, fedcm: value.use_fedcm_for_prompt }; },
-          prompt(callback) { listener = callback || null; window.__gisPrompts += 1; },
+          initialize(value) { options = value; Object.assign(window.__gis, { client_id: value.client_id, nonce: value.nonce, fedcm: value.use_fedcm_for_button }); },
+          renderButton(parent, button) {
+            window.__gis.renders += 1;
+            Object.assign(window.__gis, { width: button.width, theme: button.theme, locale: button.locale });
+            const element = document.createElement("button");
+            element.type = "button";
+            element.textContent = "Continuar como Jogador E2E";
+            element.style.width = button.width + "px";
+            element.style.height = "40px";
+            element.addEventListener("click", () => options.callback({ credential: "token-google-e2e" }));
+            parent.replaceChildren(element);
+          },
           cancel() {},
         } } };
       })();`,
