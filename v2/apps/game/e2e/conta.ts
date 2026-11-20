@@ -1,4 +1,5 @@
 import type { Page, Route } from "@playwright/test";
+import { googleSimulado } from "./apoio";
 
 /**
  * O Supabase da suíte (D112): o build de teste (`--mode e2e`, `.env.e2e`)
@@ -202,4 +203,36 @@ export async function comConta(page: Page, inicio: Partial<Nuvem> = {}): Promise
 /** As chamadas feitas para um caminho (ex.: `/rest/v1/rpc/registrar_carreira`). */
 export function chamadas(nuvem: Nuvem, path: string): Chamada[] {
   return nuvem.calls.filter((call) => call.path === path);
+}
+
+/**
+ * A janelinha de login do Google (D123), simulada: o script falso guarda o que
+ * o jogo passou ao `initialize` em `window.__gis` e só entrega o token quando o
+ * teste chama `window.__gisAprovar()` (o jogador escolhe a conta) ou fecha com
+ * `window.__gisFechar()`.
+ */
+export async function simularGoogle(page: Page): Promise<void> {
+  googleSimulado.add(page);
+  await page.route("https://accounts.google.com/**", async (route) => {
+    if (!new URL(route.request().url()).pathname.startsWith("/gsi/client")) {
+      await route.abort();
+      return;
+    }
+    await route.fulfill({
+      status: 200,
+      headers: { "content-type": "text/javascript" },
+      body: `(() => {
+        let options = null;
+        let listener = null;
+        window.__gisPrompts = 0;
+        window.__gisAprovar = () => options && options.callback({ credential: "token-google-e2e" });
+        window.__gisFechar = () => listener && listener({ isSkippedMoment: () => true, getSkippedReason: () => "user_cancel" });
+        window.google = { accounts: { id: {
+          initialize(value) { options = value; window.__gis = { client_id: value.client_id, nonce: value.nonce, fedcm: value.use_fedcm_for_prompt }; },
+          prompt(callback) { listener = callback || null; window.__gisPrompts += 1; },
+          cancel() {},
+        } } };
+      })();`,
+    });
+  });
 }

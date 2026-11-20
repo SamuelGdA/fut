@@ -3,6 +3,7 @@ import { type FormEvent, type ReactNode, useEffect, useRef, useState } from "rea
 import { screenUrl, useNavigation } from "../../app/navigation";
 import { useDraft } from "../../features/career/draft";
 import { ACCOUNTS_ENABLED } from "../../features/account/config";
+import { cancelGoogle, type OneTapOutcome, promptGoogle } from "../../features/account/googleOneTap";
 import { takeLoginReturn } from "../../features/account/openLogin";
 import { useAccount } from "../../features/account/store";
 import { type ContaKey, useContaT } from "../../i18n/conta/useContaT";
@@ -206,10 +207,49 @@ function Agreement() {
   );
 }
 
+/** Idioma da janelinha do Google. */
+const GOOGLE_LANGUAGE = { pt: "pt-BR", es: "es", en: "en" } as const;
+
+/** Depois do clique, um instante de "carregando" enquanto a janelinha do Google abre. */
+const OPENING_MS = 1500;
+
+/**
+ * "Continuar com Google" (D123): primeiro a janelinha do navegador, sem sair
+ * do site; ela também se oferece sozinha quando a tela de login abre. Se o
+ * navegador não puder mostrá-la, o clique segue pela página do Google, como
+ * antes. Fechar a janelinha de propósito não leva a lugar nenhum.
+ */
 function GoogleButton() {
-  const { ct } = useContaT();
+  const { ct, locale } = useContaT();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const alive = useRef(true);
+  const language = GOOGLE_LANGUAGE[locale];
+
+  async function settle(outcome: OneTapOutcome, fromClick: boolean): Promise<void> {
+    if (outcome.kind === "closed" || (outcome.kind === "unavailable" && !fromClick)) return;
+    if (alive.current) setBusy(true);
+    const result =
+      outcome.kind === "credential"
+        ? await useAccount.getState().signInWithGoogleToken(outcome.token, outcome.nonce)
+        : // Sem erro, o navegador já está indo para o Google.
+          await useAccount.getState().signInWithGoogle();
+    if (!alive.current || (outcome.kind === "unavailable" && !result)) return;
+    setBusy(false);
+    if (result) setError(result);
+  }
+
+  useEffect(() => {
+    alive.current = true;
+    void promptGoogle(language).then((outcome) => settle(outcome, false));
+    return () => {
+      alive.current = false;
+      cancelGoogle();
+    };
+    // A janelinha se oferece uma vez por abertura da tela, no idioma de então.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <>
       <button
@@ -217,16 +257,14 @@ function GoogleButton() {
         className="google-button"
         aria-busy={busy || undefined}
         disabled={busy}
-        onClick={async () => {
+        onClick={() => {
           feedback("confirm");
           setBusy(true);
           setError(null);
-          const result = await useAccount.getState().signInWithGoogle();
-          // Sem erro, o navegador já está indo para o Google.
-          if (result) {
-            setError(result);
-            setBusy(false);
-          }
+          window.setTimeout(() => {
+            if (alive.current) setBusy(false);
+          }, OPENING_MS);
+          void promptGoogle(language).then((outcome) => settle(outcome, true));
         }}
       >
         <GoogleMark />

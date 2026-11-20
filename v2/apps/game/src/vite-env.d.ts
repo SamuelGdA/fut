@@ -11,6 +11,8 @@ interface ImportMetaEnv {
   /** Supabase (D112): endereço do projeto e chave PUBLICÁVEL. Ver .env.example. */
   readonly VITE_SUPABASE_URL?: string;
   readonly VITE_SUPABASE_PUBLISHABLE_KEY?: string;
+  /** ID público do cliente Google, para a janelinha de login (D123). */
+  readonly VITE_GOOGLE_CLIENT_ID?: string;
   /** Google Analytics 4 e AdSense (D113): genéricos até a monetização ser ligada. */
   readonly VITE_GA_MEASUREMENT_ID?: string;
   readonly VITE_ADSENSE_CLIENT?: string;

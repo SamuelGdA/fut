@@ -230,7 +230,7 @@ export const contaPt = {
       },
       partners: {
         title: "Quem processa os dados",
-        body: "Supabase: banco de dados e login (os servidores podem ficar fora do Brasil). Google: login com Google, Analytics e AdSense, cada um só quando você usa ou permite. A hospedagem do site recebe o registro técnico de acesso (endereço IP, data e página), como qualquer site.",
+        body: "Supabase: banco de dados e login (os servidores podem ficar fora do Brasil). Google: login com Google, Analytics e AdSense. A tela de entrar abre a janela de login do Google, que mostra as contas Google do seu navegador; nada é enviado ao Futeiro até você escolher uma. Analytics e AdSense só quando você permite. A hospedagem do site recebe o registro técnico de acesso (endereço IP, data e página), como qualquer site.",
       },
       rights: {
         title: "Seus direitos",

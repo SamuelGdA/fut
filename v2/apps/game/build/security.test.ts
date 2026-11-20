@@ -25,6 +25,14 @@ describe("Content-Security-Policy", () => {
     for (const source of directive("script-src").split(" ").slice(1)) expect(source === "'self'" || /^https:\/\/[\w*.-]*google|doubleclick|gstatic|googlesyndication|googletagmanager|adtrafficquality/.test(source), source).toBe(true);
   });
 
+  it("libera a janelinha de login do Google só pelo caminho /gsi/ (D123)", () => {
+    expect(directive("script-src")).toContain("https://accounts.google.com/gsi/");
+    expect(directive("style-src")).toContain("https://accounts.google.com/gsi/");
+    expect(directive("frame-src")).toContain("https://accounts.google.com/gsi/");
+    expect(directive("connect-src")).toContain("https://accounts.google.com");
+    expect(directive("script-src")).not.toMatch(/https:\/\/accounts\.google\.com(?!\/gsi\/)/);
+  });
+
   it("o desenvolvimento fica sem CSP (o Vite injeta script), com o resto igual", () => {
     expect(devSecurityHeaders()["Content-Security-Policy"]).toBeUndefined();
     expect(devSecurityHeaders()["X-Frame-Options"]).toBe("DENY");

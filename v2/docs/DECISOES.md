@@ -2274,6 +2274,12 @@ A inspeção da abertura da pilha de troféus agora observa os quadros antes de 
 
 **Por quê.** O jogo é feito para jogar com internet (conta, ranking e Desafio dependem do servidor), então baixar 54 MB para jogar sem rede era peso sem uso. Publicar só da `main` separa o que está em teste do que está no ar, sem passo manual.
 
+## D123: login com Google sem sair do site (20/11/2026)
+
+**Decisão.** O "Continuar com Google" usa a janelinha de login do próprio navegador (Google Identity Services com FedCM): ela se oferece sozinha quando o `/login` abre e reabre no botão, e o token de identidade que devolve vira sessão no Supabase por `signInWithIdToken`, com nonce (o Google assina o SHA-256, o Supabase confere o cru). Fechar a janelinha não faz nada; quando o navegador não pode mostrá-la, o botão segue pela página do Google com o PKCE de antes. O script do Google só baixa na tela de login, e a CSP libera só o caminho `/gsi/` de accounts.google.com (mais o próprio accounts.google.com no `connect-src`, para o FedCM). O ID do cliente vai no `.env.production` (`VITE_GOOGLE_CLIENT_ID`), por ser público. A Política de Privacidade passa a dizer que a tela de entrar abre a janela do Google.
+
+**Por quê.** No caminho pela página do Google, a tela dizia "Prosseguir para eiikxyjqzbjcwtbfrkjk.supabase.co", um endereço estranho para o jogador, e trocá-lo por um domínio próprio no Supabase é pago. A janelinha diz "futeiro.com", não tira o jogador do jogo e resolve em um clique. Manter o caminho antigo como reserva garante que o login nunca deixa de funcionar em navegador que bloqueia a janelinha.
+
 ## D122: e-mails da conta no idioma do jogador (20/11/2026)
 
 **Decisão.** Os oito modelos de e-mail e os seus assuntos trazem um bloco em português, espanhol e inglês, e o Supabase escolhe por `user_metadata.locale` (`{{ if eq (printf "%v" .Data.locale) "es" }}`, depois `"en"`, senão português). O jogo grava o idioma dos Ajustes nesse campo no cadastro, a cada login (só quando mudou) e a cada troca de idioma com a conta aberta. Sai o resumo em espanhol e inglês no rodapé do modelo em português. O remetente é `no-reply@futeiro.com`, pelo Resend.

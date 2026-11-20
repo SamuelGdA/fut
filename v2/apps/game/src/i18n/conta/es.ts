@@ -225,7 +225,7 @@ export const contaEs: ContaMessages = {
       },
       partners: {
         title: "Quién procesa los datos",
-        body: "Supabase: base de datos e inicio de sesión (los servidores pueden estar fuera de Brasil). Google: inicio de sesión con Google, Analytics y AdSense, cada uno solo cuando lo usas o lo permites. El alojamiento del sitio recibe el registro técnico de acceso (dirección IP, fecha y página), como cualquier sitio.",
+        body: "Supabase: base de datos e inicio de sesión (los servidores pueden estar fuera de Brasil). Google: inicio de sesión con Google, Analytics y AdSense. La pantalla de entrar abre la ventana de inicio de sesión de Google, que muestra las cuentas Google de tu navegador; nada se envía a Futeiro hasta que eliges una. Analytics y AdSense solo cuando lo permites. El alojamiento del sitio recibe el registro técnico de acceso (dirección IP, fecha y página), como cualquier sitio.",
       },
       rights: {
         title: "Tus derechos",

@@ -9,7 +9,7 @@ import { Button } from "../../ui/Button";
 
 /** A data da versão atual dos dois textos. Mudou o texto, muda a data (e o CONSENT_VERSION, se o aviso de cookies mudar). */
 // Meio-dia UTC: a data é a mesma em qualquer fuso (meia-noite viraria o dia anterior nas Américas).
-const LEGAL_UPDATED = Date.UTC(2026, 9, 30, 12);
+const LEGAL_UPDATED = Date.UTC(2026, 10, 20, 12);
 
 type Doc = "terms" | "privacy";
 

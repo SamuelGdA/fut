@@ -46,6 +46,21 @@ export const CLOUD: CloudConfig | null = readCloudConfig({
   VITE_SUPABASE_PUBLISHABLE_KEY: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
 });
 
+/** O ID público do cliente Google (termina em `.apps.googleusercontent.com`). */
+const GOOGLE_CLIENT = /^\d+-[a-z0-9]+\.apps\.googleusercontent\.com$/;
+
+/**
+ * ID do cliente OAuth do Google para a janelinha de login do navegador
+ * (D123). É público por natureza (vai na página); sem ele, ou fora do formato,
+ * o "Continuar com Google" usa só o caminho pela página do Google.
+ */
+export function readGoogleClientId(value: string | undefined): string {
+  const id = value?.trim() ?? "";
+  return GOOGLE_CLIENT.test(id) ? id : "";
+}
+
+export const GOOGLE_CLIENT_ID = readGoogleClientId(import.meta.env.VITE_GOOGLE_CLIENT_ID);
+
 /** Contas e nuvem ligadas neste build. */
 export const ACCOUNTS_ENABLED = CLOUD !== null;
 

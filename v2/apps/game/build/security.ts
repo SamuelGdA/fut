@@ -6,9 +6,10 @@ import type { Plugin } from "vite";
  * `_headers` gravado no build (Netlify e Cloudflare Pages leem) e o
  * `vercel.json` da raiz do v2 (um teste confere que ele é igual a isto).
  *
- * A Content-Security-Policy libera só o próprio site, o Supabase e os
+ * A Content-Security-Policy libera só o próprio site, o Supabase, os
  * endereços do Google Analytics e do AdSense (inclusive os quadros dos
- * anúncios). Nenhum script embutido: a abertura e as páginas de erro carregam
+ * anúncios) e o login do Google pela janelinha do navegador (D123, só o
+ * caminho `/gsi/` de accounts.google.com). Nenhum script embutido: a abertura e as páginas de erro carregam
  * arquivos de `public/boot/`. `frame-ancestors 'none'` e `X-Frame-Options`
  * impedem o jogo de rodar dentro de iframe de outro site (clickjacking).
  */
@@ -44,20 +45,28 @@ const GOOGLE_FRAMES = [
   "https://fundingchoicesmessages.google.com",
 ];
 
+/**
+ * Login com Google sem sair do site (D123): o script, o estilo, o quadro e as
+ * chamadas da janelinha moram em accounts.google.com/gsi/, e o navegador
+ * (FedCM) conversa com accounts.google.com.
+ */
+const GOOGLE_SIGN_IN = "https://accounts.google.com/gsi/";
+const GOOGLE_ACCOUNTS = "https://accounts.google.com";
+
 /** O Supabase de qualquer projeto (o endereço exato vem do `.env.local` e não precisa ir para cá). */
 const SUPABASE = ["https://*.supabase.co", "wss://*.supabase.co"];
 
 export function contentSecurityPolicy(): string {
   const directives: [string, string[]][] = [
     ["default-src", ["'self'"]],
-    ["script-src", ["'self'", ...GOOGLE_SCRIPTS]],
+    ["script-src", ["'self'", ...GOOGLE_SCRIPTS, GOOGLE_SIGN_IN]],
     // React, Motion e os anúncios mexem em `style`; estilo não executa código.
-    ["style-src", ["'self'", "'unsafe-inline'"]],
+    ["style-src", ["'self'", "'unsafe-inline'", GOOGLE_SIGN_IN]],
     // Escudos e avatares gerados são `data:`; anúncios trazem imagem de vários domínios do Google.
     ["img-src", ["'self'", "data:", "blob:", "https:"]],
     ["font-src", ["'self'", "data:"]],
-    ["connect-src", ["'self'", ...SUPABASE, ...GOOGLE_CONNECT]],
-    ["frame-src", GOOGLE_FRAMES],
+    ["connect-src", ["'self'", ...SUPABASE, ...GOOGLE_CONNECT, GOOGLE_ACCOUNTS]],
+    ["frame-src", [...GOOGLE_FRAMES, GOOGLE_SIGN_IN]],
     ["worker-src", ["'self'", "blob:"]],
     ["manifest-src", ["'self'"]],
     ["media-src", ["'self'", "data:", "blob:"]],

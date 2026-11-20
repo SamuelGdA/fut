@@ -54,6 +54,8 @@ interface AccountState {
   ensureClient(): Promise<SupabaseClient | null>;
   refresh(): Promise<void>;
   signInWithGoogle(): Promise<string | null>;
+  /** Entra com o token da janelinha do Google (D123); `nonce` é o cru. */
+  signInWithGoogleToken(token: string, nonce: string): Promise<string | null>;
   signInWithEmail(email: string, password: string): Promise<string | null>;
   signUp(email: string, password: string, username: string): Promise<{ error: string | null; confirm: boolean }>;
   resendConfirmation(email: string): Promise<string | null>;
@@ -132,6 +134,10 @@ function authError(error: unknown): string {
 }
 
 let initializing: Promise<void> | null = null;
+/** A gravação do idioma em andamento: sair espera por ela (senão ela regrava a sessão). */
+let syncingLocale: Promise<void> | null = null;
+/** Conta e idioma já levados nesta aba. */
+const localeTried = new Set<string>();
 let listening = false;
 /** Contas que já trouxeram as conquistas do aparelho nesta aba. */
 const importedFor = new Set<string>();
@@ -186,15 +192,25 @@ export const useAccount = create<AccountState>()((set, get) => {
     void importLocal(client, user);
   }
 
-  /** Leva o idioma atual para a conta, só quando mudou (um pedido a menos a cada login). */
+  /**
+   * Leva o idioma atual para a conta, só quando mudou (um pedido a menos a cada
+   * login), e uma vez por conta e idioma nesta aba: se o servidor não guardar,
+   * o jogo não fica pedindo de novo a cada aviso de conta atualizada.
+   */
   async function syncEmailLocale(client: SupabaseClient, session: Session): Promise<void> {
     const locale = usePrefs.getState().locale;
-    if (emailLocaleOf(session) === locale) return;
-    try {
-      await client.auth.updateUser({ data: { locale } });
-    } catch {
-      // Sem rede, o e-mail sai no idioma anterior; o próximo login tenta de novo.
-    }
+    const attempt = `${session.user.id}:${locale}`;
+    if (emailLocaleOf(session) === locale || syncingLocale || localeTried.has(attempt)) return;
+    localeTried.add(attempt);
+    syncingLocale = (async () => {
+      try {
+        await client.auth.updateUser({ data: { locale } });
+      } catch {
+        // Sem rede, o e-mail sai no idioma anterior; o próximo login tenta de novo.
+      }
+    })();
+    await syncingLocale;
+    syncingLocale = null;
   }
 
   function listen(client: SupabaseClient): void {
@@ -211,7 +227,10 @@ export const useAccount = create<AccountState>()((set, get) => {
       window.setTimeout(() => {
         if (event === "PASSWORD_RECOVERY") set({ recovery: true });
         if (event === "SIGNED_OUT") void applySession(client, null);
-        else if (event === "SIGNED_IN" || event === "USER_UPDATED") void applySession(client, session);
+        else if (event === "SIGNED_IN") void applySession(client, session);
+        // Uma atualização da conta (o idioma dos e-mails, a senha) só vale para
+        // quem ainda está nela: chegando depois de sair, não reabre a sessão.
+        else if (event === "USER_UPDATED" && session && get().status === "member" && get().user?.id === session.user.id) void applySession(client, session);
       }, 0);
     });
   }
@@ -296,6 +315,19 @@ export const useAccount = create<AccountState>()((set, get) => {
         options: { redirectTo: authRedirect(), queryParams: { prompt: "select_account" } },
       });
       return error ? authError(error) : null;
+    },
+
+    async signInWithGoogleToken(token, nonce) {
+      const client = await get().ensureClient();
+      if (!client) return "network";
+      try {
+        const { data, error } = await client.auth.signInWithIdToken({ provider: "google", token, nonce });
+        if (error) return authError(error);
+        await applySession(client, data.session);
+        return null;
+      } catch (error) {
+        return authError(error);
+      }
     },
 
     async signInWithEmail(email, password) {
@@ -414,6 +446,7 @@ export const useAccount = create<AccountState>()((set, get) => {
 
     async signOut() {
       const client = await get().ensureClient();
+      await syncingLocale;
       try {
         await client?.auth.signOut({ scope: "local" });
       } catch {
@@ -426,6 +459,7 @@ export const useAccount = create<AccountState>()((set, get) => {
       const client = await get().ensureClient();
       const user = get().user;
       if (!client || !user) return "network";
+      await syncingLocale;
       const { error } = await client.rpc("excluir_conta");
       if (error) return isNetworkError(error) ? "network" : "unknown";
       try {

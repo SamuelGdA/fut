@@ -29,6 +29,13 @@ export interface Prefs {
 }
 
 /**
+ * Páginas em que a suíte responde pelo Google (e2e/conta.ts, `simularGoogle`).
+ * Nas outras, o script do login do Google (D123) é recusado: a suíte nunca
+ * fala com o Google de verdade, e o botão segue pelo caminho da página.
+ */
+export const googleSimulado = new WeakSet<Page>();
+
+/**
  * Abre o jogo com as preferências dadas (som e vibração desligados). A
  * abertura é sempre o hub do Futeiro (D50). As preferências entram só na
  * primeira abertura da aba: recarregar no meio do teste mantém o que o jogo
@@ -51,6 +58,7 @@ export async function abrir(page: Page, prefs: Prefs = {}, path = "/"): Promise<
     window.sessionStorage.setItem("craque-e2e", "1");
     window.localStorage.setItem("craque.v2.prefs", JSON.stringify({ state: value, version: 1 }));
   }, state);
+  if (!googleSimulado.has(page)) await page.route("https://accounts.google.com/**", (route) => route.abort());
   await page.goto(path);
   // Espera a tela de verdade desenhar (o título dela), não só o `load` da página:
   // sob carga, um Início ainda carregando leria o que o teste gravar em seguida.

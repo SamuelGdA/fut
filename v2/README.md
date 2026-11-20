@@ -2197,6 +2197,15 @@ revisão D112 a D115 do GDD; o porquê em D112 a D115 de `docs/DECISOES.md`.
      (e-mail de suporte e de contato da tela de consentimento), público
      externo e em produção, só com os escopos de e-mail e perfil (sem logotipo,
      para não exigir verificação). Origem `https://futeiro.com`.
+   - *Login sem sair do site (D123):* o `VITE_GOOGLE_CLIENT_ID` (o ID do
+     cliente, público; o segredo fica só no Supabase) liga a janelinha de login
+     do navegador, que abre no `/login` e no botão "Continuar com Google" e
+     mostra "futeiro.com" no lugar do endereço do Supabase. O token vira
+     sessão por `signInWithIdToken`, com nonce. Sem o ID, ou quando o
+     navegador não mostra a janelinha, o botão vai pela página do Google. O ID
+     do site está no `apps/game/.env.production`. Para testar no computador,
+     acrescente `http://localhost` e `http://localhost:5173` às origens do
+     cliente no Google Cloud.
    - *Emails > SMTP:* o e-mail de teste do Supabase manda poucos e-mails por
      hora; para o público, configure um SMTP próprio (Resend, Brevo e afins).
    - A vinculação automática junta Google e senha do mesmo e-mail confirmado.
@@ -2219,7 +2228,7 @@ AdSense serve); o aviso do jogo cobre a LGPD.
 
 O build grava `_headers` (Netlify e Cloudflare Pages leem) e o `vercel.json` na
 raiz do v2 traz os mesmos cabeçalhos: CSP sem script embutido, liberando só o
-site, o Supabase, o Google Analytics e o AdSense; `frame-ancestors 'none'`,
+site, o Supabase, o Google Analytics, o AdSense e a janelinha de login do Google (`accounts.google.com/gsi/`, D123); `frame-ancestors 'none'`,
 `X-Frame-Options`, `nosniff`, `Referrer-Policy`, `Permissions-Policy`, `COOP` e
 `HSTS`. `/login`, `/perfil`, `/termos`, `/privacidade`, `/craque` e `/tecnico`
 funcionam em qualquer hospedagem estática (o build grava uma página em cada pasta).

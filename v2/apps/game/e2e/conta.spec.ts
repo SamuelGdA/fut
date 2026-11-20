@@ -1,6 +1,7 @@
 import { expect, type Page, test } from "@playwright/test";
+import { createHash } from "node:crypto";
 import { abrir, auditar, entrarNoCraque, jogoRapido } from "./apoio";
-import { chamadas, comConta, perfil, simularNuvem, SUPABASE } from "./conta";
+import { chamadas, comConta, perfil, simularGoogle, simularNuvem, SUPABASE } from "./conta";
 
 /**
  * Contas, privacidade e segurança (D112 a D114), com o Supabase simulado
@@ -71,7 +72,7 @@ test("login por e-mail: erro claro, entrada e volta para onde estava", async ({ 
   expect(csp).toEqual([]);
 });
 
-test("Google: sai para o Supabase com PKCE e volta pelo /login já logado", async ({ page }) => {
+test("Google sem a janelinha (script bloqueado): sai para o Supabase com PKCE e volta pelo /login já logado", async ({ page }) => {
   const nuvem = await simularNuvem(page);
   await abrir(page, {}, "/login");
   await page.getByRole("button", { name: "Continuar com Google" }).click();
@@ -87,6 +88,42 @@ test("Google: sai para o Supabase com PKCE e volta pelo /login já logado", asyn
   await expect(page).not.toHaveURL(/code=/);
   const exchange = chamadas(nuvem, "/auth/v1/token").find((call) => call.search.includes("grant_type=pkce"));
   expect((exchange?.body as { auth_code?: string } | undefined)?.auth_code).toBe("codigo-e2e");
+});
+
+type Gis = { __gisPrompts: number; __gis: { client_id: string; nonce: string; fedcm: boolean }; __gisAprovar(): void; __gisFechar(): void };
+
+test("Google pela janelinha do navegador: entra sem sair do site, com nonce (D123)", async ({ page }) => {
+  const nuvem = await simularNuvem(page);
+  await simularGoogle(page);
+  const csp = vigiarCsp(page);
+  await abrir(page, {}, "/login");
+  // A janelinha se oferece sozinha quando o login abre.
+  await expect.poll(() => page.evaluate(() => (window as unknown as Gis).__gisPrompts)).toBe(1);
+  // Fechar de propósito não leva para a página do Google.
+  await page.evaluate(() => (window as unknown as Gis).__gisFechar());
+  await expect(page).toHaveURL(/\/login$/);
+  await expect(page.getByRole("button", { name: "Continuar com Google" })).toBeEnabled();
+
+  // O botão abre a janelinha de novo, e o jogador escolhe a conta.
+  await page.getByRole("button", { name: "Continuar com Google" }).click();
+  await expect.poll(() => page.evaluate(() => (window as unknown as Gis).__gisPrompts)).toBe(2);
+  const gis = await page.evaluate(() => (window as unknown as Gis).__gis);
+  expect(gis.client_id).toBe("1234567890-e2esomentetestes.apps.googleusercontent.com");
+  expect(gis.fedcm).toBe(true);
+  await page.evaluate(() => (window as unknown as Gis).__gisAprovar());
+
+  await expect(page.getByRole("heading", { name: "Futeiro", level: 1 })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Abrir o perfil de @craque_e2e" })).toBeVisible();
+  const exchange = chamadas(nuvem, "/auth/v1/token").find((call) => call.search.includes("grant_type=id_token"));
+  const body = exchange?.body as { id_token?: string; nonce?: string; provider?: string } | undefined;
+  expect(body?.id_token).toBe("token-google-e2e");
+  expect(body?.provider).toBe("google");
+  // O Google assinou o hash; o Supabase recebe o nonce cru e confere.
+  expect(createHash("sha256").update(body?.nonce ?? "").digest("hex")).toBe(gis.nonce);
+  expect(chamadas(nuvem, "/auth/v1/authorize")).toEqual([]);
+  // D122: a conta nova recebe o idioma do jogo, uma vez, para os e-mails.
+  await expect.poll(() => chamadas(nuvem, "/auth/v1/user").filter((call) => call.method === "PUT").map((call) => (call.body as { data?: { locale?: string } }).data?.locale)).toEqual(["pt"]);
+  expect(csp).toEqual([]);
 });
 
 test("link de confirmação aberto em outro navegador: e-mail confirmado, falta entrar", async ({ page }) => {
@@ -111,7 +148,9 @@ test("criar conta pede confirmação por e-mail e confere o @ antes", async ({ p
   await page.getByLabel("Senha", { exact: true }).fill("senha1234");
   await page.getByRole("button", { name: "Criar conta", exact: true }).last().click();
   await expect(page.getByRole("heading", { name: "Confira seu e-mail" })).toBeVisible();
-  const signup = chamadas(nuvem, "/auth/v1/signup")[0]?.body as { email?: string; data?: { username?: string } };
+  const signup = chamadas(nuvem, "/auth/v1/signup")[0]?.body as { email?: string; data?: { username?: string; locale?: string } };
+  // D122: o idioma do jogo vai junto, para os e-mails da conta saírem nele.
+  expect(signup.data?.locale).toBe("pt");
   expect(signup.email).toBe("novo@exemplo.com");
   expect(signup.data?.username).toBe("novo_craque");
   await auditar(page, "Login, confirmação");
@@ -193,7 +232,7 @@ for (const [path, title] of [["/termos", "Termos de Serviço"], ["/privacidade",
     await expect(page.getByRole("navigation", { name: "Nesta página" }).getByRole("link").first()).toBeVisible();
     await expect(page.getByText("contato@exemplo.com")).toBeVisible();
     // A data da versão não pode virar o dia anterior no fuso de Brasília.
-    await expect(page.getByText("Atualizado em 30/10/2026")).toBeVisible();
+    await expect(page.getByText("Atualizado em 20/11/2026")).toBeVisible();
     if (path === "/privacidade") {
       await expect(page.getByRole("heading", { name: /Google Analytics/ })).toBeVisible();
       await expect(page.getByRole("heading", { name: /Google AdSense/ })).toBeVisible();
