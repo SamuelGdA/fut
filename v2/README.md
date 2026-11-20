@@ -2238,10 +2238,23 @@ pnpm build
 npx wrangler deploy
 ```
 
-O `.env.local` precisa de `VITE_SITE_URL=https://futeiro.com` e
-`VITE_CONTACT_EMAIL=contact@futeiro.com`. E-mail do domínio: `contact@futeiro.com`
-é encaminhado pelo Email Routing da Cloudflare; os e-mails da conta saem por SMTP
-próprio (Resend), configurado no painel do Supabase.
+**Publicação automática (D121).** O Workers Builds da Cloudflare está ligado ao
+repositório: cada push na `main` roda `pnpm build` na pasta `v2` e
+`npx wrangler deploy`; push em outra branch só sobe uma versão de prévia
+(`npx wrangler versions upload`), sem mexer no site. As duas variáveis de build
+do painel são `VITE_SUPABASE_URL` e `VITE_SUPABASE_PUBLISHABLE_KEY`, ambas
+públicas por natureza (vão dentro do site; quem protege os dados é o RLS). O
+resto dos valores públicos vem do `apps/game/.env.production`, versionado.
+Desenvolva em outra branch e mescle na `main` para ir ao ar.
+
+O `.env.local` (fora do git) guarda as mesmas chaves para o desenvolvimento.
+E-mail do domínio: `contact@futeiro.com` é encaminhado pelo Email Routing da
+Cloudflare. Os e-mails da conta saem por SMTP próprio (Resend, região São Paulo),
+de `no-reply@futeiro.com`, configurado no painel do Supabase; os registros SPF e
+DKIM do Resend e o DMARC (`p=none`, relatórios no DMARC Management da
+Cloudflare) estão no DNS da zona. Os modelos de `supabase/templates` foram
+colados no painel. **Não rode `supabase config push`**: o `config.toml` não
+guarda o SMTP (a senha não pode ir para o git) e o push desligaria o SMTP.
 
 ### Imagens geradas
 
