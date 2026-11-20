@@ -2197,6 +2197,13 @@ com jogos), no fim.
 - **Copiar link**: a carreira inteira comprimida no fragmento da URL. Abrir o
   link reconstrói o resumo por replay, em modo leitura.
 
+*Como ficou (D130):* o botão do resumo chama **Copiar carreira** e é o único
+que leva o link da carreira. **Compartilhar** manda a imagem da carreira
+(1200 × 630, a mesma do botão Imagem) com um convite pronto nos três idiomas,
+"Olha a carreira que eu fiz com o {nome} no Futeiro! Monte o seu jogador e
+escolha a sua história também: futeiro.com" (sem o nome, se a imagem esconde o
+nome). Onde o navegador não aceita arquivo, vai só o convite.
+
 **Como ficou no M6 (D27):** o PNG sai do próprio DOM do pôster pelo
 `modern-screenshot`, carregado só quando alguém pede o pôster. A prévia na
 folha é o pôster em tamanho real, reduzido por escala. Escudos, bandeiras e

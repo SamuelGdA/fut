@@ -569,13 +569,14 @@ export const es: Messages = {
     actions: {
       poster: "Imagen",
       share: "Compartir",
-      copyLink: "Copiar enlace",
+      copyLink: "Copiar carrera",
     },
     link: {
-      copied: "Enlace copiado",
+      copied: "Enlace de la carrera copiado",
       copiedBody: "Quien lo abra verá este resumen, sin tocar su propia carrera.",
       failed: "No se pudo generar el enlace ahora.",
-      shareText: "La carrera de {surname} en CRAQUE",
+      shareInvite: "¡Mira la carrera que hice con {surname} en Futeiro! Arma tu jugador y elige tu propia historia: {site}",
+      shareInviteAnonymous: "¡Mira la carrera que hice en Futeiro! Arma tu jugador y elige tu propia historia: {site}",
     },
     chapters: {
       label: "Capítulos del resumen",
@@ -651,7 +652,6 @@ export const es: Messages = {
       saved: "Imagen guardada",
       failed: "No se pudo dibujar la imagen. Inténtalo de nuevo.",
       shareFailed: "No se pudo compartir la imagen.",
-      shareText: "Mi carrera en CRAQUE",
       hard: "Difícil",
       showcase: "Vitrina",
       noTitles: "Una carrera sin copas, pero con historia.",

@@ -569,13 +569,14 @@ export const en: Messages = {
     actions: {
       poster: "Image",
       share: "Share",
-      copyLink: "Copy link",
+      copyLink: "Copy career",
     },
     link: {
-      copied: "Link copied",
+      copied: "Career link copied",
       copiedBody: "Whoever opens it sees this summary, without touching their own career.",
       failed: "Couldn't create the link right now.",
-      shareText: "{surname}'s career in CRAQUE",
+      shareInvite: "Check out the career I built with {surname} on Futeiro! Create your player and choose your own story: {site}",
+      shareInviteAnonymous: "Check out the career I built on Futeiro! Create your player and choose your own story: {site}",
     },
     chapters: {
       label: "Summary chapters",
@@ -651,7 +652,6 @@ export const en: Messages = {
       saved: "Image saved",
       failed: "Couldn't draw the image. Try again.",
       shareFailed: "Couldn't share the image.",
-      shareText: "My career in CRAQUE",
       hard: "Hard",
       showcase: "Showcase",
       noTitles: "A career without trophies, but with a story.",

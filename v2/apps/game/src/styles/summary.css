@@ -1337,6 +1337,14 @@ button.honour-stack .honour-token:hover, button.honour-stack .honour-token:focus
     transform-origin: top left;
   }
 
+  /* D130: a imagem que o "Compartilhar" do resumo desenha, fora da tela. */
+  .share-offscreen {
+    position: fixed;
+    top: 0;
+    left: -20000px;
+    pointer-events: none;
+  }
+
   .share-card {
     position: relative;
     display: grid;

@@ -8,6 +8,7 @@ import {
   posterFileName,
   renderPoster,
   shareImage,
+  shareInvite,
 } from "../../features/summary/poster";
 import { useT } from "../../i18n/useT";
 import { useElementWidth } from "../../lib/useElementWidth";
@@ -55,7 +56,7 @@ export function PosterSheet({ open, onOpenChange, career, avatar }: PosterSheetP
         feedback("confirm");
         notify({ tone: "good", title: t("summary.poster.saved"), description: fileName });
       } else {
-        const outcome = await shareImage(blob, fileName, t("app.name"), t("summary.poster.shareText"));
+        const outcome = await shareImage(blob, fileName, t("app.name"), shareInvite(t, showSurname ? career.setup.identity.surname : null));
         if (outcome === "failed") notify({ tone: "bad", title: t("summary.poster.shareFailed") });
         if (outcome === "shared") feedback("confirm");
       }

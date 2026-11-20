@@ -119,10 +119,15 @@ test("o leitor de tela ouve o lance numa frase, a cada jogada", async ({ page },
   const first = await live.textContent();
   // A jogada seguinte pode ser uma escolha sem temporada (treino, evento): o
   // anúncio dela não traz OVR. Joga até a próxima temporada anunciada.
-  for (let turn = 0; turn < 4; turn++) {
+  // Lê o anúncio só depois que ele muda: logo após a jogada, ele ainda pode
+  // ser o da anterior.
+  let previous = first;
+  for (let turn = 0; turn < 8; turn++) {
     await jogarTurno(page);
+    await expect.poll(async () => (await live.textContent()) ?? "", { timeout: 5_000 }).not.toBe(previous).catch(() => undefined);
     const text = (await live.textContent()) ?? "";
     if (text.includes("OVR") && text !== first) break;
+    previous = text;
   }
   await expect(live).toContainText("OVR");
   expect(await live.textContent()).not.toBe(first);

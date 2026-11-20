@@ -66,12 +66,40 @@ test("do hub ao Resumo, montando o jogador", async ({ page }, info) => {
   await expect(page.getByRole("textbox", { name: "Nome", exact: true })).toHaveValue("Ribeiro");
 });
 
+test("Compartilhar manda a imagem da carreira com o convite, sem o link (D130)", async ({ page }) => {
+  // O compartilhamento do aparelho, simulado: guarda o que o jogo pediu.
+  await page.addInitScript(() => {
+    const calls: unknown[] = [];
+    Object.assign(window, { __shares: calls });
+    Object.defineProperty(navigator, "canShare", { configurable: true, value: () => true });
+    Object.defineProperty(navigator, "share", {
+      configurable: true,
+      value: async (data: { files?: File[]; text?: string; url?: string }) => {
+        calls.push({ files: (data.files ?? []).map((file) => ({ name: file.name, type: file.type, size: file.size })), text: data.text, url: data.url });
+      },
+    });
+  });
+  await abrirCraque(page);
+  await jogoRapido(page);
+  for (let turn = 0; turn < 3; turn += 1) await jogarTurno(page);
+  await encerrar(page);
+  await page.getByRole("button", { name: "Compartilhar" }).click();
+  await expect.poll(() => page.evaluate(() => (window as unknown as { __shares: unknown[] }).__shares.length), { timeout: 30_000 }).toBe(1);
+  const [shared] = await page.evaluate(() => (window as unknown as { __shares: { files: { name: string; type: string; size: number }[]; text: string; url?: string }[] }).__shares);
+  expect(shared?.files).toHaveLength(1);
+  expect(shared?.files[0]?.type).toBe("image/png");
+  expect(shared?.files[0]?.size).toBeGreaterThan(10_000);
+  expect(shared?.text).toContain("Olha a carreira que eu fiz com o");
+  expect(shared?.text).not.toContain("#c=");
+  expect(shared?.url).toBeUndefined();
+});
+
 test("o link da carreira abre o resumo só de leitura, sem tocar no save de quem abre", async ({ page }) => {
   await abrirCraque(page);
   await jogoRapido(page);
   for (let turn = 0; turn < 3; turn += 1) await jogarTurno(page);
   await encerrar(page);
-  await page.getByRole("button", { name: "Copiar link" }).click();
+  await page.getByRole("button", { name: "Copiar carreira" }).click();
   const link = await page.evaluate(() => navigator.clipboard.readText());
   expect(link).toContain("#c=");
 
@@ -87,7 +115,7 @@ test("o link da carreira abre o resumo só de leitura, sem tocar no save de quem
 
 for (const theme of ["light", "dark"] as const) {
   test(`D66 e D118: coleção grande cabe na imagem de 1200 × 630, ${theme}`, async ({ page }, info) => {
-    // Link público de replay, o mesmo contrato de Copiar link; sem injetar estado na página.
+    // Link público de replay, o mesmo contrato de Copiar carreira; sem injetar estado na página.
     // Fixture real: semente d80-collection-16, refeita no motor m43 com as escolhas da amostra anterior.
     const replay=await readFile(new URL("./fixtures/colecao-m43.json",import.meta.url));
     const token=deflateRawSync(replay).toString("base64url");

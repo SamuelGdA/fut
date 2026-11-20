@@ -2274,6 +2274,12 @@ A inspeção da abertura da pilha de troféus agora observa os quadros antes de 
 
 **Por quê.** O jogo é feito para jogar com internet (conta, ranking e Desafio dependem do servidor), então baixar 54 MB para jogar sem rede era peso sem uso. Publicar só da `main` separa o que está em teste do que está no ar, sem passo manual.
 
+## D130: compartilhar manda a imagem e um convite, não o link (20/11/2026)
+
+**Decisão.** No resumo da carreira, "Compartilhar" desenha a imagem da carreira (a de 1200 × 630) fora da tela e a manda pelo compartilhamento do aparelho com um convite pronto: "Olha a carreira que eu fiz com o {nome} no Futeiro! Monte o seu jogador e escolha a sua história também: futeiro.com" (português, espanhol e inglês; sem o nome quando a imagem o esconde). O link da carreira sai do Compartilhar e fica só no botão, que passa a se chamar "Copiar carreira". O compartilhar da janela da imagem usa o mesmo convite. Sem suporte a arquivo, vai só o convite.
+
+**Por quê.** No WhatsApp, o link da carreira é um texto enorme e a prévia mostrava só o site; a imagem conta a carreira de relance e o convite chama quem recebe para jogar. O link continua existindo para quem quer abrir o resumo inteiro, com um nome que diz o que copia.
+
 ## D129: o site se atualiza sozinho, sem aviso (20/11/2026)
 
 **Decisão.** Sai o aviso "Versão nova do Futeiro" com o botão "Atualizar". O navegador baixa a versão nova em segundo plano; quando o site abre e já há uma versão esperando, o jogo a ativa e recarrega na hora, só se o jogador ainda não tocou na tela e nos primeiros 6 segundos. Uma versão que chega com o site aberto espera em silêncio até a próxima abertura.

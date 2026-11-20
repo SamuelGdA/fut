@@ -6,6 +6,8 @@
  * esperadas antes de desenhar.
  */
 
+import { siteLabel } from "../../lib/env";
+
 export const POSTER_WIDTH = 1080;
 export const POSTER_HEIGHT = 1350;
 /** O fundo do pôster, igual ao da paleta escura fixa. */
@@ -92,4 +94,23 @@ export async function shareImage(blob: Blob, fileName: string, title: string, te
   } catch (error) {
     return error instanceof DOMException && error.name === "AbortError" ? "cancelled" : "failed";
   }
+}
+
+/** Compartilha só o texto, onde o navegador não aceita arquivo (D130). */
+export async function shareText(title: string, text: string): Promise<ShareOutcome> {
+  try {
+    await navigator.share({ title, text });
+    return "shared";
+  } catch (error) {
+    return error instanceof DOMException && error.name === "AbortError" ? "cancelled" : "failed";
+  }
+}
+
+/**
+ * O convite que vai junto da imagem (D130): o nome do jogador, quando ele
+ * aparece, e o endereço do jogo. Nunca o link da carreira.
+ */
+export function shareInvite(t: (key: "summary.link.shareInvite" | "summary.link.shareInviteAnonymous", vars?: Record<string, string>) => string, surname: string | null): string {
+  const site = siteLabel() || "futeiro.com";
+  return surname ? t("summary.link.shareInvite", { surname, site }) : t("summary.link.shareInviteAnonymous", { site });
 }

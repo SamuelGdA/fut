@@ -2457,3 +2457,8 @@ novo. Conferido no ar: título, descrição, imagem 1200 × 630, cartão grande 
 e `og:site_name`. Uma rede que já guardou a prévia de um link antigo pode
 mostrá-la por alguns dias; o Sharing Debugger da Meta força a leitura nova.
 
+## D130: compartilhar a carreira (20/11/2026)
+
+"Compartilhar" no resumo manda a imagem da carreira e um convite pronto
+(`summary.link.shareInvite`, nos três idiomas, com o endereço do jogo), sem o
+link da carreira. O link fica só em "Copiar carreira" (antes "Copiar link").

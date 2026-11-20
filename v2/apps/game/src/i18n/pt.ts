@@ -573,13 +573,14 @@ export const pt = {
     actions: {
       poster: "Imagem",
       share: "Compartilhar",
-      copyLink: "Copiar link",
+      copyLink: "Copiar carreira",
     },
     link: {
-      copied: "Link copiado",
+      copied: "Link da carreira copiado",
       copiedBody: "Quem abrir vê este resumo, sem mexer na própria carreira.",
       failed: "Não deu para gerar o link agora.",
-      shareText: "A carreira de {surname} no CRAQUE",
+      shareInvite: "Olha a carreira que eu fiz com o {surname} no Futeiro! Monte o seu jogador e escolha a sua história também: {site}",
+      shareInviteAnonymous: "Olha a carreira que eu fiz no Futeiro! Monte o seu jogador e escolha a sua história também: {site}",
     },
     chapters: {
       label: "Capítulos do resumo",
@@ -655,7 +656,6 @@ export const pt = {
       saved: "Imagem salva",
       failed: "Não deu para desenhar a imagem. Tente de novo.",
       shareFailed: "Não deu para compartilhar a imagem.",
-      shareText: "Minha carreira no CRAQUE",
       hard: "Difícil",
       showcase: "Vitrine",
       noTitles: "Uma carreira sem taças, mas com história.",
