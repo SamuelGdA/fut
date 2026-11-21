@@ -1,3 +1,4 @@
+import { AdSlot } from "../../features/ads/AdSlot";
 import { useOwnAttempts } from "../../features/hall/ownAttempts";
 import { missionName } from "@craque/content";
 import { getCountry, getCountryKit } from "@craque/world";
@@ -200,6 +201,8 @@ export function ChallengeScreen() {
           {cloud ? <WorldRanking day={clock.day} /> : null}
           <DayRanking attempts={attempts} day={clock.day} title={cloud ? t("account.ranking.local") : undefined} />
           <StatsPanel attempts={attempts} />
+          {/* D134: na coluna de leitura, depois do ranking e dos números. */}
+          <AdSlot id="desafio-ranking" className="ch-ad" />
         </aside>
       </div>
       <LegalFinePrint className="mt-6" />

@@ -1,6 +1,11 @@
 import { lazy, Suspense, type ReactNode } from "react";
 import { SCREEN_GAME, useNavigation } from "./navigation";
 import { AccountButton } from "../features/account/AccountButton";
+import { AdAnchor } from "../features/ads/AdAnchor";
+import { AdPreviewToggle } from "../features/ads/AdPreviewToggle";
+import { AdRails } from "../features/ads/AdRails";
+import { ADS_PREVIEW_AVAILABLE } from "../features/ads/preview";
+import { RAIL_SCREENS, RAIL_TOP } from "../features/ads/slots";
 import { CookieBanner } from "../features/consent/CookieBanner";
 import { SettingsMenu } from "../features/settings/SettingsMenu";
 import { useT } from "../i18n/useT";
@@ -53,6 +58,7 @@ function TopBar() {
       <div className="topbar-inner mx-auto flex max-w-6xl items-center justify-between gap-3 px-4">
         <Brand />
         <div className="flex items-center gap-1">
+          {ADS_PREVIEW_AVAILABLE ? <AdPreviewToggle /> : null}
           <AccountButton />
           <SettingsMenu />
         </div>
@@ -65,10 +71,13 @@ function TopBar() {
  * Casca fixa: pular para o conteúdo, barra superior, tela e avisos. A barra
  * fica em todas as telas, a Carreira inclusive (D43): o placar do jogador vem
  * logo abaixo dela. A conta (D112) entra ao lado dos ajustes; o aviso de
- * cookies (D113), no pé, só quando há o que consentir.
+ * cookies (D113), no pé, só quando há o que consentir. Os trilhos de anúncio
+ * do PC e a âncora do celular (D134) também moram aqui, fora do conteúdo.
  */
 export function AppShell({ children }: { children: ReactNode }) {
   const { t } = useT();
+  const screen = useNavigation((state) => state.screen);
+  const rail = RAIL_SCREENS[screen];
   return (
     <>
       <a href="#conteudo" className="skip-link">
@@ -78,6 +87,9 @@ export function AppShell({ children }: { children: ReactNode }) {
       <main id="conteudo" tabIndex={-1} className="outline-none">
         {children}
       </main>
+      {/* D134: trilhos do PC e âncora do celular, fora do conteúdo (prévia). */}
+      {rail ? <AdRails key={screen} content={rail.content} below={rail.below} top={RAIL_TOP.page} prefix="trilho" anchor="fixed" /> : null}
+      <AdAnchor />
       <Toaster closeLabel={t("common.close")} />
       <UnlockAnnouncer />
       <CookieBanner />

@@ -2,6 +2,7 @@ import { getClub, getCountryKit } from "@craque/world";
 import { ArrowRight, Award, BookOpen, FlaskConical, Play, RotateCcw } from "lucide-react";
 import { useEffect } from "react";
 import { screenUrl, useNavigation } from "../../app/navigation";
+import { AdSlot } from "../../features/ads/AdSlot";
 import { useDraft } from "../../features/career/draft";
 import { useHall } from "../../features/hall/store";
 import { useCoachDraft } from "../../features/tecnico/draft";
@@ -42,6 +43,9 @@ export function HubScreen() {
         <CraqueCard />
         <TecnicoCard />
       </div>
+
+      {/* D134: depois da escolha dos modos, longe dos botões de jogar. */}
+      <AdSlot id="hub-rodape" className="hub-ad" />
 
       <footer className="hub-footer">
         <Button

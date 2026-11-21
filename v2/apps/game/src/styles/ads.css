@@ -1,0 +1,335 @@
+/* ---------------------------------------------------------------------------
+   D134: espaços de anúncio (prévia). Cada espaço reserva o tamanho IAB exato:
+   o do celular abaixo de 768 px, o do PC daqui para cima, trocados só por CSS.
+   O rótulo "Publicidade" (18 px) entra na altura reservada. As cores são os
+   tokens do tema, então a moldura acompanha o claro e o escuro.
+   ------------------------------------------------------------------------- */
+
+@layer components {
+  .ad-box {
+    --ad-w: var(--ad-mw, 0px);
+    --ad-h: var(--ad-mh, 0px);
+    display: grid;
+    justify-items: center;
+    gap: 4px;
+    width: min(100%, var(--ad-w));
+    margin-inline: auto;
+  }
+
+  .ad-box[data-mobile="none"] {
+    display: none;
+  }
+
+  @media (min-width: 768px) {
+    .ad-box {
+      --ad-w: var(--ad-dw, 0px);
+      --ad-h: var(--ad-dh, 0px);
+    }
+
+    .ad-box[data-mobile="none"] {
+      display: grid;
+    }
+
+    .ad-box[data-desktop="none"] {
+      display: none;
+    }
+  }
+
+  .ad-box-label {
+    height: 14px;
+    color: var(--faint);
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 14px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .ad-frame {
+    position: relative;
+    display: block;
+    box-sizing: border-box;
+    width: var(--ad-w);
+    max-width: 100%;
+    height: var(--ad-h);
+    overflow: hidden;
+    border: 1px dashed color-mix(in oklab, var(--rule) 85%, transparent);
+    border-radius: var(--radius-sm);
+    background:
+      repeating-linear-gradient(135deg, transparent 0 9px, color-mix(in oklab, var(--fg) 3.5%, transparent) 9px 18px),
+      color-mix(in oklab, var(--panel) 72%, transparent);
+    color: var(--muted);
+    container-type: size;
+  }
+
+  .ad-frame-inner {
+    display: grid;
+    width: 100%;
+    height: 100%;
+    place-items: center;
+    padding: 8px;
+  }
+
+  .ad-frame-badge {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    padding: 2px 7px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--panel);
+    color: var(--muted);
+    font-size: 9px;
+    font-weight: 800;
+    line-height: 1.4;
+    letter-spacing: 0.14em;
+    white-space: nowrap;
+  }
+
+  .ad-frame-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    min-width: 0;
+    text-align: center;
+  }
+
+  .ad-frame-id {
+    max-width: 100%;
+    color: var(--fg);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    overflow-wrap: anywhere;
+  }
+
+  .ad-frame-size {
+    color: var(--fg);
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    font-weight: 800;
+    line-height: 1;
+  }
+
+  .ad-frame-kind {
+    color: var(--muted);
+    font-size: 10px;
+    font-weight: 600;
+  }
+
+  .ad-frame-size[data-for="desktop"] {
+    display: none;
+  }
+
+  @media (min-width: 768px) {
+    .ad-frame-size[data-for="desktop"] {
+      display: inline;
+    }
+
+    .ad-frame-size[data-for="mobile"] {
+      display: none;
+    }
+  }
+
+  /* Formatos baixos: o número menor (320×100). */
+  @container (max-height: 119px) {
+    .ad-frame-size {
+      font-size: 1.25rem;
+    }
+  }
+
+  /* Faixas largas e baixas (728×90) e a âncora (320×50): tudo numa linha só. */
+  @container ((max-height: 119px) and (min-width: 480px)) or (max-height: 60px) {
+    .ad-frame-inner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 0 10px;
+    }
+
+    .ad-frame-badge {
+      position: static;
+    }
+
+    .ad-frame-body {
+      flex-direction: row;
+      align-items: baseline;
+      gap: 8px;
+    }
+  }
+
+  @container (max-height: 60px) {
+    .ad-frame-kind {
+      display: none;
+    }
+
+    .ad-frame-size {
+      font-size: 1.05rem;
+    }
+  }
+
+  /* ----------------------------------------------------------------- trilhos
+     Presos à janela, centrados na margem livre fora do conteúdo, abaixo da
+     barra do topo. Não empurram nada; somem quando não cabem (AdRails). */
+
+  /* Acima das faixas de fundo que cruzam a tela (a barra de capítulos do
+     resumo antes de grudar no topo), abaixo do topo, dos avisos e das camadas. */
+  .ad-rail {
+    position: fixed;
+    z-index: 31;
+    top: calc(var(--topbar-h) + 16px + var(--rail-below, 0px));
+    width: var(--ad-w);
+    margin: 0;
+  }
+
+  .ad-rail[data-anchor="contained"] {
+    position: absolute;
+    top: 16px;
+  }
+
+  .ad-rail[data-side="left"] {
+    left: calc((100% - var(--rail-content)) / 4 - var(--ad-w) / 2);
+  }
+
+  .ad-rail[data-side="right"] {
+    right: calc((100% - var(--rail-content)) / 4 - var(--ad-w) / 2);
+  }
+
+  /* ------------------------------------------------------- âncora do celular
+     320×50 no pé, acima da área segura; a página e o aviso de cookies sobem a
+     mesma altura. Fica abaixo de avisos, modais e folhas. */
+
+  .ad-anchor {
+    position: fixed;
+    z-index: 35;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    padding: 4px 0 calc(4px + env(safe-area-inset-bottom));
+    border-top: 1px solid var(--line);
+    background: color-mix(in oklab, var(--canvas) 94%, transparent);
+    backdrop-filter: blur(6px);
+  }
+
+  .ad-anchor .ad-box-label {
+    display: none;
+  }
+
+  @media (max-width: 767px) {
+    :root[data-ad-anchor] {
+      --ad-anchor-h: calc(59px + env(safe-area-inset-bottom));
+    }
+
+    :root[data-ad-anchor] #conteudo {
+      padding-bottom: var(--ad-anchor-h);
+    }
+
+    :root[data-ad-anchor] .cookie-banner {
+      bottom: calc(12px + var(--ad-anchor-h));
+    }
+  }
+
+  @media (min-width: 768px) {
+    .ad-anchor {
+      display: none;
+    }
+  }
+
+  /* ------------------------------------------------------ botão da prévia
+     Só no desenvolvimento e na suíte: um botão discreto na barra do topo do
+     PC, ao lado da conta. */
+
+  .ad-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 32px;
+    padding: 0 10px;
+    border: 1px dashed var(--rule);
+    border-radius: 999px;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .ad-toggle[aria-pressed="true"] {
+    border-style: solid;
+    color: var(--fg);
+  }
+
+  .ad-toggle:hover {
+    background: var(--panel-2);
+  }
+
+  .ad-toggle:focus-visible {
+    outline: 2px solid var(--fg);
+    outline-offset: 2px;
+  }
+
+  /* No celular a barra do topo já está cheia: a chave mora nos Ajustes. */
+  @media (max-width: 767px) {
+    .ad-toggle {
+      display: none;
+    }
+  }
+
+  /* -------------------------------------------------- lugares específicos */
+
+  /* Sorteio de clubes (D118): o rótulo do intervalo já diz "Publicidade". */
+  .ad-break-slot {
+    margin-top: 14px;
+  }
+
+  .ad-break-slot .ad-box-label {
+    display: none;
+  }
+
+  /* No celular estreito, o intervalo afina as margens para o 300×250 caber inteiro. */
+  @media (max-width: 380px) {
+    .dialog-popup.ad-break {
+      padding-inline: 12px;
+    }
+  }
+
+  /* Hub: centrado sem cortar o topo quando o anúncio deixa a tela mais alta. */
+  @media (min-width: 1024px) {
+    .hub {
+      justify-content: flex-start;
+    }
+
+    .hub > :first-child {
+      margin-top: auto;
+    }
+
+    .hub > :last-child {
+      margin-bottom: auto;
+    }
+  }
+
+  /* Desafio: entre 1024 e 1279 px a coluna da direita tem 260 px; o 300×250
+     não cabe inteiro, então some (nunca um anúncio espremido). */
+  @media (min-width: 1024px) and (max-width: 1279px) {
+    .ch-ad {
+      display: none;
+    }
+  }
+
+  /* Laboratório: todos os espaços lado a lado. */
+  .lab-ads {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 24px;
+  }
+
+  .lab-ads .ad-box {
+    margin-inline: 0;
+  }
+}

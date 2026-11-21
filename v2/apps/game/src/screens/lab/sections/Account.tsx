@@ -1,6 +1,7 @@
 import { GuestNotice } from "../../../features/account/GuestNotice";
 import { LegalFinePrint } from "../../../features/account/LegalFinePrint";
-import { AdSlot } from "../../../features/consent/AdSlot";
+import { AdFrame } from "../../../features/ads/AdFrame";
+import { AD_SLOTS, type AdSlotId, ANCHOR_SIZE, IAB } from "../../../features/ads/slots";
 import { CookieBanner } from "../../../features/consent/CookieBanner";
 import { useT } from "../../../i18n/useT";
 import { Skeleton } from "../../../ui/Skeleton";
@@ -74,7 +75,15 @@ export function AccountSection({ index }: { index: number }) {
       <CookieBanner preview />
 
       <p className="eyebrow mt-8 mb-3">{t("lab.account.ads")}</p>
-      <AdSlot placement="perfil" className="max-w-2xl" />
+      <div className="lab-ads">
+        {(Object.keys(AD_SLOTS) as AdSlotId[]).map((id) => (
+          <AdFrame key={id} id={id} kind={AD_SLOTS[id].kind} desktop={AD_SLOTS[id].desktop} mobile={AD_SLOTS[id].mobile} />
+        ))}
+        {/* No laboratório, trilhos e âncora aparecem em qualquer largura. */}
+        <AdFrame id="trilho" kind="rail" desktop={IAB.halfPage} mobile={IAB.halfPage} />
+        <AdFrame id="trilho" kind="rail" desktop={IAB.skyscraper} mobile={IAB.skyscraper} />
+        <AdFrame id="ancora-celular" kind="anchor" desktop={ANCHOR_SIZE} mobile={ANCHOR_SIZE} />
+      </div>
 
       <p className="eyebrow mt-8 mb-3">{t("lab.account.legal")}</p>
       <LegalFinePrint />

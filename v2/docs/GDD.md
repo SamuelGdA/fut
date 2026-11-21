@@ -5172,6 +5172,7 @@ O motor não muda (Craque `2.0.0-m41`, Técnico `1.10.0`): nenhuma carreira dá 
 - **Aviso de cookies.** Faixa no pé da tela, com "Somente essenciais" e "Aceitar todos" do mesmo tamanho e o link da Política. Não bloqueia o jogo nem pega o foco. Aparece só quando o build tem `VITE_GA_MEASUREMENT_ID` ou `VITE_ADSENSE_CLIENT`. A escolha fica em `craque.v2.consent`, com a versão do aviso (`CONSENT_VERSION`); mudar o texto do aviso faz todo mundo escolher de novo. Ajustes > Privacidade e termos > Preferências de cookies reabre o aviso.
 - **Google Analytics e AdSense.** Só depois de "Aceitar todos", com o Consent Mode v2 (padrão negado). Voltar para "Somente essenciais" nega o consentimento na hora e apaga os cookies `_ga` do site. O Analytics mede a tela aberta como página virtual e nunca recebe e-mail, `@` ou id da conta.
 - **Anúncios genéricos.** Três espaços: perfil, resumo e conquistas. Nenhum no laço (D23). Sem as variáveis do AdSense, em produção nada aparece; em desenvolvimento, uma moldura tracejada com o nome do espaço.
+  *Como ficou (D134):* os espaços viraram um registro central com tamanho IAB exato (`features/ads/slots.ts`), estudado em `docs/analise-monetizacao.md`. Por enquanto é só prévia, sem rede de anúncio: trilhos 300×600 ou 160×600 nas margens livres do PC, 728×90 no conteúdo do PC, 300×250 ou 320×100 no celular, âncora 320×50 no pé do celular só nas telas de leitura e depois de rolar, e o 300×250 do recompensado no sorteio de clubes. Nunca no laço, na criação, no login nem em modal. A prévia existe no `pnpm dev` (ligada) e na suíte (desligada); em produção, nada.
 - **Páginas legais.** Termos de Serviço e Política de Privacidade, com índice, seções numeradas e a data da versão, nos três idiomas; o contato vem de `VITE_CONTACT_EMAIL`. Links no hub, nos Ajustes, no login e no perfil.
 - **Aviso legal.** "Todos os nomes, escudos e marcas de clubes presentes neste simulador são de propriedade de seus respectivos titulares..." em letra miúda (11 px, cor apagada) no pé das telas onde a carreira começa: quem é você (Craque), identidade do Técnico e Desafio do dia. Fica no fluxo da página, nunca por cima do laço; o texto inteiro também nos Termos.
 - **Sem fila offline (D116).** Conquistas e fim da carreira saem direto para o banco, um envio por vez. Sem internet no momento, o envio se perde (nada fica guardado no aparelho para depois); reenviar a mesma carreira nunca soma duas vezes.
@@ -5243,7 +5244,9 @@ vitrine aparece nos três idiomas. As telas do jogo não são modificadas.
   jogador troca o idioma nos Ajustes; conta sem idioma recebe português.
 - **Anúncios de exemplo na carreira.** A partir de 1660 px de largura, dois
   espaços de 160 × 600 nas margens, fora das três colunas; abaixo disso, nada.
-  O laço continua cabendo na tela (D23).
+  O laço continua cabendo na tela (D23). *Como ficou (D134):* só a partir de
+  1696 px (a margem tem de comportar o anúncio e 24 px de folga dos dois
+  lados), 300 × 600 a partir de 1976 px, abaixo do cabeçalho do jogador.
 - **Telas.** "Quem é você" cabe sem rolar de 1280 × 720 a 1920 × 1080; o
   campo e a carta do login vão para o meio do palco; o cabeçalho do perfil não
   corta o `@` no celular; sai o "i" ao lado do OVR na carreira; o aviso do

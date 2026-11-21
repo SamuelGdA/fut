@@ -936,39 +936,6 @@
     overflow: hidden;
   }
 
-  /*
-   * D118: os anúncios da carreira moram nas margens que sobram fora das três
-   * colunas (1280 px). Só aparecem quando a margem comporta um arranha-céu de
-   * 160 px com folga; abaixo disso, somem e o laço fica como era.
-   */
-  .ad-slot.career-ad {
-    display: none;
-  }
-
-  @media (min-width: 1660px) {
-    .ad-slot.career-ad {
-      position: absolute;
-      top: 16px;
-      display: grid;
-      align-content: start;
-      width: 160px;
-      height: min(600px, calc(100% - 32px));
-      overflow: hidden;
-    }
-
-    .ad-slot-placeholder.career-ad {
-      align-content: center;
-    }
-
-    .career-ad:nth-last-of-type(2) {
-      left: calc((100% - 1280px) / 4 - 80px);
-    }
-
-    .career-ad:last-of-type {
-      right: calc((100% - 1280px) / 4 - 80px);
-    }
-  }
-
   /* Painel que cabe: coluna flexível, sem rolagem da página. */
   .fit-panel {
     display: flex;

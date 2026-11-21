@@ -56,9 +56,11 @@
 
     /* A mão e o "Você" ocupam as duas linhas; à direita, jogar em cima e o
        ranking e os números embaixo. */
+    /* Cresce com o conteúdo: numa janela baixa a página rola por dentro, em
+       vez de a mão do dia vazar por cima do aviso legal (D134). */
     .ch-grid {
       display: grid;
-      flex: 1;
+      flex: 1 0 auto;
       grid-template-columns: minmax(0, 1fr) minmax(0, 330px) minmax(0, 300px);
       grid-template-rows: auto minmax(0, 1fr);
       align-items: start;

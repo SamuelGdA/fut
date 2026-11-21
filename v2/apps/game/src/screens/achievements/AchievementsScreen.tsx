@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { useNavigation } from "../../app/navigation";
 import { openLogin } from "../../features/account/openLogin";
 import { useAccount } from "../../features/account/store";
-import { AdSlot } from "../../features/consent/AdSlot";
+import { AdSlot } from "../../features/ads/AdSlot";
 import { type AttemptEntry, rankedDays } from "../../features/hall/model";
 import { useHall } from "../../features/hall/store";
 import { formatShortDate } from "../../i18n/format";
@@ -62,7 +62,7 @@ export function AchievementsScreen() {
           ) : (
             <Collection />
           )}
-          <AdSlot placement="conquistas" className="mt-10" />
+          <AdSlot id="conquistas-rodape" className="mt-10" />
         </>
       )}
       {status === "guest" ? null : (

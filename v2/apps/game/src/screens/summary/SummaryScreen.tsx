@@ -7,7 +7,6 @@ import { feedback } from "../../services/feedback";
 import { Loading } from "../../ui/Loading";
 import { notify } from "../../ui/toast/notify";
 import { SummaryView } from "./SummaryView";
-import { AdSlot } from "../../features/consent/AdSlot";
 
 /**
  * O resumo da carreira nesta sessão (GDD 24). Sem carreira
@@ -66,8 +65,6 @@ export function SummaryScreen() {
         onBranch={challenge ? undefined : branch}
         internalTesting={internalTesting}
       />
-      {/* D113: o espaço de anúncio do resumo, fora do laço; vazio até a monetização ser ligada. */}
-      <AdSlot placement="resumo" className="mx-4 mb-10 max-w-6xl sm:mx-auto" />
     </>
   );
 }

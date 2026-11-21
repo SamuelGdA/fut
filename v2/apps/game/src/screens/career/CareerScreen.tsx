@@ -1,5 +1,6 @@
 import { MatchAtmosphere } from "./MatchAtmosphere";
-import { AdSlot } from "../../features/consent/AdSlot";
+import { AdRails } from "../../features/ads/AdRails";
+import { CAREER_CONTENT, RAIL_TOP } from "../../features/ads/slots";
 import { SeasonDecision } from "./SeasonDecision";
 import { useSeasonFlow } from "../../features/career/useSeasonFlow";
 import { matchTheme } from "../../features/career/matchTheme";
@@ -208,9 +209,8 @@ export function CareerScreen() {
               <ExploreColumn career={career} onReplay={onReplay} challenge={challenge} />
             </div>
           </div>
-          {/* D118: anúncio só nas margens das telas largas, fora das colunas do laço. */}
-          <AdSlot placement="carreira" className="career-ad" />
-          <AdSlot placement="carreira" className="career-ad" />
+          {/* D118 e D134: anúncio só nas margens das telas largas, fora das colunas do laço. */}
+          <AdRails content={CAREER_CONTENT} top={RAIL_TOP.career} prefix="carreira-trilho" anchor="contained" />
         </main>
       ) : (
         <BaseTabs.Root

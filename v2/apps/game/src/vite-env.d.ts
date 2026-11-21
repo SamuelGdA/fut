@@ -18,10 +18,8 @@ interface ImportMetaEnv {
   /** Google Analytics 4 e AdSense (D113): genéricos até a monetização ser ligada. */
   readonly VITE_GA_MEASUREMENT_ID?: string;
   readonly VITE_ADSENSE_CLIENT?: string;
-  readonly VITE_ADSENSE_SLOT_PERFIL?: string;
-  readonly VITE_ADSENSE_SLOT_RESUMO?: string;
-  readonly VITE_ADSENSE_SLOT_CONQUISTAS?: string;
-  readonly VITE_ADSENSE_SLOT_CARREIRA?: string;
+  /** D134: "1" deixa a prévia dos anúncios disponível num build (a suíte ponta a ponta). */
+  readonly VITE_ADS_PREVIEW?: string;
   /** E-mail de contato das páginas legais (D113). */
   readonly VITE_CONTACT_EMAIL?: string;
 }

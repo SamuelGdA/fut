@@ -32,6 +32,7 @@ import { Chip } from "../../ui/Signals";
 import { notify } from "../../ui/toast/notify";
 import { Newspaper } from "./Newspaper";
 import { ShareSheet } from "./ShareSheet";
+import { AdSlot } from "../../features/ads/AdSlot";
 import { Showcase } from "./Showcase";
 import { ChallengeChapter } from "./ChallengeChapter";
 import { NumbersSection, TimelineSection } from "./SummarySections";
@@ -203,6 +204,8 @@ export function SummaryView({ career, avatar, mode, alternate = false, internalT
         <Chapter id="numbers" title={t("summary.chapters.numbers")}>
           <NumbersSection career={career} />
         </Chapter>
+        {/* D134: primeira pausa da leitura, entre os números e os troféus. */}
+        <AdSlot id="resumo-numeros" />
         <Chapter id="trophies" title={t("summary.chapters.trophies")}>
           <h3 className="eyebrow mb-3">{t("summary.newspaper.trophies")}</h3>
           <Showcase history={career.history} kind="title" maxHeight={640} maxArt={72} />
@@ -212,6 +215,7 @@ export function SummaryView({ career, avatar, mode, alternate = false, internalT
         <Chapter id="timeline" title={t("summary.chapters.timeline")}>
           <TimelineSection career={career} />
         </Chapter>
+        <AdSlot id="resumo-jornal" />
         <Chapter id="newspaper" title={t("summary.chapters.newspaper")}>
           <Newspaper career={career} />
         </Chapter>

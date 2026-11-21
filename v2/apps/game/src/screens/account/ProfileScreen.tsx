@@ -5,7 +5,7 @@ import { screenUrl, useNavigation } from "../../app/navigation";
 import { openLogin } from "../../features/account/openLogin";
 import { type Profile, type Trophy, USERNAME_COOLDOWN_DAYS } from "../../features/account/schemas";
 import { useAccount } from "../../features/account/store";
-import { AdSlot } from "../../features/consent/AdSlot";
+import { AdSlot } from "../../features/ads/AdSlot";
 import { isBlockedAchievement, TECNICO_BLOCKED } from "../../lib/modes";
 import { formatShortDate } from "../../i18n/format";
 import { type ContaKey, useContaT } from "../../i18n/conta/useContaT";
@@ -194,7 +194,7 @@ function ProfileView({ profile }: { profile: Profile }) {
 
       <AccountPanel username={username} changedAt={profile.username_alterado_em} />
 
-      <AdSlot placement="perfil" className="mt-6" />
+      <AdSlot id="perfil-rodape" className="mt-8" />
 
       <p className="mt-6 text-center text-xs text-faint">
         <a

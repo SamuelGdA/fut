@@ -987,7 +987,16 @@ export const pt = {
 
   ads: {
     label: "Publicidade",
-    placeholder: "Espaço de anúncio genérico: aparece só em desenvolvimento, até a monetização ser ligada (D113).",
+    kinds: { inline: "No conteúdo", reward: "Recompensado", rail: "Trilho lateral", anchor: "Âncora fixa" },
+    preview: {
+      badge: "AD · PREVIEW",
+      desktop: "PC",
+      mobile: "celular",
+      on: "Ads: prévia",
+      off: "Ads: ocultos",
+      toggle: "Mostrar ou ocultar a prévia dos anúncios",
+      shortcut: "Alt + Shift + A",
+    },
   },
 
   legal: {
@@ -1240,7 +1249,7 @@ export const pt = {
       skeleton: "Esqueleto de carregamento",
       guest: "Faixa do visitante",
       cookies: "Aviso de cookies (prévia, não grava escolha)",
-      ads: "Espaço de anúncio genérico",
+      ads: "Espaços de anúncio (prévia, D134)",
       legal: "Aviso legal ao começar a jogar",
       emails: "E-mails da conta",
       emailsLead: "Os modelos que o Supabase manda (D118, D122), com dados de exemplo, no idioma da interface. Os arquivos ficam em supabase/templates e entram no projeto pelo config.toml.",

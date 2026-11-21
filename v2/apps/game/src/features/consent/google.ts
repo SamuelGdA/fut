@@ -1,4 +1,4 @@
-import { ADSENSE_CLIENT, GA_MEASUREMENT_ID } from "./config";
+import { GA_MEASUREMENT_ID } from "./config";
 
 /**
  * Os scripts do Google (D113), carregados só depois de "Aceitar todos". Antes
@@ -14,7 +14,6 @@ declare global {
   interface Window {
     dataLayer?: unknown[];
     gtag?: Gtag;
-    adsbygoogle?: unknown[];
   }
 }
 
@@ -23,17 +22,15 @@ const GRANTED = { ad_storage: "granted", analytics_storage: "granted", ad_user_d
 
 let analyticsLoaded = false;
 let analyticsActive = false;
-let adsLoaded = false;
 
 function gtag(...args: unknown[]): void {
   window.gtag?.(...args);
 }
 
-function addScript(src: string, crossOrigin = false): void {
+function addScript(src: string): void {
   const script = document.createElement("script");
   script.async = true;
   script.src = src;
-  if (crossOrigin) script.crossOrigin = "anonymous";
   document.head.append(script);
 }
 
@@ -78,23 +75,4 @@ export function disableAnalytics(): void {
 export function trackScreen(screen: string): void {
   if (!analyticsActive || !GA_MEASUREMENT_ID) return;
   gtag("event", "page_view", { page_title: screen, page_location: `${window.location.origin}/${screen}` });
-}
-
-/** Baixa o AdSense uma vez (só com consentimento). */
-export function enableAds(): boolean {
-  if (!ADSENSE_CLIENT) return false;
-  if (!adsLoaded) {
-    adsLoaded = true;
-    addScript(`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${encodeURIComponent(ADSENSE_CLIENT)}`, true);
-  }
-  return true;
-}
-
-/** Pede o anúncio de um bloco recém-desenhado. */
-export function fillAd(): void {
-  try {
-    (window.adsbygoogle = window.adsbygoogle ?? []).push({});
-  } catch {
-    /* Bloqueador de anúncio ou bloco já preenchido: o espaço só fica vazio. */
-  }
 }

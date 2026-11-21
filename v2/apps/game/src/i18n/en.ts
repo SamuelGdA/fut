@@ -983,7 +983,16 @@ export const en: Messages = {
 
   ads: {
     label: "Advertisement",
-    placeholder: "Generic ad space: shown only in development until monetisation is switched on (D113).",
+    kinds: { inline: "In content", reward: "Rewarded", rail: "Side rail", anchor: "Sticky anchor" },
+    preview: {
+      badge: "AD · PREVIEW",
+      desktop: "desktop",
+      mobile: "mobile",
+      on: "Ads: preview",
+      off: "Ads: hidden",
+      toggle: "Show or hide the ad preview",
+      shortcut: "Alt + Shift + A",
+    },
   },
 
   legal: {
@@ -1236,7 +1245,7 @@ export const en: Messages = {
       skeleton: "Loading skeleton",
       guest: "Guest strip",
       cookies: "Cookie notice (preview, does not save a choice)",
-      ads: "Generic ad space",
+      ads: "Ad slots (preview, D134)",
       legal: "Legal notice when play starts",
       emails: "Account emails",
       emailsLead: "The templates Supabase sends (D118, D122), with sample data, in the interface language. The files live in supabase/templates and reach the project through config.toml.",

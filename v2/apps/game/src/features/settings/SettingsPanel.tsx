@@ -1,5 +1,7 @@
 import { Cookie, FileText, Moon, ShieldCheck, Sun, Volume2, VolumeX } from "lucide-react";
 import { useNavigation } from "../../app/navigation";
+import { AdPreviewSwitch } from "../ads/AdPreviewToggle";
+import { ADS_PREVIEW_AVAILABLE } from "../ads/preview";
 import { TRACKERS_ENABLED } from "../consent/config";
 import { useConsent } from "../consent/store";
 import type { ReactNode } from "react";
@@ -162,6 +164,9 @@ export function SettingsPanel() {
           }}
         />
       </div> : null}
+
+      {/* D134: a prévia dos anúncios, só no desenvolvimento e na suíte. */}
+      {ADS_PREVIEW_AVAILABLE ? <AdPreviewSwitch /> : null}
 
       <PrivacyRow />
     </div>

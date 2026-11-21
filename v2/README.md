@@ -935,8 +935,8 @@ pé do hub). Áreas:
   as variantes; as decisões de partida com o seletor de competição e a vitrine
   Transmissões, com as 80 competições e qualquer seleção (D83); Conta e
   privacidade (D112 e D113): o troféu bloqueado, liberado e com quantidade, os
-  esqueletos, a faixa do visitante, o aviso de cookies, o espaço de anúncio e o
-  aviso legal.
+  esqueletos, a faixa do visitante, o aviso de cookies, todos os espaços de
+  anúncio do registro (D134) e o aviso legal.
 - **Mundo**: clubes por país e divisão, com as notas, e as 211 seleções.
 - **Arte**: escudos, selos, troféus e prêmios, reais e gerados.
 - **Avatar**: o criador de personagem e uma galeria.
@@ -2213,16 +2213,42 @@ revisão D112 a D115 do GDD; o porquê em D112 a D115 de `docs/DECISOES.md`.
    Postgres embutido (PGlite) e prova RLS, privilégio por coluna, limites,
    idempotência, ranking e exclusão da conta. Entra no `pnpm test` e no `verify`.
 
-### Anúncios e Analytics (GENÉRICOS até você ligar)
+### Anúncios e Analytics
 
-Sem `VITE_GA_MEASUREMENT_ID` e `VITE_ADSENSE_CLIENT`, nada do Google é baixado,
-o aviso de cookies não aparece e os espaços de anúncio só aparecem no
-desenvolvimento, como moldura tracejada ("Publicidade · perfil"). Para ligar:
-preencha o ID de medição do GA4, o ID de editor do AdSense e um bloco por espaço
-(`VITE_ADSENSE_SLOT_PERFIL`, `_RESUMO`, `_CONQUISTAS`, `_CARREIRA`), e `VITE_CONTACT_EMAIL`
-para as páginas legais. Para tráfego da Europa, o AdSense exige uma plataforma de
-consentimento certificada pelo Google (a de "Privacidade e mensagens" do próprio
-AdSense serve); o aviso do jogo cobre a LGPD.
+Sem `VITE_GA_MEASUREMENT_ID` e `VITE_ADSENSE_CLIENT`, nada do Google é baixado e
+o aviso de cookies não aparece. Preencha o ID de medição do GA4 para medir, e
+`VITE_CONTACT_EMAIL` para as páginas legais.
+
+**Anúncios: só prévia (D134).** Nenhum espaço chama rede de anúncio: não há
+script do AdSense, do Ad Manager nem tag nenhuma no código. O estudo completo
+(formatos, tela por tela, PC e celular, densidade, regras do Google e do Better
+Ads, o que fica para depois) está em
+[`docs/analise-monetizacao.md`](docs/analise-monetizacao.md). Os espaços moram
+num registro central, `apps/game/src/features/ads/slots.ts`, e aparecem como
+moldura de prévia no tamanho IAB exato:
+
+| Slot | Onde | PC | Celular |
+|---|---|---|---|
+| `trilho-esquerdo`, `trilho-direito` | hub, quem é você, desafio, resumo, conquistas, Termos, Privacidade | 300×600 ou 160×600, só com margem livre | oculto |
+| `carreira-trilho-*` | carreira (fora das três colunas) | 160×600 a partir de 1696 px, 300×600 a partir de 1976 px | oculto |
+| `hub-rodape` | hub, abaixo dos cartões | 728×90 | 320×100 |
+| `resumo-numeros`, `resumo-jornal` | resumo, entre capítulos | 728×90 | 300×250 |
+| `desafio-ranking` | desafio do dia, coluna do ranking | 300×250 (some entre 1024 e 1279 px) | 300×250 |
+| `conquistas-rodape` | conquistas | 728×90 | 300×250 |
+| `perfil-rodape` | perfil (com conta) | 728×90 | 300×250 |
+| `ancora-celular` | resumo e conquistas, depois de rolar 240 px | oculto | 320×50 fixo no pé |
+| `sorteio-recompensado` | intervalo do sorteio de clubes | 300×250 | 300×250 |
+
+Para ver: `pnpm dev`. A prévia vem ligada; o botão "Ads" na barra do topo do PC,
+o atalho **Alt + Shift + A**, a chave nos Ajustes (é o caminho no celular) ou a
+URL (`?ads=on`, `?ads=off`) ligam e desligam, e a escolha fica no aparelho. Em
+produção a prévia não existe. Na suíte ponta a ponta (`VITE_ADS_PREVIEW=1`) ela
+existe desligada, e `e2e/anuncios.spec.ts` liga para testar.
+
+Quando for ligar de verdade: AdSense aprovado, `ads.txt`, CMP certificada para
+a Europa (o aviso do jogo cobre a LGPD) e um bloco por slot, trocando a moldura
+pelo anúncio dentro do mesmo espaço reservado (checklist na seção 10 da
+análise).
 
 ### Hospedagem e cabeçalhos
 
@@ -2336,9 +2362,9 @@ clones antigos precisa clonar de novo.
   grava no cadastro, a cada login e a cada troca de idioma; sem ele, sai em
   português. Para valerem no projeto hospedado, cole o HTML e o assunto no
   painel, em Authentication, Emails (o `config push` desligaria o SMTP).
-- **Anúncios na carreira.** Em telas a partir de 1660 px, dois espaços de
-  160 × 600 nas margens, fora das três colunas do laço (`AdSlot` "carreira").
-  Abaixo disso, somem.
+- **Anúncios na carreira.** Em telas largas, dois espaços de 160 × 600 nas
+  margens, fora das três colunas do laço. Abaixo disso, somem. (Na D134 viraram
+  os `carreira-trilho-*` do registro de anúncios, a partir de 1696 px.)
 - **Sortear outros clubes.** Na janela de transferências com pelo menos uma
   proposta, uma linha vermelha tracejada abaixo das opções: o jogador assiste a
   um anúncio (por enquanto de exemplo, 1 segundo) e recebe propostas novas, do
@@ -2495,3 +2521,25 @@ imagem fica dentro do Compartilhar. A mensagem é pronta e não se edita.
 Código: `screens/summary/ShareSheet.tsx`, `features/summary/shareTargets.ts`
 (links de cada rede), `ui/brandIcons.ts` (ícones do `simple-icons`, CC0).
 Testes: `shareTargets.test.ts` e dois cenários ponta a ponta (PC e celular).
+
+## D134: estudo de monetização e prévia dos espaços de anúncio (21/11/2026)
+
+O estudo está em [`docs/analise-monetizacao.md`](docs/analise-monetizacao.md):
+como jogo de sessão longa numa página só ganha com anúncio, os formatos IAB,
+as regras do Google e do Better Ads, o mapa tela por tela no PC e no celular,
+a densidade e o que fica para depois (intersticial pela H5 Games Ads, refresh
+pelo Ad Manager).
+
+O que entrou no jogo é só a prévia: `features/ads` com o registro (`slots.ts`),
+a moldura (`AdFrame`), o espaço no conteúdo (`AdSlot`), os trilhos
+(`AdRails`), a âncora do celular (`AdAnchor`) e o botão da prévia
+(`AdPreviewToggle`), mais `styles/ads.css`. Nenhum script de anúncio. Saem o
+`AdSlot` antigo da D113, as variáveis `VITE_ADSENSE_SLOT_*` e o carregador do
+AdSense (`enableAds`, `fillAd`); `VITE_ADSENSE_CLIENT` continua só ligando o
+aviso de cookies. O espaço do fim do resumo mudou para dois entre capítulos.
+De passagem: no Desafio do dia em PC baixo (1366 × 768), a mão do dia vazava
+por cima do aviso legal; agora a página rola por dentro.
+Testes: `features/ads/slots.test.ts` (tamanhos IAB, telas proibidas, conta dos
+trilhos) e `e2e/anuncios.spec.ts` (desligada por padrão, tamanhos exatos, nada
+em cima de controle, trilhos fora do conteúdo, laço sem anúncio, atalho e
+recompensado).

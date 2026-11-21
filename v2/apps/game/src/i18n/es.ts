@@ -983,7 +983,16 @@ export const es: Messages = {
 
   ads: {
     label: "Publicidad",
-    placeholder: "Espacio de anuncio genérico: solo aparece en desarrollo, hasta activar la monetización (D113).",
+    kinds: { inline: "En el contenido", reward: "Recompensado", rail: "Carril lateral", anchor: "Ancla fija" },
+    preview: {
+      badge: "AD · PREVIEW",
+      desktop: "PC",
+      mobile: "móvil",
+      on: "Ads: vista previa",
+      off: "Ads: ocultos",
+      toggle: "Mostrar u ocultar la vista previa de los anuncios",
+      shortcut: "Alt + Shift + A",
+    },
   },
 
   legal: {
@@ -1236,7 +1245,7 @@ export const es: Messages = {
       skeleton: "Esqueleto de carga",
       guest: "Franja del visitante",
       cookies: "Aviso de cookies (vista previa, no guarda la elección)",
-      ads: "Espacio de anuncio genérico",
+      ads: "Espacios de anuncio (vista previa, D134)",
       legal: "Aviso legal al empezar a jugar",
       emails: "Correos de la cuenta",
       emailsLead: "Las plantillas que envía Supabase (D118, D122), con datos de ejemplo, en el idioma de la interfaz. Los archivos están en supabase/templates y entran al proyecto por config.toml.",
