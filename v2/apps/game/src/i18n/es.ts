@@ -983,7 +983,8 @@ export const es: Messages = {
 
   ads: {
     label: "Publicidad",
-    kinds: { inline: "En el contenido", reward: "Recompensado", rail: "Carril lateral", anchor: "Ancla fija" },
+    kinds: { inline: "En el contenido", reward: "Recompensado", rail: "Carril lateral", anchor: "Ancla fija", interstitial: "Intersticial" },
+    interstitial: { title: "Anuncio a pantalla completa", close: "Cerrar" },
     preview: {
       badge: "AD · PREVIEW",
       desktop: "PC",

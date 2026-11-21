@@ -1,7 +1,7 @@
-import { type CSSProperties, useSyncExternalStore } from "react";
+import { type CSSProperties, useLayoutEffect, useSyncExternalStore } from "react";
 import { AdFrame } from "./AdFrame";
 import { useAdPreview } from "./preview";
-import { type AdSize, railFormat } from "./slots";
+import { type AdSize, type RailPlace, railLayout } from "./slots";
 
 function subscribe(onChange: () => void): () => void {
   window.addEventListener("resize", onChange);
@@ -20,41 +20,45 @@ function useViewport(): [number, number] {
 }
 
 interface AdRailsProps {
-  /** Largura do conteúdo mais largo da tela: o trilho mora fora dela. */
-  content: number;
-  /** Altura ocupada acima do trilho (barra do topo e o que mais houver). */
-  top: number;
-  /** Barra fixa da própria tela abaixo do topo (a dos capítulos do resumo). */
-  below?: number;
+  place: RailPlace;
   /** Prefixo dos IDs: `trilho` nas telas comuns, `carreira-trilho` no jogo. */
   prefix: "trilho" | "carreira-trilho";
-  /**
-   * `fixed`: presos à janela (telas comuns, não empurram nada). `contained`:
-   * dentro do corpo da carreira, que não rola (D118).
-   */
-  anchor: "fixed" | "contained";
 }
 
 /**
- * Os trilhos laterais do PC (D134): um arranha-céu de cada lado, centrado na
- * margem que sobra fora do conteúdo. Sobe para 300×600 quando há margem e
- * some quando nem o 160×600 cabe com folga, então nunca espremem o jogo.
+ * Os trilhos laterais do PC (D134, D135): um arranha-céu de cada lado, preso
+ * à janela e centrado na margem que sobra fora do conteúdo. Sobe para 300×600
+ * quando há margem; quando nem o 160×600 cabe e a tela aceita, o conteúdo
+ * encolhe só o necessário (a raiz ganha `data-ad-squeeze` e `--ad-squeeze`,
+ * antes de a tela aparecer, então nada pula). Some quando não cabe.
  */
-export function AdRails({ content, top, below = 0, prefix, anchor }: AdRailsProps) {
+export function AdRails({ place, prefix }: AdRailsProps) {
   const on = useAdPreview((state) => state.on);
   const [width, height] = useViewport();
-  if (!on) return null;
-  const format = railFormat(width, height, content, top + below);
-  if (!format) return null;
+  const layout = on ? railLayout(width, height, place) : null;
+  const squeeze = layout && layout.content < place.content ? layout.content : null;
+
+  useLayoutEffect(() => {
+    if (squeeze === null) return;
+    const root = document.documentElement;
+    root.setAttribute("data-ad-squeeze", "");
+    root.style.setProperty("--ad-squeeze", `${squeeze}px`);
+    return () => {
+      root.removeAttribute("data-ad-squeeze");
+      root.style.removeProperty("--ad-squeeze");
+    };
+  }, [squeeze]);
+
+  if (!layout) return null;
   return (
     <>
-      <Rail side="left" id={`${prefix}-esquerdo`} format={format} content={content} below={below} anchor={anchor} />
-      <Rail side="right" id={`${prefix}-direito`} format={format} content={content} below={below} anchor={anchor} />
+      <Rail side="left" id={`${prefix}-esquerdo`} format={layout.format} content={layout.content} />
+      <Rail side="right" id={`${prefix}-direito`} format={layout.format} content={layout.content} />
     </>
   );
 }
 
-function Rail({ side, id, format, content, below, anchor }: { side: "left" | "right"; id: string; format: AdSize; content: number; below: number; anchor: AdRailsProps["anchor"] }) {
-  const style = { "--rail-content": `${content}px`, "--rail-below": `${below}px` } as CSSProperties;
-  return <AdFrame id={id} kind="rail" desktop={format} mobile={null} className="ad-rail" style={style} side={side} anchor={anchor} />;
+function Rail({ side, id, format, content }: { side: "left" | "right"; id: string; format: AdSize; content: number }) {
+  const style = { "--rail-content": `${content}px` } as CSSProperties;
+  return <AdFrame id={id} kind="rail" desktop={format} mobile={null} className="ad-rail" style={style} side={side} anchor="fixed" />;
 }

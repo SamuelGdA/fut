@@ -31,24 +31,35 @@ function store(on: boolean): void {
   }
 }
 
-/** Ligada? A URL vence o que está guardado; sem nada, ligada só no desenvolvimento. */
+function urlParam(): string | null {
+  return typeof window === "undefined" ? null : new URLSearchParams(window.location.search).get("ads");
+}
+
+/**
+ * Ligada? A URL vence o que está guardado; sem nada, ligada só no
+ * desenvolvimento. `?ads=all` liga e também tira o limite de frequência do
+ * intersticial (D135), para ver todos sem esperar os minutos de intervalo.
+ */
 function initial(): boolean {
   if (!ADS_PREVIEW_AVAILABLE || typeof window === "undefined") return false;
-  const param = new URLSearchParams(window.location.search).get("ads");
-  if (param === "on" || param === "off") {
-    store(param === "on");
-    return param === "on";
+  const param = urlParam();
+  if (param === "on" || param === "off" || param === "all") {
+    store(param !== "off");
+    return param !== "off";
   }
   return readStored() ?? import.meta.env.DEV;
 }
 
 interface AdPreviewState {
   on: boolean;
+  /** Sem o limite de frequência do intersticial (só com `?ads=all`). */
+  uncapped: boolean;
   toggle(): void;
 }
 
 export const useAdPreview = create<AdPreviewState>((set, get) => ({
   on: initial(),
+  uncapped: ADS_PREVIEW_AVAILABLE && urlParam() === "all",
   toggle() {
     if (!ADS_PREVIEW_AVAILABLE) return;
     const on = !get().on;

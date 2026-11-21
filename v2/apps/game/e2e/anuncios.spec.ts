@@ -1,7 +1,7 @@
 import { expect, type Page, test } from "@playwright/test";
 import { readFile } from "node:fs/promises";
 import { deflateRawSync } from "node:zlib";
-import { abrir, abrirMomento, auditar, entrarNoCraque, jogoRapido } from "./apoio";
+import { abrir, abrirMomento, auditar, encerrar, entrarNoCraque, jogarTurno, jogoRapido } from "./apoio";
 
 /**
  * D134: a prévia dos espaços de anúncio. No build da suíte ela existe, mas
@@ -107,7 +107,7 @@ test("D134: trilhos só onde sobra margem, nunca em cima do jogo", async ({ page
   await expect(page.locator('[data-ad-slot="hub-rodape"]')).toBeVisible();
   await expect(page.locator(".ad-rail")).toHaveCount(0);
 
-  // Na carreira, os trilhos ficam fora das três colunas; abaixo de 1696 px, somem.
+  // Na carreira, os trilhos ficam fora das três colunas.
   await page.setViewportSize({ width: 1920, height: 1080 });
   await entrarNoCraque(page);
   await jogoRapido(page);
@@ -118,8 +118,36 @@ test("D134: trilhos só onde sobra margem, nunca em cima do jogo", async ({ page
   expect(trilho!.x).toBeGreaterThan(colunas!.x + colunas!.width);
   // O laço continua sem rolar (D23).
   expect(await page.evaluate(() => document.documentElement.scrollHeight <= innerHeight + 1)).toBe(true);
+  // D135: entre 1520 e 1695 px as colunas encolhem para o 160×600 caber; abaixo, somem.
   await page.setViewportSize({ width: 1600, height: 900 });
+  await expect(page.locator(".career-columns")).toHaveCSS("max-width", "1184px");
+  await page.setViewportSize({ width: 1440, height: 900 });
   await expect(page.locator(".ad-rail")).toHaveCount(0);
+  await expect(page.locator(".career-columns")).toHaveCSS("max-width", "1280px");
+});
+
+test("D135: notebook Full HD com escala de 125% (1536 × 730) tem trilho na carreira e no hub", async ({ page }, info) => {
+  test.skip(info.project.name === "celular", "Trilho é do PC.");
+  await page.setViewportSize({ width: 1536, height: 730 });
+  await abrir(page, { motion: "reduced" }, "/?ads=on");
+  expect(await tamanho(page, "trilho-esquerdo")).toBe("160×600");
+  await semConflito(page);
+  await entrarNoCraque(page);
+  // A criação de jogador não encolhe: sem trilho aqui.
+  await expect(page.locator(".ad-rail")).toHaveCount(0);
+  await jogoRapido(page);
+  expect(await tamanho(page, "carreira-trilho-esquerdo")).toBe("160×600");
+  expect(await tamanho(page, "carreira-trilho-direito")).toBe("160×600");
+  const colunas = (await page.locator(".career-columns").boundingBox())!;
+  expect(Math.round(colunas.width)).toBe(1120);
+  const esquerdo = (await page.locator('[data-ad-slot="carreira-trilho-esquerdo"]').boundingBox())!;
+  const direito = (await page.locator('[data-ad-slot="carreira-trilho-direito"]').boundingBox())!;
+  expect(esquerdo.x + esquerdo.width).toBeLessThanOrEqual(colunas.x - 24);
+  expect(direito.x).toBeGreaterThanOrEqual(colunas.x + colunas.width + 24);
+  // O laço continua cabendo sem rolar (D23).
+  expect(await page.evaluate(() => [document.documentElement.scrollWidth - innerWidth, document.documentElement.scrollHeight - innerHeight])).toEqual([0, 0]);
+  await semConflito(page);
+  await page.screenshot({ path: info.outputPath("d135-carreira-1536.png") });
 });
 
 test("D134: o laço do celular e a criação não têm anúncio", async ({ page }, info) => {
@@ -128,8 +156,66 @@ test("D134: o laço do celular e a criação não têm anúncio", async ({ page 
   await entrarNoCraque(page);
   await expect(page.locator(".ad-box")).toHaveCount(0);
   await jogoRapido(page);
-  await expect(page.locator(".ad-box")).toHaveCount(0);
+  // Na temporada (o laço), nada; o retângulo mora no fim das abas de exploração (D135).
+  await expect(page.locator(".ad-box:visible")).toHaveCount(0);
   expect(await page.evaluate(() => document.documentElement.hasAttribute("data-ad-anchor"))).toBe(false);
+  await page.getByRole("tab", { name: "Histórico" }).click();
+  const historico = page.locator('[data-ad-slot="carreira-historico"]');
+  await historico.scrollIntoViewIfNeeded();
+  await expect(historico).toBeVisible();
+  expect(await tamanho(page, "carreira-historico")).toBe("300×250");
+  await page.getByRole("tab", { name: "Troféus" }).click();
+  await expect(page.locator('[data-ad-slot="carreira-trofeus"]')).toBeAttached();
+  // A barra de abas continua por cima de tudo e clicável.
+  await page.getByRole("tab", { name: "Temporada" }).click();
+  await expect(page.locator(".ad-box:visible")).toHaveCount(0);
+});
+
+test("D135: a âncora do Desafio sai enquanto se digita o nome", async ({ page }, info) => {
+  test.skip(info.project.name !== "celular", "Celular.");
+  await abrir(page, { motion: "reduced" }, "/?ads=on");
+  await entrarNoCraque(page);
+  await page.getByRole("button", { name: /Ver o desafio/i }).click();
+  await expect(page.locator(".ch-page")).toBeVisible();
+  await page.evaluate(() => window.scrollTo(0, 900));
+  await expect(page.locator('[data-ad-slot="ancora-celular"]')).toBeVisible();
+  await page.locator(".ch-page").getByRole("textbox", { name: "Nome", exact: true }).focus();
+  await expect(page.locator('[data-ad-slot="ancora-celular"]')).toHaveCount(0);
+  await page.locator(".ch-page").getByRole("textbox", { name: "Nome", exact: true }).blur();
+  await expect(page.locator('[data-ad-slot="ancora-celular"]')).toBeVisible();
+});
+
+test("D135: intersticial na temporada nova e no fim da carreira, com fechar à vista", async ({ page }, info) => {
+  const mobile = info.project.name === "celular";
+  // `?ads=all` tira o limite de frequência só para ver o intersticial já.
+  await abrir(page, { motion: "reduced" }, "/?ads=all");
+  await entrarNoCraque(page);
+  await jogoRapido(page);
+  const intersticial = page.locator(".ad-interstitial");
+  for (let turno = 0; turno < 30 && !(await intersticial.isVisible()); turno += 1) {
+    await jogarTurno(page);
+    await intersticial.waitFor({ state: "visible", timeout: 1_800 }).catch(() => undefined);
+  }
+  await expect(page.locator('[data-ad-slot="intersticial-temporada"]')).toBeVisible();
+  expect(await tamanho(page, "intersticial-temporada")).toBe(mobile ? "320×480" : "336×280");
+  await auditar(page, "intersticial", ".ad-interstitial");
+  await page.screenshot({ path: info.outputPath("d135-intersticial.png") });
+  await page.getByRole("button", { name: "Fechar", exact: true }).click();
+  await expect(intersticial).toHaveCount(0);
+  await encerrar(page);
+  await expect(page.locator('[data-ad-slot="intersticial-fim-carreira"]')).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(intersticial).toHaveCount(0);
+});
+
+test("D135: com o limite de frequência, nada de intersticial nos primeiros minutos", async ({ page }) => {
+  await abrir(page, { motion: "reduced" }, "/?ads=on");
+  await entrarNoCraque(page);
+  await jogoRapido(page);
+  for (let turno = 0; turno < 8; turno += 1) await jogarTurno(page);
+  await encerrar(page);
+  await page.waitForTimeout(1_500);
+  await expect(page.locator(".ad-interstitial")).toHaveCount(0);
 });
 
 test("D134: Alt + Shift + A esconde e mostra, e a escolha fica no aparelho", async ({ page }, info) => {

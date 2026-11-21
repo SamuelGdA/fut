@@ -3,7 +3,7 @@ import { useT } from "../../i18n/useT";
 import { cn } from "../../ui/cn";
 import { type AdSize, sizeLabel } from "./slots";
 
-export type AdFrameKind = "inline" | "reward" | "rail" | "anchor";
+export type AdFrameKind = "inline" | "reward" | "rail" | "anchor" | "interstitial";
 
 interface AdFrameProps {
   id: string;

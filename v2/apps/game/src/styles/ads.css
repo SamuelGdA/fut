@@ -174,19 +174,15 @@
      Presos à janela, centrados na margem livre fora do conteúdo, abaixo da
      barra do topo. Não empurram nada; somem quando não cabem (AdRails). */
 
-  /* Acima das faixas de fundo que cruzam a tela (a barra de capítulos do
-     resumo antes de grudar no topo), abaixo do topo, dos avisos e das camadas. */
+  /* Logo abaixo da barra do topo e acima das faixas que cruzam a tela (o
+     cabeçalho do jogador, a barra de capítulos do resumo): na margem, elas não
+     têm nada. Abaixo do topo, dos avisos e das camadas. */
   .ad-rail {
     position: fixed;
     z-index: 31;
-    top: calc(var(--topbar-h) + 16px + var(--rail-below, 0px));
+    top: calc(var(--topbar-h) + 16px);
     width: var(--ad-w);
     margin: 0;
-  }
-
-  .ad-rail[data-anchor="contained"] {
-    position: absolute;
-    top: 16px;
   }
 
   .ad-rail[data-side="left"] {
@@ -321,6 +317,64 @@
     }
   }
 
+  /* Carreira no celular: o retângulo no fim das abas Histórico e Troféus. */
+  .career-tab-ad {
+    margin-top: 28px;
+  }
+
+  /* -------------------------------------------------------- intersticial
+     D135: tela cheia escurecida, o anúncio no meio, o fechar sempre à vista e
+     longe dele. Fica acima de tudo, como o anúncio de verdade. */
+
+  .ad-interstitial-backdrop {
+    position: fixed;
+    z-index: 95;
+    inset: 0;
+    background: color-mix(in oklab, #000 78%, transparent);
+  }
+
+  .ad-interstitial {
+    position: fixed;
+    z-index: 96;
+    inset: 0;
+    display: grid;
+    place-content: center;
+    padding: calc(64px + env(safe-area-inset-top)) 16px calc(24px + env(safe-area-inset-bottom));
+    outline: none;
+  }
+
+  .ad-interstitial .ad-box-label {
+    color: color-mix(in oklab, #fff 70%, transparent);
+  }
+
+  .ad-interstitial .ad-frame {
+    background:
+      repeating-linear-gradient(135deg, transparent 0 9px, color-mix(in oklab, var(--fg) 3.5%, transparent) 9px 18px),
+      var(--panel);
+  }
+
+  .ad-interstitial-close {
+    position: absolute;
+    top: calc(14px + env(safe-area-inset-top));
+    right: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 40px;
+    padding: 0 14px;
+    border: 1px solid color-mix(in oklab, #fff 35%, transparent);
+    border-radius: 999px;
+    background: color-mix(in oklab, #000 55%, transparent);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .ad-interstitial-close:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+  }
+
   /* Laboratório: todos os espaços lado a lado. */
   .lab-ads {
     display: flex;
@@ -332,4 +386,18 @@
   .lab-ads .ad-box {
     margin-inline: 0;
   }
+}
+
+/* ---------------------------------------------------------------------------
+   D135: telas que encolhem para o trilho 160×600 caber (notebook de 1536 px).
+   Fora das camadas de propósito: precisam vencer as larguras do Tailwind
+   (`max-w-6xl`, `max-w-[1280px]`). Só valem enquanto o trilho existe
+   (`data-ad-squeeze`, posto pelo AdRails antes da pintura).
+   ------------------------------------------------------------------------- */
+
+:root[data-ad-squeeze] .career-columns,
+:root[data-ad-squeeze] .career-header > div,
+:root[data-ad-squeeze] .hub,
+:root[data-ad-squeeze] .achievements-page {
+  max-width: var(--ad-squeeze);
 }

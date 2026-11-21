@@ -2229,19 +2229,26 @@ moldura de prévia no tamanho IAB exato:
 
 | Slot | Onde | PC | Celular |
 |---|---|---|---|
-| `trilho-esquerdo`, `trilho-direito` | hub, quem é você, desafio, resumo, conquistas, Termos, Privacidade | 300×600 ou 160×600, só com margem livre | oculto |
-| `carreira-trilho-*` | carreira (fora das três colunas) | 160×600 a partir de 1696 px, 300×600 a partir de 1976 px | oculto |
+| `trilho-esquerdo`, `trilho-direito` | hub, quem é você, desafio, resumo, conquistas, Termos, Privacidade | 300×600 ou 160×600, só com margem livre (hub e conquistas encolhem um pouco para caber) | oculto |
+| `carreira-trilho-*` | carreira (fora das três colunas) | 160×600 a partir de 1520 px (as colunas encolhem até 1104 px), 300×600 a partir de 1976 px | oculto |
 | `hub-rodape` | hub, abaixo dos cartões | 728×90 | 320×100 |
 | `resumo-numeros`, `resumo-jornal` | resumo, entre capítulos | 728×90 | 300×250 |
 | `desafio-ranking` | desafio do dia, coluna do ranking | 300×250 (some entre 1024 e 1279 px) | 300×250 |
 | `conquistas-rodape` | conquistas | 728×90 | 300×250 |
 | `perfil-rodape` | perfil (com conta) | 728×90 | 300×250 |
-| `ancora-celular` | resumo e conquistas, depois de rolar 240 px | oculto | 320×50 fixo no pé |
+| `ancora-celular` | resumo, conquistas e Desafio, depois de rolar 240 px (sai com o teclado aberto) | oculto | 320×50 fixo no pé |
+| `carreira-historico`, `carreira-trofeus` | fim das abas Histórico e Troféus da carreira | oculto | 300×250 |
 | `sorteio-recompensado` | intervalo do sorteio de clubes | 300×250 | 300×250 |
+| `intersticial-temporada`, `intersticial-fim-carreira` | começo de temporada nova; fim da carreira | 336×280 em tela escurecida | 320×480 em tela cheia |
+
+O intersticial nunca aparece nos 2 primeiros minutos da sessão nem dois em
+menos de 3 minutos, e só com a decisão nova assentada (sem resultado, revisão
+ou deslize na tela).
 
 Para ver: `pnpm dev`. A prévia vem ligada; o botão "Ads" na barra do topo do PC,
 o atalho **Alt + Shift + A**, a chave nos Ajustes (é o caminho no celular) ou a
-URL (`?ads=on`, `?ads=off`) ligam e desligam, e a escolha fica no aparelho. Em
+URL (`?ads=on`, `?ads=off`) ligam e desligam, e a escolha fica no aparelho.
+`?ads=all` liga e tira o limite do intersticial, para vê-lo sem esperar. Em
 produção a prévia não existe. Na suíte ponta a ponta (`VITE_ADS_PREVIEW=1`) ela
 existe desligada, e `e2e/anuncios.spec.ts` liga para testar.
 
@@ -2543,3 +2550,22 @@ Testes: `features/ads/slots.test.ts` (tamanhos IAB, telas proibidas, conta dos
 trilhos) e `e2e/anuncios.spec.ts` (desligada por padrão, tamanhos exatos, nada
 em cima de controle, trilhos fora do conteúdo, laço sem anúncio, atalho e
 recompensado).
+
+## D135: trilho no notebook de 1536 px e mais receita no celular (21/11/2026)
+
+Notebook e monitor Full HD do Windows abrem com escala de 125%: a página fica
+com uns 1536 × 730 px. Ali não havia trilho nenhum (nem no resumo, por falta de
+altura). Agora o trilho começa logo abaixo da barra do topo (cabe em 706 px de
+altura) e a carreira, o hub e as conquistas encolhem só o necessário para o
+160×600 caber (`RailPlace.min`, `data-ad-squeeze`). Em 1536 px a carreira fica
+com 1120 px e os dois trilhos. A criação de jogador e o Desafio não encolhem.
+
+No celular entram, como prévia: o intersticial (`AdInterstitial`,
+`requestInterstitial`) no começo de cada temporada nova e no fim da carreira,
+com limite de frequência; um 300×250 no fim das abas Histórico e Troféus da
+carreira; a âncora também no Desafio do dia, saindo com o teclado aberto. A
+análise ganhou a seção 12: todos os formatos possíveis no celular com o
+veredito, recompensados sem vantagem de jogo e os cuidados (categorias
+sensíveis bloqueadas, nada de casa de apostas). Testes: `slots.test.ts`
+(conta do encolhimento, 1536 × 730, limite do intersticial) e seis cenários
+novos em `e2e/anuncios.spec.ts`.

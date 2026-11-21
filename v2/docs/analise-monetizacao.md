@@ -18,7 +18,10 @@ integração de verdade é uma fase posterior (seção 10).
 - **O laço da carreira é sagrado** (D23: decisão, lance e jornal cabem numa tela
   sem rolar). Nenhum anúncio entra nele, nem no celular. No PC, só os
   **trilhos laterais** que moram fora das três colunas e só aparecem quando a
-  margem comporta o anúncio inteiro com folga (a partir de 1660 px).
+  margem comporta o anúncio inteiro com folga. Desde a D135, as colunas
+  encolhem até 1104 px para o 160×600 caber já no notebook Full HD com escala
+  de 125% (1536 px); no celular, entram só o intersticial na temporada nova
+  (com limite de frequência) e um retângulo no fim das abas de exploração.
 - **A receita mora nas telas de pausa e de exploração:** o resumo da carreira
   (tela mais longa, mais lida e mais compartilhada), o Desafio do dia (volta
   todo dia), as conquistas, o perfil e o hall. São as pausas cognitivas
@@ -34,10 +37,12 @@ integração de verdade é uma fase posterior (seção 10).
 - **CLS = 0:** todo espaço reserva a altura exata do formato antes de o anúncio
   existir; trilhos e âncora são fixos (não empurram nada); a página ganha
   `padding-bottom` igual à âncora.
-- **Futuro recomendado** (não implementado agora): intersticial de transição
-  entre carreiras pela H5 Games Ads (o produto do Google feito para jogos de
-  navegador), recompensado opcional em mais um ponto que não dê vantagem, e
-  Ad Manager com refresh por tempo só quando houver volume.
+- **Intersticial (D135, prévia):** começo de temporada nova e fim de carreira,
+  nunca nos 2 primeiros minutos e nunca dois em menos de 3. No celular, é ele
+  que carrega a receita (seção 12). Na integração, H5 Games Ads.
+- **Futuro recomendado:** recompensados sem vantagem de jogo (12.3), a página
+  de classificados no jornal, e Ad Manager com refresh por tempo quando houver
+  volume.
 
 ---
 
@@ -174,7 +179,7 @@ Políticas do Google (AdSense/Ad Manager) que pesam no posicionamento:
 | Trilhos laterais (PC largo) | Sim | Receita por tempo numa sessão longa; zero impacto no conteúdo. |
 | Âncora no pé (celular) | Sim, só em telas de leitura | Visibilidade máxima com 50 px; nunca no laço, na criação ou no login. |
 | Recompensado opcional | Sim, o do sorteio de clubes (já existia) | Troca justa: variedade de propostas sem vantagem (D118). |
-| Intersticial de transição | **Futuro** | Bom entre carreiras (fim de carreira → resumo, "Jogar de novo"), com limite de frequência. Exige H5 Games Ads. |
+| Intersticial de transição | Sim (prévia, D135) | Temporada nova e fim de carreira, com limite de frequência. Na integração, H5 Games Ads. |
 | Refresh por tempo | **Futuro** | Só com Ad Manager e volume. |
 | Vídeo in-stream / outstream | Não recomendado | Pesado, chama atenção demais, pede player; não combina com um jogo de leitura e decisão. |
 
@@ -243,10 +248,10 @@ Políticas do Google (AdSense/Ad Manager) que pesam no posicionamento:
 | Hub | Sim | 728×90 / 320×100 abaixo dos cartões; trilhos no PC largo | Primeira tela, muitas visitas; o anúncio vem depois da escolha dos modos, sem disputar com "Jogar". |
 | Quem é você (criação, também o Início do Craque) | Só trilhos (PC largo) | Nada no conteúdo | Formulário com botão de começar; no celular há barra fixa embaixo. |
 | Aparência | Não | | Editor de personagem; toque e arrasto. |
-| Carreira (laço) | Só trilhos a partir de 1660 px | 160×600 (ou 300×600 a partir de 1944 px) | D23: o laço cabe numa tela; anúncio só fora das colunas. |
+| Carreira (laço) | Trilhos no PC; no celular, só nas abas de exploração; intersticial na temporada nova | 160×600 a partir de 1520 px (as colunas encolhem até 1104 px), 300×600 a partir de 1976 px; 300×250 no fim de Histórico e Troféus no celular | D23: a decisão, o lance e o jornal ficam limpos; o resto é fora deles (D135). |
 | Sorteio de clubes | Sim, recompensado | 300×250 dentro do intervalo | Escolha da pessoa; troca justa (D118). |
 | Resumo / carreira compartilhada | Sim | 2 in-content + trilhos + âncora no celular | A tela mais longa e mais lida; pausa total. |
-| Desafio do dia | Sim | 300×250 na coluna do ranking; trilhos | Volta diária; a coluna lateral é leitura. |
+| Desafio do dia | Sim | 300×250 na coluna do ranking; trilhos; âncora no celular (sai enquanto se digita) | Volta diária; a coluna lateral é leitura. |
 | Hall | Sim (abre as conquistas) | o mesmo das conquistas | O hall antigo virou a tela de conquistas. |
 | Conquistas | Sim | 728×90 / 300×250 no pé; trilhos; âncora | Coleção; já tinha espaço (D113). |
 | Perfil | Só com conta | 728×90 / 300×250 no pé | Sem conta, o perfil é o login: nada. |
@@ -266,14 +271,16 @@ O registro no código é `apps/game/src/features/ads/slots.ts`.
 | Slot ID | Telas | PC (≥ 768 px) | Celular (< 768 px) | Função estratégica |
 |---|---|---|---|---|
 | `trilho-esquerdo`, `trilho-direito` | hub, quem é você, desafio, resumo, carreira compartilhada, conquistas (e o hall, que abre as conquistas), termos, privacidade | 300×600 quando a margem livre ≥ 348 px; 160×600 quando ≥ 208 px; senão oculto | Oculto | Receita por tempo numa sessão longa; zero impacto no conteúdo. |
-| `carreira-trilho-esquerdo`, `carreira-trilho-direito` | carreira (laço) | 160×600 a partir de 1696 px; 300×600 a partir de 1976 px (conteúdo de 1280 px) | Oculto | O único anúncio possível durante o jogo, sem tocar nas três colunas (D118). |
+| `carreira-trilho-esquerdo`, `carreira-trilho-direito` | carreira (laço) | 160×600 a partir de 1520 px (as colunas encolhem até 1104 px); 300×600 a partir de 1976 px | Oculto | O único anúncio possível durante o jogo, sem tocar nas três colunas (D118). |
 | `hub-rodape` | hub | 728×90 | 320×100 | Primeira tela; depois da escolha do modo. |
 | `resumo-numeros` | resumo, carreira compartilhada | 728×90 | 300×250 | Primeira pausa da leitura: depois dos números, antes dos troféus. Alta visibilidade. |
 | `resumo-jornal` | resumo, carreira compartilhada | 728×90 | 300×250 | Segunda pausa: depois da linha do tempo, antes do jornal. |
 | `desafio-ranking` | desafio do dia | 300×250 (coluna do ranking; some entre 1024 e 1279 px, onde a coluna tem 260 px) | 300×250 (depois das ranqueadas) | Público diário; a coluna é de leitura. |
 | `conquistas-rodape` | conquistas (e o hall) | 728×90 | 300×250 | Fim da coleção (D113). |
 | `perfil-rodape` | perfil, só com conta | 728×90 | 300×250 | Fim do perfil (D113). |
-| `ancora-celular` | resumo, carreira compartilhada, conquistas (e o hall) | Oculto | 320×50 fixo no pé, depois de rolar 240 px | Visibilidade perto de 100% nas telas de leitura. |
+| `ancora-celular` | resumo, carreira compartilhada, conquistas (e o hall), Desafio do dia | Oculto | 320×50 fixo no pé, depois de rolar 240 px; sai com o teclado aberto | Visibilidade perto de 100% nas telas de leitura. |
+| `carreira-historico`, `carreira-trofeus` | carreira, abas Histórico e Troféus (D135) | Oculto | 300×250 no fim da aba | O jogador passa a maior parte do tempo na carreira; as abas de exploração rolam e ficam fora do laço. |
+| `intersticial-temporada`, `intersticial-fim-carreira` | começo de temporada nova; fim da carreira, antes do resumo (D135) | 336×280 em tela escurecida | 320×480 em tela cheia | O formato que mais rende no celular. Limite: nunca nos 2 primeiros minutos, nunca dois em menos de 3. |
 | `sorteio-recompensado` | intervalo do sorteio de clubes | 300×250 | 300×250 | Recompensado opcional (D118). |
 
 ### 5.1 Por que cada um, em detalhe
@@ -321,9 +328,11 @@ O registro no código é `apps/game/src/features/ads/slots.ts`.
 
 Larguras do conteúdo medidas no PC: hub 1216 px; quem é você e desafio
 1312 px; coluna do resumo 896 px; conquistas 1152 px; Termos e Privacidade
-736 px; carreira 1280 px (três colunas).
+736 px; carreira 1280 px (três colunas). Revisado na D135 (seção 12): carreira,
+hub e conquistas encolhem até um mínimo (1104, 1104 e 1056 px) para o 160×600
+caber; o trilho começa logo abaixo da barra do topo.
 
-| Largura × altura | Hub | Quem é você / Desafio | Resumo | Conquistas | Termos | Carreira | In-content | Âncora |
+| Largura × altura da página | Hub | Quem é você / Desafio | Resumo | Conquistas | Termos | Carreira | In-content | Âncora |
 |---|---|---|---|---|---|---|---|---|
 | 360 × 640 | | | | | | | 300×250 / 320×100 | 320×50 |
 | 390 × 844 | | | | | | | 300×250 / 320×100 | 320×50 |
@@ -332,41 +341,21 @@ Larguras do conteúdo medidas no PC: hub 1216 px; quem é você e desafio
 | 1280 × 800 | | | | | 160×600 | | 728×90 | |
 | 1366 × 768 | | | 160×600 | | 160×600 | | 728×90 | |
 | 1440 × 900 | | | 160×600 | | 300×600 | | 728×90 | |
-| 1536 × 864 | | | 160×600 | | 300×600 | | 728×90 | |
-| 1600 × 900 | | | 300×600 | 160×600 | 300×600 | | 728×90 | |
+| 1536 × 730 (Full HD com escala 125%) | 160×600 (encolhe) | | 160×600 | 160×600 (encolhe) | 300×600 | 160×600 (encolhe) | 728×90 | |
+| 1600 × 900 | 160×600 (encolhe) | | 300×600 | 160×600 | 300×600 | 160×600 (encolhe) | 728×90 | |
 | 1920 × 1080 | 300×600 | 160×600 | 300×600 | 300×600 | 300×600 | 160×600 | 728×90 | |
 | 2560 × 1440 | 300×600 | 300×600 | 300×600 | 300×600 | 300×600 | 300×600 | 728×90 | |
 
 A conta: margem livre = (largura da tela − largura do conteúdo) ÷ 2. O trilho
-aparece se a margem ≥ largura do trilho + 48 px. Altura mínima: barra do topo
-(e a barra de capítulos, no resumo, ou o cabeçalho do jogador, na carreira) +
-rótulo + 600 px + 16 px.
+aparece se a margem ≥ largura do trilho + 48 px. Se não cabe e a tela aceita
+encolher, o conteúdo fica com a largura da tela − 416 px (o 160×600 e 24 px de
+cada lado), nunca abaixo do mínimo dela. Altura mínima da página: 706 px (barra
+do topo, folga, rótulo, 600 px e 16 px embaixo).
 
-Laptops de 1366 a 1536 px (a maioria dos PCs no Brasil) só ganham trilho nas
-telas de coluna estreita (resumo, Termos): é de propósito. Espremer o jogo para
-caber um 160×600 custaria mais em experiência do que renderia. Nas outras telas
-desses laptops, a receita do PC vem do in-content.
-
----|---|---|---|---|---|
-| 360 × 640 | não | não | não | 300×250 / 320×100 | 320×50 |
-| 390 × 844 | não | não | não | 300×250 / 320×100 | 320×50 |
-| 768 × 1024 | não | não | não | 728×90 | não |
-| 1024 × 768 | não | não | não | 728×90 | não |
-| 1280 × 800 | não | 160×600 | não | 728×90 | não |
-| 1366 × 768 | não | 300×600 | não | 728×90 | não |
-| 1440 × 900 | não | 300×600 | não | 728×90 | não |
-| 1536 × 864 | 160×600 | 300×600 | não | 728×90 | não |
-| 1920 × 1080 | 300×600 | 300×600 | 160×600 | 728×90 | não |
-| 2560 × 1440 | 300×600 | 300×600 | 300×600 | 728×90 | não |
-
-A conta: margem livre = (largura da tela − largura do conteúdo) ÷ 2. O trilho
-aparece se a margem ≥ largura do trilho + 48 px. Altura mínima: barra do topo
-(ou cabeçalho da carreira) + 600 px + 16 px.
-
-Laptops de 1366 a 1440 px (a maioria dos PCs no Brasil) ficam sem trilho nas
-telas largas: é de propósito. Espremer o jogo para caber um 160×600 custaria
-mais em experiência do que renderia. Nessas telas, a receita do PC vem do
-in-content.
+A criação de jogador e o Desafio não encolhem: são telas de começar, com
+formulário e o botão principal, e encolher 200 px apertaria demais as quatro
+colunas da criação. Nelas, a receita do notebook vem do in-content e do
+intersticial.
 
 ---
 
@@ -381,8 +370,8 @@ in-content.
   inteiro: a página rola mais 50 px no fim.
 - **Avisos e camadas.** Avisos (toasts) ficam no topo: não brigam com a
   âncora. O aviso de cookies sobe acima da âncora. Folhas e modais cobrem a
-  âncora (ela tem camada menor). O teclado virtual não acontece nessas telas
-  (são de leitura).
+  âncora (ela tem camada menor). O Desafio do dia tem campo de nome: com um
+  campo de texto em foco (teclado aberto), a âncora sai (D135).
 - **Clique acidental.** Nenhum in-content encosta em botão: o capítulo tem 56 px
   de respiro em cima e embaixo. A âncora não fica colada em nada clicável: a
   página termina 50 px acima dela.
@@ -391,7 +380,8 @@ in-content.
 
 ## 8. Formatos futuros (recomendação, não implementado agora)
 
-1. **Intersticial de transição (H5 Games Ads / Ad Placement API).** É o produto
+1. **Intersticial de transição (H5 Games Ads / Ad Placement API).** Já na
+   prévia desde a D135 (seção 12); falta a integração. É o produto
    do Google para jogos de navegador (`adBreak()` com tipos `start`, `next`,
    `pause`, `browse`, `reward`), com limite de frequência e as regras do Better
    Ads já embutidas. Lugares certos: ao encerrar a carreira, antes do resumo
@@ -471,3 +461,96 @@ colocados), **preenchimento** (tamanhos padrão), **número de telas por sessão
   fica no aparelho. Em produção a prévia não existe; na suíte ponta a ponta ela
   existe desligada e os testes de `e2e/anuncios.spec.ts` a ligam.
 - **Produção:** nada muda para o jogador. Nenhum script de anúncio novo.
+
+---
+
+## 12. Revisão D135: o notebook de 1536 px e a receita do celular
+
+### 12.1 A armadilha do 1536 px (confirmada e corrigida)
+
+O Windows abre o notebook e o monitor Full HD com escala de 125% por padrão:
+a tela de 1920 × 1080 vira 1536 × 864 em px de CSS, e a página, descontadas a
+barra de tarefas, as abas e a barra de endereço, fica com uns **1536 × 730**.
+Medido no navegador antes da correção:
+
+| Página | Hub | Carreira | Resumo |
+|---|---|---|---|
+| 1536 × 864 | nenhum | nenhum (colunas de 1280 px) | 160×600 |
+| 1536 × 730 | nenhum | nenhum | **nenhum** (faltava altura) |
+| 1440 × 760 | nenhum | nenhum | nenhum (faltava altura) |
+
+Dois problemas, não um: a **largura** (a carreira com 1280 px deixa só 128 px
+de margem) e a **altura** (o trilho começava abaixo do cabeçalho do jogador ou
+da barra de capítulos, e precisava de 762 a 788 px de página).
+
+Correção:
+
+1. **O trilho começa logo abaixo da barra do topo** e passa por cima das faixas
+   que cruzam a tela (o cabeçalho do jogador, a barra de capítulos), na
+   margem, onde elas não têm nada. Precisa de 706 px de altura: cabe em 730.
+2. **A tela encolhe só o necessário.** Carreira e hub podem ir de 1280 e
+   1216 px até 1104 px; conquistas, de 1152 até 1056. Em 1536 px, os três ficam
+   com 1120 px e o 160×600 entra com 24 px de folga de cada lado. A coluna do
+   meio da carreira fica com 448 px (em 1024 px de tela, o jogo já usa 288
+   px). A raiz ganha `data-ad-squeeze` antes da pintura: nada pula.
+3. **Não encolhem:** a criação de jogador e o Desafio (formulário e o botão
+   principal); em 1536 px, ficam sem trilho.
+
+Depois: em 1536 × 730, carreira com 160×600 dos dois lados, colunas de 1120
+px, sem rolagem; hub e resumo com 160×600. Teste ponta a ponta próprio (D135).
+
+### 12.2 Todos os formatos para o celular, e o que vale aqui
+
+O celular deve ser 70% ou mais do tráfego. Com só o pós-carreira, a receita do
+celular ficaria pequena. Estes são os formatos possíveis num jogo de navegador
+no celular, com o veredito:
+
+| Formato | Como funciona | Rende | Veredito |
+|---|---|---|---|
+| Âncora 320×50 | Fixa no pé | eCPM baixo, visibilidade perto de 100% | **Sim**, telas de leitura; agora também no Desafio (sai com o teclado aberto) |
+| In-content 300×250 / 320×100 | No meio do conteúdo que rola | Médio, o 300×250 é o de mais demanda | **Sim**; agora também no fim das abas Histórico e Troféus da carreira |
+| **Intersticial** (H5 Games Ads, `adBreak` tipo `next`) | Tela cheia numa pausa, com fechar | **O maior eCPM de display no celular**, várias vezes o de um banner | **Sim (prévia)**: começo de temporada nova e fim de carreira; nunca nos 2 primeiros minutos, nunca dois em menos de 3 |
+| Recompensado (H5 `reward`) | A pessoa escolhe ver em troca de algo | Alto, e sem irritar (é escolha) | **Sim** no sorteio de clubes; mais pontos na 12.3 |
+| Intersticial recompensado (Ad Manager) | Recompensado que se oferece numa pausa | Alto | Depois, com Ad Manager; o H5 cobre o caso |
+| Vinheta do AdSense (Auto ads) e intersticial web do Ad Manager | Aparecem ao clicar num link que recarrega a página | Alto | **Não funciona aqui**: o jogo não recarrega a página (SPA). Por isso o H5 Games Ads |
+| Pré-rolagem (H5 `preroll`) | Anúncio antes de o jogo abrir | Alto | **Não**: estraga a primeira impressão, piora o carregamento e afasta quem chega |
+| Offerwall | Anúncio para liberar conteúdo | Médio | **Não**: nada no jogo é bloqueado |
+| Vídeo outstream | Vídeo que toca no meio do texto | Alto | **Não**: pesado, chama atenção demais |
+| Pop-up, pop-under, notificação de anúncio | | | **Nunca**: Better Ads e política do Google |
+| Página de classificados no jornal | Uma página "Classificados" com anúncio a cada N edições do jornal do resumo, rotulada | Médio, combina com o tema | **Próximo passo** (PC e celular) |
+| Patrocínio direto | Uma marca patrocina o Desafio do dia (selo e uma arte) | Alto no nicho de futebol | **Futuro**, com volume; nunca casa de apostas (público com menores, regras da Lei 14.790/2023) |
+
+Com o que entrou, uma sessão típica no celular (uma carreira de uns 15
+minutos) passa de cerca de 4 impressões de banner, quase todas depois da
+carreira, para algo como 2 a 4 intersticiais, 1 ou 2 retângulos nas abas e o
+que já havia. Como o intersticial paga várias vezes o banner, a receita por
+sessão no celular passa a vir principalmente dele. É ordem de grandeza: o
+número real só aparece com as primeiras semanas no ar.
+
+### 12.3 Recompensados que valem (sem vantagem de jogo)
+
+As duas perguntas do `AI_RULES.md` valem para anúncio também: nada que só
+quem assiste ganhe vantagem (vira obrigatório e desequilibra).
+
+- **Tentativa extra do Desafio, amistosa** (fora do ranking): mais jogo para
+  quem quer, sem mexer no ranking. Boa troca.
+- **Estilos da imagem de compartilhar** (fundo, moldura da carta): só visual,
+  e todo compartilhamento leva o jogo junto.
+- **Itens de aparência extras** no criador de jogador: só visual.
+- O sorteio de clubes (D118) continua: variedade, não vantagem.
+
+### 12.4 O que mais vale para o PC
+
+- O encolhimento da 12.1 é o ganho grande: notebook Full HD com 125% é o PC
+  mais comum.
+- O intersticial também vale no PC (336×280 numa tela escurecida).
+- A página de classificados no jornal funciona igual no PC.
+
+### 12.5 Cuidados que entram junto
+
+- **Bloquear categorias sensíveis** no AdSense (apostas, jogos de azar,
+  conteúdo adulto): o público de jogo de futebol tem muitos menores.
+- **Limite de frequência** do intersticial no próprio código (o H5 também
+  tem um) e nunca no meio de uma decisão: só com a decisão nova assentada, sem
+  resultado, revisão ou deslize na tela.
+- `?ads=all` liga a prévia sem o limite, só para ver o intersticial na hora.

@@ -1,7 +1,7 @@
 import { GuestNotice } from "../../../features/account/GuestNotice";
 import { LegalFinePrint } from "../../../features/account/LegalFinePrint";
 import { AdFrame } from "../../../features/ads/AdFrame";
-import { AD_SLOTS, type AdSlotId, ANCHOR_SIZE, IAB } from "../../../features/ads/slots";
+import { AD_SLOTS, type AdSlotId, ANCHOR_SIZE, IAB, IAB_INTERSTITIAL } from "../../../features/ads/slots";
 import { CookieBanner } from "../../../features/consent/CookieBanner";
 import { useT } from "../../../i18n/useT";
 import { Skeleton } from "../../../ui/Skeleton";
@@ -77,12 +77,13 @@ export function AccountSection({ index }: { index: number }) {
       <p className="eyebrow mt-8 mb-3">{t("lab.account.ads")}</p>
       <div className="lab-ads">
         {(Object.keys(AD_SLOTS) as AdSlotId[]).map((id) => (
-          <AdFrame key={id} id={id} kind={AD_SLOTS[id].kind} desktop={AD_SLOTS[id].desktop} mobile={AD_SLOTS[id].mobile} />
+          <AdFrame key={id} id={id} kind={AD_SLOTS[id].kind} desktop={AD_SLOTS[id].desktop ?? AD_SLOTS[id].mobile} mobile={AD_SLOTS[id].mobile ?? AD_SLOTS[id].desktop} />
         ))}
         {/* No laboratório, trilhos e âncora aparecem em qualquer largura. */}
         <AdFrame id="trilho" kind="rail" desktop={IAB.halfPage} mobile={IAB.halfPage} />
         <AdFrame id="trilho" kind="rail" desktop={IAB.skyscraper} mobile={IAB.skyscraper} />
         <AdFrame id="ancora-celular" kind="anchor" desktop={ANCHOR_SIZE} mobile={ANCHOR_SIZE} />
+        <AdFrame id="intersticial" kind="interstitial" desktop={IAB_INTERSTITIAL.desktop} mobile={IAB_INTERSTITIAL.mobile} />
       </div>
 
       <p className="eyebrow mt-8 mb-3">{t("lab.account.legal")}</p>

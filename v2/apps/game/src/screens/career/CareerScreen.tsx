@@ -1,13 +1,13 @@
 import { MatchAtmosphere } from "./MatchAtmosphere";
-import { AdRails } from "../../features/ads/AdRails";
-import { CAREER_CONTENT, RAIL_TOP } from "../../features/ads/slots";
+import { AdSlot } from "../../features/ads/AdSlot";
+import { requestInterstitial } from "../../features/ads/interstitial";
 import { SeasonDecision } from "./SeasonDecision";
 import { useSeasonFlow } from "../../features/career/useSeasonFlow";
 import { matchTheme } from "../../features/career/matchTheme";
 import { Tabs as BaseTabs } from "@base-ui/react/tabs";
 import type { Career } from "@craque/engine";
 import { CalendarDays, Crosshair, ListOrdered, Trophy, UserRound } from "lucide-react";
-import { type CSSProperties, useEffect, useLayoutEffect, useState } from "react";
+import { type CSSProperties, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { type Screen, useNavigation } from "../../app/navigation";
 import { clubStyle } from "../../features/career/clubColors";
 import { usePlayAnnouncement } from "../../features/career/playAnnouncement";
@@ -97,6 +97,22 @@ export function CareerScreen() {
     return () => setGuard(null);
   }, [setGuard]);
 
+  // D135: o intersticial da temporada nova, numa pausa de verdade: a decisão
+  // nova já assentou, sem resultado, revisão ou deslize na tela. O limite de
+  // frequência (2 minutos de sessão, 3 entre um e outro) fica no pedido.
+  const seasonsSeen = useRef<number | null>(null);
+  useEffect(() => {
+    if (!career || career.end || transitioning || matchResult || recall || review) return;
+    if (seasonsSeen.current === null || career.history.length < seasonsSeen.current) {
+      seasonsSeen.current = career.history.length;
+      return;
+    }
+    if (career.history.length === seasonsSeen.current) return;
+    seasonsSeen.current = career.history.length;
+    const timer = window.setTimeout(() => requestInterstitial("temporada"), 1200);
+    return () => window.clearTimeout(timer);
+  }, [career, transitioning, matchResult, recall, review]);
+
   if (!career) {
     return (
       <Loading label={t("career.loading")} className="min-h-[60dvh]" />
@@ -123,12 +139,14 @@ export function CareerScreen() {
     feedback("reveal");
     useCareer.getState().markSummary();
     go("summary", { force: true });
+    requestInterstitial("fim-carreira");
   };
 
   const retire = () => {
     feedback("back");
     useCareer.getState().retire();
     go("summary", { force: true });
+    requestInterstitial("fim-carreira");
   };
 
   const club = career.contract?.club ?? career.history[career.history.length - 1]?.club ?? null;
@@ -209,8 +227,6 @@ export function CareerScreen() {
               <ExploreColumn career={career} onReplay={onReplay} challenge={challenge} />
             </div>
           </div>
-          {/* D118 e D134: anúncio só nas margens das telas largas, fora das colunas do laço. */}
-          <AdRails content={CAREER_CONTENT} top={RAIL_TOP.career} prefix="carreira-trilho" anchor="contained" />
         </main>
       ) : (
         <BaseTabs.Root
@@ -244,11 +260,14 @@ export function CareerScreen() {
                   <h2 className="eyebrow mb-3">{t("career.tabs.nation")}</h2>
                   <NationPanel career={career} />
                 </section>
+                {/* D135: aba de exploração, fora do laço; rola por dentro. */}
+                <AdSlot id="carreira-historico" className="career-tab-ad" />
               </div>
             </BaseTabs.Panel>
             <BaseTabs.Panel value="trophies" className="scroll-panel">
               <div className="scroll-panel-inner">
                 <TrophiesPanel career={career} />
+                <AdSlot id="carreira-trofeus" className="career-tab-ad" />
               </div>
             </BaseTabs.Panel>
           </main>

@@ -987,7 +987,8 @@ export const pt = {
 
   ads: {
     label: "Publicidade",
-    kinds: { inline: "No conteúdo", reward: "Recompensado", rail: "Trilho lateral", anchor: "Âncora fixa" },
+    kinds: { inline: "No conteúdo", reward: "Recompensado", rail: "Trilho lateral", anchor: "Âncora fixa", interstitial: "Intersticial" },
+    interstitial: { title: "Anúncio em tela cheia", close: "Fechar" },
     preview: {
       badge: "AD · PREVIEW",
       desktop: "PC",

@@ -2,10 +2,11 @@ import { lazy, Suspense, type ReactNode } from "react";
 import { SCREEN_GAME, useNavigation } from "./navigation";
 import { AccountButton } from "../features/account/AccountButton";
 import { AdAnchor } from "../features/ads/AdAnchor";
+import { AdInterstitial } from "../features/ads/AdInterstitial";
 import { AdPreviewToggle } from "../features/ads/AdPreviewToggle";
 import { AdRails } from "../features/ads/AdRails";
 import { ADS_PREVIEW_AVAILABLE } from "../features/ads/preview";
-import { RAIL_SCREENS, RAIL_TOP } from "../features/ads/slots";
+import { RAIL_SCREENS } from "../features/ads/slots";
 import { CookieBanner } from "../features/consent/CookieBanner";
 import { SettingsMenu } from "../features/settings/SettingsMenu";
 import { useT } from "../i18n/useT";
@@ -88,8 +89,9 @@ export function AppShell({ children }: { children: ReactNode }) {
         {children}
       </main>
       {/* D134: trilhos do PC e âncora do celular, fora do conteúdo (prévia). */}
-      {rail ? <AdRails key={screen} content={rail.content} below={rail.below} top={RAIL_TOP.page} prefix="trilho" anchor="fixed" /> : null}
+      {rail ? <AdRails key={screen} place={rail} prefix={screen === "career" ? "carreira-trilho" : "trilho"} /> : null}
       <AdAnchor />
+      <AdInterstitial />
       <Toaster closeLabel={t("common.close")} />
       <UnlockAnnouncer />
       <CookieBanner />
