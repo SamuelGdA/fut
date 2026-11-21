@@ -54,28 +54,21 @@ test("do hub ao Resumo, montando o jogador", async ({ page }, info) => {
   expect((await page.locator(".summary-chapter-title").allTextContents()).map((title) => title.toLowerCase())).toEqual(chapters.map((title) => title.toLowerCase()));
   await expect(page.getByRole("heading", { name: "Biografia" })).toHaveCount(0);
 
-  // A imagem da carreira (D118) abre com a prévia e fecha.
-  await page.getByRole("button", { name: "Imagem", exact: true }).click();
-  await expect(page.getByRole("dialog", { name: "Imagem da carreira" })).toBeVisible();
+  // A imagem da carreira (D118) abre no Compartilhar (D133), com a prévia, e fecha.
+  await expect(page.getByRole("button", { name: "Imagem", exact: true })).toHaveCount(0);
+  await page.getByRole("button", { name: "Compartilhar", exact: true }).click();
+  await expect(page.getByRole("dialog", { name: "Compartilhar carreira" })).toBeVisible();
   await expect(page.locator(".share-card").first()).toBeVisible();
   await page.keyboard.press("Escape");
-  await expect(page.getByRole("dialog", { name: "Imagem da carreira" })).toHaveCount(0);
+  await expect(page.getByRole("dialog", { name: "Compartilhar carreira" })).toHaveCount(0);
 
   // Jogar de novo volta para a identidade com o rascunho intacto.
   await page.getByRole("button", { name: "Jogar de novo" }).click();
   await expect(page.getByRole("textbox", { name: "Nome", exact: true })).toHaveValue("Ribeiro");
 });
 
-test("Compartilhar abre o painel: link curto com a imagem, uma rede por botão (D132)", async ({ page }) => {
-  // O servidor do link curto, simulado: guarda o que o jogo mandou.
-  const uploads: { size: number; type: string; token: string; name: string; lang: string }[] = [];
-  await page.route("**/api/compartilhar", async (route) => {
-    const body = route.request().postDataBuffer() ?? Buffer.alloc(0);
-    const text = body.toString("latin1");
-    const field = (name: string) => new RegExp(`name="${name}"\\r\\n\\r\\n([^\\r]*)`).exec(text)?.[1] ?? "";
-    uploads.push({ size: body.length, type: /Content-Type: (image\/\w+)/.exec(text)?.[1] ?? "", token: field("token"), name: field("name"), lang: field("lang") });
-    await route.fulfill({ status: 201, contentType: "application/json", body: JSON.stringify({ url: "https://futeiro.com/c/AbCdEfGhJk" }) });
-  });
+test("Compartilhar no computador: cada rede abre a tela de postar, e a imagem se baixa (D133)", async ({ page }, info) => {
+  test.skip(info.project.name !== "desktop", "No celular, o compartilhamento é o do aparelho.");
   await page.addInitScript(() => {
     const opened: string[] = [];
     Object.assign(window, { __opened: opened });
@@ -88,51 +81,76 @@ test("Compartilhar abre o painel: link curto com a imagem, uma rede por botão (
   await jogoRapido(page);
   for (let turn = 0; turn < 3; turn += 1) await jogarTurno(page);
   await encerrar(page);
-  await page.getByRole("button", { name: "Compartilhar" }).click();
+  const surname = (await page.getByRole("heading", { level: 1 }).textContent())!.trim();
+  const name = surname.toLowerCase().replace(/(^|[\s'-])(\p{L})/gu, (_m, before: string, letter: string) => `${before}${letter.toUpperCase()}`);
+  await page.getByRole("button", { name: "Compartilhar", exact: true }).click();
   const sheet = page.getByRole("dialog", { name: "Compartilhar carreira" });
-  await expect(sheet.getByRole("status")).toHaveText("Link pronto: a imagem vai na prévia da mensagem.", { timeout: 30_000 });
+  await expect(sheet.locator(".share-card")).toBeVisible();
 
-  // O jogo mandou a imagem (JPEG) e o link de replay, com o nome escrito como gente.
-  expect(uploads).toHaveLength(1);
-  expect(uploads[0]?.type).toBe("image/jpeg");
-  expect(uploads[0]?.size).toBeGreaterThan(10_000);
-  expect(uploads[0]?.token).toMatch(/^[zj]/);
-  const name = uploads[0]?.name ?? "";
-  // Escrito como gente: só a primeira letra de cada parte em maiúscula.
-  expect(name).toMatch(/^\p{Lu}[\p{Ll}' -]*(?: \p{Lu}[\p{Ll}'-]*)*$/u);
-  expect(uploads[0]?.lang).toBe("pt");
-  const message = sheet.getByRole("textbox", { name: "Mensagem" });
-  await expect(message).toHaveValue(`Olha a carreira que eu fiz com o ${name} no Futeiro! Monte o seu jogador e escolha a sua história também.`);
+  // Só redes que abrem a tela de postar; nada que só copia, e a mensagem não se edita.
+  for (const gone of ["Discord", "Instagram", "Copiar link", "Copiar mensagem", "Copiar imagem", "Mais opções"]) await expect(sheet.getByRole("button", { name: gone })).toHaveCount(0);
+  await expect(sheet.getByRole("textbox")).toHaveCount(0);
 
-  // A mensagem pode mudar; cada rede abre com ela e com o link curto.
-  await message.fill("Minha carreira no Futeiro");
+  const message = `Olha a carreira que eu fiz com o ${name} no Futeiro! Monte o seu jogador e escolha a sua história também.`;
   for (const network of ["WhatsApp", "X", "Facebook", "Telegram", "Reddit"]) await sheet.getByRole("button", { name: network, exact: true }).click();
   const opened = await page.evaluate(() => (window as unknown as { __opened: string[] }).__opened);
-  expect(opened[0]).toBe(`https://wa.me/?text=${encodeURIComponent("Minha carreira no Futeiro\nhttps://futeiro.com/c/AbCdEfGhJk")}`);
-  expect(opened[1]).toBe(`https://x.com/intent/post?text=${encodeURIComponent("Minha carreira no Futeiro")}&url=${encodeURIComponent("https://futeiro.com/c/AbCdEfGhJk")}`);
-  expect(opened[2]).toBe(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent("https://futeiro.com/c/AbCdEfGhJk")}`);
-  expect(opened[3]).toContain("https://t.me/share/url?url=");
-  expect(opened[4]).toContain("https://www.reddit.com/submit?url=");
+  const link = new URL(page.url()).origin.replace(/^http:/, "https:");
+  expect(opened[0]).toBe(`https://wa.me/?text=${encodeURIComponent(`${message}\n${link}`)}`);
+  expect(opened[1]).toBe(`https://x.com/intent/post?text=${encodeURIComponent(message)}&url=${encodeURIComponent(link)}`);
+  expect(opened[2]).toBe(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(link)}`);
+  expect(opened[3]).toBe(`https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent(message)}`);
+  expect(opened[4]).toBe(`https://www.reddit.com/submit?url=${encodeURIComponent(link)}&title=${encodeURIComponent(message)}`);
 
-  // Discord não tem botão de compartilhar: a mensagem com o link vai para a área de transferência.
-  await sheet.getByRole("button", { name: "Discord", exact: true }).click();
-  await expect(page.getByText("Cole no Discord")).toBeVisible();
-  // A área de transferência do Windows guarda a quebra de linha como \r\n.
-  expect((await page.evaluate(() => navigator.clipboard.readText())).replace(/\r\n/g, "\n")).toBe("Minha carreira no Futeiro\nhttps://futeiro.com/c/AbCdEfGhJk");
-  await sheet.getByRole("button", { name: "Copiar link" }).click();
-  expect(await page.evaluate(() => navigator.clipboard.readText())).toBe("https://futeiro.com/c/AbCdEfGhJk");
+  // Sem o sobrenome, a mensagem também não o diz.
+  await sheet.getByRole("switch", { name: "Mostrar sobrenome" }).click();
+  await sheet.getByRole("button", { name: "WhatsApp", exact: true }).click();
+  const anonymous = await page.evaluate(() => (window as unknown as { __opened: string[] }).__opened.at(-1)!);
+  expect(decodeURIComponent(anonymous)).toContain("Olha a carreira que eu fiz no Futeiro!");
+
+  // A imagem se baixa para mandar junto.
+  const downloading = page.waitForEvent("download");
+  await sheet.getByRole("button", { name: "Baixar imagem", exact: true }).click();
+  expect((await downloading).suggestedFilename()).toBe("craque-carreira.png");
 });
 
-test("sem o link curto, o painel avisa e as redes vão com o endereço do jogo (D132)", async ({ page }) => {
-  await page.route("**/api/compartilhar", (route) => route.fulfill({ status: 503, body: "{}" }));
+test("Compartilhar no celular: imagem e mensagem juntas, ou só o convite (D133)", async ({ page }, info) => {
+  test.skip(info.project.name !== "celular", "No computador, cada rede tem o seu botão.");
+  await page.addInitScript(() => {
+    const shared: { files: number; type: string; text: string }[] = [];
+    Object.assign(window, { __shared: shared });
+    Object.defineProperty(navigator, "canShare", { configurable: true, value: () => true });
+    Object.defineProperty(navigator, "share", {
+      configurable: true,
+      value: async (data: ShareData) => {
+        shared.push({ files: data.files?.length ?? 0, type: data.files?.[0]?.type ?? "", text: data.text ?? "" });
+      },
+    });
+  });
   await abrirCraque(page);
   await jogoRapido(page);
   for (let turn = 0; turn < 2; turn += 1) await jogarTurno(page);
   await encerrar(page);
-  await page.getByRole("button", { name: "Compartilhar" }).click();
+  await page.getByRole("button", { name: "Compartilhar", exact: true }).click();
   const sheet = page.getByRole("dialog", { name: "Compartilhar carreira" });
-  await expect(sheet.getByRole("status")).toContainText("não ficou pronto", { timeout: 30_000 });
-  await expect(sheet.getByRole("button", { name: "WhatsApp", exact: true })).toBeEnabled();
+  await expect(sheet.locator(".share-card")).toBeVisible();
+  await expect(sheet.getByRole("button", { name: "WhatsApp" })).toHaveCount(0);
+  await expect(sheet.getByRole("textbox")).toHaveCount(0);
+
+  await sheet.getByRole("button", { name: "Compartilhar", exact: true }).click();
+  await expect.poll(() => page.evaluate(() => (window as unknown as { __shared: unknown[] }).__shared.length)).toBe(1);
+  let shared = await page.evaluate(() => (window as unknown as { __shared: { files: number; type: string; text: string }[] }).__shared);
+  expect(shared[0]).toMatchObject({ files: 1, type: "image/png" });
+  expect(shared[0]?.text).toMatch(/^Olha a carreira que eu fiz com o .+ no Futeiro! Monte o seu jogador e escolha a sua história também\.\nhttps:\/\/\S+$/);
+
+  // Sem a imagem do jogador: só o convite para jogar, e nada para baixar.
+  await sheet.getByRole("switch", { name: "Mandar a imagem do jogador" }).click();
+  await expect(sheet.locator(".share-card")).toHaveCount(0);
+  await expect(sheet.getByRole("button", { name: "Baixar imagem" })).toHaveCount(0);
+  await sheet.getByRole("button", { name: "Compartilhar", exact: true }).click();
+  await expect.poll(() => page.evaluate(() => (window as unknown as { __shared: unknown[] }).__shared.length)).toBe(2);
+  shared = await page.evaluate(() => (window as unknown as { __shared: { files: number; type: string; text: string }[] }).__shared);
+  expect(shared[1]?.files).toBe(0);
+  expect(shared[1]?.text).toMatch(/^Bora jogar\? No Futeiro você monta o seu jogador e escolhe a sua história\.\nhttps:\/\/\S+$/);
 });
 
 test("o link da carreira abre o resumo só de leitura, sem tocar no save de quem abre", async ({ page }) => {
@@ -161,7 +179,7 @@ for (const theme of ["light", "dark"] as const) {
     const replay=await readFile(new URL("./fixtures/colecao-m43.json",import.meta.url));
     const token=deflateRawSync(replay).toString("base64url");
     await abrir(page,{theme},`/#c=z${token}`);
-    await page.getByRole("button",{name:"Imagem",exact:true}).click();
+    await page.getByRole("button",{name:"Compartilhar",exact:true}).click();
     const card=page.locator(".share-card");
     await expect(card).toBeVisible();
     // Muitos destaques: a faixa mostra o que cabe e o resto vira "+N"; nada sai do quadro.

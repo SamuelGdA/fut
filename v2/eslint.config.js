@@ -50,14 +50,6 @@ export default defineConfig([
   },
 
   {
-    // O Worker do site (D132): roda na Cloudflare, com as APIs de service worker.
-    files: ["apps/game/worker/**/*.ts"],
-    languageOptions: {
-      globals: globals.serviceworker,
-    },
-  },
-
-  {
     // Scripts clássicos da abertura (D114): rodam no navegador antes do jogo.
     files: ["apps/game/public/**/*.js"],
     languageOptions: {

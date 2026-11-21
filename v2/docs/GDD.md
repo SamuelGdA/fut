@@ -2197,15 +2197,14 @@ com jogos), no fim.
 - **Copiar link**: a carreira inteira comprimida no fragmento da URL. Abrir o
   link reconstrói o resumo por replay, em modo leitura.
 
-*Como ficou (D132):* **Compartilhar** abre um painel com a imagem, a
-mensagem pronta (editável) e um botão por rede: WhatsApp, X, Facebook,
-Telegram, Reddit, Discord e Instagram, mais copiar link, copiar mensagem,
-copiar imagem (computador), baixar imagem e mais opções (celular). As redes
-recebem a mensagem e um link curto, `futeiro.com/c/<código>`, cuja prévia é a
-imagem da carreira: é assim que imagem e mensagem chegam juntas. O link curto
-vale seis meses e abre o resumo da carreira. Discord recebe a mensagem copiada;
-Instagram, o arquivo pelo compartilhar do aparelho (celular) ou baixado
-(computador).
+*Como ficou (D133):* o resumo tem **Compartilhar** e **Copiar carreira**
+(o botão Imagem saiu). Compartilhar abre um painel com a imagem e "Mostrar
+sobrenome"; a mensagem é pronta e não se edita. No computador, um botão por
+rede (WhatsApp, X, Facebook, Telegram, Reddit) abre a tela de postar ou mandar
+com a mensagem e o endereço do jogo, e **Baixar imagem** guarda o PNG para
+mandar junto. No celular, **Compartilhar** abre o compartilhamento do aparelho
+com a imagem e a mensagem juntas; com "Mandar a imagem do jogador" desligado,
+vai só o convite para jogar. Nada fica guardado no servidor.
 
 *Como ficou (D130):* o botão do resumo chama **Copiar carreira** e é o único
 que leva o link da carreira. **Compartilhar** manda a imagem da carreira
@@ -2546,11 +2545,10 @@ recarregar** (remove só o save). Ela avisa que a carreira continua salva.
   na hora, antes do primeiro toque (até 6 s). Chegando com o site aberto, ela
   espera em silêncio, porque recarregar encerraria a sessão do Craque.
   *D131:* ela entra no próximo lugar seguro: hub, início do Craque ou "Jogar
-  de novo", sem carreira em andamento (uma carreira deixada pelo "Sair" ainda
-  conta como em andamento). A troca é instantânea: a instalação velha é
+  de novo". *D133:* inclusive depois do "Sair" no meio de uma carreira: o
+  Craque não tem continuar, então ela já estava encerrada. A troca é instantânea: a instalação velha é
   desligada e a página recarrega do servidor, com a tela "Atualizando o
-  Futeiro…" por cima. No computador, "Compartilhar" copia a imagem e o convite
-  para colar com Ctrl+V.
+  Futeiro…" por cima.
 - **Barreiras de erro** em três níveis: a da raiz (tela inteira), uma por tela
   (a casca fica de pé, com a volta para o Início) e uma por trecho (capítulo
   do resumo, área do laboratório, painel de ajustes). A revelação que falhar

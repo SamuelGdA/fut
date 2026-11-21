@@ -1,4 +1,3 @@
-import { useCareer } from "../features/career/store";
 import { cacheGame } from "./modeCache";
 import { SCREEN_GAME, useNavigation } from "./navigation";
 import { useEffect, useState } from "react";
@@ -18,14 +17,16 @@ import { notify } from "../ui/toast/notify";
  * uma versão esperando, o jogo troca na hora, antes de o jogador tocar em
  * qualquer coisa (nada se perde: ainda não há carreira na memória). Se a
  * versão nova chega com o site aberto, ela espera em silêncio até um momento
- * seguro (D131): ir para o hub, para o início do Craque ou "Jogar de novo",
- * sem carreira em andamento. Aí o site recarrega na versão nova. Recarregar
- * no meio do jogo encerraria a sessão do Craque, então isso nunca acontece.
+ * seguro (D131): ir para o hub, para o início do Craque ou "Jogar de novo".
+ * Aí o site recarrega na versão nova. Recarregar no meio do jogo encerraria a
+ * sessão do Craque, então isso nunca acontece. Quem sai no meio da carreira
+ * (Sair, no topo) já a deixou para trás: o Craque não tem "continuar", então
+ * o hub também é seguro nesse caso (D133). O Técnico fica salvo no aparelho.
  *
  * Não desenha nada. O registro é importado sob demanda, fora do pacote da
  * primeira tela.
  */
-/** Telas em que recarregar não perde nada, se não houver carreira em andamento (D131). */
+/** Telas em que recarregar não perde nada (D131, D133). */
 const SAFE_SCREENS = new Set(["hub", "home", "identity"]);
 
 /** A versão nova esperando: a função que a ativa e recarrega, ou `null`. */
@@ -37,12 +38,6 @@ let pendingUpdate: (() => void) | null = null;
  * passando por ela atrasa a troca em dezenas de segundos.
  */
 let newVersionKnown = false;
-
-/** Não há carreira do Craque viva na memória (nenhuma, ou já terminada). */
-function noCareerRunning(): boolean {
-  const career = useCareer.getState().career;
-  return career === null || career.end !== null;
-}
 
 /**
  * Troca para a versão nova já (D131). O caminho de sempre (avisar a versão
@@ -80,7 +75,7 @@ export function PwaEffects() {
   }, [updating]);
   // D131: chegou num lugar seguro com uma versão nova esperando: troca agora.
   useEffect(() => {
-    if (!pendingUpdate || !SAFE_SCREENS.has(screen) || !noCareerRunning()) return;
+    if (!pendingUpdate || !SAFE_SCREENS.has(screen)) return;
     // eslint-disable-next-line react-hooks/set-state-in-effect -- a tela de espera nasce junto com a troca, que é um efeito externo.
     setUpdating(true);
     pendingUpdate();

@@ -119,6 +119,6 @@ export default defineConfig({
       VITE_GA_MEASUREMENT_ID: "desligado-nos-testes",
       VITE_ADSENSE_CLIENT: "desligado-nos-testes",
     },
-    include: ["src/**/*.test.ts", "build/**/*.test.ts", "scripts/**/*.test.ts", "worker/**/*.test.ts"],
+    include: ["src/**/*.test.ts", "build/**/*.test.ts", "scripts/**/*.test.ts"],
   },
 });

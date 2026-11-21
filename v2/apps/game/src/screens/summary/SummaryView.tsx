@@ -9,7 +9,6 @@ import {
   Hash,
   History,
   Home,
-  Image,
   Link2,
   Newspaper as NewspaperIcon,
   Play,
@@ -32,7 +31,6 @@ import { PlayerCard } from "../../ui/PlayerCard";
 import { Chip } from "../../ui/Signals";
 import { notify } from "../../ui/toast/notify";
 import { Newspaper } from "./Newspaper";
-import { PosterSheet } from "./PosterSheet";
 import { ShareSheet } from "./ShareSheet";
 import { Showcase } from "./Showcase";
 import { ChallengeChapter } from "./ChallengeChapter";
@@ -86,7 +84,6 @@ export function SummaryView({ career, avatar, mode, alternate = false, internalT
   const challenge = typeof career.setup.challengeId === "string";
   const chapters = CHAPTERS.filter((key) => (key === "challenge" ? challenge : key === "whatIf" ? !challenge && onBranch !== undefined : true));
   const country = getCountry(career.nationality);
-  const [posterOpen, setPosterOpen] = useState(false);
   // D132: o painel de compartilhar (imagem, mensagem e uma rede por botão).
   const [shareOpen, setShareOpen] = useState(false);
 
@@ -143,20 +140,9 @@ export function SummaryView({ career, avatar, mode, alternate = false, internalT
 
             <div className="mt-6 flex flex-col gap-3">
               <div className="flex flex-wrap gap-2.5">
-                <Button
-                  size="lg"
-                  onClick={() => {
-                    feedback("select");
-                    setPosterOpen(true);
-                  }}
-                >
-                  <Image size={18} aria-hidden="true" />
-                  {t("summary.actions.poster")}
-                </Button>
                 {!internalTesting ? (
                   <Button
                     size="lg"
-                    variant="secondary"
                     onClick={() => {
                       feedback("select");
                       setShareOpen(true);
@@ -236,7 +222,6 @@ export function SummaryView({ career, avatar, mode, alternate = false, internalT
         ) : null}
       </div>
 
-      <PosterSheet open={posterOpen} onOpenChange={setPosterOpen} career={career} avatar={avatar} />
       <ShareSheet open={shareOpen} onOpenChange={setShareOpen} career={career} avatar={avatar} />
     </div>
   );

@@ -1,12 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { displayName, messageWithLink, networkUrl, SHARE_NETWORKS } from "./shareTargets";
 
-/** Compartilhar a carreira pelo link curto (D132). */
+/** Compartilhar a carreira no computador: cada rede abre a tela de postar (D133). */
 
-const LINK = "https://futeiro.com/c/AbCdEfGhJk";
+const LINK = "https://futeiro.com";
 
 describe("links de cada rede", () => {
-  it("a mensagem e o link curto vão no formato de cada rede", () => {
+  it("a mensagem e o endereço do jogo vão no formato de cada rede", () => {
     expect(networkUrl("whatsapp", "Olá & tchau", LINK)).toBe(`https://wa.me/?text=${encodeURIComponent(`Olá & tchau\n${LINK}`)}`);
     expect(networkUrl("x", "Olá", LINK)).toBe(`https://x.com/intent/post?text=Ol%C3%A1&url=${encodeURIComponent(LINK)}`);
     expect(networkUrl("facebook", "Olá", LINK)).toBe(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(LINK)}`);
@@ -14,10 +14,8 @@ describe("links de cada rede", () => {
     expect(networkUrl("reddit", "Olá", LINK)).toBe(`https://www.reddit.com/submit?url=${encodeURIComponent(LINK)}&title=Ol%C3%A1`);
   });
 
-  it("Discord e Instagram não têm link de compartilhar", () => {
-    expect(networkUrl("discord", "Olá", LINK)).toBeNull();
-    expect(networkUrl("instagram", "Olá", LINK)).toBeNull();
-    expect(SHARE_NETWORKS).toHaveLength(7);
+  it("só redes que abrem a tela de postar, nenhuma que só copia", () => {
+    expect(SHARE_NETWORKS).toEqual(["whatsapp", "x", "facebook", "telegram", "reddit"]);
   });
 
   it("mensagem com o link numa linha própria", () => {

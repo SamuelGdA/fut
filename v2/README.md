@@ -2233,19 +2233,6 @@ site, o Supabase, o Google Analytics, o AdSense e a janelinha de login do Google
 `HSTS`. `/login`, `/perfil`, `/termos`, `/privacidade`, `/craque` e `/tecnico`
 funcionam em qualquer hospedagem estática (o build grava uma página em cada pasta).
 
-**Carreiras compartilhadas (D132).** Um Worker pequeno
-(`apps/game/worker`, `main` do `wrangler.jsonc`) atende só `/api/*` e `/c/*`;
-o resto continua arquivo estático. `POST /api/compartilhar` guarda a imagem da
-carreira (JPEG 1200 × 630) e o link de replay no KV `COMPARTILHADAS` (seis
-meses) e devolve `futeiro.com/c/<código>`; `GET /c/<código>` é a página com a
-imagem como prévia (Open Graph), que leva ao resumo; `GET /c/<código>.jpg` é a
-imagem. Limite de 10 envios por minuto por endereço (`COMPARTILHAR_LIMITE`).
-As prévias de branch usam o bloco `previews` do `wrangler.jsonc`, com um KV
-separado (`COMPARTILHADAS_PREVIA`): uma prévia nunca toca as carreiras do site.
-Para testar no computador com o Worker: `pnpm build` e
-`npx wrangler dev --cwd v2 --port 8788 --local` (KV simulado). O `pnpm dev` não
-roda o Worker: o painel avisa e usa o endereço do jogo.
-
 **Onde o site mora (D120): Cloudflare, em `futeiro.com`.** O `wrangler.jsonc`
 na raiz do v2 publica `apps/game/dist` como arquivos estáticos dos Workers, sem
 código no servidor: arquivo estático não conta na cota de requisições e não há
@@ -2488,12 +2475,23 @@ carreira em andamento (não troca). No computador, "Compartilhar" copia a imagem
 e o convite (`copyImageAndInvite`) para colar com Ctrl+V em qualquer conversa;
 a janela do Windows só lista apps instalados e descarta o texto.
 
-## D132: compartilhar com link curto e imagem na prévia (20/11/2026)
+## D133: compartilhar pelo PC e pelo celular, sem servidor (20/11/2026)
 
-"Compartilhar" abre um painel com a imagem, a mensagem editável e um botão por
-rede (WhatsApp, X, Facebook, Telegram, Reddit, Discord, Instagram), mais copiar
-link, mensagem e imagem, baixar e mais opções. O link curto
-(`futeiro.com/c/<código>`) tem a imagem da carreira na prévia, então ela chega
-junto da mensagem em qualquer rede. Ícones das marcas: `simple-icons` (CC0).
-Testes: `worker/share.test.ts` (validação, página, rotas),
-`shareTargets.test.ts` e dois cenários ponta a ponta.
+O resumo tem **Compartilhar** e **Copiar carreira**; o botão "Imagem" saiu e a
+imagem fica dentro do Compartilhar. A mensagem é pronta e não se edita.
+
+- **Computador:** um botão por rede (WhatsApp, X, Facebook, Telegram, Reddit)
+  abre a tela de postar ou mandar com a mensagem e o endereço do jogo; **Baixar
+  imagem** guarda o PNG para mandar junto. Nada que só copia.
+- **Celular:** **Compartilhar** abre o compartilhamento do aparelho com a imagem
+  e a mensagem juntas. Com "Mandar a imagem do jogador" desligado, vai só o
+  convite para jogar.
+- Nada fica guardado no servidor: o link curto da D132 (Worker e KV) saiu antes
+  de ir ao ar, porque guardar uma imagem por compartilhamento ocupava espaço e o
+  limite diário de gravações do plano gratuito. O site continua só arquivos.
+- A versão nova (D131) também entra no hub depois do "Sair" no meio de uma
+  carreira: o Craque não tem continuar, então não há nada a perder.
+
+Código: `screens/summary/ShareSheet.tsx`, `features/summary/shareTargets.ts`
+(links de cada rede), `ui/brandIcons.ts` (ícones do `simple-icons`, CC0).
+Testes: `shareTargets.test.ts` e dois cenários ponta a ponta (PC e celular).
